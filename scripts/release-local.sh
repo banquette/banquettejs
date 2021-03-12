@@ -36,7 +36,7 @@ git add "changelog/RELEASE_NOTE_$VERSION.md"
 git commit -m "chore: add changelog v$VERSION"
 
 # Publish in the local registry
-lerna publish --registry="http://localhost:4873" -m "build: v$VERSION"
+lerna publish --registry="http://localhost:4873" -m "build: release v$VERSION"
 
 # Clean the build
 npm run clean
