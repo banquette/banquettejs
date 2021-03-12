@@ -1,0 +1,10 @@
+scripts/
+src/
+node_modules
+.gitignore
+.huskyrc
+commitlint.config.js
+index.html
+rollup.config.js
+tsconfig.json
+webpack.config.js

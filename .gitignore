@@ -1,0 +1,11 @@
+.idea
+.vscode
+.DS_Store
+node_modules
+TODO.md
+dist
+coverage
+dist/*.js
+scripts-local
+packages/**/dist
+packages/**/build
