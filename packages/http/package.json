@@ -1,0 +1,23 @@
+{
+    "name": "@banquette/http",
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "directory": "packages/http"
+    },
+    "license": "Apache-2.0",
+    "main": "dist/index.cjs.prod.js",
+    "module": "build/index.js",
+    "types": "build",
+    "exports": {
+        ".": "./build",
+        "./package.json": "./package.json"
+    },
+    "dependencies": {
+        "@banquette/core": "^0.0.1",
+        "@banquette/event": "^0.0.1",
+        "@banquette/utils-base64": "^0.0.1"
+    },
+    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+}
