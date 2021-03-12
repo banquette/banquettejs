@@ -1,6 +1,6 @@
 {
     "name": "@banquette/utils-color",
-    "version": "0.0.1",
+    "version": "0.0.5",
     "repository": {
         "type": "git",
         "url": "https://github.com/@banquette/core/banquettejs.git",
