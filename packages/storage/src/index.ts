@@ -1,0 +1,13 @@
+export * from './adapter/abstract.adapter';
+export * from './adapter/adapter.interface';
+export * from './adapter/synchronous-adapter.interface';
+export * from './adapter/cookies.adapter';
+export * from './adapter/local-storage.adapter';
+
+export * from './exception/no-adapter-available.exception';
+
+export * from './config';
+export * from './constants';
+export * from './storage-configuration.interface';
+export * from './storage.service';
+export * from './types';
