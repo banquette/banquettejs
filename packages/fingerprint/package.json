@@ -1,10 +1,10 @@
 {
-    "name": "@banquette/core",
+    "name": "@banquette/fingerprint",
     "version": "0.0.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/@banquette/core/banquettejs.git",
-        "directory": "packages/core"
+        "directory": "packages/fingerprint"
     },
     "license": "Apache-2.0",
     "main": "dist/index.cjs.prod.js",
@@ -13,6 +13,10 @@
     "exports": {
         ".": "./build",
         "./package.json": "./package.json"
+    },
+    "dependencies": {
+        "@banquette/core": "^0.0.3",
+        "@banquette/storage": "^0.0.1"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
