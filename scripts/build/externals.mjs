@@ -3,5 +3,6 @@
  */
 export const Externals = [
     'reflect-metadata',
-    'inversify'
+    'inversify',
+    'rxjs'
 ];
