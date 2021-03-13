@@ -166,7 +166,7 @@ export class HttpService {
                 queuedRequest.request.setAdapter(adapter);
             }
             queuedRequest.isExecuting = true;
-            await this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request)).promise;
+            await this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request));
             if (!HttpService.IsValidPayload(queuedRequest.request.payload)) {
                 return void this.handleRequestFailure(queuedRequest, new UsageException(
                     `Invalid body. Ensure that you have registered an encoder for this type of payload.`
@@ -175,7 +175,7 @@ export class HttpService {
             queuedRequest.tryCount++;
             queuedRequest.request.incrementTryCount();
             const adapterResponse: AdapterResponse = await adapter.execute(queuedRequest.request as AdapterRequest);
-            await this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest)).promise;
+            await this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest));
             this.handleRequestResponse(adapterResponse, queuedRequest);
         } catch (e) {
             this.handleRequestFailure(queuedRequest, e);

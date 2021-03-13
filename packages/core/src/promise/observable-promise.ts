@@ -1,40 +1,23 @@
-import { UsageException } from "../error";
 import { isObject, isUndefined } from "../utils";
 import { isType } from "../utils/types/is-type";
+import { PromiseCanceledException } from "./exception/authentication.exception";
+import { ExecutorCallbacksInterface, } from "./executor-callbacks.interface";
 import { PromiseEventType } from "./promise-event-type";
 import { PromiseEventInterface } from "./promise-event.interface";
 import { PromiseObserver } from "./promise-observer";
+import { ExecutorFunction } from "./types";
 
 /**
  * A Promise wrapper that you can subscribe to, adding progress events capabilities.
+ * It works exactly like a classic promise and is compatible with the async/await syntax.
  *
- * The API is analog to an observable, with several key differences:
- *
- *   - "subscribe()" doesn't have to be called for the executor to be called, the process starts immediately,
- *
- *   - each time "subscribe()" is called the whole stack of events previously dispatched (calls to next()) will be replayed
- *     and the executor will NOT be executed again,
- *
- *   - the "complete" callback can receive a completion result.
- *
- *   - a "isCompleted()" method is available to easily test the completion of the observable.
- *
- * And most of all, this simple class is not designed to replace rxjs at all. It is mainly used internally
- * in place of a simple Promise where being able to trigger multiple events is useful (like an HTTP request).
- *
- * It also remove the rxjs dependency from the tools which is a good saving on bundle size.
+ * This wrapper is used instead of rxjs observables for its simplicity and to avoid an external dependency.
  */
 export class ObservablePromise<N, C = any> {
     /**
      * The actual promise object.
      */
-    public readonly promise: Promise<C>;
-
-    /**
-     * Promise's callbacks.
-     */
-    private promiseResolve!: (result: C) => void;
-    private promiseReject!: (reason: any) => void;
+    private readonly promise: Promise<C>;
 
     /**
      * A flag to remember if the promise has been resolved/rejected.
@@ -51,12 +34,28 @@ export class ObservablePromise<N, C = any> {
      */
     private eventsStack: PromiseEventInterface[] = [];
 
-    public constructor(executor: (observer: PromiseObserver<N, C>) => void) {
+    /**
+     * Object holding the wrapper callbacks for resolve, reject and progress.
+     */
+    private executorCallbacks!: ExecutorCallbacksInterface<N, C>;
+
+    public constructor(executor: ExecutorFunction<N, C>, private replayEvents: boolean = true) {
         this.promise = new Promise<C>((resolve, reject) => {
-            this.promiseResolve = resolve;
-            this.promiseReject = reject;
+            this.executorCallbacks = {
+                resolve: (result: C | PromiseLike<C>) => {
+                    this.dispatch(PromiseEventType.resolve, result);
+                    resolve(result);
+                    this.completed = true;
+                },
+                reject: (reason: any) => {
+                    this.dispatch(PromiseEventType.reject, reason);
+                    reject(reason);
+                    this.completed = true;
+                },
+                progress: (progress: N) => void this.dispatch(PromiseEventType.progress, progress)
+            };
+            executor(this.executorCallbacks.resolve, this.executorCallbacks.reject, this.executorCallbacks.progress);
         });
-        this.execute(executor);
     }
 
     /**
@@ -64,6 +63,30 @@ export class ObservablePromise<N, C = any> {
      */
     public isCompleted(): boolean {
         return this.completed;
+    }
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     */
+    public then<T1 = C, T2 = never>(onResolve?: ((value: C) => T1 | PromiseLike<T1>) | undefined | null,
+                                    onReject?: ((reason: any) => T2 | PromiseLike<T2>) | undefined | null): Promise<T1|T2> {
+        return this.promise.then(onResolve, onReject);
+    }
+
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     */
+    public catch<T = never>(onReject?: ((reason: any) => T | PromiseLike<T>) | undefined | null): Promise<C|T> {
+        return this.promise.catch(onReject);
+    }
+
+    /**
+     * Cancel the
+     */
+    public cancel(): void {
+        if (!this.isCompleted()) {
+            this.executorCallbacks.reject(new PromiseCanceledException('Canceled.'));
+        }
     }
 
     /**
@@ -79,29 +102,11 @@ export class ObservablePromise<N, C = any> {
             observer = {progress: observer, resolve, reject};
         }
         this.observers.push(observer);
-        for (const event of this.eventsStack) {
-            ObservablePromise.DispatchToObserver(observer, event.type, event.value);
-        }
-    }
-
-    /**
-     * Wrap the original executor to stack the events to they can be played back for each new subscribe.
-     * Also add the capability to send a result when calling "complete()".
-     */
-    private execute(executor: (observer: PromiseObserver<N, C>) => void): void {
-        executor({
-            progress: (progress: N) => void this.dispatch(PromiseEventType.progress, progress),
-            reject: (reason: any) => {
-                this.dispatch(PromiseEventType.reject, reason);
-                this.promiseReject(reason);
-                this.completed = true;
-            },
-            resolve: (result: C) => {
-                this.dispatch(PromiseEventType.resolve, result);
-                this.promiseResolve(result);
-                this.completed = true;
+        if (this.replayEvents) {
+            for (const event of this.eventsStack) {
+                ObservablePromise.DispatchToObserver(observer, event.type, event.value);
             }
-        });
+        }
     }
 
     /**
@@ -109,7 +114,7 @@ export class ObservablePromise<N, C = any> {
      */
     private dispatch(type: PromiseEventType, value: any): void {
         if (this.completed) {
-            throw new UsageException('The promise is already completed, you cannot send new events.');
+            return void console.warn('The promise is already completed, you cannot send new events.');
         }
         this.eventsStack.push({type, value});
         for (const observer of this.observers) {

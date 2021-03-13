@@ -82,7 +82,7 @@ export class EventDispatcher implements EventDispatcherInterface {
     public dispatch<T = any>(type: symbol, event?: EventArg|null, sync: boolean = false): ObservablePromise<DispatchCallInterface<T>, T[]> {
         // Forced to assign a new variable because if reassigning "event" the compiler still thinks it can be of type "null" or "undefined".
         const e = !isType<EventArg>(event, Not(isNullOrUndefined)) ? new EventArg() : event;
-        return new ObservablePromise<DispatchCallInterface<T>, T[]>((observer: PromiseObserver<DispatchCallInterface<T>, T[]>) => {
+        return new ObservablePromise<DispatchCallInterface<T>, T[]>((resolve, reject, progress) => {
             const propagationStoppedTags: symbol[] = [];
             const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
             const results: T[] = [];
@@ -91,7 +91,7 @@ export class EventDispatcher implements EventDispatcherInterface {
             let index = -1;
             const next = () => {
                 if (++index >= subscribers.length) {
-                    return void observer.resolve(results);
+                    return void resolve(results);
                 }
                 const subscriber = subscribers[index];
                 if (index > 0 && e.isPropagationStopped()) {
@@ -114,19 +114,19 @@ export class EventDispatcher implements EventDispatcherInterface {
                             (result as Promise<any>).then((result) => {
                                 results.push(result);
                                 call.result = result;
-                                observer.progress(call);
+                                progress(call);
                                 next();
                             }).catch((reason: any) => {
-                                observer.reject(ExceptionFactory.EnsureException(reason));
+                                reject(ExceptionFactory.EnsureException(reason));
                             });
                         } else {
                             results.push(result);
-                            observer.progress(call);
+                            progress(call);
                             next();
                         }
                         ++doneCount;
                     } catch (e) {
-                        observer.reject(ExceptionFactory.EnsureException(e));
+                        reject(ExceptionFactory.EnsureException(e));
                     }
                 } else {
                     ++skippedCount;
