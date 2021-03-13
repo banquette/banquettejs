@@ -16,7 +16,7 @@
         "clean": "node scripts/build/clean.mjs",
         "build:aliases": "node scripts/update-tsconfigs-aliases.mjs",
         "build:changelog": "node scripts/generate-changelog.js",
-        "test": "jest --passWithNoTests",
+        "test": "npm run clean && jest --passWithNoTests",
         "release": "bash scripts/release.sh",
         "release:local": "bash scripts/release-local.sh"
     },

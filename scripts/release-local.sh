@@ -18,9 +18,6 @@ if ! [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 echo "Releasing LOCAL $VERSION ..."
 
-# Clean any previous build or the tests will fail
-npm run clean
-
 # Execute tests
 if [[ -z $SKIP_TESTS ]]; then
   npm run test
