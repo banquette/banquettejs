@@ -31,7 +31,7 @@ export class SimpleObservable<N, C = any> {
     /**
      * List of registered observers.
      */
-    private observers: Array<Partial<CompletableWithResultObserver<N, C>>>  = [];
+    private observers: Array<Partial<CompletableWithResultObserver<N, C>>> = [];
 
     /**
      * The stack of events in the order received by the observer.
