@@ -1,18 +1,19 @@
 import { UsageException } from "../error";
 import { isObject, isUndefined } from "../utils";
 import { isType } from "../utils/types/is-type";
-import { SimpleObserver } from "./simple-observer";
-import { ObserverEventType } from "./observer-event-type";
-import { ObserverEventInterface } from "./observer-event.interface";
+import { PromiseEventType } from "./promise-event-type";
+import { PromiseEventInterface } from "./promise-event.interface";
+import { PromiseObserver } from "./promise-observer";
 
 /**
- * A basic yet powerful observable meant to act more like a "Promise with progression" than like real observable like in rxjs.
- * Even it the public API looks a bit like rxjs, there are several key differences:
+ * A Promise wrapper that you can subscribe to, adding progress events capabilities.
  *
- *   - "subscribe()" doesn't have to be called for the executor to be called, the process starts immediately (like a Promise),
+ * The API is analog to an observable, with several key differences:
+ *
+ *   - "subscribe()" doesn't have to be called for the executor to be called, the process starts immediately,
  *
  *   - each time "subscribe()" is called the whole stack of events previously dispatched (calls to next()) will be replayed
- *     and the executor WILL NOT be executed again,
+ *     and the executor will NOT be executed again,
  *
  *   - the "complete" callback can receive a completion result.
  *
@@ -23,9 +24,9 @@ import { ObserverEventInterface } from "./observer-event.interface";
  *
  * It also remove the rxjs dependency from the tools which is a good saving on bundle size.
  */
-export class SimpleObservable<N, C = any> {
+export class ObservablePromise<N, C = any> {
     /**
-     * A promise is always created in parallel to be as easy to use as possible.
+     * The actual promise object.
      */
     public readonly promise: Promise<C>;
 
@@ -36,21 +37,21 @@ export class SimpleObservable<N, C = any> {
     private promiseReject!: (reason: any) => void;
 
     /**
-     * A flag to remember if the observable has been completed.
+     * A flag to remember if the promise has been resolved/rejected.
      */
     private completed: boolean = false;
 
     /**
      * List of registered observers.
      */
-    private observers: Array<Partial<SimpleObserver<N, C>>> = [];
+    private observers: Array<Partial<PromiseObserver<N, C>>> = [];
 
     /**
      * The stack of events in the order received by the observer.
      */
-    private eventsStack: ObserverEventInterface[] = [];
+    private eventsStack: PromiseEventInterface[] = [];
 
-    public constructor(executor: (observer: SimpleObserver<N, C>) => void) {
+    public constructor(executor: (observer: PromiseObserver<N, C>) => void) {
         this.promise = new Promise<C>((resolve, reject) => {
             this.promiseResolve = resolve;
             this.promiseReject = reject;
@@ -69,17 +70,17 @@ export class SimpleObservable<N, C = any> {
      * Subscribe to the observer.
      * All the events already triggered until now will be replayed immediately.
      */
-    public subscribe(next: Partial<SimpleObserver<N, C>>|((progress: N) => void),
-                     error?: (reason: any) => void,
-                     complete?: (result: C) => void): void {
-        // local variable only here to have better naming ("observer" in local and "next" as parameter).
-        let observer: Partial<SimpleObserver<N, C>>|((progress: N) => void) = next;
-        if (!isType<Partial<SimpleObserver<N, C>>>(observer, isObject)) {
-            observer = {next: observer, error, complete};
+    public subscribe(progress: Partial<PromiseObserver<N, C>>|((progress: N) => void),
+                     resolve?: (result: C) => void,
+                     reject?: (reason: any) => void): void {
+        // local variable only here to have better naming ("observer" in local and "progress" as parameter).
+        let observer: Partial<PromiseObserver<N, C>>|((progress: N) => void) = progress;
+        if (!isType<Partial<PromiseObserver<N, C>>>(observer, isObject)) {
+            observer = {progress: observer, resolve, reject};
         }
         this.observers.push(observer);
         for (const event of this.eventsStack) {
-            SimpleObservable.DispatchToObserver(observer, event.type, event.value);
+            ObservablePromise.DispatchToObserver(observer, event.type, event.value);
         }
     }
 
@@ -87,16 +88,16 @@ export class SimpleObservable<N, C = any> {
      * Wrap the original executor to stack the events to they can be played back for each new subscribe.
      * Also add the capability to send a result when calling "complete()".
      */
-    private execute(executor: (observer: SimpleObserver<N, C>) => void): void {
+    private execute(executor: (observer: PromiseObserver<N, C>) => void): void {
         executor({
-            next: (progress: N) => void this.dispatch(ObserverEventType.next, progress),
-            error: (reason: any) => {
-                this.dispatch(ObserverEventType.error, reason);
+            progress: (progress: N) => void this.dispatch(PromiseEventType.progress, progress),
+            reject: (reason: any) => {
+                this.dispatch(PromiseEventType.reject, reason);
                 this.promiseReject(reason);
                 this.completed = true;
             },
-            complete: (result: C) => {
-                this.dispatch(ObserverEventType.complete, result);
+            resolve: (result: C) => {
+                this.dispatch(PromiseEventType.resolve, result);
                 this.promiseResolve(result);
                 this.completed = true;
             }
@@ -106,20 +107,20 @@ export class SimpleObservable<N, C = any> {
     /**
      * Dispatch an event to all observers and save it to the stack.
      */
-    private dispatch(type: ObserverEventType, value: any): void {
+    private dispatch(type: PromiseEventType, value: any): void {
         if (this.completed) {
-            throw new UsageException('The observable is already completed, you cannot send new events.');
+            throw new UsageException('The promise is already completed, you cannot send new events.');
         }
         this.eventsStack.push({type, value});
         for (const observer of this.observers) {
-            SimpleObservable.DispatchToObserver(observer, type, value);
+            ObservablePromise.DispatchToObserver(observer, type, value);
         }
     }
 
     /**
      * Dispatch an event to an observer (if subscribed).
      */
-    private static DispatchToObserver(observer: Partial<SimpleObserver<any>>, type: ObserverEventType, value: any): void {
+    private static DispatchToObserver(observer: Partial<PromiseObserver<any>>, type: PromiseEventType, value: any): void {
         const callback: any = observer[type];
         if (!isUndefined(callback)) {
             callback(value);

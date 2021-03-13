@@ -1,10 +1,9 @@
 import {
-    SimpleObserver,
     ensureArray,
     ExceptionFactory,
     getFromSymbolIndex,
     isNullOrUndefined,
-    SimpleObservable, isPromiseLike, Not
+    isPromiseLike, Not, ObservablePromise, PromiseObserver
 } from "@banquette/core";
 import { injectable } from "inversify";
 import { isType } from "../../core/src/utils/types/is-type";
@@ -80,19 +79,19 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Trigger an event.
      * The promise will resolve when all subscribers have been executed.
      */
-    public dispatch<T = any>(type: symbol, event?: EventArg|null, sync: boolean = false): SimpleObservable<DispatchCallInterface<T>, T[]> {
+    public dispatch<T = any>(type: symbol, event?: EventArg|null, sync: boolean = false): ObservablePromise<DispatchCallInterface<T>, T[]> {
         // Forced to assign a new variable because if reassigning "event" the compiler still thinks it can be of type "null" or "undefined".
         const e = !isType<EventArg>(event, Not(isNullOrUndefined)) ? new EventArg() : event;
-        return new SimpleObservable<DispatchCallInterface<T>, T[]>((observer: SimpleObserver<DispatchCallInterface<T>, T[]>) => {
+        return new ObservablePromise<DispatchCallInterface<T>, T[]>((observer: PromiseObserver<DispatchCallInterface<T>, T[]>) => {
             const propagationStoppedTags: symbol[] = [];
             const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
             const results: T[] = [];
-            let done = 0;
-            let skipped = 0;
+            let doneCount = 0;
+            let skippedCount = 0;
             let index = -1;
             const next = () => {
                 if (++index >= subscribers.length) {
-                    return void observer.complete(results);
+                    return void observer.resolve(results);
                 }
                 const subscriber = subscribers[index];
                 if (index > 0 && e.isPropagationStopped()) {
@@ -105,8 +104,8 @@ export class EventDispatcher implements EventDispatcherInterface {
                     try {
                         const result: any = subscriber.callback(e);
                         const call: DispatchCallInterface<T> = {
-                            done,
-                            skipped,
+                            doneCount,
+                            skippedCount,
                             subscriber,
                             result,
                             event: e
@@ -115,22 +114,22 @@ export class EventDispatcher implements EventDispatcherInterface {
                             (result as Promise<any>).then((result) => {
                                 results.push(result);
                                 call.result = result;
-                                observer.next(call);
+                                observer.progress(call);
                                 next();
                             }).catch((reason: any) => {
-                                observer.error(ExceptionFactory.EnsureException(reason));
+                                observer.reject(ExceptionFactory.EnsureException(reason));
                             });
                         } else {
                             results.push(result);
-                            observer.next(call);
+                            observer.progress(call);
                             next();
                         }
-                        ++done;
+                        ++doneCount;
                     } catch (e) {
-                        observer.error(ExceptionFactory.EnsureException(e));
+                        observer.reject(ExceptionFactory.EnsureException(e));
                     }
                 } else {
-                    ++skipped;
+                    ++skippedCount;
                     next();
                 }
             };

@@ -4,16 +4,16 @@ import { SubscriberInterface } from "./subscriber.interface";
 /**
  * Represent a call to a subscriber by the event dispatcher.
  */
-export interface DispatchCallInterface<T> {
+export interface DispatchCallInterface<T = any> {
     /**
      * Number of subscribers called until the current one.
      */
-    done: number;
+    doneCount: number;
 
     /**
      * Number of subscribers skipped until the current one.
      */
-    skipped: number;
+    skippedCount: number;
 
     /**
      * The event the subscriber has been called with.
