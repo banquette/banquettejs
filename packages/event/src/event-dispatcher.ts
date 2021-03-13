@@ -1,13 +1,17 @@
-import { ensureArray, ExceptionFactory, getFromSymbolIndex, isNullOrUndefined, isUndefined } from "@banquette/core";
+import {
+    SimpleObserver,
+    ensureArray,
+    ExceptionFactory,
+    getFromSymbolIndex,
+    isNullOrUndefined,
+    SimpleObservable, isPromiseLike, Not
+} from "@banquette/core";
 import { injectable } from "inversify";
+import { isType } from "../../core/src/utils/types/is-type";
+import { DispatchCallInterface } from "./dispatch-call.interface";
 import { EventArg } from './event-arg';
 import { EventDispatcherInterface } from "./event-dispatcher.interface";
-
-interface Subscriber {
-    priority: number;
-    tags: symbol[];
-    callback: (event: EventArg) => void;
-}
+import { SubscriberInterface } from "./subscriber.interface";
 
 @injectable()
 export class EventDispatcher implements EventDispatcherInterface {
@@ -16,7 +20,7 @@ export class EventDispatcher implements EventDispatcherInterface {
     /**
      * Object holding an array of callbacks for each event name.
      */
-    private subscribers: Record<symbol, Subscriber[]>;
+    private subscribers: Record<symbol, SubscriberInterface[]>;
 
     /**
      * Queue of events that are waiting for a subscriber to register.
@@ -39,12 +43,12 @@ export class EventDispatcher implements EventDispatcherInterface {
      * @return A function to call to unsubscribe.
      */
     public subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void, priority: number = 0, tags: symbol[] = []): () => void {
-        const subscribers: Subscriber[] = this.getSubscribersForType(type);
+        const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
         if (!tags.length) {
             tags.push(EventDispatcher.DEFAULT_TAG);
         }
         subscribers.push({callback: callback as (event: EventArg) => void, priority, tags});
-        subscribers.sort((a: Subscriber, b: Subscriber) => {
+        subscribers.sort((a: SubscriberInterface, b: SubscriberInterface) => {
             return b.priority - a.priority;
         });
         this.setSubscribersForType(type, subscribers);
@@ -65,7 +69,7 @@ export class EventDispatcher implements EventDispatcherInterface {
             });
         }
         return () => {
-            const subscribers: Subscriber[] = this.getSubscribersForType(type).filter((subscriber: Subscriber) => {
+            const subscribers: SubscriberInterface[] = this.getSubscribersForType(type).filter((subscriber: SubscriberInterface) => {
                 return subscriber.callback !== callback;
             });
             this.setSubscribersForType(type, subscribers);
@@ -76,127 +80,77 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Trigger an event.
      * The promise will resolve when all subscribers have been executed.
      */
-    public async dispatch(type: symbol, arg: EventArg = new EventArg()): Promise<void> {
-        // We don't care about the result here, calling dispatchFromResponse is only to avoid repeating the same logic.
-        await this.dispatchForResponse(type, arg);
-    }
-
-    /**
-     * Trigger an event synchronously.
-     * This method will not wait for asynchronous subscribers to finish.
-     */
-    public dispatchSync(type: symbol, arg?: EventArg): void {
-        this.dispatchForResponseSync(type, arg);
+    public dispatch<T = any>(type: symbol, event?: EventArg|null, sync: boolean = false): SimpleObservable<DispatchCallInterface<T>, T[]> {
+        // Forced to assign a new variable because if reassigning "event" the compiler still thinks it can be of type "null" or "undefined".
+        const e = !isType<EventArg>(event, Not(isNullOrUndefined)) ? new EventArg() : event;
+        return new SimpleObservable<DispatchCallInterface<T>, T[]>((observer: SimpleObserver<DispatchCallInterface<T>, T[]>) => {
+            const propagationStoppedTags: symbol[] = [];
+            const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
+            const results: T[] = [];
+            let done = 0;
+            let skipped = 0;
+            let index = -1;
+            const next = () => {
+                if (++index >= subscribers.length) {
+                    return void observer.complete(results);
+                }
+                const subscriber = subscribers[index];
+                if (index > 0 && e.isPropagationStopped()) {
+                    // We could add duplicates this way but it doesn't matter.
+                    // The cost of removing them exceed the benefit imho.
+                    Array.prototype.push.apply(propagationStoppedTags, subscribers[index - 1].tags);
+                    e.restorePropagation();
+                }
+                if (subscriber.tags.filter((tag: symbol) => propagationStoppedTags.indexOf(tag) < 0).length > 0) {
+                    try {
+                        const result: any = subscriber.callback(e);
+                        const call: DispatchCallInterface<T> = {
+                            done,
+                            skipped,
+                            subscriber,
+                            result,
+                            event: e
+                        };
+                        if (!sync && isPromiseLike(result)) {
+                            (result as Promise<any>).then((result) => {
+                                results.push(result);
+                                call.result = result;
+                                observer.next(call);
+                                next();
+                            }).catch((reason: any) => {
+                                observer.error(ExceptionFactory.EnsureException(reason));
+                            });
+                        } else {
+                            results.push(result);
+                            observer.next(call);
+                            next();
+                        }
+                        ++done;
+                    } catch (e) {
+                        observer.error(ExceptionFactory.EnsureException(e));
+                    }
+                } else {
+                    ++skipped;
+                    next();
+                }
+            };
+            next();
+        });
     }
 
     /**
      * Try to trigger and event but keep the call in a queue if no subscribers have been registered yet.
      * The dispatch will run again when a subscriber is registered.
      */
-    public dispatchSafe(type: symbol, arg?: EventArg): void {
-        const subscribers: Subscriber[] = this.getSubscribersForType(type);
+    public dispatchSafe(type: symbol, event?: EventArg|null): void {
+        event = isNullOrUndefined(event) ? new EventArg() : event;
+        const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
         if (subscribers.length > 0) {
-            return void this.dispatch(type, arg);
+            return void this.dispatch(type, event);
         }
         const queue = ensureArray(getFromSymbolIndex(this.queue, type));
-        queue.push({arg});
+        queue.push({event});
         Object.assign(this.queue, {[type]: queue});
-    }
-
-    /**
-     * Trigger an event and return responses of callbacks.
-     * This method will wait for promises to resolve.
-     */
-    public async dispatchForResponse<R>(type: symbol, arg: EventArg = new EventArg()): Promise<R[]> {
-        const responses: any[] = [];
-        const propagationStoppedTags: symbol[] = [];
-        const subscribers: Subscriber[] = this.getSubscribersForType(type);
-        for (const subscriber of subscribers) {
-            if (subscriber.tags.filter((tag: symbol) => propagationStoppedTags.indexOf(tag) < 0).length > 0) {
-                try {
-                    const response: any = await subscriber.callback(arg);
-                    if (!isUndefined(response)) {
-                        responses.push(response);
-                    }
-                    if (arg.isPropagationStopped()) {
-                        // We could add duplicates this way but it doesn't matter.
-                        // The cost of removing them exceed the benefit imho.
-                        Array.prototype.push.apply(propagationStoppedTags, subscriber.tags);
-                        arg.restorePropagation();
-                    }
-                } catch (e) {
-                    throw ExceptionFactory.EnsureException(e);
-                }
-            }
-        }
-        return responses;
-    }
-
-    /**
-     * Trigger an event and return responses of callbacks.
-     * This method will not wait for asynchronous subscribers to finish before returning.
-     */
-    public dispatchForResponseSync<R>(type: symbol, arg: EventArg = new EventArg()): R[] {
-        const responses: any[] = [];
-        const propagationStoppedTags: symbol[] = [];
-        const subscribers: Subscriber[] = this.getSubscribersForType(type);
-        for (const subscriber of subscribers) {
-            if (subscriber.tags.filter((tag: symbol) => propagationStoppedTags.indexOf(tag) < 0).length > 0) {
-                try {
-                    const response: any = subscriber.callback(arg);
-                    if (!isUndefined(response)) {
-                        responses.push(response);
-                    }
-                    if (arg.isPropagationStopped()) {
-                        // We could add duplicates this way but it doesn't matter.
-                        // The cost of removing them exceed the benefit imho.
-                        Array.prototype.push.apply(propagationStoppedTags, subscriber.tags);
-                        arg.restorePropagation();
-                    }
-                } catch (e) {
-                    throw ExceptionFactory.EnsureException(e);
-                }
-            }
-        }
-        return responses;
-    }
-
-    /**
-     * Trigger an event and return responses of callbacks.
-     * This method will wait for promises to resolve.
-     */
-    public async dispatchForSingleResponse<R>(type: symbol, arg?: EventArg, strategy: 'first' | 'last' | number = 'last'): Promise<R|null> {
-        const responses = await this.dispatchForResponse<R>(type, arg);
-        if (responses.length > 0) {
-            if (strategy === 'last') {
-                return responses.pop() as R;
-            } else if (strategy === 'first') {
-                return responses.shift() as R;
-            }
-            if (responses.length > strategy) {
-                return responses[strategy];
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Trigger an event and return responses of callbacks.
-     * This method will not wait for asynchronous subscribers to finish before returning.
-     */
-    public dispatchForSingleResponseSync<R>(type: symbol, arg: EventArg, strategy: 'first' | 'last' | number): R|null {
-        const responses = this.dispatchForResponseSync<R>(type, arg);
-        if (responses.length > 0) {
-            if (strategy === 'last') {
-                return responses.pop() as R;
-            } else if (strategy === 'first') {
-                return responses.shift() as R;
-            }
-            if (responses.length > strategy) {
-                return responses[strategy];
-            }
-        }
-        return null;
     }
 
     /**
@@ -216,8 +170,8 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Workaround until TypeScript allow for symbols as object indexes.
      * @see https://github.com/microsoft/TypeScript/issues/1863
      */
-    private getSubscribersForType(type: symbol): Subscriber[] {
-        const subscribers: Subscriber[]|null = getFromSymbolIndex(this.subscribers, type) as Subscriber[]|null;
+    private getSubscribersForType(type: symbol): SubscriberInterface[] {
+        const subscribers: SubscriberInterface[]|null = getFromSymbolIndex(this.subscribers, type) as SubscriberInterface[]|null;
         return subscribers !== null ? subscribers : [];
     }
 
@@ -227,7 +181,7 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Workaround until TypeScript allow for symbols as object indexes.
      * @see https://github.com/microsoft/TypeScript/issues/1863
      */
-    private setSubscribersForType(type: symbol, subscribers: Subscriber[]): void {
+    private setSubscribersForType(type: symbol, subscribers: SubscriberInterface[]): void {
         Object.assign(this.subscribers, {[type]: subscribers});
     }
 }

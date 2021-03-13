@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { Injector, waitForDelay } from "@banquette/core";
+import { DispatchCallInterface } from "../dispatch-call.interface";
 import { EventArg } from "../event-arg";
 import { EventDispatcherInterface } from "../event-dispatcher.interface";
 import { EventDispatcherServiceSymbol } from "../event-dispatcher.service";
@@ -27,16 +28,6 @@ const eventDispatcher = Injector.Get<EventDispatcherInterface>(EventDispatcherSe
  * Basics
  */
 test('simple events', async () => {
-    const t1 = subscribeAndTrack(event1, {'a': []});
-    expectFromDispatchSync(t1, event2, []);
-    expectFromDispatchSync(t1, event1, ['a']);
-
-    const t2 = subscribeAndTrack(event2, {'b': []});
-    expectFromDispatchSync(t2, event1, []);
-    expectFromDispatchSync(t2, event2, ['b']);
-});
-
-test('simple events (async)', async () => {
     const t1 = subscribeAndTrack(event1, {'a': [0, [], false, 100]});
     await expectFromDispatch(t1, event2, []);
     await expectFromDispatch(t1, event1, ['a']);
@@ -46,31 +37,7 @@ test('simple events (async)', async () => {
     await expectFromDispatch(t2, event2, ['b']);
 });
 
-/**
- * Tags
- */
-test('tags', () => {
-    let tracker = subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1], true],
-        'other': [0],
-        'encoder2': [0, [tag1]],
-    });
-    expectFromDispatchSync(tracker, event1, ['encoder1', 'other']);
-    tracker = subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1]],
-        'other': [0],
-        'encoder2': [0, [tag1]],
-    });
-    expectFromDispatchSync(tracker, event1, ['encoder1', 'other', 'encoder2']);
-    tracker = subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1]],
-        'other': [0, [tag2, tag1], true],
-        'encoder2': [0, [tag1]]
-    });
-    expectFromDispatchSync(tracker, event1, ['encoder1', 'other']);
-});
-
-test('tags (async)', async () => {
+test('tags', async () => {
     let tracker = subscribeAndTrack(event1, {
         'encoder1': [0, [tag1], true],
         'other': [0],
@@ -89,6 +56,38 @@ test('tags (async)', async () => {
         'encoder2': [0, [tag1]]
     });
     await expectFromDispatch(tracker, event1, ['encoder1', 'other']);
+});
+
+test('tags (sync)', async () => {
+    subscribeAndTrack(event1, {
+        'encoder1': [0, [tag1], true],
+        'other': [0],
+        'encoder2': [0, [tag1]],
+    });
+    expectFromDispatchSync(event1, ['encoder1', 'other']);
+    subscribeAndTrack(event1, {
+        'encoder1': [0, [tag1]],
+        'other': [0],
+        'encoder2': [0, [tag1]],
+    });
+    expectFromDispatchSync(event1, ['encoder1', 'other', 'encoder2']);
+    subscribeAndTrack(event1, {
+        'encoder1': [0, [tag1]],
+        'other': [0, [tag2, tag1], true],
+        'encoder2': [0, [tag1]]
+    });
+    expectFromDispatchSync(event1, ['encoder1', 'other']);
+});
+
+test('results from promise sync', async () => {
+    subscribeAndTrack(event1, {
+        'a': [],
+        'b': [],
+        'c': [],
+    });
+    eventDispatcher.dispatch<string>(event1).promise.then((results: string[]) => {
+        expect(results).toStrictEqual(['a', 'b', 'c']);
+    });
 });
 
 /**
@@ -131,7 +130,7 @@ test('stop propagation', () => {
     for (let _i = 0; _i < 5; _i++) {
         eventDispatcher.subscribe(event1, () => {counter++;})
     }
-    eventDispatcher.dispatchSync(event1);
+    eventDispatcher.dispatch(event1);
     expect(counter).toStrictEqual(5);
 })
 
@@ -148,71 +147,13 @@ test('unsubscribe', () => {
         counter = 1000000;
         event.stopPropagation();
     })
-    eventDispatcher.dispatchSync(event1);
+    eventDispatcher.dispatch(event1, null, true);
     expect(counter).toStrictEqual(1000000);
     unsubscribeCallback();
     counter = 0;
-    eventDispatcher.dispatchSync(event1);
+    eventDispatcher.dispatch(event1, null, true);
     expect(counter).toStrictEqual(5);
 })
-
-/**
- * Test single return
- */
-test('dispatch for response (single return)', () => {
-    eventDispatcher.clear();
-    for (let _i = 0; _i < 5; _i++) {
-        eventDispatcher.subscribe(event1, () => {return _i;})
-    }
-
-    const promiseFirst = eventDispatcher.dispatchForSingleResponse(event1, new EventArg(), 'first');
-    promiseFirst.then((data: any) => {
-        expect(data).toStrictEqual(0);
-    });
-
-    const promiseLast = eventDispatcher.dispatchForSingleResponse(event1, new EventArg(), 'last');
-    promiseLast.then((data: any) => {
-        expect(data).toStrictEqual(4);
-    });
-    //expect(resultDefault).toStrictEqual(4);
-})
-
-/**
- * Test multiple returns
- */
-test('dispatch for response (multiple returns async)', () => {
-    eventDispatcher.clear();
-    for (let i = 0; i < 5; i++) {
-        if (i === 1 || i === 4) {
-            eventDispatcher.subscribe(event1, async () => {
-                await waitForDelay(10);
-                return i;
-            });
-        } else {
-            eventDispatcher.subscribe(event1, ((_i) => {
-                return () => _i;
-            })(i));
-        }
-    }
-    const promise = eventDispatcher.dispatchForResponse<number>(event1, new EventArg());
-    promise.then((data: number[]) => {
-        expect(data).toStrictEqual([0, 1, 2, 3, 4]);
-    });
-});
-
-/**
- * Test multiple returns
- */
-test('dispatch for response (multiple returns sync)', () => {
-    eventDispatcher.clear();
-    for (let i = 0; i < 5; i++) {
-        eventDispatcher.subscribe(event1, ((_i) => {
-            return () => _i;
-        })(i));
-    }
-    const results = eventDispatcher.dispatchForResponseSync<number>(event1, new EventArg());
-    expect(results).toStrictEqual([0, 1, 2, 3, 4]);
-});
 
 /**
  * Register multiple subscribers to the dispatcher and return an object
@@ -231,14 +172,17 @@ function subscribeAndTrack(type: symbol, subscribers: Subscribers): SubscribersT
                         event.stopPropagation();
                     }
                     tracker.calledStack.push(_k);
+                    return _k;
                 };
                 if (delay > 0) {
                     return new Promise((resolve, reject) => {
-                        p();
-                        waitForDelay(delay).then(resolve).catch(reject);
+                        const res = p();
+                        waitForDelay(delay).then(() => {
+                            resolve(res);
+                        }).catch(reject);
                     });
                 } else {
-                    p();
+                    return p();
                 }
             };
         })(key, subscribers[key][2] || false, subscribers[key][3] || 0), subscribers[key][0], subscribers[key][1] || []);
@@ -251,7 +195,7 @@ function subscribeAndTrack(type: symbol, subscribers: Subscribers): SubscribersT
  */
 async function expectFromDispatch(tracker: SubscribersTracker, event: symbol, expected: string[]): Promise<void> {
     try {
-        await eventDispatcher.dispatch(event);
+        await eventDispatcher.dispatch(event).promise;
         expect(tracker.calledStack).toStrictEqual(expected);
     } catch (e) {
         fail(e);
@@ -261,10 +205,13 @@ async function expectFromDispatch(tracker: SubscribersTracker, event: symbol, ex
 /**
  * Dispatch an event and check if the results of a tracker are what is in "expected".
  */
-function expectFromDispatchSync(tracker: SubscribersTracker, event: symbol, expected: string[]): void {
+function expectFromDispatchSync(event: symbol, expected: string[]): void {
     try {
-        eventDispatcher.dispatchSync(event);
-        expect(tracker.calledStack).toStrictEqual(expected);
+        const results: string[] = [];
+        eventDispatcher.dispatch<string>(event, null, true).subscribe((e: DispatchCallInterface<string>) => {
+            results.push(e.result);
+        });
+        expect(results).toStrictEqual(expected);
     } catch (e) {
         fail(e);
     }
@@ -273,15 +220,15 @@ function expectFromDispatchSync(tracker: SubscribersTracker, event: symbol, expe
 /**
  * Call subscribeAndTrack and expectFromDispatch successively.
  */
-function testSubscribeAndDispatch(type: symbol, subscribers: Subscribers, expected: string[]): void {
+async function testSubscribeAndDispatch(type: symbol, subscribers: Subscribers, expected: string[]): Promise<void> {
     const tracker = subscribeAndTrack(event1, subscribers);
-    expectFromDispatch(tracker, event1, expected);
+    await expectFromDispatch(tracker, event1, expected);
 }
 
 /**
  * Call subscribeAndTrack and expectFromDispatch successively.
  */
 function testSubscribeAndDispatchSync(type: symbol, subscribers: Subscribers, expected: string[]): void {
-    const tracker = subscribeAndTrack(event1, subscribers);
-    expectFromDispatchSync(tracker, event1, expected);
+    subscribeAndTrack(event1, subscribers);
+    expectFromDispatchSync(event1, expected);
 }

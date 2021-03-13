@@ -166,7 +166,7 @@ export class HttpService {
                 queuedRequest.request.setAdapter(adapter);
             }
             queuedRequest.isExecuting = true;
-            await this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request));
+            await this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request)).promise;
             if (!HttpService.IsValidPayload(queuedRequest.request.payload)) {
                 return void this.handleRequestFailure(queuedRequest, new UsageException(
                     `Invalid body. Ensure that you have registered an encoder for this type of payload.`
@@ -175,7 +175,7 @@ export class HttpService {
             queuedRequest.tryCount++;
             queuedRequest.request.incrementTryCount();
             const adapterResponse: AdapterResponse = await adapter.execute(queuedRequest.request as AdapterRequest);
-            await this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest));
+            await this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest)).promise;
             this.handleRequestResponse(adapterResponse, queuedRequest);
         } catch (e) {
             this.handleRequestFailure(queuedRequest, e);
@@ -201,7 +201,7 @@ export class HttpService {
         }
         queuedRequest.response.setStatus(HttpResponseStatus.Success);
         queuedRequest.resolve(queuedRequest.response);
-        this.eventDispatcher.dispatchSync(Events.RequestSuccess, new RequestEvent(queuedRequest.request));
+        this.eventDispatcher.dispatch(Events.RequestSuccess, new RequestEvent(queuedRequest.request));
         this.removeFromQueue(queuedRequest);
     }
 
@@ -212,14 +212,14 @@ export class HttpService {
         if (error instanceof NetworkException && queuedRequest.triesLeft > 0) {
             queuedRequest.triesLeft--;
             queuedRequest.isExecuting = false;
-            this.eventDispatcher.dispatchSync(Events.RequestQueued, new RequestEvent(queuedRequest.request));
+            this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(queuedRequest.request));
             this.processQueue();
             return ;
         }
         queuedRequest.response.error = error;
         queuedRequest.response.setStatus(HttpResponseStatus.Error);
         queuedRequest.reject(queuedRequest.response);
-        this.eventDispatcher.dispatchSync(Events.RequestFailure, new RequestEvent(queuedRequest.request));
+        this.eventDispatcher.dispatch(Events.RequestFailure, new RequestEvent(queuedRequest.request));
         this.removeFromQueue(queuedRequest);
     }
 
@@ -271,7 +271,7 @@ export class HttpService {
             response
         });
         this.scheduleQueueForProcess();
-        this.eventDispatcher.dispatchSync(Events.RequestQueued, new RequestEvent(request));
+        this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(request));
     }
 
     /**

@@ -254,7 +254,6 @@ describe('events dispatching', () => {
     beforeEach(() => {
         // Remove existing spies.
         jest.restoreAllMocks();
-        jest.spyOn(eventDispatcher, 'dispatchSync');
         jest.spyOn(eventDispatcher, 'dispatch');
     });
 
@@ -263,11 +262,11 @@ describe('events dispatching', () => {
             url: buildTestUrl({responseKey: 'ValidJson'})
         }));
         await waitForNextCycle();
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object));
         await response.promise;
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object));
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object));
     });
 
     test(`request failing 2 times`, async () => {
@@ -275,14 +274,11 @@ describe('events dispatching', () => {
             url: buildTestUrl({networkError: 2, responseKey: 'ValidJson'})
         }));
         await response.promise;
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledTimes(4); // RequestQueued x3 + RequestSuccess
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
-
-        expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(4); // BeforeRequest x3 + BeforeResponse
+        expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(8); // RequestQueued x3 + RequestSuccess + BeforeRequest x3 + BeforeResponse
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object));
-
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object));
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object));
     });
 
     test(`request failing definitely`, async () => {
@@ -292,13 +288,10 @@ describe('events dispatching', () => {
         try {
             await response.promise;
         } catch (e) { /* Nothing to do, that's not the point of this test */ }
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledTimes(2); // RequestQueued + RequestFailure
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
-
-        expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(2); // BeforeRequest + BeforeResponse
+        expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(4); // RequestQueued + RequestFailure + BeforeRequest + BeforeResponse
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object));
-
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object));
-        expect(eventDispatcher.dispatchSync).toHaveBeenCalledWith(Events.RequestFailure, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestFailure, expect.any(Object));
     });
 });
