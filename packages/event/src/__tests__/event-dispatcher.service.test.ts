@@ -85,7 +85,7 @@ test('results from promise sync', async () => {
         'b': [],
         'c': [],
     });
-    eventDispatcher.dispatch<string>(event1).promise.then((results: string[]) => {
+    eventDispatcher.dispatch<string>(event1).then((results: string[]) => {
         expect(results).toStrictEqual(['a', 'b', 'c']);
     });
 });
@@ -195,7 +195,7 @@ function subscribeAndTrack(type: symbol, subscribers: Subscribers): SubscribersT
  */
 async function expectFromDispatch(tracker: SubscribersTracker, event: symbol, expected: string[]): Promise<void> {
     try {
-        await eventDispatcher.dispatch(event).promise;
+        await eventDispatcher.dispatch(event);
         expect(tracker.calledStack).toStrictEqual(expected);
     } catch (e) {
         fail(e);
