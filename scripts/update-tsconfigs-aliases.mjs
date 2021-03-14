@@ -40,7 +40,7 @@ for (const packageName of packages) {
             }
         }
         console.log(`Update ${chalk.cyan('tsconfig.json')} of package ${chalk.blue(packageName)}.`);
-        fs.writeFileSync(tsconfigPath, stringify(config, {indent: 4}));
+        fs.writeFileSync(tsconfigPath, stringify(config, {indent: 4}) + "\n");
     } catch (e) {
         console.log(chalk.yellow(`Failed to reach tsconfig.json file of package ${packageName}.`));
         console.error(e);
@@ -54,7 +54,7 @@ for (const packageName of packages) {
     testConfig.compilerOptions.paths[`@banquette/${packageName}`] = [`packages/${packageName}/src/index.ts`];
 }
 console.log(`Update ${chalk.blue('jest')} ${chalk.cyan('tsconfig.json')}.`);
-fs.writeFileSync(testTsConfigPath, stringify(testConfig, {indent: 4}));
+fs.writeFileSync(testTsConfigPath, stringify(testConfig, {indent: 4}) + "\n");
 
 // Update jest.config.js
 jestConfig.moduleNameMapper = {};
@@ -62,4 +62,4 @@ for (const packageName of packages) {
     jestConfig.moduleNameMapper[`@banquette/${packageName}$`] = `<rootDir>/packages/${packageName}/src/index.ts`;
 }
 console.log(`Update ${chalk.cyan('jest.config.js')}.`);
-fs.writeFileSync(path.join(rootDir, 'jest.config.js'), `module.exports = ${stringify(jestConfig, {indent: 4})}`);
+fs.writeFileSync(path.join(rootDir, 'jest.config.js'), `module.exports = ${stringify(jestConfig, {indent: 4})}\n`);
