@@ -1,13 +1,5 @@
-import {
-    camelCase, Injector,
-    ExceptionFactory,
-    getSymbolDescription,
-    isNullOrUndefined,
-    isUndefined,
-    kebabCase,
-    trim,
-    UsageException
-} from "@banquette/core";
+import { ExceptionFactory, Injector, UsageException } from "@banquette/core";
+import { camelCase, getSymbolDescription, isNullOrUndefined, isUndefined, kebabCase, trim } from "@banquette/utils";
 import { injectable } from "inversify";
 import { DomModule } from "./dom-module";
 import { DomModuleDataInterface } from "./dom-module-data.interface";

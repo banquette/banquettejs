@@ -1,4 +1,5 @@
-import { areEqual, Pojo, UsageException } from "@banquette/core";
+import { UsageException } from "@banquette/core";
+import { areEqual, Pojo } from '@banquette/utils';
 import { injectable } from "inversify";
 
 @injectable()

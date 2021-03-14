@@ -1,4 +1,5 @@
-import { proxy, UsageException } from "@banquette/core";
+import { UsageException } from "@banquette/core";
+import { proxy } from "@banquette/utils";
 import { injectable } from "inversify";
 import { NetworkException } from "../exception/network.exception";
 import { RequestCanceledException } from "../exception/request-canceled.exception";

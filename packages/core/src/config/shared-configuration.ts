@@ -1,10 +1,8 @@
+import { extend, getFromSymbolIndex, getSymbolDescription } from "@banquette/utils";
 import { injectable } from "inversify";
-import { Injector } from "../injector";
 import { UsageException } from "../error/usage.exception";
-import { extend } from "../utils/object/extend";
-import { getFromSymbolIndex } from "../utils/object/get-from-symbol-index";
-import { getSymbolDescription } from "../utils/object/get-symbol-description";
-import { VarHolder } from "../utils/var-holder";
+import { Injector } from "../injector";
+import { VarHolder } from "../var-holder";
 import { CoreConfigurationInterface } from "./core-configuration.interface";
 
 @injectable()

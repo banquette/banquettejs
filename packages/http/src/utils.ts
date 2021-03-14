@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/core";
+import { isUndefined } from "@banquette/utils";
 import { HttpStatus } from "./constants";
 
 /**

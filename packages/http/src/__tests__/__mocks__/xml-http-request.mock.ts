@@ -1,4 +1,5 @@
-import { ensureSameType, isFunction, isObject, isString, randomInt, UsageException } from "@banquette/core";
+import { UsageException } from "@banquette/core";
+import { ensureSameType, isFunction, isObject, isString, randomInt } from "@banquette/utils";
 import { base64decodeUrlSafe } from "@banquette/utils-base64";
 import { XSSIPrefix } from "../../decoder/json.decoder";
 import { httpStatusToText } from "../../utils";

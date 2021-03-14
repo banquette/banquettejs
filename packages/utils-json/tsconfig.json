@@ -11,14 +11,13 @@
             "@banquette/fingerprint": ["packages/fingerprint/src/index.ts"],
             "@banquette/http": ["packages/http/src/index.ts"],
             "@banquette/log": ["packages/log/src/index.ts"],
+            "@banquette/promise": ["packages/promise/src/index.ts"],
             "@banquette/storage": ["packages/storage/src/index.ts"],
+            "@banquette/utils": ["packages/utils/src/index.ts"],
             "@banquette/utils-base64": ["packages/utils-base64/src/index.ts"],
             "@banquette/utils-color": ["packages/utils-color/src/index.ts"],
             "@banquette/utils-crypto": ["packages/utils-crypto/src/index.ts"],
-            "@banquette/utils-easing": ["packages/utils-easing/src/index.ts"],
-            "@banquette/vue-core": ["packages/vue-core/src/index.ts"],
-            "@banquette/vue-form": ["packages/vue-form/src/index.ts"],
-            "@banquette/vue-popin": ["packages/vue-popin/src/index.ts"]
+            "@banquette/utils-easing": ["packages/utils-easing/src/index.ts"]
         }
     },
     "exclude": []

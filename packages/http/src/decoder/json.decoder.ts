@@ -1,5 +1,6 @@
-import { Injector, ExceptionFactory, isNullOrUndefined, isString, isUndefined, trim } from "@banquette/core";
+import { ExceptionFactory, Injector } from '@banquette/core';
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
+import { isNullOrUndefined, isString, isUndefined, trim } from "@banquette/utils";
 import { DecoderTag, Events, ResponseTypeAutoDetect } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";

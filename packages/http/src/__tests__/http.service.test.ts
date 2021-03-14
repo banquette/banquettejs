@@ -1,13 +1,7 @@
 import 'reflect-metadata';
-import {
-    Injector,
-    SharedConfiguration,
-    SharedConfigurationSymbol,
-    UsageException,
-    waitForDelay,
-    waitForNextCycle
-} from "@banquette/core";
+import { Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from '@banquette/core';
 import { EventDispatcherService, EventDispatcherServiceSymbol } from "@banquette/event";
+import { waitForDelay, waitForNextCycle } from "@banquette/utils";
 import { XhrAdapter } from "../adapter/xhr.adapter";
 import { HttpConfigurationSymbol } from "../config";
 import { Events, HttpMethod, ResponseTypeAutoDetect } from "../constants";

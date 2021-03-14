@@ -1,5 +1,6 @@
-import { Injector, isNullOrUndefined, isObject, proxy } from "@banquette/core";
+import { Injector } from '@banquette/core';
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
+import { isNullOrUndefined, isObject, proxy } from "@banquette/utils";
 import { inject, injectable } from "inversify";
 import { Events } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";

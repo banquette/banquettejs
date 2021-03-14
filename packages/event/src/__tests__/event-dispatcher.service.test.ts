@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { Injector, waitForDelay } from "@banquette/core";
+import { Injector } from "@banquette/core";
+import { waitForDelay } from "@banquette/utils";
 import { DispatchCallInterface } from "../dispatch-call.interface";
 import { EventArg } from "../event-arg";
 import { EventDispatcherInterface } from "../event-dispatcher.interface";
@@ -208,7 +209,7 @@ async function expectFromDispatch(tracker: SubscribersTracker, event: symbol, ex
 function expectFromDispatchSync(event: symbol, expected: string[]): void {
     try {
         const results: string[] = [];
-        eventDispatcher.dispatch<string>(event, null, true).subscribe((e: DispatchCallInterface<string>) => {
+        eventDispatcher.dispatch<string>(event, null, true).progress((e: DispatchCallInterface<string>) => {
             results.push(e.result);
         });
         expect(results).toStrictEqual(expected);

@@ -112,7 +112,6 @@ export * from './not';
 export * from './proxy';
 export * from './throttle';
 export * from './timeout';
-export * from './var-holder';
 
 /**
  * Extensions

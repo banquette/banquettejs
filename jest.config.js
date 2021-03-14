@@ -12,15 +12,14 @@ module.exports = {
         "@banquette/fingerprint$": "<rootDir>/packages/fingerprint/src/index.ts",
         "@banquette/http$": "<rootDir>/packages/http/src/index.ts",
         "@banquette/log$": "<rootDir>/packages/log/src/index.ts",
+        "@banquette/promise$": "<rootDir>/packages/promise/src/index.ts",
         "@banquette/storage$": "<rootDir>/packages/storage/src/index.ts",
+        "@banquette/utils$": "<rootDir>/packages/utils/src/index.ts",
         "@banquette/utils-base64$": "<rootDir>/packages/utils-base64/src/index.ts",
         "@banquette/utils-color$": "<rootDir>/packages/utils-color/src/index.ts",
         "@banquette/utils-crypto$": "<rootDir>/packages/utils-crypto/src/index.ts",
         "@banquette/utils-easing$": "<rootDir>/packages/utils-easing/src/index.ts",
-        "@banquette/utils-json$": "<rootDir>/packages/utils-json/src/index.ts",
-        "@banquette/vue-core$": "<rootDir>/packages/vue-core/src/index.ts",
-        "@banquette/vue-form$": "<rootDir>/packages/vue-form/src/index.ts",
-        "@banquette/vue-popin$": "<rootDir>/packages/vue-popin/src/index.ts"
+        "@banquette/utils-json$": "<rootDir>/packages/utils-json/src/index.ts"
     },
     "modulePathIgnorePatterns": ["__mocks__", "unused-packages"],
     "unmockedModulePathPatterns": ["<rootDir>/node_modules/"]

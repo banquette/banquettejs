@@ -1,4 +1,5 @@
-import { Injector, isUndefined } from "@banquette/core";
+import { Injector } from "@banquette/core";
+import { isUndefined } from "@banquette/utils";
 import { injectable } from "inversify";
 import { FingerprintGeneratorInvalidScriptException } from "../exception/fingerprint-generator-invalid-script.exception";
 import { FingerprintGeneratorScriptTimeoutException } from "../exception/fingerprint-generator-script-timeout.exception";

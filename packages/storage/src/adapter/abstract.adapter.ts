@@ -1,4 +1,4 @@
-import { ensureNumber, isBoolean, isNumber, isObject, isUndefined } from "@banquette/core";
+import { ensureNumber, isBoolean, isNumber, isObject, isUndefined } from "@banquette/utils";
 import { injectable } from "inversify";
 import { AdapterInterface } from "./adapter.interface";
 

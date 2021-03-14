@@ -1,5 +1,6 @@
-import { Injector, Exception, ExceptionFactory, isNullOrUndefined, noop, UsageException } from "@banquette/core";
+import { Exception, ExceptionFactory, Injector, UsageException } from "@banquette/core";
 import { StorageService, StorageServiceSymbol } from "@banquette/storage";
+import { isNullOrUndefined, noop } from '@banquette/utils';
 import { inject, injectable, multiInject } from "inversify";
 import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";
 import './adapter/fingerprintjs.adapter';

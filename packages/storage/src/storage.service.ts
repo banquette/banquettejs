@@ -1,4 +1,5 @@
-import { Injector, isConstructor, isString, isSymbol, isUndefined, UsageException } from "@banquette/core";
+import { Injector, UsageException } from "@banquette/core";
+import { isConstructor, isString, isSymbol, isUndefined } from "@banquette/utils";
 import { inject, injectable, LazyServiceIdentifer, multiInject } from "inversify";
 import { SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
 import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";

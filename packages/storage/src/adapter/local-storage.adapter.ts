@@ -1,4 +1,5 @@
-import { Injector, isFunction, isObject } from "@banquette/core";
+import { Injector } from "@banquette/core";
+import { isFunction, isObject } from "@banquette/utils";
 import { injectable } from "inversify";
 import { AbstractAdapter } from "./abstract.adapter";
 import { AdapterInterfaceSymbol } from "./adapter.interface";

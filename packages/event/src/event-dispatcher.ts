@@ -1,12 +1,9 @@
-import {
-    ensureArray,
-    ExceptionFactory,
-    getFromSymbolIndex,
-    isNullOrUndefined,
-    isPromiseLike, Not, ObservablePromise, PromiseObserver
-} from "@banquette/core";
+import { ExceptionFactory } from "@banquette/core";
+import { ObservablePromise } from "@banquette/promise";
+import { ensureArray, getFromSymbolIndex, isNullOrUndefined, isPromiseLike, Not } from "@banquette/utils";
 import { injectable } from "inversify";
-import { isType } from "../../core/src/utils/types/is-type";
+import { isType } from "../../utils/src/types/is-type";
+
 import { DispatchCallInterface } from "./dispatch-call.interface";
 import { EventArg } from './event-arg';
 import { EventDispatcherInterface } from "./event-dispatcher.interface";
@@ -79,10 +76,10 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Trigger an event.
      * The promise will resolve when all subscribers have been executed.
      */
-    public dispatch<T = any>(type: symbol, event?: EventArg|null, sync: boolean = false): ObservablePromise<DispatchCallInterface<T>, T[]> {
+    public dispatch<T = any>(type: symbol, event?: EventArg|null, sync: boolean = false): ObservablePromise<T[]> {
         // Forced to assign a new variable because if reassigning "event" the compiler still thinks it can be of type "null" or "undefined".
         const e = !isType<EventArg>(event, Not(isNullOrUndefined)) ? new EventArg() : event;
-        return new ObservablePromise<DispatchCallInterface<T>, T[]>((resolve, reject, progress) => {
+        return new ObservablePromise<T[]>((resolve, reject, progress) => {
             const propagationStoppedTags: symbol[] = [];
             const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
             const results: T[] = [];

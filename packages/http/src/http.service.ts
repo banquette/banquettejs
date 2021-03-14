@@ -1,16 +1,6 @@
-import {
-    Injector,
-    Exception,
-    isNullOrUndefined,
-    isString,
-    noop,
-    Pojo,
-    proxy,
-    SharedConfiguration,
-    SharedConfigurationSymbol,
-    UsageException
-} from "@banquette/core";
+import { Exception, Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from "@banquette/core";
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
+import { isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
 import { inject, injectable } from "inversify";
 import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";

@@ -121,6 +121,10 @@ export const Builds = Object.assign({},
         module: 'BanquetteUtilsBase64'
     }),
     createBuildVariants({
+        package: 'utils',
+        module: 'BanquetteUtils'
+    }),
+    createBuildVariants({
         package: 'utils-easing',
         module: 'BanquetteUtilsEasing'
     }),

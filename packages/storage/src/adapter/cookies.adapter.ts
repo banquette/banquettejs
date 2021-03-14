@@ -1,4 +1,5 @@
-import { Injector, isUndefined, SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
+import { Injector,  SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
+import { isUndefined } from "@banquette/utils";
 import { inject, injectable, LazyServiceIdentifer } from "inversify";
 import { AbstractAdapter } from "./abstract.adapter";
 import { AdapterInterfaceSymbol } from "./adapter.interface";

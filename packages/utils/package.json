@@ -1,0 +1,17 @@
+{
+    "name": "@banquette/utils",
+    "version": "0.0.5",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "directory": "packages/utils"
+    },
+    "license": "Apache-2.0",
+    "main": "dist/index.cjs.prod.js",
+    "module": "build/index.js",
+    "types": "build",
+    "exports": {
+        ".": "./build",
+        "./package.json": "./package.json"
+    }
+}

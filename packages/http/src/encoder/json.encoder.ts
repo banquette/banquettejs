@@ -1,5 +1,6 @@
-import { Injector, isArray, isNullOrUndefined, isObject, UsageException } from "@banquette/core";
+import { Injector, UsageException } from "@banquette/core";
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
+import { isArray, isNullOrUndefined, isObject } from "@banquette/utils";
 import { EncoderTag, Events } from "../constants";
 import { RequestEvent } from "../event/request.event";
 

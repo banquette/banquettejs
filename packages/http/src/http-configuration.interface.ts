@@ -1,4 +1,4 @@
-import { ConstructorFunction } from "@banquette/core";
+import { ConstructorFunction } from "@banquette/utils";
 import { AdapterInterface } from "./adapter/adapter.interface";
 
 /**
