@@ -1,5 +1,5 @@
 import { UsageException } from "@banquette/core";
-import { ConstructorFunction, ensureArray, isPromiseLike, noop, proxy } from "@banquette/utils";
+import { ConstructorFunction, ensureArray, isPromiseLike, isUndefined, noop, proxy } from "@banquette/utils";
 import { isInstanceOf } from "../../utils/src/types/is-instance-of";
 import { isType } from "../../utils/src/types/is-type";
 import { CancelException } from "./exception/cancel.exception";
@@ -114,11 +114,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      */
     public progress<ProgressT = any>(onProgress: (progress: ProgressT) => void,
                                      types: Array<ConstructorFunction<any>> = []): ObservablePromiseInterface<CompleteT> {
-        const promise = this.then((value: CompleteT) => value, undefined, onProgress, types);
-        for (const value of this.progressHistory) {
-            this.dispatch(PromiseEventType.progress, value);
-        }
-        return promise;
+        return this.then((value: CompleteT) => value, undefined, onProgress, types);
     }
 
     /**
@@ -231,7 +227,10 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
             }
         });
         if (this.status !== PromiseStatus.Pending) {
-            this.dispatch(ObservablePromise.EventTypeFromStatus(this.status), this.result);
+            this.dispatch(ObservablePromise.EventTypeFromStatus(this.status), this.result, this.observers.length - 1);
+        }
+        for (const value of this.progressHistory) {
+            this.dispatch(PromiseEventType.progress, value, this.observers.length - 1);
         }
     }
 
@@ -262,8 +261,8 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Dispatch an event to all registered observers.
      */
-    private dispatch(type: PromiseEventType, value: any): void {
-        for (const observer of this.observers) {
+    private dispatch(type: PromiseEventType, value: any, observerIndex?: number): void {
+        const doDispatch = (observer: PromiseObserverInterface<any>) => {
             switch (type) {
                 case PromiseEventType.resolve: {
                     observer.onResolve(value);
@@ -279,6 +278,15 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                     }
                 } break ;
             }
+        }
+        if (isUndefined(observerIndex)) {
+            for (const observer of this.observers) {
+                doDispatch(observer);
+            }
+        } else if (this.observers.length > observerIndex) {
+            doDispatch(this.observers[observerIndex]);
+        } else {
+            throw new UsageException(`Out of bounds observer index (${observerIndex}), ${this.observers.length} observers in array.`);
         }
     }
 
@@ -323,7 +331,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     }
 
     /**
-     * Wait for the first promise to resolve or reject and return and forward the result to the promise returned by the function.
+     * Wait for the first promise to resolve or reject and forward the result to the promise returned by the function.
      * The items of the collection are not forced to be promises, any value can be given, non promise items will resolve immediately.
      */
     public static Any<T = any>(collection: Array<T | ThenableInterface<T>>): ObservablePromiseInterface<T> {
@@ -346,10 +354,9 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     }
 
     /**
-     * Resolve after a given delay in milliseconds.
-     * You can give a value to resolve with as second argument.
+     * Resolve with a given value after a delay in milliseconds.
      */
-    public static Wait<T = any>(delay: number, value?: T): ObservablePromise<T> {
+    public static ResolveAfterDelay<T = any>(delay: number, value?: T): ObservablePromise<T> {
         return new ObservablePromise<T>((resolve: ResolveCallback<T>) => {
             window.setTimeout(() => {
                 resolve(value as T);
@@ -359,9 +366,9 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
 
     /**
      * Ensure the promise is resolved after a minimum amount of time.
-     * If the promise resolve sooner, a timer will wait for the remaining time.
+     * If the promise resolves sooner, a timer will wait for the remaining time.
      */
-    public static MinDelay<T = any>(executor: ExecutorFunction<T>, delay: number): ObservablePromise<T> {
+    public static MinDelay<T = any>(delay: number, executor: ExecutorFunction<T>): ObservablePromise<T> {
         const startTime = (new Date()).getTime();
         return new ObservablePromise<T>((resolve: ResolveCallback<T>, reject: RejectCallback) => {
             const forward = (type: PromiseEventType, result?: any) => {

@@ -82,6 +82,21 @@ describe('Basic implementation', () => {
         });
     });
 
+    test('cancelling a resolved promise does nothing', () => {
+        return new Promise<void>((resolve) => {
+            const onResolve = jest.fn();
+            const onReject = jest.fn();
+            const promise = ObservablePromise.Resolve(10);
+            promise.then(onResolve).catch(onReject);
+            promise.cancel();
+            window.setTimeout(() => {
+                expect(onReject).not.toBeCalled();
+                expect(onResolve).toBeCalledTimes(1);
+                resolve();
+            }, 50);
+        });
+    });
+
     test('is not mutable', () => {
         const start = new ObservablePromise<number>((resolve: ResolveCallback<number>) => {
             resolve(20);
@@ -122,50 +137,114 @@ describe('Basic implementation', () => {
 });
 
 describe('Progression events', () => {
-    const step = 10;
-    const wait = (delay: number): ObservablePromise<any> => {
-        return new ObservablePromise<any>((resolve, reject, progress) => {
-            let i = 0;
-            let intervalId = window.setInterval(() => {
-                i += step;
-                progress(i);
-                if (i >= delay) {
-                    window.clearInterval(intervalId);
-                    resolve('finished!');
+    const defaultStep = 10;
+    const wait = (delay: number, step: number = defaultStep) => {
+        return (new ObservablePromise((resolve, reject, progress) => {
+            let acc = 0;
+            const next = () => {
+                acc += step;
+                if (acc >= delay) {
+                    progress(acc);
+                    return void resolve('Done.');
                 }
-            }, step);
-        });
+                progress(acc);
+                window.setTimeout(next, step);
+            };
+            progress('Starting.');
+            next();
+        }));
     };
 
-    test('receive the correct number of events', () => {
+    test('receives the correct number of events', () => {
         let eventsCount = 0;
-        return wait(300).progress((value) => {
-            expect(value).toEqual(((eventsCount++) + 1) * step);
+        return wait(300).progress((result) => {
+            ++eventsCount;
         }).then(() => {
-            expect(eventsCount).toEqual(30);
+            expect(eventsCount).toEqual(31);
         });
     });
 
     test('resolves normally', () => {
+        let count = 0;
         const startTime = (new Date()).getTime();
         return wait(300).progress((value) => {
-            expect(value).toBeGreaterThan(0);
+            if (++count === 1) {
+                expect(value).toEqual('Starting.');
+            } else {
+                expect(value).toBeGreaterThan(0);
+            }
         }).then((result) => {
             const delta = (new Date()).getTime() - startTime;
             expect(delta).toBeGreaterThanOrEqual(280);
             expect(delta).toBeLessThanOrEqual(320);
-            expect(result).toEqual('finished!');
+            expect(result).toEqual('Done.');
         });
     });
 
     test('works when inverting calls ordering', () => {
         let eventsCount = 0;
         return wait(300).then(() => {
-            expect(eventsCount).toEqual(30);
+            expect(eventsCount).toEqual(31);
         }).progress((value) => {
-            expect(value).toEqual(((eventsCount++) + 1) * step);
+            eventsCount++
+            if (eventsCount === 1) {
+                expect(value).toEqual('Starting.');
+            } else {
+                expect(value).toEqual((eventsCount - 1) * defaultStep);
+            }
         });
     });
+
+    test('replays events', async () => {
+        const expected: any = {
+            t1: ['Done.'],
+            t2: ['Done.'],
+            t3: ['Done.'],
+            p1: ['Starting.', 30, 60],
+            p2: ['Starting.', 30, 60],
+        };
+        const stack: any = {};
+        const register = (index: string) => {
+            stack[index] = [];
+            return (value: any) => void stack[index].push(value);
+        };
+        return new Promise<void>((resolve) => {
+            const promise = wait(60, 30);
+            promise.then(register('t1')).progress(register('p1'));
+            window.setTimeout(() => {
+                promise.progress(register('p2')).then(register('t2'));
+                window.setTimeout(() => {
+                    promise.then(register('t3'));
+                    window.setTimeout(() => {
+                        expect(stack).toStrictEqual(expected);
+                        resolve();
+                    });
+                }, 100);
+            }, 100);
+            return promise;
+        });
+    });
+
+    test('replays events after resolve', async () => {
+        const expected: any[] = ['Starting.', 30, 60, 'Done.'];
+        const stack: any[] = [];
+        const register = (value: any) => void stack.push(value);
+        return new Promise<void>((resolve, reject) => {
+            const promise = wait(60, 30);
+            promise.then(() => {
+                promise.progress(register).then(register).then(() => {
+                    try {
+                        expect(stack).toStrictEqual(expected);
+                        resolve();
+                    } catch (e) {
+                        reject(e);
+                    }
+                });
+            })
+            return promise;
+        });
+    });
+
 });
 
 describe('ObservablePromise.All', () => {
@@ -192,10 +271,10 @@ describe('ObservablePromise.All', () => {
 describe('ObservablePromise.Any', () => {
     test('resolves the first value', () => {
         return ObservablePromise.Any<number>([
-            ObservablePromise.Resolve(1),
             new ObservablePromise((resolve: ResolveCallback<number>) => {
                 window.setTimeout(resolve, 15);
             }),
+            ObservablePromise.Resolve(1),
         ]).then((result: number) => {
             expect(result).toBe(1);
         });
@@ -213,15 +292,15 @@ describe('ObservablePromise.Any', () => {
     });
 });
 
-describe('ObservablePromise.Wait', () => {
+describe('ObservablePromise.ResolveAfterDelay', () => {
     test('waits for the given amount of milliseconds before resolving (async / await)', async () => {
         const startTime = (new Date()).getTime();
-        await ObservablePromise.Wait(500);
+        await ObservablePromise.ResolveAfterDelay(500);
         expect((new Date()).getTime() - startTime).toBeGreaterThanOrEqual(480 /* because timeout is not reliable at the ms */ );
         expect((new Date()).getTime() - startTime).toBeLessThanOrEqual(520 /* because timeout is not reliable at the ms */ );
     });
     test('returns the correct value', async () => {
-        const result = await ObservablePromise.Wait(400, 'test');
+        const result = await ObservablePromise.ResolveAfterDelay(400, 'test');
         expect(result).toEqual('test');
     });
 });
@@ -229,21 +308,21 @@ describe('ObservablePromise.Wait', () => {
 describe('ObservablePromise.MinDelay', () => {
     test('waits the min delay when the processing is shorter', async () => {
         const startTime = (new Date()).getTime();
-        await ObservablePromise.MinDelay((resolve) => {
+        await ObservablePromise.MinDelay<void>(200, (resolve) => {
             window.setTimeout(() => {
-                resolve(0);
+                resolve();
             }, 50);
-        }, 200);
+        });
         expect((new Date()).getTime() - startTime).toBeGreaterThanOrEqual(150 /* because timeout is not reliable at the ms */ );
     });
 
     test('do not wait if the processing is longer', async () => {
         const startTime = (new Date()).getTime();
-        await ObservablePromise.MinDelay((resolve) => {
+        await ObservablePromise.MinDelay(100, (resolve) => {
             window.setTimeout(() => {
                 resolve(0);
             }, 200);
-        }, 100);
+        });
         expect((new Date()).getTime() - startTime).toBeGreaterThanOrEqual(180 /* because timeout is not reliable at the ms */ );
         expect((new Date()).getTime() - startTime).toBeLessThanOrEqual(220 /* because timeout is not reliable at the ms */ );
     });
