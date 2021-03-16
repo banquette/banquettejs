@@ -1,4 +1,5 @@
 import { UsageException } from "@banquette/core";
+import { ObservablePromise } from "@banquette/promise";
 import { proxy } from "@banquette/utils";
 import { injectable } from "inversify";
 import { NetworkException } from "../exception/network.exception";
@@ -13,13 +14,14 @@ export class XhrAdapter implements AdapterInterface {
     private xhr!: XMLHttpRequest;
     private promiseResolve!: (value: any) => void;
     private promiseReject!: (reason?: any) => void;
+    private promiseProgress!: (value?: any) => void;
     private canceled: boolean = false;
 
     /**
      * @inheritDoc
      */
-    public execute(request: AdapterRequest): Promise<AdapterResponse> {
-        return new Promise<any>((resolve, reject) => {
+    public execute(request: AdapterRequest): ObservablePromise<AdapterResponse> {
+        return new ObservablePromise<any>((resolve, reject, progress) => {
             if (this.xhr) {
                 return void reject(new UsageException(
                     'An XHR object is already defined.' +
@@ -30,12 +32,14 @@ export class XhrAdapter implements AdapterInterface {
 
             this.promiseResolve = resolve;
             this.promiseReject = reject;
+            this.promiseProgress = progress;
 
             // Bind
             this.xhr.onabort = proxy(this.onAbort, this);
             this.xhr.onerror = proxy(this.onError, this);
             this.xhr.onload = proxy(this.onComplete, this);
             this.xhr.ontimeout = proxy(this.onTimeout, this);
+            this.xhr.onprogress = proxy(this.onProgress, this);
 
             // Configure
             this.xhr.open(request.method, request.url, true);
@@ -84,6 +88,13 @@ export class XhrAdapter implements AdapterInterface {
      */
     private onError(): void {
         this.promiseReject(new NetworkException());
+    }
+
+    /**
+     * Called when and error occurred at the network level (the transaction failed).
+     */
+    private onProgress(): void {
+        this.promiseProgress();
     }
 
     /**

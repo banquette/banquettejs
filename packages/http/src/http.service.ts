@@ -1,5 +1,6 @@
 import { Exception, Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from "@banquette/core";
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
+import { ObservablePromise } from "@banquette/promise";
 import { isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
 import { inject, injectable } from "inversify";
 import { AdapterRequest } from "./adapter/adapter-request";
@@ -129,7 +130,7 @@ export class HttpService {
         const response = new HttpResponse<T>(request);
         request.setResponse(response);
         response.setStatus(HttpResponseStatus.Pending);
-        response.promise = new Promise<HttpResponse<T>>((resolve, reject) => {
+        response.promise = new ObservablePromise<HttpResponse<T>>((resolve, reject) => {
             this.queueRequest<T>(
                 request,
                 response,

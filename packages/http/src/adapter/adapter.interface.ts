@@ -1,3 +1,4 @@
+import { ObservablePromise } from "@banquette/promise";
 import { AdapterRequest } from "./adapter-request";
 import { AdapterResponse } from "./adapter-response";
 
@@ -8,7 +9,7 @@ export interface AdapterInterface {
     /**
      * Execute a request.
      */
-    execute(request: AdapterRequest): Promise<AdapterResponse>;
+    execute(request: AdapterRequest): ObservablePromise<AdapterResponse>;
 
     /**
      * Cancel the request.

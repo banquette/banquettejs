@@ -1,3 +1,4 @@
+import { ObservablePromise } from "@banquette/promise";
 import { HttpResponseStatus } from "./constants";
 import { NetworkException } from "./exception/network.exception";
 import { RequestException } from "./exception/request.exception";
@@ -68,7 +69,7 @@ export class HttpResponse<T> {
      * The promise from the Http service.
      * Will resolve (or reject) depending on the status of the request.
      */
-    public promise: Promise<HttpResponse<T>>|null = null;
+    public promise: ObservablePromise<HttpResponse<T>>|null = null;
 
     /**
      * The request associated with the response.
