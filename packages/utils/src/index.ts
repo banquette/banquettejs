@@ -43,6 +43,9 @@ export * from './types/ensure-object';
 export * from './types/ensure-string';
 export * from './types/ensure-same-type';
 
+export * from './types/is-instance-of';
+export * from './types/is-type';
+
 /**
  * String
  */

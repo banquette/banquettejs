@@ -1,7 +1,14 @@
 import { UsageException } from "@banquette/core";
-import { ConstructorFunction, ensureArray, isPromiseLike, isUndefined, noop, proxy } from "@banquette/utils";
-import { isInstanceOf } from "../../utils/src/types/is-instance-of";
-import { isType } from "../../utils/src/types/is-type";
+import {
+    ConstructorFunction,
+    ensureArray,
+    isInstanceOf,
+    isPromiseLike,
+    isType,
+    isUndefined,
+    noop,
+    proxy
+} from "@banquette/utils";
 import { CancelException } from "./exception/cancel.exception";
 import { TimeoutException } from "./exception/timeout.exception";
 import { ObservablePromiseInterface } from "./observable-promise.interface";

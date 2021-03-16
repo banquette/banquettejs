@@ -1,9 +1,7 @@
 import { ExceptionFactory } from "@banquette/core";
 import { ObservablePromise } from "@banquette/promise";
-import { ensureArray, getFromSymbolIndex, isNullOrUndefined, isPromiseLike, Not } from "@banquette/utils";
+import { ensureArray, getFromSymbolIndex, isNullOrUndefined, isPromiseLike, isType, Not } from "@banquette/utils";
 import { injectable } from "inversify";
-import { isType } from "../../utils/src/types/is-type";
-
 import { DispatchCallInterface } from "./dispatch-call.interface";
 import { EventArg } from './event-arg';
 import { EventDispatcherInterface } from "./event-dispatcher.interface";
