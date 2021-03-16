@@ -16,5 +16,6 @@ export * from './error/stop.exception';
 export * from './error/system.exception';
 export * from './error/usage.exception';
 export * from './error/type/not-implemented.exception';
+export * from './error/type/io.exception';
 
 export * from './var-holder';
