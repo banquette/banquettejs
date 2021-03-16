@@ -168,9 +168,16 @@ export function filterBuilds(builds, filter) {
     }
     const filters = filter.split(',').map((e) => new RegExp(e));
     return Object.keys(builds)
-        .filter(key => filters.includes(key))
+        .filter((key) => {
+            for (const filter of filters) {
+                if (key.match(filter)) {
+                    return true;
+                }
+            }
+            return false;
+        })
         .reduce((obj, key) => {
-            obj[key] = raw[key];
+            obj[key] = builds[key];
             return obj;
         }, {});
 }
