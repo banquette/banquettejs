@@ -1,6 +1,6 @@
 import { isUndefined } from "@banquette/utils";
 import { HttpMethod, ResponseTypeAutoDetect } from "./constants";
-import { PayloadTypeJson } from "./encoder/json.encoder";
+import { PayloadTypeFormData } from "./encoder/form-data.encoder";
 import { HttpRequest } from "./http-request";
 
 export class HttpRequestFactory {
@@ -21,7 +21,7 @@ export class HttpRequestFactory {
             input.method || HttpMethod.GET,
             input.url,
             !isUndefined(input.payload) ? input.payload : null,
-            input.payloadType || PayloadTypeJson,
+            input.payloadType || PayloadTypeFormData,
             input.responseType || ResponseTypeAutoDetect,
             input.headers || {},
             !isUndefined(input.timeout) ? input.timeout : 30000,

@@ -7,7 +7,6 @@ import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
 import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";
 import { Events, HttpMethod, HttpResponseStatus, ResponseTypeAutoDetect } from "./constants";
-import { ResponseTypeJson } from "./decoder/json.decoder";
 import { PayloadTypeJson } from "./encoder/json.encoder";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 import { RequestEvent } from "./event/request.event";
@@ -56,7 +55,6 @@ export class HttpService {
             .method(HttpMethod.GET)
             .url(url)
             .headers(headers)
-            .responseType(ResponseTypeJson)
             .getRequest()
         );
     }
@@ -68,8 +66,7 @@ export class HttpService {
         return this.send(this.build()
             .method(HttpMethod.POST)
             .url(url)
-            .payload(body, PayloadTypeJson)
-            .responseType(ResponseTypeJson)
+            .payload(body)
             .headers(headers)
             .getRequest()
         );
@@ -82,8 +79,7 @@ export class HttpService {
         return this.send(this.build()
             .method(HttpMethod.PUT)
             .url(url)
-            .payload(body, PayloadTypeJson)
-            .responseType(ResponseTypeJson)
+            .payload(body)
             .headers(headers)
             .getRequest()
         );
@@ -96,7 +92,6 @@ export class HttpService {
         return this.send(this.build()
             .method(HttpMethod.DELETE)
             .url(url)
-            .responseType(ResponseTypeJson)
             .headers(headers)
             .getRequest()
         );

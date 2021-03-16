@@ -30,9 +30,6 @@ export enum HttpResponseStatus {
  * @see interceptors/json.interceptor.ts
  * @see interceptors/xml.interceptor.ts
  */
-// Request
-export const PayloadTypeText         = Symbol('text');
-
 // Response
 export const ResponseTypeText        = Symbol('text');   // string
 export const ResponseTypeHtml        = Symbol('html');   // string

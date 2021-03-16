@@ -10,7 +10,9 @@ export * from './adapter/xhr.adapter';
  * Encoding / decoding
  */
 export * from './decoder/json.decoder';
+export * from './encoder/form-data.encoder';
 export * from './encoder/json.encoder';
+export * from './encoder/raw.encoder';
 
 /**
  * Events

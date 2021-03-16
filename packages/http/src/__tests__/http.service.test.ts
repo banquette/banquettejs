@@ -6,6 +6,7 @@ import { XhrAdapter } from "../adapter/xhr.adapter";
 import { HttpConfigurationSymbol } from "../config";
 import { Events, HttpMethod, ResponseTypeAutoDetect } from "../constants";
 import { ResponseTypeJson } from "../decoder/json.decoder";
+import { PayloadTypeFormData } from "../encoder/form-data.encoder";
 import { PayloadTypeJson } from "../encoder/json.encoder";
 import { RequestEvent } from "../event/request.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";
@@ -95,7 +96,7 @@ describe('requests forgery', () => {
         })).toStrictEqual(HttpRequestFactory.Create({
             method: HttpMethod.GET,
             url: '//test',
-            payloadType: PayloadTypeJson,
+            payloadType: PayloadTypeFormData,
             responseType: ResponseTypeAutoDetect,
             headers: {},
             payload: null,
@@ -118,9 +119,9 @@ describe('requests forgery', () => {
 });
 
 /**
- * Successful requests
+ * Responses
  */
-describe('successful requests', () => {
+describe('responses', () => {
     test(`JSON response (no XSSI prefix, no headers, no response type)`, async () => {
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson'})

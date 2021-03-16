@@ -1,7 +1,7 @@
 import { UsageException } from "@banquette/core";
 import { extend, isUndefined } from "@banquette/utils";
 import { HttpMethod, ResponseTypeAutoDetect } from "./constants";
-import { PayloadTypeJson } from "./encoder/json.encoder";
+import { PayloadTypeFormData } from "./encoder/form-data.encoder";
 import { HttpRequest } from "./http-request";
 import { HttpRequestFactory } from "./http-request.factory";
 
@@ -9,7 +9,7 @@ export class HttpRequestBuilder {
     private _method: HttpMethod = HttpMethod.GET;
     private _url!: string;
     private _payload: any = null;
-    private _payloadType: symbol = PayloadTypeJson;
+    private _payloadType: symbol = PayloadTypeFormData;
     private _responseType: symbol = ResponseTypeAutoDetect;
     private _headers: Record<string, string> = {};
     private _timeout: number = 30000;
