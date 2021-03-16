@@ -13,6 +13,7 @@ export class HttpRequestBuilder {
     private _responseType: symbol = ResponseTypeAutoDetect;
     private _headers: Record<string, string> = {};
     private _timeout: number = 30000;
+    private _mimeType: string|null = null;
     private _extras: Record<string, any> = {};
 
     /**
@@ -107,6 +108,14 @@ export class HttpRequestBuilder {
     }
 
     /**
+     * Set the mime type of the payload.
+     */
+    public mimeType(mimeType: string|null): HttpRequestBuilder {
+        this._mimeType = mimeType;
+        return this;
+    }
+
+    /**
      * Replace the current extra object by the one in parameter.
      * No copy is made so the actual reference you give will be stored in the request.
      */
@@ -139,6 +148,7 @@ export class HttpRequestBuilder {
             responseType: this._responseType,
             headers: this._headers,
             timeout: this._timeout,
+            mimeType: this._mimeType,
             extras: this._extras
         });
     }

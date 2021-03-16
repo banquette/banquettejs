@@ -67,7 +67,7 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
             this.timeout = config.timeout;
             changeState.apply(this, [1]);
         },
-        send: function(params: any) {
+        send: function(payload: any) {
             const that = this;
             if (aborted) {
                 return ;

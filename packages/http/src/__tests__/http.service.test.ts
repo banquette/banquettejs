@@ -101,7 +101,8 @@ describe('requests forgery', () => {
             headers: {},
             payload: null,
             extras: {},
-            timeout: 30000
+            timeout: 30000,
+            mimeType: null
         }));
     });
 
@@ -115,6 +116,41 @@ describe('requests forgery', () => {
         expect(() => {
             requestBuilder.getRequest();
         }).toThrow(UsageException);
+    });
+});
+
+/**
+ * Payloads
+ */
+describe('payloads', () => {
+    let lastPayload: any = null;
+    let unsubscribeMethods: any[] = [];
+
+    beforeAll(() => {
+        unsubscribeMethods.push(eventDispatcher.subscribe(Events.BeforeRequest, (event: RequestEvent) => {
+            lastPayload = event.request.payload;
+        }, -1024 /* Very low priority and not tag to ensure being called last */));
+    });
+
+    afterAll(() => {
+        for (const unsub of unsubscribeMethods) {
+            unsub();
+        }
+    });
+
+    test(`POST request with FormData`, async () => {
+        const payload = {'test': '2'};
+        const response = http.send(HttpRequestFactory.Create({
+            url: buildTestUrl({responseKey: 'PayloadAsJson'}),
+            payload
+        }));
+        await response.promise;
+        expect(lastPayload).toBeInstanceOf(FormData);
+        const obj: Record<string, any>   = {};
+        (lastPayload as FormData).forEach((value, key) => {
+            obj[key] = value;
+        });
+        expect(obj).toStrictEqual(payload);
     });
 });
 
@@ -239,6 +275,14 @@ describe('failures', () => {
             payload: '<p>Test</p>'
         }));
         await expect(response.promise).rejects.toMatchObject({error: expect.any(UsageException)});
+    });
+    test(`timeout request doesn\'t retry`, async () => {
+        const start = (new Date()).getTime();
+        const response = http.send(HttpRequestFactory.Create({
+            url: buildTestUrl({timeout: 100, delay: 1000})
+        }));
+        await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestTimeoutException)});
+        expect((new Date()).getTime() - start).toBeLessThan(150 /* meaning 1 try */);
     });
 })
 

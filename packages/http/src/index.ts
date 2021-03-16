@@ -11,6 +11,7 @@ export * from './adapter/xhr.adapter';
  */
 export * from './decoder/json.decoder';
 export * from './encoder/form-data.encoder';
+export * from './encoder/file.encoder';
 export * from './encoder/json.encoder';
 export * from './encoder/raw.encoder';
 

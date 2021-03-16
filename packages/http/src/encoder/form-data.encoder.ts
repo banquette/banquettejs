@@ -13,7 +13,6 @@ function onBeforeRequest(event: RequestEvent) {
     if (event.request.payloadType !== PayloadTypeFormData) {
         return ;
     }
-    debugger;
     event.stopPropagation();
     if (event.request.tryCount || isNullOrUndefined(event.request.payload)) {
         return ;
@@ -21,11 +20,24 @@ function onBeforeRequest(event: RequestEvent) {
     if (!isObject(event.request.payload)) {
         throw new UsageException('An object is expected as input to encode the payload as FormData.');
     }
-    const formData = new FormData();
-    for (const key of Object.keys(event.request.payload)) {
-        const value = event.request.payload[key];
-        // TODO: handle file name with the 3rd parameter (required in IE 10).
-        formData.append(key, value);
+    if (event.request.payload instanceof HTMLFormElement) {
+        event.request.payload = new FormData(event.request.payload);
+    } else if (event.request.payload instanceof HTMLInputElement && !isNullOrUndefined(event.request.payload.files)) {
+        const formData = new FormData();
+        for (let i = 0; i < event.request.payload.files.length; ++i) {
+            const file: File|null = event.request.payload.files.item(i);
+            if (file) {
+                formData.append(`files${event.request.payload.multiple ? '[]' : ''}`, file, file.name);
+            }
+        }
+        event.request.payload = formData;
+    } else {
+        const formData = new FormData();
+        for (const key of Object.keys(event.request.payload)) {
+            const value = event.request.payload[key];
+            formData.append(key, value);
+        }
+        event.request.payload = formData;
     }
 }
 Injector.Get<EventDispatcherInterface>(EventDispatcherServiceSymbol).subscribe<RequestEvent>(

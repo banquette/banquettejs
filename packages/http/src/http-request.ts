@@ -34,6 +34,7 @@ export class HttpRequest {
      * @param responseType  Format of the response.
      * @param headers       Additional headers to send with the request.
      * @param timeout       Maximum duration of the request (in milliseconds)
+     * @param mimeType      MimeType of the payload
      * @param extras        Any additional data you want to associated with the request.
      *                      This object will not be sent with the request.
      */
@@ -44,6 +45,7 @@ export class HttpRequest {
                        public responseType: symbol,
                        public headers: Record<string, string>,
                        public timeout: number,
+                       public mimeType: string|null,
                        public extras: Record<string, any>) {
 
     }

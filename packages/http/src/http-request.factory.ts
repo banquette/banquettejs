@@ -15,6 +15,7 @@ export class HttpRequestFactory {
         responseType?: symbol,
         headers?: any,
         timeout?: number,
+        mimeType?: string|null,
         extras?: any
     }): HttpRequest {
         return new HttpRequest(
@@ -25,6 +26,7 @@ export class HttpRequestFactory {
             input.responseType || ResponseTypeAutoDetect,
             input.headers || {},
             !isUndefined(input.timeout) ? input.timeout : 30000,
+            input.mimeType || null,
             input.extras || {}
         );
     }

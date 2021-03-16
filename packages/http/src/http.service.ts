@@ -13,6 +13,7 @@ import { RequestEvent } from "./event/request.event";
 import { ResponseEvent } from "./event/response.event";
 import { AuthenticationException } from "./exception/authentication.exception";
 import { NetworkException } from "./exception/network.exception";
+import { RequestTimeoutException } from "./exception/request-timeout.exception";
 import { RequestException } from "./exception/request.exception";
 import { HttpRequest } from "./http-request";
 import { HttpRequestBuilder } from "./http-request.builder";
@@ -111,6 +112,7 @@ export class HttpService {
             ResponseTypeAutoDetect,
             headers,
             -1,
+            null,
             {}
         ));
     }
@@ -147,6 +149,7 @@ export class HttpService {
             return void this.removeFromQueue(queuedRequest);
         }
         try {
+            queuedRequest.triesLeft--;
             const adapter = Injector.Get<AdapterInterface>(AdapterInterfaceSymbol);
             if (!queuedRequest.tryCount) {
                 queuedRequest.request.setAdapter(adapter);
@@ -195,8 +198,7 @@ export class HttpService {
      * Do what needs to be done after a request failed on the network level.
      */
     private handleRequestFailure(queuedRequest: QueuedRequestInterface<any>, error: Exception): void {
-        if (error instanceof NetworkException && queuedRequest.triesLeft > 0) {
-            queuedRequest.triesLeft--;
+        if (error instanceof NetworkException && !(error instanceof RequestTimeoutException) && queuedRequest.triesLeft > 0) {
             queuedRequest.isExecuting = false;
             this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(queuedRequest.request));
             this.processQueue();

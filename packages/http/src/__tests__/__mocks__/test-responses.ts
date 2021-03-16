@@ -41,5 +41,10 @@ export const TestResponses: Record<string, TestResponse> = {
     </body>
 </html>`
 }),
-    ServerError: createResponse({status: 500, content: '{"message": "Test error."}'})
+    ServerError: createResponse({status: 500, content: '{"message": "Test error."}'}),
+    /**
+     * Special type of response, setting "__payload__" as content is recognized by the mocked adapter
+     * to return the input payload as response. Used to test the payload transfer and encoding.
+     */
+    PayloadAsJson: createResponse({content: '__payload__'})
 };
