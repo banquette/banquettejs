@@ -113,6 +113,10 @@ export const Builds = Object.assign({},
         module: 'BanquetteHttp'
     }),
     createBuildVariants({
+        package: 'promise',
+        module: 'BanquettePromise'
+    }),
+    createBuildVariants({
         package: 'storage',
         module: 'BanquetteStorage'
     }),

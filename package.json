@@ -18,7 +18,8 @@
         "build:changelog": "node scripts/generate-changelog.js",
         "test": "npm run clean && jest --passWithNoTests",
         "release": "bash scripts/release.sh",
-        "release:local": "bash scripts/release-local.sh"
+        "release:local": "bash scripts/release-local.sh",
+        "copy:local": "node scripts/copy-locally.mjs"
     },
     "dependencies": {
         "inversify": "^5.0.5",
