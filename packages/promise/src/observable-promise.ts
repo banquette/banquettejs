@@ -316,6 +316,26 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     }
 
     /**
+     * Create a resolved promise.
+     *
+     * This method is only here to comply to the Promises/A+ specification.
+     * All static methods normally start with an uppercase letter in Banquette.
+     */
+    public static resolve<T>(value: T | ThenableInterface<T>): ObservablePromise<T> {
+        return ObservablePromise.Resolve(value);
+    }
+
+    /**
+     * Create a rejected promise.
+     *
+     * This method is only here to comply to the Promises/A+ specification.
+     * All static methods normally start with an uppercase letter in Banquette.
+     */
+    public static reject<T>(reason: any): ObservablePromise<T> {
+        return ObservablePromise.Reject(reason);
+    }
+
+    /**
      * Wait for all entries of the collection to resolve and resolve with an array of the results.
      * The items of the collection are not forced to be promises, any value can be given.
      */
