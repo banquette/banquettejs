@@ -20,6 +20,9 @@ export * from './encoder/raw.encoder';
  */
 export * from './event/network-availability-change.event';
 export * from './event/request.event';
+export * from './event/request-progress.event';
+export * from './event/status-change.event';
+export * from './event/transfer-progress.event';
 export * from './event/response.event';
 
 /**

@@ -9,6 +9,7 @@ import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.inte
 import { Events, HttpMethod, HttpResponseStatus, ResponseTypeAutoDetect } from "./constants";
 import { PayloadTypeJson } from "./encoder/json.encoder";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
+import { RequestProgressEvent } from "./event/request-progress.event";
 import { RequestEvent } from "./event/request.event";
 import { ResponseEvent } from "./event/response.event";
 import { AuthenticationException } from "./exception/authentication.exception";
@@ -127,13 +128,14 @@ export class HttpService {
         const response = new HttpResponse<T>(request);
         request.setResponse(response);
         response.setStatus(HttpResponseStatus.Pending);
-        response.promise = new ObservablePromise<HttpResponse<T>>((resolve, reject) => {
+        response.promise = new ObservablePromise<HttpResponse<T>>((resolve, reject, progress) => {
             this.queueRequest<T>(
                 request,
                 response,
                 0,
                 resolve,
-                reject
+                reject,
+                progress
             );
         });
         return response;
@@ -163,7 +165,9 @@ export class HttpService {
             }
             queuedRequest.tryCount++;
             queuedRequest.request.incrementTryCount();
-            const adapterResponse: AdapterResponse = await adapter.execute(queuedRequest.request as AdapterRequest);
+            const adapterPromise: ObservablePromise = adapter.execute(queuedRequest.request as AdapterRequest);
+            adapterPromise.progress(queuedRequest.progress);
+            const adapterResponse: AdapterResponse = await adapterPromise;
             await this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest));
             this.handleRequestResponse(adapterResponse, queuedRequest);
         } catch (e) {
@@ -244,7 +248,8 @@ export class HttpService {
                             response: HttpResponse<T>,
                             executeAt: number,
                             resolve: (response: HttpResponse<T>) => void,
-                            reject: (response: HttpResponse<T>) => void): void {
+                            reject: (response: HttpResponse<T>) => void,
+                            progress: (value: RequestProgressEvent) => void): void {
         this.networkWatcher.watch();
         this.requestsQueue.push({
             request,
@@ -254,6 +259,7 @@ export class HttpService {
             executeAt,
             resolve,
             reject,
+            progress,
             isExecuting: false,
             isError: false,
             response

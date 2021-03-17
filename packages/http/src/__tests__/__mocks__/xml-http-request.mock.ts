@@ -1,5 +1,6 @@
 import { UsageException } from "@banquette/core";
-import { ensureSameType, isFunction, isObject, isString, randomInt } from "@banquette/utils";
+import { EventDispatcher } from "@banquette/event";
+import { ensureSameType, isFunction, isObject, isString, isUndefined, randomInt } from "@banquette/utils";
 import { base64decodeUrlSafe } from "@banquette/utils-base64";
 import { XSSIPrefix } from "../../decoder/json.decoder";
 import { httpStatusToText } from "../../utils";
@@ -19,6 +20,17 @@ const configStates: Record<number, ConfigState> = {};
 // @ts-ignore
 window.XMLHttpRequest = jest.fn().mockImplementation(() => {
     let aborted: boolean = false;
+    let eventsSymbols: Record<string, symbol> = {};
+    const eventDispatcher = new EventDispatcher();
+    const subscribe = (event: string, callback: any) => {
+        if (isUndefined(eventsSymbols[event])) {
+            eventsSymbols[event] = Symbol(event);
+        }
+        eventDispatcher.subscribe(eventsSymbols[event], callback);
+    };
+    const dispatch = (event: string, eventArg: any) => {
+        eventDispatcher.dispatch(eventsSymbols[event], eventArg);
+    };
     const config: XhrConfig = {
         id: -1,
         url: '',
@@ -49,6 +61,14 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
         return configStates[id] || defaultState;
     };
     return {
+        addEventListener: (eventName: string, callback: any) => {
+            subscribe(eventName, callback);
+        },
+        upload: {
+            addEventListener: (eventName: string, callback: any) => {
+                subscribe('upload.'+eventName, callback);
+            }
+        },
         open: function(method: string, url: string) {
             const urlParams = new URLSearchParams(url.indexOf('?') > -1 ? url.substring(url.indexOf('?') + 1) : '');
             for (const key of Object.keys(config)) {
@@ -80,9 +100,7 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                 }
                 // If we've reached the timeout.
                 if ((new Date()).getTime() - startTime >= config.timeout) {
-                    if (isFunction(that.ontimeout)) {
-                        that.ontimeout();
-                    }
+                    dispatch('timeout', null);
                     return ;
                 }
                 if (config.networkError > 0) {
@@ -90,9 +108,7 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                     if (configState.networkErrorsLeft > 0) {
                         configState.networkErrorsLeft--;
                         saveConfigState(config.id, configState);
-                        if (isFunction(that.onerror)) {
-                            that.onerror();
-                        }
+                        dispatch('error', null);
                         return;
                     }
                 }
@@ -104,14 +120,12 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                     (that as any).responseText = (config.XSSISafe ? XSSIPrefix : '') + response.content;
                 }
                 that.statusText = httpStatusToText(that.status);
-                if (isFunction(that.onload)) {
-                    that.onload();
-                }
+                dispatch('load', null);
             }, Math.min(config.timeout * 1.1 /* To ensure the timeout isn't called too soon when we want to reach the timeout. */, config.delay));
         },
         abort: function() {
             aborted = true;
-            this.onabort();
+            dispatch('abort', null);
         },
         getAllResponseHeaders: () => {
             const headersObj = isObject(config.headers) ? config.headers : ((config.responseKey) ? (TestResponses[config.responseKey as any].headers || {}) : {}) as any;

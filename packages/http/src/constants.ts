@@ -21,6 +21,34 @@ export enum HttpResponseStatus {
 }
 
 /**
+ * Progress status of a request.
+ * Used by progression events only.
+ */
+export enum HttpRequestProgressStatus {
+    /**
+     * The request is preparing to execute.
+     */
+    Preparing,
+
+    /**
+     * The body of the request is uploading to the server.
+     */
+    Uploading,
+
+    /**
+     * The response from the server is downloading.
+     */
+    Downloading,
+
+    /**
+     * The request is closed.
+     * This status only inform there is no network activity for this request anymore, it can have succeeded or failed.
+     * The response object contains the details of what happened.
+     */
+    Closed
+}
+
+/**
  * Payloads & responses types.
  * Simply constants are used instead of enums so it's easy to extend externally.
  *

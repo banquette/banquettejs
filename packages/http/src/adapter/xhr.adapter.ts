@@ -1,10 +1,14 @@
 import { UsageException } from "@banquette/core";
 import { ObservablePromise } from "@banquette/promise";
-import { proxy } from "@banquette/utils";
+import { isUndefined, proxy } from "@banquette/utils";
 import { injectable } from "inversify";
+import { HttpRequestProgressStatus } from "../constants";
+import { StatusChangeEvent } from "../event/status-change.event";
+import { TransferProgressEvent } from "../event/transfer-progress.event";
 import { NetworkException } from "../exception/network.exception";
 import { RequestCanceledException } from "../exception/request-canceled.exception";
 import { RequestTimeoutException } from "../exception/request-timeout.exception";
+import { HttpRequest } from "../http-request";
 import { AdapterRequest } from "./adapter-request";
 import { AdapterResponse } from "./adapter-response";
 import { AdapterInterface } from "./adapter.interface";
@@ -12,9 +16,11 @@ import { AdapterInterface } from "./adapter.interface";
 @injectable()
 export class XhrAdapter implements AdapterInterface {
     private xhr!: XMLHttpRequest;
+    private request!: HttpRequest;
     private promiseResolve!: (value: any) => void;
     private promiseReject!: (reason?: any) => void;
     private promiseProgress!: (value?: any) => void;
+    private requestProgressStatus!: HttpRequestProgressStatus;
     private canceled: boolean = false;
 
     /**
@@ -28,18 +34,26 @@ export class XhrAdapter implements AdapterInterface {
                     'You must create a new instance of the adapter for each request.'
                 ));
             }
-            this.xhr = new XMLHttpRequest();
-
+            // Init
+            this.request = request as HttpRequest;
             this.promiseResolve = resolve;
             this.promiseReject = reject;
             this.promiseProgress = progress;
+            this.updateProgressStatus(HttpRequestProgressStatus.Preparing);
+
+            // Create xhr
+            this.xhr = new XMLHttpRequest();
 
             // Bind
-            this.xhr.onabort = proxy(this.onAbort, this);
-            this.xhr.onerror = proxy(this.onError, this);
-            this.xhr.onload = proxy(this.onComplete, this);
-            this.xhr.ontimeout = proxy(this.onTimeout, this);
-            this.xhr.onprogress = proxy(this.onProgress, this);
+            this.xhr.addEventListener('abort', proxy(this.onAbort, this));
+            this.xhr.addEventListener('error', proxy(this.onError, this));
+            this.xhr.addEventListener('load', proxy(this.onComplete, this));
+            this.xhr.addEventListener('timeout', proxy(this.onTimeout, this));
+            this.xhr.addEventListener('progress', proxy(this.onProgress, this));
+
+            this.xhr.upload.addEventListener('loadstart', proxy(this.onProgress, this));
+            this.xhr.upload.addEventListener('progress', proxy(this.onProgress, this));
+            this.xhr.upload.addEventListener('load', proxy(this.onProgress, this));
 
             // Configure
             this.xhr.open(request.method, request.url, true);
@@ -77,6 +91,7 @@ export class XhrAdapter implements AdapterInterface {
      * The server could still be on error, this only means the network request succeeded.
      */
     private onComplete(): void {
+        this.updateProgressStatus(HttpRequestProgressStatus.Closed);
         this.promiseResolve(new AdapterResponse(
             this.xhr.status,
             this.xhr.responseURL,
@@ -90,20 +105,36 @@ export class XhrAdapter implements AdapterInterface {
      * Called when and error occurred at the network level (the transaction failed).
      */
     private onError(): void {
+        this.updateProgressStatus(HttpRequestProgressStatus.Closed);
         this.promiseReject(new NetworkException());
     }
 
     /**
      * Called when and error occurred at the network level (the transaction failed).
      */
-    private onProgress(): void {
-        this.promiseProgress();
+    private onProgress(event: ProgressEvent): void {
+        if (event.type === 'loadstart') {
+            this.updateProgressStatus(HttpRequestProgressStatus.Uploading);
+        } else if (event.type === 'load') {
+            this.updateProgressStatus(HttpRequestProgressStatus.Downloading);
+        }
+        if (event.lengthComputable) {
+            const transferEvent = new TransferProgressEvent(
+                this.request,
+                this.requestProgressStatus,
+                event.loaded,
+                event.total,
+                Math.round(event.loaded / event.total * 10000) * 0.01
+            );
+            this.promiseProgress(transferEvent);
+        }
     }
 
     /**
      * Called when the transaction is aborted.
      */
     private onAbort(): void {
+        this.updateProgressStatus(HttpRequestProgressStatus.Closed);
         this.promiseReject(new RequestCanceledException());
     }
 
@@ -111,6 +142,7 @@ export class XhrAdapter implements AdapterInterface {
      * Called when the transaction duration reached the timeout.
      */
     private onTimeout(): void {
+        this.updateProgressStatus(HttpRequestProgressStatus.Closed);
         this.promiseReject(new RequestTimeoutException(this.xhr.timeout));
     }
 
@@ -124,5 +156,15 @@ export class XhrAdapter implements AdapterInterface {
             map[parts.shift() as string] = parts.join(': ');
         });
         return map;
+    }
+
+    /**
+     * Notify the promise of a status change.
+     */
+    private updateProgressStatus(status: HttpRequestProgressStatus): void {
+        if (isUndefined(this.requestProgressStatus) || status > this.requestProgressStatus) {
+            this.promiseProgress(new StatusChangeEvent(this.request, status));
+            this.requestProgressStatus = status;
+        }
     }
 }

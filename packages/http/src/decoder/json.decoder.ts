@@ -1,6 +1,6 @@
 import { ExceptionFactory, Injector } from '@banquette/core';
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
-import { isNullOrUndefined, isString, isUndefined, trim } from "@banquette/utils";
+import { isString, isUndefined, trim } from "@banquette/utils";
 import { DecoderTag, Events, ResponseTypeAutoDetect } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";
@@ -30,7 +30,7 @@ function expectJson(event: ResponseEvent): boolean {
         return true;
     }
     // If we have no information on the type of body, try to detect if it looks like JSON.
-    if (isNullOrUndefined(event.response.responseType) && isUndefined(event.response.headers['content-type'])) {
+    if (!event.response.responseType && isUndefined(event.response.headers['content-type'])) {
         const body = trim(stripXSSIPrefix(event.response.response));
         return body[0] === '[' || body[0] === '{';
     }

@@ -1,3 +1,4 @@
+import { RequestProgressEvent } from "./event/request-progress.event";
 import { HttpRequest } from "./http-request";
 import { HttpResponse } from "./http-response";
 
@@ -45,6 +46,11 @@ export interface QueuedRequestInterface<T> {
      * Reject callback of the original promise.
      */
     reject: (response: HttpResponse<T>) => void;
+
+    /**
+     * Progress callback of the original promise.
+     */
+    progress: (value: RequestProgressEvent) => void;
 
     /**
      * The original HttpRequest object.
