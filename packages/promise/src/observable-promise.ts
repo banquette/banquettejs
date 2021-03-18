@@ -340,7 +340,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
         }
         return this.then((value: CompleteT) => value, (reason: any): RejectT | ThenableInterface<RejectT> => {
             const pos: number|null = isObject(reason) ? types.indexOf(reason.constructor) : null;
-            if (pos !== null && ((shouldMatch && pos > -1) || (!shouldMatch && pos < 0))) {
+            if ((!shouldMatch && pos === null) || (pos !== null && ((shouldMatch && pos > -1) || (!shouldMatch && pos < 0)))) {
                 onReject(reason);
                 return reason;
             }
