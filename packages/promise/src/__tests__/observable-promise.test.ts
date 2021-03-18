@@ -234,7 +234,7 @@ describe('catchOf()', () => {
         expect(cb2).not.toBeCalled();
     });
 
-    test('catchNotOf with non object reject', async () => {
+    test('catchNotOf is caught (non object reject)', async () => {
         const cb1 = jest.fn();
         const cb2 = jest.fn();
         await ObservablePromise.Reject(10).catchNotOf(CancelException, cb1).catchOf(Error, cb2);
@@ -242,10 +242,18 @@ describe('catchOf()', () => {
         expect(cb2).not.toBeCalled();
     });
 
-    test('catchNotOf with non object reject (reverse)', async () => {
+    test('catchNotOf is caught (non object reject reverse)', async () => {
         const cb1 = jest.fn();
         const cb2 = jest.fn();
         await ObservablePromise.Reject(10).catchOf(Error, cb2).catchNotOf(CancelException, cb1);
+        expect(cb1).toBeCalledTimes(1);
+        expect(cb2).not.toBeCalled();
+    });
+
+    test('catchNotOf is uncaught (multiple types)', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        await ObservablePromise.Reject(10).catchNotOf([TimeoutException, CancelException], cb1).catchOf(Error, cb2);
         expect(cb1).toBeCalledTimes(1);
         expect(cb2).not.toBeCalled();
     });
