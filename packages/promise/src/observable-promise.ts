@@ -136,21 +136,14 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      * Like catch() but only calling the callback if the rejection reason is an object matching of the the type defined in parameter.
      */
     public catchOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
-        if (this.parent) {
-            this.parent.forwardReject();
-        }
-        return this.then((value: CompleteT) => value, (reason: any): RejectT | ThenableInterface<RejectT> => {
-            const types = ensureArray(type);
-            if (isObject(reason) && types.indexOf(reason.constructor) > -1) {
-                onReject(reason);
-                return reason;
-            }
-            if (this.canForwardReject) {
-                this.doForwardReject = true;
-                throw reason;
-            }
-            return reason;
-        });
+        return this.catchBasedOnType(ensureArray(type), true, onReject);
+    }
+
+    /**
+     * Like catchOf() but requires the type NOT to match for the callback to fire.
+     */
+    public catchNotOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+        return this.catchBasedOnType(ensureArray(type), false, onReject);
     }
 
     /**
@@ -336,6 +329,27 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
         } else {
             throw new UsageException(`Out of bounds observer index (${observerIndex}), ${this.observers.length} observers in array.`);
         }
+    }
+
+    /**
+     * Centralize the catchOf() logic so we can inverse the condition.
+     */
+    private catchBasedOnType<RejectT>(types: Array<ConstructorFunction<any>>, shouldMatch: boolean, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+        if (this.parent) {
+            this.parent.forwardReject();
+        }
+        return this.then((value: CompleteT) => value, (reason: any): RejectT | ThenableInterface<RejectT> => {
+            const pos: number|null = isObject(reason) ? types.indexOf(reason.constructor) : null;
+            if (pos !== null && ((shouldMatch && pos > -1) || (!shouldMatch && pos < 0))) {
+                onReject(reason);
+                return reason;
+            }
+            if (this.canForwardReject) {
+                this.doForwardReject = true;
+                throw reason;
+            }
+            return reason;
+        });
     }
 
     /**

@@ -222,6 +222,17 @@ describe('catchOf()', () => {
         expect(cb1).toBeCalledTimes(1);
         expect(cb2).not.toBeCalled();
     });
+
+    test('catchNotOf is caught', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        }).catchNotOf(CancelException, cb1).catchOf(Error, cb2);
+        await promise;
+        expect(cb1).toBeCalledTimes(1);
+        expect(cb2).not.toBeCalled();
+    });
 });
 
 describe('Progression events', () => {
