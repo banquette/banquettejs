@@ -14,7 +14,12 @@ export interface ObservablePromiseInterface<CompleteT> {
     /**
      * Attaches a callback that will be called if the promise rejects.
      */
-    catch<RejectT = never>(onReject?: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT>;
+    catch<RejectT = never>(onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT>;
+
+    /**
+     * Like catch() but only calling the callback if the rejection reason is an object matching of the the type defined in parameter.
+     */
+    catchOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT>;
 
     /**
      * Subscribe to the promise progression events.

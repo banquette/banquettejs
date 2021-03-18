@@ -2,7 +2,7 @@ import { UsageException } from "@banquette/core";
 import {
     ConstructorFunction,
     ensureArray,
-    isInstanceOf,
+    isInstanceOf, isObject,
     isPromiseLike,
     isType,
     isUndefined,
@@ -55,7 +55,13 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      */
     private progressHistory: any[] = [];
 
-    public constructor(executor: ExecutorFunction<CompleteT>) {
+    /**
+     * Only true if a catchOf() follows.
+     */
+    private canForwardReject: boolean = false;
+    private doForwardReject: boolean = false;
+
+    public constructor(executor: ExecutorFunction<CompleteT>, private parent?: ObservablePromise) {
         try {
             executor(proxy(this.resolve, this), proxy(this.reject, this), proxy(this.notify, this));
         } catch (e) {
@@ -87,9 +93,16 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                         return void reject(reason);
                     }
                     try {
-                        resolve(onReject(reason) as any);
+                        const subResult = onReject(reason) as any;
+                        if (this.doForwardReject) {
+                            reject(subResult);
+                        } else {
+                            resolve(subResult);
+                        }
                     } catch (e) {
                         reject(e);
+                    } finally {
+                        this.doForwardReject = false;
                     }
                 }, onProgress: {
                     types: progressTypes,
@@ -106,14 +119,38 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                 }
             };
             this.subscribe(subscriber);
-        });
+        }, this);
     }
 
     /**
      * Attaches a callback that will be called if the promise rejects.
      */
-    public catch<RejectT = never>(onReject?: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    public catch<RejectT = never>(onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+        if (this.parent) {
+            this.parent.forwardReject();
+        }
         return this.then((value: CompleteT) => value, onReject);
+    }
+
+    /**
+     * Like catch() but only calling the callback if the rejection reason is an object matching of the the type defined in parameter.
+     */
+    public catchOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+        if (this.parent) {
+            this.parent.forwardReject();
+        }
+        return this.then((value: CompleteT) => value, (reason: any): RejectT | ThenableInterface<RejectT> => {
+            const types = ensureArray(type);
+            if (isObject(reason) && types.indexOf(reason.constructor) > -1) {
+                onReject(reason);
+                return reason;
+            }
+            if (this.canForwardReject) {
+                this.doForwardReject = true;
+                throw reason;
+            }
+            return reason;
+        });
     }
 
     /**
@@ -194,6 +231,10 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
 
     public toString() {
         return '[object ObservablePromise]';
+    }
+
+    public forwardReject(): void {
+        this.canForwardReject = true;
     }
 
     /**

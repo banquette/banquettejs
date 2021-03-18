@@ -136,6 +136,94 @@ describe('Basic implementation', () => {
     });
 });
 
+describe('catchOf()', () => {
+    test('catchOf is caught', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        }).catchOf(Error, cb1).catchOf(CancelException, cb2);
+        await promise;
+        expect(cb1).toBeCalledTimes(1);
+        expect(cb2).not.toBeCalled();
+    });
+
+    test('catchOf is caught (multiple types)', async () => {
+        const cb = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        }).catchOf([CancelException, Error, TimeoutException], cb);
+        await promise;
+        expect(cb).toBeCalledTimes(1);
+    });
+
+    test('catchOf is caught (multiple matches)', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        }).catchOf(Error, cb1).catchOf(Error, cb2);
+        await promise;
+        expect(cb1).toBeCalledTimes(1);
+        expect(cb2).not.toBeCalled();
+    });
+
+    test('catchOf is caught and catch not called', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        }).catchOf(Error, cb1).catch(cb2);
+        await promise;
+        expect(cb1).toBeCalledTimes(1);
+        expect(cb2).not.toBeCalled();
+    });
+
+    test('catchOf not called after catch', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        }).catch(cb2).catchOf(Error, cb1);
+        await promise;
+        expect(cb2).toBeCalledTimes(1);
+        expect(cb1).not.toBeCalled();
+    });
+
+    test('catchOf is caught (reverse)', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        }).catchOf(CancelException, cb2).catchOf(Error, cb1);
+        await promise;
+        expect(cb1).toBeCalledTimes(1);
+        expect(cb2).not.toBeCalled();
+    });
+
+    test('catchOf is uncaught', async () => {
+        const cb = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        });
+        promise.catchOf(CancelException, cb);
+        await expect(promise).rejects.toBeInstanceOf(Error);
+        expect(cb).not.toBeCalled();
+    });
+
+    test('catchOf is uncaught but catch is called', async () => {
+        const cb1 = jest.fn();
+        const cb2 = jest.fn();
+        const promise = new ObservablePromise(() => {
+            throw new Error('I have been thrown.');
+        });
+        promise.catchOf(CancelException, cb2).catch(cb1);
+        await expect(promise).rejects.toBeInstanceOf(Error);
+        expect(cb1).toBeCalledTimes(1);
+        expect(cb2).not.toBeCalled();
+    });
+});
+
 describe('Progression events', () => {
     const defaultStep = 10;
     const wait = (delay: number, step: number = defaultStep) => {
