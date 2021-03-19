@@ -27,16 +27,20 @@ export class HttpRequest {
     /**
      * Create a Request object.
      *
-     * @param method        HTTP method.
-     * @param url           Ready to use url.
-     * @param payload       Body of the request.
-     * @param payloadType   Format of the payload.
-     * @param responseType  Format of the response.
-     * @param headers       Additional headers to send with the request.
-     * @param timeout       Maximum duration of the request (in milliseconds)
-     * @param mimeType      MimeType of the payload
-     * @param extras        Any additional data you want to associated with the request.
-     *                      This object will not be sent with the request.
+     * @param method            HTTP method.
+     * @param url               Ready to use url.
+     * @param payload           Body of the request.
+     * @param payloadType       Format of the payload.
+     * @param responseType      Format of the response.
+     * @param headers           Additional headers to send with the request.
+     * @param timeout           Maximum duration of the request (in milliseconds).
+     * @param retry             Maximum number of tries allowed for the request.
+     * @param retryDelay        Time to wait before trying again in case of error.
+     * @param priority          The higher the priority the sooner the request will be executed.
+     * @param withCredentials   If true, cookies and auth headers are included in the request.
+     * @param mimeType          MimeType of the payload.
+     * @param extras            Any additional data you want to associated with the request.
+     *                          This object will not be sent with the request.
      */
     public constructor(public method: HttpMethod,
                        public url: string,
@@ -44,7 +48,11 @@ export class HttpRequest {
                        public payloadType: symbol,
                        public responseType: symbol,
                        public headers: Record<string, string>,
-                       public timeout: number,
+                       public timeout: number|null,
+                       public retry: number|null,
+                       public retryDelay: number|'auto'|null,
+                       public priority: number,
+                       public withCredentials: boolean,
                        public mimeType: string|null,
                        public extras: Record<string, any>) {
 

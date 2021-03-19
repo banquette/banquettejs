@@ -1,6 +1,7 @@
 import { UsageException } from "@banquette/core";
 import { extend, isUndefined } from "@banquette/utils";
-import { HttpMethod, ResponseTypeAutoDetect } from "./constants";
+import { HttpMethod } from "./constants";
+import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";
 import { HttpRequest } from "./http-request";
 import { HttpRequestFactory } from "./http-request.factory";
@@ -12,8 +13,12 @@ export class HttpRequestBuilder {
     private _payloadType: symbol = PayloadTypeFormData;
     private _responseType: symbol = ResponseTypeAutoDetect;
     private _headers: Record<string, string> = {};
-    private _timeout: number = 30000;
+    private _timeout: number|null = null;
+    private _withCredentials: boolean|null = null;
     private _mimeType: string|null = null;
+    private _retry: number|null = null;
+    private _retryDelay: number|'auto'|null = null;
+    private _priority: number|null = null;
     private _extras: Record<string, any> = {};
 
     /**
@@ -100,10 +105,43 @@ export class HttpRequestBuilder {
     }
 
     /**
+     * Set the maximum number of time the request can be replayed in case of a network error.
+     */
+    public retry(count: number|null): HttpRequestBuilder {
+        this._retry = count;
+        return this;
+    }
+
+    /**
+     * Time to wait (in ms) between each try.
+     * If set to 'auto', an exponential backoff retry strategy is used.
+     */
+    public retryDelay(delay: number|'auto'|null): HttpRequestBuilder {
+        this._retryDelay = delay;
+        return this;
+    }
+
+    /**
+     * The higher priority requests are executed first.
+     */
+    public priority(priority: number): HttpRequestBuilder {
+        this._priority = priority;
+        return this;
+    }
+
+    /**
      * Set the maximum time the request can take.
      */
     public timeout(timeout: number): HttpRequestBuilder {
         this._timeout = timeout;
+        return this;
+    }
+
+    /**
+     * If true, cookies and auth headers are included in the request.
+     */
+    public withCredentials(value: boolean): HttpRequestBuilder {
+        this._withCredentials = value;
         return this;
     }
 
@@ -148,6 +186,10 @@ export class HttpRequestBuilder {
             responseType: this._responseType,
             headers: this._headers,
             timeout: this._timeout,
+            retry: this._retry,
+            retryDelay: this._retryDelay,
+            priority: this._priority,
+            withCredentials: this._withCredentials,
             mimeType: this._mimeType,
             extras: this._extras
         });

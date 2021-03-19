@@ -6,29 +6,37 @@ import { AdapterInterface } from "./adapter/adapter.interface";
  */
 export interface HttpConfigurationInterface {
     /**
-     * Maximum time to wait for a request to finish before it is considered a failure.
+     * The adapter to use to make XHR requests.
+     */
+    adapter?: ConstructorFunction<AdapterInterface>;
+
+    /**
+     * Maximum number of requests that can run simultaneously.
+     */
+    maxSimultaneousRequests: number;
+
+    /**
+     * Default maximum time to wait for a request to finish before it is considered a failure.
+     * This can be overridden for each request.
      */
     requestTimeout: number;
 
     /**
-     * Number of time a request will be retried until it is considered a failure.
-     * Request are replayed only in case of connection error. If the request fails because of a server error it will not try again.
+     * Default number of time a request will be retried until it is considered a failure.
+     *
+     * Request are only replayed when there is a network error.
+     * If the request fails because of a server error it will not try again.
+     *
+     * This can be overridden for each request.
      */
-    requestErrorRetryCount: number;
+    requestRetryCount: number;
 
     /**
-     * Time to wait before retrying when a request has failed for a connection error.
+     * Default time (is milliseconds) to wait before retrying when a request has failed for a network error.
+     *
+     * If set to 'auto', an exponential backoff retry strategy is used.
+     *
+     * This can be overridden for each request.
      */
-    connectionErrorRetryDelay: number;
-
-    /**
-     * If true, if any request returns an HTTP status 401, the page will be reloaded
-     * so the server can redirect the user to the login page or whatever.
-     */
-    reloadOnAuthenticationError?: boolean;
-
-    /**
-     * The adapter to use to make XHR requests.
-     */
-    adapter?: ConstructorFunction<AdapterInterface>;
+    requestRetryDelay: number|'auto';
 }

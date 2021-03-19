@@ -69,15 +69,18 @@ export class HttpResponse<T> {
      * The promise from the Http service.
      * Will resolve (or reject) depending on the status of the request.
      */
-    public promise: ObservablePromise<HttpResponse<T>>|null = null;
+    public promise: ObservablePromise<HttpResponse<T>>;
 
     /**
      * The request associated with the response.
      */
     public readonly request: HttpRequest;
 
-    public constructor(request: HttpRequest, status: HttpResponseStatus = HttpResponseStatus.Pending) {
+    public constructor(request: HttpRequest,
+                       status: HttpResponseStatus = HttpResponseStatus.Pending,
+                       promise: ObservablePromise<HttpResponse<T>>) {
         this.request = request;
+        this.promise = promise;
         this.setStatus(status);
     }
 

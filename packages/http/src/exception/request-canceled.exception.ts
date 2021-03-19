@@ -1,10 +1,10 @@
 import { Exception } from "@banquette/core";
-import { RequestException } from "./request.exception";
+import { NetworkException } from "./network.exception";
 
 /**
  * Error thrown when a request is canceled before its completion.
  */
-export class RequestCanceledException extends RequestException {
+export class RequestCanceledException extends NetworkException {
     public constructor(message: string = 'Canceled.', previous?: Exception|null, extra?: any) {
         super(message, previous, extra);
     }

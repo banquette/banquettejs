@@ -1,7 +1,7 @@
 import { Exception, SystemException } from "@banquette/core";
 
 /**
- * Exception thrown when a request fails at a network level
+ * Exception thrown when a request fails at the network level
  * (like if the timeout is reached or if the request is canceled).
  *
  * More specific error types may extend this exception.

@@ -58,6 +58,7 @@ export class XhrAdapter implements AdapterInterface {
             // Configure
             this.xhr.open(request.method, request.url, true);
             this.xhr.timeout = request.timeout;
+            this.xhr.withCredentials = request.withCredentials;
             if (request.mimeType !== null) {
                 this.xhr.overrideMimeType(request.mimeType);
             }

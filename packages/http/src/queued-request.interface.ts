@@ -38,6 +38,11 @@ export interface QueuedRequestInterface<T> {
     triesLeft: number;
 
     /**
+     * Time to wait between two tries.
+     */
+    retryDelay: number|'auto';
+
+    /**
      * Resolve callback of the original promise.
      */
     resolve: (response: HttpResponse<T>) => void;

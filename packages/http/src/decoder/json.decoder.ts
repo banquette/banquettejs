@@ -1,9 +1,10 @@
 import { ExceptionFactory, Injector } from '@banquette/core';
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
 import { isString, isUndefined, trim } from "@banquette/utils";
-import { DecoderTag, Events, ResponseTypeAutoDetect } from "../constants";
+import { DecoderTag, Events } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";
+import { ResponseTypeAutoDetect } from "./auto-detect.decoder";
 
 export const XSSIPrefix = ")]}'\n";
 export const ResponseTypeJson = Symbol('json');
@@ -12,9 +13,8 @@ export const ResponseTypeJson = Symbol('json');
  * Remove the XSSI prefix (if present).
  */
 function stripXSSIPrefix(input: string): string {
-    const prefix: string = ")]}'\n";
-    if (input.substring(0, prefix.length) === prefix) {
-        return input.substring(prefix.length);
+    if (input.substring(0, XSSIPrefix.length) === XSSIPrefix) {
+        return input.substring(XSSIPrefix.length);
     }
     return input;
 }

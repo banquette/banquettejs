@@ -1,10 +1,12 @@
 import 'reflect-metadata';
 import { Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from '@banquette/core';
 import { EventDispatcherService, EventDispatcherServiceSymbol } from "@banquette/event";
+import { ObservablePromise } from "@banquette/promise";
 import { waitForDelay, waitForNextCycle } from "@banquette/utils";
 import { XhrAdapter } from "../adapter/xhr.adapter";
 import { HttpConfigurationSymbol } from "../config";
-import { Events, HttpMethod, ResponseTypeAutoDetect } from "../constants";
+import { Events, HttpMethod } from "../constants";
+import { ResponseTypeAutoDetect } from "../decoder/auto-detect.decoder";
 import { ResponseTypeJson } from "../decoder/json.decoder";
 import { PayloadTypeFormData } from "../encoder/form-data.encoder";
 import { PayloadTypeJson } from "../encoder/json.encoder";
@@ -15,6 +17,7 @@ import { RequestCanceledException } from "../exception/request-canceled.exceptio
 import { RequestTimeoutException } from "../exception/request-timeout.exception";
 import { RequestException } from "../exception/request.exception";
 import { HttpConfigurationInterface } from "../http-configuration.interface";
+import { HttpRequest } from "../http-request";
 import { HttpRequestBuilder } from "../http-request.builder";
 import { HttpRequestFactory } from "../http-request.factory";
 import { HttpService, HttpServiceSymbol } from "../http.service";
@@ -28,6 +31,8 @@ const http: HttpService = Injector.Get<HttpService>(HttpServiceSymbol);
 
 const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfigurationSymbol);
 config.modifyConfig<HttpConfigurationInterface>(HttpConfigurationSymbol, {
+    maxSimultaneousRequests: 5,
+    requestRetryCount: 5,
     adapter: XhrAdapter
 });
 
@@ -101,7 +106,11 @@ describe('requests forgery', () => {
             headers: {},
             payload: null,
             extras: {},
-            timeout: 30000,
+            timeout: null,
+            retry: null,
+            retryDelay: null,
+            priority: 0,
+            withCredentials: false,
             mimeType: null
         }));
     });
@@ -158,21 +167,22 @@ describe('payloads', () => {
  * Responses
  */
 describe('responses', () => {
-    test(`JSON response (no XSSI prefix, no headers, no response type)`, async () => {
+    test(`JSON response (no XSSI prefix, no headers, no response type)`, () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson'})
         }));
-        await response.promise;
-        expect(response.result).toStrictEqual(JSON.parse(TestResponses.ValidJson.content));
+        return expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
     });
     test(`JSON response (with XSSI prefix and response type)`, async () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson', responseType: 'json', XSSISafe: true})
         }));
-        await response.promise;
-        expect(response.result).toStrictEqual(JSON.parse(TestResponses.ValidJson.content));
+        return expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
     });
     test(`JSON response (with XSSI prefix and Content-Type header)`, async () => {
+        expect.assertions(2);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson', headers: true, XSSISafe: true}),
             responseType: ResponseTypeAutoDetect
@@ -182,6 +192,7 @@ describe('responses', () => {
         expect(response.httpHeaders).toMatchObject({'content-type': 'application/json'});
     });
     test(`JSON response (with XSSI prefix and no info on the response type)`, async () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson', XSSISafe: true}),
             responseType: ResponseTypeAutoDetect
@@ -190,6 +201,7 @@ describe('responses', () => {
         expect(response.result).toStrictEqual(JSON.parse(TestResponses.ValidJson.content));
     });
     test(`Empty response (JSON expected)`, async () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: '//test',
             responseType: ResponseTypeJson
@@ -197,6 +209,7 @@ describe('responses', () => {
         await expect(response.promise).resolves.toMatchObject({result: {}});
     });
     test(`HTML response`, async () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidHtml'})
         }));
@@ -204,6 +217,7 @@ describe('responses', () => {
         expect(response.result).toStrictEqual(TestResponses.ValidHtml.content);
     });
     test(`HTML response (slow connection)`, async () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({delay: 1000, timeout: 1500, responseKey: 'ValidHtml'})
         }));
@@ -217,6 +231,7 @@ describe('responses', () => {
  */
 describe('failures', () => {
     test(`invalid JSON response`, async () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'InvalidJson'}),
             responseType: ResponseTypeAutoDetect
@@ -224,6 +239,7 @@ describe('failures', () => {
         await expect(response.promise).rejects.toMatchObject({error: expect.any(InvalidResponseTypeException)});
     });
     test(`success after 1 network failure`, async () => {
+        expect.assertions(3);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({networkError: 1, responseKey: 'ValidJson'})
         }));
@@ -232,35 +248,41 @@ describe('failures', () => {
         expect(response.isSuccess).toEqual(true);
         expect(response.result).toStrictEqual(JSON.parse(TestResponses.ValidJson.content));
     });
-    test(`network error`, async () => {
+    test(`network error`, () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
-            url: buildTestUrl({networkError: 5 /** The max number of tries is 3 */, responseKey: 'ValidJson'})
+            url: buildTestUrl({networkError: 6 /** The max number of tries is 5 */, responseKey: 'ValidJson'}),
+            retryDelay: 0
         }));
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(NetworkException)});
+        return expect(response.promise).rejects.toMatchObject({error: expect.any(NetworkException)});
     });
-    test(`timeout reached`, async () => {
+    test(`timeout reached`, () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({delay: 1000, timeout: 500, responseKey: 'ValidJson'})
         }));
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestTimeoutException)});
+        return expect(response.promise).rejects.toMatchObject({error: expect.any(RequestTimeoutException)});
     });
-    test(`error HTTP status code`, async () => {
+    test(`error HTTP status code`, () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ServerError'})
         }));
-        await expect(response.promise).rejects.toMatchObject({
+        return expect(response.promise).rejects.toMatchObject({
             error: expect.any(RequestException),
             result: {message: 'Test error.'}
         });
     });
-    test(`cancel (immediate)`, async () => {
+    test(`cancel (immediate)`, () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({delay: 500, responseKey: 'ServerError'})
         }));
         response.request.cancel();
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestCanceledException)});
+        return expect(response.promise).rejects.toMatchObject({error: expect.any(RequestCanceledException)});
     });
     test(`cancel (after delay)`, async () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({delay: 500, responseKey: 'ServerError'})
         }));
@@ -268,15 +290,17 @@ describe('failures', () => {
         response.request.cancel();
         await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestCanceledException)});
     });
-    test(`invalid payload`, async () => {
+    test(`invalid payload`,  () => {
+        expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({delay: 500, responseKey: 'ServerError'}),
             payloadType: PayloadTypeJson,
             payload: '<p>Test</p>'
         }));
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(UsageException)});
+        return expect(response.promise).rejects.toMatchObject({error: expect.any(UsageException)});
     });
     test(`timeout request doesn\'t retry`, async () => {
+        expect.assertions(2);
         const start = (new Date()).getTime();
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({timeout: 100, delay: 1000})
@@ -284,7 +308,92 @@ describe('failures', () => {
         await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestTimeoutException)});
         expect((new Date()).getTime() - start).toBeLessThan(150 /* meaning 1 try */);
     });
-})
+    test(`no retry for this request`, async () => {
+        expect.assertions(1);
+        const response = http.send(HttpRequestFactory.Create({
+            url: buildTestUrl({networkError: 1, responseKey: 'ValidJson'}),
+            retry: 0
+        }));
+        await expect(response.promise).rejects.toMatchObject({error: expect.any(NetworkException)});
+    });
+    test(`retry delay is respected`, async () => {
+        expect.assertions(3);
+        const start = (new Date()).getTime();
+        const response = http.send(HttpRequestFactory.Create({
+            url: buildTestUrl({networkError: 1, delay: 0, responseKey: 'ValidJson'}),
+            retry: 1,
+            retryDelay: 300
+        }));
+        await expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
+        const delta = (new Date()).getTime() - start;
+        expect(delta).toBeGreaterThan(300);
+        expect(delta).toBeLessThan(350);
+    });
+    test(`retry auto increment exponentially`, async () => {
+        expect.assertions(3);
+        const start = (new Date()).getTime();
+        const response = http.send(HttpRequestFactory.Create({
+            url: buildTestUrl({networkError: 3, delay: 0, responseKey: 'ValidJson'}),
+            retry: 4,
+            retryDelay: 'auto'
+        }));
+        await expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
+        const delta = (new Date()).getTime() - start;
+        expect(delta).toBeGreaterThan(1110 /* 0 + 10 + 100 + 1000 */);
+        expect(delta).toBeLessThan(1200);
+    });
+});
+
+/**
+ * Simultaneous requests.
+ */
+describe('request queue', () => {
+    const runningRequests: HttpRequest[] = [];
+    let unsubscribeMethods: Array<() => void> = [];
+    beforeEach(() => {
+        unsubscribeMethods.push(eventDispatcher.subscribe(Events.BeforeRequest, (event: RequestEvent) => void runningRequests.push(event.request)));
+        unsubscribeMethods.push(eventDispatcher.subscribe(Events.RequestSuccess, (event: RequestEvent) => void runningRequests.splice(runningRequests.indexOf(event.request), 1)));
+    });
+
+    afterEach(() => {
+        for (const unsubscribeMethod of unsubscribeMethods) {
+            unsubscribeMethod();
+        }
+    });
+
+    test(`simultaneous requests limit is respected`, () => {
+        expect.assertions(1);
+        const promises: any[] = [];
+        for (let i = 0; i < 7; ++i) {
+            promises.push(http.send(HttpRequestFactory.Create({
+                url: buildTestUrl({delay: 200, responseKey: 'ValidJson'})
+            })).promise);
+        }
+        window.setTimeout(() => {
+            expect(runningRequests.length).toEqual(config.get('http.maxSimultaneousRequests'));
+        }, 50);
+        return ObservablePromise.All(promises);
+    });
+
+    test(`priority is respected`, () => {
+        expect.assertions(1);
+        const promises: any[] = [];
+        for (let i = 1; i <= 5; ++i) {
+            promises.push(http.send(HttpRequestFactory.Create({
+                url: buildTestUrl({delay: 200, responseKey: 'ValidJson'}),
+                priority: 5 - i, // Inverse the priority so the requests are not added in the correct order,
+                extras: {i}
+            })).promise);
+        }
+        window.setTimeout(() => {
+            expect(runningRequests.reduce((acc: string[], i) => {
+                acc.push(i.extras.i);
+                return acc;
+            }, [])).toEqual([1, 2, 3, 4, 5]);
+        }, 50);
+        return ObservablePromise.All(promises);
+    });
+});
 
 /**
  * Events
@@ -297,6 +406,7 @@ describe('events dispatching', () => {
     });
 
     test(`basic working request`, async () => {
+        expect.assertions(4);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson'})
         }));
@@ -309,6 +419,7 @@ describe('events dispatching', () => {
     });
 
     test(`request failing 2 times`, async () => {
+        expect.assertions(5);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({networkError: 2, responseKey: 'ValidJson'})
         }));
@@ -321,6 +432,7 @@ describe('events dispatching', () => {
     });
 
     test(`request failing definitely`, async () => {
+        expect.assertions(5);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ServerError'})
         }));

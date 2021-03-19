@@ -5,9 +5,9 @@ import { HttpConfigurationInterface } from "./http-configuration.interface";
 
 export const HttpConfigurationSymbol = Symbol('http');
 Injector.Get<SharedConfiguration>(SharedConfigurationSymbol).registerConfig<HttpConfigurationInterface>(HttpConfigurationSymbol, {
-    requestErrorRetryCount: 3,
-    requestTimeout: 10000,
-    connectionErrorRetryDelay: 10000,
-    reloadOnAuthenticationError: true,
-    adapter: XhrAdapter
+    adapter: XhrAdapter,
+    maxSimultaneousRequests: 3,
+    requestRetryDelay: 'auto',
+    requestRetryCount: 5,
+    requestTimeout: 10000
 }, true);

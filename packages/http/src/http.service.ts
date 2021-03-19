@@ -3,21 +3,23 @@ import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquet
 import { ObservablePromise } from "@banquette/promise";
 import { isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
 import { inject, injectable } from "inversify";
+import { ProgressCallback, RejectCallback, ResolveCallback } from "../../promise/src/types";
 import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
 import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";
-import { Events, HttpMethod, HttpResponseStatus, ResponseTypeAutoDetect } from "./constants";
-import { PayloadTypeJson } from "./encoder/json.encoder";
+import { Events, HttpMethod, HttpResponseStatus } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 import { RequestProgressEvent } from "./event/request-progress.event";
 import { RequestEvent } from "./event/request.event";
 import { ResponseEvent } from "./event/response.event";
 import { AuthenticationException } from "./exception/authentication.exception";
 import { NetworkException } from "./exception/network.exception";
+import { RequestCanceledException } from "./exception/request-canceled.exception";
 import { RequestTimeoutException } from "./exception/request-timeout.exception";
 import { RequestException } from "./exception/request.exception";
 import { HttpRequest } from "./http-request";
 import { HttpRequestBuilder } from "./http-request.builder";
+import { HttpRequestFactory } from "./http-request.factory";
 import { HttpResponse } from "./http-response";
 import { NetworkWatcherService, NetworkWatcherServiceSymbol } from './network-watcher.service';
 import { QueuedRequestInterface } from './queued-request.interface';
@@ -35,7 +37,15 @@ export class HttpService {
      */
     private queueProcessTimeout: any = null;
 
+    /**
+     * Is the service initialized?
+     */
     private initialized: boolean = false;
+
+    /**
+     * How many requests are currently running?
+     */
+    private runningRequestsCount: number = 0;
 
     constructor(@inject(SharedConfigurationSymbol) private config: SharedConfiguration,
                 @inject(EventDispatcherServiceSymbol) private eventDispatcher: EventDispatcherInterface,
@@ -52,11 +62,11 @@ export class HttpService {
     /**
      * Do a GET request expecting a JSON response.
      */
-    public get<T>(url: string, headers?: any): HttpResponse<T> {
+    public get<T>(url: string, headers?: Record<string, string>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.GET)
             .url(url)
-            .headers(headers)
+            .headers(headers || {})
             .getRequest()
         );
     }
@@ -64,12 +74,12 @@ export class HttpService {
     /**
      * Do a POST request that sends a JSON payload and expect a JSON response.
      */
-    public post<T>(url: string, body?: any, headers?: any): HttpResponse<T> {
+    public post<T>(url: string, body?: any, headers?: Record<string, string>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.POST)
             .url(url)
             .payload(body)
-            .headers(headers)
+            .headers(headers || {})
             .getRequest()
         );
     }
@@ -77,12 +87,12 @@ export class HttpService {
     /**
      * Do a PUT request that sends a JSON payload and expect a JSON response.
      */
-    public put<T>(url: string, body?: any, headers?: any): HttpResponse<T> {
+    public put<T>(url: string, body?: any, headers?: Record<string, string>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.PUT)
             .url(url)
             .payload(body)
-            .headers(headers)
+            .headers(headers || {})
             .getRequest()
         );
     }
@@ -90,11 +100,11 @@ export class HttpService {
     /**
      * Do a DELETE request.
      */
-    public delete<T>(url: string, headers?: any): HttpResponse<T> {
+    public delete<T>(url: string, headers?: Record<string, string>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.DELETE)
             .url(url)
-            .headers(headers)
+            .headers(headers || {})
             .getRequest()
         );
     }
@@ -104,18 +114,13 @@ export class HttpService {
      *
      * @deprecated Use HttpService::build() and HttpService::send() instead.
      */
-    public request<T>(method: HttpMethod, url: string, body: Pojo|null, headers?: any): HttpResponse<T> {
-        return this.send(new HttpRequest(
+    public request<T>(method: HttpMethod, url: string, payload: Pojo|null, headers?: any): HttpResponse<T> {
+        return this.send(HttpRequestFactory.Create({
             method,
             url,
-            body,
-            PayloadTypeJson,
-            ResponseTypeAutoDetect,
-            headers,
-            -1,
-            null,
-            {}
-        ));
+            payload,
+            headers
+        }));
     }
 
     /**
@@ -125,19 +130,30 @@ export class HttpService {
      */
     public send<T>(request: HttpRequest): HttpResponse<T> {
         this.initialize();
-        const response = new HttpResponse<T>(request);
+        let promiseResolve: ResolveCallback<HttpResponse<T>>;
+        let promiseReject: RejectCallback;
+        let promiseProgress: ProgressCallback;
+        const response = new HttpResponse<T>(request, HttpResponseStatus.Pending, new ObservablePromise<HttpResponse<T>>((resolve, reject, progress) => {
+            promiseResolve = resolve;
+            promiseReject = reject;
+            promiseProgress = progress;
+        }));
         request.setResponse(response);
-        response.setStatus(HttpResponseStatus.Pending);
-        response.promise = new ObservablePromise<HttpResponse<T>>((resolve, reject, progress) => {
-            this.queueRequest<T>(
-                request,
-                response,
-                0,
-                resolve,
-                reject,
-                progress
-            );
-        });
+        this.queueRequest<T>(
+            request,
+            response,
+            0,
+            //
+            // These are guaranteed to be set before being used.
+            // It's a little tricky because both the response AND the promise's callbacks are need to queue the request.
+            //
+            // @ts-ignore
+            promiseResolve,
+            // @ts-ignore
+            promiseReject,
+            // @ts-ignore
+            promiseProgress
+        );
         return response;
     }
 
@@ -151,12 +167,13 @@ export class HttpService {
             return void this.removeFromQueue(queuedRequest);
         }
         try {
-            queuedRequest.triesLeft--;
             const adapter = Injector.Get<AdapterInterface>(AdapterInterfaceSymbol);
             if (!queuedRequest.tryCount) {
                 queuedRequest.request.setAdapter(adapter);
             }
+            queuedRequest.triesLeft--;
             queuedRequest.isExecuting = true;
+            this.runningRequestsCount++;
             await this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request));
             if (!HttpService.IsValidPayload(queuedRequest.request.payload)) {
                 return void this.handleRequestFailure(queuedRequest, new UsageException(
@@ -174,6 +191,7 @@ export class HttpService {
             this.handleRequestFailure(queuedRequest, e);
         } finally {
             queuedRequest.isExecuting = false;
+            this.runningRequestsCount--;
         }
     }
 
@@ -202,7 +220,8 @@ export class HttpService {
      * Do what needs to be done after a request failed on the network level.
      */
     private handleRequestFailure(queuedRequest: QueuedRequestInterface<any>, error: Exception): void {
-        if (error instanceof NetworkException && !(error instanceof RequestTimeoutException) && queuedRequest.triesLeft > 0) {
+        if (error instanceof NetworkException && !(error instanceof RequestTimeoutException) && !(error instanceof RequestCanceledException) && queuedRequest.triesLeft > 0) {
+            queuedRequest.executeAt = HttpService.CalculateNextTryTime(queuedRequest);
             queuedRequest.isExecuting = false;
             this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(queuedRequest.request));
             this.processQueue();
@@ -220,8 +239,9 @@ export class HttpService {
      */
     private processQueue(): void {
         const currentTime = (new Date()).getTime();
+        const maxSimultaneousRequestsCount: number = this.config.get('http.maxSimultaneousRequests');
         for (const request of this.requestsQueue) {
-            if (!request.isExecuting && request.executeAt <= currentTime) {
+            if (!request.isExecuting && request.executeAt <= currentTime && this.runningRequestsCount < maxSimultaneousRequestsCount) {
                 // Will never reject, the catch is only here to calm tslint.
                 this.executeQueuedRequest(request).catch(noop);
             }
@@ -250,12 +270,15 @@ export class HttpService {
                             resolve: (response: HttpResponse<T>) => void,
                             reject: (response: HttpResponse<T>) => void,
                             progress: (value: RequestProgressEvent) => void): void {
+        let i = 0;
         this.networkWatcher.watch();
-        this.requestsQueue.push({
+        for (; i < this.requestsQueue.length && this.requestsQueue[i].request.priority >= request.priority; ++i);
+        this.requestsQueue.splice(i, 0, {
             request,
             timeout: this.config.get('http.requestTimeout'),
             tryCount: 0,
-            triesLeft: Math.max(1, this.config.get('http.requestErrorRetryCount')),
+            triesLeft: 1 + Math.max(0, request.retry !== null ? request.retry : this.config.get('http.requestRetryCount')),
+            retryDelay: request.retryDelay !== null ? request.retryDelay : this.config.get('http.requestRetryDelay'),
             executeAt,
             resolve,
             reject,
@@ -270,7 +293,6 @@ export class HttpService {
 
     /**
      * Put a timeout to process the queue as soon as the less delayed request is available for retry.
-     * A timeout will always be set even if no request ask for a delay.
      */
     private scheduleQueueForProcess(): void {
         if (this.queueProcessTimeout !== null || !this.requestsQueue.length) {
@@ -327,10 +349,26 @@ export class HttpService {
                 'to use the Http service (key "http.adapter").'
             );
         }
-        // Add the adapter to the container so it can inject dependencies of its own.
+        // Ensure there is no other definition of the adapter interface in the container.
+        if (Injector.GetContainer().isBound(AdapterInterfaceSymbol)) {
+            Injector.GetContainer().unbind(AdapterInterfaceSymbol);
+        }
+        // Add the adapter to the container as a module so each request will create a new instance.
+        // Registering the adapter in the container here ensures it is registered as a module.
         Injector.RegisterModule(AdapterInterfaceSymbol, adapter);
         this.eventDispatcher.subscribe(Events.NetworkAvailabilityChange, proxy(this.onNetworkAvailabilityChange, this));
         this.initialized = true;
+    }
+
+    /**
+     * Calculate the timestamp at which the request should be executed again.
+     */
+    private static CalculateNextTryTime(request: QueuedRequestInterface<any>): number {
+        const now = (new Date()).getTime();
+        if (request.retryDelay !== 'auto') {
+            return now + request.retryDelay;
+        }
+        return now + Math.min(30000, 10 ** request.tryCount);
     }
 
     /**

@@ -49,22 +49,6 @@ export enum HttpRequestProgressStatus {
 }
 
 /**
- * Payloads & responses types.
- * Simply constants are used instead of enums so it's easy to extend externally.
- *
- * It's also useful because you can isolate a constant in a file with additional logic
- * and use the import to trigger the code.
- *
- * @see interceptors/json.interceptor.ts
- * @see interceptors/xml.interceptor.ts
- */
-// Response
-export const ResponseTypeText        = Symbol('text');   // string
-export const ResponseTypeHtml        = Symbol('html');   // string
-export const ResponseTypeBinary      = Symbol('binary'); // ArrayBuffer
-export const ResponseTypeAutoDetect  = Symbol('auto');
-
-/**
  * Tag to use in the event dispatcher when subscribing to alter the request body or response.
  *
  * Tagging your subscriber as "encoder" will allow to stop the propagation of encoders only,
@@ -121,7 +105,7 @@ export const Events = {
     RequestSuccess: Symbol('network:request-success'),
 
     /**
-     * Emitted after a request failed to execute (on a network level).
+     * Emitted after a request failed to execute.
      *
      * The request may have failed for a network issue (no internet) or because the timeout is reached,
      * on because it has been canceled, this kind of thing.

@@ -1,5 +1,6 @@
-import { isUndefined } from "@banquette/utils";
-import { HttpMethod, ResponseTypeAutoDetect } from "./constants";
+import { isUndefined, isValidNumber } from "@banquette/utils";
+import { HttpMethod } from "./constants";
+import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";
 import { HttpRequest } from "./http-request";
 
@@ -14,7 +15,11 @@ export class HttpRequestFactory {
         payloadType?: symbol,
         responseType?: symbol,
         headers?: any,
-        timeout?: number,
+        timeout?: number|null,
+        retry?: number|null,
+        retryDelay?: number|'auto'|null,
+        priority?: number|null,
+        withCredentials?: boolean|null,
         mimeType?: string|null,
         extras?: any
     }): HttpRequest {
@@ -25,7 +30,11 @@ export class HttpRequestFactory {
             input.payloadType || PayloadTypeFormData,
             input.responseType || ResponseTypeAutoDetect,
             input.headers || {},
-            !isUndefined(input.timeout) ? input.timeout : 30000,
+            !isUndefined(input.timeout) ? input.timeout : null,
+            !isUndefined(input.retry) ? input.retry : null,
+            !isUndefined(input.retryDelay) ? input.retryDelay : null,
+            isValidNumber(input.priority) ? input.priority : 0,
+            input.withCredentials || false,
             input.mimeType || null,
             input.extras || {}
         );
