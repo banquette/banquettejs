@@ -11,7 +11,7 @@
     "module": "build/index.js",
     "types": "build",
     "exports": {
-        ".": "./build",
+        ".": "./dist/index.cjs.dev.js",
         "./package.json": "./package.json"
     },
     "dependencies": {

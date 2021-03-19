@@ -11,7 +11,7 @@
     "module": "build/index.js",
     "types": "build",
     "exports": {
-        ".": "./build",
+        ".": "./dist/index.cjs.dev.js",
         "./package.json": "./package.json"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
