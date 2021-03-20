@@ -40,28 +40,35 @@ config.modifyConfig<HttpConfigurationInterface>(HttpConfigurationSymbol, {
  * Shortcut methods
  */
 describe('check the HttpRequest objects created by shortcut methods', () => {
-    test(`get()`, async () => {
-        const unsubscribe = eventDispatcher.subscribe(Events.RequestQueued, (event: RequestEvent) => {
-            unsubscribe();
-            expect(event.request).toMatchObject(HttpRequestFactory.Create({
-                method: HttpMethod.GET,
-                url: '//test',
-                payload: null,
-                responseType: ResponseTypeJson,
-                headers: {'x-test': 'test'}
-            }));
-        });
-        try {
-            await http.get('//test', {'x-test': 'test'}).promise;
-        } catch (e) { }
-    });
-    for (const method of ['post', 'put']) {
+    for (const method of ['get', 'delete']) {
         test(`${method}()`, ((_method) => {
+            expect.assertions(1);
             return async () => {
                 const unsubscribe = eventDispatcher.subscribe(Events.RequestQueued, (event: RequestEvent) => {
                     unsubscribe();
                     expect(event.request).toMatchObject(HttpRequestFactory.Create({
-                        method: _method === 'post' ? HttpMethod.POST : HttpMethod.PUT,
+                        method: HttpMethod.GET,
+                        url: '//test',
+                        payload: null,
+                        responseType: ResponseTypeJson,
+                        headers: {'x-test': 'test'}
+                    }));
+                });
+                try {
+                    await (http as any)[_method]('//test', {'x-test': 'test'}).promise;
+                } catch (e) {
+                }
+            };
+        })(method));
+    }
+    for (const method of ['post', 'put', 'patch']) {
+        test(`${method}()`, ((_method) => {
+            expect.assertions(1);
+            return async () => {
+                const unsubscribe = eventDispatcher.subscribe(Events.RequestQueued, (event: RequestEvent) => {
+                    unsubscribe();
+                    expect(event.request).toMatchObject(HttpRequestFactory.Create({
+                        method: _method.toUpperCase() as HttpMethod,
                         url: '//test',
                         payload: {value: 2},
                         responseType: ResponseTypeJson,
@@ -74,21 +81,6 @@ describe('check the HttpRequest objects created by shortcut methods', () => {
             };
         })(method));
     }
-    test(`delete()`, async () => {
-        const unsubscribe = eventDispatcher.subscribe(Events.RequestQueued, (event: RequestEvent) => {
-            unsubscribe();
-            expect(event.request).toMatchObject(HttpRequestFactory.Create({
-                method: HttpMethod.DELETE,
-                url: '//test',
-                payload: null,
-                responseType: ResponseTypeJson,
-                headers: {'x-test': 'test'}
-            }));
-        });
-        try {
-            await http.delete('//test', {'x-test': 'test'}).promise;
-        } catch (e) { }
-    });
 });
 
 /**
@@ -148,6 +140,7 @@ describe('payloads', () => {
     });
 
     test(`POST request with FormData`, async () => {
+        expect.assertions(2);
         const payload = {'test': '2'};
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'PayloadAsJson'}),

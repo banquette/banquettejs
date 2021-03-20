@@ -32,7 +32,7 @@ export interface HttpConfigurationInterface {
     requestRetryCount: number;
 
     /**
-     * Default time (is milliseconds) to wait before retrying when a request has failed for a network error.
+     * Default time (in milliseconds) to wait before retrying when a request has failed for a network error.
      *
      * If set to 'auto', an exponential backoff retry strategy is used.
      *

@@ -98,6 +98,19 @@ export class HttpService {
     }
 
     /**
+     * Do a PATCH request that sends a JSON payload and expect a JSON response.
+     */
+    public patch<T>(url: string, body?: any, headers?: Record<string, string>): HttpResponse<T> {
+        return this.send(this.build()
+            .method(HttpMethod.PATCH)
+            .url(url)
+            .payload(body)
+            .headers(headers || {})
+            .getRequest()
+        );
+    }
+
+    /**
      * Do a DELETE request.
      */
     public delete<T>(url: string, headers?: Record<string, string>): HttpResponse<T> {
