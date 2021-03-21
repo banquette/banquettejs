@@ -2,7 +2,7 @@ import { Injector, SharedConfiguration, SharedConfigurationSymbol } from "@banqu
 import { StorageConfigurationInterface } from "./storage-configuration.interface";
 
 export const StorageConfigurationSymbol = Symbol('storage');
-Injector.Get<SharedConfiguration>(SharedConfigurationSymbol).registerConfig<StorageConfigurationInterface>(StorageConfigurationSymbol, {
+Injector.Get<SharedConfiguration>(SharedConfigurationSymbol).register<StorageConfigurationInterface>(StorageConfigurationSymbol, {
     defaultAdapter: 'auto',
     cookieAdapter: {
         prefix: ''

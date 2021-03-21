@@ -1,3 +1,5 @@
+import { ConfigurationInterface } from "./configuration.interface";
+
 /**
  * Environment types.
  */
@@ -6,7 +8,7 @@ export type EnvType = 'dev' | 'prod';
 /**
  * Define the configuration object of the core.
  */
-export interface CoreConfigurationInterface {
+export interface CoreConfigurationInterface extends ConfigurationInterface {
     /**
      * Current environment.
      */

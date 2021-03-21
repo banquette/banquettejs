@@ -1,4 +1,3 @@
-import { Injector } from "../injector";
 import { ExceptionInterface } from "./exception.interface";
 
 /**
@@ -62,24 +61,9 @@ import { ExceptionInterface } from "./exception.interface";
  *   - a system error MUST be in the end user language, and be translated if necessary. The error may be shown to the end user.
  */
 export abstract class Exception implements ExceptionInterface {
-    private static _IsDev: boolean|null = null;
-
     public constructor(public readonly message: string,
                        public readonly previous?: Exception|null,
                        public readonly extra?: any) {
 
-    }
-
-    /**
-     * Offers and easy way to test if the current env is dev.
-     */
-    protected static IsDev(): boolean {
-        if (Exception._IsDev === null) {
-            // SharedConfiguration has the particularity to be also registered as a string constant so it can
-            // be imported anywhere without circular dependency error.
-            const conf: any = Injector.Get('SharedConfiguration');
-            Exception._IsDev = conf.get('env') === 'dev';
-        }
-        return Exception._IsDev;
     }
 }

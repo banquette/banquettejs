@@ -30,7 +30,7 @@ const eventDispatcher: EventDispatcherService = Injector.Get(EventDispatcherServ
 const http: HttpService = Injector.Get<HttpService>(HttpServiceSymbol);
 
 const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfigurationSymbol);
-config.modifyConfig<HttpConfigurationInterface>(HttpConfigurationSymbol, {
+config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     maxSimultaneousRequests: 5,
     requestRetryCount: 5,
     adapter: XhrAdapter

@@ -4,7 +4,7 @@ import { XhrAdapter } from "./adapter/xhr.adapter";
 import { HttpConfigurationInterface } from "./http-configuration.interface";
 
 export const HttpConfigurationSymbol = Symbol('http');
-Injector.Get<SharedConfiguration>(SharedConfigurationSymbol).registerConfig<HttpConfigurationInterface>(HttpConfigurationSymbol, {
+Injector.Get<SharedConfiguration>(SharedConfigurationSymbol).register<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     adapter: XhrAdapter,
     maxSimultaneousRequests: 3,
     requestRetryDelay: 'auto',

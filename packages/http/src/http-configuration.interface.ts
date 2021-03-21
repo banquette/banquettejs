@@ -1,10 +1,11 @@
+import { ConfigurationInterface } from "@banquette/core";
 import { Constructor } from "@banquette/utils";
 import { AdapterInterface } from "./adapter/adapter.interface";
 
 /**
  * Define the configuration object of the network.
  */
-export interface HttpConfigurationInterface {
+export interface HttpConfigurationInterface extends ConfigurationInterface {
     /**
      * The adapter to use to make XHR requests.
      */

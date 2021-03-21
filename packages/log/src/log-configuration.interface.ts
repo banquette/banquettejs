@@ -1,6 +1,7 @@
+import { ConfigurationInterface } from "@banquette/core";
 import { LogLevel } from "./constants";
 
-export interface LogConfigurationInterface {
+export interface LogConfigurationInterface extends ConfigurationInterface {
     /**
      * Should the log manager register new logs?
      */

@@ -14,7 +14,7 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
 
     public constructor(@inject(new LazyServiceIdentifer(() => SharedConfigurationSymbol)) configuration: SharedConfiguration) {
         super();
-        this.prefix = configuration.get('storage.cookieAdapter.prefix');
+        this.prefix = configuration.get<string>('storage.cookieAdapter.prefix');
     }
 
     /**

@@ -3,8 +3,10 @@ export * from './injector';
 /**
  * Config
  */
+export * from './config/configuration.interface';
 export * from './config/core-configuration.interface';
 export * from './config/shared-configuration';
+export * from './config';
 
 /**
  * Errors

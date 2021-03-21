@@ -1,10 +1,11 @@
-import { Adapter } from "./types";
+import { ConfigurationInterface } from "@banquette/core";
+import { AdapterIdentifier } from "./types";
 
-export interface StorageConfigurationInterface {
+export interface StorageConfigurationInterface extends ConfigurationInterface {
     /**
      * Define the default adapter to use.
      */
-    defaultAdapter: Adapter;
+    defaultAdapter: AdapterIdentifier;
 
     /**
      * Configuration specific to the cookie adapter.

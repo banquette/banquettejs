@@ -3,18 +3,18 @@ import { isConstructor, isString, isSymbol, isUndefined } from "@banquette/utils
 import { inject, injectable, LazyServiceIdentifer, multiInject } from "inversify";
 import { SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
 import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";
-import './adapter/cookies.adapter';
-import './adapter/local-storage.adapter';
 import { StorageConfigurationSymbol } from "./config";
 import { NoAdapterAvailableException } from "./exception/no-adapter-available.exception";
 import { StorageConfigurationInterface } from "./storage-configuration.interface";
-import { Adapter } from "./types";
+import { AdapterIdentifier } from "./types";
+import './adapter/cookies.adapter';
+import './adapter/local-storage.adapter';
 
 @injectable()
 export class StorageService {
     private readonly availableAdaptersOrdered: AdapterInterface[];
     private readonly availableAdaptersMap: Record<string, AdapterInterface>;
-    private defaultAdapter: AdapterInterface;
+    private readonly defaultAdapter: AdapterInterface;
 
     public constructor(@multiInject(AdapterInterfaceSymbol) adapters: AdapterInterface[],
                        @inject(new LazyServiceIdentifer(() => SharedConfigurationSymbol)) configuration: SharedConfiguration) {
@@ -29,7 +29,7 @@ export class StorageService {
         this.availableAdaptersOrdered.sort((a: AdapterInterface, b: AdapterInterface) => {
             return b.getPriority() - a.getPriority();
         });
-        this.defaultAdapter = this.resolveAdapter(configuration.getConfig<StorageConfigurationInterface>(StorageConfigurationSymbol).defaultAdapter);
+        this.defaultAdapter = this.resolveAdapter(configuration.get<StorageConfigurationInterface>(StorageConfigurationSymbol).defaultAdapter);
     }
 
     /**
@@ -37,7 +37,7 @@ export class StorageService {
      *
      * @throws UsageException
      */
-    public use<T extends AdapterInterface>(adapter: Adapter): T {
+    public use<T extends AdapterInterface>(adapter: AdapterIdentifier): T {
         return this.resolveAdapter<T>(adapter);
     }
 
@@ -96,17 +96,18 @@ export class StorageService {
      * @throws UsageException
      * @throws NoAdapterAvailableException
      */
-    private resolveAdapter<T extends AdapterInterface>(adapter: Adapter): T {
+    private resolveAdapter<T extends AdapterInterface>(adapter: AdapterIdentifier): T {
         let adapterStr: string|null = null;
         if (isString(adapter) || isUndefined(adapter)) {
             if (!this.availableAdaptersOrdered.length) {
                 throw new NoAdapterAvailableException();
             }
-            // Only 'auto' is valid string value.
+            // Only 'auto' is a valid string value
+            // so we can take the first one without checking the value of the string.
             return this.availableAdaptersOrdered[0] as T;
         }
         if (isSymbol(adapter)) {
-            adapter = Injector.Get<AdapterInterface>(adapter);
+            return Injector.Get<AdapterInterface>(adapter) as T;
         }
         if (isConstructor(adapter) && isString(adapter.name)) {
             adapterStr = adapter.name;
