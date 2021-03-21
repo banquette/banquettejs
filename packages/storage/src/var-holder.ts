@@ -1,6 +1,6 @@
+import { UsageException } from "@banquette/core";
 import { ensureArray, isObject, isString, isUndefined } from "@banquette/utils";
 import { injectable } from "inversify";
-import { UsageException } from "./error/usage.exception";
 
 /**
  * A generic key/value pair storage you can use to store data in memory.

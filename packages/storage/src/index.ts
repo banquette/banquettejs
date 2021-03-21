@@ -11,3 +11,4 @@ export * from './constants';
 export * from './storage-configuration.interface';
 export * from './storage.service';
 export * from './types';
+export * from './var-holder';
