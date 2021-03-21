@@ -39,7 +39,7 @@ export class NetworkWatcherService {
      * Start watching the network status.
      */
     public watch(): void {
-        if (isNullOrUndefined(this.onConnectionLostFn)) {
+        if (this.isSupported && isNullOrUndefined(this.onConnectionLostFn)) {
             this.onConnectionRetrievedFn = proxy(this.onConnectionRetrieved, this);
             this.onConnectionLostFn = proxy(this.onConnectionLost, this);
             window.addEventListener('online', this.onConnectionRetrievedFn);
