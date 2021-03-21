@@ -1,7 +1,7 @@
 import { Exception, Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from "@banquette/core";
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
 import { ObservablePromise } from "@banquette/promise";
-import { isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
+import { Constructor, isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
 import { inject, injectable } from "inversify";
 import { ProgressCallback, RejectCallback, ResolveCallback } from "../../promise/src/types";
 import { AdapterRequest } from "./adapter/adapter-request";
@@ -355,7 +355,7 @@ export class HttpService {
         if (this.initialized) {
             return ;
         }
-        const adapter: AdapterInterface = this.config.get('http.adapter');
+        const adapter: Constructor<AdapterInterface> = this.config.get('http.adapter');
         if (isNullOrUndefined(adapter)) {
             throw new UsageException(
                 'You must define a network adapter in the global configuration ' +
