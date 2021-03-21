@@ -70,15 +70,20 @@ export class SharedConfiguration {
      */
     public register<T extends ConfigurationInterface>(symbol: symbol, config: T, availableAsString: boolean = false): void {
         const description: string = getSymbolDescription(symbol);
-        if (availableAsString && description) {
-            if (description && isUndefined(this.stringMap[description])) {
-                this.stringMap[description] = config;
-            } else if (description) {
-                console.warn(
+        if (availableAsString) {
+            if (!description) {
+                throw new UsageException(
+                    'You must give a description to your symbol '+
+                    'if you make the configuration available by string.'
+                );
+            }
+            if (!isUndefined(this.stringMap[description])) {
+                throw new UsageException(
                     `Another symbol with the description "${description}" already exists. ` +
                     `This configuration will not be accessible by string.`
                 );
             }
+            this.stringMap[description] = config;
         }
         this.assignConfig(symbol, config);
     }
