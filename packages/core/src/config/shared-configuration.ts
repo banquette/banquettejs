@@ -49,7 +49,7 @@ export class SharedConfiguration {
         if (isSymbol(key)) {
             return extend({}, this.getBySymbol(key), true);
         }
-        return extend({}, this.getByString(key, defaultValue), true);
+        return this.getByString<T>(key, defaultValue);
     }
 
     /**
@@ -99,17 +99,17 @@ export class SharedConfiguration {
         if (config === null) {
             throw new UsageException(`No config found for "${symbol.toString()}".`);
         }
-        return config;
+        return extend({}, config);
     }
 
     /**
      * Get the configuration object or value in the string index.
      */
-    private getByString(key: symbol|string|string[], defaultValue: any = null): ConfigurationInterface | ConfigurationValue {
+    private getByString<T>(key: symbol|string|string[], defaultValue: any = null): T {
         const keys = isString(key) ? key.split('.') : ensureArray(key);
         let currentValue: any = this.stringMap;
-
-        for (let i = 0; i < keys.length; ++i) {
+        let i = 0;
+        for (; i < keys.length; ++i) {
             if (isUndefined(currentValue[keys[i]]) || (!isObject(currentValue[keys[i]]) && i < keys.length - 1)) {
                 if (i === 0 && isUndefined(currentValue[keys[i]])) {
                     throw new UsageException(`No config found for "${keys[i]}".`);
@@ -118,7 +118,7 @@ export class SharedConfiguration {
             }
             currentValue = currentValue[keys[i]];
         }
-        return currentValue;
+        return !i ? extend({}, currentValue) : currentValue;
     }
 }
 
