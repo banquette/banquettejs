@@ -1,4 +1,4 @@
-import { ConstructorFunction } from "@banquette/utils";
+import { Constructor } from "@banquette/utils";
 import { AdapterInterface } from "./adapter/adapter.interface";
 
 /**
@@ -8,7 +8,7 @@ export interface HttpConfigurationInterface {
     /**
      * The adapter to use to make XHR requests.
      */
-    adapter?: ConstructorFunction<AdapterInterface>;
+    adapter?: Constructor<AdapterInterface>;
 
     /**
      * Maximum number of requests that can run simultaneously.

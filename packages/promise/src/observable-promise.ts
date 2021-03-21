@@ -1,6 +1,6 @@
 import { UsageException } from "@banquette/core";
 import {
-    ConstructorFunction,
+    Constructor,
     ensureArray,
     isInstanceOf, isObject,
     isPromiseLike,
@@ -76,7 +76,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
         onResolve?: onResolveCallback<CompleteT, ResultT>,
         onReject?: onRejectCallback<RejectT>,
         onProgress?: (progress: ProgressT) => void,
-        progressTypes: Array<ConstructorFunction<any>> = []): ObservablePromiseInterface<ResultT|RejectT> {
+        progressTypes: Array<Constructor<any>> = []): ObservablePromiseInterface<ResultT|RejectT> {
         return new ObservablePromise<ResultT>((resolve: ResolveCallback<ResultT>, reject: RejectCallback, progress: ProgressCallback) => {
             const subscriber = {
                 onResolve: (result: CompleteT) => {
@@ -135,14 +135,14 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Like catch() but only calling the callback if the rejection reason is an object matching of the the type defined in parameter.
      */
-    public catchOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    public catchOf<RejectT = never>(type: Constructor<any>|Array<Constructor<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
         return this.catchBasedOnType(ensureArray(type), true, onReject);
     }
 
     /**
      * Like catchOf() but requires the type NOT to match for the callback to fire.
      */
-    public catchNotOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    public catchNotOf<RejectT = never>(type: Constructor<any>|Array<Constructor<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
         return this.catchBasedOnType(ensureArray(type), false, onReject);
     }
 
@@ -150,7 +150,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      * Subscribe to the promise progression events.
      */
     public progress<ProgressT = any>(onProgress: (progress: ProgressT) => void,
-                                     types: Array<ConstructorFunction<any>> = []): ObservablePromiseInterface<CompleteT> {
+                                     types: Array<Constructor<any>> = []): ObservablePromiseInterface<CompleteT> {
         return this.then((value: CompleteT) => value, undefined, onProgress, types);
     }
 
@@ -334,7 +334,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Centralize the catchOf() logic so we can inverse the condition.
      */
-    private catchBasedOnType<RejectT>(types: Array<ConstructorFunction<any>>, shouldMatch: boolean, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    private catchBasedOnType<RejectT>(types: Array<Constructor<any>>, shouldMatch: boolean, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
         if (this.parent) {
             this.parent.forwardReject();
         }

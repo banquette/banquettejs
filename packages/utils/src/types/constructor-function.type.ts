@@ -1,4 +1,4 @@
 /**
  * A generic constructor type.
  */
-export type ConstructorFunction<T> = new (...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;

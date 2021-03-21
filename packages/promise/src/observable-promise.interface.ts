@@ -1,4 +1,4 @@
-import { ConstructorFunction, ensureArray } from "@banquette/utils";
+import { Constructor, ensureArray } from "@banquette/utils";
 import { onFinallyCallback, onRejectCallback, onResolveCallback } from "./types";
 
 export interface ObservablePromiseInterface<CompleteT> {
@@ -9,7 +9,7 @@ export interface ObservablePromiseInterface<CompleteT> {
         onResolve?: onResolveCallback<CompleteT, ResultT>,
         onReject?: onRejectCallback<RejectT>,
         onProgress?: (progress: ProgressT) => void,
-        progressTypes?: Array<ConstructorFunction<any>>): ObservablePromiseInterface<ResultT|RejectT>;
+        progressTypes?: Array<Constructor<any>>): ObservablePromiseInterface<ResultT|RejectT>;
 
     /**
      * Attaches a callback that will be called if the promise rejects.
@@ -19,17 +19,17 @@ export interface ObservablePromiseInterface<CompleteT> {
     /**
      * Like catch() but only calling the callback if the rejection reason is an object matching of the the type defined in parameter.
      */
-    catchOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT>;
+    catchOf<RejectT = never>(type: Constructor<any>|Array<Constructor<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT>;
 
     /**
      * Like catchOf() but requires the type NOT to match for the callback to fire.
      */
-    catchNotOf<RejectT = never>(type: ConstructorFunction<any>|Array<ConstructorFunction<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT>;
+    catchNotOf<RejectT = never>(type: Constructor<any>|Array<Constructor<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT>;
 
     /**
      * Subscribe to the promise progression events.
      */
-    progress<ProgressT = any>(onProgress: (progress: ProgressT) => void, types?: Array<ConstructorFunction<any>>): ObservablePromiseInterface<CompleteT>;
+    progress<ProgressT = any>(onProgress: (progress: ProgressT) => void, types?: Array<Constructor<any>>): ObservablePromiseInterface<CompleteT>;
 
     /**
      * Attaches a callback that will be called when the promise is settled, no matter if it resolves or rejects.

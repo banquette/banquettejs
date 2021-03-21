@@ -1,4 +1,4 @@
-import { ConstructorFunction } from "@banquette/utils";
+import { Constructor } from "@banquette/utils";
 import { onProgressCallback } from "./types";
 
 export interface ProgressObserverInterface<T> {
@@ -14,5 +14,5 @@ export interface ProgressObserverInterface<T> {
      * If the array is empty all events will be transmitted.
      * If the array contains at least one element, only object values matching one of the constructors will be transmitted.
      */
-    types: Array<ConstructorFunction<any>>;
+    types: Array<Constructor<any>>;
 }
