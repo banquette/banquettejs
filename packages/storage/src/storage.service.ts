@@ -7,8 +7,8 @@ import { StorageConfigurationSymbol } from "./config";
 import { NoAdapterAvailableException } from "./exception/no-adapter-available.exception";
 import { StorageConfigurationInterface } from "./storage-configuration.interface";
 import { AdapterIdentifier } from "./types";
-import './adapter/cookies.adapter';
 import './adapter/local-storage.adapter';
+import './adapter/cookies.adapter';
 
 @injectable()
 export class StorageService {
@@ -49,42 +49,42 @@ export class StorageService {
     }
 
     /**
-     * Get the value associated with the given key.
+     * Get the value associated with a key or the default value is not found.
      */
-    public get(key: string): Promise<any> {
-        return this.defaultAdapter.get(key);
+    public get(key: string, defaultValue?: any): Promise<any> {
+        return this.defaultAdapter.get(key, defaultValue);
     }
 
     /**
-     * Set the value for the given key.
+     * Set the value of a key.
      */
     public set(key: string, value: any): Promise<void> {
         return this.defaultAdapter.set(key, value);
     }
 
     /**
-     * Remove any value associated with this key.
+     * Remove a key.
      */
     public remove(key: string): Promise<void> {
         return this.defaultAdapter.remove(key);
     }
 
     /**
-     * Clear the entire key value store.
+     * Clear the entire storage.
      */
     public clear(): Promise<void> {
         return this.defaultAdapter.clear();
     }
 
     /**
-     * Gets how many keys are stored in the storage.
+     * Gets how many keys are stored.
      */
     public length(): Promise<number> {
         return this.defaultAdapter.length();
     }
 
     /**
-     * Gets the list of all keys stored in the storage.
+     * Gets the list of all keys stored.
      */
     public keys(): Promise<string[]> {
         return this.defaultAdapter.keys();
