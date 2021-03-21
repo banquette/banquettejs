@@ -1,4 +1,6 @@
+import { ensureArray } from "../types/ensure-array";
 import { isArray } from "../types/is-array";
+import { isConstructor } from "../types/is-constructor";
 import { isDate } from "../types/is-date";
 import { isElement } from "../types/is-element";
 import { isFunction } from "../types/is-function";
@@ -11,9 +13,7 @@ import { isRegExp } from "../types/is-reg-exp";
  * Promises are copied as is, so they will be shared between dst and objs.
  */
 export function extend(dst: any, objs: any, deep: boolean = true) {
-    if (!isArray(objs)) {
-        objs = [objs];
-    }
+    objs = ensureArray(objs);
     for (let i = 0, ii = objs.length; i < ii; ++i) {
         const obj = objs[i];
         if (!isObject(obj) && !isFunction(obj)) {
@@ -33,7 +33,7 @@ export function extend(dst: any, objs: any, deep: boolean = true) {
                     dst[key] = src.cloneNode(true);
                 } else if (isElement(src)) {
                     dst[key] = src.clone();
-                } else if (isPromiseLike(src)) {
+                } else if (isPromiseLike(src) || isConstructor(src)) {
                     dst[key] = src;
                 } else {
                     const isar: boolean = isArray(src);
