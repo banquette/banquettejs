@@ -1,20 +1,18 @@
+
+import { FingerprintService, FingerprintServiceSymbol } from "@banquette/fingerprint";
+import { StorageService, StorageServiceSymbol } from "@banquette/storage";
 import {
-    Injector,
-    ensureArray,
-    ensureString,
+    ensureArray, ensureString,
     extend,
     getCaller,
     isArray,
     isNullOrUndefined,
-    isUndefined,
-    noop,
+    isUndefined, noop,
     prepareForDump,
     proxy
-} from "@banquette/core";
-import { FingerprintService, FingerprintServiceSymbol } from "@banquette/fingerprint";
-import { StorageService, StorageServiceSymbol } from "@banquette/storage";
+} from "@banquette/utils";
 import { inject, injectable } from "inversify";
-import { SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
+import { Injector, SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
 import { LogLevel } from './constants';
 import { LogMessageInterface } from "./log-message.interface";
 import { LoggerInterface } from "./logger.interface";
@@ -253,8 +251,8 @@ export class LoggerService implements LoggerInterface {
             return ;
         }
         this.isPersisting = true;
-        if (this.logs.length > this.config.get('log.maximumCount')) {
-            this.logs = this.logs.splice(-this.config.get('log.maximumCount'));
+        if (this.logs.length > this.config.get<number>('log.maximumCount')) {
+            this.logs = this.logs.splice(-this.config.get<number>('log.maximumCount'));
         }
         this.storage.set(this.config.get('log.storageKey'), this.logs).catch(noop).finally(() => {
             this.isPersisting = false;
