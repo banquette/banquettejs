@@ -4,25 +4,27 @@ import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";
 import { HttpRequest } from "./http-request";
 
+export interface HttpRequestFactoryConfig {
+    method?: HttpMethod,
+    url: string,
+    payload?: any,
+    payloadType?: symbol,
+    responseType?: symbol,
+    headers?: any,
+    timeout?: number|null,
+    retry?: number|null,
+    retryDelay?: number|'auto'|null,
+    priority?: number|null,
+    withCredentials?: boolean|null,
+    mimeType?: string|null,
+    extras?: any
+}
+
 export class HttpRequestFactory {
     /**
      * Alternative way to create an HttpRequest object.
      */
-    public static Create(input: {
-        method?: HttpMethod,
-        url: string,
-        payload?: any,
-        payloadType?: symbol,
-        responseType?: symbol,
-        headers?: any,
-        timeout?: number|null,
-        retry?: number|null,
-        retryDelay?: number|'auto'|null,
-        priority?: number|null,
-        withCredentials?: boolean|null,
-        mimeType?: string|null,
-        extras?: any
-    }): HttpRequest {
+    public static Create(input: HttpRequestFactoryConfig): HttpRequest {
         return new HttpRequest(
             input.method || HttpMethod.GET,
             input.url,
