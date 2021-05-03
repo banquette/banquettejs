@@ -6,10 +6,10 @@ import { ensureString } from "./ensure-string";
 import { isArray } from "./is-array";
 
 /**
- * Ensure the input is converted to a valid number.
+ * Ensure the input is converted to a the type of the reference value.
  */
 export function ensureSameType(input: any, referenceValue: any): any {
-    const targetType = typeof(referenceValue);
+    const targetType = referenceValue === null ? 'null' : typeof(referenceValue);
     switch (targetType) {
         case 'string': return ensureString(input);
         case 'number': case 'bigint': return ensureNumber(input);
@@ -20,7 +20,6 @@ export function ensureSameType(input: any, referenceValue: any): any {
             }
             return ensureObject(input);
         }
-        case 'undefined': return undefined;
     }
     return input;
 }
