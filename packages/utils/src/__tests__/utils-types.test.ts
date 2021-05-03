@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { noop } from "../noop";
-import { GenericCallback } from "../types/generic-callback.type";
+import { GenericCallback } from "../types/types";
 import { isPojo } from "../types/is-pojo";
 import { isPromiseLike } from "../types/is-promise-like";
 

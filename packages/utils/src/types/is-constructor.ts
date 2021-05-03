@@ -1,4 +1,4 @@
-import { Constructor } from "./constructor-function.type";
+import { Constructor } from "./types";
 
 /**
  * Test if the input value is an object constructor.

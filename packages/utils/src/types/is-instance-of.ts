@@ -1,4 +1,4 @@
-import { Constructor } from "./constructor-function.type";
+import { Constructor } from "./types";
 import { ensureArray } from "./ensure-array";
 import { isObject } from "./is-object";
 

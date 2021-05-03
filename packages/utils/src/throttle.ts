@@ -1,4 +1,4 @@
-import { GenericCallback } from "./types/generic-callback.type";
+import { GenericCallback } from "./types/types";
 
 /**
  * Throttle call to a function to ensure it is not called more frequently than a specified timing.

@@ -1,4 +1,4 @@
-import { GenericCallback } from "./types/generic-callback.type";
+import { GenericCallback } from "./types/types";
 
 /**
  * Ensure a function is only called after not being called for a certain amount of time.

@@ -1,4 +1,4 @@
-import { GenericCallback } from "./types/generic-callback.type";
+import { GenericCallback } from "./types/types";
 
 /**
  * Bind a function to a context, optionally partially applying any arguments.
