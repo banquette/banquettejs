@@ -1,9 +1,7 @@
 /**
  * Types
  */
-export * from './types/constructor-function.type';
-export * from './types/generic-callback.type';
-export * from './types/pojo.types';
+export * from './types/types';
 
 // Is type
 export * from './types/is-array';
@@ -19,6 +17,7 @@ export * from './types/is-file';
 export * from './types/is-function';
 export * from './types/is-valid-number';
 export * from './types/is-integer';
+export * from './types/is-iterable';
 export * from './types/is-null-or-undefined';
 export * from './types/is-number';
 export * from './types/is-numeric';
@@ -52,6 +51,7 @@ export * from './types/is-type';
 export * from './string/trim';
 export * from './string/capitalize';
 export * from './string/camel-case';
+export * from './string/escape-regex';
 export * from './string/human-file-size';
 export * from './string/is-empty-string';
 export * from './string/kebab-case';
