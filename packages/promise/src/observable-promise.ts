@@ -35,6 +35,8 @@ import {
  * @see https://www.freecodecamp.org/news/how-to-implement-promises-in-javascript-1ce2680a7f51/
  */
 export class ObservablePromise<CompleteT = any> implements ObservablePromiseInterface<CompleteT> {
+    public [Symbol.toStringTag]: string = 'ObservablePromise';
+
     /**
      * A flag to remember if the promise has been resolved/rejected.
      */

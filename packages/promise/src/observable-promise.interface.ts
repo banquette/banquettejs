@@ -3,6 +3,11 @@ import { onFinallyCallback, onRejectCallback, onResolveCallback } from "./types"
 
 export interface ObservablePromiseInterface<CompleteT> {
     /**
+     * For compatibility with Promise<T>.
+     */
+    readonly [Symbol.toStringTag]: string;
+
+    /**
      * Attaches callbacks for the resolution, rejection and/or progress events of the promise.
      */
     then<ResultT = CompleteT, RejectT = never>(
