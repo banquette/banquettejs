@@ -54,6 +54,7 @@ export * from './string/camel-case';
 export * from './string/escape-regex';
 export * from './string/human-file-size';
 export * from './string/is-empty-string';
+export * from './string/is-non-empty-string';
 export * from './string/kebab-case';
 export * from './string/number-format';
 export * from './string/remove-accents';
