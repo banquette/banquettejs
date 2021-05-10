@@ -1,7 +1,7 @@
 import { Exception, Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from "@banquette/core";
 import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
 import { ObservablePromise } from "@banquette/promise";
-import { Constructor, isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
+import { Constructor, isNonEmptyString, isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
 import { inject, injectable } from "inversify";
 import { ProgressCallback, RejectCallback, ResolveCallback } from "../../promise/src/types";
 import { AdapterRequest } from "./adapter/adapter-request";
@@ -188,11 +188,7 @@ export class HttpService {
             queuedRequest.isExecuting = true;
             this.runningRequestsCount++;
             await this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request));
-            if (!HttpService.IsValidPayload(queuedRequest.request.payload)) {
-                return void this.handleRequestFailure(queuedRequest, new UsageException(
-                    `Invalid body. Ensure that you have registered an encoder for this type of payload.`
-                ));
-            }
+            HttpService.EnsureValidRequest(queuedRequest.request);
             queuedRequest.tryCount++;
             queuedRequest.request.incrementTryCount();
             const adapterPromise: ObservablePromise = adapter.execute(queuedRequest.request as AdapterRequest);
@@ -385,17 +381,30 @@ export class HttpService {
     }
 
     /**
-     * Check the type of the payload to ensure it is compatible with what the xhr expects.
+     * Check if a request seems valid and throw a UsageException if not.
      */
-    private static IsValidPayload(payload: any): boolean {
-        return payload === null ||
+    private static EnsureValidRequest(request: HttpRequest): void {
+        if (!isNonEmptyString(request.url)) {
+            throw new UsageException('You must define a valid url.');
+        }
+        HttpService.EnsureValidPayload(request.payload);
+    }
+
+    /**
+     * Check the type of the payload to ensure it is compatible with what the xhr expects.
+     * Throw a UsageException if not.
+     */
+    private static EnsureValidPayload(payload: any): void {
+        if (payload === null ||
             isString(payload) ||
             payload instanceof Blob ||
             payload instanceof FormData ||
             payload instanceof ArrayBuffer ||
             payload instanceof Uint8Array ||
-            payload instanceof URLSearchParams;
-
+            payload instanceof URLSearchParams) {
+            return ;
+        }
+        throw new UsageException(`Invalid body. Ensure that you have registered an encoder for this type of payload.`);
     }
 }
 export const HttpServiceSymbol = Symbol("HttpService");
