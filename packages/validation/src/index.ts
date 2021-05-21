@@ -26,6 +26,7 @@ export * from './type/valid';
 
 export * from './v';
 export * from './simplified-validator.interface';
+export * from './simplify-validator';
 export * from './utils';
 export * from './validation-context';
 export * from './validator.factory';

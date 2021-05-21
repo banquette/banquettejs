@@ -1,6 +1,6 @@
 import { UsageException } from "@banquette/core";
 import { isIterable, isObject } from "@banquette/utils";
-import { ensureValidationContext, isValidatorContainer } from "../utils";
+import { isValidatorContainer } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorContainerInterface } from "../validator-container.interface";
@@ -42,7 +42,7 @@ export const Foreach = (validator: ValidatorInterface): ValidatorContainerInterf
          * Validate a value.
          */
         validate(value: any, maskOrContext: ValidationContext|string|string[]): ValidationResult {
-            const context: ValidationContext = ensureValidationContext(value, maskOrContext);
+            const context: ValidationContext = ValidationContext.EnsureValidationContext(value, maskOrContext);
             if (isIterable(value) || (value !== null && isObject(value))) {
                 for (const [k, v] of Object.entries(value)) {
                     const subContext = new ValidationContext(context, k, v);

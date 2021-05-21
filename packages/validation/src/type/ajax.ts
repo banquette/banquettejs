@@ -11,7 +11,7 @@ import {
 import { extend, isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils";
 import { inject, injectable } from "inversify";
 import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
-import { simplifyValidator } from "../utils";
+import { simplifyValidator } from "../simplify-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from '../validator.interface';

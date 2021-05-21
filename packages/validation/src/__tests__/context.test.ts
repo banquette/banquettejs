@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { UsageException } from "@banquette/core";
 import { isArray, isNumber, isObject } from "@banquette/utils";
-import { MatchResult } from "../utils";
+import { MatchResult } from "../mask/match-result";
 import { ValidationContext } from "../validation-context";
 
 function getForPath(root: ValidationContext, path: string): ValidationContext {

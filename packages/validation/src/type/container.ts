@@ -1,6 +1,7 @@
 import { UsageException } from "@banquette/core";
 import { isArray, isObject, isUndefined } from "@banquette/utils";
-import { ensureValidationContext, isValidatorContainer, MatchResult, splitPath } from "../utils";
+import { MatchResult } from "../mask/match-result";
+import { isValidatorContainer, splitPath } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorContainerInterface } from "../validator-container.interface";
@@ -69,7 +70,7 @@ export class ContainerValidator implements ValidatorContainerInterface {
      * Validate a value.
      */
     public validate(value: any, maskOrContext: ValidationContext|string|string[]): ValidationResult {
-        const context: ValidationContext = ensureValidationContext(value, maskOrContext);
+        const context: ValidationContext = ValidationContext.EnsureValidationContext(value, maskOrContext);
         if (!isObject(value) || context.matchMask() === MatchResult.None) {
             return context.result;
         }

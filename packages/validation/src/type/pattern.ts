@@ -1,6 +1,6 @@
 import { isString } from "@banquette/utils";
 import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
-import { simplifyValidator } from "../utils";
+import { simplifyValidator } from "../simplify-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorFactory } from "../validator.factory";

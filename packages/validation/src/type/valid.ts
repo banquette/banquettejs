@@ -1,4 +1,4 @@
-import { simplifyValidator } from "../utils";
+import { simplifyValidator } from "../simplify-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";

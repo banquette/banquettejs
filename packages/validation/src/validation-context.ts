@@ -1,6 +1,9 @@
 import { UsageException } from "@banquette/core";
-import { isUndefined } from "@banquette/utils";
-import { normalizeMasks, findBestPathMatch, isValidatorContainer, MatchResult } from "./utils";
+import { ensureArray, isUndefined } from "@banquette/utils";
+import { bestMaskMatch } from "./mask/best-mask-match";
+import { MatchResult } from "./mask/match-result";
+import { normalizeMasks } from "./mask/normalize-mask";
+import { isValidatorContainer } from "./utils";
 import { ValidationResult } from "./validation-result";
 import { ValidatorInterface } from "./validator.interface";
 
@@ -162,7 +165,7 @@ export class ValidationContext {
         if (!masks.length) {
             result = MatchResult.Full;
         } else {
-            result = findBestPathMatch(masks, this.path);
+            result = bestMaskMatch(masks, this.path);
         }
         if (useCache) {
             this.maskMatchResult[this.path] = result;
@@ -179,5 +182,20 @@ export class ValidationContext {
             (maskMatch === MatchResult.Sync && validator.asynchronous !== true) ||
             (maskMatch === MatchResult.Async && validator.asynchronous === true) ||
             (maskMatch === MatchResult.Partial && isValidatorContainer(validator));
+    }
+
+    /**
+     * Ensure a ValidationContext object is returned from a ValidatorInterface signature.
+     */
+    public static EnsureValidationContext(value: any, maskOrContext?: ValidationContext|string|string[]): ValidationContext {
+        if (!(maskOrContext instanceof ValidationContext)) {
+            return new ValidationContext(
+                null,
+                null,
+                value,
+                ensureArray(maskOrContext) as string[]
+            );
+        }
+        return maskOrContext as ValidationContext;
     }
 }

@@ -1,6 +1,8 @@
 import { Exception, ExceptionFactory, UsageException } from "@banquette/core";
 import { ensureArray, GenericCallback, isUndefined, proxy, replaceStringVariables, Writeable } from "@banquette/utils";
-import { normalizeMasks, findBestPathMatch, MatchResult } from "./utils";
+import { bestMaskMatch } from "./mask/best-mask-match";
+import { MatchResult } from "./mask/match-result";
+import { normalizeMasks } from "./mask/normalize-mask";
 import { Violation } from "./violation";
 import { ViolationInterface } from "./violation.interface";
 
@@ -268,7 +270,7 @@ export class ValidationResult {
      */
     private static ShouldMatch(result: ValidationResult, mask: string|string[]): ElaborateMatch {
         const masks = ensureArray(mask);
-        const matchResult: MatchResult = !masks.length ? MatchResult.Full : findBestPathMatch(masks, result.path);
+        const matchResult: MatchResult = !masks.length ? MatchResult.Full : bestMaskMatch(masks, result.path);
         return {rawResult: matchResult, fullyMatch: matchResult === MatchResult.Full ||
                 (matchResult === MatchResult.Async && result.promise !== null) ||
                 (matchResult === MatchResult.Sync && result.promise === null)};

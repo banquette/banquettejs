@@ -1,7 +1,7 @@
 import { UsageException } from "@banquette/core";
 import { isNumeric, isPromiseLike, isType, isUndefined } from "@banquette/utils";
 import { Valid } from "./type/valid";
-import { ensureValidationContext, isValidatorContainer, MatchResult, splitPath } from "./utils";
+import { isValidatorContainer, splitPath } from "./utils";
 import { ValidationContext } from "./validation-context";
 import { ValidationResult } from "./validation-result";
 import { ValidatorContainerInterface } from "./validator-container.interface";
@@ -93,7 +93,7 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
         let wrappingPromiseResolve: any = null;
         let wrappingPromiseReject: any = null;
         let lastLocalPromise: any = null;
-        const context = ensureValidationContext(value, maskOrContext);
+        const context = ValidationContext.EnsureValidationContext(value, maskOrContext);
         const getOrCreateWrapper = () => {
             // Because we don't know how many validators will be asynchronous, we have to wrap the promise
             // to prevent the main promise of the ValidationResult to resolve when the promise of
