@@ -143,6 +143,10 @@ export const Builds = Object.assign({},
     createBuildVariants({
         package: 'utils-color',
         module: 'BanquetteUtilsColor'
+    }),
+    createBuildVariants({
+        package: 'validation',
+        module: 'BanquetteValidation'
     })
 );
 

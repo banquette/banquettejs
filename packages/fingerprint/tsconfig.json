@@ -17,7 +17,8 @@
             "@banquette/utils-color": ["packages/utils-color/src/index.ts"],
             "@banquette/utils-crypto": ["packages/utils-crypto/src/index.ts"],
             "@banquette/utils-easing": ["packages/utils-easing/src/index.ts"],
-            "@banquette/utils-json": ["packages/utils-json/src/index.ts"]
+            "@banquette/utils-json": ["packages/utils-json/src/index.ts"],
+            "@banquette/validation": ["packages/validation/src/index.ts"]
         }
     },
     "exclude": []

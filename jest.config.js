@@ -19,7 +19,8 @@ module.exports = {
         "@banquette/utils-color$": "<rootDir>/packages/utils-color/src/index.ts",
         "@banquette/utils-crypto$": "<rootDir>/packages/utils-crypto/src/index.ts",
         "@banquette/utils-easing$": "<rootDir>/packages/utils-easing/src/index.ts",
-        "@banquette/utils-json$": "<rootDir>/packages/utils-json/src/index.ts"
+        "@banquette/utils-json$": "<rootDir>/packages/utils-json/src/index.ts",
+        "@banquette/validation$": "<rootDir>/packages/validation/src/index.ts"
     },
     "modulePathIgnorePatterns": ["__mocks__", "unused-packages"],
     "unmockedModulePathPatterns": ["<rootDir>/node_modules/"]

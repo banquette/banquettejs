@@ -1,0 +1,20 @@
+{
+    "name": "@banquette/validation",
+    "version": "0.0.5",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "directory": "packages/validation"
+    },
+    "license": "Apache-2.0",
+    "main": "dist/index.cjs.prod.js",
+    "module": "build/index.js",
+    "types": "build",
+    "exports": {
+        ".": "./dist/index.cjs.dev.js",
+        "./package.json": "./package.json"
+    },
+    "dependencies": {
+        "@banquette/core": "^0.0.2"
+    }
+}
