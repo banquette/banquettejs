@@ -1,11 +1,10 @@
-import { Injector } from "@banquette/core";
-import { isFunction, isObject } from "@banquette/utils";
-import { injectable } from "inversify";
+import { Service } from "@banquette/dependency-injection";
+import { isFunction, isObject } from "@banquette/utils-type";
+import { StorageAdapterTag } from "../constant";
 import { AbstractAdapter } from "./abstract.adapter";
-import { AdapterInterfaceSymbol } from "./adapter.interface";
 import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";
 
-@injectable()
+@Service(StorageAdapterTag)
 export class LocalStorageAdapter extends AbstractAdapter implements SynchronousAdapterInterface {
     /**
      * Test if the adapter is available in the current configuration.
@@ -110,4 +109,3 @@ export class LocalStorageAdapter extends AbstractAdapter implements SynchronousA
         return keys;
     }
 }
-Injector.RegisterService(AdapterInterfaceSymbol, LocalStorageAdapter);

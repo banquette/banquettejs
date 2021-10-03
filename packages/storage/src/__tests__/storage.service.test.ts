@@ -1,33 +1,33 @@
 import 'reflect-metadata';
-import { Injector } from "@banquette/core";
+import { Injector } from "@banquette/dependency-injection";
 import { AdapterInterface } from "../adapter/adapter.interface";
 import { SynchronousAdapterInterface } from "../adapter/synchronous-adapter.interface";
-import { StorageServiceSymbol, StorageService } from "../storage.service";
+import { StorageService } from "../storage.service";
 import { CookiesAdapter } from "../adapter/cookies.adapter";
 import { LocalStorageAdapter } from "../adapter/local-storage.adapter";
 
 test('default adapter (async)', async () => {
-    const storage = Injector.Get<StorageService>(StorageServiceSymbol);
+    const storage = Injector.Get<StorageService>(StorageService);
     await testAdapter(storage.getDefaultAdapter());
 });
 
 test('cookie adapter (async)', async () => {
-    const storage = Injector.Get<StorageService>(StorageServiceSymbol);
+    const storage = Injector.Get<StorageService>(StorageService);
     await testAdapter(storage.use(CookiesAdapter));
 });
 
 test('local storage adapter (async)', async () => {
-    const storage = Injector.Get<StorageService>(StorageServiceSymbol);
+    const storage = Injector.Get<StorageService>(StorageService);
     await testAdapter(storage.use(LocalStorageAdapter));
 });
 
 test('cookie adapter (sync)', () => {
-    const storage = Injector.Get<StorageService>(StorageServiceSymbol);
+    const storage = Injector.Get<StorageService>(StorageService);
     testAdapterSync(storage.use<CookiesAdapter>(CookiesAdapter));
 });
 
 test('local storage adapter (sync)',  () => {
-    const storage = Injector.Get<StorageService>(StorageServiceSymbol);
+    const storage = Injector.Get<StorageService>(StorageService);
     testAdapterSync(storage.use<LocalStorageAdapter>(LocalStorageAdapter));
 });
 

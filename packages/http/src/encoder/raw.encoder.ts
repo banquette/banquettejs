@@ -1,5 +1,5 @@
-import { Injector } from "@banquette/core";
-import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
+import { Injector } from "@banquette/dependency-injection";
+import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
 import { EncoderTag, Events } from "../constants";
 import { RequestEvent } from "../event/request.event";
 
@@ -14,7 +14,7 @@ function onBeforeRequest(event: RequestEvent) {
         event.stopPropagation();
     }
 }
-Injector.Get<EventDispatcherInterface>(EventDispatcherServiceSymbol).subscribe<RequestEvent>(
+Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<RequestEvent>(
     Events.BeforeRequest,
     onBeforeRequest,
     16, // Slightly higher priority so it is checked before the others

@@ -1,11 +1,12 @@
 import { ObservablePromise } from "@banquette/promise";
 import { EventArg } from './event-arg';
+import { UnsubscribeFunction } from "./type";
 
 export interface EventDispatcherInterface {
     /**
      * Subscribe to an event.
      */
-    subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void, priority?: number, tags?: symbol[]): () => void;
+    subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void, priority?: number, tags?: symbol[]): UnsubscribeFunction;
 
     /**
      * Trigger an event.

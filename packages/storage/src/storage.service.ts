@@ -1,23 +1,25 @@
-import { Injector, UsageException } from "@banquette/core";
-import { isConstructor, isString, isSymbol, isUndefined } from "@banquette/utils";
-import { inject, injectable, LazyServiceIdentifer, multiInject } from "inversify";
-import { SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
-import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";
+import { SharedConfiguration } from "@banquette/config";
+import { InjectLazy, InjectMultiple, Injector, Service } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { isConstructor, isString, isSymbol, isUndefined } from "@banquette/utils-type";
+import { AdapterInterface } from "./adapter/adapter.interface";
 import { StorageConfigurationSymbol } from "./config";
+import { StorageAdapterTag } from "./constant";
 import { NoAdapterAvailableException } from "./exception/no-adapter-available.exception";
 import { StorageConfigurationInterface } from "./storage-configuration.interface";
 import { AdapterIdentifier } from "./types";
-import './adapter/local-storage.adapter';
-import './adapter/cookies.adapter';
 
-@injectable()
+import './adapter/cookies.adapter';
+import './adapter/local-storage.adapter';
+
+@Service()
 export class StorageService {
     private readonly availableAdaptersOrdered: AdapterInterface[];
     private readonly availableAdaptersMap: Record<string, AdapterInterface>;
     private readonly defaultAdapter: AdapterInterface;
 
-    public constructor(@multiInject(AdapterInterfaceSymbol) adapters: AdapterInterface[],
-                       @inject(new LazyServiceIdentifer(() => SharedConfigurationSymbol)) configuration: SharedConfiguration) {
+    public constructor(@InjectMultiple(StorageAdapterTag) adapters: AdapterInterface[],
+                       @InjectLazy(() => SharedConfiguration) configuration: SharedConfiguration) {
         this.availableAdaptersOrdered = [];
         this.availableAdaptersMap = {};
         for (const adapter of adapters) {
@@ -121,5 +123,3 @@ export class StorageService {
         return this.availableAdaptersMap[adapterStr] as T;
     }
 }
-export const StorageServiceSymbol = Symbol("StorageService");
-Injector.RegisterService(StorageServiceSymbol, StorageService);

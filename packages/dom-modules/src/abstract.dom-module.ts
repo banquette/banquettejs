@@ -1,9 +1,8 @@
-import { UsageException } from "@banquette/core";
-import { areEqual, Pojo } from '@banquette/utils';
-import { injectable } from "inversify";
+import { UsageException } from "@banquette/exception";
+import { areEqual } from "@banquette/utils-misc";
+import { Pojo } from "@banquette/utils-type";
 
-@injectable()
-export class DomModule {
+export abstract class AbstractDomModule {
     /**
      * Module options.
      */

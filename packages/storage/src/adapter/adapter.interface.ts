@@ -41,5 +41,3 @@ export interface AdapterInterface {
      */
     keys(): Promise<string[]>;
 }
-
-export const AdapterInterfaceSymbol = Symbol("AdapterInterface");

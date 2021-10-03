@@ -1,6 +1,7 @@
-import { UsageException } from "@banquette/core";
+import { UsageException } from "@banquette/exception";
 import { EventDispatcher } from "@banquette/event";
-import { ensureSameType, isFunction, isObject, isString, isUndefined, randomInt } from "@banquette/utils";
+import { randomInt } from "@banquette/utils-random";
+import { ensureSameType, isFunction, isObject, isString, isUndefined } from "@banquette/utils-type";
 import { base64decodeUrlSafe } from "@banquette/utils-base64";
 import { XSSIPrefix } from "../../decoder/json.decoder";
 import { httpStatusToText } from "../../utils";

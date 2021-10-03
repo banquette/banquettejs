@@ -1,6 +1,8 @@
-import { ExceptionFactory, Injector } from '@banquette/core';
-import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
-import { isString, isUndefined, trim } from "@banquette/utils";
+import { Injector } from "@banquette/dependency-injection";
+import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { ExceptionFactory } from "@banquette/exception";
+import { trim } from "@banquette/utils-string";
+import { isString, isUndefined } from "@banquette/utils-type";
 import { DecoderTag, Events } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";
@@ -66,7 +68,7 @@ function onAfterRequest(event: ResponseEvent) {
     }
 }
 
-Injector.Get<EventDispatcherInterface>(EventDispatcherServiceSymbol).subscribe<ResponseEvent>(
+Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<ResponseEvent>(
     Events.BeforeResponse,
     onAfterRequest,
     0,

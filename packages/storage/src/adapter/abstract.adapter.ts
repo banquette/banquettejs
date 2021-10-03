@@ -1,5 +1,4 @@
-import { ensureNumber, isBoolean, isNumber, isObject, isUndefined } from "@banquette/utils";
-import { injectable } from "inversify";
+import { ensureNumber, isBoolean, isNumber, isObject, isUndefined } from "@banquette/utils-type";
 import { AdapterInterface } from "./adapter.interface";
 
 const UndefinedSymbol = Symbol('undefined');
@@ -12,7 +11,6 @@ enum Types {
     Undefined
 }
 
-@injectable()
 export abstract class AbstractAdapter implements AdapterInterface {
     /**
      * Test if the adapter is available in the current configuration.

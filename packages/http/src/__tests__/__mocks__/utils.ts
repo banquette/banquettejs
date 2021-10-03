@@ -1,4 +1,4 @@
-import { isObject, isUndefined } from "@banquette/utils";
+import { isObject, isUndefined } from "@banquette/utils-type";
 import { base64encodeUrlSafe } from "@banquette/utils-base64";
 import { XhrConfig } from "./xhr-config.type";
 

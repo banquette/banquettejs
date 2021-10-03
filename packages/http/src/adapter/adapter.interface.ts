@@ -16,5 +16,3 @@ export interface AdapterInterface {
      */
     cancel(): void;
 }
-
-export const AdapterInterfaceSymbol = Symbol('AdapterInterface');

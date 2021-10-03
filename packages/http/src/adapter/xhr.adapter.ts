@@ -1,7 +1,8 @@
-import { UsageException } from "@banquette/core";
+import { Module } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
 import { ObservablePromise } from "@banquette/promise";
-import { isUndefined, proxy } from "@banquette/utils";
-import { injectable } from "inversify";
+import { isUndefined } from "@banquette/utils-type";
+import { proxy } from "@banquette/utils-misc";
 import { HttpRequestProgressStatus } from "../constants";
 import { StatusChangeEvent } from "../event/status-change.event";
 import { TransferProgressEvent } from "../event/transfer-progress.event";
@@ -13,7 +14,7 @@ import { AdapterRequest } from "./adapter-request";
 import { AdapterResponse } from "./adapter-response";
 import { AdapterInterface } from "./adapter.interface";
 
-@injectable()
+@Module()
 export class XhrAdapter implements AdapterInterface {
     private xhr!: XMLHttpRequest;
     private request!: HttpRequest;

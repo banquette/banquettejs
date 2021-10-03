@@ -1,4 +1,4 @@
-import { DomModule } from "./dom-module";
+import { AbstractDomModule } from "./abstract.dom-module";
 
 export interface DomModuleDataInterface {
     /**
@@ -9,7 +9,7 @@ export interface DomModuleDataInterface {
     /**
      * Instance of the module.
      */
-    instance: DomModule;
+    instance: AbstractDomModule;
 
     /**
      * Name of the module in the data object of $element.
@@ -20,9 +20,4 @@ export interface DomModuleDataInterface {
      * HTML 5 attribute selector for the module.
      */
     selector: string;
-
-    /**
-     * Unique symbol associated to the module type
-     */
-    symbol: symbol;
 }

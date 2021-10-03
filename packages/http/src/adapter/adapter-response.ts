@@ -1,4 +1,4 @@
-import { slugify } from "@banquette/utils";
+import { slugify } from "@banquette/utils-string";
 
 /**
  * Holds the response of an adapter.

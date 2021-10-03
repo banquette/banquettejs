@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/core";
+import { SystemException } from "@banquette/exception";
 
 /**
  * Exception thrown to clearly notify an implementation is missing.

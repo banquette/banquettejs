@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { Injector } from "@banquette/core";
-import { waitForDelay } from "@banquette/utils";
+import { Injector } from "@banquette/dependency-injection";
+import { waitForDelay } from "@banquette/utils-misc";
 import { DispatchCallInterface } from "../dispatch-call.interface";
 import { EventArg } from "../event-arg";
 import { EventDispatcherInterface } from "../event-dispatcher.interface";
-import { EventDispatcherServiceSymbol } from "../event-dispatcher.service";
+import { EventDispatcherService } from "../event-dispatcher.service";
 
 interface Subscribers {
     [key: string]: [
@@ -23,7 +23,7 @@ const event1: symbol = Symbol('event1');
 const event2: symbol = Symbol('event2');
 const tag1: symbol = Symbol('tag1');
 const tag2: symbol = Symbol('tag2');
-const eventDispatcher = Injector.Get<EventDispatcherInterface>(EventDispatcherServiceSymbol);
+const eventDispatcher = Injector.Get<EventDispatcherInterface>(EventDispatcherService);
 
 /**
  * Basics

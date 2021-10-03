@@ -1,11 +1,13 @@
-import { Exception, ExceptionFactory, Injector, UsageException } from "@banquette/core";
-import { StorageService, StorageServiceSymbol } from "@banquette/storage";
-import { isNullOrUndefined, noop } from '@banquette/utils';
-import { inject, injectable, multiInject } from "inversify";
-import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";
+import { Inject, InjectMultiple, Service } from "@banquette/dependency-injection";
+import { Exception, ExceptionFactory, UsageException } from "@banquette/exception";
+import { StorageService } from "@banquette/storage";
+import { noop } from "@banquette/utils-misc";
+import { isNullOrUndefined } from '@banquette/utils-type';
+import { AdapterInterface } from "./adapter/adapter.interface";
 import './adapter/fingerprintjs.adapter';
+import { AdapterTag } from "./constant";
 
-@injectable()
+@Service()
 export class FingerprintService {
     /**
      * Name of the key to use to store the fingerprint in cache.
@@ -18,8 +20,8 @@ export class FingerprintService {
      */
     private promise!: Promise<string>;
 
-    public constructor(@inject(StorageServiceSymbol) private storage: StorageService,
-                       @multiInject(AdapterInterfaceSymbol) private adapters: AdapterInterface[]) {
+    public constructor(@Inject(StorageService) private storage: StorageService,
+                       @InjectMultiple(AdapterTag) private adapters: AdapterInterface[]) {
     }
 
     /**
@@ -76,6 +78,3 @@ export class FingerprintService {
         );
     }
 }
-
-export const FingerprintServiceSymbol = Symbol('FingerprintService');
-Injector.RegisterService(FingerprintServiceSymbol, FingerprintService);

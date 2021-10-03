@@ -10,10 +10,10 @@ export type ProgressCallback = (value: any) => void;
 /**
  * Promise callbacks types.
  */
-export type onResolveCallback<CompleteT, ResultT> = ((value: CompleteT) => ResultT | ThenableInterface<ResultT>);
-export type onRejectCallback<RejectT> = ((reason: any) => RejectT | ThenableInterface<RejectT>);
+export type onResolveCallback<CompleteT, ResultT> = (value: CompleteT) => ResultT | ThenableInterface<ResultT>;
+export type onRejectCallback<RejectT> = (reason: any) => RejectT | ThenableInterface<RejectT>;
 export type onProgressCallback<T> = (value: T) => void;
-export type onFinallyCallback<T> = () => T | ThenableInterface<T>;
+export type onFinallyCallback<T> = () => void;
 
 /**
  * Define the function passed to the constructor of the Promise.

@@ -1,4 +1,4 @@
-import { Exception, SystemException } from "@banquette/core";
+import { Exception, SystemException } from "@banquette/exception";
 
 /**
  * Exception thrown when a request fails at the network level

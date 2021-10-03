@@ -5,5 +5,3 @@ export interface AdapterInterface {
      */
     generateFingerprint(): Promise<string>;
 }
-
-export const AdapterInterfaceSymbol = Symbol("AdapterInterface");

@@ -1,18 +1,18 @@
-import { Injector,  SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
-import { isUndefined } from "@banquette/utils";
-import { inject, injectable, LazyServiceIdentifer } from "inversify";
+import { SharedConfiguration } from "@banquette/config";
+import { InjectLazy, Service } from "@banquette/dependency-injection";
+import { isUndefined } from "@banquette/utils-type";
+import { StorageAdapterTag } from "../constant";
 import { AbstractAdapter } from "./abstract.adapter";
-import { AdapterInterfaceSymbol } from "./adapter.interface";
 import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";
 
-@injectable()
+@Service(StorageAdapterTag)
 export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapterInterface {
     /**
      * Prefix to be able to differentiate between cookies managed by the storage and cookies who don't.
      */
     private prefix: string;
 
-    public constructor(@inject(new LazyServiceIdentifer(() => SharedConfigurationSymbol)) configuration: SharedConfiguration) {
+    public constructor(@InjectLazy(() => SharedConfiguration) configuration: SharedConfiguration) {
         super();
         this.prefix = configuration.get<string>('storage.cookieAdapter.prefix');
     }
@@ -143,4 +143,3 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
         return keys;
     }
 }
-Injector.RegisterService(AdapterInterfaceSymbol, CookiesAdapter);

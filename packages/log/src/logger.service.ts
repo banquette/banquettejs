@@ -1,23 +1,23 @@
-
-import { FingerprintService, FingerprintServiceSymbol } from "@banquette/fingerprint";
-import { StorageService, StorageServiceSymbol } from "@banquette/storage";
+import { SharedConfiguration } from "@banquette/config";
+import { Inject, Service } from "@banquette/dependency-injection";
+import { FingerprintService } from "@banquette/fingerprint";
+import { StorageService } from "@banquette/storage";
+import { noop, proxy } from "@banquette/utils-misc";
+import { extend } from "@banquette/utils-object";
+import { getCaller } from "@banquette/utils-reflection";
 import {
-    ensureArray, ensureString,
-    extend,
-    getCaller,
+    ensureArray,
+    ensureSerializable,
+    ensureString,
     isArray,
     isNullOrUndefined,
-    isUndefined, noop,
-    prepareForDump,
-    proxy
-} from "@banquette/utils";
-import { inject, injectable } from "inversify";
-import { Injector, SharedConfiguration, SharedConfigurationSymbol } from "@banquette/core";
+    isUndefined
+} from "@banquette/utils-type";
 import { LogLevel } from './constants';
 import { LogMessageInterface } from "./log-message.interface";
 import { LoggerInterface } from "./logger.interface";
 
-@injectable()
+@Service()
 export class LoggerService implements LoggerInterface {
     /**
      * Whole list of logs.
@@ -60,9 +60,9 @@ export class LoggerService implements LoggerInterface {
      */
     private fingerprint!: string|null;
 
-    constructor(@inject(StorageServiceSymbol) private storage: StorageService,
-                @inject(SharedConfigurationSymbol) private config: SharedConfiguration,
-                @inject(FingerprintServiceSymbol) private fingerprintGenerator: FingerprintService) {
+    constructor(@Inject(StorageService) private storage: StorageService,
+                @Inject(SharedConfiguration) private config: SharedConfiguration,
+                @Inject(FingerprintService) private fingerprintGenerator: FingerprintService) {
         this.listen(config.get('log.level'));
     }
 
@@ -156,7 +156,7 @@ export class LoggerService implements LoggerInterface {
             const log: LogMessageInterface = {
                 level,
                 message: LoggerService.resolveMessagePlaceholders(message, newContext),
-                context: prepareForDump(newContext, 5)
+                context: ensureSerializable(newContext, 5)
             };
             this.register(log);
             if (this.config.get('env') === 'dev') {
@@ -314,5 +314,3 @@ export class LoggerService implements LoggerInterface {
         return output;
     }
 }
-export const LoggerServiceSymbol = Symbol("LoggerService");
-Injector.RegisterService(LoggerServiceSymbol, LoggerService);

@@ -1,14 +1,6 @@
-import { UsageException } from "@banquette/core";
-import {
-    Constructor,
-    ensureArray,
-    isInstanceOf, isObject,
-    isPromiseLike,
-    isType,
-    isUndefined,
-    noop,
-    proxy
-} from "@banquette/utils";
+import { UsageException } from "@banquette/exception";
+import { noop, proxy } from "@banquette/utils-misc";
+import { Constructor, ensureArray, isObject, isPromiseLike, isType, isUndefined } from "@banquette/utils-type";
 import { CancelException } from "./exception/cancel.exception";
 import { TimeoutException } from "./exception/timeout.exception";
 import { ObservablePromiseInterface } from "./observable-promise.interface";
@@ -18,8 +10,7 @@ import { PromiseObserverInterface } from "./promise-observer.interface";
 import { PromiseStatus } from "./promise-status";
 import { ThenableInterface } from "./thenable.interface";
 import {
-    ExecutorFunction,
-    onFinallyCallback,
+    ExecutorFunction, onFinallyCallback,
     onRejectCallback,
     onResolveCallback,
     ProgressCallback,
@@ -75,10 +66,10 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      * Attaches callbacks for the resolution, rejection and/or progress events of the promise.
      */
     public then<ResultT = CompleteT, RejectT = never, ProgressT = any>(
-        onResolve?: onResolveCallback<CompleteT, ResultT>,
-        onReject?: onRejectCallback<RejectT>,
+        onResolve?: onResolveCallback<CompleteT, ResultT> | null,
+        onReject?: onRejectCallback<RejectT> | null,
         onProgress?: (progress: ProgressT) => void,
-        progressTypes: Array<Constructor<any>> = []): ObservablePromiseInterface<ResultT|RejectT> {
+        progressTypes: Array<Constructor> = []): ObservablePromiseInterface<ResultT|RejectT> {
         return new ObservablePromise<ResultT>((resolve: ResolveCallback<ResultT>, reject: RejectCallback, progress: ProgressCallback) => {
             const subscriber = {
                 onResolve: (result: CompleteT) => {
@@ -127,7 +118,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Attaches a callback that will be called if the promise rejects.
      */
-    public catch<RejectT = never>(onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    public catch<RejectT = never>(onReject?: onRejectCallback<RejectT> | null): ObservablePromiseInterface<CompleteT|RejectT> {
         if (this.parent) {
             this.parent.forwardReject();
         }
@@ -137,14 +128,14 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Like catch() but only calling the callback if the rejection reason is an object matching of the the type defined in parameter.
      */
-    public catchOf<RejectT = never>(type: Constructor<any>|Array<Constructor<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    public catchOf<RejectT = never>(type: Constructor|Array<Constructor>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
         return this.catchBasedOnType(ensureArray(type), true, onReject);
     }
 
     /**
      * Like catchOf() but requires the type NOT to match for the callback to fire.
      */
-    public catchNotOf<RejectT = never>(type: Constructor<any>|Array<Constructor<any>>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    public catchNotOf<RejectT = never>(type: Constructor|Array<Constructor>, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
         return this.catchBasedOnType(ensureArray(type), false, onReject);
     }
 
@@ -152,26 +143,30 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      * Subscribe to the promise progression events.
      */
     public progress<ProgressT = any>(onProgress: (progress: ProgressT) => void,
-                                     types: Array<Constructor<any>> = []): ObservablePromiseInterface<CompleteT> {
+                                     types: Array<Constructor> = []): ObservablePromiseInterface<CompleteT> {
         return this.then((value: CompleteT) => value, undefined, onProgress, types);
     }
 
     /**
      * Attaches a callback that will be called when the promise is settled, no matter if it resolves or rejects.
      */
-    public finally<ResultT = CompleteT, RejectT = never>(onSettle: onFinallyCallback<ResultT>): ObservablePromiseInterface<ResultT|RejectT> {
+    public finally<ResultT = CompleteT, RejectT = never>(onSettle: onFinallyCallback<ResultT> | null): ObservablePromiseInterface<ResultT|RejectT> {
         return new ObservablePromise<ResultT>((resolve: ResolveCallback<ResultT>, reject: RejectCallback, progress: ProgressCallback) => {
             let rejected = false;
             let result: any;
             return this.then(
                 (value: CompleteT) => {
                     result = value;
-                    return onSettle();
+                    if (onSettle) {
+                        onSettle();
+                    }
                 },
                 (reason: any) => {
                     result = reason;
                     rejected = true;
-                    return onSettle();
+                    if (onSettle) {
+                        onSettle();
+                    }
                 }
             ).then(() => {
                 if (rejected) {
@@ -316,7 +311,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                 } break ;
 
                 case PromiseEventType.progress: {
-                    if (!observer.onProgress.types.length || isInstanceOf(value, observer.onProgress.types)) {
+                    if (!observer.onProgress.types.length) {
                         observer.onProgress.callback(value);
                     }
                 } break ;
@@ -336,7 +331,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Centralize the catchOf() logic so we can inverse the condition.
      */
-    private catchBasedOnType<RejectT>(types: Array<Constructor<any>>, shouldMatch: boolean, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
+    private catchBasedOnType<RejectT>(types: Array<Constructor>, shouldMatch: boolean, onReject: onRejectCallback<RejectT>): ObservablePromiseInterface<CompleteT|RejectT> {
         if (this.parent) {
             this.parent.forwardReject();
         }
@@ -396,7 +391,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      * Wait for all entries of the collection to resolve and resolve with an array of the results.
      * The items of the collection are not forced to be promises, any value can be given.
      */
-    public static All<T = any>(collection: Array<T | ThenableInterface<T>>): ObservablePromiseInterface<T[]> {
+    public static All<T>(collection: Array<T | ThenableInterface<T>>): ObservablePromiseInterface<T[]> {
         return new ObservablePromise<T[]>((resolve: ResolveCallback<T[]>, reject: RejectCallback) => {
             collection = ensureArray(collection);
             let done = 0;

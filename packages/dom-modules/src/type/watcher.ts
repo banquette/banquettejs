@@ -1,14 +1,15 @@
-import { Injector, throttle } from "@banquette/core";
-import { inject, injectable } from "inversify";
-import { DomModule } from "../dom-module";
-import { DomModulesScanner, DomModulesScannerSymbol } from "../dom-modules-scanner";
+import { Inject } from "@banquette/dependency-injection";
+import { throttle } from "@banquette/utils-misc";
+import { DomModule } from "../decorator/dom-module.decorator";
+import { AbstractDomModule } from "../abstract.dom-module";
+import { DomModulesScanner } from "../dom-modules-scanner";
 
-@injectable()
-class Watcher extends DomModule {
+@DomModule('watcher')
+export class Watcher extends AbstractDomModule {
     private scanner: DomModulesScanner;
     private observer: MutationObserver|null ;
 
-    public constructor(@inject(DomModulesScannerSymbol) scanner: DomModulesScanner) {
+    public constructor(@Inject(DomModulesScanner) scanner: DomModulesScanner) {
         super();
         this.scanner = scanner;
         this.observer = null;
@@ -39,5 +40,3 @@ class Watcher extends DomModule {
         }
     }
 }
-export const WatcherSymbol = Symbol("Watcher");
-Injector.RegisterModule(WatcherSymbol, Watcher);

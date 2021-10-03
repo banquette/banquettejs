@@ -1,5 +1,5 @@
-import { UsageException } from "@banquette/core";
-import { VarHolder } from "./var-holder";
+import { UsageException } from "@banquette/exception";
+import { VarHolder } from "@banquette/utils-misc";
 
 export class Constants extends VarHolder {
     private static Instance: Constants|null = null;

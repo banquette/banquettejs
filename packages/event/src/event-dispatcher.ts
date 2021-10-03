@@ -1,13 +1,13 @@
-import { ExceptionFactory } from "@banquette/core";
+import { ExceptionFactory } from "@banquette/exception";
 import { ObservablePromise } from "@banquette/promise";
-import { ensureArray, getFromSymbolIndex, isNullOrUndefined, isPromiseLike, isType, Not } from "@banquette/utils";
-import { injectable } from "inversify";
+import { Not } from "@banquette/utils-misc";
+import { ensureArray, isNullOrUndefined, isPromiseLike, isType, isUndefined } from "@banquette/utils-type";
 import { DispatchCallInterface } from "./dispatch-call.interface";
 import { EventArg } from './event-arg';
 import { EventDispatcherInterface } from "./event-dispatcher.interface";
 import { SubscriberInterface } from "./subscriber.interface";
+import { UnsubscribeFunction } from "./type";
 
-@injectable()
 export class EventDispatcher implements EventDispatcherInterface {
     private static DEFAULT_TAG = Symbol('default');
 
@@ -36,7 +36,7 @@ export class EventDispatcher implements EventDispatcherInterface {
      *
      * @return A function to call to unsubscribe.
      */
-    public subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void, priority: number = 0, tags: symbol[] = []): () => void {
+    public subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void, priority: number = 0, tags: symbol[] = []): UnsubscribeFunction {
         const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
         if (!tags.length) {
             tags.push(EventDispatcher.DEFAULT_TAG);
@@ -45,10 +45,10 @@ export class EventDispatcher implements EventDispatcherInterface {
         subscribers.sort((a: SubscriberInterface, b: SubscriberInterface) => {
             return b.priority - a.priority;
         });
-        this.setSubscribersForType(type, subscribers);
+        this.subscribers[type] = subscribers;
         let events: any;
         // If we have events waiting for a subscriber, trigger them.
-        if ((events = getFromSymbolIndex(this.queue, type)) !== null) {
+        if (!isUndefined((events = this.queue[type]))) {
             // Now that events are copied into a local variable, we can remove them from the class property.
             delete (this.queue as any)[type];
             //
@@ -63,10 +63,9 @@ export class EventDispatcher implements EventDispatcherInterface {
             });
         }
         return () => {
-            const subscribers: SubscriberInterface[] = this.getSubscribersForType(type).filter((subscriber: SubscriberInterface) => {
+            this.subscribers[type] = this.getSubscribersForType(type).filter((subscriber: SubscriberInterface) => {
                 return subscriber.callback !== callback;
             });
-            this.setSubscribersForType(type, subscribers);
         };
     }
 
@@ -142,7 +141,7 @@ export class EventDispatcher implements EventDispatcherInterface {
         if (subscribers.length > 0) {
             return void this.dispatch(type, event);
         }
-        const queue = ensureArray(getFromSymbolIndex(this.queue, type));
+        const queue = ensureArray(this.queue[type]);
         queue.push({event});
         Object.assign(this.queue, {[type]: queue});
     }
@@ -154,28 +153,14 @@ export class EventDispatcher implements EventDispatcherInterface {
         if (isNullOrUndefined(type)) {
             this.subscribers = {};
         } else {
-            this.setSubscribersForType(type, []);
+            this.subscribers[type] = [];
         }
     }
 
     /**
      * Get the list of subscribers for a type of event.
-     *
-     * Workaround until TypeScript allow for symbols as object indexes.
-     * @see https://github.com/microsoft/TypeScript/issues/1863
      */
     private getSubscribersForType(type: symbol): SubscriberInterface[] {
-        const subscribers: SubscriberInterface[]|null = getFromSymbolIndex(this.subscribers, type) as SubscriberInterface[]|null;
-        return subscribers !== null ? subscribers : [];
-    }
-
-    /**
-     * Update the list of subscribers for a type of event.
-     *
-     * Workaround until TypeScript allow for symbols as object indexes.
-     * @see https://github.com/microsoft/TypeScript/issues/1863
-     */
-    private setSubscribersForType(type: symbol, subscribers: SubscriberInterface[]): void {
-        Object.assign(this.subscribers, {[type]: subscribers});
+        return !isUndefined(this.subscribers[type]) ? this.subscribers[type] : [];
     }
 }

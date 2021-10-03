@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/core";
+import { UsageException } from "@banquette/exception";
 import { AdapterInterface } from "./adapter/adapter.interface";
 import { HttpMethod } from "./constants";
 import { HttpResponse } from "./http-response";

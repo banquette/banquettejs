@@ -7,8 +7,8 @@ export * from './adapter/local-storage.adapter';
 export * from './exception/no-adapter-available.exception';
 
 export * from './config';
+export * from './constant';
 export * from './constants';
 export * from './storage-configuration.interface';
 export * from './storage.service';
 export * from './types';
-export * from './var-holder';

@@ -1,30 +1,26 @@
-import { ExceptionFactory, Injector, UsageException } from "@banquette/core";
-import { camelCase, getSymbolDescription, isNullOrUndefined, isUndefined, kebabCase, trim } from "@banquette/utils";
-import { injectable } from "inversify";
-import { DomModule } from "./dom-module";
-import { DomModuleDataInterface } from "./dom-module-data.interface";
+import { InjectableMetadataInterface, Injector, MetadataContainer, Service } from "@banquette/dependency-injection";
+import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { isNullOrUndefined, isUndefined } from "@banquette/utils-type";
+import { camelCase, kebabCase, trim } from "@banquette/utils-string";
+import { AbstractDomModule } from "./abstract.dom-module";
+import { DomModuleConstructor, ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from "./constant";
 
 /**
  * Manages modules created using [dom-*] attributes in the DOM.
  */
-@injectable()
+@Service()
 export class DomModulesScanner {
     private static MODULES_HTML_ATTRIBUTES_PREFIX = "dom-";
 
     /**
      * List of attributes selectors with the symbol of their associated module.
      */
-    private modulesAttributeSelectors: {[key: string]: symbol}|null = null;
-
-    /**
-     * List of instantiated modules.
-     */
-    private modules: DomModuleDataInterface[] = [];
+    private modulesAttributeSelectors: {[key: string]: DomModuleConstructor}|null = null;
 
     /**
      * Map DOM elements to their associated DomModule instances.
      */
-    private existingModules: WeakMap<HTMLElement, Record<string, DomModule>> = new WeakMap<HTMLElement, Record<string, DomModule>>();
+    private existingModules: WeakMap<HTMLElement, Record<string, AbstractDomModule>> = new WeakMap<HTMLElement, Record<string, AbstractDomModule>>();
 
     /**
      * Scan the DOM in the search of [dom-*] attributes and create the corresponding modules.
@@ -34,11 +30,8 @@ export class DomModulesScanner {
         if (this.modulesAttributeSelectors === null) {
             this.modulesAttributeSelectors = this.computeModulesAttributeSelectors();
         }
-        for (const selector in this.modulesAttributeSelectors) {
-            if (!this.modulesAttributeSelectors.hasOwnProperty(selector)) {
-                continue ;
-            }
-            document.querySelectorAll(`[${selector}]`).forEach((function(attrName: string, moduleSymbol: symbol) {
+        for (const selector of Object.keys(this.modulesAttributeSelectors)) {
+            document.querySelectorAll(`[${selector}]`).forEach((function(attrName: string, moduleCtor: DomModuleConstructor) {
                 return function (element: Element) {
                     if (!(element instanceof HTMLElement)) {
                         return ;
@@ -48,7 +41,7 @@ export class DomModulesScanner {
                         attrValue = trim(attrValue);
                     }
                     const dataName = camelCase(attrName);
-                    const moduleInstance: DomModule = Injector.Get<DomModule>(moduleSymbol);
+                    const moduleInstance: AbstractDomModule = Injector.Get<AbstractDomModule>(moduleCtor);
                     let options: any = {};
 
                     let existingModules = that.existingModules.get(element);
@@ -57,7 +50,7 @@ export class DomModulesScanner {
                         that.existingModules.set(element, existingModules);
                     }
                     if (!isUndefined(existingModules[attrName])) {
-                        throw new UsageException(`Multiple initialization of the jQuery module "${getSymbolDescription(moduleSymbol)}".`);
+                        throw new UsageException(`Multiple initialization of the jQuery module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}".`);
                     }
                     if (attrValue) {
                         if (attrValue[0] === "{") {
@@ -68,7 +61,7 @@ export class DomModulesScanner {
                                 }
                             } catch (e) {
                                 throw new UsageException(
-                                    `Failed to decode options of the jQuery module "${getSymbolDescription(moduleSymbol)}". `+
+                                    `Failed to decode options of the jQuery module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}". `+
                                     `Please provide a valid JSON object.`,
                                     ExceptionFactory.EnsureException(e)
                                 );
@@ -76,7 +69,7 @@ export class DomModulesScanner {
                         } else {
                             const defaultOptionName: string|null = moduleInstance.getDefaultOptionName();
                             if (defaultOptionName === null) {
-                                throw new UsageException(`No default option name has been defined for the jQuery module "${getSymbolDescription(moduleSymbol)}".`);
+                                throw new UsageException(`No default option name has been defined for the jQuery module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}".`);
                             }
                             options[defaultOptionName] = attrValue;
                         }
@@ -85,13 +78,6 @@ export class DomModulesScanner {
                     moduleInstance.setElement(element);
                     moduleInstance.initialize(options);
                     existingModules[dataName] = moduleInstance;
-                    that.modules.push({
-                        element: element,
-                        dataName,
-                        instance: moduleInstance,
-                        selector: attrName,
-                        symbol: moduleSymbol,
-                    });
                 };
             })(selector, this.modulesAttributeSelectors[selector]));
         }
@@ -100,20 +86,23 @@ export class DomModulesScanner {
     /**
      * Create an object containing:
      *   - as key: an HTML attribute
-     *   - as value: the symbol corresponding to the module that should be created if the HTML attribute is found.
+     *   - as value: the constructor of the module that should be created if the HTML attribute is found.
      *
      * @returns {object}
      */
-    private computeModulesAttributeSelectors(): {[key: string]: symbol} {
-        const output: {[key: string]: symbol} = {};
-        const symbols: symbol[] = Injector.GetModulesSymbols();
-        for (const item of symbols) {
-            const attrName: string = DomModulesScanner.MODULES_HTML_ATTRIBUTES_PREFIX + kebabCase(getSymbolDescription(item));
-            output[attrName] = item;
+    private computeModulesAttributeSelectors(): {[key: string]: DomModuleConstructor} {
+        const output: {[key: string]: DomModuleConstructor} = {};
+        const metadata: InjectableMetadataInterface[] = MetadataContainer.GetForTag(ModuleInjectorTag);
+        const ctors: DomModuleConstructor[] = metadata.reduce((acc: DomModuleConstructor[], item: InjectableMetadataInterface) => {
+            if (item.tags.indexOf(ModuleInjectorTag) > -1 && !isUndefined((item.ctor as any)[MODULE_NAME_CTOR_ATTR])) {
+                acc.push(item.ctor as DomModuleConstructor);
+            }
+            return acc;
+        }, []);
+        for (const ctor of ctors) {
+            const attrName: string = DomModulesScanner.MODULES_HTML_ATTRIBUTES_PREFIX + kebabCase(ctor[MODULE_NAME_CTOR_ATTR]);
+            output[attrName] = ctor;
         }
         return output;
     }
 }
-
-export const DomModulesScannerSymbol = Symbol("DomModulesScanner");
-Injector.RegisterService(DomModulesScannerSymbol, DomModulesScanner);

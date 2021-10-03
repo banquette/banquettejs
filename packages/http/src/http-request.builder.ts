@@ -1,5 +1,6 @@
-import { UsageException } from "@banquette/core";
-import { extend, isUndefined } from "@banquette/utils";
+import { UsageException } from "@banquette/exception";
+import { extend } from "@banquette/utils-object";
+import { isUndefined } from "@banquette/utils-type";
 import { HttpMethod } from "./constants";
 import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";

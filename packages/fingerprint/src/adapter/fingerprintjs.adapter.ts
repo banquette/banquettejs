@@ -1,11 +1,11 @@
-import { Injector } from "@banquette/core";
-import { isUndefined } from "@banquette/utils";
-import { injectable } from "inversify";
+import { Service } from "@banquette/dependency-injection";
+import { isUndefined } from "@banquette/utils-type";
+import { AdapterTag } from "../constant";
 import { FingerprintGeneratorInvalidScriptException } from "../exception/fingerprint-generator-invalid-script.exception";
 import { FingerprintGeneratorScriptTimeoutException } from "../exception/fingerprint-generator-script-timeout.exception";
-import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter.interface";
+import { AdapterInterface } from "./adapter.interface";
 
-@injectable()
+@Service(AdapterTag)
 export class FingerprintjsAdapter implements AdapterInterface {
     /**
      * Maximum time to wait for the detection script to load.
@@ -41,4 +41,3 @@ export class FingerprintjsAdapter implements AdapterInterface {
         });
     }
 }
-Injector.RegisterService(AdapterInterfaceSymbol, FingerprintjsAdapter);

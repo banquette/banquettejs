@@ -1,4 +1,4 @@
-import { Exception } from "@banquette/core";
+import { Exception } from "@banquette/exception";
 import { HttpResponse } from "../http-response";
 import { RequestException } from "./request.exception";
 

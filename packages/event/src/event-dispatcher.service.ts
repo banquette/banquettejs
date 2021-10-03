@@ -1,10 +1,7 @@
-import { Injector } from "@banquette/core";
-import { injectable } from "inversify";
+import { Service } from "@banquette/dependency-injection";
 import { EventDispatcher } from "./event-dispatcher";
 
-@injectable()
+@Service()
 export class EventDispatcherService  extends EventDispatcher {
 
 }
-export const EventDispatcherServiceSymbol = Symbol("EventDispatcherService");
-Injector.RegisterService(EventDispatcherServiceSymbol, EventDispatcherService);

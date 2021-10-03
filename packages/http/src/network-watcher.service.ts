@@ -1,11 +1,11 @@
-import { Injector } from '@banquette/core';
-import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
-import { isNullOrUndefined, isObject, proxy } from "@banquette/utils";
-import { inject, injectable } from "inversify";
+import { Inject, Service } from "@banquette/dependency-injection";
+import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { proxy } from "@banquette/utils-misc";
+import { isNullOrUndefined, isObject } from "@banquette/utils-type";
 import { Events } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 
-@injectable()
+@Service()
 export class NetworkWatcherService {
     /**
      * Holds if the connection to internet is available.
@@ -23,7 +23,7 @@ export class NetworkWatcherService {
     private onConnectionRetrievedFn!: () => void;
     private onConnectionLostFn!: () => void;
 
-    public constructor(@inject(EventDispatcherServiceSymbol) private eventDispatcher: EventDispatcherInterface) {
+    public constructor(@Inject(EventDispatcherService) private eventDispatcher: EventDispatcherInterface) {
         this.isSupported = isObject(window.navigator);
         this.isOnlineAttr = this.isSupported ? window.navigator.onLine : true;
     }
@@ -82,5 +82,3 @@ export class NetworkWatcherService {
         this.eventDispatcher.dispatch(Events.NetworkAvailabilityChange, new NetworkAvailabilityChangeEvent(this.isOnlineAttr));
     }
 }
-export const NetworkWatcherServiceSymbol = Symbol("NetworkWatcherService");
-Injector.RegisterService<NetworkWatcherService>(NetworkWatcherServiceSymbol, NetworkWatcherService);

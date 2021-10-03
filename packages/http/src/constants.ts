@@ -63,6 +63,11 @@ export const EncoderTag = Symbol('encoder');
 export const DecoderTag = Symbol('decoder');
 
 /**
+ * Tag used to mark adapters in the container.
+ */
+export const AdapterTag = Symbol('adapter');
+
+/**
  * Events emitted by the network module through the event dispatcher singleton.
  */
 export const Events = {

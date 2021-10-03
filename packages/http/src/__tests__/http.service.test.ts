@@ -1,8 +1,10 @@
 import 'reflect-metadata';
-import { Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from '@banquette/core';
-import { EventDispatcherService, EventDispatcherServiceSymbol } from "@banquette/event";
+import { SharedConfiguration } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
+import { EventDispatcherService } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
 import { ObservablePromise } from "@banquette/promise";
-import { waitForDelay, waitForNextCycle } from "@banquette/utils";
+import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc";
 import { XhrAdapter } from "../adapter/xhr.adapter";
 import { HttpConfigurationSymbol } from "../config";
 import { Events, HttpMethod } from "../constants";
@@ -20,16 +22,16 @@ import { HttpConfigurationInterface } from "../http-configuration.interface";
 import { HttpRequest } from "../http-request";
 import { HttpRequestBuilder } from "../http-request.builder";
 import { HttpRequestFactory } from "../http-request.factory";
-import { HttpService, HttpServiceSymbol } from "../http.service";
+import { HttpService } from "../http.service";
 
 import { TestResponses } from "./__mocks__/test-responses";
 import { buildTestUrl } from "./__mocks__/utils";
 import './__mocks__/xml-http-request.mock';
 
-const eventDispatcher: EventDispatcherService = Injector.Get(EventDispatcherServiceSymbol);
-const http: HttpService = Injector.Get<HttpService>(HttpServiceSymbol);
+const eventDispatcher: EventDispatcherService = Injector.Get(EventDispatcherService);
+const http: HttpService = Injector.Get<HttpService>(HttpService);
 
-const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfigurationSymbol);
+const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfiguration);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     maxSimultaneousRequests: 5,
     requestRetryCount: 5,

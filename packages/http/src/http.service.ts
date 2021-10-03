@@ -1,12 +1,15 @@
-import { Exception, Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from "@banquette/core";
-import { EventDispatcherInterface, EventDispatcherServiceSymbol } from "@banquette/event";
+import { SharedConfiguration } from "@banquette/config";
+import { Inject, Injector, Service } from "@banquette/dependency-injection";
+import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { Exception, ExceptionFactory, UsageException } from "@banquette/exception";
 import { ObservablePromise } from "@banquette/promise";
-import { Constructor, isNonEmptyString, isNullOrUndefined, isString, noop, Pojo, proxy } from '@banquette/utils';
-import { inject, injectable } from "inversify";
+import { noop, proxy } from "@banquette/utils-misc";
+import { isNonEmptyString } from "@banquette/utils-string";
+import { Constructor, isNullOrUndefined, isString, Pojo } from '@banquette/utils-type';
 import { ProgressCallback, RejectCallback, ResolveCallback } from "../../promise/src/types";
 import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
-import { AdapterInterface, AdapterInterfaceSymbol } from "./adapter/adapter.interface";
+import { AdapterInterface } from "./adapter/adapter.interface";
 import { Events, HttpMethod, HttpResponseStatus } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 import { RequestProgressEvent } from "./event/request-progress.event";
@@ -21,11 +24,11 @@ import { HttpRequest } from "./http-request";
 import { HttpRequestBuilder } from "./http-request.builder";
 import { HttpRequestFactory } from "./http-request.factory";
 import { HttpResponse } from "./http-response";
-import { NetworkWatcherService, NetworkWatcherServiceSymbol } from './network-watcher.service';
+import { NetworkWatcherService } from './network-watcher.service';
 import { QueuedRequestInterface } from './queued-request.interface';
 import { httpStatusToText } from "./utils";
 
-@injectable()
+@Service()
 export class HttpService {
     /**
      * Array of requests waiting to be executed.
@@ -47,9 +50,14 @@ export class HttpService {
      */
     private runningRequestsCount: number = 0;
 
-    constructor(@inject(SharedConfigurationSymbol) private config: SharedConfiguration,
-                @inject(EventDispatcherServiceSymbol) private eventDispatcher: EventDispatcherInterface,
-                @inject(NetworkWatcherServiceSymbol) private networkWatcher: NetworkWatcherService) {
+    /**
+     * Identifier in the injector of the adapter in use.
+     */
+    private adapterIdentifier!: Constructor<AdapterInterface>;
+
+    constructor(@Inject(SharedConfiguration) private config: SharedConfiguration,
+                @Inject(EventDispatcherService) private eventDispatcher: EventDispatcherInterface,
+                @Inject(NetworkWatcherService) private networkWatcher: NetworkWatcherService) {
     }
 
     /**
@@ -180,7 +188,7 @@ export class HttpService {
             return void this.removeFromQueue(queuedRequest);
         }
         try {
-            const adapter = Injector.Get<AdapterInterface>(AdapterInterfaceSymbol);
+            const adapter = Injector.Get<AdapterInterface>(this.adapterIdentifier);
             if (!queuedRequest.tryCount) {
                 queuedRequest.request.setAdapter(adapter);
             }
@@ -197,7 +205,7 @@ export class HttpService {
             await this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest));
             this.handleRequestResponse(adapterResponse, queuedRequest);
         } catch (e) {
-            this.handleRequestFailure(queuedRequest, e);
+            this.handleRequestFailure(queuedRequest, ExceptionFactory.EnsureException(e));
         } finally {
             queuedRequest.isExecuting = false;
             this.runningRequestsCount--;
@@ -351,20 +359,16 @@ export class HttpService {
         if (this.initialized) {
             return ;
         }
-        const adapter: Constructor<AdapterInterface> = this.config.get('http.adapter');
-        if (isNullOrUndefined(adapter)) {
+        this.adapterIdentifier = this.config.get('http.adapter');
+        if (isNullOrUndefined(this.adapterIdentifier)) {
             throw new UsageException(
                 'You must define a network adapter in the global configuration ' +
                 'to use the Http service (key "http.adapter").'
             );
         }
-        // Ensure there is no other definition of the adapter interface in the container.
-        if (Injector.GetContainer().isBound(AdapterInterfaceSymbol)) {
-            Injector.GetContainer().unbind(AdapterInterfaceSymbol);
+        if (!Injector.Has(this.adapterIdentifier)) {
+            throw new UsageException('You must register your adapter into the injector using the "@Module()" decorator.');
         }
-        // Add the adapter to the container as a module so each request will create a new instance.
-        // Registering the adapter in the container here ensures it is registered as a module.
-        Injector.RegisterModule(AdapterInterfaceSymbol, adapter);
         this.eventDispatcher.subscribe(Events.NetworkAvailabilityChange, proxy(this.onNetworkAvailabilityChange, this));
         this.initialized = true;
     }
@@ -407,5 +411,3 @@ export class HttpService {
         throw new UsageException(`Invalid body. Ensure that you have registered an encoder for this type of payload.`);
     }
 }
-export const HttpServiceSymbol = Symbol("HttpService");
-Injector.RegisterService(HttpServiceSymbol, HttpService);
