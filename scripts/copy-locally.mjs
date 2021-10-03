@@ -33,9 +33,16 @@ for (const target of targets) {
     for (const p of packages) {
         console.log(`Copy files for package ${chalk.blue(p)}.`);
         const sourceBasePath = path.resolve(__dirname, `../packages/${p}`);
-        fse.copySync(`${sourceBasePath}/dist`, path.join(targetBasePath, `${p}/dist`));
-        fse.copySync(`${sourceBasePath}/build`, path.join(targetBasePath, `${p}/build`));
-        fse.copySync(`${sourceBasePath}/package.json`, path.join(targetBasePath, `${p}/package.json`));
+        const pathsToCopy = [
+            [`${sourceBasePath}/dist`, path.join(targetBasePath, `${p}/dist`)],
+            [`${sourceBasePath}/build`, path.join(targetBasePath, `${p}/build`)],
+            [`${sourceBasePath}/package.json`, path.join(targetBasePath, `${p}/package.json`)]
+        ];
+        for (let i = 0; i < pathsToCopy.length; ++i) {
+            if (fs.existsSync(pathsToCopy[i][0])) {
+                fse.copySync(pathsToCopy[i][0], pathsToCopy[i][1]);
+            }
+        }
     }
 
     // Update the package.json
@@ -44,11 +51,10 @@ for (const target of targets) {
     if (typeof(packageJson.dependencies) !== 'object') {
         packageJson.dependencies = {};
     }
-    const deps = Object.keys(packageJson.dependencies);
-    packageJson.dependencies = Object.assign({}, dependencies, deps
-        .filter(k =>  k.indexOf('@banquette/'))
+    packageJson.dependencies = Object.assign({}, dependencies, Object.keys(packageJson.dependencies)
+        .filter(k =>  k.indexOf('@banquette/') < 0)
         .reduce((obj, i) => {
-            obj[i] = deps[i];
+            obj[i] = packageJson.dependencies[i];
             return obj;
         }, {}));
     console.log(`Update ${chalk.blue('package.json')} dependencies.`);
