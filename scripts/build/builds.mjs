@@ -89,64 +89,120 @@ function createBuildVariants(config) {
 
 export const Builds = Object.assign({},
     createBuildVariants({
-        package: 'core',
-        module: 'BanquetteCore'
+        package: 'config',
+        module: 'Banquette.Config'
+    }),
+    createBuildVariants({
+        package: 'dependency-injection',
+        module: 'Banquette.DI'
     }),
     createBuildVariants({
         package: 'event',
-        module: 'BanquetteEvent'
+        module: 'Banquette.Event'
+    }),
+    createBuildVariants({
+        package: 'exception',
+        module: 'Banquette.Exception'
     }),
     createBuildVariants({
         package: 'dom-modules',
-        module: 'BanquetteDomModules'
+        module: 'Banquette.DomModules'
     }),
     createBuildVariants({
         package: 'fingerprint',
-        module: 'BanquetteFingerprint'
+        module: 'Banquette.Fingerprint'
     }),
     createBuildVariants({
         package: 'log',
-        module: 'BanquetteLog'
+        module: 'Banquette.Log'
     }),
     createBuildVariants({
         package: 'http',
-        module: 'BanquetteHttp'
+        module: 'Banquette.Http'
+    }),
+    createBuildVariants({
+        package: 'inversify',
+        module: 'Banquette.Inversify'
     }),
     createBuildVariants({
         package: 'promise',
-        module: 'BanquettePromise'
+        module: 'Banquette.Promise'
     }),
     createBuildVariants({
         package: 'storage',
-        module: 'BanquetteStorage'
+        module: 'Banquette.Storage'
+    }),
+    createBuildVariants({
+        package: 'utils-type',
+        module: 'Banquette.Utils.Type'
+    }),
+    createBuildVariants({
+        package: 'utils-misc',
+        module: 'Banquette.Utils.Misc'
+    }),
+    createBuildVariants({
+        package: 'utils-array',
+        module: 'Banquette.Utils.Array'
     }),
     createBuildVariants({
         package: 'utils-base64',
-        module: 'BanquetteUtilsBase64'
+        module: 'Banquette.Utils.Base64'
     }),
     createBuildVariants({
-        package: 'utils',
-        module: 'BanquetteUtils'
+        package: 'utils-date',
+        module: 'Banquette.Utils.Date'
+    }),
+    createBuildVariants({
+        package: 'utils-dom',
+        module: 'Banquette.Utils.Dom'
     }),
     createBuildVariants({
         package: 'utils-easing',
-        module: 'BanquetteUtilsEasing'
+        module: 'Banquette.Utils.Easing'
+    }),
+    createBuildVariants({
+        package: 'utils-glob',
+        module: 'Banquette.Utils.Glob'
     }),
     createBuildVariants({
         package: 'utils-json',
-        module: 'BanquetteUtilsJson'
+        module: 'Banquette.Utils.Json'
+    }),
+    createBuildVariants({
+        package: 'utils-object',
+        module: 'Banquette.Utils.Object'
+    }),
+    createBuildVariants({
+        package: 'utils-random',
+        module: 'Banquette.Utils.Random'
+    }),
+    createBuildVariants({
+        package: 'utils-reflection',
+        module: 'Banquette.Utils.Reflection'
+    }),
+    createBuildVariants({
+        package: 'utils-string',
+        module: 'Banquette.Utils.String'
     }),
     createBuildVariants({
         package: 'utils-crypto',
-        module: 'BanquetteUtilsCrypto'
+        module: 'Banquette.Utils.Crypto'
     }),
     createBuildVariants({
         package: 'utils-color',
-        module: 'BanquetteUtilsColor'
+        module: 'Banquette.Utils.Color'
     }),
     createBuildVariants({
         package: 'validation',
-        module: 'BanquetteValidation'
+        module: 'Banquette.Validation'
+    }),
+    createBuildVariants({
+        package: 'vue-typescript',
+        module: 'Banquette.Vue.Typescript'
+    }),
+    createBuildVariants({
+        package: 'vue-dom-module',
+        module: 'Banquette.Vue.DomModule'
     })
 );
 
@@ -154,7 +210,8 @@ export const Builds = Object.assign({},
  * Define the mapping of externals.
  */
 export const Globals = {
-    'inversify': 'Inversify'
+    'inversify': 'Inversify',
+    'vue': 'Vue'
 };
 for (const build of Object.keys(Builds)) {
     Globals[`@banquette/${Builds[build].package}`] = Builds[build].moduleName;
