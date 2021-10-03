@@ -1,4 +1,4 @@
-import { waitForDelay } from "@banquette/utils";
+import { waitForDelay } from "@banquette/utils-misc";
 import { simplifyValidator } from "../../../simplify-validator";
 import { ValidationContext } from "../../../validation-context";
 import { ValidationResult } from "../../../validation-result";

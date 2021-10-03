@@ -1,4 +1,5 @@
-import { isString } from "@banquette/utils";
+import { isString } from "@banquette/utils-type";
+import { SYNC_TAG } from "../constant";
 import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
 import { simplifyValidator } from "../simplify-validator";
 import { ValidationContext } from "../validation-context";
@@ -8,7 +9,7 @@ import { ValidatorFactory } from "../validator.factory";
 /**
  * Check that the value matches a pattern.
  */
-export const Pattern: ValidatorFactory = (pattern: RegExp, message: string = 'Invalid value.', type: string = 'pattern'): SimplifiedValidatorInterface => {
+export const Pattern: ValidatorFactory = (pattern: RegExp, message: string = 'Invalid value.', type: string = 'pattern', tags: string[] = []): SimplifiedValidatorInterface => {
     return simplifyValidator({
         validate: (context: ValidationContext): ValidationResult => {
             if (context.value && (!isString(context.value) || !pattern.test(context.value))) {
@@ -16,5 +17,5 @@ export const Pattern: ValidatorFactory = (pattern: RegExp, message: string = 'In
             }
             return context.result;
         }
-    });
+    }, [SYNC_TAG].concat(tags));
 };

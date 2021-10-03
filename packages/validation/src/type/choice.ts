@@ -1,4 +1,6 @@
-import { areSameObjects, isObject } from "@banquette/utils";
+import { areObjectsEqual } from "@banquette/utils-object";
+import { isObject } from "@banquette/utils-type";
+import { SYNC_TAG } from "../constant";
 import { simplifyValidator } from "../simplify-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
@@ -7,13 +9,13 @@ import { ValidatorInterface } from "../validator.interface";
 /**
  * Check that the value is in a list of predefined choices.
  */
-export const Choice = (choices: any[], message: string = 'The value is not part of the expected choices.', type: string = 'choice'): ValidatorInterface => {
+export const Choice = (choices: any[], message: string = 'The value is not part of the expected choices.', type: string = 'choice', tags: string[] = []): ValidatorInterface => {
     return simplifyValidator({
         validate: (context: ValidationContext): ValidationResult => {
             if (isObject(context.value)) {
                 let i;
                 for (i = 0; i < choices.length; ++i) {
-                    if (isObject(choices[i]) && areSameObjects(choices[i], context.value)) {
+                    if (isObject(choices[i]) && areObjectsEqual(choices[i], context.value)) {
                         break ;
                     }
                 }
@@ -25,5 +27,5 @@ export const Choice = (choices: any[], message: string = 'The value is not part 
             }
             return context.result;
         }
-    });
+    }, [SYNC_TAG].concat(tags));
 };

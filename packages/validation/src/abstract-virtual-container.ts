@@ -1,5 +1,5 @@
-import { UsageException } from "@banquette/core";
-import { isNumeric, isPromiseLike, isType, isUndefined } from "@banquette/utils";
+import { UsageException } from "@banquette/exception";
+import { isNumeric, isPromiseLike, isType, isUndefined, Writeable } from "@banquette/utils-type";
 import { Valid } from "./type/valid";
 import { isValidatorContainer, splitPath } from "./utils";
 import { ValidationContext } from "./validation-context";
@@ -8,13 +8,18 @@ import { ValidatorContainerInterface } from "./validator-container.interface";
 import { ValidatorInterface } from "./validator.interface";
 
 /**
- * A virtual container is a kind of container that will not create sub context when validating.
+ * A virtual container is a type of container that will not create sub contexts when validating.
  * So each of its validators will report to the same ValidationResult instance and will have the same validation path.
  *
  * Virtual containers are: And, Or, If and Compose.
  * "Real" containers are: Container and Foreach.
  */
 export abstract class AbstractVirtualContainer implements ValidatorContainerInterface {
+    /**
+     * Will be true if all sub validators have been skipped.
+     */
+    public readonly skipped: boolean = false;
+
     public constructor(public validators: ValidatorInterface[], public readonly sequential: boolean = true) {
     }
 
@@ -93,6 +98,9 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
         let wrappingPromiseResolve: any = null;
         let wrappingPromiseReject: any = null;
         let lastLocalPromise: any = null;
+        let skipped: boolean = false;
+
+        (this as Writeable<AbstractVirtualContainer>).skipped = true;
         const context = ValidationContext.EnsureValidationContext(value, maskOrContext);
         const getOrCreateWrapper = () => {
             // Because we don't know how many validators will be asynchronous, we have to wrap the promise
@@ -107,15 +115,18 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
             return wrappingPromise;
         };
         const validateNext = () => {
-            if ((++index && !this.onNextResult(context.result, index)) || this.validators.length <= index) {
+            if ((++index && !this.onNextResult(context.result, index, skipped)) || this.validators.length <= index) {
                 if (wrappingPromise !== null) {
                     wrappingPromiseResolve();
                 }
                 this.onEnd(context, index);
                 return ;
             }
+            skipped = true;
             if (context.shouldValidate(this.validators[index])) {
                 this.validators[index].validate(value, context);
+                (this as Writeable<AbstractVirtualContainer>).skipped = false;
+                skipped = false;
             }
             if (context.result.localPromise !== null && context.result.localPromise !== lastLocalPromise) {
                 wrappingPromise = getOrCreateWrapper();
@@ -155,7 +166,7 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
      *
      * @return boolean true to continue the iteration and validate the next validator, false to stop and return the result.
      */
-    protected abstract onNextResult(result: ValidationResult, index: number): boolean;
+    protected abstract onNextResult(result: ValidationResult, index: number, skipped: boolean): boolean;
 
     /**
      * Called before the first validator is executed.

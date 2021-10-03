@@ -8,6 +8,7 @@ import { ValidatorInterface } from '../validator.interface';
  */
 export class OrValidator extends AbstractVirtualContainer {
     private lastViolationsCount: number = 0;
+    private skippedCount: number = 0;
     private failedCount: number = 0;
 
     /**
@@ -22,11 +23,16 @@ export class OrValidator extends AbstractVirtualContainer {
     /**
      * @inheritDoc
      */
-    protected onNextResult(result: ValidationResult): boolean {
-        const shouldContinue: boolean = result.violations.length !== this.lastViolationsCount;
+    protected onNextResult(result: ValidationResult, index: number, skipped: boolean): boolean {
+        const prev = this.validators[index - 1];
+        skipped = skipped || (prev instanceof AbstractVirtualContainer && prev.skipped);
+        const shouldContinue: boolean = result.violations.length !== this.lastViolationsCount || skipped;
         this.lastViolationsCount = result.violations.length;
         if (shouldContinue) {
             ++this.failedCount;
+        }
+        if (skipped) {
+            ++this.skippedCount;
         }
         return shouldContinue;
     }
@@ -35,7 +41,7 @@ export class OrValidator extends AbstractVirtualContainer {
      * @inheritDoc
      */
     protected onEnd(context: ValidationContext, index: number): void {
-        if (this.failedCount < this.validators.length) {
+        if (this.failedCount < this.validators.length - this.skippedCount) {
             context.result.clearViolations(false);
         }
     }

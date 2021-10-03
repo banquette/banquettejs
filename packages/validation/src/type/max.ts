@@ -1,4 +1,5 @@
-import { ensureString, isArray, isNumber, isNumeric, isObject, isString } from "@banquette/utils";
+import { ensureString, isArray, isNumber, isNumeric, isObject, isString } from "@banquette/utils-type";
+import { SYNC_TAG } from "../constant";
 import { simplifyValidator } from "../simplify-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
@@ -16,7 +17,8 @@ import { ValidatorInterface } from "../validator.interface";
 export const Max = (count: number,
                     treatAs: 'string'|'number'|'auto' = 'auto',
                     message: string|'auto' = 'auto',
-                    type: string = 'max'): ValidatorInterface => {
+                    type: string = 'max',
+                    tags: string[] = []): ValidatorInterface => {
     return simplifyValidator({
         validate: (context: ValidationContext): ValidationResult => {
             let valid: boolean = true;
@@ -35,5 +37,5 @@ export const Max = (count: number,
             }
             return context.result;
         }
-    });
+    }, [SYNC_TAG].concat(tags));
 };

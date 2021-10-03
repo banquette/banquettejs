@@ -1,30 +1,41 @@
-import { escapeRegex, trimArray } from "@banquette/utils";
+import { trimArray } from "@banquette/utils-array";
+import { escapeRegex } from "@banquette/utils-string";
+import { isUndefined } from "@banquette/utils-type";
+import { MatchType } from "./constant";
 import { MatchResult } from "./match-result";
 
 /**
- * Match a path against a mask.
+ * Match a mask against a path.
  */
-export function matchMask(mask: string, path: string): MatchResult {
+export function match(mask: string, path: string, tags?: string[]): MatchResult {
+    const result: MatchResult = {pattern: MatchType.Full, tags: MatchType.Full};
     if (mask === path) {
-        return MatchResult.Full;
+        return result;
     }
-    let highestMatchResult = MatchResult.Full;
-    const patternSections = mask.split(':');
-    for (let i = 1; i < patternSections.length; ++i) {
-        if (patternSections[i] === 'async') {
-            highestMatchResult = MatchResult.Async;
-        } else if (patternSections[i] === 'sync') {
-            highestMatchResult = MatchResult.Sync;
-        }
+    const sections = trimArray(mask.split(':'));
+
+    // If "tags" is undefined, totally ignore the tags part of the pattern, consider its a full match.
+    if (!isUndefined(tags)) {
+        const maskTags = sections.slice(1);
+        const matchingTags = maskTags.filter((tag: string) => tags.indexOf(tag) > -1);
+        result.tags = maskTags.length === matchingTags.length ? MatchType.Full : (matchingTags.length > 0 ? MatchType.Partial : MatchType.None);
     }
-    // No pattern, simply use the modifier match result.
-    if (patternSections[0] === '') {
-        return highestMatchResult;
+    // No pattern, consider its a perfect match.
+    if (sections[0] === '') {
+        return result;
     }
-    const patternParts = patternSections[0].split('/').filter((item, pos, arr) => pos === 0 || item !== '**' || item !== arr[pos - 1]);
+    result.pattern = matchPattern(sections[0], path);
+    return result;
+}
+
+/**
+ * Do the actual pattern matching.
+ */
+function matchPattern(pattern: string, path: string): MatchType {
+    const patternParts = pattern.split('/').filter((item, pos, arr) => pos === 0 || item !== '**' || item !== arr[pos - 1]);
     if (patternParts[0] !== '') {
         // Meaning the first character is not a "/". In which case nothing can match.
-        return MatchResult.None;
+        return MatchType.None;
     }
     let pathIndex = 1;
     if (path[path.length - 1] === '/') {
@@ -58,27 +69,27 @@ export function matchMask(mask: string, path: string): MatchResult {
         const p = patternParts[i];
         if (p === '**') {
             if (i >= patternParts.length - 1) {
-                return highestMatchResult;
+                return MatchType.Full;
             }
             if (patternParts[i + 1] === '*') {
-                return pathIndex >= pathParts.length ? MatchResult.Partial : MatchResult.Full;
+                return pathIndex >= pathParts.length ? MatchType.Partial : MatchType.Full;
             }
             let j;
             let matchFound = false;
             for (j = ++i; j < patternParts.length && pathIndex < pathParts.length && !(matchFound = matchPart(patternParts[j])); ++pathIndex);
             if (!matchFound && (j >= patternParts.length || pathIndex >= pathParts.length)) {
-                return MatchResult.Partial;
+                return MatchType.Partial;
             }
             matchGlobstar = true;
         } else if (pathIndex >= pathParts.length) {
             if (i === patternParts.length - 1 && patternParts[i] === '**') {
-                return MatchResult.Full;
+                return MatchType.Full;
             }
-            return MatchResult.Partial;
+            return MatchType.Partial;
         } else if (!matchPart(p)) {
-            return matchGlobstar ? MatchResult.Partial : MatchResult.None;
+            return matchGlobstar ? MatchType.Partial : MatchType.None;
         }
         ++pathIndex;
     }
-    return pathIndex < pathParts.length ? MatchResult.None : highestMatchResult;
+    return pathIndex < pathParts.length ? MatchType.None : MatchType.Full;
 }

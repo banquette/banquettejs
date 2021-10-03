@@ -1,7 +1,6 @@
-import { UsageException } from "@banquette/core";
-import { ensureArray, isUndefined } from "@banquette/utils";
-import { bestMaskMatch } from "./mask/best-mask-match";
-import { MatchResult } from "./mask/match-result";
+import { UsageException } from "@banquette/exception";
+import { matchBest, MatchResult, MatchType } from "@banquette/utils-glob";
+import { ensureArray, isUndefined } from "@banquette/utils-type";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { isValidatorContainer } from "./utils";
 import { ValidationResult } from "./validation-result";
@@ -13,7 +12,7 @@ export class ValidationContext {
 
     private readonly children: ValidationContext[];
     private masks: string[];
-    private maskMatchResult: Record<string, MatchResult>;
+    private maskMatchResult: WeakMap<ValidatorInterface, Record<string, MatchResult>>;
 
     /**
      * Create a ValidationContext object.
@@ -22,11 +21,13 @@ export class ValidationContext {
      * @param name   string                 The name of the attribute being validated.
      * @param value  any                    The value being validated
      * @param masks  string[]               (optional, default: []) One or multiple patterns limiting the validators that will be executed
+     * @param tags   string[]               (optional, default: undefined) Any number of tags that will further limit the validators that will be executed
      */
     public constructor(public readonly parent: ValidationContext|null,
                        public readonly name: string|null,
                        public readonly value: any,
-                       masks: string[] = []) {
+                       masks: string[] = [],
+                       private tags?: string[]) {
         if (name !== null && name.match(/\/|\*/)) {
             throw new UsageException('Invalid context name. Must not contain "/" or "*".');
         }
@@ -35,7 +36,7 @@ export class ValidationContext {
         }
         this.children = [];
         this.masks = [];
-        this.maskMatchResult = {};
+        this.maskMatchResult = new WeakMap<ValidatorInterface, Record<string, MatchResult>>();
         this.path = this.parent ? (this.parent.path + (this.parent.name ? '/' : '') + name) : '/';
         this.result = new ValidationResult(this.path, this.parent ? this.parent.result : null);
         if (this.parent) {
@@ -127,7 +128,7 @@ export class ValidationContext {
      */
     public addMask(mask: string|string[]): void {
         if (this.parent) {
-            return void this.addMask(mask);
+            return this.addMask(mask);
         }
         this.masks = this.masks.concat(normalizeMasks(mask, this.path));
     }
@@ -137,7 +138,7 @@ export class ValidationContext {
      */
     public setMasks(masks: string[]): void {
         if (this.parent) {
-            return void this.setMasks(masks);
+            return this.setMasks(masks);
         }
         this.masks = normalizeMasks(masks, this.path);
     }
@@ -153,47 +154,55 @@ export class ValidationContext {
     }
 
     /**
+     * Check if a validator should be validated.
+     */
+    public shouldValidate(validator: ValidatorInterface): boolean {
+        const result: MatchResult = this.matchMask(validator);
+        return (
+            result.pattern === MatchType.Full ||
+            (result.pattern === MatchType.Partial && isValidatorContainer(validator))
+        ) && result.tags >= MatchType.Partial;
+    }
+
+    /**
      * Test if the validation should be performed for the current context.
      * The match can be partial, in which case only container validators must be executed.
+     *
+     * If a validator is given as context, the result will be cached.
      */
-    public matchMask(useCache: boolean = true): MatchResult {
-        if (useCache && !isUndefined(this.maskMatchResult[this.path])) {
-            return this.maskMatchResult[this.path];
+    private matchMask(validator: ValidatorInterface|null = null): MatchResult {
+        if (validator) {
+            const cachedResults = this.maskMatchResult.get(validator);
+            if (cachedResults && !isUndefined(cachedResults[this.path])) {
+                return cachedResults[this.path];
+            }
         }
         let result: MatchResult;
         const masks = this.getRoot().masks;
         if (!masks.length) {
-            result = MatchResult.Full;
+            result = {pattern: MatchType.Full, tags: MatchType.Full};
         } else {
-            result = bestMaskMatch(masks, this.path);
+            result = matchBest(masks, this.path, validator ? validator.tags : undefined);
         }
-        if (useCache) {
-            this.maskMatchResult[this.path] = result;
+        if (validator) {
+            const cachedResults = this.maskMatchResult.get(validator) || {};
+            cachedResults[this.path] = result;
+            this.maskMatchResult.set(validator, cachedResults);
         }
         return result;
     }
 
     /**
-     * Check if a validator should be validated.
-     */
-    public shouldValidate(validator: ValidatorInterface): boolean {
-        const maskMatch: MatchResult = this.matchMask();
-        return (maskMatch === MatchResult.Full) ||
-            (maskMatch === MatchResult.Sync && validator.asynchronous !== true) ||
-            (maskMatch === MatchResult.Async && validator.asynchronous === true) ||
-            (maskMatch === MatchResult.Partial && isValidatorContainer(validator));
-    }
-
-    /**
      * Ensure a ValidationContext object is returned from a ValidatorInterface signature.
      */
-    public static EnsureValidationContext(value: any, maskOrContext?: ValidationContext|string|string[]): ValidationContext {
+    public static EnsureValidationContext(value: any, maskOrContext?: ValidationContext|string|string[], tags?: string[]): ValidationContext {
         if (!(maskOrContext instanceof ValidationContext)) {
             return new ValidationContext(
                 null,
                 null,
                 value,
-                ensureArray(maskOrContext) as string[]
+                ensureArray(maskOrContext) as string[],
+                tags
             );
         }
         return maskOrContext as ValidationContext;

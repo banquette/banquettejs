@@ -1,5 +1,7 @@
 import 'reflect-metadata';
-import { Exception, Injector, SharedConfiguration, SharedConfigurationSymbol, UsageException } from "@banquette/core";
+import { SharedConfiguration } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
+import { Exception, UsageException } from "@banquette/exception";
 import {
     HttpConfigurationInterface,
     HttpConfigurationSymbol,
@@ -7,9 +9,12 @@ import {
     NetworkException,
     RequestException
 } from "@banquette/http";
-import { ensureArray, extend, isArray, isUndefined, waitForDelay } from "@banquette/utils";
+import { waitForDelay } from "@banquette/utils-misc";
+import { extend } from "@banquette/utils-object";
+import { ensureArray, isArray, isUndefined } from "@banquette/utils-type";
 import { buildTestUrl } from "../../../http/src/__tests__/__mocks__/utils";
 import '../../../http/src/__tests__/__mocks__/xml-http-request.mock';
+import { ASYNC_TAG } from "../constant";
 import { Callback } from "../type/callback";
 import { NotEmpty } from "../type/not-empty";
 import { Pattern } from "../type/pattern";
@@ -22,7 +27,7 @@ import { ValidatorInterface } from "../validator.interface";
 import { ViolationInterface } from "../violation.interface";
 import { ValidateAfterDelayTest } from "./__mocks__/type/validate-after-delay.test-validator";
 
-const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfigurationSymbol);
+const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfiguration);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {requestRetryCount: 2});
 
 function expectViolationsArrayContaining(violations: Array<{path?: string, type?: string}>|{path?: string, type?: string}): any {
@@ -168,8 +173,8 @@ describe('masks', () => {
     const tests: any = {
         '/name': ['/name', [{type: 'name'}]],
         'name': ['name', [{type: 'name'}]],
-        '[/name, /email]': [['/name', '/email'], [{type: 'name'}, {type: 'email-1'}]],
-        '/{name, email}': ['/{name, email}', [{type: 'name'}, {type: 'email-1'}]],
+        '[/name, /email]': [['/name', '/email'], [{type: 'name'}, {type: 'email-1'}, {type: 'email-callback'}]],
+        '/{name, email}': ['/{name, email}', [{type: 'name'}, {type: 'email-1'}, {type: 'email-callback'}]],
         '/tags/*/name': ['/tags/*/name', [{path: '/tags/0/name'}, {path: '/tags/1/name'}]],
         '/tags/*/*': ['/tags/*/*', [{path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
         '/tags': ['/tags', [{type: 'tags-max'}]],
@@ -177,18 +182,24 @@ describe('masks', () => {
         '/tags/**': ['/tags/**', [{type: 'tags-max'}, {path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
         '/tags/**/*': ['/tags/**/*', [{path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
         '/tags/**/**/**': ['/tags/**/**/**', [{type: 'tags-max'}, {path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
-        '/**': ['/**', [{type: 'name'}, {type: 'email-1'}, {type: 'tags-max'}, {path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
-        '**': ['**', [{type: 'name'}, {type: 'email-1'}, {type: 'tags-max'}, {path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
-        '/**/name': ['/**/name', [{path: '/name'}, {path: '/tags/0/name'}, {path: '/tags/1/name'}]] // "**" will match {0,N} levels
+        '/**': ['/**', [{type: 'name'}, {type: 'email-1'}, {type: 'email-callback'}, {type: 'tags-max'}, {path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
+        '**': ['**', [{type: 'name'}, {type: 'email-1'}, {type: 'email-callback'}, {type: 'tags-max'}, {path: '/tags/0/name'}, {path: '/tags/0/color'}, {path: '/tags/1/name'}, {path: '/tags/1/color'}]],
+        '/**/name': ['/**/name', [{path: '/name'}, {path: '/tags/0/name'}, {path: '/tags/1/name'}]], // "**" will match {0,N} levels,
+        '/email:sync': ['/email:sync', [{type: 'email-1'}]],
+        '/email:async': ['/email:async', [{type: 'email-callback'}]],
+        '/email:sync:async': ['/email:sync:async', [{type: 'email-1'}, {type: 'email-callback'}]]
     };
     let validator: ValidatorInterface = V.Container({});
     beforeAll(() => {
         validator = V.Container({
             name: V.Invalid('', 'name'),
-            email: V.And(
+            email: V.Or(V.And(
                 V.Invalid('', 'email-1'),
                 V.Invalid('', 'email-2')
-            ),
+            ), V.Callback(async (context: ValidationContext) => {
+                await waitForDelay(20);
+                context.result.addViolation('email-callback');
+            }, [ASYNC_TAG])),
             tags: V.Compose(
                 V.Invalid('', 'tags-max'),
                 V.Foreach(
@@ -203,19 +214,25 @@ describe('masks', () => {
 
     describe('validation', () => {
         for (let mask of Object.keys(tests)) {
-            test(mask, () => void expectViolations(validator.validate({tags: [{}, {}]}, tests[mask][0]).getViolationsArray(), tests[mask][1]));
+            test(mask, async () => {
+                const result = await validator.validate({tags: [{}, {}]}, tests[mask][0]).onReady();
+                expectViolations(result.getViolationsArray(), tests[mask][1]);
+            });
         }
     });
 
     describe('violations', () => {
         let result: ValidationResult = new ValidationResult('/');
-        beforeAll(() => {
-            result = validator.validate({
+        beforeAll(async () => {
+            result = await validator.validate({
                 tags: [{}, {}]
-            });
+            }).onReady();
         });
         for (let mask of Object.keys(tests)) {
-            test(mask, () => void expectViolations(result.getViolationsArray(tests[mask][0]), tests[mask][1]));
+            // Ignore masks with tags. Makes no sense when filtering violations.
+            if (mask.indexOf(':') < 0) {
+                test(mask, () => void expectViolations(result.getViolationsArray(tests[mask][0]), tests[mask][1]));
+            }
         }
     });
 });

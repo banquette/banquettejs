@@ -3,10 +3,22 @@ import { ValidationResult } from "./validation-result";
 
 export interface ValidatorInterface {
     /**
-     * Define if the validator is asynchronous or not.
-     * If the property is not defined, the validator is considered synchronous.
+     * A list of strings giving additional information about the validator.
+     *
+     * Used internally to differentiate synchronous and asynchronous validators (using the tag 'sync' or 'async').
+     *
+     * But you can add any custom tag you want.
+     *
+     * You can then filter your validators using a mask.
+     * Example:
+     *
+     * `validator.validate('a value', '/name:sync')`
+     * or
+     * `validator.validate('a value', '/name:sync:custom-tag')`
+     *
+     * If `undefined`, the tag matching result is always "full".
      */
-    readonly asynchronous?: boolean;
+    readonly tags?: string[];
 
     /**
      * Validate a value.

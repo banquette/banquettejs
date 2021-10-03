@@ -1,15 +1,16 @@
-import { Injector, UsageException } from "@banquette/core";
+import { Inject, Injector, Module } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
 import {
     HttpMethod,
     HttpRequest,
     HttpRequestFactory,
     HttpRequestFactoryConfig,
     HttpResponse,
-    HttpService,
-    HttpServiceSymbol
+    HttpService
 } from "@banquette/http";
-import { extend, isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils";
-import { inject, injectable } from "inversify";
+import { extend } from "@banquette/utils-object";
+import { isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
+import { ASYNC_TAG } from "../constant";
 import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
 import { simplifyValidator } from "../simplify-validator";
 import { ValidationContext } from "../validation-context";
@@ -26,16 +27,14 @@ const NoPayloadSymbol = Symbol();
 /**
  * Do a remote validation.
  */
-@injectable()
+@Module()
 export class AjaxValidator implements SimplifiedValidatorInterface {
-    public readonly asynchronous: boolean;
     public requestFactory?: RequestFactory;
     public responseHandler: ResponseHandler;
     public message: string;
     public type: string;
 
-    public constructor(@inject(HttpServiceSymbol) private http: HttpService) {
-        this.asynchronous = true;
+    public constructor(@Inject(HttpService) private http: HttpService) {
         this.message = 'Invalid value.';
         this.type = 'ajax';
         this.responseHandler = (response: HttpResponse<any>, result: ValidationResult) => {
@@ -74,15 +73,12 @@ export class AjaxValidator implements SimplifiedValidatorInterface {
     }
 }
 
-const AjaxValidatorSymbol = Symbol('AjaxValidator');
-Injector.RegisterModule(AjaxValidatorSymbol, AjaxValidator);
-
 export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFactoryConfig|string,
                      responseHandler?: ResponseHandler,
                      message?: string,
                      type?: string): ValidatorInterface => {
     const isFactoryConfig = (value: RequestFactory|HttpRequestFactoryConfig): value is HttpRequestFactoryConfig => isObject(value);
-    const instance: AjaxValidator = Injector.Get<AjaxValidator>(AjaxValidatorSymbol);
+    const instance: AjaxValidator = Injector.Get<AjaxValidator>(AjaxValidator);
     if (requestFactory instanceof HttpRequest) {
         const userRequest = requestFactory;
         requestFactory = () => userRequest;
@@ -108,5 +104,5 @@ export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFacto
     if (!isUndefined(type)) {
         instance.type = type;
     }
-    return simplifyValidator(instance);
+    return simplifyValidator(instance, [ASYNC_TAG]);
 };

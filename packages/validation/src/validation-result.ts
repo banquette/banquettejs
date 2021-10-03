@@ -1,7 +1,8 @@
-import { Exception, ExceptionFactory, UsageException } from "@banquette/core";
-import { ensureArray, GenericCallback, isUndefined, proxy, replaceStringVariables, Writeable } from "@banquette/utils";
-import { bestMaskMatch } from "./mask/best-mask-match";
-import { MatchResult } from "./mask/match-result";
+import { Exception, ExceptionFactory, UsageException } from "@banquette/exception";
+import { matchBest, MatchResult, MatchType } from "@banquette/utils-glob";
+import { proxy } from "@banquette/utils-misc";
+import { replaceStringVariables } from "@banquette/utils-string";
+import { ensureArray, GenericCallback, isUndefined, Writeable } from "@banquette/utils-type";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { Violation } from "./violation";
 import { ViolationInterface } from "./violation.interface";
@@ -91,7 +92,7 @@ export class ValidationResult {
         if (match.fullyMatch) {
             violations = violations.concat(this.violations);
         }
-        if (match.fullyMatch || match.rawResult === MatchResult.Partial) {
+        if (match.fullyMatch || match.rawResult.pattern === MatchType.Partial) {
             for (const child of this.children) {
                 violations = violations.concat(child.getViolationsArray(mask));
             }
@@ -148,7 +149,7 @@ export class ValidationResult {
         if (this.cancelCallback !== null && match.fullyMatch) {
             this.cancelCallback();
         }
-        if (match.fullyMatch || match.rawResult === MatchResult.Partial) {
+        if (match.fullyMatch || match.rawResult.pattern === MatchType.Partial) {
             for (const child of this.children) {
                 child.cancel(mask);
             }
@@ -270,9 +271,10 @@ export class ValidationResult {
      */
     private static ShouldMatch(result: ValidationResult, mask: string|string[]): ElaborateMatch {
         const masks = ensureArray(mask);
-        const matchResult: MatchResult = !masks.length ? MatchResult.Full : bestMaskMatch(masks, result.path);
-        return {rawResult: matchResult, fullyMatch: matchResult === MatchResult.Full ||
-                (matchResult === MatchResult.Async && result.promise !== null) ||
-                (matchResult === MatchResult.Sync && result.promise === null)};
+        const matchResult: MatchResult = !masks.length ? {pattern: MatchType.Full, tags: MatchType.Full} : matchBest(masks, result.path);
+        return {
+            rawResult: matchResult,
+            fullyMatch: matchResult.pattern === MatchType.Full && matchResult.tags >= MatchType.Partial
+        };
     }
 }

@@ -26,7 +26,6 @@
             "@banquette/utils-date": ["packages/utils-date/src/index.ts"],
             "@banquette/utils-dom": ["packages/utils-dom/src/index.ts"],
             "@banquette/utils-easing": ["packages/utils-easing/src/index.ts"],
-            "@banquette/utils-glob": ["packages/utils-glob/src/index.ts"],
             "@banquette/utils-json": ["packages/utils-json/src/index.ts"],
             "@banquette/utils-misc": ["packages/utils-misc/src/index.ts"],
             "@banquette/utils-object": ["packages/utils-object/src/index.ts"],
@@ -36,6 +35,7 @@
             ],
             "@banquette/utils-string": ["packages/utils-string/src/index.ts"],
             "@banquette/utils-type": ["packages/utils-type/src/index.ts"],
+            "@banquette/validation": ["packages/validation/src/index.ts"],
             "@banquette/vue-dom-module": [
                 "packages/vue-dom-module/src/index.ts"
             ],

@@ -1,10 +1,10 @@
 {
-    "name": "@banquette/utils",
+    "name": "@banquette/utils-glob",
     "version": "0.0.5",
     "repository": {
         "type": "git",
         "url": "https://github.com/@banquette/core/banquettejs.git",
-        "directory": "packages/utils"
+        "directory": "packages/utils-glob"
     },
     "license": "Apache-2.0",
     "main": "dist/index.cjs.prod.js",
