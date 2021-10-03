@@ -1,7 +1,7 @@
 import { Builds } from "./builds.mjs";
 import { build, cleanupBuilds, filterBuilds, getRollupConfig } from './utils.mjs';
 
-let builds = filterBuilds(Builds, process.argv[2]);
+let builds = filterBuilds(Builds, process.argv[2], false);
 if (!Object.keys(builds).length) {
     console.log('No build found.');
     process.exit(1);

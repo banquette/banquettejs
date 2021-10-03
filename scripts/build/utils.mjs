@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { rollup } from 'rollup';
+import {rollup, watch as rollupWatch} from 'rollup';
 import buble from 'rollup-plugin-buble';
 import typescript from 'rollup-plugin-typescript2';
 import replace from 'rollup-plugin-replace';
@@ -9,6 +9,9 @@ import { fileURLToPath } from 'url';
 import {Builds, Globals} from "./builds.mjs";
 import { terser } from "rollup-plugin-terser";
 import chalk from 'chalk';
+import vue from 'rollup-plugin-vue';
+import postcss from 'rollup-plugin-postcss';
+import inlineVueContentsVue from "../plugin/inline-vue-contents-vue.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +56,11 @@ export function getRollupConfig(buildConfig) {
     const vars = {__VERSION__: getVersion()};
     const externals = Externals.concat(buildConfig.externals || []);
     const rollupConfig = {
+        watch: {
+            buildDelay: 0,
+            clearScreen: true,
+            skipWrite: false
+        },
         input: buildConfig.entry,
         external: (candidate) => {
             for (const pattern of externals) {
@@ -66,6 +74,7 @@ export function getRollupConfig(buildConfig) {
             return false;
         },
         plugins: [
+            inlineVueContentsVue()
             // alias(Object.assign({}, aliases, buildConfig.alias))
         ].concat(buildConfig.plugins || []),
         output: {
@@ -75,6 +84,8 @@ export function getRollupConfig(buildConfig) {
             globals: Globals
         }
     };
+    rollupConfig.plugins.push(vue({css: false}));
+    rollupConfig.plugins.push(postcss());
     if (buildConfig.outputFile) {
         rollupConfig.plugins.push(typescript({
             tsconfig: path.join(buildConfig.rootDir, 'tsconfig.json'),
@@ -89,7 +100,7 @@ export function getRollupConfig(buildConfig) {
     } else if (buildConfig.outputDir) {
         rollupConfig.plugins.push(typescript({
             useTsconfigDeclarationDir: true,
-            tsconfig: path.join(buildConfig.rootDir, 'tsconfig.json'),
+            tsconfig: path.join(buildConfig.rootDir, 'tsconfig.json')
         }));
         rollupConfig.preserveModules = true;
         rollupConfig.output.dir = buildConfig.outputDir;
@@ -118,6 +129,16 @@ export function getRollupConfig(buildConfig) {
     return rollupConfig;
 }
 
+function writeOutput(config, output) {
+    if (config.output.format === 'es') {
+        const dir = output.dir || path.dirname(output.file);
+        const packageRoot = dir.substring(0, dir.length - (4 /* /src */ + config._name.length + 6 /* build/ */));
+        fs.renameSync(dir, packageRoot + '_build');
+        fs.rmdirSync(packageRoot + 'build', {recursive: true});
+        fs.renameSync(packageRoot + '_build', packageRoot + 'build');
+    }
+}
+
 /**
  * Call rollup with a finalized configuration and write the output.
  */
@@ -127,14 +148,44 @@ export function build(config) {
     return rollup(config)
         .then(bundle => bundle.write(output))
         .then(({ output: [{ code }] }) => {
-            if (config.output.format === 'es') {
-                const dir = output.dir || path.dirname(output.file);
-                const packageRoot = dir.substring(0, dir.length - (4 /* /src */ + config._name.length + 6 /* build/ */));
-                fs.renameSync(dir, packageRoot + '_build');
-                fs.rmdirSync(packageRoot + 'build', {recursive: true});
-                fs.renameSync(packageRoot + '_build', packageRoot + 'build');
+            writeOutput(config, output);
+        }).catch((event) => {
+            console.log(chalk.red(event.message));
+            if (event.stack) {
+                console.log(chalk.red(event.stack));
             }
         });
+}
+
+/**
+ * Call rollup with a finalized configuration and write the output.
+ */
+export function watch(config, onBeforeBuild, onBuildEnd, onBuildFailed) {
+    const output = config.output;
+    const watcher = rollupWatch(config);
+    watcher.on('event', event => {
+        if (event.code === 'START') {
+            onBeforeBuild();
+        } else if (event.code === 'BUNDLE_START') {
+            console.log(`${chalk.red('Building & watching')} package ${chalk.blue(config._name)} in ${chalk.blue(config.output.format)}${config._env !== null ? chalk.yellow(` (${config._env})`) : ''} format.`);
+        } else if (event.code === 'BUNDLE_END') {
+            onBuildEnd();
+        } else if (event.code === 'ERROR') {
+            console.log(chalk.red(event.error.code));
+            if (typeof(event.error.loc) === 'object') {
+                console.log(`in ${chalk.blue(event.error.loc.file)} line ${chalk.magenta(event.error.loc.line + ':' + event.error.loc.column)}`);
+            }
+            if (event.error.stack) {
+                console.log(chalk.red(event.error.stack));
+            }
+            onBuildFailed();
+        }
+    });
+    watcher.on('event', ({ result }) => {
+        if (result) {
+            result.close();
+        }
+    });
 }
 
 export function cleanupBuilds(configs) {
@@ -161,12 +212,12 @@ export function cleanupBuilds(configs) {
     }
 }
 
-export function filterBuilds(builds, filter) {
+export function filterBuilds(builds, filter, isWatch) {
     builds = Object.assign({}, builds);
+    const filters = filter ? filter.split(',').map((e) => new RegExp(e)) : [];
     if (!filter) {
         return builds;
     }
-    const filters = filter.split(',').map((e) => new RegExp(e));
     return Object.keys(builds)
         .filter((key) => {
             for (const filter of filters) {
@@ -175,6 +226,8 @@ export function filterBuilds(builds, filter) {
                 }
             }
             return false;
+        }).filter((key) => {
+            return !isWatch || key.match(/cjs-dev$/);
         })
         .reduce((obj, key) => {
             obj[key] = builds[key];
