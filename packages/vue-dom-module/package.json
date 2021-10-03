@@ -1,0 +1,22 @@
+{
+    "name": "@banquette/vue-dom-module",
+    "version": "0.0.5",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "directory": "packages/vue-dom-module"
+    },
+    "license": "Apache-2.0",
+    "main": "dist/index.cjs.prod.js",
+    "module": "build/index.js",
+    "types": "build",
+    "exports": {
+        ".": "./dist/index.cjs.dev.js",
+        "./package.json": "./package.json"
+    },
+    "dependencies": {
+        "@banquette/core": "^0.0.5",
+        "@banquette/dom-modules": "^0.0.5",
+        "@banquette/vue-typescript": "^0.0.5"
+    }
+}
