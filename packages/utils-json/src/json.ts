@@ -1,4 +1,4 @@
-import { isArray, isUndefined } from "@banquette/core";
+import { isArray, isUndefined } from "@banquette/utils-type";
 
 declare global {
     interface JSON {

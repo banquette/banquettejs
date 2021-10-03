@@ -1,4 +1,5 @@
-import { isObject, isString, isUndefined, UsageException } from "@banquette/core";
+import { UsageException } from "@banquette/exception";
+import { isObject, isString, isUndefined } from "@banquette/utils-type";
 
 /**
  * Utility class to work on colors.

@@ -19,7 +19,7 @@
             "@banquette/log": ["packages/log/src/index.ts"],
             "@banquette/promise": ["packages/promise/src/index.ts"],
             "@banquette/storage": ["packages/storage/src/index.ts"],
-            "@banquette/utils-array": ["packages/utils-array/src/index.ts"],
+            "@banquette/utils-base64": ["packages/utils-base64/src/index.ts"],
             "@banquette/utils-color": ["packages/utils-color/src/index.ts"],
             "@banquette/utils-crypto": ["packages/utils-crypto/src/index.ts"],
             "@banquette/utils-date": ["packages/utils-date/src/index.ts"],
