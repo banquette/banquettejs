@@ -12,6 +12,11 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "baseUrl" : ".",
+        "types": [
+            "reflect-metadata",
+            "jest",
+            "node"
+        ],
         "typeRoots": [
             "node_modules/@types",
             "packages/vue-core/src/@types"
