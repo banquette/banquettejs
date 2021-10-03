@@ -1,5 +1,4 @@
-import { isObject } from "@banquette/utils";
-import { isString } from "@banquette/utils";
+import { isObject, isString } from "@banquette/utils-type";
 import { Exception } from "./exception";
 import { UsageException } from "./usage.exception";
 

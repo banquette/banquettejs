@@ -1,19 +1,10 @@
-import {
-    ensureArray,
-    extend,
-    getFromSymbolIndex,
-    getSymbolDescription,
-    isObject,
-    isString,
-    isSymbol,
-    isUndefined
-} from "@banquette/utils";
-import { injectable } from "inversify";
-import { UsageException } from "../error/usage.exception";
-import { Injector } from "../injector";
+import { Service } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { extend, getSymbolDescription } from "@banquette/utils-object";
+import { ensureArray, isObject, isString, isSymbol, isUndefined } from "@banquette/utils-type";
 import { ConfigurationInterface, ConfigurationValue } from "./configuration.interface";
 
-@injectable()
+@Service()
 export class SharedConfiguration {
     /**
      * Configuration objects indexed symbol.
@@ -58,7 +49,7 @@ export class SharedConfiguration {
     public modify<T extends ConfigurationInterface>(symbol: symbol, modifier: Partial<T>): T {
         const config = extend(this.get(symbol), modifier, true);
         const description: string = getSymbolDescription(symbol);
-        this.assignConfig(symbol, config);
+        this.symbolMap[symbol] = config;
         if (description) {
             this.stringMap[description] = config;
         }
@@ -85,22 +76,14 @@ export class SharedConfiguration {
             }
             this.stringMap[description] = config;
         }
-        this.assignConfig(symbol, config);
-    }
-
-    /**
-     * Assign a config object to the index.
-     */
-    private assignConfig(symbol: symbol, config: any): void {
-        // @see https://github.com/microsoft/TypeScript/issues/1863#issuecomment-689028589
-        Object.assign(this.symbolMap, {[symbol]: config});
+        this.symbolMap[symbol] = config;
     }
 
     /**
      * Get the full configuration object associated with a symbol.
      */
     private getBySymbol<T extends ConfigurationInterface>(symbol: symbol): T {
-        const config = getFromSymbolIndex(this.symbolMap, symbol, null) as T;
+        const config = (this.symbolMap[symbol] as T) || null;
         if (config === null) {
             throw new UsageException(`No config found for "${symbol.toString()}".`);
         }
@@ -126,6 +109,3 @@ export class SharedConfiguration {
         return !i ? extend({}, currentValue) : currentValue;
     }
 }
-
-export const SharedConfigurationSymbol = Symbol('SharedConfiguration');
-Injector.RegisterService(SharedConfigurationSymbol, SharedConfiguration);

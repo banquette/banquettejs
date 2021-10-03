@@ -1,9 +1,9 @@
-import { Constructor } from "@banquette/utils";
+import { Constructor } from "@banquette/utils-type";
 
 /**
  * Represent a valid configuration value.
  */
-export type ConfigurationValue = string | number | boolean | null | symbol | undefined | Constructor<any> | ConfigurationInterface | Array<ConfigurationValue>;
+export type ConfigurationValue = string | number | boolean | null | symbol | undefined | Constructor | ConfigurationInterface | Array<ConfigurationValue>;
 
 /**
  * Interface all configuration objects stored in the SharedConfiguration service must conform with.
