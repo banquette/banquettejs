@@ -65,7 +65,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Attaches callbacks for the resolution, rejection and/or progress events of the promise.
      */
-    public then<ResultT = CompleteT, RejectT = never, ProgressT = any>(
+    public then<ResultT = CompleteT, RejectT = never, ProgressT = never>(
         onResolve?: onResolveCallback<CompleteT, ResultT> | null,
         onReject?: onRejectCallback<RejectT> | null,
         onProgress?: (progress: ProgressT) => void,
@@ -83,7 +83,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                     }
                 }, onReject: (reason: any) => {
                     if (!onReject) {
-                        return void reject(reason);
+                        return reject(reason);
                     }
                     try {
                         const subResult = onReject(reason) as any;
@@ -101,7 +101,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                     types: progressTypes,
                     callback: (value: any) => {
                         if (!onProgress) {
-                            return void progress(value);
+                            return progress(value);
                         }
                         try {
                             onProgress(value);
@@ -151,7 +151,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      * Attaches a callback that will be called when the promise is settled, no matter if it resolves or rejects.
      */
     public finally<ResultT = CompleteT, RejectT = never>(onSettle: onFinallyCallback<ResultT> | null): ObservablePromiseInterface<ResultT|RejectT> {
-        return new ObservablePromise<ResultT>((resolve: ResolveCallback<ResultT>, reject: RejectCallback, progress: ProgressCallback) => {
+        return new ObservablePromise<ResultT>((resolve: ResolveCallback<ResultT>, reject: RejectCallback) => {
             let rejected = false;
             let result: any;
             return this.then(
@@ -260,7 +260,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
             onResolve: handlers.onResolve || ((value: CompleteT) => value),
             onReject: handlers.onReject || noop,
             onProgress: handlers.onProgress || {
-                callback: value => {},
+                callback: () => {},
                 types: []
             }
         });

@@ -1,14 +1,14 @@
 import { Constructor } from "@banquette/utils-type";
-import { onRejectCallback, onResolveCallback } from "./types";
+import { onProgressCallback, onRejectCallback, onResolveCallback } from "./types";
 
 export interface ObservablePromiseInterface<CompleteT> extends Promise<CompleteT> {
     /**
      * Attaches callbacks for the resolution, rejection and/or progress events of the promise.
      */
-    then<ResultT = CompleteT, RejectT = never>(
+    then<ResultT = CompleteT, RejectT = never, ProgressT = never>(
         onResolve?: onResolveCallback<CompleteT, ResultT> | null,
         onReject?: onRejectCallback<RejectT> | null,
-        onProgress?: (progress: any /** No generic type to keep the type compatible with the official promise signature */) => void,
+        onProgress?: onProgressCallback<ProgressT> | null,
         progressTypes?: Array<Constructor>): ObservablePromiseInterface<ResultT|RejectT>;
 
     /**
