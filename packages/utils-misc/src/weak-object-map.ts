@@ -78,6 +78,9 @@ export class WeakObjectMap<T = Object> {
      * processing may be at play externally that may ask for a reference in a couple of frames.
      *
      * Here we give it 30 seconds, which should be more than enough in most cases.
+     *
+     * Using a WeakRef would be far better but it is still on proposal state at the time of writing:
+     * @see https://tc39.es/proposal-weakrefs/#sec-weak-ref-objects
      */
     private scheduleMapRemoval(alias: string): void {
         if (isUndefined(this.removeTimers[alias])) {
