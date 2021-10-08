@@ -6,5 +6,5 @@ import { trim } from "./format/trim";
  * This function makes a basic cast to string so you can give it numbers for example.
  */
 export function isNonEmptyString(input: any): boolean {
-    return (isString(input) || isNumber(input)) &&  trim('' + input).length > 0;
+    return (isString(input) || isNumber(input)) && trim('' + input).length > 0;
 }
