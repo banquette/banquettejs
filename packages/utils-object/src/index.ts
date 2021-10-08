@@ -4,6 +4,7 @@ export * from './compare-objects';
 export * from './are-objects-equal';
 export * from './extend';
 export * from './clone-deep';
+export * from './clone-deep-primitive';
 export * from './clone-object-with-mask';
 export * from './flatten';
 export * from './get-object-keys';
