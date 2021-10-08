@@ -9,5 +9,5 @@ export type ConfigurationValue = string | number | boolean | null | symbol | und
  * Interface all configuration objects stored in the SharedConfiguration service must conform with.
  */
 export interface ConfigurationInterface {
-    [member: string]: ConfigurationValue
+    [member: string]: ConfigurationValue;
 }
