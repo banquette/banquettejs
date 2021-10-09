@@ -2,7 +2,7 @@
 export enum TrimStrategy {
     LEFT    = 1,
     RIGHT   = 2,
-    BOTH    = 4
+    BOTH    = 3
 }
 
 /**
@@ -16,12 +16,12 @@ export function trim(input: string, chars: string = " \n\r\t", strategy: TrimStr
     let multipleChars = chars.length > 1;
 
     if ((strategy & TrimStrategy.LEFT) === TrimStrategy.LEFT) {
-        while (start < end && (!multipleChars && input[start] === chars) || (multipleChars && chars.indexOf(input[start]) >= 0)) {
+        while (start < end && ((!multipleChars && input[start] === chars) || (multipleChars && chars.indexOf(input[start]) >= 0))) {
             ++start;
         }
     }
     if ((strategy & TrimStrategy.RIGHT) === TrimStrategy.RIGHT) {
-        while (end > start && (!multipleChars && input[end - 1] === chars) || (multipleChars && chars.indexOf(input[end - 1]) >= 0)) {
+        while (end > start && ((!multipleChars && input[end - 1] === chars) || (multipleChars && chars.indexOf(input[end - 1]) >= 0))) {
             --end;
         }
     }

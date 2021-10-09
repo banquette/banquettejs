@@ -5,6 +5,6 @@ import { trim, TrimStrategy } from "./trim";
  *
  * Alias of `trim(input, chars, TrimStrategy.LEFT)`.
  */
-export function ltrim(input: string, chars: string = ' '): string {
+export function ltrim(input: string, chars?: string): string {
     return trim(input, chars, TrimStrategy.LEFT);
 }
