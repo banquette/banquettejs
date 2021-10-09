@@ -13,6 +13,8 @@ export * from './case/kebab-case';
  * Format
  */
 export * from './format/trim';
+export * from './format/ltrim';
+export * from './format/rtrim';
 export * from './format/escape-regex';
 export * from './format/format';
 export * from './format/human-file-size';
