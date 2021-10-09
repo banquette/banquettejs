@@ -4,7 +4,7 @@ import { isNullOrUndefined } from "./is-null-or-undefined";
 /**
  * Ensure the input is always a valid array.
  */
-export function ensureArray(input: any): any[] {
+export function ensureArray<T = any>(input: any): T[] {
     if (isNullOrUndefined(input)) {
         return [];
     }
