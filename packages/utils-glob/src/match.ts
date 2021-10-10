@@ -32,12 +32,7 @@ export function match(mask: string, path: string, tags?: string[]): MatchResult 
  * Do the actual pattern matching.
  */
 function matchPattern(pattern: string, path: string): MatchType {
-    const patternParts = pattern.split('/').filter((item, pos, arr) => pos === 0 || item !== '**' || item !== arr[pos - 1]);
-    if (patternParts[0] !== '') {
-        // Meaning the first character is not a "/". In which case nothing can match.
-        return MatchType.None;
-    }
-    let pathIndex = 1;
+    let pathIndex = 0;
     if (path[path.length - 1] === '/') {
         path = path.substring(0, path.length - 2);
     }
@@ -65,7 +60,8 @@ function matchPattern(pattern: string, path: string): MatchType {
         return false;
     };
     let matchGlobstar = false;
-    for (let i = 1; i < patternParts.length; ++i) {
+    const patternParts = pattern.split('/').filter((item, pos, arr) => pos === 0 || item !== '**' || item !== arr[pos - 1]);
+    for (let i = 0; i < patternParts.length; ++i) {
         const p = patternParts[i];
         if (p === '**') {
             if (i >= patternParts.length - 1) {
