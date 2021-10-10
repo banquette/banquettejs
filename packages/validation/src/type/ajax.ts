@@ -66,9 +66,7 @@ export class AjaxValidator implements SimplifiedValidatorInterface {
                 resolve(context);
             });
         });
-        context.result.delayResponse(promiseWrapper, () => {
-            response.request.cancel();
-        });
+        context.result.delayResponse(promiseWrapper, response.request.cancel);
         return context.result;
     }
 }
