@@ -202,7 +202,11 @@ export class ValidationResult {
                 this.promiseResolve = this.promiseReject = null;
                 this.cleanupAsync();
                 return this;
-            }).catch(proxy(this.fail, this));
+            }).catch((error: any) => {
+                this.fail(error);
+                return Promise.reject(error);
+            });
+
         }
         const localPromise: Promise<any> = this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]);
         (this as Writeable<ValidationResult>).localPromise = localPromise;
