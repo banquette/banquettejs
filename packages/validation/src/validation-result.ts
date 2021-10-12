@@ -24,24 +24,18 @@ export class ValidationResult {
     public readonly children: ValidationResult[];
     public readonly promise: Promise<ValidationResult>|null;
     public readonly localPromise: Promise<any>|null;
-    // @ts-ignore
-    public readonly status: ValidationResultStatus;
-    // @ts-ignore
-    public readonly valid: boolean;
-    // @ts-ignore
-    public readonly invalid: boolean;
-    // @ts-ignore
-    public readonly error: boolean;
+    public readonly status!: ValidationResultStatus;
+    public readonly valid!: boolean;
+    public readonly invalid!: boolean;
+    public readonly error!: boolean;
     public readonly errorDetail: Exception|null;
-    // @ts-ignore
-    public readonly waiting: boolean;
+    public readonly waiting!: boolean;
     private cancelCallback: GenericCallback|null;
     public previousPromise: Promise<any>|null;
     private promiseResolve: ((result: ValidationResult) => any)|null;
     private promiseReject: ((reason: any) => any)|null;
 
-    public constructor(public readonly path: string,
-                       public readonly parent: ValidationResult|null = null) {
+    public constructor(public readonly path: string, public readonly parent: ValidationResult|null = null) {
         this.violations = [];
         this.children = [];
         this.promise = null;
