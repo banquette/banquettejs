@@ -1,5 +1,5 @@
 import { isPromiseLike } from "@banquette/utils-type";
-import { simplifyValidator } from "../simplify-validator";
+import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";
@@ -10,7 +10,7 @@ type ValidationCallback = ((context: ValidationContext) => Promise<any>|undefine
  * Delegate the validation to a custom callback given as parameter of the factory.
  */
 export const Callback = (callback: ValidationCallback, tags?: string[]): ValidatorInterface => {
-    return simplifyValidator({
+    return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
             try {
                 const res = callback(context);

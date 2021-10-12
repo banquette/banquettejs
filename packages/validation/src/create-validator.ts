@@ -4,9 +4,10 @@ import { ValidationResult } from "./validation-result";
 import { ValidatorInterface } from "./validator.interface";
 
 /**
- * Abstract the context creation when building validators.
+ * An utility method that ensure te ValidationContext is always set when the validator is used.
+ * You should use this method anytime you want to create a custom validator.
  */
-export function simplifyValidator(validator: SimplifiedValidatorInterface, tags?: string[]): ValidatorInterface {
+export function createValidator(validator: SimplifiedValidatorInterface, tags?: string[]): ValidatorInterface {
     return {
         tags,
         validate(value: any, maskOrContext?: ValidationContext|string|string[]): ValidationResult {

@@ -1,5 +1,5 @@
 import { SYNC_TAG } from "../constant";
-import { simplifyValidator } from "../simplify-validator";
+import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";
@@ -9,7 +9,7 @@ import { ValidatorInterface } from "../validator.interface";
  * It will never create a violation.
  */
 export const Valid = (tags: string[] = []): ValidatorInterface => {
-    return simplifyValidator({
+    return createValidator({
         validate: (context: ValidationContext): ValidationResult => context.result
     }, [SYNC_TAG].concat(tags));
 };

@@ -1,7 +1,7 @@
 import { areObjectsEqual } from "@banquette/utils-object";
 import { isObject } from "@banquette/utils-type";
 import { SYNC_TAG } from "../constant";
-import { simplifyValidator } from "../simplify-validator";
+import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";
@@ -10,7 +10,7 @@ import { ValidatorInterface } from "../validator.interface";
  * Check that the value is in a list of predefined choices.
  */
 export const Choice = (choices: any[], message: string = 'The value is not part of the expected choices.', type: string = 'choice', tags: string[] = []): ValidatorInterface => {
-    return simplifyValidator({
+    return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
             if (isObject(context.value)) {
                 let i;

@@ -1,6 +1,6 @@
 import { ensureString, isArray, isNumber, isNumeric, isObject, isString } from "@banquette/utils-type";
 import { SYNC_TAG } from "../constant";
-import { simplifyValidator } from "../simplify-validator";
+import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";
@@ -19,7 +19,7 @@ export const Min = (count: number,
                     message: string|'auto' = 'auto',
                     type: string = 'min',
                     tags: string[] = []): ValidatorInterface => {
-    return simplifyValidator({
+    return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
             let valid: boolean = true;
             let defaultMessage: string = 'Must be greater or equal to %count%.';

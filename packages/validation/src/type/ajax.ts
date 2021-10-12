@@ -12,7 +12,7 @@ import { extend } from "@banquette/utils-object";
 import { isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
 import { ASYNC_TAG } from "../constant";
 import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
-import { simplifyValidator } from "../simplify-validator";
+import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from '../validator.interface';
@@ -66,7 +66,19 @@ export class AjaxValidator implements SimplifiedValidatorInterface {
                 resolve(context);
             });
         });
-        context.result.delayResponse(promiseWrapper, response.request.cancel);
+        context.result.delayResponse(promiseWrapper, () => {
+            //
+            // DO NOT shorten this to:
+            // `context.result.delayResponse(promiseWrapper, response.request.cancel)`
+            // Because the call context will be incorrect.
+            //
+            // To make it a one liner we could use a proxy:
+            // `context.result.delayResponse(promiseWrapper, proxy(response.request.cancel, response.request))`
+            //
+            // But it's slower and uglier, so its good like that.
+            //
+            response.request.cancel();
+        });
         return context.result;
     }
 }
@@ -102,5 +114,5 @@ export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFacto
     if (!isUndefined(type)) {
         instance.type = type;
     }
-    return simplifyValidator(instance, [ASYNC_TAG]);
+    return createValidator(instance, [ASYNC_TAG]);
 };

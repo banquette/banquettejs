@@ -16,6 +16,7 @@ export * from './type/invalid';
 export * from './type/max';
 export * from './type/min';
 export * from './type/not-empty';
+export * from './type/not-equal';
 export * from './type/or';
 export * from './type/pattern';
 export * from './type/phone';
@@ -26,7 +27,7 @@ export * from './type/valid';
 
 export * from './v';
 export * from './simplified-validator.interface';
-export * from './simplify-validator';
+export * from './create-validator';
 export * from './utils';
 export * from './validation-context';
 export * from './validation-result';

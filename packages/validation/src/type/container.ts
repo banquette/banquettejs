@@ -1,5 +1,4 @@
 import { UsageException } from "@banquette/exception";
-import { MatchResult, MatchType } from "@banquette/utils-glob";
 import { isArray, isObject, isUndefined } from "@banquette/utils-type";
 import { isValidatorContainer, splitPath } from "../utils";
 import { ValidationContext } from "../validation-context";
@@ -7,7 +6,7 @@ import { ValidationResult } from "../validation-result";
 import { ValidatorContainerInterface } from "../validator-container.interface";
 import { ValidatorInterface } from "../validator.interface";
 
-type ValidatorsCollection = Record<string, ValidatorInterface>|ValidatorInterface[];
+export type ValidatorsCollection = Record<string, ValidatorInterface>|ValidatorInterface[];
 
 /**
  * Validate an object or an array.
