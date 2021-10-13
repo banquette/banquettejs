@@ -1,5 +1,5 @@
 import { areObjectsEqual } from "@banquette/utils-object";
-import { isObjectLiteral } from "@banquette/utils-type";
+import { isObjectLiteral, isArray } from "@banquette/utils-type";
 
 /**
  * Test if two values are strictly equal, no matter their type.
@@ -13,7 +13,7 @@ export function areEqual(a: any, b: any): boolean {
     if (ta === 'undefined' || ta === 'null') {
         return true;
     }
-    if (ta === 'object' && isObjectLiteral(a) && isObjectLiteral(b)) {
+    if (ta === 'object' && (isArray(a) || isObjectLiteral(a)) && (isArray(b) || isObjectLiteral(b))) {
         return areObjectsEqual(a, b);
     }
     return a === b;

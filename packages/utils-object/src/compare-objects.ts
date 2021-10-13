@@ -1,4 +1,4 @@
-import { isObject, isUndefined } from "@banquette/utils-type";
+import { isObject, isUndefined, isObjectLiteral, isArray } from "@banquette/utils-type";
 
 /**
  * Compares two objects and returns the difference between them.
@@ -23,7 +23,7 @@ export function compareObjects(a: any, b: any, keepBothValues: boolean = false):
         }
         const value = a[key];
         if (!isUndefined(b[key])) {
-            if (isObject(value) && isObject(b[key])) {
+            if ((isObjectLiteral(value) || isArray(value)) && (isObjectLiteral(b[key]) || isArray(b[key])) ) {
                 const subOutput: object =
                     compareObjects(
                         value as object,
