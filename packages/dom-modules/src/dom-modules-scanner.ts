@@ -1,6 +1,6 @@
 import { InjectableMetadataInterface, Injector, MetadataContainer, Service } from "@banquette/dependency-injection";
 import { ExceptionFactory, UsageException } from "@banquette/exception";
-import { isNullOrUndefined, isUndefined } from "@banquette/utils-type";
+import { isNullOrUndefined, isUndefined, Constructor } from "@banquette/utils-type";
 import { camelCase, kebabCase, trim } from "@banquette/utils-string";
 import { AbstractDomModule } from "./abstract.dom-module";
 import { DomModuleConstructor, ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from "./constant";
@@ -41,7 +41,7 @@ export class DomModulesScanner {
                         attrValue = trim(attrValue);
                     }
                     const dataName = camelCase(attrName);
-                    const moduleInstance: AbstractDomModule = Injector.Get<AbstractDomModule>(moduleCtor);
+                    const moduleInstance: AbstractDomModule = Injector.Get<AbstractDomModule>(moduleCtor as Constructor<any>);
                     let options: any = {};
 
                     let existingModules = that.existingModules.get(element);
