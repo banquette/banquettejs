@@ -301,7 +301,7 @@ describe('failures', () => {
             url: buildTestUrl({timeout: 100, delay: 1000})
         }));
         await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestTimeoutException)});
-        expect((new Date()).getTime() - start).toBeLessThan(150 /* meaning 1 try */);
+        expect((new Date()).getTime() - start).toBeLessThan(250 /* meaning 1 try */);
     });
     test(`no retry for this request`, async () => {
         expect.assertions(1);
@@ -322,7 +322,7 @@ describe('failures', () => {
         await expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
         const delta = (new Date()).getTime() - start;
         expect(delta).toBeGreaterThan(300);
-        expect(delta).toBeLessThan(350);
+        expect(delta).toBeLessThan(500);
     });
     test(`retry auto increment exponentially`, async () => {
         expect.assertions(3);
@@ -335,7 +335,7 @@ describe('failures', () => {
         await expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
         const delta = (new Date()).getTime() - start;
         expect(delta).toBeGreaterThan(1110 /* 0 + 10 + 100 + 1000 */);
-        expect(delta).toBeLessThan(1200);
+        expect(delta).toBeLessThan(1500);
     });
 });
 

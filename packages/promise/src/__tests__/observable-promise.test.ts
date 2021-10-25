@@ -299,7 +299,7 @@ describe('Progression events', () => {
         }).then((result) => {
             const delta = (new Date()).getTime() - startTime;
             expect(delta).toBeGreaterThanOrEqual(280);
-            expect(delta).toBeLessThanOrEqual(450);
+            expect(delta).toBeLessThanOrEqual(600);
             expect(result).toEqual('Done.');
         });
     });
