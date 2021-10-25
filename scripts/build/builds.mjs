@@ -121,6 +121,10 @@ export const Builds = Object.assign({},
         module: 'Banquette.Http'
     }),
     createBuildVariants({
+        package: 'form',
+        module: 'Banquette.Form'
+    }),
+    createBuildVariants({
         package: 'inversify',
         module: 'Banquette.Inversify'
     }),

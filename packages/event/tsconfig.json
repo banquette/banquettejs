@@ -6,19 +6,18 @@
         "rootDir": "..",
         "paths": {
             "@banquette/config": ["packages/config/src/index.ts"],
-            "@banquette/core": ["packages/core/src/index.ts"],
             "@banquette/dependency-injection": [
                 "packages/dependency-injection/src/index.ts"
             ],
             "@banquette/dom-modules": ["packages/dom-modules/src/index.ts"],
             "@banquette/exception": ["packages/exception/src/index.ts"],
             "@banquette/fingerprint": ["packages/fingerprint/src/index.ts"],
+            "@banquette/form": ["packages/form/src/index.ts"],
             "@banquette/http": ["packages/http/src/index.ts"],
             "@banquette/inversify": ["packages/inversify/src/index.ts"],
             "@banquette/log": ["packages/log/src/index.ts"],
             "@banquette/promise": ["packages/promise/src/index.ts"],
             "@banquette/storage": ["packages/storage/src/index.ts"],
-            "@banquette/utils": ["packages/utils/src/index.ts"],
             "@banquette/utils-array": ["packages/utils-array/src/index.ts"],
             "@banquette/utils-base64": ["packages/utils-base64/src/index.ts"],
             "@banquette/utils-color": ["packages/utils-color/src/index.ts"],
