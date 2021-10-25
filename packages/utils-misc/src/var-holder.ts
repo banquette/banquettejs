@@ -1,29 +1,30 @@
 import { UsageException } from "@banquette/exception";
 import { ensureArray, isObject, isString, isUndefined } from "@banquette/utils-type";
+import { getObjectKeys } from "@banquette/utils-object";
 
 /**
  * A generic key/value pair storage you can use to store data in memory.
  */
-export class VarHolder {
-    protected bag: Record<any, any>;
+export class VarHolder<K extends keyof any = any, V = any> {
+    protected bag: Partial<Record<K, V>>;
 
-    public constructor() {
-        this.bag = {};
+    public constructor(bag?: Partial<Record<K, V>>) {
+        if (!isUndefined(bag)) {
+            this.bag = Object.assign({}, bag);
+        } else {
+            this.bag = {};
+        }
     }
 
     /**
-     * Returns the parameters.
-     *
-     * @return array An array of parameters
+     * Returns the whole container.
      */
     public all() {
-        return this.bag;
+        return Object.assign({}, this.bag);
     }
 
     /**
-     * Returns the parameter keys.
-     *
-     * @return array An array of parameter keys
+     * Returns all the keys registered in the container.
      */
     public keys() {
         return Object.keys(this.bag);
@@ -40,7 +41,7 @@ export class VarHolder {
      *   - get('http.timeout', 2000) will get the "timeout" value of the "http" key
      *   - get(['http', 'timeout'], 2000) same as above
      */
-    public get(key: string|string[], defaultValue: any = null): any {
+    public get(key: K|K[], defaultValue: V|null = null): any {
         const keys = isString(key) ? key.split('.') : ensureArray(key);
         let bag: any = this.bag;
 
@@ -63,7 +64,7 @@ export class VarHolder {
      *   - set('http.timeout', 2000) will set the "timeout" value of the "http" key
      *   - set(['http', 'timeout'], 2000) same as above
      */
-    public set(key: string|string[], value: any): void {
+    public set(key: K|K[], value: V): void {
         const keys = isString(key) ? key.split('.') : ensureArray(key);
         let bag: any = this.bag;
 
@@ -80,65 +81,58 @@ export class VarHolder {
     }
 
     /**
-     * Replaces the current parameters by a new set.
-     *
-     * @param parameters object An array of parameters
+     * Replaces the current values by a new set.
      */
-    public replace(parameters: Record<any, any>) {
-        this.bag = parameters;
+    public replace(values: Partial<Record<K, V>>) {
+        this.bag = values;
     }
 
     /**
-     * Adds parameters.
-     *
-     * @param parameters object An array of parameters
+     * Merge input values with the ones already stored in the container.
      */
-    public add(parameters: Record<any, any>) {
-        for (const name in parameters) {
-            if (parameters.hasOwnProperty(name)) {
-                this.bag[name] = parameters[name];
-            }
+    public add(values: Partial<Record<K, V>>) {
+        for (const key of getObjectKeys(values)) {
+            this.bag[key] = values[key];
         }
     }
 
     /**
-     * Returns true if the parameter is defined.
-     *
-     * @param key string|string[] The key
-     *
-     * @return boolean true if the parameter exists, false otherwise
+     * Returns true if the value is defined in the container.
      */
-    public has(key: string|string[]) {
+    public has(key: K|K[]) {
         // We can't do:
         //   `this.get(key, undefined)`
-        // because doing this will set the default value to `null` (the default value of the parameter).
+        // because doing this will set the default value to `null` (the default value of the "defaultValue" parameter).
         //
-        // And I don't want to lose the ability to have the default value to null by default.
-        // So the trick is to get the value once:
+        // So to not lose the ability to have the default value to null by default,
+        // the trick is to get the value once:
         const v = this.get(key);
 
         // If the value is null, it may not exist in the bag.
         if (v === null) {
             // But the value set by the user could be null, so do another get to be sure
-            return this.get(key, '_') === null; // If the result is still null, the key was effectively set to null by the user.
+            return this.get(key, '_' as any) === null; // If the result is still null, the key was effectively set to null by the user.
         }
         // Otherwise the key exist.
         return true;
     }
 
     /**
-     * Removes a parameter.
-     *
-     * @param key string The key
+     * Removes a value from the container.
      */
-    public remove(key: string) {
+    public remove(key: K) {
         delete(this.bag[key]);
     }
 
     /**
-     * Returns the number of parameters.
-     *
-     * @return number
+     * Clear the container of all its values.
+     */
+    public clear(): void {
+        this.bag = {};
+    }
+
+    /**
+     * Returns the number of values registered in the container.
      */
     public count(): number {
         return Object.keys(this.bag).length;
