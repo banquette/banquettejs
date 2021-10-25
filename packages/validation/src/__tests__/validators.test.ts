@@ -15,11 +15,6 @@ import { ensureArray, isArray, isUndefined } from "@banquette/utils-type";
 import { buildTestUrl } from "../../../http/src/__tests__/__mocks__/utils";
 import '../../../http/src/__tests__/__mocks__/xml-http-request.mock';
 import { ASYNC_TAG } from "../constant";
-import { Callback } from "../type/callback";
-import { Invalid } from "../type/invalid";
-import { NotEmpty } from "../type/not-empty";
-import { Pattern } from "../type/pattern";
-import { SameAs } from "../type/same-as";
 import { V } from "../v";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult, ValidationResultStatus } from "../validation-result";
@@ -103,8 +98,8 @@ async function expectResultAsync(expectedDelay: number|[number, number], res: Va
     }
     if (expectedDelay > 0) {
         const delta = (new Date()).getTime() - startTime;
-        expect(delta).toBeGreaterThan(Math.round(isArray(expectedDelay) ? expectedDelay[0] : (expectedDelay * 0.9)));
-        expect(delta).toBeLessThan(Math.round(isArray(expectedDelay) ? expectedDelay[1] : (expectedDelay * 1.1)));
+        expect(delta).toBeGreaterThan(Math.round(isArray(expectedDelay) ? expectedDelay[0] : (expectedDelay * 0.8)));
+        expect(delta).toBeLessThan(Math.round(isArray(expectedDelay) ? expectedDelay[1] : (expectedDelay * 2 /* Be generous for slow machines..*/ )));
     }
     return expectResult(res, conditions);
 }
@@ -124,7 +119,7 @@ function runTests(tests: Array<[number, string|null, Function]>): void {
 
 describe('basic usage', () => {
     test('simple value', () => {
-        expect(Pattern(/^[A-Z]/).validate('Test').valid).toEqual(true);
+        expect(V.Pattern(/^[A-Z]/).validate('Test').valid).toEqual(true);
     });
 
     test('simple object', () => {
@@ -168,7 +163,7 @@ describe('ValidationResult', () => {
     });
 
     test('A new ValidationResult is created for each call to validate', async () => {
-        const validator = ValidateAfterDelay(200, NotEmpty());
+        const validator = ValidateAfterDelay(200, V.NotEmpty());
         const result = validator.validate('Valid');
 
         await waitForDelay(20);
@@ -186,12 +181,12 @@ describe('ValidationResult', () => {
 
 describe('status', () => {
     test('sync', () => {
-        const validator = Pattern(/^[A-Z]/);
+        const validator = V.Pattern(/^[A-Z]/);
         expectStatus(validator.validate('A'), ValidationResultStatus.Valid);
     });
 
     test('async', async () => {
-        const validator = Callback(async () => {
+        const validator = V.Callback(async () => {
             await waitForDelay(20);
         });
         const validationResult = validator.validate('A');
@@ -292,7 +287,7 @@ describe('validators', () => {
             [6, null, () => expectResult(V.Or(V.Empty(), V.Min(5)).validate('Test'), {valid: false, violations: [{type: 'min'}]})],
             [5, null, () => expectResult(V.Or(V.Empty(), V.Min(5)).validate(''), {valid: true})],
             [8, null, () => expectResultAsync(20, V.Or(ValidateAfterDelay(), V.Min(5)).validate(''), {valid: true})],
-            [8, null, () => expectResultAsync(40, V.Or(ValidateAfterDelay(20, Invalid('test')), ValidateAfterDelay(20, Invalid('test')), V.NotEmpty(), ValidateAfterDelay(20, Invalid('test'))).validate('value'), {valid: true})],
+            [8, null, () => expectResultAsync(40, V.Or(ValidateAfterDelay(20, V.Invalid('test')), ValidateAfterDelay(20, V.Invalid('test')), V.NotEmpty(), ValidateAfterDelay(20, V.Invalid('test'))).validate('value'), {valid: true})],
         ]);
     });
 
@@ -301,27 +296,27 @@ describe('validators', () => {
             [6, null, () => expectResult(V.Compose(V.Empty(), V.Min(5)).validate('Test'), {valid: false, violations: [{type: 'empty'}, {type: 'min'}]})],
             [6, null, () => expectResult(V.Compose(V.NotEmpty(), V.Min(5)).validate(''), {valid: false, violations: [{type: 'not-empty'}, {type: 'min'}]})],
             [9, 'Async behavior', () => expectResultAsync(20, V.Compose(ValidateAfterDelay(), V.Min(5)).validate(''), {valid: false, violations: [{type: 'min'}]})],
-            [9, 'Parallel execution', () => expectResultAsync(20, V.Compose(ValidateAfterDelay(20, Invalid('', 'test1')), V.Min(5), ValidateAfterDelay(20, Invalid('', 'test2'))).validate('abc'), {valid: false, violations: [{type: 'test1'}, {type: 'test2'}, {type: 'min'}]})]
+            [9, 'Parallel execution', () => expectResultAsync(20, V.Compose(ValidateAfterDelay(20, V.Invalid('', 'test1')), V.Min(5), ValidateAfterDelay(20, V.Invalid('', 'test2'))).validate('abc'), {valid: false, violations: [{type: 'test1'}, {type: 'test2'}, {type: 'min'}]})]
         ]);
     });
 
     describe('If', () => {
         runTests([
-            [5, null, () => expectResult(V.If(() => true, NotEmpty()).validate(''), {valid: false})],
-            [5, null, () => expectResult(V.If(() => false, NotEmpty()).validate(''), {valid: true})],
+            [5, null, () => expectResult(V.If(() => true, V.NotEmpty()).validate(''), {valid: false})],
+            [5, null, () => expectResult(V.If(() => false, V.NotEmpty()).validate(''), {valid: true})],
             [8, null, () => expectResultAsync(20, V.If(async () => {
                 await waitForDelay(20);
                 return true;
-            }, NotEmpty()).validate(''), {valid: false})],
+            }, V.NotEmpty()).validate(''), {valid: false})],
             [8, null, () => expectResultAsync(20, V.If(async () => {
                 await waitForDelay(20);
                 return false;
-            }, NotEmpty()).validate(''), {valid: true})],
+            }, V.NotEmpty()).validate(''), {valid: true})],
             [8, null, () => expectResultAsync(1000, V.If(() => {
                 return new Promise((resolve) => {
                     window.setTimeout(() => void resolve(true), 1000);
                 });
-            }, NotEmpty()).validate(''), {valid: false})]
+            }, V.NotEmpty()).validate(''), {valid: false})]
         ])
     });
 
@@ -595,9 +590,9 @@ describe('validators', () => {
             }, value], true);
         };
         runTests([
-            [6, null, () => expectResult(buildValidator({passwordConfirm: SameAs('/password')}).validate(buildValue({passwordConfirm: 'invalid'})), {valid: false, violations: [{type: 'same-as'}]})],
-            [5, null, () => expectResult(buildValidator({passwordConfirm: SameAs('/password')}).validate(buildValue()), {valid: true})],
-            [6, null, () => expectResult(buildValidator({'tags/name': SameAs('../../../name')}).validate(buildValue()), {valid: false, violations: [{type: 'same-as'}]})],
+            [6, null, () => expectResult(buildValidator({passwordConfirm: V.SameAs('/password')}).validate(buildValue({passwordConfirm: 'invalid'})), {valid: false, violations: [{type: 'same-as'}]})],
+            [5, null, () => expectResult(buildValidator({passwordConfirm: V.SameAs('/password')}).validate(buildValue()), {valid: true})],
+            [6, null, () => expectResult(buildValidator({'tags/name': V.SameAs('../../../name')}).validate(buildValue()), {valid: false, violations: [{type: 'same-as'}]})],
         ]);
     });
 
