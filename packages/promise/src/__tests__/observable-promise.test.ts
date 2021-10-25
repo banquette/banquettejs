@@ -299,7 +299,7 @@ describe('Progression events', () => {
         }).then((result) => {
             const delta = (new Date()).getTime() - startTime;
             expect(delta).toBeGreaterThanOrEqual(280);
-            expect(delta).toBeLessThanOrEqual(320);
+            expect(delta).toBeLessThanOrEqual(450);
             expect(result).toEqual('Done.');
         });
     });
@@ -420,7 +420,7 @@ describe('ObservablePromise.ResolveAfterDelay', () => {
         const startTime = (new Date()).getTime();
         await ObservablePromise.ResolveAfterDelay(500);
         expect((new Date()).getTime() - startTime).toBeGreaterThanOrEqual(480 /* because timeout is not reliable at the ms */ );
-        expect((new Date()).getTime() - startTime).toBeLessThanOrEqual(520 /* because timeout is not reliable at the ms */ );
+        expect((new Date()).getTime() - startTime).toBeLessThanOrEqual(650 /* because timeout is not reliable at the ms */ );
     });
     test('returns the correct value', async () => {
         const result = await ObservablePromise.ResolveAfterDelay(400, 'test');
@@ -447,7 +447,7 @@ describe('ObservablePromise.MinDelay', () => {
             }, 200);
         });
         expect((new Date()).getTime() - startTime).toBeGreaterThanOrEqual(180 /* because timeout is not reliable at the ms */ );
-        expect((new Date()).getTime() - startTime).toBeLessThanOrEqual(220 /* because timeout is not reliable at the ms */ );
+        expect((new Date()).getTime() - startTime).toBeLessThanOrEqual(350 /* because timeout is not reliable at the ms */ );
     });
 });
 
