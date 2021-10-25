@@ -30,3 +30,15 @@ export type Abstract<T> = NewableFunction & { prototype: T };
 export type PojoValue = Primitive | Pojo | PojoArray;
 export type Pojo = {[member: string]: PojoValue};
 export interface PojoArray extends Array<PojoValue> {}
+
+/**
+ * Make all properties of a type required.
+ */
+export type Complete<T> = {
+    [P in keyof T]-?: T[P];
+}
+
+/**
+ * Modify a type by redefining some of its properties.
+ */
+export type Modify<T, R> = Omit<T, keyof R> & R;
