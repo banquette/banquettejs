@@ -2,7 +2,7 @@ import { Exception, ExceptionFactory, UsageException } from "@banquette/exceptio
 import { matchBest, MatchResult, MatchType } from "@banquette/utils-glob";
 import { proxy } from "@banquette/utils-misc";
 import { replaceStringVariables } from "@banquette/utils-string";
-import { ensureArray, GenericCallback, isUndefined, Writeable } from "@banquette/utils-type";
+import { ensureArray, GenericCallback, isUndefined, Writeable, Modify } from "@banquette/utils-type";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { Violation } from "./violation";
 import { ViolationInterface } from "./violation.interface";
@@ -31,7 +31,7 @@ export class ValidationResult {
     public readonly errorDetail: Exception|null;
     public readonly waiting!: boolean;
     private cancelCallback: GenericCallback|null;
-    public previousPromise: Promise<any>|null;
+    private previousPromise: Promise<any>|null;
     private promiseResolve: ((result: ValidationResult) => any)|null;
     private promiseReject: ((reason: any) => any)|null;
 
@@ -196,11 +196,8 @@ export class ValidationResult {
                 this.promiseResolve = this.promiseReject = null;
                 this.cleanupAsync();
                 return this;
-            }).catch((error: any) => {
-                this.fail(error);
-                return Promise.reject(error);
             });
-
+            (this as Modify<ValidationResult, {promise: Promise<ValidationResult>}>).promise.catch(proxy(this.fail, this));
         }
         const localPromise: Promise<any> = this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]);
         (this as Writeable<ValidationResult>).localPromise = localPromise;
