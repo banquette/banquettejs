@@ -24,11 +24,6 @@ export const VUE_CLASS_COMPONENT_OPTIONS_NAME = '__vccOpts';
 export const DECORATORS_OPTIONS_HOLDER_NAME = '__bvcOpts';
 
 /**
- * Cache of DECORATORS_OPTIONS_HOLDER_NAME to avoid recalculating everything at each update.
- */
-export const DECORATORS_OPTIONS_HOLDER_CACHE_NAME = '__bvcCache';
-
-/**
  * Vue lifecycle hooks.
  * @link https://v3.vuejs.org/guide/composition-api-lifecycle-hooks.html#lifecycle-hooks
  */

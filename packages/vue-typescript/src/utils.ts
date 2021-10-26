@@ -15,7 +15,6 @@ import { WritableComputedOptions } from "@vue/reactivity";
 import { WatchOptions } from "@vue/runtime-core";
 import { computed, nextTick, Ref, ref, toRefs, watch, getCurrentInstance } from "vue";
 import {
-    DECORATORS_OPTIONS_HOLDER_CACHE_NAME,
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,
     PRE_CONSTRUCTION_HOOKS,
@@ -136,9 +135,6 @@ function instantiate(ctor: Constructor, options: ComponentDecoratorOptions | Com
  * Add the necessary data to a constructor so it can be used as a Vue component.
  */
 export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface & {component: ComponentDecoratorOptions}) {
-    if (!isUndefined(ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME])) {
-        return ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME];
-    }
     const options: any = {};
 
     // Merge parent data
@@ -233,14 +229,6 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         if ((ctor as any)[key]) {
             options[key] = (ctor as any)[key];
         }
-    });
-
-    // Save the final options object into the prototype for caching.
-    Object.defineProperty(ctor.prototype, DECORATORS_OPTIONS_HOLDER_CACHE_NAME, {
-        enumerable: false,
-        configurable: true,
-        writable: false,
-        value: options
     });
     return options;
 }
