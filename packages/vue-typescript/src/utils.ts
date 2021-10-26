@@ -1,6 +1,6 @@
 import { UsageException } from "@banquette/exception";
 import { areEqual, proxy } from "@banquette/utils-misc";
-import { cloneDeep, extend, getObjectKeys, getObjectValue } from "@banquette/utils-object";
+import { extend, getObjectKeys, getObjectValue } from "@banquette/utils-object";
 import {
     Constructor,
     ensureArray,
@@ -12,23 +12,14 @@ import {
     isUndefined
 } from "@banquette/utils-type";
 import { WritableComputedOptions } from "@vue/reactivity";
-import { ComponentOptionsWithoutProps, WatchOptions } from "@vue/runtime-core";
-import {
-    ComponentOptions,
-    ComponentOptionsWithObjectProps,
-    computed,
-    DefineComponent,
-    nextTick,
-    Ref,
-    ref,
-    toRefs,
-    watch
-} from "vue";
+import { WatchOptions } from "@vue/runtime-core";
+import { computed, nextTick, Ref, ref, toRefs, watch, getCurrentInstance } from "vue";
 import {
     DECORATORS_OPTIONS_HOLDER_CACHE_NAME,
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,
-    PRE_CONSTRUCTION_HOOKS, VUE_CLASS_COMPONENT_OPTIONS_NAME
+    PRE_CONSTRUCTION_HOOKS,
+    VUE_CLASS_COMPONENT_OPTIONS_NAME
 } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ComposableDecoratorOptions } from "./decorator/composable.decorator";
@@ -39,8 +30,14 @@ import { LifecycleHook } from "./decorator/lifecycle.decorator";
 import { WatchFunction } from "./decorator/watch.decorator";
 import { AliasesMap, AliasResolver, PrefixOrAlias } from "./type";
 import { VueBuilder } from "./vue-builder";
+import { Vue } from "./vue";
 
 export type DecoratedConstructor = Constructor & {[DECORATORS_OPTIONS_HOLDER_NAME]: DecoratorsDataInterface};
+
+/**
+ * A map between Vue instances and objects created by vue-typescript.
+ */
+const vueInstancesMap: WeakMap<any, any> = new WeakMap<any, any>();
 
 export function defineGetter<T, K extends keyof T>(obj: T, key: K, getter: () => T[K]): void {
     Object.defineProperty(obj, key, {
@@ -262,11 +259,39 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 output[propRefName] = propsRefs[propRefName];
                 defineRefProxy(inst, propRefName, output);
             }
-            defineGetter(inst, '$props', () => props);
-            defineGetter(inst, '$attrs', () => ctx.attrs);
-            defineGetter(inst, '$slots', () => ctx.slots);
-            defineGetter(inst, '$emit', () => ctx.emit);
 
+            const vueInstance: any = getCurrentInstance();
+            if (vueInstancesMap.has(vueInstance)) {
+                throw new UsageException('The same vue instance has been initialized twice.');
+            }
+            vueInstancesMap.set(vueInstance, inst);
+
+            // If the component inherits from the "Vue" class this means the user
+            // may want to access theses attributes or methods.
+            if (inst instanceof Vue) {
+                // Working because exposed in the input context
+                defineGetter(inst, '$props', () => props);
+                defineGetter(inst, '$attrs', () => ctx.attrs);
+                defineGetter(inst, '$slots', () => ctx.slots);
+                defineGetter(inst, '$emit', () => ctx.emit);
+
+                // TODO: Find a way to access these missing attributes and methods
+                defineGetter(inst, '$', () => vueInstance.ctx.$);
+                defineGetter(inst, '$data', () => vueInstance.ctx.$data);
+                defineGetter(inst, '$el', () => vueInstance.ctx.$el);
+                defineGetter(inst, '$options', () => vueInstance.ctx.$options);
+                defineGetter(inst, '$refs', () => vueInstance.ctx.$refs);
+                defineGetter(inst, '$root', () => ctx.slots);
+                defineGetter(inst, '$forceUpdate', () => vueInstance.ctx.$forceUpdate);
+                defineGetter(inst, '$nextTick', () => vueInstance.ctx.$nextTick);
+                defineGetter(inst, '$watch', () => vueInstance.ctx.$watch);
+                defineGetter(inst, '$parent', () => {
+                    if (!vueInstance.ctx.$parent || !vueInstancesMap.has(vueInstance.ctx.$parent._)) {
+                        return vueInstance.ctx.$parent;
+                    }
+                    return vueInstancesMap.get(vueInstance.ctx.$parent._);
+                });
+            }
             rootProps = props;
         }
 

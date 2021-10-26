@@ -1,4 +1,5 @@
 export * from './vue-builder';
+export * from './vue';
 
 /**
  * Decorators
