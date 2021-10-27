@@ -1,5 +1,5 @@
 import { UsageException } from "@banquette/exception";
-import { ensureArray, isUndefined } from "@banquette/utils-type";
+import { ensureArray, isUndefined, Writeable } from "@banquette/utils-type";
 import { InjectableMetadataInterface } from "./injectable-metadata.interface";
 import { InjectableIdentifier } from "./type/injectable-identifier.type";
 
@@ -18,6 +18,11 @@ export class MetadataContainer {
      * Metadata objects indexed by tag symbol.
      */
     private static TagsMap: Record<symbol, InjectableMetadataInterface[]> = {};
+
+    /**
+     * Holds the number of time tags relative metadata have changed.
+     */
+    public static readonly TagsVersion: number = 0;
 
     /**
      * Register an dependency into the container.
@@ -89,6 +94,7 @@ export class MetadataContainer {
                         }
                         if (MetadataContainer.TagsMap[newTag].indexOf(metadata) < 0) {
                             MetadataContainer.TagsMap[newTag].push(metadata);
+                            (MetadataContainer as any).TagsVersion = MetadataContainer.TagsVersion + 1;
                         }
                     }
                 }
