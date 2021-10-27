@@ -320,7 +320,26 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
         // Template refs
         for (const refPropertyName of Object.keys(data.templateRefs)) {
             output[data.templateRefs[refPropertyName]] = ref(null);
-            defineRefProxy(inst, refPropertyName, output, data.templateRefs[refPropertyName]);
+            ((_templateRefName: string) => {
+                Object.defineProperty(inst, _templateRefName, {
+                    get: () => {
+                        const v = output[data.templateRefs[_templateRefName]].value;
+
+                        // Special case when a ref is set of a <component/> component.
+                        // Try to resolve the component instance if possible.
+                        if (isObject(v) && isObject(v._) && vueInstancesMap.has(v._)) {
+                            return vueInstancesMap.get(v._);
+                        }
+                        // Otherwise return the value as is.
+                        return v;
+                    },
+                    set: (value) => {
+                        output[data.templateRefs[_templateRefName]].value = value
+                    },
+                    enumerable: true,
+                    configurable: true,
+                });
+            })(refPropertyName);
         }
 
         // Computed
