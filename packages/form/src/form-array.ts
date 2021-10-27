@@ -4,7 +4,7 @@ import { getObjectKeys } from "@banquette/utils-object";
 import { ensureInteger, isNullOrUndefined, isNumeric, isUndefined } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
 import { AbstractFormGroup } from "./abstract-form-group";
-import { BasicState, CallContext, ConfigurableChildrenFilterType, Events, ValidationStrategy } from "./constant";
+import { CallContext, ConfigurableChildrenFilterType, Events, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";
 import { ComponentRemovedFormEvent } from "./event/component-removed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";

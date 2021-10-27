@@ -40,6 +40,6 @@ module.exports = {
         "@banquette/vue-dom-module$": "<rootDir>/packages/vue-dom-module/src/index.ts",
         "@banquette/vue-typescript$": "<rootDir>/packages/vue-typescript/src/index.ts"
     },
-    "modulePathIgnorePatterns": ["__mocks__", "unused-packages"],
+    "modulePathIgnorePatterns": ["__mocks__", "unused-packages", "^(?!.*\\.test\\.(?:t|j)s$).+$"],
     "unmockedModulePathPatterns": ["<rootDir>/node_modules/"]
 }
