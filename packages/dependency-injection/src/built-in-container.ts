@@ -4,6 +4,7 @@ import { MetadataContainer } from "./metadata.container";
 import { InjectableIdentifier } from "./type/injectable-identifier.type";
 import { InjectableType } from "./type/injectable.type";
 import { LazyInjectableIdentifier } from "./type/lazy-injectable-identifier";
+import { isUndefined, isArray } from "@banquette/utils-type";
 
 /**
  * A very basic container, only meant to cover the limited needs of the tools.
@@ -45,12 +46,31 @@ export class BuiltInContainer {
      */
     public getMultiple<T>(tag: symbol|symbol[]): T[] {
         let output: T[] = [];
-        const metadata: InjectableMetadataInterface[] = MetadataContainer.GetForTag(tag);
-        for (const item of metadata) {
-            output = output.concat(this.resolveInjectable(item.identifier));
-            this.assignResolutionInstancesPropertyDependencies();
-        }
-        return output;
+        let lastTagsVersion = 0;
+        // Create a proxy to account for changes
+        // because a tag can be injected before every dependency have time to register.
+        return new Proxy(output, {
+            get: (target: T[], name: string|symbol) => {
+                if (lastTagsVersion === MetadataContainer.TagsVersion) {
+                    return !isUndefined(name) ? target[name as any] : target;
+                }
+                lastTagsVersion = MetadataContainer.TagsVersion;
+                target.splice(0, target.length);
+                const metadata: InjectableMetadataInterface[] = MetadataContainer.GetForTag(tag);
+                for (const item of metadata) {
+                    const resolvedItems = this.resolveInjectable(item.identifier);
+                    if (isArray(resolvedItems)) {
+                        for (const resolvedItem of resolvedItems) {
+                            target.push(resolvedItem);
+                        }
+                    } else {
+                        target.push(resolvedItems);
+                    }
+                    this.assignResolutionInstancesPropertyDependencies();
+                }
+                return !isUndefined(name) ? target[name as any] : target;
+            }
+        });
     }
 
     /**
