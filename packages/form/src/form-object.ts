@@ -182,32 +182,6 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         }
     }
 
-    // /**
-    //  * Set the validator to use to the validate the component.
-    //  *
-    //  * The validator should only validate the current component because only the value will be exposed,
-    //  * not the component itself.
-    //  *
-    //  * If child components need validation, give them their own validators.
-    //  */
-    // public setValidator(validator: ValidatorInterface|null) {
-    //     const subValidators: ValidatorsCollection = {};
-    //     this.forEach((child: FormComponentInterface, name: string) => {
-    //         if (child.validator !== null) {
-    //             subValidators[name] = child.validator;
-    //         }
-    //     }, this.foreachFilters[ConfigurableChildrenFilterType.Validate]);
-    //     if (Object.keys(subValidators).length > 0) {
-    //         let containerValidator = Container(subValidators);
-    //         if (validator !== null) {
-    //             validator = And(validator, containerValidator);
-    //         } else {
-    //             validator = containerValidator;
-    //         }
-    //     }
-    //     super.setValidator(validator);
-    // }
-
     /**
      * Call a function for each child.
      * If the callback returns `false`, the loop is stopped.

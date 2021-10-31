@@ -1,7 +1,8 @@
 import { FormComponentInterface } from "./form-component.interface";
 import { FormControlInterface } from "./form-control.interface";
 import { FormGroupInterface } from "./form-group.interface";
-import { BasicState, ConcreteValidationStrategy } from "./type";
+import { ConcreteValidationStrategy } from "./type";
+import { BasicState } from "./constant";
 
 /**
  * Bridge between a two form component in the direction "Child -> Parent".
