@@ -4,7 +4,7 @@ import { removeFromArray } from "@banquette/utils-array";
 import { matchBest, MatchResult } from "@banquette/utils-glob";
 import { proxy } from "@banquette/utils-misc";
 import { getObjectKeys } from "@banquette/utils-object";
-import { ensureArray, GenericCallback, isUndefined, Writeable } from "@banquette/utils-type";
+import { ensureArray, GenericCallback, isUndefined, Writeable, isFunction } from "@banquette/utils-type";
 import { ValidationResult, ValidatorInterface } from "@banquette/validation";
 import {
     BasicState,
@@ -16,7 +16,7 @@ import {
     InverseState,
     StatesInverseMap,
     ValidationStatus,
-    ValidationStrategy, VirtualViolationType
+    ValidationStrategy, VirtualViolationType, EventsInheritanceMap
 } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
@@ -293,12 +293,6 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     }
 
     /**
-     * A readonly property telling subclasses if a dispatcher is present or not.
-     * This is for optimization purpose, so subclasses don't create EventArg objects when not necessary.
-     */
-    protected readonly shouldDispatch: boolean = false;
-
-    /**
      * Additional tags that will be added to the active states when matching a pattern.
      */
     protected readonly additionalPatternTags: string[] = [];
@@ -547,8 +541,8 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      *
      * @return A method to call to unsubscribe.
      */
-    public onValueChanged(callback: (event: ValueChangedFormEvent) => void): UnsubscribeFunction {
-        return this.subscribe<ValueChangedFormEvent>(Events.ValueChanged, callback);
+    public onValueChanged(callback: (event: ValueChangedFormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe<ValueChangedFormEvent>(Events.ValueChanged, callback, selfOnly);
     }
 
     /**
@@ -556,17 +550,27 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      *
      * @return A method to call to unsubscribe.
      */
-    public onStateChanged(callback: (event: StateChangedFormEvent) => void): UnsubscribeFunction {
-        return this.subscribe<StateChangedFormEvent>(Events.StateChanged, callback);
+    public onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe<StateChangedFormEvent>(Events.StateChanged, callback, selfOnly);
     }
-
 
     /**
      * Subscribe to an event.
      * You can alternatively use shortcut methods (like "onValueChange") to subscribe to events.
      */
-    public subscribe<T extends FormEvent>(type: symbol, callback: (event: T) => void): UnsubscribeFunction {
-        return this.getEventDispatcher().subscribe(type, callback);
+    public subscribe<T extends FormEvent>(type: symbol, callback: (event: T) => void, selfOnly: boolean = true): UnsubscribeFunction {
+        const unsubscribeFunctions: Function[] = [];
+        const dispatcher = this.getEventDispatcher();
+
+        unsubscribeFunctions.push(dispatcher.subscribe(type, callback));
+        if (!selfOnly && !isUndefined(EventsInheritanceMap[type])) {
+            unsubscribeFunctions.push(dispatcher.subscribe(EventsInheritanceMap[type], callback));
+        }
+        return () => {
+            for (const fn of unsubscribeFunctions) {
+                fn();
+            }
+        };
     }
 
     /**
@@ -613,9 +617,15 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     /**
      * Dispatch an event.
      */
-    protected dispatch(type: symbol, event: FormEvent): void {
+    protected dispatch(type: symbol, event: FormEvent|(() => FormEvent), tags: symbol[] = []): void {
         if (this.eventDispatcher !== null) {
+            if (isFunction(event)) {
+                event = event();
+            }
             this.getEventDispatcher().dispatch(type, event);
+        }
+        if (this.parent !== null) {
+            this.parent.dispatch(type, event);
         }
     }
 
@@ -831,9 +841,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * Dispatch a `Events.StateChanged` form event if something is listening.
      */
     protected dispatchStateChange(state: State, newValue: boolean): void {
-        if (this.shouldDispatch) {
-            this.getEventDispatcher().dispatch(Events.StateChanged, new StateChangedFormEvent(this, state, newValue));
-        }
+        this.dispatch(Events.StateChanged, () => new StateChangedFormEvent(this, state, newValue));
     }
 
     /**
@@ -845,9 +853,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             if (this.basicStates[state].indexOf(id) < 0) {
                 this.basicStates[state].push(id);
                 this.updateActiveState(state, false);
-                if (this.shouldDispatch) {
-                    this.dispatch(Events.StateChanged, new StateChangedFormEvent(this, state, true));
-                }
+                this.dispatch(Events.StateChanged, () => new StateChangedFormEvent(this, state, true));
             }
             if (this.parent !== null) {
                 this.parent.markBasicState(state, id);
@@ -867,9 +873,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
                 if (this.basicStates[state].length === 0) {
                     this.updateActiveState(state, true);
                 }
-                if (this.shouldDispatch) {
-                    this.dispatch(Events.StateChanged, new StateChangedFormEvent(this, state, false));
-                }
+                this.dispatch(Events.StateChanged, () => new StateChangedFormEvent(this, state, false));
             }
             if (this.parent !== null) {
                 this.parent.unmarkBasicState(state, id);
@@ -963,7 +967,6 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     private getEventDispatcher(): EventDispatcherInterface {
         if (this.eventDispatcher === null) {
             this.eventDispatcher = new EventDispatcher();
-            (this as Writeable<any>).shouldDispatch = true;
         }
         return this.eventDispatcher;
     }

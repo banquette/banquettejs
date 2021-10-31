@@ -62,9 +62,7 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
             return ;
         }
         (this as Writeable<FormControl>).value = value;
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ValueChanged, new ValueChangedFormEvent(this, this.lastValue, this.value));
-        }
+        this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
         if (this.viewModel && (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset))) {
             this.viewModel.setValue(value);
         }

@@ -49,10 +49,10 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             this.children_.push(component.setParent(this.buildParentComponentDecorator()));
             this.children_[this.children_.length - 1].propagateStatesToParent();
         });
-        if (this.shouldDispatch) {
+        this.dispatch(Events.ComponentAdded, () => {
             const index: number = this.children_.length - 1;
-            this.dispatch(Events.ComponentAdded, new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index));
-        }
+            return new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index)
+        });
     }
 
     /**
@@ -66,9 +66,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             this.children_.unshift(component.setParent(this.buildParentComponentDecorator()));
             this.children_[0].propagateStatesToParent();
         });
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ComponentAdded, new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
-        }
+        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
     }
 
     /**
@@ -95,9 +93,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             }
             child.propagateStatesToParent();
         });
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ComponentAdded, new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
-        }
+        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
     }
 
     /**
@@ -150,9 +146,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             }
             child.propagateStatesToParent();
         });
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ComponentAdded, new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index));
-        }
+        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index));
     }
 
     /**
@@ -177,9 +171,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             this.children_.splice(index, 1);
             removed.unsetParent();
         });
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ComponentRemoved, new ComponentRemovedFormEvent<number>(this, removed.decorated, index));
-        }
+        this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, removed.decorated, index));
         return removed.decorated;
     }
 
@@ -187,14 +179,12 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
      * Remove all components from the collection.
      */
     public clear(): void {
-        const children = this.shouldDispatch ? ([] as FormChildComponentInterface[]).concat(this.children_) : [];
+        const children = ([] as FormChildComponentInterface[]).concat(this.children_);
         this.updateCollection(() => {
             this.children_ = [];
         });
-        if (this.shouldDispatch) {
-            for (let i = 0; i < children.length; ++i) {
-                this.dispatch(Events.ComponentRemoved, new ComponentRemovedFormEvent<number>(this, children[i].decorated, i));
-            }
+        for (let i = 0; i < children.length; ++i) {
+            this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, children[i].decorated, i));
         }
     }
 
@@ -288,9 +278,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         this.forEach((child: FormComponentInterface) => {
             this.value.push(child.value);
         }, this.foreachFilters[ConfigurableChildrenFilterType.UpdateValue]);
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ValueChanged, new ValueChangedFormEvent(this, oldValue, this.value));
-        }
+        this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }

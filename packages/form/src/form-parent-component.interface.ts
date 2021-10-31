@@ -3,6 +3,7 @@ import { FormControlInterface } from "./form-control.interface";
 import { FormGroupInterface } from "./form-group.interface";
 import { ConcreteValidationStrategy } from "./type";
 import { BasicState } from "./constant";
+import { FormEvent } from "./event/form-event";
 
 /**
  * Bridge between a two form component in the direction "Child -> Parent".
@@ -62,4 +63,9 @@ export interface FormParentComponentInterface {
      * Change the `virtual` state of the component and its parent to `false`.
      */
     markAsConcrete(): void;
+
+    /**
+     * Dispatch an event.
+     */
+    dispatch(type: symbol, event: FormEvent|(() => FormEvent)): void;
 }

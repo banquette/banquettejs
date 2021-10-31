@@ -22,6 +22,32 @@ export const Events = {
 };
 
 /**
+ * Events that are emitted from child to parent.
+ */
+export const InheritedEvents = {
+    ValueChanged: Symbol('inherited-value-changed'),
+    StateChanged: Symbol('inherited-state-changed'),
+    ComponentAdded: Symbol('inherited-component-added'),
+    ComponentRemoved: Symbol('inherited-component-removed')
+};
+
+/**
+ * A map facilitating the conversion between events and their inherited equivalent.
+ */
+export const EventsInheritanceMap = {
+    [Events.ValueChanged]: InheritedEvents.ValueChanged,
+    [Events.StateChanged]: InheritedEvents.StateChanged,
+    [Events.ComponentAdded]: InheritedEvents.ComponentAdded,
+    [Events.ComponentRemoved]: InheritedEvents.ComponentRemoved,
+
+    // So the map can be used with already inherited events
+    [InheritedEvents.ValueChanged]: InheritedEvents.ValueChanged,
+    [InheritedEvents.StateChanged]: InheritedEvents.StateChanged,
+    [InheritedEvents.ComponentAdded]: InheritedEvents.ComponentAdded,
+    [InheritedEvents.ComponentRemoved]: InheritedEvents.ComponentRemoved
+};
+
+/**
  * Types of strategies available to form component to automatically trigger a validation round.
  * Calling `validate()` manually totally bypass this.
  */

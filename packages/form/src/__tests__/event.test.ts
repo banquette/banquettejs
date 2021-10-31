@@ -24,13 +24,12 @@ describe('ValueChanged', () => {
 
     test('trigger on the control the change happened on', () => {
         let value = '';
-        const newValue = 'new';
         const control = form.get('username');
         control.onValueChanged((event) => {
             value = event.newValue;
         });
-        control.setValue(newValue);
-        expect(value).toEqual(newValue);
+        control.setValue('new');
+        expect(value).toEqual('new');
     });
 
     test('the event gives the previous and new value', () => {
@@ -42,6 +41,33 @@ describe('ValueChanged', () => {
         });
         control.setValue('new');
         expect.assertions(2);
+    });
+
+    test('by default events only emit for component they have been set onto', () => {
+        let value = '';
+        const control = form.get('category/tags/1/name');
+        form.onValueChanged((event) => {
+            if (event.source === control) {
+                value = event.newValue;
+            }
+        });
+        control.setValue('new');
+        expect(value).toEqual('');
+    });
+
+    test('the "selfOnly" argument can be set to false so events are triggered on parents too', () => {
+        let value = '';
+        let source = null;
+        const control = form.get('category/tags/1/name');
+        form.onValueChanged((event) => {
+            if (event.source === control) {
+                value = event.newValue;
+                source = event.source;
+            }
+        }, false);
+        control.setValue('new');
+        expect(value).toEqual('new');
+        expect(source).toStrictEqual(control);
     });
 
     test('doesn\'t trigger when the value does not change', () => {

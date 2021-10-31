@@ -329,12 +329,12 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
      *
      * @return A method to call to unsubscribe.
      */
-    onValueChanged(callback: (event: ValueChangedFormEvent) => void): UnsubscribeFunction;
+    onValueChanged(callback: (event: ValueChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
 
     /**
      * Register a callback that will be called when the value of a flag changes.
      *
      * @return A method to call to unsubscribe.
      */
-    onStateChanged(callback: (event: StateChangedFormEvent) => void): UnsubscribeFunction;
+    onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
 }

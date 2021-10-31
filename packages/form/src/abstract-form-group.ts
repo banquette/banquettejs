@@ -1,7 +1,7 @@
 import { UnsubscribeFunction } from "@banquette/event";
 import { MatchResult, MatchType } from "@banquette/utils-glob";
 import { ltrim, trim } from "@banquette/utils-string";
-import { ensureArray, isBoolean, isType } from "@banquette/utils-type";
+import { ensureArray, isBoolean, isType, isUndefined } from "@banquette/utils-type";
 import { createValidator, ValidationContext, ValidationResult, ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
 import {
@@ -10,7 +10,7 @@ import {
     ConfigurableChildrenFilterType,
     ContextualizedState,
     Events,
-    VirtualViolationType
+    VirtualViolationType, EventsInheritanceMap
 } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { ComponentNotFoundException } from "./exception/component-not-found.exception";
@@ -227,15 +227,15 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
     /**
      * Register a callback that will be called when a component is added/set to the collection.
      */
-    public onControlAdded(cb: (event: FormEvent) => void): UnsubscribeFunction {
-        return this.subscribe(Events.ComponentAdded, cb);
+    public onControlAdded(cb: (event: FormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe(Events.ComponentAdded, cb,  selfOnly);
     }
 
     /**
      * Register a callback that will be called when a component is removed from the collection.
      */
-    public onControlRemoved(cb: (event: FormEvent) => void): UnsubscribeFunction {
-        return this.subscribe(Events.ComponentRemoved, cb);
+    public onControlRemoved(cb: (event: FormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe(Events.ComponentRemoved, cb, selfOnly);
     }
 
     /**
@@ -375,7 +375,14 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
                 unmarkBasicState: this.unmarkBasicState,
                 markAsVirtual: this.markAsVirtual,
                 markAsConcrete: this.markAsConcrete,
-                remove: this.removeByRef
+                remove: this.removeByRef,
+                dispatch: (type: symbol, event: FormEvent | (() => FormEvent)) => {
+                    // If the event is not available as inherited we have nothing to do.
+                    if (isUndefined(EventsInheritanceMap[type])) {
+                        return ;
+                    }
+                    return this.dispatch(EventsInheritanceMap[type], event);
+                }
             }, CallContext.Child)
         ) as FormParentComponentInterface;
     }

@@ -85,9 +85,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             this.children_[identifier] = component.setParent(this.buildParentComponentDecorator());
             this.children_[identifier].propagateStatesToParent();
         });
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ComponentAdded, new ComponentAddedFormEvent<string>(this, this.children_[identifier].decorated, identifier));
-        }
+        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<string>(this, this.children_[identifier].decorated, identifier));
     }
 
     /**
@@ -112,9 +110,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             delete this.children_[identifier];
             removed.unsetParent();
         });
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ComponentRemoved, new ComponentRemovedFormEvent<string>(this, removed.decorated, identifier));
-        }
+        this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, removed.decorated, identifier));
         return removed.decorated;
     }
 
@@ -122,14 +118,12 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
      * Remove all components from the collection.
      */
     public clear(): void {
-        const components = this.shouldDispatch ? Object.assign({}, this.children_) : {};
+        const components = Object.assign({}, this.children_);
         this.updateCollection(() => {
             this.children_ = {};
         });
-        if (this.shouldDispatch) {
-            for (const name of Object.keys(components)) {
-                this.dispatch(Events.ComponentRemoved, new ComponentRemovedFormEvent<string>(this, components[name].decorated, name));
-            }
+        for (const name of Object.keys(components)) {
+            this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, components[name].decorated, name));
         }
     }
 
@@ -234,9 +228,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         this.forEach((child: FormComponentInterface, name: string) => {
             this.value[name] = child.value;
         }, this.foreachFilters[ConfigurableChildrenFilterType.UpdateValue]);
-        if (this.shouldDispatch) {
-            this.dispatch(Events.ValueChanged, new ValueChangedFormEvent(this, oldValue, this.value));
-        }
+        this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }
