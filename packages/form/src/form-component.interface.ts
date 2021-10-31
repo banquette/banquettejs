@@ -1,7 +1,7 @@
 import { UnsubscribeFunction } from "@banquette/event";
 import { MatchResult } from "@banquette/utils-glob";
 import { ValidatorInterface } from "@banquette/validation";
-import { InverseState, ValidationStrategy } from "./constant";
+import { ValidationStrategy } from "./constant";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 import { FormChildComponentInterface } from "./form-child-component.interface";
@@ -9,6 +9,7 @@ import { FormControlInterface } from "./form-control.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
 import { State } from "./type";
 import { FormError } from "./form-error";
+import { FormGroupInterface } from "./form-group.interface";
 
 export interface FormComponentInterface<ValueType = unknown, ChildrenType = unknown> {
     /**
@@ -232,6 +233,11 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
      * @internal to setup a parent/child relationship, add the child to the parent.
      */
     setParent(parent: FormParentComponentInterface): FormChildComponentInterface;
+
+    /**
+     * Test if the component is a group.
+     */
+    isGroup(): this is FormGroupInterface;
 
     /**
      * Set the validator to use to the validate the component.

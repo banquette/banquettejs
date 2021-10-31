@@ -4,7 +4,14 @@ import { ltrim, trim } from "@banquette/utils-string";
 import { ensureArray, isBoolean, isType } from "@banquette/utils-type";
 import { createValidator, ValidationContext, ValidationResult, ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
-import { BasicState, CallContext, ConfigurableChildrenFilterType, ContextualizedState, Events } from "./constant";
+import {
+    BasicState,
+    CallContext,
+    ConfigurableChildrenFilterType,
+    ContextualizedState,
+    Events,
+    VirtualViolationType
+} from "./constant";
 import { FormEvent } from "./event/form-event";
 import { ComponentNotFoundException } from "./exception/component-not-found.exception";
 import { FormChildComponentInterface } from "./form-child-component.interface";
@@ -164,8 +171,8 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
             if (result.pattern === MatchType.Full && result.tags === MatchType.Full) {
                 collection.add(component.decorated);
             }
-            if (result.pattern >= MatchType.Partial && component.decorated.children !== null) {
-                collection.merge((component.decorated as FormGroupInterface).getByPattern(patterns));
+            if (result.pattern >= MatchType.Partial && component.decorated.isGroup()) {
+                collection.merge(component.decorated.getByPattern(patterns));
             }
         });
         return collection;
@@ -185,7 +192,7 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
         const identifier = path.substring(0, pos);
         const rest = path.substring(pos + 1);
         const child: FormComponentInterface = this.get(identifier);
-        if (isType<FormGroupInterface>(child, () => child.children !== null)) {
+        if (child.isGroup()) {
             return child.getByPath(rest);
         }
         throw new ComponentNotFoundException(path, `No component has been found for path "${path}" in "${this.path}".`);
@@ -274,6 +281,9 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
                         }
                         promisesStack.push(subResult);
                     }, this.foreachFilters[ConfigurableChildrenFilterType.Validate]);
+                    if (!subSyncResult) {
+                        localResult.addViolation(VirtualViolationType);
+                    }
                     if (promisesStack.length === 0) {
                         return localResult;
                     }
