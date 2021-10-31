@@ -210,6 +210,19 @@ describe('Explicit validation', () => {
         expect(formObject.get('category').valid).toEqual(false);
         expect(formObject.get('category/name').valid).toEqual(false);
     });
+
+    test('parent becomes invalid when a child validation fails', () => {
+        const formObject = new FormObject({
+            name: createConcreteControl('', NotEmpty())
+        });
+        expect(formObject.validate()).toEqual(false);
+        expect(formObject.valid).toEqual(false);
+        expect(formObject.errors.length).toEqual(0);
+        expect(formObject.errorsDeepMap).toMatchObject({
+            '/': expect.arrayContaining([]),
+            '/name': expect.arrayContaining([expect.objectContaining({type: 'not-empty'})])
+        });
+    });
 });
 
 /**

@@ -135,6 +135,14 @@ export const StatesInverseMap: Record<BasicState|ContextualizedState, InverseSta
 export const BasicStates = enumToArray(BasicState);
 
 /**
+ * A special violation type that is set when the validation of a child component fails.
+ *
+ * This is because the validation of each part of the tree is totally separated and the
+ * ValidationResult objects are not accessible between levels.
+ */
+export const VirtualViolationType = 'dQ264Eeu019J8i5Fos4lBgj5iE1nOlhpNycl3n252';
+
+/**
  * Define the different contexts from which a method can be called.
  *
  * @see AbstractFormComponent.buildChildComponentDecorator

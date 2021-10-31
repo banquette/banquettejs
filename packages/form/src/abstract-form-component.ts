@@ -16,7 +16,7 @@ import {
     InverseState,
     StatesInverseMap,
     ValidationStatus,
-    ValidationStrategy
+    ValidationStrategy, VirtualViolationType
 } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
@@ -27,6 +27,7 @@ import { FormControlInterface } from "./form-control.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
 import { ConcreteValidationStrategy, ContextStackItem, State } from "./type";
 import { FormError } from "./form-error";
+import { FormGroupInterface } from "./form-group.interface";
 
 /**
  * Used to give a unique id to every new form component.
@@ -413,6 +414,13 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     }
 
     /**
+     * Test if the component is a group.
+     */
+    public isGroup(): this is FormGroupInterface {
+        return this.children !== null;
+    }
+
+    /**
      * Set the validator to use to the validate the component.
      *
      * The validator should only validate the current component because only the value will be exposed,
@@ -679,7 +687,9 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         } else {
             (this as Writeable<AbstractFormComponent>).errors = [];
             for (const violation of result.violations) {
-                this.addError(new FormError(this.path, violation.type, violation.message));
+                if (violation.type !== VirtualViolationType) {
+                    this.addError(new FormError(this.path, violation.type, violation.message));
+                }
             }
             this.markBasicState(BasicState.Invalid, this.id);
         }
