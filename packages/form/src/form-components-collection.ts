@@ -240,57 +240,65 @@ export class FormComponentsCollection {
     /**
      * Disable all components of the collection.
      */
-    public disable(): void {
+    public disable(): FormComponentsCollection {
         this.callForEach('disable');
+        return this;
     }
 
     /**
      * Enable all components of the collection.
      */
-    public enable(): void {
+    public enable(): FormComponentsCollection {
         this.callForEach('enable');
+        return this;
     }
 
     /**
      * Mark all the components of the collection as `concrete`.
      */
-    public markAsConcrete(): void {
+    public markAsConcrete(): FormComponentsCollection {
         this.callForEach('markAsConcrete');
+        return this;
     }
 
     /**
      * Mark all the components of the collection as `virtual`.
      */
-    public markAsVirtual(): void {
+    public markAsVirtual(): FormComponentsCollection {
         this.callForEach('markAsVirtual');
+        return this;
     }
 
     /**
      * Set the same value to all items of the collection.
      */
-    public setValue(value: unknown): void {
+    public setValue(value: unknown): FormComponentsCollection {
         this.callForEach('setValue', value);
+        return this;
     }
 
     /**
      * Set the validator to use to all items of the collection.
      */
-    public setValidator(validator: ValidatorInterface|null): void {
+    public setValidator(validator: ValidatorInterface|null): FormComponentsCollection {
         this.callForEach('setValidator', validator);
+        return this;
     }
 
     /**
      * Set the validation strategy to use to all items of the collection.
      */
-    public setValidationStrategy(strategy: ValidationStrategy): void {
+    public setValidationStrategy(strategy: ValidationStrategy): FormComponentsCollection {
         this.callForEach('setValidationStrategy', strategy);
+        return this;
     }
 
     /**
      * Validate each item of the collection.
      */
-    public validate(): void {
+    public validate(): FormComponentsCollection {
         this.callForEach('validate');
+        return this;
     }
 
     /**
