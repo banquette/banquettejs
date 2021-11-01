@@ -1,5 +1,5 @@
 import { EventDispatcher, EventDispatcherInterface, UnsubscribeFunction } from "@banquette/event";
-import { UsageException } from "@banquette/exception";
+import { UsageException, ExceptionFactory } from "@banquette/exception";
 import { removeFromArray } from "@banquette/utils-array";
 import { matchBest, MatchResult } from "@banquette/utils-glob";
 import { proxy } from "@banquette/utils-misc";
@@ -617,12 +617,15 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     /**
      * Dispatch an event.
      */
-    protected dispatch(type: symbol, event: FormEvent|(() => FormEvent), tags: symbol[] = []): void {
+    protected dispatch(type: symbol, event: FormEvent|(() => FormEvent)): void {
         if (this.eventDispatcher !== null) {
             if (isFunction(event)) {
                 event = event();
             }
-            this.getEventDispatcher().dispatch(type, event);
+            const result = this.getEventDispatcher().dispatch(type, event);
+            if (result.error) {
+                throw result.errorDetail;
+            }
         }
         if (this.parent !== null) {
             this.parent.dispatch(type, event);

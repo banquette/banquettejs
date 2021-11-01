@@ -6,16 +6,6 @@ import { SubscriberInterface } from "./subscriber.interface";
  */
 export interface DispatchCallInterface<T = any> {
     /**
-     * Number of subscribers called until the current one.
-     */
-    doneCount: number;
-
-    /**
-     * Number of subscribers skipped until the current one.
-     */
-    skippedCount: number;
-
-    /**
      * The event the subscriber has been called with.
      * You can use it to stop the propagation if needed.
      */

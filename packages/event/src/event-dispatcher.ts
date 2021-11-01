@@ -1,12 +1,10 @@
-import { ExceptionFactory } from "@banquette/exception";
-import { ObservablePromise } from "@banquette/promise";
 import { Not } from "@banquette/utils-misc";
-import { ensureArray, isNullOrUndefined, isPromiseLike, isType, isUndefined } from "@banquette/utils-type";
-import { DispatchCallInterface } from "./dispatch-call.interface";
+import { ensureArray, isNullOrUndefined, isType, isUndefined } from "@banquette/utils-type";
 import { EventArg } from './event-arg';
 import { EventDispatcherInterface } from "./event-dispatcher.interface";
 import { SubscriberInterface } from "./subscriber.interface";
 import { UnsubscribeFunction } from "./type";
+import { DispatchResult } from "./dispatch-result";
 
 export class EventDispatcher implements EventDispatcherInterface {
     private static DEFAULT_TAG = Symbol('default');
@@ -73,62 +71,52 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Trigger an event.
      * The promise will resolve when all subscribers have been executed.
      */
-    public dispatch<T = any>(type: symbol, event?: EventArg|null, sync: boolean = false): ObservablePromise<T[]> {
-        // Forced to assign a new variable because if reassigning "event" the compiler still thinks it can be of type "null" or "undefined".
+    public dispatch<T = any>(type: symbol, event?: EventArg|null, sequential: boolean = false): DispatchResult<T> {
         const e = !isType<EventArg>(event, Not(isNullOrUndefined)) ? new EventArg() : event;
-        return new ObservablePromise<T[]>((resolve, reject, progress) => {
-            const propagationStoppedTags: symbol[] = [];
-            const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
-            const results: T[] = [];
-            let doneCount = 0;
-            let skippedCount = 0;
-            let index = -1;
-            const next = () => {
-                if (++index >= subscribers.length) {
-                    return void resolve(results);
-                }
-                const subscriber = subscribers[index];
-                if (index > 0 && e.isPropagationStopped()) {
-                    // We could add duplicates this way but it doesn't matter.
-                    // The cost of removing them exceed the benefit imho.
-                    Array.prototype.push.apply(propagationStoppedTags, subscribers[index - 1].tags);
-                    e.restorePropagation();
-                }
-                if (subscriber.tags.filter((tag: symbol) => propagationStoppedTags.indexOf(tag) < 0).length > 0) {
-                    try {
-                        const result: any = subscriber.callback(e);
-                        const call: DispatchCallInterface<T> = {
-                            doneCount,
-                            skippedCount,
-                            subscriber,
-                            result,
-                            event: e
-                        };
-                        if (!sync && isPromiseLike(result)) {
-                            (result as Promise<any>).then((result) => {
-                                results.push(result);
-                                call.result = result;
-                                progress(call);
-                                next();
-                            }).catch((reason: any) => {
-                                reject(ExceptionFactory.EnsureException(reason));
-                            });
-                        } else {
-                            results.push(result);
-                            progress(call);
-                            next();
-                        }
-                        ++doneCount;
-                    } catch (e) {
-                        reject(ExceptionFactory.EnsureException(e));
+        const propagationStoppedTags: symbol[] = [];
+        const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
+        const result = new DispatchResult<T>();
+        let index = -1;
+
+        const next = () => {
+            if (++index >= subscribers.length) {
+                return ;
+            }
+            const subscriber = subscribers[index];
+            if (index > 0 && e.isPropagationStopped()) {
+                // We could add duplicates this way but it doesn't matter.
+                // The cost of removing them exceed the benefit imho.
+                Array.prototype.push.apply(propagationStoppedTags, subscribers[index - 1].tags);
+                e.restorePropagation();
+            }
+            if (subscriber.tags.filter((tag: symbol) => propagationStoppedTags.indexOf(tag) < 0).length > 0) {
+                try {
+                    const subResult: any = subscriber.callback(e);
+                    result.registerCall({
+                        subscriber,
+                        result: subResult,
+                        event: e
+                    });
+                    if (sequential && result.localPromise !== null) {
+                        // Don't catch because localPromise is already caught internally
+                        // and we don't want to continue if one of the subscriber fails.
+                        // If the promise rejects, the result will fail and nothing else will happen.
+                        result.localPromise.then(next);
+                    } else {
+                        next();
                     }
-                } else {
-                    ++skippedCount;
-                    next();
+                } catch (e) {
+                    // dispatch() must never throw, so if an exception is thrown,
+                    // we capture it and set the result on error.
+                    // The end user can then decide to throw the error stored in "errorDetails" if they want to.
+                    result.fail(e);
                 }
-            };
-            next();
-        });
+            } else {
+                next();
+            }
+        };
+        next();
+        return result;
     }
 
     /**

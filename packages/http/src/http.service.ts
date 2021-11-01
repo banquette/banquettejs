@@ -27,6 +27,7 @@ import { HttpResponse } from "./http-response";
 import { NetworkWatcherService } from './network-watcher.service';
 import { QueuedRequestInterface } from './queued-request.interface';
 import { httpStatusToText } from "./utils";
+import { DispatchResult } from "../../event/src/dispatch-result";
 
 @Service()
 export class HttpService {
@@ -195,14 +196,14 @@ export class HttpService {
             queuedRequest.triesLeft--;
             queuedRequest.isExecuting = true;
             this.runningRequestsCount++;
-            await this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request));
+            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request)));
             HttpService.EnsureValidRequest(queuedRequest.request);
             queuedRequest.tryCount++;
             queuedRequest.request.incrementTryCount();
             const adapterPromise: ObservablePromise = adapter.execute(queuedRequest.request as AdapterRequest);
             adapterPromise.progress(queuedRequest.progress);
             const adapterResponse: AdapterResponse = await adapterPromise;
-            await this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest));
+            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest)));
             this.handleRequestResponse(adapterResponse, queuedRequest);
         } catch (e) {
             this.handleRequestFailure(queuedRequest, ExceptionFactory.EnsureException(e));
@@ -371,6 +372,18 @@ export class HttpService {
         }
         this.eventDispatcher.subscribe(Events.NetworkAvailabilityChange, proxy(this.onNetworkAvailabilityChange, this));
         this.initialized = true;
+    }
+
+    /**
+     * Wait for a DispatchResult to settle and throw the error found in it if it failed.
+     */
+    private async ensureDispatchSucceeded(result: DispatchResult): Promise<void> {
+        if (result.promise !== null) {
+            await result.promise;
+        }
+        if (result.error) {
+            throw result.errorDetail;
+        }
     }
 
     /**

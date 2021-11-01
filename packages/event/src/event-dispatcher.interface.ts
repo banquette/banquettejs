@@ -1,6 +1,6 @@
-import { ObservablePromise } from "@banquette/promise";
 import { EventArg } from './event-arg';
 import { UnsubscribeFunction } from "./type";
+import { DispatchResult } from "./dispatch-result";
 
 export interface EventDispatcherInterface {
     /**
@@ -12,7 +12,7 @@ export interface EventDispatcherInterface {
      * Trigger an event.
      * The promise will resolve when all subscribers have been executed.
      */
-    dispatch<T = any>(type: symbol, event?: EventArg|null, sync?: boolean): ObservablePromise<T[]>;
+    dispatch<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean): DispatchResult<T>;
 
     /**
      * Try to trigger and event but keep the call in a queue if no listeners have been registered yet.

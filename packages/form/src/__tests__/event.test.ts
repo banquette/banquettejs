@@ -7,7 +7,7 @@ import { FormFactory } from "../form.factory";
 import { FormObject } from "../form-object";
 import { StateChangedFormEvent } from "../event/state-changed.form-event";
 import { ViewModelMock } from "./__mocks__/view-model.mock";
-import { BasicState } from "../constant";
+import { BasicState, ConfigurableChildrenFilterType } from "../constant";
 import { NotEmpty } from "@banquette/validation";
 
 class Foo {}
@@ -108,11 +108,19 @@ describe('ValueChanged', () => {
         const form = FormFactory.Create({username: 'previous'}) as FormObject;
         const control = form.get('username');
 
+        form.getByPattern('**').markAsConcrete();
+        form.setChildrenFilters(ConfigurableChildrenFilterType.UpdateValue, {});
         form.onValueChanged((event: ValueChangedFormEvent) => {
-            expect(event.oldValue).toEqual({username: 'previous'});
-            expect(event.newValue).toEqual({username: 'new'});
-        });
+            if (event.source === form) {
+                expect(event.oldValue).toEqual({username: 'previous'});
+                expect(event.newValue).toEqual({username: 'new'});
+            } else if (event.source === control) {
+                expect(event.oldValue).toEqual('previous');
+                expect(event.newValue).toEqual('new');
+            }
+        }, false);
         control.setValue('new');
+        expect.assertions(4);
     });
 });
 
