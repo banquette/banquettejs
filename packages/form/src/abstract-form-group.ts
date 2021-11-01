@@ -1,7 +1,7 @@
 import { UnsubscribeFunction } from "@banquette/event";
 import { MatchResult, MatchType } from "@banquette/utils-glob";
 import { ltrim, trim } from "@banquette/utils-string";
-import { ensureArray, isBoolean, isType, isUndefined } from "@banquette/utils-type";
+import { ensureArray, isBoolean, isUndefined } from "@banquette/utils-type";
 import { createValidator, ValidationContext, ValidationResult, ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
 import {
@@ -10,7 +10,8 @@ import {
     ConfigurableChildrenFilterType,
     ContextualizedState,
     Events,
-    VirtualViolationType, EventsInheritanceMap
+    VirtualViolationType,
+    EventsInheritanceMap
 } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { ComponentNotFoundException } from "./exception/component-not-found.exception";
@@ -203,6 +204,9 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
      */
     public setChildrenFilters(type: ConfigurableChildrenFilterType, filters: ForEachFilters): void {
         this.foreachFilters[type] = filters;
+        if (type === ConfigurableChildrenFilterType.UpdateValue) {
+            this.updateValue();
+        }
     }
 
     /**
