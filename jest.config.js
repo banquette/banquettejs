@@ -9,6 +9,7 @@ module.exports = {
     "setupFilesAfterEnv": ["jest-extended"],
     "globals": {"ts-jest": {"tsconfig": "./tsconfig.test.json"}},
     "moduleNameMapper": {
+        "@banquette/api$": "<rootDir>/packages/api/src/index.ts",
         "@banquette/config$": "<rootDir>/packages/config/src/index.ts",
         "@banquette/dependency-injection$": "<rootDir>/packages/dependency-injection/src/index.ts",
         "@banquette/dom-modules$": "<rootDir>/packages/dom-modules/src/index.ts",
@@ -40,6 +41,10 @@ module.exports = {
         "@banquette/vue-dom-module$": "<rootDir>/packages/vue-dom-module/src/index.ts",
         "@banquette/vue-typescript$": "<rootDir>/packages/vue-typescript/src/index.ts"
     },
-    "modulePathIgnorePatterns": ["__mocks__", "unused-packages", "^(?!.*\\.test\\.(?:t|j)s$).+$"],
+    "modulePathIgnorePatterns": [
+        "__mocks__",
+        "unused-packages",
+        "^(?!.*\\.test\\.(?:t|j)s$).+$"
+    ],
     "unmockedModulePathPatterns": ["<rootDir>/node_modules/"]
 }

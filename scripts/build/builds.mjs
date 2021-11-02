@@ -89,6 +89,10 @@ function createBuildVariants(config) {
 
 export const Builds = Object.assign({},
     createBuildVariants({
+        package: 'api',
+        module: 'Banquette.Api'
+    }),
+    createBuildVariants({
         package: 'config',
         module: 'Banquette.Config'
     }),

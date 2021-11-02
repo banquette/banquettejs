@@ -5,6 +5,7 @@
         "declarationDir": "build",
         "rootDir": "..",
         "paths": {
+            "@banquette/api": ["packages/api/src/index.ts"],
             "@banquette/config": ["packages/config/src/index.ts"],
             "@banquette/dependency-injection": [
                 "packages/dependency-injection/src/index.ts"

@@ -5,7 +5,6 @@
         "declarationDir": "build",
         "rootDir": "..",
         "paths": {
-            "@banquette/api": ["packages/api/src/index.ts"],
             "@banquette/config": ["packages/config/src/index.ts"],
             "@banquette/dependency-injection": [
                 "packages/dependency-injection/src/index.ts"
@@ -15,6 +14,7 @@
             "@banquette/exception": ["packages/exception/src/index.ts"],
             "@banquette/fingerprint": ["packages/fingerprint/src/index.ts"],
             "@banquette/form": ["packages/form/src/index.ts"],
+            "@banquette/http": ["packages/http/src/index.ts"],
             "@banquette/inversify": ["packages/inversify/src/index.ts"],
             "@banquette/log": ["packages/log/src/index.ts"],
             "@banquette/promise": ["packages/promise/src/index.ts"],
