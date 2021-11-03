@@ -3,9 +3,7 @@ import { UsageException } from "@banquette/exception";
 import { EndpointNotFoundException } from "./exception/endpoint-not-found.exception";
 import { HttpMethod } from "@banquette/http";
 import { ApiEndpoint } from "./api-endpoint";
-import { ApiEndpointOptions, ApiEndpointParameterOptions } from "./api-endpoint.options";
-
-type ApiEndpointOptionsWithName = ApiEndpointOptions & {name: string};
+import { ApiEndpointParameterOptions, ApiEndpointOptionsWithName } from "./api-endpoint.options";
 
 export class ApiEndpointCollection {
     /**
@@ -42,6 +40,13 @@ export class ApiEndpointCollection {
             throw new EndpointNotFoundException(name, `No endpoint name ${name} has been found.`);
         }
         return this.endpoints[name];
+    }
+
+    /**
+     * Test if an endpoint has been registered.
+     */
+    public hasEndpoint(name: string): boolean {
+        return !isUndefined(this.endpoints[name]);
     }
 
     /**

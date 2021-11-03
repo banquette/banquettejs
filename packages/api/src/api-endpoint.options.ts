@@ -3,6 +3,7 @@ import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interfac
 import { ValidatorInterface } from "@banquette/validation";
 
 export type ApiEndpointParameterOptions = Partial<Omit<ApiEndpointParameterInterface, 'url'>>|ValidatorInterface|true|null;
+export type ApiEndpointOptionsWithName = ApiEndpointOptions & {name: string};
 
 export interface ApiEndpointOptions {
     /**
