@@ -20,6 +20,10 @@ module.exports = {
         "@banquette/http$": "<rootDir>/packages/http/src/index.ts",
         "@banquette/inversify$": "<rootDir>/packages/inversify/src/index.ts",
         "@banquette/log$": "<rootDir>/packages/log/src/index.ts",
+        "@banquette/model$": "<rootDir>/packages/model/src/index.ts",
+        "@banquette/model-api$": "<rootDir>/packages/model-api/src/index.ts",
+        "@banquette/model-form$": "<rootDir>/packages/model-form/src/index.ts",
+        "@banquette/model-validation$": "<rootDir>/packages/model-validation/src/index.ts",
         "@banquette/promise$": "<rootDir>/packages/promise/src/index.ts",
         "@banquette/storage$": "<rootDir>/packages/storage/src/index.ts",
         "@banquette/utils-array$": "<rootDir>/packages/utils-array/src/index.ts",
@@ -39,6 +43,7 @@ module.exports = {
         "@banquette/utils-type$": "<rootDir>/packages/utils-type/src/index.ts",
         "@banquette/validation$": "<rootDir>/packages/validation/src/index.ts",
         "@banquette/vue-dom-module$": "<rootDir>/packages/vue-dom-module/src/index.ts",
+        "@banquette/vue-form$": "<rootDir>/packages/vue-form/src/index.ts",
         "@banquette/vue-typescript$": "<rootDir>/packages/vue-typescript/src/index.ts"
     },
     "modulePathIgnorePatterns": [

@@ -18,6 +18,12 @@
             "@banquette/http": ["packages/http/src/index.ts"],
             "@banquette/inversify": ["packages/inversify/src/index.ts"],
             "@banquette/log": ["packages/log/src/index.ts"],
+            "@banquette/model": ["packages/model/src/index.ts"],
+            "@banquette/model-api": ["packages/model-api/src/index.ts"],
+            "@banquette/model-form": ["packages/model-form/src/index.ts"],
+            "@banquette/model-validation": [
+                "packages/model-validation/src/index.ts"
+            ],
             "@banquette/promise": ["packages/promise/src/index.ts"],
             "@banquette/storage": ["packages/storage/src/index.ts"],
             "@banquette/utils-array": ["packages/utils-array/src/index.ts"],
@@ -38,6 +44,7 @@
             "@banquette/utils-string": ["packages/utils-string/src/index.ts"],
             "@banquette/utils-type": ["packages/utils-type/src/index.ts"],
             "@banquette/validation": ["packages/validation/src/index.ts"],
+            "@banquette/vue-form": ["packages/vue-form/src/index.ts"],
             "@banquette/vue-typescript": [
                 "packages/vue-typescript/src/index.ts"
             ]

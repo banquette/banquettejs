@@ -18,8 +18,7 @@
             "node"
         ],
         "typeRoots": [
-            "node_modules/@types",
-            "packages/vue-core/src/@types"
+            "node_modules/@types"
         ]
     }
 }

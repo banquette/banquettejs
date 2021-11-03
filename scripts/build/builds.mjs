@@ -121,6 +121,22 @@ export const Builds = Object.assign({},
         module: 'Banquette.Log'
     }),
     createBuildVariants({
+        package: 'model',
+        module: 'Banquette.Model'
+    }),
+    createBuildVariants({
+        package: 'model-api',
+        module: 'Banquette.Model.Api'
+    }),
+    createBuildVariants({
+        package: 'model-form',
+        module: 'Banquette.Model.Form'
+    }),
+    createBuildVariants({
+        package: 'model-validation',
+        module: 'Banquette.Model.Validation'
+    }),
+    createBuildVariants({
         package: 'http',
         module: 'Banquette.Http'
     }),
@@ -203,6 +219,10 @@ export const Builds = Object.assign({},
     createBuildVariants({
         package: 'validation',
         module: 'Banquette.Validation'
+    }),
+    createBuildVariants({
+        package: 'vue-form',
+        module: 'Banquette.Vue.Form'
     }),
     createBuildVariants({
         package: 'vue-typescript',

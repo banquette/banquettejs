@@ -1,0 +1,23 @@
+{
+    "name": "@banquette/model-validation",
+    "version": "0.0.5",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "directory": "packages/model-validation"
+    },
+    "license": "Apache-2.0",
+    "main": "dist/index.cjs.prod.js",
+    "module": "build/index.js",
+    "types": "build",
+    "exports": {
+        ".": "./dist/index.cjs.dev.js",
+        "./package.json": "./package.json"
+    },
+    "dependencies": {
+        "@banquette/core": "^0.0.5",
+        "@banquette/fingerprint": "^0.0.5",
+        "@banquette/storage": "^0.0.5"
+    },
+    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+}
