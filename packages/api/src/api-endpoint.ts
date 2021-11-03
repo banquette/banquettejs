@@ -1,6 +1,15 @@
 import { HttpMethod, PayloadTypeJson, ResponseTypeJson, HttpRequest, HttpRequestBuilder } from "@banquette/http";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
-import { ensureObject, isObject, isUndefined, isFunction, isString, ensureString, isType } from "@banquette/utils-type";
+import {
+    ensureObject,
+    isObject,
+    isUndefined,
+    isFunction,
+    isString,
+    ensureString,
+    isType,
+    isArray
+} from "@banquette/utils-type";
 import { ApiEndpointOptions, ApiEndpointParameterOptions } from "./api-endpoint.options";
 import { ValidatorInterface } from "@banquette/validation";
 import { MissingRequiredParameterException } from "./exception/missing-required-parameter.exception";
@@ -71,7 +80,7 @@ export class ApiEndpoint {
         this.url = this.normalizeUrl(options.url);
         this.method = options.method || HttpMethod.GET;
         this.headers = ensureObject(options.headers);
-        this.parameters = this.normalizeParameters(options.parameters);
+        this.parameters = extend(this.buildParametersFromUrl(this.url), this.normalizeParameters(options.parameters), true);
         this.payloadType = options.payloadType || PayloadTypeJson;
         this.responseType = options.responseType || ResponseTypeJson;
     }
@@ -108,6 +117,26 @@ export class ApiEndpoint {
             url += '?' + qs.stringify(parametersBag.query, ApiEndpoint.GetConfiguration().queryString);
         }
         return url;
+    }
+
+    /**
+     * Search for parameters in the url and generate a default configuration for them.
+     */
+    private buildParametersFromUrl(url: string): Record<string, ApiEndpointParameterInterface> {
+        const output: Record<string, ApiEndpointParameterInterface> = {};
+        const reg: RegExp = new RegExp('{\s*([a-z0-9*._-]+)\s*}', 'gi');
+        let matches: RegExpMatchArray|null;
+        while ((matches = reg.exec(url)) !== null) {
+            if (isArray(matches) && matches.length > 1) {
+                output[matches[1]] = {
+                    url: true,
+                    required: true,
+                    defaultValue: undefined,
+                    validator: null
+                };
+            }
+        }
+        return output;
     }
 
     /**
