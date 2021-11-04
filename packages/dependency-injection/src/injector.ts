@@ -12,11 +12,6 @@ export class Injector {
     private static Adapter: InjectorAdapterInterface<any>;
 
     /**
-     * List of known identifiers.
-     */
-    private static KnownIdentifiers: InjectableIdentifier[] = [];
-
-    /**
      * Set the container adapter to use.
      */
     public static UseAdapter(adapter: InjectorAdapterInterface<unknown>): void {
@@ -60,7 +55,6 @@ export class Injector {
      */
     public static Register(metadata: InjectableMetadataInterface): void {
         Injector.Adapter.register(metadata);
-        Injector.KnownIdentifiers.push(metadata.identifier);
     }
 }
 
