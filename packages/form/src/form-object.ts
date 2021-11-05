@@ -5,7 +5,7 @@ import { trim } from "@banquette/utils-string";
 import { isUndefined } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
 import { AbstractFormGroup } from "./abstract-form-group";
-import { CallContext, ConfigurableChildrenFilterType, Events, ValidationStrategy } from "./constant";
+import { CallContext, FilterGroup, Events, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";
 import { ComponentRemovedFormEvent } from "./event/component-removed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
@@ -182,7 +182,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
      */
     public forEach(cb: (component: FormComponentInterface, identifier: string) => void|false, filters?: ForEachFilters): void {
         if (isUndefined(filters)) {
-            filters = this.foreachFilters[ConfigurableChildrenFilterType.External];
+            filters = this.foreachFilters[FilterGroup.External];
         }
         const filtersKeys: State[] = getObjectKeys(filters);
         ext:
@@ -227,7 +227,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         (this as any).value = {};
         this.forEach((child: FormComponentInterface, name: string) => {
             this.value[name] = child.value;
-        }, this.foreachFilters[ConfigurableChildrenFilterType.UpdateValue]);
+        }, this.foreachFilters[FilterGroup.UpdateValue]);
         this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();

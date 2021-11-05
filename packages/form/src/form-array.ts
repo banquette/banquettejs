@@ -4,7 +4,7 @@ import { getObjectKeys } from "@banquette/utils-object";
 import { ensureInteger, isNullOrUndefined, isNumeric, isUndefined } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
 import { AbstractFormGroup } from "./abstract-form-group";
-import { CallContext, ConfigurableChildrenFilterType, Events, ValidationStrategy } from "./constant";
+import { CallContext, FilterGroup, Events, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";
 import { ComponentRemovedFormEvent } from "./event/component-removed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
@@ -228,7 +228,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
      */
     public forEach(cb: (component: FormComponentInterface, identifier: number) => void|false, filters?: ForEachFilters): void {
         if (isUndefined(filters)) {
-            filters = this.foreachFilters[ConfigurableChildrenFilterType.External];
+            filters = this.foreachFilters[FilterGroup.External];
         }
         // Copy the array to allow the callback to alter the collection without messing up the loop.
         const copy = [...this.children_];
@@ -277,7 +277,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         (this as any).value = [];
         this.forEach((child: FormComponentInterface) => {
             this.value.push(child.value);
-        }, this.foreachFilters[ConfigurableChildrenFilterType.UpdateValue]);
+        }, this.foreachFilters[FilterGroup.UpdateValue]);
         this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();

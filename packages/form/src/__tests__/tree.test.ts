@@ -13,7 +13,6 @@ import { FormConfigurationInterface } from "../form-configuration.interface";
 import { FormControl } from "../form-control";
 import { FormGroupInterface } from "../form-group.interface";
 import { FormObject } from "../form-object";
-import { FormFactory } from "../form.factory";
 import { FormFactoryTest } from "./__mocks__/form-factory-test";
 import { checkFormArrayContiguity, createConcreteControl, createTestForm, expectContents } from "./__mocks__/utils";
 import { ViewModelMock } from "./__mocks__/view-model.mock";

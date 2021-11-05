@@ -1,9 +1,9 @@
 import { UnsubscribeFunction } from "@banquette/event";
-import { ConfigurableChildrenFilterType } from "./constant";
+import { FilterGroup } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { FormComponentInterface } from "./form-component.interface";
 import { FormComponentsCollection } from "./form-components-collection";
-import { ForEachFilters, ValidatorsTree } from "./type";
+import { ForEachFilters } from "./type";
 
 export interface FormGroupInterface<IdentifierType = unknown> extends FormComponentInterface {
     /**
@@ -69,7 +69,7 @@ export interface FormGroupInterface<IdentifierType = unknown> extends FormCompon
     /**
      * Set the filters to apply in a certain type of access to the child components of the group.
      */
-    setChildrenFilters(type: ConfigurableChildrenFilterType, filters: ForEachFilters): void;
+    setGroupFilters(type: FilterGroup, filters: ForEachFilters): void;
 
     /**
      * Register a callback that will be called when a control is added/set to the collection.

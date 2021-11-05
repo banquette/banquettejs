@@ -7,7 +7,7 @@ import { AbstractFormComponent } from "./abstract-form-component";
 import {
     BasicState,
     CallContext,
-    ConfigurableChildrenFilterType,
+    FilterGroup,
     ContextualizedState,
     Events,
     VirtualViolationType,
@@ -29,15 +29,15 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
      * The filters to apply in the different type iteration over child components.
      * This is configurable using the `setChildrenFilters`.
      */
-    protected readonly foreachFilters: Record<ConfigurableChildrenFilterType, ForEachFilters> = {
-        [ConfigurableChildrenFilterType.External]: {[BasicState.Concrete]: true},
-        [ConfigurableChildrenFilterType.UpdateValue]: {[BasicState.Concrete]: true},
-        [ConfigurableChildrenFilterType.Validate]: {
+    protected readonly foreachFilters: Record<FilterGroup, ForEachFilters> = {
+        [FilterGroup.External]: {[BasicState.Concrete]: true},
+        [FilterGroup.UpdateValue]: {[BasicState.Concrete]: true},
+        [FilterGroup.Validate]: {
             [BasicState.Concrete]: true,
             [ContextualizedState.Disabled]: false
         },
-        [ConfigurableChildrenFilterType.Size]: {[BasicState.Concrete]: true},
-        [ConfigurableChildrenFilterType.Errors]: {[BasicState.Concrete]: true, [BasicState.Invalid]: true}
+        [FilterGroup.Size]: {[BasicState.Concrete]: true},
+        [FilterGroup.Errors]: {[BasicState.Concrete]: true, [BasicState.Invalid]: true}
     };
 
     /**
@@ -128,7 +128,7 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
         let totalLength = 1;
         this.forEach((component: FormComponentInterface) => {
             totalLength += component.sizeDeep;
-        }, this.foreachFilters[ConfigurableChildrenFilterType.Size]);
+        }, this.foreachFilters[FilterGroup.Size]);
         return totalLength;
     }
 
@@ -139,7 +139,7 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
         let errors: FormError[] = this.errors;
         this.forEach((component: FormComponentInterface) => {
             errors = errors.concat(component.errorsDeep);
-        }, this.foreachFilters[ConfigurableChildrenFilterType.Errors]);
+        }, this.foreachFilters[FilterGroup.Errors]);
         return errors;
     }
 
@@ -150,8 +150,18 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
         const map: Record<string, FormError[]> = {[this.path]: this.errors};
         this.forEach((component: FormComponentInterface) => {
             Object.assign(map, component.errorsDeepMap);
-        }, this.foreachFilters[ConfigurableChildrenFilterType.Errors]);
+        }, this.foreachFilters[FilterGroup.Errors]);
         return map;
+    }
+
+    /**
+     * Remove all errors from the component and its children.
+     */
+    public clearErrorsDeep(): void {
+        super.clearErrorsDeep();
+        this.forEach((component: FormComponentInterface) => {
+            component.clearErrorsDeep();
+        }, this.foreachFilters[FilterGroup.Errors]);
     }
 
     /**
@@ -170,10 +180,10 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
         this.forEachDecorated((component: FormChildComponentInterface) => {
             const result: MatchResult = component.decorated.matchPattern(patterns);
             if (result.pattern === MatchType.Full && result.tags === MatchType.Full) {
-                collection.add(component.decorated);
+                collection.append(component.decorated);
             }
             if (result.pattern >= MatchType.Partial && component.decorated.isGroup()) {
-                collection.merge(component.decorated.getByPattern(patterns));
+                collection.concat(component.decorated.getByPattern(patterns));
             }
         });
         return collection;
@@ -202,9 +212,9 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
     /**
      * Set the filters to apply in a certain type of access to the child components of the group.
      */
-    public setChildrenFilters(type: ConfigurableChildrenFilterType, filters: ForEachFilters): void {
+    public setGroupFilters(type: FilterGroup, filters: ForEachFilters): void {
         this.foreachFilters[type] = filters;
-        if (type === ConfigurableChildrenFilterType.UpdateValue) {
+        if (type === FilterGroup.UpdateValue) {
             this.updateValue();
         }
     }
@@ -284,7 +294,7 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
                             return ;
                         }
                         promisesStack.push(subResult);
-                    }, this.foreachFilters[ConfigurableChildrenFilterType.Validate]);
+                    }, this.foreachFilters[FilterGroup.Validate]);
                     if (!subSyncResult) {
                         localResult.addViolation(VirtualViolationType);
                     }

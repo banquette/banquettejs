@@ -86,12 +86,12 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public get invalid(): boolean { return this.basicStates[BasicState.Invalid].length > 0 }
 
     /**
-     * A component is `validated` when the validation has run, no matter if errors have been found or not.
+     * Inverse of `validated`.
      */
     public get notValidated(): boolean { return this.basicStates[BasicState.NotValidated].length > 0 }
 
     /**
-     * Inverse of `validated`.
+     * A component is `validated` when the validation has run, no matter if errors have been found or not.
      */
     public get validated(): boolean { return !this.notValidated }
 
@@ -106,12 +106,12 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public get notValidating(): boolean { return !this.validating }
 
     /**
-     * Only `true` when the component has been validated, has not validation running and no error have been found.
+     * Only `true` when the component has been validated, has no validation running and no error have been found.
      */
     public get validatedAndValid(): boolean { return this.validated && this.validated && !this.validating }
 
     /**
-     * A component is `busy` when the view model of a component or one of its children is processing something.
+     * A component is `busy` when its view model or the one of its children is processing something.
      */
     public get busy(): boolean { return this.basicStates[BasicState.Busy].length > 0 }
 
@@ -121,7 +121,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public get notBusy(): boolean { return !this.busy }
 
     /**
-     * A disabled component is non-interactive and excluded from the validation.
+     * A `disabled` component is non-interactive and excluded from the validation.
      *
      * This is a "multi origin" flag, meaning it can be set multiple time by different sources.
      * All original sources must remove their flag for the component to become enabled again.
@@ -144,8 +144,6 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public get pristine(): boolean { return !this.dirty }
 
     /**
-     * True if the component is marked as `touched`.
-     *
      * A component is marked `touched` once the user has triggered a `blur` event on it.
      */
     public get touched(): boolean { return this.basicStates[BasicState.Touched].length > 0 }
@@ -180,10 +178,10 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      *
      *  - For a `FormControl`: it has a view model,
      *  - For a `FromObject`: at least one of its children is concrete,
-     *  - For a `FormArray`: a view model try to access its children
+     *  - For a `FormArray`: it has been accessed from the view
      *
      * A virtual component is not part of the validation process nor of the exported values,
-     * so it will basically be invisible to the outside of the form.
+     * so it will basically be invisible from outside of the form.
      *
      * The goal is to be able to create a form where we don't know yet what
      * components will actually be used in the view.
@@ -498,11 +496,10 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     /**
      * Add one or multiple errors to the component.
      */
-    public addError(error: FormError|FormError[]): void {
-        (this as Writeable<AbstractFormComponent>).errors = this.errors.concat(ensureArray(error));
-        if (this.errors.length > 0) {
-            this.markBasicState(BasicState.Invalid, this.id);
-        }
+    public addError(type: string, message?: string): void {
+        const error = new FormError(this.path, type, message);
+        this.errors.push(error);
+        this.markBasicState(BasicState.Invalid, this.id);
     }
 
     /**
@@ -511,6 +508,13 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public clearErrors(): void {
         (this as Writeable<AbstractFormComponent>).errors = [];
         this.unmarkBasicState(BasicState.Invalid, this.id);
+    }
+
+    /**
+     * Remove all errors from the component and its children.
+     */
+    public clearErrorsDeep(): void {
+        this.clearErrors();
     }
 
     /**
@@ -701,7 +705,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             (this as Writeable<AbstractFormComponent>).errors = [];
             for (const violation of result.violations) {
                 if (violation.type !== VirtualViolationType) {
-                    this.addError(new FormError(this.path, violation.type, violation.message));
+                    this.addError(violation.type, violation.message);
                 }
             }
             this.markBasicState(BasicState.Invalid, this.id);

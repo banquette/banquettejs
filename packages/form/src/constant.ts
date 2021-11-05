@@ -53,27 +53,27 @@ export const EventsInheritanceMap = {
  */
 export enum ValidationStrategy {
     /**
-     * The control will never trigger a validation by itself.
+     * The component will never trigger a validation by itself.
      */
     None = 0,
 
     /**
-     * The control will trigger a validation each time the value changes.
+     * The component will trigger a validation each time the value changes.
      */
     OnChange = 1,
 
     /**
-     * The control will trigger a validation when the focus is gained.
+     * The component will trigger a validation when the focus is gained.
      */
     OnFocus = 2,
 
     /**
-     * The control will trigger a validation when the focus is lost.
+     * The component will trigger a validation when the focus is lost.
      */
     OnBlur = 4,
 
     /**
-     * The control will use the validation strategy of its parent.
+     * The component will use the validation strategy of its parent.
      * If no parent, "ValidationStrategy.None" is used.
      */
     Inherit = 8
@@ -210,7 +210,7 @@ export const ComponentRelatedCallContexts = [CallContext.Child, CallContext.Pare
 /**
  * The different type of internal accesses to the `forEach` method of groups.
  */
-export enum ConfigurableChildrenFilterType {
+export enum FilterGroup {
     /**
      * Default filters to apply when iterating over the child components from outside.
      * Can be overridden on a per call basis using the second argument of `forEach`.

@@ -6,6 +6,7 @@ import { ValidationStrategy } from "./constant";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 import { FormComponentInterface } from "./form-component.interface";
+import { UsageException } from "@banquette/exception";
 
 /**
  * A collection that behave like a single component.
@@ -153,8 +154,28 @@ export class FormComponentsCollection {
     /**
      * Add a component to the collection.
      */
-    public add(component: FormComponentInterface): void {
+    public append(component: FormComponentInterface): void {
         this.collection.push(component);
+    }
+
+    /**
+     * Add a component to the beginning of the collection.
+     */
+    public prepend(component: FormComponentInterface): void {
+        this.collection.unshift(component);
+    }
+
+    /**
+     * Insert a component at a specific index, moving all elements after it.
+     */
+    public insert(index: number, component: FormComponentInterface): void {
+        if (index < this.collection.length) {
+            this.collection.splice(index, 0, component);
+        } else if (index === this.collection.length) {
+            this.collection.push(component);
+        } else {
+            throw new UsageException(`There is no component at index "${index}" and index "${index}" is not the next contiguous identifier.`);
+        }
     }
 
     /**
@@ -190,10 +211,10 @@ export class FormComponentsCollection {
     }
 
     /**
-     * Merge the content of a collection into this one.
+     * Append all the children of another collection into this one.
      */
-    public merge(collection: FormComponentsCollection): void {
-        collection.forEach(proxy(this.add, this));
+    public concat(collection: FormComponentsCollection): void {
+        collection.forEach(proxy(this.append, this));
     }
 
     /**

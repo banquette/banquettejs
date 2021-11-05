@@ -4,7 +4,7 @@ import { FormTransformerSymbol } from "../transformer/root/form";
 import {
     FormObject as FormObjectObject,
     FormControl as FormControlObject,
-    ConfigurableChildrenFilterType
+    FilterGroup
 } from "@banquette/form";
 import { Form } from "../decorator/form-component";
 import { GenericTransformerTest } from "../../../model/src/__tests__/__mocks__/generic-transformer-test";
@@ -99,8 +99,8 @@ describe('General mechanics', () => {
             public foo: string = '';
         }
         const form = Injector.Get(TransformService).transform(new Foo(), FormTransformerSymbol).result as FormObjectObject;
-        form.setChildrenFilters(ConfigurableChildrenFilterType.Errors, {});
-        form.setChildrenFilters(ConfigurableChildrenFilterType.Validate, {});
+        form.setGroupFilters(FilterGroup.Errors, {});
+        form.setGroupFilters(FilterGroup.Validate, {});
         expect(form.validate() || form.valid).toEqual(false);
         expect(form.errorsDeepMap).toMatchObject({
             '/': expect.arrayContaining([]),
@@ -115,8 +115,8 @@ describe('General mechanics', () => {
             public foo: string[] = ['a', 'b'];
         }
         const form = Injector.Get(TransformService).transform(new Foo(), FormTransformerSymbol).result as FormObjectObject;
-        form.setChildrenFilters(ConfigurableChildrenFilterType.Errors, {});
-        form.setChildrenFilters(ConfigurableChildrenFilterType.Validate, {});
+        form.setGroupFilters(FilterGroup.Errors, {});
+        form.setGroupFilters(FilterGroup.Validate, {});
         expect(form.validate() || form.valid).toEqual(false);
         expect(form.errorsDeepMap).toMatchObject({
             '/': expect.arrayContaining([]),
@@ -134,8 +134,8 @@ describe('General mechanics', () => {
             public bar!: Bar;
         }
         const form = Injector.Get(TransformService).transform(new Foo(), FormTransformerSymbol).result as FormObjectObject;
-        form.setChildrenFilters(ConfigurableChildrenFilterType.Errors, {});
-        form.setChildrenFilters(ConfigurableChildrenFilterType.Validate, {});
+        form.setGroupFilters(FilterGroup.Errors, {});
+        form.setGroupFilters(FilterGroup.Validate, {});
         expect(form.validate() || form.valid).toEqual(false);
         expect(form.errorsDeepMap).toMatchObject({
             '/': expect.arrayContaining([]),
@@ -150,7 +150,7 @@ describe('General mechanics', () => {
             foo: 'foo',
             bar: 'bar'
         }, FormTransformerSymbol).result;
-        result.setChildrenFilters(ConfigurableChildrenFilterType.Size, {});
+        result.setGroupFilters(FilterGroup.Size, {});
         expect(result.sizeDeep).toEqual(3);
         expect(result.get('foo')).toBeInstanceOf(FormControlObject);
         expect(result.get('bar')).toBeInstanceOf(FormControlObject);
@@ -188,6 +188,18 @@ describe('General mechanics', () => {
             }
         }).toThrow(UsageException);
     });
+
+    //
+    // TODO: Support this
+    //
+    // test('A property defined on the constructor can be a form component', () => {
+    //     class Foo {
+    //         public constructor(@Assert(NotEmpty()) @Form() public foo: string) {
+    //         }
+    //     }
+    //     const form = Injector.Get(TransformService).transform(new Foo('foo'), FormTransformerSymbol).result as FormObjectObject;
+    //     expect(form.get('foo').value).toEqual('foo');
+    // });
 });
 
 describe('Individual transformers', () => {

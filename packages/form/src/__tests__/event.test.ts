@@ -7,7 +7,7 @@ import { FormFactory } from "../form.factory";
 import { FormObject } from "../form-object";
 import { StateChangedFormEvent } from "../event/state-changed.form-event";
 import { ViewModelMock } from "./__mocks__/view-model.mock";
-import { BasicState, ConfigurableChildrenFilterType } from "../constant";
+import { BasicState, FilterGroup } from "../constant";
 import { NotEmpty } from "@banquette/validation";
 
 class Foo {}
@@ -109,7 +109,7 @@ describe('ValueChanged', () => {
         const control = form.get('username');
 
         form.getByPattern('**').markAsConcrete();
-        form.setChildrenFilters(ConfigurableChildrenFilterType.UpdateValue, {});
+        form.setGroupFilters(FilterGroup.UpdateValue, {});
         form.onValueChanged((event: ValueChangedFormEvent) => {
             if (event.source === form) {
                 expect(event.oldValue).toEqual({username: 'previous'});

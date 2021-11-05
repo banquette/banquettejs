@@ -218,7 +218,7 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     readonly errors: FormError[];
 
     /**
-     * The whole list of errors found in the current component and all its children.
+     * Flattened array of errors found on the component itself and all its children (recursively).
      */
     readonly errorsDeep: FormError[];
 
@@ -296,14 +296,19 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     markAsConcrete(): void;
 
     /**
-     * Add one or multiple errors to the component.
+     * Add an error to the component.
      */
-    addError(error: FormError|FormError[]): void;
+    addError(type: string, message: string): void;
 
     /**
      * Remove all errors from the component.
      */
     clearErrors(): void;
+
+    /**
+     * Remove all errors from the component and its children.
+     */
+    clearErrorsDeep(): void;
 
     /**
      * Reset the control. It has the following effects:
