@@ -76,7 +76,7 @@ export class ValidationResult {
     }
 
     /**
-     * Flattened the violations of all results matching the mask(s) into a single array.
+     * Flattened the violations of all results matching the mask(s) into a single level array.
      * If no mask is given, all violations found in the tree will be returned.
      */
     public getViolationsArray(mask: string|string[] = []): ViolationInterface[] {
@@ -92,6 +92,19 @@ export class ValidationResult {
             }
         }
         return violations;
+    }
+
+    /**
+     * Flattened the violations of all results matching the mask(s) into an array of strings containing
+     * the path and message of each violation (or their type if no message is available).
+     */
+    public getViolationsStringsArray(mask: string|string[] = []): string[] {
+        const output: string[] = [];
+        const violations = this.getViolationsArray(mask);
+        for (const violation of violations) {
+            output.push(`${violation.path}: ${violation.message || violation.type}`);
+        }
+        return output;
     }
 
     /**
