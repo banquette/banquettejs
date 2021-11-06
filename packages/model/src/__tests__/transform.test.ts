@@ -17,8 +17,6 @@ import { JsonTransformerSymbol } from "../transformer/type/root/json";
 import { transformAndCheck, checkTransformResult, transformAndCheckAsync } from "./utils";
 import { TransformFailedException } from "../exception/transform-failed.exception";
 import { Relation } from "../decorator/relation";
-import { ModelTransformMetadataService } from "../model-transform-metadata.service";
-import { Raw } from "../transformer/type/raw";
 
 const transformService = Injector.Get(TransformService);
 

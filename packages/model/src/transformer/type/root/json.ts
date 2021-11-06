@@ -1,4 +1,4 @@
-import { Module, Injector } from "@banquette/dependency-injection";
+import { Module } from "@banquette/dependency-injection";
 import { Complete, isString, isObject } from "@banquette/utils-type";
 import { ModelTransformerTag } from "../../../constants";
 import { TransformContext } from "../../transform-context";
@@ -8,8 +8,6 @@ import { TransformPipeline } from "../../transform-pipeline";
 import { UsageException, ExceptionFactory } from "@banquette/exception";
 import { InvalidJsonException } from "../../../exception/invalid-json.exception";
 import { AbstractRootTransformer } from "./abstract-root-transformer";
-import { Primitive } from "../primitive";
-import { ModelTransformMetadataService } from "../../../model-transform-metadata.service";
 
 export const JsonTransformerSymbol = Symbol('json');
 
