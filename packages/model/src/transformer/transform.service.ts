@@ -28,8 +28,8 @@ export class TransformService {
      * Transform a model instance into another format.
      */
     public transform(parentContext: TransformContext): TransformResult;
-    public transform(modelInstance: object, transformType: symbol, wildcardTransformer?: TransformerInterface|null, extra?: Record<string, any>): TransformResult;
-    public transform(modelInstanceOrParentContext: object|TransformContext, transformType?: symbol, wildcardTransformer?: TransformerInterface|null, extra?: Record<string, any>): TransformResult {
+    public transform(modelInstance: object, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult;
+    public transform(modelInstanceOrParentContext: object|TransformContext, transformType?: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
         let parentContext: TransformContext|null = null;
         if (modelInstanceOrParentContext instanceof TransformContext) {
             parentContext = modelInstanceOrParentContext;
@@ -53,8 +53,8 @@ export class TransformService {
      * Transform a model from a custom format back to model entity.
      */
     public transformInverse(parentContext: TransformContext): TransformResult;
-    public transformInverse(value: any, modelType: ModelExtendedIdentifier, transformType: symbol, wildcardTransformer?: TransformerInterface|null, extra?: Record<string, any>): TransformResult;
-    public transformInverse(parentContextOrValue: TransformContext|any, modelType?: ModelExtendedIdentifier, transformType?: symbol, wildcardTransformer?: TransformerInterface|null, extra?: Record<string, any>): TransformResult {
+    public transformInverse(value: any, modelType: ModelExtendedIdentifier, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult;
+    public transformInverse(parentContextOrValue: TransformContext|any, modelType?: ModelExtendedIdentifier, transformType?: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
         let parentContext: TransformContext | null = null;
         if (parentContextOrValue instanceof TransformContext) {
             parentContext = parentContextOrValue;

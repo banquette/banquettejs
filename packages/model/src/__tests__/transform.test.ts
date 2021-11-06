@@ -297,7 +297,7 @@ describe('Wildcard transformer', () => {
         const result = transformService.transform({
             foo: 'foo',
             bar: 'bar'
-        }, JsonTransformerSymbol, Primitive());
+        }, JsonTransformerSymbol, {}, Primitive());
         expect(result.result).toEqual('{"foo":"foo","bar":"bar"}');
     });
 
@@ -306,7 +306,7 @@ describe('Wildcard transformer', () => {
             foo: 'foo',
             bar: 'bar'
         };
-        const result = transformService.transform(obj, JsonTransformerSymbol, Primitive());
+        const result = transformService.transform(obj, JsonTransformerSymbol, {}, Primitive());
         expect(result.result).toEqual('{"foo":"foo","bar":"bar"}');
 
         const result2 = transformService.transform(obj, JsonTransformerSymbol);
@@ -321,7 +321,7 @@ describe('Wildcard transformer', () => {
             num: 2,
             obj: {a: 2, b: 'b'},
             func: () => {}
-        }, JsonTransformerSymbol, Primitive());
+        }, JsonTransformerSymbol, {}, Primitive());
         expect(result.result).toEqual('{"foo":"foo","bar":"bar","num":2,"obj":{"a":2,"b":"b"}}');
     });
 });
