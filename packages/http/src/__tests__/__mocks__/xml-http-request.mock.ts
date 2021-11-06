@@ -116,7 +116,7 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                 }
                 that.status = 200;
                 that.responseURL = config.url;
-                if (!isNullOrUndefined(config.serverResponse)) {
+                if (config.serverResponse !== null) {
                     (that as any).responseText = (config.XSSISafe ? XSSIPrefix : '') + config.serverResponse;
                 } else if (config.responseKey) {
                     const response = TestResponses[config.responseKey as any];
