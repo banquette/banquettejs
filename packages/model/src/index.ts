@@ -19,6 +19,7 @@ export * from './decorator/json';
 export * from './decorator/pojo';
 export * from './decorator/relation';
 export * from './decorator/transformable';
+export * from './decorator/utils';
 
 // Exceptions
 export * from './exception/model-alias-not-found.exception';
