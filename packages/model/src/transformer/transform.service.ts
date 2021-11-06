@@ -1,5 +1,5 @@
 import { Service, InjectMultiple, Inject } from "@banquette/dependency-injection";
-import { Constructor, Complete, isUndefined, isNullOrUndefined } from "@banquette/utils-type";
+import { Constructor, Complete, isNullOrUndefined } from "@banquette/utils-type";
 import { RootTransformerInterface } from "./root-transformer.interface";
 import { ModelTransformerTag } from "../constants";
 import { NoCompatibleTransformerFoundException } from "../exception/no-compatible-transformer-found.exception";
