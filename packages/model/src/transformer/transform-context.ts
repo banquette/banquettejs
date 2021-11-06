@@ -1,5 +1,7 @@
 import { Constructor, isUndefined } from "@banquette/utils-type";
 import { TransformResult } from "../transform-result";
+import { ValidatorInterface } from "@banquette/validation";
+import { UsageException } from "@banquette/exception";
 
 export class TransformContext {
     /**
@@ -65,5 +67,28 @@ export class TransformContext {
             return this.parent.getExtra(name, defaultValue);
         }
         return defaultValue;
+    }
+
+    /**
+     * Get one or multiple extra value with an additional validation check.
+     */
+    public getValidatedExtra(targets: Record<string, [ValidatorInterface|null, any]>): Record<string, any> {
+        const output: Record<string, any> = {};
+        for (const key of Object.keys(targets)) {
+            const config = targets[key];
+            const value = this.getExtra(key, config[1]);
+            const validator = config[0];
+            if (validator !== null) {
+                const validationResult = validator.validate(value);
+                if (validationResult.waiting) {
+                    throw new UsageException('Asynchronous validators are not supported in "TransformContext::getValidatedExtra".');
+                }
+                if (validationResult.invalid) {
+                    throw new UsageException(validationResult.getViolationsStringsArray().join(', '));
+                }
+            }
+            output[key] = value;
+        }
+        return output;
     }
 }
