@@ -15,7 +15,7 @@ export class ModelApiService {
     }
 
     /**
-     * @inheritDoc
+     * Create a request from a model instance and an endpoint.
      */
     public buildRequest(modelInstance: object, endpoint: string, parameters: Record<string, string> = {}): HttpRequest|Promise<HttpRequest> {
         const transformResult = this.transformService.transform(modelInstance, ApiTransformerSymbol, {endpoint, parameters});
