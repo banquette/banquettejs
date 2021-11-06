@@ -47,7 +47,7 @@ export enum Type {
 }
 
 /**
- * Ensure the output type matches the one given as parameter (in both directions).
+ * Ensure the output type matches the ones given as parameters.
  */
 export function Primitive(transformType: Type = Type.Any, inverseType: Type = Type.Any): TransformerInterface {
     const ensureType = (type: Type, value: any) => {
