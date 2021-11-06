@@ -326,7 +326,7 @@ describe('Wildcard transformer', () => {
     });
 });
 
-describe('Individual transformers', () => {
+describe('Root transformers', () => {
     describe('Json', () => {
         test('Transform inverse, sync', () => {
             class Foo {
@@ -346,6 +346,71 @@ describe('Individual transformers', () => {
             const result = transformService.transformInverse('{"bar: "bar"}', Foo, JsonTransformerSymbol);
             expect(result.error).toBe(true);
             expect(result.errorDetail).toBeInstanceOf(TransformFailedException);
+        });
+    });
+
+    describe('Json', () => {
+        test('Single level, sync', () => {
+            class Foo {
+                @Json(Primitive(Type.String))
+                public bar: any = 2;
+            }
+            transformAndCheck(new Foo(), JsonTransformerSymbol, {
+                resultEqual: JSON.stringify({bar: '2'})
+            }, {
+                resultInstanceOf: Foo,
+                resultMatchObject: {bar: '2'}
+            });
+        });
+
+        test('Deep, models, sync', () => {
+            class Bar {
+                @Json(Collection(Primitive(Type.String)))
+                public baz: any[] = ['a', 2];
+            }
+
+            class Foo {
+                @Json(Collection(T.Model()))
+                @Relation(Bar)
+                public bars: Bar[] = [new Bar(), new Bar()];
+            }
+            transformAndCheck(new Foo(), JsonTransformerSymbol, {
+                resultEqual: JSON.stringify({bars: [{baz: ['a', '2']}, {baz: ['a', '2']}]})
+            }, {
+                resultInstanceOf: Foo,
+                resultMatchObject: {bars: [{baz: ['a', '2']}, {baz: ['a', '2']}]}
+            });
+        });
+    });
+});
+
+describe('Property transformers', () => {
+    describe('Primitive', () => {
+        test('String', () => {
+            class Foo {
+                @Pojo(Primitive(Type.String))
+                public bar: any = {'test': 2};
+            }
+            transformAndCheck(new Foo(), PojoTransformerSymbol, {
+                resultEqual: {bar: '{"test":2}'}
+            }, {
+                resultInstanceOf: Foo,
+                resultMatchObject: {bar: '{"test":2}'}
+            });
+        });
+
+        test('Different types depending on the direction', () => {
+            class Foo {
+                @Pojo(Primitive(Type.String, Type.Number))
+                public bar: number = 2;
+            }
+
+            transformAndCheck(new Foo(), PojoTransformerSymbol, {
+                resultEqual: {bar: '2'}
+            }, {
+                resultInstanceOf: Foo,
+                resultMatchObject: {bar: 2}
+            });
         });
     });
 
@@ -415,40 +480,6 @@ describe('Individual transformers', () => {
             }, {
                 resultInstanceOf: Foo,
                 resultMatchObject: {bars: [{baz: ['a', 2]}, {baz: ['a', 2]}]}
-            });
-        });
-    });
-
-    describe('Json', () => {
-        test('Single level, sync', () => {
-            class Foo {
-                @Json(Primitive(Type.String))
-                public bar: any = 2;
-            }
-            transformAndCheck(new Foo(), JsonTransformerSymbol, {
-                resultEqual: JSON.stringify({bar: '2'})
-            }, {
-                resultInstanceOf: Foo,
-                resultMatchObject: {bar: '2'}
-            });
-        });
-
-        test('Deep, models, sync', () => {
-            class Bar {
-                @Json(Collection(Primitive(Type.String)))
-                public baz: any[] = ['a', 2];
-            }
-
-            class Foo {
-                @Json(Collection(T.Model()))
-                @Relation(Bar)
-                public bars: Bar[] = [new Bar(), new Bar()];
-            }
-            transformAndCheck(new Foo(), JsonTransformerSymbol, {
-                resultEqual: JSON.stringify({bars: [{baz: ['a', '2']}, {baz: ['a', '2']}]})
-            }, {
-                resultInstanceOf: Foo,
-                resultMatchObject: {bars: [{baz: ['a', '2']}, {baz: ['a', '2']}]}
             });
         });
     });
