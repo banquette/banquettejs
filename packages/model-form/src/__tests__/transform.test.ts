@@ -23,6 +23,7 @@ import { FormArray } from "../transformer/form-array";
 import { Assert } from "@banquette/model-validation";
 import { NotEmpty, Min } from "@banquette/validation";
 import { UsageException } from "@banquette/exception";
+import { Constructor, isObject, isFunction, ensureArray } from "@banquette/utils-type";
 
 describe('General mechanics', () => {
     test('Multiple levels, sync', () => {
@@ -189,17 +190,14 @@ describe('General mechanics', () => {
         }).toThrow(UsageException);
     });
 
-    //
-    // TODO: Support this
-    //
-    // test('A property defined on the constructor can be a form component', () => {
-    //     class Foo {
-    //         public constructor(@Assert(NotEmpty()) @Form() public foo: string) {
-    //         }
-    //     }
-    //     const form = Injector.Get(TransformService).transform(new Foo('foo'), FormTransformerSymbol).result as FormObjectObject;
-    //     expect(form.get('foo').value).toEqual('foo');
-    // });
+    test('A property defined on the constructor can be a form component', () => {
+        class Foo {
+            public constructor(@Form() public foo: string) {
+            }
+        }
+        const form = Injector.Get(TransformService).transform(new Foo('foo'), FormTransformerSymbol).result as FormObjectObject;
+        expect(form.get('foo').value).toEqual('foo');
+    });
 });
 
 describe('Individual transformers', () => {
