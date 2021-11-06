@@ -8,7 +8,9 @@ import { Constructor } from "@banquette/utils-type";
 import { Alias } from "../../../model/src/decorator/alias";
 import { ModelAliasNotFoundException } from "../../../model/src/exception/model-alias-not-found.exception";
 import { ValidatorInterface } from "@banquette/validation";
-import { ModelMetadataService } from "@banquette/model";
+import { ModelMetadataService, TransformService } from "@banquette/model";
+import { Form, FormTransformerSymbol } from "@banquette/model-form";
+import { FormObject as FormObjectObject } from "@banquette/form";
 
 describe('Metadata storage', () => {
     class User {
@@ -98,6 +100,33 @@ describe('Decorator', () => {
 
     test('Can get metadata through model aliases', () => {
         expect(validationMetadata.get('User', 'username')).not.toEqual(null);
+    });
+
+    test('A property defined on the constructor can be have an @Assert decorator', () => {
+        class Foo {
+            public constructor(@Assert(V.NotEmpty()) public foo: string) {
+            }
+        }
+        expect(validationMetadata.get(Foo, 'foo')).not.toEqual(null);
+    });
+
+    test('@Assert cannot be placed on a class', () => {
+        expect(() => {
+            @Assert(V.NotEmpty())
+            class Foo {
+            }
+        }).toThrow(UsageException);
+    });
+
+    test('@Assert cannot be placed on methods', () => {
+        expect(() => {
+            class Foo {
+                @Assert(V.NotEmpty())
+                public bar(): void {
+
+                }
+            }
+        }).toThrow(UsageException);
     });
 });
 
