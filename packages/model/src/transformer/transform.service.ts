@@ -76,14 +76,6 @@ export class TransformService {
         });
     }
 
-    // public transformInverse(value: any, transformerType: symbol): TransformResult {
-    //     const transformer = this.getTransformer(transformerType);
-    //     transformer.transformInverse(value);
-    // }
-    //
-    // public transformTransversal(): TransformResult {
-    // }
-
     /**
      * Get the list of available root transformers.
      */

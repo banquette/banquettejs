@@ -8,10 +8,7 @@ export enum TransformResultStatus {
     Ready
 }
 
-let maxId = 0;
-
 export class TransformResult<T = any> {
-    public id = ++maxId;
     public readonly promise: Promise<TransformResult<T>>|null;
     public readonly localPromise: Promise<any>|null;
     public readonly status!: TransformResultStatus;
