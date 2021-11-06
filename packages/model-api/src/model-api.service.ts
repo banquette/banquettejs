@@ -3,8 +3,7 @@ import { HttpRequest, HttpService } from "@banquette/http";
 import { TransformService, TransformResult } from "@banquette/model";
 import { ApiTransformerSymbol } from "./transformer/root/api";
 import { ModelApiMetadataService } from "./model-api-metadata.service";
-import { Constructor, isPromiseLike, isType, isUndefined } from "@banquette/utils-type";
-import { ApiEndpoint } from "@banquette/api";
+import { isPromiseLike, isType } from "@banquette/utils-type";
 import { Not } from "@banquette/utils-misc";
 import { ApiResponse } from "./api-response";
 
@@ -19,23 +18,13 @@ export class ModelApiService {
      * @inheritDoc
      */
     public buildRequest(modelInstance: object, endpoint: string, parameters: Record<string, string> = {}): HttpRequest|Promise<HttpRequest> {
-        const endpointObject = this.apiMetadata.getEndpoint(modelInstance.constructor as Constructor, endpoint);
-        const transformResult = this.transformService.transform(modelInstance, ApiTransformerSymbol);
-        const buildRequest = (endpoint: ApiEndpoint, payload: any) => {
-            for (const prop of Object.keys(payload)) {
-                if (!isUndefined(endpoint.parameters[prop]) && isUndefined(parameters[prop])) {
-                    parameters[prop] = payload[prop];
-                }
-            }
-            return endpoint.buildRequest(payload, parameters);
-        };
+        const transformResult = this.transformService.transform(modelInstance, ApiTransformerSymbol, {endpoint, parameters});
         if (transformResult.promise === null) {
-            return buildRequest(endpointObject, transformResult.result);
+            return transformResult.result;
         }
-        const transformPromise = transformResult.promise;
         return new Promise<HttpRequest>((resolve, reject) => {
-            transformPromise.then((result: TransformResult) => {
-                resolve(buildRequest(endpointObject, result.result));
+            transformResult.onReady().then((result: TransformResult) => {
+                resolve(result.result);
             }).catch(reject);
         });
     }
