@@ -1,7 +1,14 @@
 import 'reflect-metadata';
 import { Endpoint } from "../decorator/endpoint";
 import { Injector } from "@banquette/dependency-injection";
-import { HttpRequest, HttpMethod } from "@banquette/http";
+import {
+    HttpRequest,
+    HttpMethod,
+    HttpRequestFactory,
+    HttpService,
+    HttpConfigurationInterface,
+    HttpConfigurationSymbol, XhrAdapter
+} from "@banquette/http";
 import { Api } from "../decorator/api";
 import { ModelApiService } from "../model-api.service";
 import { GenericTransformerTest } from "../../../model/src/__tests__/__mocks__/generic-transformer-test";
@@ -11,6 +18,19 @@ import { ApiTransformerSymbol } from "../transformer/root/api";
 import { TransformFailedException } from "../../../model/src/exception/transform-failed.exception";
 import { UsageException } from "@banquette/exception";
 import { EndpointNotFoundException } from "@banquette/api";
+import { buildTestUrl } from "../../../http/src/__tests__/__mocks__/utils";
+import { SharedConfiguration } from "@banquette/config";
+
+import '../../../http/src/__tests__/__mocks__/xml-http-request.mock';
+
+const http: HttpService = Injector.Get<HttpService>(HttpService);
+
+const config = Injector.Get(SharedConfiguration);
+config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {
+    maxSimultaneousRequests: 5,
+    requestRetryCount: 5,
+    adapter: XhrAdapter
+});
 
 const api = Injector.Get(ModelApiService);
 
@@ -93,61 +113,88 @@ describe('ModelApiService', () => {
 describe('ApiTransformer', () => {
     const transformService = Injector.Get(TransformService);
 
-    test('Transform basic model', () => {
-        @Endpoint('getOne', '/user/{ref}/{other}')
-        class Foo {
-            @Api()
-            public ref: string = 'abc';
-        }
-        const result = transformService.transform(new Foo(), ApiTransformerSymbol, {endpoint: 'getOne', parameters: {ref: 'def', other: 'custom'}});
-        expect(result).toBeInstanceOf(TransformResult);
-        expect(result.ready).toBe(true);
-        expect(result.result).toBeInstanceOf(HttpRequest);
-        expect(result.result.url).toEqual('/user/def/custom');
-        expect(result.result.method).toEqual(HttpMethod.GET);
-        expect(result.result.payload).toMatchObject({ref: 'abc'});
+    describe('model => HttpRequest', () => {
+
+        test('Transform basic model', () => {
+            @Endpoint('getOne', '/user/{ref}/{other}')
+            class Foo {
+                @Api()
+                public ref: string = 'abc';
+            }
+
+            const result = transformService.transform(new Foo(), ApiTransformerSymbol, {
+                endpoint: 'getOne',
+                parameters: {ref: 'def', other: 'custom'}
+            });
+            expect(result).toBeInstanceOf(TransformResult);
+            expect(result.ready).toBe(true);
+            expect(result.result).toBeInstanceOf(HttpRequest);
+            expect(result.result.url).toEqual('/user/def/custom');
+            expect(result.result.method).toEqual(HttpMethod.GET);
+            expect(result.result.payload).toMatchObject({ref: 'abc'});
+        });
+
+        test('Transform model with async property transformer', async () => {
+            @Endpoint('getOne', '/user/{ref}')
+            class Foo {
+                @Api(GenericTransformerTest({delay: 100, transform: 'def'}))
+                public ref: string = 'abc';
+            }
+
+            const result = transformService.transform(new Foo(), ApiTransformerSymbol, {endpoint: 'getOne'});
+            expect(result).toBeInstanceOf(TransformResult);
+            expect(result.ready).toBe(false);
+            await result.promise;
+            expect(result.ready).toBe(true);
+            expect(result.result).toBeInstanceOf(HttpRequest);
+            expect(result.result.url).toEqual('/user/def');
+            expect(result.result.method).toEqual(HttpMethod.GET);
+            expect(result.result.payload).toMatchObject({ref: 'def'});
+        });
+
+        test('Missing extra', () => {
+            @Endpoint('getOne', '/user/{ref}')
+            class Foo {
+                @Api()
+                public ref: string = 'abc';
+            }
+
+            const result = transformService.transform(new Foo(), ApiTransformerSymbol);
+            expect(result).toBeInstanceOf(TransformResult);
+            expect(result.error).toBe(true);
+            expect(result.errorDetail).toBeInstanceOf(TransformFailedException);
+            expect((result.errorDetail as TransformFailedException).previous).toBeInstanceOf(UsageException);
+        });
+
+        test('Endpoint not found', () => {
+            @Endpoint('getOne', '/user/{ref}')
+            class Foo {
+                @Api()
+                public ref: string = 'abc';
+            }
+
+            const result = transformService.transform(new Foo(), ApiTransformerSymbol, {endpoint: 'invalid'});
+            expect(result).toBeInstanceOf(TransformResult);
+            expect(result.error).toBe(true);
+            expect(result.errorDetail).toBeInstanceOf(TransformFailedException);
+            expect((result.errorDetail as TransformFailedException).previous).toBeInstanceOf(EndpointNotFoundException);
+        });
     });
 
-    test('Transform model with async property transformer', async () => {
-        @Endpoint('getOne', '/user/{ref}')
-        class Foo {
-            @Api(GenericTransformerTest({delay: 100, transform: 'def'}))
-            public ref: string = 'abc';
-        }
-        const result = transformService.transform(new Foo(), ApiTransformerSymbol, {endpoint: 'getOne'});
-        expect(result).toBeInstanceOf(TransformResult);
-        expect(result.ready).toBe(false);
-        await result.promise;
-        expect(result.ready).toBe(true);
-        expect(result.result).toBeInstanceOf(HttpRequest);
-        expect(result.result.url).toEqual('/user/def');
-        expect(result.result.method).toEqual(HttpMethod.GET);
-        expect(result.result.payload).toMatchObject({ref: 'def'});
-    });
-
-    test('Missing extra', () => {
-        @Endpoint('getOne', '/user/{ref}')
-        class Foo {
-            @Api()
-            public ref: string = 'abc';
-        }
-        const result = transformService.transform(new Foo(), ApiTransformerSymbol);
-        expect(result).toBeInstanceOf(TransformResult);
-        expect(result.error).toBe(true);
-        expect(result.errorDetail).toBeInstanceOf(TransformFailedException);
-        expect((result.errorDetail as TransformFailedException).previous).toBeInstanceOf(UsageException);
-    });
-
-    test('Endpoint not found', () => {
-        @Endpoint('getOne', '/user/{ref}')
-        class Foo {
-            @Api()
-            public ref: string = 'abc';
-        }
-        const result = transformService.transform(new Foo(), ApiTransformerSymbol, {endpoint: 'invalid'});
-        expect(result).toBeInstanceOf(TransformResult);
-        expect(result.error).toBe(true);
-        expect(result.errorDetail).toBeInstanceOf(TransformFailedException);
-        expect((result.errorDetail as TransformFailedException).previous).toBeInstanceOf(EndpointNotFoundException);
+    describe('HttpResponse => model', () => {
+        test('Transform back basic model', async () => {
+            @Endpoint('getOne', '/user/{ref}/{other}')
+            class Foo {
+                @Api()
+                public ref: string = 'abc';
+            }
+            const response = http.send(HttpRequestFactory.Create({
+                url: buildTestUrl({delay: 50, serverResponse: JSON.stringify({ref: 'def'})})
+            }));
+            const result = transformService.transformInverse(response, Foo, ApiTransformerSymbol);
+            await result.promise;
+            expect(result.result).toBeInstanceOf(Foo);
+            expect(result.result).toMatchObject({ref: 'def'});
+        });
     });
 });

@@ -4,17 +4,18 @@ import {
     TransformContext,
     TransformPipeline,
     TransformResult,
-    TransformerInterface,
     ModelMetadataService,
     ModelTransformMetadataService,
     ModelFactoryService,
     TransformService,
     PojoTransformer
 } from "@banquette/model";
-import { Complete, isObject, isUndefined } from "@banquette/utils-type";
+import { isUndefined, Writeable } from "@banquette/utils-type";
 import { ApiEndpoint } from "@banquette/api";
 import { NotEmpty } from "@banquette/validation";
 import { ModelApiMetadataService } from "../../model-api-metadata.service";
+import { HttpResponse } from "@banquette/http";
+import { UsageException } from "@banquette/exception";
 
 export const ApiTransformerSymbol = Symbol('api');
 
@@ -70,21 +71,19 @@ export class ApiTransformer extends PojoTransformer {
      * @inheritDoc
      */
     protected doTransformInverse(context: TransformContext, model: any, pipeline: TransformPipeline): TransformResult {
-        pipeline.forEach((property: string, transformer: Complete<TransformerInterface>) => {
-            const subContext = new TransformContext(
-                context,
-                context.type,
-                context.ctor,
-                isObject(context.value) ? context.value[property] : null,
-                property
-            );
-            return transformer.transformInverse(subContext);
-        }, (property: string, subResult: TransformResult) => {
-            model[property] = subResult.result;
-        });
-        pipeline.onFinish(() => {
-            context.result.setResult(model);
-        });
+        if (!(context.value instanceof HttpResponse)) {
+            throw new UsageException('The inverse transform of ApiTransformer expect an HttpResponse.');
+        }
+        const transformResponse = () => {
+            (context as Writeable<TransformContext>).value = context.value.result;
+            super.doTransformInverse(context, model, pipeline);
+        };
+        if (context.value.promise !== null) {
+            context.result.delayResponse(context.value.promise);
+            context.value.promise.then(transformResponse);
+        } else {
+            transformResponse();
+        }
         return context.result;
     }
 }
