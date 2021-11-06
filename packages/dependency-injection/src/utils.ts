@@ -5,6 +5,7 @@ import { MetadataContainer } from "./metadata.container";
 import { InjectableIdentifier } from "./type/injectable-identifier.type";
 import { InjectableType } from "./type/injectable.type";
 import { LazyInjectableIdentifier } from "./type/lazy-injectable-identifier";
+import { getConstructorArgumentsTypes } from "@banquette/utils-reflection";
 
 /**
  * Create the metadata object defining the type and dependencies of an injectable.
@@ -24,7 +25,7 @@ export function buildInjectableMetadata(ctor: Constructor): InjectableMetadataIn
  */
 export function registerImplicitDependencies(ctor: Constructor): InjectableMetadataInterface {
     const metadata: InjectableMetadataInterface = buildInjectableMetadata(ctor);
-    const parametersTypes: any[] = getMetadata(ctor);
+    const parametersTypes: any[] = getConstructorArgumentsTypes(ctor);
     for (let i = 0; i < parametersTypes.length; ++i) {
         if (metadata.constructorDependencies.length <= i || isUndefined(metadata.constructorDependencies[i])) {
             metadata.constructorDependencies[i] = getInjectableType(parametersTypes[i], false);
@@ -75,11 +76,4 @@ export function getInjectableType(identifier: InjectableIdentifier|LazyInjectabl
         lazy: lazy === true ? identifier as LazyInjectableIdentifier : null,
         tags: isUndefined(lazy) ? ensureArray(identifier) as symbol[] : null
     };
-}
-
-export function getMetadata(ctor: Constructor): any[] {
-    if (!isObject(Reflect) || !isFunction((Reflect as any).getMetadata)) {
-        throw new UsageException(`"reflect-metadata" is required for the container to work. Please ensure you have imported it at the very beginning of your scripts.`);
-    }
-    return ensureArray((Reflect as any).getMetadata('design:paramtypes', ctor));
 }
