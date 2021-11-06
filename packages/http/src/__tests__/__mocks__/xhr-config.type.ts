@@ -47,6 +47,11 @@ export type XhrConfig = {
     responseKey: string;
 
     /**
+     * The raw response from the server.
+     */
+    serverResponse?: any;
+
+    /**
      * Define the number of times the request should fail for a network error.
      */
     networkError: number;

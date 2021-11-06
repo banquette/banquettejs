@@ -1,7 +1,7 @@
 import { UsageException } from "@banquette/exception";
 import { EventDispatcher } from "@banquette/event";
 import { randomInt } from "@banquette/utils-random";
-import { ensureSameType, isFunction, isObject, isString, isUndefined } from "@banquette/utils-type";
+import { ensureSameType, isFunction, isObject, isString, isUndefined, isNullOrUndefined } from "@banquette/utils-type";
 import { base64decodeUrlSafe } from "@banquette/utils-base64";
 import { XSSIPrefix } from "../../decoder/json.decoder";
 import { httpStatusToText } from "../../utils";
@@ -41,6 +41,7 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
         timeout: 1000,
         XSSISafe: false,
         responseKey: '',
+        serverResponse: null,
         networkError: 0
     };
     const changeState = function(this: XMLHttpRequest, value: number): void {
@@ -115,7 +116,9 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                 }
                 that.status = 200;
                 that.responseURL = config.url;
-                if (config.responseKey) {
+                if (!isNullOrUndefined(config.serverResponse)) {
+                    (that as any).responseText = (config.XSSISafe ? XSSIPrefix : '') + config.serverResponse;
+                } else if (config.responseKey) {
                     const response = TestResponses[config.responseKey as any];
                     that.status = response.status;
                     (that as any).responseText = (config.XSSISafe ? XSSIPrefix : '') + response.content;
