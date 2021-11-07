@@ -11,6 +11,7 @@ import { ValidatorInterface } from "@banquette/validation";
 import { ModelMetadataService, TransformService } from "@banquette/model";
 import { Form, FormTransformerSymbol } from "@banquette/model-form";
 import { FormObject as FormObjectObject } from "@banquette/form";
+import { validate } from "../validate";
 
 describe('Metadata storage', () => {
     class User {
@@ -206,6 +207,18 @@ describe('Validation', () => {
         user.category.name = 'invalid';
 
         expect(V.Model(userCtor).validate(user).getViolationsMap()).toMatchObject({
+            '/username': expect.arrayContaining([expect.objectContaining({type: 'not-empty'})]),
+            '/email': expect.arrayContaining([expect.objectContaining({type: 'not-empty'})]),
+            '/category/name': expect.arrayContaining([expect.objectContaining({type: 'max'})]),
+        });
+    });
+
+    test('validate utility function can validate a model instance', () => {
+        const user: any = new userCtor();
+        user.category = new categoryCtor();
+        user.category.name = 'invalid';
+
+        expect(validate(user).getViolationsMap()).toMatchObject({
             '/username': expect.arrayContaining([expect.objectContaining({type: 'not-empty'})]),
             '/email': expect.arrayContaining([expect.objectContaining({type: 'not-empty'})]),
             '/category/name': expect.arrayContaining([expect.objectContaining({type: 'max'})]),
