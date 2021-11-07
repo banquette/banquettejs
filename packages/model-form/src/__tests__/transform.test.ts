@@ -6,7 +6,7 @@ import {
     FormControl as FormControlObject,
     FilterGroup
 } from "@banquette/form";
-import { Form } from "../decorator/form-component";
+import { Form } from "../decorator/form";
 import { GenericTransformerTest } from "../../../model/src/__tests__/__mocks__/generic-transformer-test";
 import { FormControl } from "../transformer/form-control";
 import {

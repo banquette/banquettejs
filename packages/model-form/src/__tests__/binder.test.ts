@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Form } from "../decorator/form-component";
+import { Form } from "../decorator/form";
 import { Injector } from "@banquette/dependency-injection";
 import {
     FormObject as FormObjectObject,
