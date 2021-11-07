@@ -13,7 +13,7 @@ import { Api } from "../decorator/api";
 import { ModelApiService } from "../model-api.service";
 import { GenericTransformerTest } from "../../../model/src/__tests__/__mocks__/generic-transformer-test";
 import { isPromiseLike } from "@banquette/utils-type";
-import { TransformService, TransformResult } from "@banquette/model";
+import { TransformService, TransformResult, Relation, Model } from "@banquette/model";
 import { ApiTransformerSymbol } from "../transformer/root/api";
 import { TransformFailedException } from "../../../model/src/exception/transform-failed.exception";
 import { UsageException } from "@banquette/exception";
@@ -108,6 +108,37 @@ describe('ModelApiService', () => {
             payload: {ref: 'def'}
         });
     });
+
+    test('Build request with asynchronous transformer and deep relations', async () => {
+        class Qux {
+            @Api(GenericTransformerTest({delay: 100, transform: 'new quux'}))
+            public quux: string = 'quux';
+        }
+        class Bar {
+            @Api(GenericTransformerTest({transform: 'new baz'}))
+            public baz: string = 'baz';
+
+            @Api(Model())
+            @Relation(Qux)
+            public qux: Qux = new Qux();
+        }
+        @Endpoint('getOne', '/test')
+        class Foo {
+            @Api()
+            public ref: string = 'abc';
+
+            @Api(Model())
+            @Relation(Bar)
+            public bar: Bar = new Bar();
+        }
+        let request = api.buildRequest(new Foo(), 'getOne');
+        expect(isPromiseLike(request)).toBe(true);
+        request = await request;
+        expect(request).toMatchObject({
+            url: '/test',
+            payload: {ref: 'abc', bar: {baz: 'new baz', qux: {quux: 'new quux'}}}
+        });
+    });
 });
 
 describe('ApiTransformer', () => {
@@ -182,7 +213,22 @@ describe('ApiTransformer', () => {
     });
 
     describe('HttpResponse => model', () => {
-        test('Transform back basic model', async () => {
+        test('Synchronous response', async () => {
+            @Endpoint('getOne', '/user/{ref}/{other}')
+            class Foo {
+                @Api()
+                public ref: string = 'abc';
+            }
+            const response = http.send(HttpRequestFactory.Create({
+                url: buildTestUrl({delay: 50, serverResponse: JSON.stringify({ref: 'def'})})
+            }));
+            await response.promise;
+            const result = transformService.transformInverse(response, Foo, ApiTransformerSymbol);
+            expect(result.result).toBeInstanceOf(Foo);
+            expect(result.result).toMatchObject({ref: 'def'});
+        });
+
+        test('Asynchronous response', async () => {
             @Endpoint('getOne', '/user/{ref}/{other}')
             class Foo {
                 @Api()
@@ -195,6 +241,53 @@ describe('ApiTransformer', () => {
             await result.promise;
             expect(result.result).toBeInstanceOf(Foo);
             expect(result.result).toMatchObject({ref: 'def'});
+        });
+
+        test('Asynchronous response and transformer', async () => {
+            @Endpoint('getOne', '/user/{ref}/{other}')
+            class Foo {
+                @Api(GenericTransformerTest({delay: 100, inverse: 'def'}))
+                public ref: string = 'abc';
+            }
+            const response = http.send(HttpRequestFactory.Create({
+                url: buildTestUrl({delay: 50, serverResponse: JSON.stringify({ref: 'def'})})
+            }));
+            const result = transformService.transformInverse(response, Foo, ApiTransformerSymbol);
+            await result.promise;
+            expect(result.result).toBeInstanceOf(Foo);
+            expect(result.result).toMatchObject({ref: 'def'});
+        });
+
+        test('Asynchronous response and transformer with deep relations', async () => {
+            @Endpoint('getOne', '/user/{ref}/{other}')
+            class Qux {
+                @Api(GenericTransformerTest({delay: 100, inverse: null}))
+                public quux: string = 'quux';
+            }
+            class Bar {
+                @Api(GenericTransformerTest({inverse: null}))
+                public baz: string = 'baz';
+
+                @Api(Model())
+                @Relation(Qux)
+                public qux: Qux = new Qux();
+            }
+            @Endpoint('getOne', '/test')
+            class Foo {
+                @Api()
+                public ref: string = 'abc';
+
+                @Api(Model())
+                @Relation(Bar)
+                public bar: Bar = new Bar();
+            }
+            const response = http.send(HttpRequestFactory.Create({
+                url: buildTestUrl({delay: 50, serverResponse: JSON.stringify({ref: 'def', bar: {baz: 'new baz', qux: {quux: 'new quux'}}})})
+            }));
+            const result = transformService.transformInverse(response, Foo, ApiTransformerSymbol);
+            await result.promise;
+            expect(result.result).toBeInstanceOf(Foo);
+            expect(result.result).toMatchObject({ref: 'def', bar: {baz: 'new baz', qux: {quux: 'new quux'}}});
         });
     });
 });

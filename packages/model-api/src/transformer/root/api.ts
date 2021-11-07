@@ -10,7 +10,7 @@ import {
     TransformService,
     PojoTransformer
 } from "@banquette/model";
-import { isUndefined, Writeable } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type";
 import { ApiEndpoint } from "@banquette/api";
 import { NotEmpty } from "@banquette/validation";
 import { ModelApiMetadataService } from "../../model-api-metadata.service";
@@ -40,6 +40,9 @@ export class ApiTransformer extends PojoTransformer {
      * @inheritDoc
      */
     protected doTransform(context: TransformContext, pipeline: TransformPipeline): TransformResult {
+        if (context.parent !== null && context.parent.type === ApiTransformerSymbol) {
+            return super.doTransform(context, pipeline);
+        }
         const {endpoint, parameters} = context.getValidatedExtra({
             endpoint: [NotEmpty(), null],
             parameters: [null, {}]
@@ -71,15 +74,50 @@ export class ApiTransformer extends PojoTransformer {
      * @inheritDoc
      */
     protected doTransformInverse(context: TransformContext, model: any, pipeline: TransformPipeline): TransformResult {
+        if (context.parent !== null && context.parent.type === ApiTransformerSymbol) {
+            return super.doTransformInverse(context, model, pipeline);
+        }
         if (!(context.value instanceof HttpResponse)) {
             throw new UsageException('The inverse transform of ApiTransformer expect an HttpResponse.');
         }
-        const transformResponse = () => {
-            (context as Writeable<TransformContext>).value = context.value.result;
-            super.doTransformInverse(context, model, pipeline);
+        let resolve: (() => any)|null = null;
+        let reject: ((reason: any) => any)|null = null;
+        const delayResponse = () => {
+            context.result.delayResponse(new Promise<void>((_resolve, _reject) => {
+                resolve = _resolve;
+                reject = _reject;
+            }));
+        }
+        const handleResult = (subResult: TransformResult) => {
+            if (subResult.error) {
+                context.result.fail(subResult.errorDetail);
+                if (reject !== null) {
+                    reject(subResult.errorDetail);
+                }
+            } else {
+                context.result.setResult(subResult.result);
+                if (resolve !== null) {
+                    resolve();
+                }
+            }
         };
-        if (context.value.promise !== null) {
-            context.result.delayResponse(context.value.promise);
+        const transformResponse = () => {
+            const contextClone = new TransformContext(context, context.type, context.ctor, context.value.result, context.property, context.extra);
+            const pipelineClone = new TransformPipeline(contextClone.result, this.getTransformableProperties(context));
+            const subResult = super.doTransformInverse(contextClone, model, pipelineClone);
+            if (subResult.promise !== null) {
+                if (resolve === null) {
+                    delayResponse();
+                }
+                subResult.promise.then(() => {
+                    handleResult(subResult);
+                });
+            } else {
+                handleResult(subResult);
+            }
+        };
+        if (context.value.isPending && context.value.promise !== null) {
+            delayResponse();
             context.value.promise.then(transformResponse);
         } else {
             transformResponse();

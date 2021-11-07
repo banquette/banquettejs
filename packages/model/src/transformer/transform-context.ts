@@ -39,7 +39,7 @@ export class TransformContext {
     /**
      * Extra data for transformers.
      */
-    private readonly extra: Record<string, any>;
+    public readonly extra: Record<string, any>;
 
     public constructor(parent: TransformContext|null,
                        type: symbol,
