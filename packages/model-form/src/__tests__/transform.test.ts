@@ -1,11 +1,7 @@
 import 'reflect-metadata';
 import { transformAndCheck, transformAndCheckAsync } from "../../../model/src/__tests__/utils";
 import { FormTransformerSymbol } from "../transformer/root/form";
-import {
-    FormObject as FormObjectObject,
-    FormControl as FormControlObject,
-    FilterGroup
-} from "@banquette/form";
+import { FormObject as FormObjectObject, FormControl as FormControlObject, FilterGroup } from "@banquette/form";
 import { Form } from "../decorator/form";
 import { GenericTransformerTest } from "../../../model/src/__tests__/__mocks__/generic-transformer-test";
 import { FormControl } from "../transformer/form-control";
@@ -23,7 +19,6 @@ import { FormArray } from "../transformer/form-array";
 import { Assert } from "@banquette/model-validation";
 import { NotEmpty, Min } from "@banquette/validation";
 import { UsageException } from "@banquette/exception";
-import { Constructor, isObject, isFunction, ensureArray } from "@banquette/utils-type";
 
 describe('General mechanics', () => {
     test('Multiple levels, sync', () => {
