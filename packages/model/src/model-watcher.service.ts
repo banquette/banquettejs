@@ -1,11 +1,12 @@
 import { Service, Inject } from "@banquette/dependency-injection";
 import { ModelChangeEvent, ModelChangeType } from "./event/model-change.event";
 import { ModelTransformMetadataService } from "./model-transform-metadata.service";
-import { ensureArray, Constructor, isNumeric, isArray } from "@banquette/utils-type";
+import { ensureArray, Constructor, isNumeric } from "@banquette/utils-type";
 
-// @ts-ignore
-import * as ObservableSlim from 'observable-slim/observable-slim.js';
+import 'observable-slim/observable-slim.js';
 import { ModelMetadataService } from "./model-metadata.service";
+
+declare const ObservableSlim: any;
 
 interface ObservableSlimChange {
     type: 'update'|'add'|'delete';
