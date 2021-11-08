@@ -8,9 +8,8 @@ import stringify from 'json-stringify-pretty-compact';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const targets = [
-    '/var/www/vhosts/banquette/banquette-user-ts'
-];
+const targets = fs.readFileSync(path.resolve(__dirname, `../.copy-local-targets`)).toString().trim().split(/\r?\n/);
+
 const packages = Object.values(Builds).reduce((acc, i) => {
     if (acc.indexOf(i.package) < 0) {
         acc.push(i.package);
@@ -25,6 +24,8 @@ for (const p of packages) {
 }
 
 for (const target of targets) {
+    console.log(`Preparing to copy to ${chalk.blue(target)}...`);
+
     const targetBasePath = path.resolve(target, 'node_modules/@banquette');
     if (fs.existsSync(targetBasePath)) {
         fs.rmdirSync(targetBasePath, {recursive: true});

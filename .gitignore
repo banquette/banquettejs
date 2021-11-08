@@ -9,3 +9,4 @@ dist/*.js
 scripts-local
 packages/**/dist
 packages/**/build
+.copy-local-targets
