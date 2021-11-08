@@ -239,7 +239,8 @@ export const Builds = Object.assign({},
  */
 export const Globals = {
     'inversify': 'Inversify',
-    'vue': 'Vue'
+    'vue': 'Vue',
+    'qs': 'qs'
 };
 for (const build of Object.keys(Builds)) {
     Globals[`@banquette/${Builds[build].package}`] = Builds[build].moduleName;

@@ -25,6 +25,7 @@ export * from './type/url';
 export * from './type/valid';
 
 
+export * from './constant';
 export * from './v';
 export * from './simplified-validator.interface';
 export * from './create-validator';

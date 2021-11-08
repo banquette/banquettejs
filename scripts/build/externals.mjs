@@ -4,5 +4,6 @@
 export const Externals = [
     'reflect-metadata',
     'inversify',
-    'vue'
+    'vue',
+    'qs'
 ];

@@ -22,8 +22,10 @@ export * from './decorator/transformable';
 export * from './decorator/utils';
 
 // Exceptions
+export * from './exception/invalid-json.exception';
 export * from './exception/model-alias-not-found.exception';
 export * from './exception/no-compatible-transformer-found.exception';
+export * from './exception/transform-failed.exception';
 export * from './exception/transform-inverse-not-supported.exception';
 export * from './exception/transform-not-supported.exception';
 

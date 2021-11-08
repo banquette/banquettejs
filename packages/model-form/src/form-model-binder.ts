@@ -5,7 +5,8 @@ import {
     FormGroupInterface,
     FormControl,
     FormArray,
-    ValueChangedFormEvent
+    ValueChangedFormEvent,
+    ComponentNotFoundException
 } from "@banquette/form";
 import {
     TransformService,
@@ -29,7 +30,6 @@ import { FormControl as FormControlTransformer, FormControlTransformerSymbol } f
 import { FormObject as FormObjectTransformer, FormObjectTransformerSymbol } from "./transformer/form-object";
 import { FormArrayTransformerSymbol } from "./transformer/form-array";
 import { FormTransformerInterface } from "./transformer/form-transformer.interface";
-import { ComponentNotFoundException } from "../../form/src/exception/component-not-found.exception";
 
 interface TransformersTree {
     ctor: Constructor<any>;

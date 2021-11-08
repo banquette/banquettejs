@@ -10,6 +10,7 @@ export * from './adapter/xhr.adapter';
  * Encoding / decoding
  */
 export * from './decoder/json.decoder';
+export * from './decoder/auto-detect.decoder';
 export * from './encoder/form-data.encoder';
 export * from './encoder/file.encoder';
 export * from './encoder/json.encoder';

@@ -1,8 +1,7 @@
 import { HttpResponse, HttpResponseStatus, RequestException, NetworkException, HttpRequest } from "@banquette/http";
 import { Writeable, isPromiseLike, isType } from "@banquette/utils-type";
 import { UsageException } from "@banquette/exception";
-import { ObservablePromise } from "@banquette/promise";
-import { ResolveCallback, RejectCallback, ProgressCallback } from "../../promise/src/types";
+import { ObservablePromise, ResolveCallback, RejectCallback, ProgressCallback } from "@banquette/promise";
 
 /**
  * A proxy to HttpResponse<T> making the request nullable.
