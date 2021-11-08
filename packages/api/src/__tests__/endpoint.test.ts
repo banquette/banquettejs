@@ -183,6 +183,7 @@ describe('Parameters handling', () => {
         'Valid cases': {
             '/test': ['/test', {}, {}],
             '/user/{id}': ['/user/2', {id: null}, {id: 2}],
+            '/user-full/{id}': ['/user-full/2?full=true', {'*': {}}, {id: 2, full: true}],
             '/test-{a}-{b}/{01c}': ['/test-a-b/c', {a: null, b: null, '01c': {defaultValue: 'c'}}, {a: 'a', b: 'b'}],
             '/test/{a}/{b}/test': ['/test/a/b/test?c=', {a: null, b: null, c: null}, {a: 'a', b: 'b', c: ''}],
             '/wildcard/{defined}': ['/wildcard/d?a=a&b=%F0%9F%98%8B', {defined: null, '*': null}, {defined: 'd', a: 'a', b: '😋'}],
