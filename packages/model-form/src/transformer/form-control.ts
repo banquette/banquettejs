@@ -6,8 +6,7 @@ import { Injector } from "@banquette/dependency-injection";
 import { FormComponentFactory } from "../form-component.factory";
 import { UsageException } from "@banquette/exception";
 import { isFormTransformer } from "./utils";
-
-export const FormControlTransformerSymbol = Symbol('form-control');
+import { FormControlTransformerSymbol } from "../contants";
 
 const factory = Injector.Get(FormComponentFactory);
 

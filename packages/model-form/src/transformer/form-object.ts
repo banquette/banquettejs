@@ -10,8 +10,7 @@ import { FormTransformerInterface } from "./form-transformer.interface";
 import { Complete } from "@banquette/utils-type";
 import { Injector } from "@banquette/dependency-injection";
 import { FormComponentFactory } from "../form-component.factory";
-
-export const FormObjectTransformerSymbol = Symbol('form-object');
+import { FormObjectTransformerSymbol } from "../contants";
 
 const factory = Injector.Get(FormComponentFactory);
 

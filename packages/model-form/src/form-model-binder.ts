@@ -26,10 +26,10 @@ import { UsageException, ExceptionFactory } from "@banquette/exception";
 import { proxy } from "@banquette/utils-misc";
 import { Constructor, isUndefined, Complete, isObject, ensureArray, isString, isArray } from "@banquette/utils-type";
 import { isFormTransformer } from "./transformer/utils";
-import { FormControl as FormControlTransformer, FormControlTransformerSymbol } from "./transformer/form-control";
-import { FormObject as FormObjectTransformer, FormObjectTransformerSymbol } from "./transformer/form-object";
-import { FormArrayTransformerSymbol } from "./transformer/form-array";
+import { FormControl as FormControlTransformer } from "./transformer/form-control";
+import { FormObject as FormObjectTransformer } from "./transformer/form-object";
 import { FormTransformerInterface } from "./transformer/form-transformer.interface";
+import { FormControlTransformerSymbol, FormArrayTransformerSymbol, FormObjectTransformerSymbol } from "./contants";
 
 interface TransformersTree {
     ctor: Constructor<any>;

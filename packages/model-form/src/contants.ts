@@ -1,6 +1,9 @@
-import { FormControlTransformerSymbol } from "./transformer/form-control";
-import { FormObjectTransformerSymbol } from "./transformer/form-object";
-import { FormArrayTransformerSymbol } from "./transformer/form-array";
+/**
+ * Transformers symbols.
+ */
+export const FormObjectTransformerSymbol = Symbol('form-object');
+export const FormArrayTransformerSymbol = Symbol('form-array');
+export const FormControlTransformerSymbol = Symbol('form-control');
 
 /**
  * If the transformer given as input to the @Form decorator

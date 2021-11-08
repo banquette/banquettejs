@@ -8,12 +8,10 @@ import {
 import { FormArray as FormArrayObject, FormComponentInterface } from '@banquette/form';
 import { FormControl } from "./form-control";
 import { isArray, Complete, isUndefined } from "@banquette/utils-type";
-import { FormRelatedTransformers } from "../contants";
+import { FormRelatedTransformers, FormArrayTransformerSymbol } from "../contants";
 import { FormTransformerInterface } from "./form-transformer.interface";
 import { Injector } from "@banquette/dependency-injection";
 import { FormComponentFactory } from "../form-component.factory";
-
-export const FormArrayTransformerSymbol = Symbol('form-array');
 
 const factory = Injector.Get(FormComponentFactory);
 
