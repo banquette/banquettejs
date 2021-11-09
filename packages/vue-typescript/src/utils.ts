@@ -18,7 +18,7 @@ import {
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,
     PRE_CONSTRUCTION_HOOKS,
-    VUE_CLASS_COMPONENT_OPTIONS_NAME
+    VUE_CLASS_COMPONENT_OPTIONS_NAME, DECORATORS_OPTIONS_HOLDER_CACHE_NAME
 } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ComposableDecoratorOptions } from "./decorator/composable.decorator";
@@ -162,6 +162,9 @@ function instantiate(ctor: Constructor, options: ComponentDecoratorOptions | Com
  * Add the necessary data to a constructor so it can be used as a Vue component.
  */
 export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface & {component: ComponentDecoratorOptions}) {
+    if (!isUndefined(ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME])) {
+        return ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME];
+    }
     const options: any = {};
 
     // Merge parent data
@@ -246,11 +249,21 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
     } else {
         injectVuePropertiesInCtor(fullOptionsMap, options);
     }
+    injectVuePropertiesInCtor(ctor, options);
+
+    // Save the final options object into the prototype for caching.
+    Object.defineProperty(ctor.prototype, DECORATORS_OPTIONS_HOLDER_CACHE_NAME, {
+        enumerable: false,
+        configurable: true,
+        writable: false,
+        value: options
+    });
     return options;
 }
 
-export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterface, rootProps: any = null, inst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
+export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, ctx: any): any => {
+        let inst = parentInst;
         const output: Record<any, any> = {};
         if (inst === null) {
             // Trick so Vue doesn't stop and show a warning because there is no render function on the component.
