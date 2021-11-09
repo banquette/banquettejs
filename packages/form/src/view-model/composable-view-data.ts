@@ -15,7 +15,6 @@ export class ComposableViewData {
         return this._value;
     }
     public set value(value: any) {
-        console.log('value changed', value);
         this._value = value;
         this.control.setValue(this.valueTransformer.viewToControl(value));
     }
