@@ -1,13 +1,6 @@
 import { UsageException } from "@banquette/exception";
 import { isNonEmptyString, kebabCase } from "@banquette/utils-string";
-import {
-    Constructor,
-    isFunction,
-    isObject,
-    isString,
-    isType,
-    isUndefined
-} from "@banquette/utils-type";
+import { Constructor, isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
 import { VUE_CLASS_COMPONENT_OPTIONS_NAME } from "../constants";
 import { generateVccOpts, getDecoratorsData } from "../utils";
 import { VueBuilder } from "../vue-builder";
