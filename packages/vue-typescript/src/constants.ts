@@ -29,6 +29,11 @@ export const DECORATORS_OPTIONS_HOLDER_NAME = '__bvcOpts';
 export const DECORATORS_OPTIONS_HOLDER_CACHE_NAME = '__bvcCache';
 
 /**
+ * Holds a reference on the component's constructor in VUE_CLASS_COMPONENT_OPTIONS_NAME.
+ */
+export const DECORATORS_CTOR_NAME = '__bvcCtor';
+
+/**
  * Vue lifecycle hooks.
  * @link https://v3.vuejs.org/guide/composition-api-lifecycle-hooks.html#lifecycle-hooks
  */

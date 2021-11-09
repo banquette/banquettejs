@@ -18,7 +18,7 @@ import {
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,
     PRE_CONSTRUCTION_HOOKS,
-    VUE_CLASS_COMPONENT_OPTIONS_NAME, DECORATORS_OPTIONS_HOLDER_CACHE_NAME
+    VUE_CLASS_COMPONENT_OPTIONS_NAME, DECORATORS_OPTIONS_HOLDER_CACHE_NAME, DECORATORS_CTOR_NAME
 } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ComposableDecoratorOptions } from "./decorator/composable.decorator";
@@ -63,6 +63,20 @@ function injectVuePropertiesInCtor(source: any, target: any): void {
             target[attribute] = source[attribute];
         }
     }
+}
+
+/**
+ * Take a constructor or __vccOpts object and ensure a constructor is returned.
+ */
+function getCtorFromVccOption(input: any): Constructor {
+    let ctor = isFunction(input) ? input : null;
+    if (ctor === null && isObject(input) && !isUndefined(input[DECORATORS_CTOR_NAME])) {
+        ctor = input[DECORATORS_CTOR_NAME];
+    }
+    if (ctor === null) {
+        throw new UsageException(`Failed to retrieve component's constructor. Maybe you gave the wrong input to the "components" option?`);
+    }
+    return ctor;
 }
 
 export function defineGetter<T, K extends keyof T>(obj: T, key: K, getter: () => T[K]): void {
@@ -201,7 +215,8 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
     if (!isUndefined(data.component.components)) {
         options.components = {};
         for (const key of getObjectKeys(data.component.components)) {
-            const componentDecoratorsData = getDecoratorsData((data.component.components[key] as any).prototype);
+            let componentConstructor = getCtorFromVccOption(data.component.components[key]);
+            const componentDecoratorsData = getDecoratorsData(componentConstructor.prototype);
             const componentName = !isUndefined(componentDecoratorsData.component) ? componentDecoratorsData.component.name! : key;
             options.components[componentName] = data.component.components[key];
         }
@@ -257,6 +272,14 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         configurable: true,
         writable: false,
         value: options
+    });
+
+    // Save the ctor so we can retrieve it from the __vccOpts object.
+    Object.defineProperty(options, DECORATORS_CTOR_NAME, {
+        enumerable: false,
+        configurable: true,
+        writable: false,
+        value: ctor
     });
     return options;
 }
