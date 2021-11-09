@@ -1,6 +1,7 @@
 import { FormViewControlInterface } from "../form-view-control.interface";
 import { ComposablePluginViewData } from "./composable-plugin-view-data";
 import { ValueTransformerInterface } from "./value-transformer/value-transformer.interface";
+import { FormError } from "../form-error";
 
 /**
  * The only part of a composable view model that should be exposed to the template.
@@ -46,6 +47,7 @@ export class ComposableViewData {
     public get unchanged()         : boolean { return this.control.unchanged }
     public get focused()           : boolean { return this.control.focused }
     public get unfocused()         : boolean { return this.control.unfocused }
+    public get errors()            : FormError[] { return this.control.errors }
 
     /**
      * The form control associated with the view.

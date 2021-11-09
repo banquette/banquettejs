@@ -9,6 +9,7 @@ import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 import { FormControlInterface } from "./form-control.interface";
 import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
+import { FormError } from "./form-error";
 
 export class FormControl extends AbstractFormComponent implements FormControlInterface {
     /**
@@ -263,12 +264,13 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
             get unchanged():         boolean { return that.unchanged },
             get focused():           boolean { return that.focused },
             get unfocused():         boolean { return that.unfocused },
+            get errors():            FormError[] { return that.errors },
             get defaultValue():      any { return that.defaultValue }
         },
             this.buildContextualizedApi<Omit<FormViewControlInterface,
                 'valid' | 'invalid' | 'validated' | 'notValidated' | 'validating' | 'notValidating' | 'validatedAndValid' |
                 'busy' | 'notBusy' | 'disabled' | 'enabled' | 'dirty' | 'pristine' | 'touched' | 'untouched' | 'changed' |
-                'unchanged' | 'focused' | 'unfocused' | 'defaultValue'>>({
+                'unchanged' | 'focused' | 'unfocused' | 'errors' | 'defaultValue'>>({
                 setValue: this.setValue,
                 markAsDisabled: this.markAsDisabled,
                 markAsEnabled: this.markAsEnabled,

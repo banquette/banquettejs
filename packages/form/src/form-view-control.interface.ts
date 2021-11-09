@@ -1,4 +1,5 @@
 import { FormViewModelInterface } from "./form-view-model.interface";
+import { FormError } from "./form-error";
 
 /**
  * Bridge between a FormControl and a view in the direction "View -> FormControl".
@@ -103,6 +104,11 @@ export interface FormViewControlInterface {
      * Inverse of `focused`.
      */
     readonly unfocused: boolean;
+
+    /**
+     * The list of errors of the component.
+     */
+    readonly errors: FormError[];
 
     /**
      * The original value of the control.

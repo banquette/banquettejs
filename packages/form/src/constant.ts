@@ -80,6 +80,12 @@ export enum ValidationStrategy {
 }
 
 /**
+ * The default validation to apply on the root level of the root,
+ * if none is defined by the end user.
+ */
+export const DefaultValidationStrategy = ValidationStrategy.OnChange;
+
+/**
  * The possible states of validation for a component.
  */
 export enum ValidationStatus {

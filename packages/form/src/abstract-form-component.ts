@@ -16,7 +16,7 @@ import {
     InverseState,
     StatesInverseMap,
     ValidationStatus,
-    ValidationStrategy, VirtualViolationType, EventsInheritanceMap
+    ValidationStrategy, VirtualViolationType, EventsInheritanceMap, DefaultValidationStrategy
 } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
@@ -595,7 +595,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         }
         this.unmarkBasicState([BasicState.Touched, BasicState.Dirty], this.id);
         this.validationStatus = ValidationStatus.Unknown;
-        // TODO: clear errors
+        this.clearErrors();
     }
 
     /**
@@ -613,7 +613,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      */
     protected getConcreteValidationStrategy(): ConcreteValidationStrategy {
         if (this.validationStrategy === ValidationStrategy.Inherit) {
-            return this.parent !== null ? this.parent.getConcreteValidationStrategy() : ValidationStrategy.None;
+            return this.parent !== null ? this.parent.getConcreteValidationStrategy() : DefaultValidationStrategy;
         }
         return this.validationStrategy;
     }
