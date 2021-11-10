@@ -4,11 +4,11 @@ import { ComposableViewModelInterface } from "./composable-view-model.interface"
 import { NoopTransformer } from "./value-transformer/noop-transformer.interface";
 import { ValueTransformerInterface } from "./value-transformer/value-transformer.interface";
 
-export abstract class AbstractComposableViewModel implements ComposableViewModelInterface {
+export abstract class AbstractComposableViewModel<ViewDataType extends ComposableViewData = ComposableViewData> implements ComposableViewModelInterface<ViewDataType> {
     /**
      * Public data used by the view when rendering.
      */
-    public viewData: ComposableViewData;
+    public viewData: ViewDataType;
 
     /**
      * The value transformer in use.
@@ -23,5 +23,5 @@ export abstract class AbstractComposableViewModel implements ComposableViewModel
     /**
      * Creat the view data object.
      */
-    protected abstract buildViewData(control: FormViewControlInterface): ComposableViewData;
+    protected abstract buildViewData(control: FormViewControlInterface): ViewDataType;
 }
