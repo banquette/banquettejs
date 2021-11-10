@@ -4,7 +4,7 @@ import { ValueTransformerInterface } from "./value-transformer/value-transformer
 /**
  * Bridge between a FormControl and a view in the direction "FormControl -> View".
  */
-export interface ComposableViewModelInterface<ViewDataType extends ComposableViewData = ComposableViewData> {
+export interface ComposableViewModelInterface<ViewDataType extends ComposableViewData> {
     /**
      * Public data used by the view when rendering.
      */
