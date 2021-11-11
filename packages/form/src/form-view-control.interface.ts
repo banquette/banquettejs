@@ -6,6 +6,16 @@ import { FormError } from "./form-error";
  */
 export interface FormViewControlInterface {
     /**
+     * Unique id of the control.
+     */
+    readonly id: number;
+
+    /**
+     * Unique id of the form tree.
+     */
+    readonly formId: string;
+
+    /**
      * A component is `valid` when the validation has run and no error has been found.
      */
     readonly valid: boolean;

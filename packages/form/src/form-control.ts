@@ -245,6 +245,8 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
     private buildControlViewDecorator(): FormViewControlInterface {
         const that = this;
         return Object.assign({
+            get id():                number { return that.id },
+            get formId():            string { return that.formId },
             get valid():             boolean { return that.valid },
             get invalid():           boolean { return that.invalid },
             get validated():         boolean { return that.validated },
@@ -268,7 +270,7 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
             get defaultValue():      any { return that.defaultValue }
         },
             this.buildContextualizedApi<Omit<FormViewControlInterface,
-                'valid' | 'invalid' | 'validated' | 'notValidated' | 'validating' | 'notValidating' | 'validatedAndValid' |
+                'id' | 'formId' | 'valid' | 'invalid' | 'validated' | 'notValidated' | 'validating' | 'notValidating' | 'validatedAndValid' |
                 'busy' | 'notBusy' | 'disabled' | 'enabled' | 'dirty' | 'pristine' | 'touched' | 'untouched' | 'changed' |
                 'unchanged' | 'focused' | 'unfocused' | 'errors' | 'defaultValue'>>({
                 setValue: this.setValue,

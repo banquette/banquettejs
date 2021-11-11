@@ -1,5 +1,5 @@
 import { EventDispatcher, EventDispatcherInterface, UnsubscribeFunction } from "@banquette/event";
-import { UsageException, ExceptionFactory } from "@banquette/exception";
+import { UsageException } from "@banquette/exception";
 import { removeFromArray } from "@banquette/utils-array";
 import { matchBest, MatchResult } from "@banquette/utils-glob";
 import { proxy } from "@banquette/utils-misc";
@@ -16,7 +16,10 @@ import {
     InverseState,
     StatesInverseMap,
     ValidationStatus,
-    ValidationStrategy, VirtualViolationType, EventsInheritanceMap, DefaultValidationStrategy
+    ValidationStrategy,
+    VirtualViolationType,
+    EventsInheritanceMap,
+    DefaultValidationStrategy
 } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
@@ -29,16 +32,36 @@ import { ConcreteValidationStrategy, ContextStackItem, State } from "./type";
 import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
 
-/**
- * Used to give a unique id to every new form component.
- */
-let maxId: number = 0;
-
 export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
     /**
-     * Unique id of the component.
+     * Used to give a unique id to every new form component.
      */
-    public readonly id: number = ++maxId;
+    private static MaxId: number = 0;
+
+    /**
+     * Array of known form ids to 100% ensure there will never be any duplicate.
+     */
+    private static KnownExtendedIds: string[] = [];
+
+    /**
+     * Unique numerical id of the component.
+     */
+    public readonly id: number = ++AbstractFormComponent.MaxId;
+
+    /**
+     * Extended unique id for the whole form.
+     *
+     * This id is a longer string, guaranteed to be unique between forms and meant to be usable as id in the DOM.
+     */
+    public get formId(): string {
+        if (this.parent !== null) {
+            return this.root.formId;
+        }
+        if (this.treeId === null) {
+            this.treeId = this.generateTreeId();
+        }
+        return this.treeId;
+    }
 
     /**
      * The absolute path of the component from the root of the form.
@@ -369,6 +392,14 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * Will stay null until a subscription is made for performance reason.
      */
     private eventDispatcher: EventDispatcherInterface|null = null;
+
+    /**
+     * Extended unique id for the whole tree.
+     * This is only defined if the id is requested through `formId` and if the component has no parent.
+     *
+     * This id is a longer string, guaranteed to be unique between forms and meant to be usable as id in the DOM.
+     */
+    private treeId: string|null = null;
 
     /**
      * Get/Set the FormControl currently on focus.
@@ -986,6 +1017,19 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             this.parent.decorated.remove(this.name);
         }
         (this as Writeable<AbstractFormComponent>).parent = null;
+    }
+
+    /**
+     * Generate a unique string id for the form.
+     */
+    private generateTreeId(): string {
+        do {
+            const candidate: string = Math.random().toString(36).substr(2, 9);
+            if (AbstractFormComponent.KnownExtendedIds.indexOf(candidate) < 0) {
+                AbstractFormComponent.KnownExtendedIds.push(candidate);
+                return candidate;
+            }
+        } while (true);
     }
 
     /**

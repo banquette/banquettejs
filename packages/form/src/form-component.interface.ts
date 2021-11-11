@@ -18,6 +18,13 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     readonly id: number;
 
     /**
+     * Extended unique id for the whole form.
+     *
+     * This id is a longer string, guaranteed to be unique between forms and meant to be usable as id in the DOM.
+     */
+    readonly formId: string;
+
+    /**
      * The absolute path of the component from the root of the form.
      *
      * The path is composed of each level name separated by "/".
