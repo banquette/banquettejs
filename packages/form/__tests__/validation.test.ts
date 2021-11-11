@@ -243,7 +243,8 @@ describe('Implicit validation', () => {
 
     test('setting the validation strategy on the root node propagates down', () => {
         const categoryName = form.get('category/name');
-        expect(form.validationStrategy).toEqual(ValidationStrategy.Inherit);
+
+        form.setValidationStrategy(ValidationStrategy.None);
         expect(categoryName.validationStrategy).toEqual(ValidationStrategy.Inherit);
         expect(form.validated || categoryName.validated).toEqual(false);
 
@@ -307,6 +308,7 @@ describe('Implicit validation', () => {
         });
 
         test('don\'t affect siblings', () => {
+            form.setValidationStrategy(ValidationStrategy.None);
             const name = form.get('name');
             const category = form.get('category');
             category.setValidationStrategy(ValidationStrategy.OnChange);
