@@ -3,10 +3,9 @@ import { ModelChangeEvent, ModelChangeType } from "./event/model-change.event";
 import { ModelTransformMetadataService } from "./model-transform-metadata.service";
 import { ensureArray, Constructor, isNumeric } from "@banquette/utils-type";
 
-import 'observable-slim/observable-slim.js';
+// @ts-ignore
+import ObservableSlim from 'observable-slim/observable-slim.js';
 import { ModelMetadataService } from "./model-metadata.service";
-
-declare const ObservableSlim: any;
 
 interface ObservableSlimChange {
     type: 'update'|'add'|'delete';
