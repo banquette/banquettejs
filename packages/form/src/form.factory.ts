@@ -1,7 +1,7 @@
 import { SharedConfiguration } from "@banquette/config";
 import { Injector } from "@banquette/dependency-injection";
 import { isNonEmptyString } from "@banquette/utils-string";
-import { isArray, isObject } from "@banquette/utils-type";
+import { isArray, isObject, isUndefined } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
 import { FormConfigurationSymbol } from "./config";
 import { FormArray } from "./form-array";
@@ -70,6 +70,9 @@ export class FormFactory {
         try {
             if (isObject(input)) {
                 if (input instanceof FormControl) {
+                    if (!isUndefined(validator)) {
+                        input.setValidator(validator);
+                    }
                     return input;
                 }
                 const component: FormGroupInterface = isArray(input) ? new FormArray([], validator) : new FormObject({}, validator);
