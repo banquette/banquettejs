@@ -42,3 +42,26 @@ export type Complete<T> = {
  * Modify a type by redefining some of its properties.
  */
 export type Modify<T, R> = Omit<T, keyof R> & R;
+
+/**
+ * Merge properties of two types.
+ *
+ * @see https://stackoverflow.com/a/47379147/1110635
+ */
+export type SameProperties<A, B> = {[P in keyof A & keyof B]: A[P] | B[P]};
+
+/**
+ * Intersect properties of two types that have the same type in both.
+ *
+ * @see https://stackoverflow.com/a/63874264/1110635
+ */
+export type SamePropertiesAndType<A, B> = Pick<
+    A,
+    {
+        [K in keyof A & keyof B]: A[K] extends B[K]
+        ? B[K] extends A[K]
+            ? K
+            : never
+        : never;
+    }[keyof A & keyof B]
+    >;
