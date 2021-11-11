@@ -36,9 +36,7 @@ export * from './exception/component-not-found.exception';
  */
 export * from './view-model/value-transformer/value-transformer.interface';
 export * from './view-model/value-transformer/noop-transformer.interface';
-export * from './view-model/composable-view-model.interface';
-export * from './view-model/composable-view-data';
-export * from './view-model/abstract-composable-view-model';
-export * from './view-model/composable-plugin-view-data';
-export * from './view-model/type/text/text.view-model';
-export * from './view-model/type/text/text.view-data';
+export * from './view-model/view-model.interface';
+export * from './view-model/view-model-composable.interface';
+export * from './view-model/abstract-view-model';
+export * from './view-model/type/text.view-model';
