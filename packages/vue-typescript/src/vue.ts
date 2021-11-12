@@ -1,11 +1,14 @@
 import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle } from "vue";
 import { WatchOptions } from "@vue/runtime-core";
+import { DECORATORS_CTOR_NAME } from "./constants";
 
 /**
  * Fake implementation of the public attributes of the vue instance.
  * The real implementation will be swapped when the component is initialized if it extends this class.
  */
 export class Vue implements ComponentPublicInstance {
+    static [DECORATORS_CTOR_NAME]: any;
+
     public $!: ComponentInternalInstance;
     public $attrs!: Record<string, unknown>;
     public $data: any;

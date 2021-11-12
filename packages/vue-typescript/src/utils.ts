@@ -13,12 +13,15 @@ import {
 } from "@banquette/utils-type";
 import { WritableComputedOptions } from "@vue/reactivity";
 import { WatchOptions } from "@vue/runtime-core";
-import { computed, nextTick, Ref, ref, toRefs, watch, getCurrentInstance } from "vue";
+import { computed, nextTick, Ref, ref, toRefs, watch, getCurrentInstance, ComponentPublicInstance } from "vue";
 import {
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,
     PRE_CONSTRUCTION_HOOKS,
-    VUE_CLASS_COMPONENT_OPTIONS_NAME, DECORATORS_OPTIONS_HOLDER_CACHE_NAME, DECORATORS_CTOR_NAME
+    VUE_CLASS_COMPONENT_OPTIONS_NAME,
+    DECORATORS_OPTIONS_HOLDER_CACHE_NAME,
+    DECORATORS_CTOR_NAME,
+    COMPONENT_INSTANCE_ATTR_NAME
 } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ComposableDecoratorOptions } from "./decorator/composable.decorator";
@@ -77,6 +80,11 @@ function getCtorFromVccOption(input: any): Constructor {
         throw new UsageException(`Failed to retrieve component's constructor. Maybe you gave the wrong input to the "components" option?`);
     }
     return ctor;
+}
+
+export function isComponentInstance<T extends Constructor<Vue>>(component: any, candidate: T): component is InstanceType<T> {
+    // @ts-ignore
+    return component instanceof candidate[DECORATORS_CTOR_NAME];
 }
 
 export function defineGetter<T, K extends keyof T>(obj: T, key: K, getter: () => T[K]): void {
@@ -318,8 +326,6 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 defineGetter(inst, '$attrs', () => ctx.attrs);
                 defineGetter(inst, '$slots', () => ctx.slots);
                 defineGetter(inst, '$emit', () => ctx.emit);
-
-                // TODO: Find a way to access these missing attributes and methods
                 defineGetter(inst, '$', () => vueInstance.ctx.$);
                 defineGetter(inst, '$data', () => vueInstance.ctx.$data);
                 defineGetter(inst, '$el', () => vueInstance.ctx.$el);
@@ -329,12 +335,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 defineGetter(inst, '$forceUpdate', () => vueInstance.ctx.$forceUpdate);
                 defineGetter(inst, '$nextTick', () => vueInstance.ctx.$nextTick);
                 defineGetter(inst, '$watch', () => vueInstance.ctx.$watch);
-                defineGetter(inst, '$parent', () => {
-                    if (!vueInstance.ctx.$parent || !vueInstancesMap.has(vueInstance.ctx.$parent._)) {
-                        return vueInstance.ctx.$parent;
-                    }
-                    return vueInstancesMap.get(vueInstance.ctx.$parent._);
-                });
+                defineGetter(inst, '$parent', () => vueInstance.ctx.$parent ? vueInstance.ctx.$parent[COMPONENT_INSTANCE_ATTR_NAME] : null);
             }
             rootProps = props;
         }
@@ -601,6 +602,12 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 Object.assign(output, composableOutput);
             }
         }
+        Object.defineProperty(output, COMPONENT_INSTANCE_ATTR_NAME, {
+            enumerable: false,
+            configurable: false,
+            writable: false,
+            value: inst
+        });
         return output;
     };
 }

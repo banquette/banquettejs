@@ -34,6 +34,12 @@ export const DECORATORS_OPTIONS_HOLDER_CACHE_NAME = '__bvcCache';
 export const DECORATORS_CTOR_NAME = '__bvcCtor';
 
 /**
+ * Hidden attribute used to maintained a link between the Vue object and the real object instance.
+ * Used to get the parent component instance.
+ */
+export const COMPONENT_INSTANCE_ATTR_NAME = '__bvcInst';
+
+/**
  * Vue lifecycle hooks.
  * @link https://v3.vuejs.org/guide/composition-api-lifecycle-hooks.html#lifecycle-hooks
  */
