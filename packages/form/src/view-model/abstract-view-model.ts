@@ -45,6 +45,11 @@ export abstract class AbstractViewModel implements ViewModelInterface {
     public get errors()             : FormError[] { return this.getControl().errors }
 
     /**
+     * HTML tab index (for keyboard navigation).
+     */
+    public tabindex: number = 0;
+
+    /**
      * Wrap the control into a function so watchers put on the view model will not include it.
      */
     private getControl!: () => FormViewControlInterface;
