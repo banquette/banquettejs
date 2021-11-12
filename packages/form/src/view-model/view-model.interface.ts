@@ -7,6 +7,11 @@ export interface ViewModelInterface {
     value: any;
 
     /**
+     * HTML tab index (for keyboard navigation).
+     */
+    tabindex: number;
+
+    /**
      * The value transformer in use.
      */
     readonly valueTransformer: ValueTransformerInterface;
@@ -15,4 +20,14 @@ export interface ViewModelInterface {
      * Initialize the view model.
      */
     initialize(): void;
+
+    /**
+     * Mark the control as focused.
+     */
+    onFocus(): void;
+
+    /**
+     * Mark the control as unfocused.
+     */
+    onBlur(): void;
 }
