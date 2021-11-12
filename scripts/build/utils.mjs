@@ -214,14 +214,16 @@ export function cleanupBuilds(configs) {
 
 export function filterBuilds(builds, filter, isWatch) {
     builds = Object.assign({}, builds);
-    const filters = filter ? filter.split(',').map((e) => new RegExp(e)) : [];
+    const filters = filter ? filter.split(',').map((e) => e[0] === ':' ? e.substring(1) : new RegExp(e)) : [];
+    const stripBuild = (i) => i.replace(/-(esm|((cjs|umd)-(dev|prod)))/, '');
     if (!filter) {
         return builds;
     }
     return Object.keys(builds)
         .filter((key) => {
+            const pack = stripBuild(key);
             for (const filter of filters) {
-                if (key.match(filter)) {
+                if ((typeof(filter) === 'object' && key.match(filter)) || (typeof(filter) === 'string' && pack === filter)) {
                     return true;
                 }
             }
