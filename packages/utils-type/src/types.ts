@@ -17,7 +17,7 @@ export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
  * Shortcut type for primitive values.
  * "undefined" and "symbol" are technically primitive but are voluntarily omitted.
  */
-export type Primitive = string | number | boolean | null;
+export type Primitive = string | number | bigint | boolean | null;
 
 /**
  * Define an abstract class (newable function with a prototype and no constructor).
