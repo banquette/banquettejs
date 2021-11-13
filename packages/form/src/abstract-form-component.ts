@@ -31,17 +31,13 @@ import { FormParentComponentInterface } from "./form-parent-component.interface"
 import { ConcreteValidationStrategy, ContextStackItem, State } from "./type";
 import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
+import { uniqueId } from "@banquette/utils-random";
 
 export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
     /**
      * Used to give a unique id to every new form component.
      */
     private static MaxId: number = 0;
-
-    /**
-     * Array of known form ids to 100% ensure there will never be any duplicate.
-     */
-    private static KnownExtendedIds: string[] = [];
 
     /**
      * Unique numerical id of the component.
@@ -58,7 +54,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             return this.root.formId;
         }
         if (this.treeId === null) {
-            this.treeId = this.generateTreeId();
+            this.treeId = uniqueId();
         }
         return this.treeId;
     }
@@ -1017,19 +1013,6 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             this.parent.decorated.remove(this.name);
         }
         (this as Writeable<AbstractFormComponent>).parent = null;
-    }
-
-    /**
-     * Generate a unique string id for the form.
-     */
-    private generateTreeId(): string {
-        do {
-            const candidate: string = Math.random().toString(36).substr(2, 9);
-            if (AbstractFormComponent.KnownExtendedIds.indexOf(candidate) < 0) {
-                AbstractFormComponent.KnownExtendedIds.push(candidate);
-                return candidate;
-            }
-        } while (true);
     }
 
     /**
