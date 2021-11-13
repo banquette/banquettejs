@@ -1,24 +1,9 @@
 import 'reflect-metadata';
-import { noop } from "@banquette/utils-misc";
-import { ensureArray } from "@banquette/utils-type";
 import { ltrim, rtrim, trim } from "../src";
-
-let currentTestingFunction: Function = noop;
-
-function createTestSuite(testFunction: Function, tests: Array<[string, string|[string, string]]>) {
-    beforeAll(() => {
-        currentTestingFunction = testFunction;
-    });
-    for (const testItem of tests) {
-        const args = ensureArray(testItem[1]);
-        test(testItem[0], () => {
-            expect(currentTestingFunction.apply(null, [testItem[0], args[1]])).toBe(args[0]);
-        });
-    }
-}
+import { createGenericTestSuite } from "../../__tests__/utils";
 
 describe('trim', () => {
-    createTestSuite(trim, [
+    createGenericTestSuite(trim, [
         ["   a bc   "        , "a bc"],
         ["a bc\n\n"          , "a bc"],
         ["\ta bc"            , "a bc"],
@@ -36,7 +21,7 @@ describe('trim', () => {
 });
 
 describe('ltrim', () => {
-    createTestSuite(ltrim, [
+    createGenericTestSuite(ltrim, [
         ["   a bc   "        , "a bc   "],
         ["a bc\n\n"          , "a bc\n\n"],
         ["\ta bc"            , "a bc"],
@@ -51,7 +36,7 @@ describe('ltrim', () => {
 });
 
 describe('rtrim', () => {
-    createTestSuite(rtrim, [
+    createGenericTestSuite(rtrim, [
         ["   a bc   "        , "   a bc"],
         ["a bc\n\n"          , "a bc"],
         ["\ta bc"            , "\ta bc"],
