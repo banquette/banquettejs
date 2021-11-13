@@ -10,7 +10,7 @@ const existingIds: string[] = [];
  * @param length the length of the id to generate
  * @param ensureUnique if `true` the id is confronted to all ids previously generated to ensure uniqueness
  */
-export function uniqueId(length: number, ensureUnique: boolean = true): string {
+export function uniqueId(length: number = 9, ensureUnique: boolean = true): string {
     let output = '';
     length = Math.max(1, length);
     do {
