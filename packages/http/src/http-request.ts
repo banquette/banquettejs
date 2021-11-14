@@ -1,7 +1,17 @@
 import { UsageException } from "@banquette/exception";
 import { AdapterInterface } from "./adapter/adapter.interface";
-import { HttpMethod } from "./constants";
+import { HttpMethod, UrlParameterType } from "./constants";
 import { HttpResponse } from "./http-response";
+import { UrlParameterInterface } from "./url-parameter.interface";
+import { replaceStringVariables } from "@banquette/utils-string";
+import { extend } from "@banquette/utils-object";
+import qs from 'qs';
+import { Injector } from "@banquette/dependency-injection";
+import { SharedConfiguration } from "@banquette/config";
+import { HttpConfigurationInterface } from "./http-configuration.interface";
+import { HttpConfigurationSymbol } from "./config";
+
+let Configuration: HttpConfigurationInterface|null = null;
 
 export class HttpRequest {
     /**
@@ -20,6 +30,41 @@ export class HttpRequest {
     public readonly tryCount: number = 0;
 
     /**
+     * The static url is the finalize version of the url, including all parameters.
+     * This is the url ready to be used.
+     */
+    public get staticUrl(): string {
+        const paramsNames = Object.keys(this.params);
+        if (!paramsNames.length) {
+            return this.url;
+        }
+        let queryParams: Record<string, string> = {};
+        const urlParams: Record<string, string> = {};
+        const urlVars = this.extractUrlVariables(this.url);
+        for (const paramName of paramsNames) {
+            const param = this.params[paramName];
+            if (param.type === UrlParameterType.Auto) {
+                param.type = urlVars.indexOf(paramName) > -1 ? UrlParameterType.Url : UrlParameterType.Query;
+            }
+            if (param.type === UrlParameterType.Url) {
+                urlParams[paramName] = param.value;
+            } else {
+                queryParams[paramName] = param.value;
+            }
+        }
+        let url = replaceStringVariables(this.url, urlParams, '{', '}');
+        if (Object.keys(queryParams).length > 0) {
+            if (url.indexOf('?') > -1) {
+                const existingParams = qs.parse(url.substring(url.indexOf('?') + 1));
+                queryParams = extend({}, [existingParams, queryParams]);
+                url = url.substring(0, url.indexOf('?'));
+            }
+            url += '?' + qs.stringify(queryParams, HttpRequest.GetConfiguration().queryString);
+        }
+        return url;
+    }
+
+    /**
      * Track if the request has been canceled BEFORE the adapter is set.
      */
     private canceled: boolean = false;
@@ -28,7 +73,8 @@ export class HttpRequest {
      * Create a Request object.
      *
      * @param method            HTTP method.
-     * @param url               Ready to use url.
+     * @param url               Base url.
+     * @param params            Url parameters.
      * @param payload           Body of the request.
      * @param payloadType       Format of the payload.
      * @param responseType      Format of the response.
@@ -44,6 +90,7 @@ export class HttpRequest {
      */
     public constructor(public method: HttpMethod,
                        public url: string,
+                       public params: Record<string, UrlParameterInterface>,
                        public payload: any,
                        public payloadType: symbol,
                        public responseType: symbol,
@@ -94,5 +141,28 @@ export class HttpRequest {
             return ;
         }
         this.adapter.cancel();
+    }
+
+    /**
+     * Extract variables names from a url.
+     */
+    private extractUrlVariables(url: string): string[] {
+        let output: string[] = [], matches;
+        const reg = new RegExp('{([a-z0-9*._-]+)}', 'gi');
+        while ((matches = reg.exec(url)) !== null) {
+            output.push(matches[1]);
+        }
+        return output;
+    }
+
+    /**
+     * Get the configuration.
+     * Not injected in the constructor to keep the creation of endpoints out of the injector.
+     */
+    private static GetConfiguration(): HttpConfigurationInterface {
+        if (Configuration === null) {
+            Configuration = Injector.Get(SharedConfiguration).get<HttpConfigurationInterface>(HttpConfigurationSymbol);
+        }
+        return Configuration;
     }
 }

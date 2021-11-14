@@ -24,7 +24,8 @@ import {
     HttpRequest,
     HttpRequestBuilder,
     HttpRequestFactory,
-    HttpService
+    HttpService,
+    UrlParameterType
 } from "../src";
 
 import { TestResponses } from "./__mocks__/test-responses";
@@ -39,6 +40,84 @@ config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     maxSimultaneousRequests: 5,
     requestRetryCount: 5,
     adapter: XhrAdapter
+});
+
+/**
+ * Url
+ */
+describe('url', () => {
+    test('default parameter type is auto', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user/{id}/{other}')
+            .params({id: 2, other: 'test'})
+            .getRequest();
+        expect(request.params.id.type).toEqual(UrlParameterType.Auto);
+    });
+
+    test('the url can take parameters', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user/{id}/{other}')
+            .params({id: 2, other: 'test'})
+            .getRequest();
+        expect(request.staticUrl).toEqual('/user/2/test');
+    });
+
+    test('an url parameter with no value is untouched', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user/{id}/{other}')
+            .params({id: 2})
+            .getRequest();
+        expect(request.staticUrl).toEqual('/user/2/{other}');
+    });
+
+    test('a parameter not found in the url is added to the query string', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user/{id}')
+            .params({id: 2, other: 'test'})
+            .getRequest();
+        expect(request.staticUrl).toEqual('/user/2?other=test');
+    });
+
+    test('parameters can be added to an existing query string', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user-{id}?id=254&final=tochange&existing=value')
+            .params({id: 2, other: 'test', final: 'final'})
+            .getRequest();
+        expect(request.staticUrl).toEqual('/user-2?id=254&final=final&existing=value&other=test');
+    });
+
+    test('a parameter forced in the url with no placeholder is ignored', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user')
+            .params({id: 2}, UrlParameterType.Url)
+            .getRequest();
+        expect(request.staticUrl).toEqual('/user');
+    });
+
+    test('a parameter forced in the query doesn\'t touch matching placeholders in the url', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user/{id}')
+            .params({id: 2}, UrlParameterType.Query)
+            .getRequest();
+        expect(request.staticUrl).toEqual('/user/{id}?id=2');
+    });
+
+    test('url parameters are normalized to string', () => {
+        const request = (new HttpRequestBuilder())
+            .url('/user/{id}')
+            .params({
+                num: 2,
+                boolTrue: true,
+                boolFalse: false,
+                str: 'value'
+            }).getRequest();
+        expect(request.params).toMatchObject({
+            num: {value: '2'},
+            boolTrue: {value: 'true'},
+            boolFalse: {value: 'false'},
+            str: {value: 'value'}
+        });
+    });
 });
 
 /**
@@ -98,6 +177,7 @@ describe('requests forgery', () => {
         })).toStrictEqual(HttpRequestFactory.Create({
             method: HttpMethod.GET,
             url: '//test',
+            params: {},
             payloadType: PayloadTypeFormData,
             responseType: ResponseTypeAutoDetect,
             headers: {},

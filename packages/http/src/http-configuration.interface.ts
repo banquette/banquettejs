@@ -40,4 +40,17 @@ export interface HttpConfigurationInterface extends ConfigurationInterface {
      * This can be overridden for each request.
      */
     requestRetryDelay: number|'auto';
+
+    /**
+     * Options directly passed to 'qs'.
+     * @see https://github.com/ljharb/qs
+     */
+    queryString: {
+        arrayFormat?: 'indices'|'brackets'|'repeat'|'comma';
+        indices?: boolean;
+        format?: 'RFC1738'|'RFC3986';
+        encodeValuesOnly?: boolean;
+        allowDots?: boolean;
+        charset?: 'utf-8'|'iso-8859-1';
+    };
 }

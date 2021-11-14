@@ -194,7 +194,7 @@ describe('Parameters handling', () => {
             'https://test.com/test?existing=a&other=2': ['https://test.com/test?existing=b&other=2', {existing: null}, {existing: 'b'}]
         },
         'Invalid cases': {
-            '/user/{id}': [MissingRequiredParameterException, {id: true}, {}],
+             '/user/{id}': [MissingRequiredParameterException, {id: true}, {}],
             '/user-min/{id}': [InvalidParameterException, {id: Min(5)}, {id: 2}],
         }
     };
@@ -210,9 +210,9 @@ describe('Parameters handling', () => {
                         parameters: testData[1]
                     });
                     if (isString(testData[0])) {
-                        expect(endpoint.buildUrl(testData[2])).toEqual(testData[0]);
+                        expect(endpoint.buildRequest(null, testData[2]).staticUrl).toEqual(testData[0]);
                     } else {
-                        expect(() => endpoint.buildUrl(testData[2])).toThrow(testData[0]);
+                        expect(() => endpoint.buildRequest(null, testData[2]).staticUrl).toThrow(testData[0]);
                     }
                 });
             }

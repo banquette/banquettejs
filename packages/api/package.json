@@ -15,7 +15,6 @@
         "./package.json": "./package.json"
     },
     "dependencies": {
-        "qs": "^6.10.1",
         "@banquette/exception": "^0.0.2",
         "@banquette/utils": "^0.0.2"
     },

@@ -17,7 +17,8 @@
     "dependencies": {
         "@banquette/core": "^0.0.1",
         "@banquette/event": "^0.0.1",
-        "@banquette/utils-base64": "^0.0.5"
+        "@banquette/utils-base64": "^0.0.5",
+        "qs": "^6.10.1"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

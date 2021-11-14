@@ -57,7 +57,7 @@ export class XhrAdapter implements AdapterInterface {
             this.xhr.upload.addEventListener('load', proxy(this.onProgress, this));
 
             // Configure
-            this.xhr.open(request.method, request.url, true);
+            this.xhr.open(request.method, request.staticUrl, true);
             this.xhr.timeout = request.timeout;
             this.xhr.withCredentials = request.withCredentials;
             if (request.mimeType !== null) {

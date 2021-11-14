@@ -1,4 +1,11 @@
-import { HttpMethod, PayloadTypeJson, ResponseTypeJson, HttpRequest, HttpRequestBuilder } from "@banquette/http";
+import {
+    HttpMethod,
+    PayloadTypeJson,
+    ResponseTypeJson,
+    HttpRequest,
+    HttpRequestBuilder,
+    UrlParameterType
+} from "@banquette/http";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
 import {
     ensureObject,
@@ -16,14 +23,7 @@ import { MissingRequiredParameterException } from "./exception/missing-required-
 import { extend } from "@banquette/utils-object";
 import { UsageException } from "@banquette/exception";
 import { InvalidParameterException } from "./exception/invalid-parameter.exception";
-import { replaceStringVariables } from "@banquette/utils-string";
 import { UnsupportedParametersException } from "./exception/unsupported-parameters.exception";
-import { ApiEndpointsConfigurationInterface } from "./api-endpoints-configuration.interface";
-import { Injector } from "@banquette/dependency-injection";
-import { SharedConfiguration } from "@banquette/config";
-import { ApiConfigurationSymbol } from "./config";
-import { ApiConfigurationInterface } from "./api-configuration.interface";
-import qs from 'qs';
 
 interface ParametersBag {
     url: Record<string, string>;
@@ -31,8 +31,6 @@ interface ParametersBag {
 }
 
 export class ApiEndpoint {
-    private static Configuration: ApiEndpointsConfigurationInterface|null = null;
-
     /**
      * The url of the endpoint.
      * The url can contain variables, surrounded by brackets "{" and "}":
@@ -88,35 +86,17 @@ export class ApiEndpoint {
     /**
      * Try to create an http request for the endpoint.
      */
-    public buildRequest(payload: any = null, urlParameters: Record<string, string> = {}): HttpRequest {
+    public buildRequest(payload: any = null, parameters: Record<string, string> = {}): HttpRequest {
+        const parametersBag = this.sortAndValidateParameters(parameters);
         return new HttpRequestBuilder()
-            .url(this.buildUrl(urlParameters))
+            .url(this.url)
+            .params(parametersBag.url, UrlParameterType.Url)
+            .params(parametersBag.query, UrlParameterType.Query)
             .method(this.method)
             .payload(payload, this.payloadType)
             .responseType(this.responseType)
             .headers(this.headers)
             .getRequest();
-    }
-
-    /**
-     * Try to generate a final url for this endpoint by integrating the parameters given as input.
-     * This method may throw if parameters are missing or don't obey set rules.
-     */
-    public buildUrl(parameters: Record<string, string>): string {
-        let url = this.url;
-        const parametersBag = this.sortAndValidateParameters(parameters);
-        if (Object.keys(parametersBag.url).length > 0) {
-            url = replaceStringVariables(url, parametersBag.url, '{', '}');
-        }
-        if (Object.keys(parametersBag.query).length > 0) {
-            if (url.indexOf('?') > -1) {
-                const existingParams = qs.parse(url.substring(url.indexOf('?') + 1));
-                parametersBag.query = extend({}, [existingParams, parametersBag.query]);
-                url = url.substring(0, url.indexOf('?'));
-            }
-            url += '?' + qs.stringify(parametersBag.query, ApiEndpoint.GetConfiguration().queryString);
-        }
-        return url;
     }
 
     /**
@@ -247,17 +227,5 @@ export class ApiEndpoint {
             }]);
         }
         return output;
-    }
-
-    /**
-     * Get the configuration.
-     * Not injected in the constructor to keep the creation of endpoints out of the injector.
-     */
-    private static GetConfiguration(): ApiEndpointsConfigurationInterface {
-        if (ApiEndpoint.Configuration === null) {
-            ApiEndpoint.Configuration = Injector.Get(SharedConfiguration)
-                .get<ApiConfigurationInterface>(ApiConfigurationSymbol).endpoints;
-        }
-        return ApiEndpoint.Configuration;
     }
 }

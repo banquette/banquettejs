@@ -3,10 +3,12 @@ import { HttpMethod } from "./constants";
 import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";
 import { HttpRequest } from "./http-request";
+import { UrlParameterInterface } from "./url-parameter.interface";
 
 export interface HttpRequestFactoryConfig {
     method?: HttpMethod,
     url: string,
+    params?: Record<string, UrlParameterInterface>,
     payload?: any,
     payloadType?: symbol,
     responseType?: symbol,
@@ -28,6 +30,7 @@ export class HttpRequestFactory {
         return new HttpRequest(
             input.method || HttpMethod.GET,
             input.url,
+            input.params || {},
             !isUndefined(input.payload) ? input.payload : null,
             input.payloadType || PayloadTypeFormData,
             input.responseType || ResponseTypeAutoDetect,

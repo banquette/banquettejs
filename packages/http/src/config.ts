@@ -9,5 +9,13 @@ Injector.Get<SharedConfiguration>(SharedConfiguration).register<HttpConfiguratio
     maxSimultaneousRequests: 3,
     requestRetryDelay: 'auto',
     requestRetryCount: 5,
-    requestTimeout: 10000
+    requestTimeout: 10000,
+    queryString: {
+        arrayFormat: 'brackets',
+        indices: true,
+        format: 'RFC3986',
+        encodeValuesOnly: false,
+        allowDots: false,
+        charset: 'utf-8'
+    }
 }, true);

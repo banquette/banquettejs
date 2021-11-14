@@ -1,11 +1,11 @@
 import { UsageException } from "@banquette/exception";
-import { extend } from "@banquette/utils-object";
-import { isUndefined } from "@banquette/utils-type";
-import { HttpMethod } from "./constants";
+import { isUndefined, Primitive } from "@banquette/utils-type";
+import { HttpMethod, UrlParameterType } from "./constants";
 import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";
 import { HttpRequest } from "./http-request";
 import { HttpRequestFactory } from "./http-request.factory";
+import { UrlParameterInterface } from "./url-parameter.interface";
 
 export class HttpRequestBuilder {
     private _method: HttpMethod = HttpMethod.GET;
@@ -20,6 +20,7 @@ export class HttpRequestBuilder {
     private _retry: number|null = null;
     private _retryDelay: number|'auto'|null = null;
     private _priority: number|null = null;
+    private _params: Record<string, UrlParameterInterface> = {};
     private _extras: Record<string, any> = {};
 
     /**
@@ -71,10 +72,36 @@ export class HttpRequestBuilder {
     }
 
     /**
-     * Set the whole headers object, removing all previously set headers.
+     * Add multiple url parameters.
+     */
+    public params(params: Record<string, Primitive>, type: UrlParameterType = UrlParameterType.Auto): HttpRequestBuilder {
+        for (const name of Object.keys(params)) {
+            this.param(name, params[name], type);
+        }
+        return this;
+    }
+
+    /**
+     * Add a url parameter.
+     */
+    public param(name: string, value: Primitive, type: UrlParameterType = UrlParameterType.Auto): HttpRequestBuilder {
+        this._params[name] = {type, value: String(value)};
+        return this;
+    }
+
+    /**
+     * Remove all url parameters.
+     */
+    public clearParams(): HttpRequestBuilder {
+        this._params = {};
+        return this;
+    }
+
+    /**
+     * Merge multiple headers with the ones already set.
      */
     public headers(headers: Record<string, string>): HttpRequestBuilder {
-        this._headers = extend({}, headers);
+        Object.assign(this._headers, headers);
         return this;
     }
 
@@ -85,6 +112,14 @@ export class HttpRequestBuilder {
         this._headers[name] = value;
         return this;
     }
+    /**
+     * Remove all headers.
+     */
+    public clearHeaders(): HttpRequestBuilder {
+        this._headers = {};
+        return this;
+    }
+
 
     /**
      * Set a generic body for the request.
@@ -155,11 +190,10 @@ export class HttpRequestBuilder {
     }
 
     /**
-     * Replace the current extra object by the one in parameter.
-     * No copy is made so the actual reference you give will be stored in the request.
+     * Merge an object of extra with the current one.
      */
     public extras(extras: Record<string, any>): HttpRequestBuilder {
-        this._extras = extras;
+        Object.assign(this._extras, extras);
         return this;
     }
 
@@ -173,6 +207,14 @@ export class HttpRequestBuilder {
     }
 
     /**
+     * Remove all extras.
+     */
+    public clearExtras(): HttpRequestBuilder {
+        this._extras = {};
+        return this;
+    }
+
+    /**
      * Get the resulting request.
      */
     public getRequest(): HttpRequest {
@@ -182,6 +224,7 @@ export class HttpRequestBuilder {
         return HttpRequestFactory.Create({
             method: this._method,
             url: this._url,
+            params: this._params,
             payload: this._payload,
             payloadType: this._payloadType,
             responseType: this._responseType,

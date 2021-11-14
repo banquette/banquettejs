@@ -50,6 +50,29 @@ export enum HttpRequestProgressStatus {
 }
 
 /**
+ * Types of url parameters.
+ */
+export enum UrlParameterType {
+    /**
+     * Will be set as a url parameter if a replacement is found in the url.
+     * Otherwise the parameter will be added to the query.
+     */
+    Auto,
+
+    /**
+     * The parameter will always be added to the url.
+     * If no placeholder exists, the parameter is ignored.
+     */
+    Url,
+
+    /**
+     * The parameter will always be added to the query string,
+     * even if a placeholder exists in the url.
+     */
+    Query
+}
+
+/**
  * Tag to use in the event dispatcher when subscribing to alter the request body or response.
  *
  * Tagging your subscriber as "encoder" will allow to stop the propagation of encoders only,

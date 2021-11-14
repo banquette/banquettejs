@@ -41,7 +41,7 @@ describe('ModelApiService', () => {
         expect(request).toBeInstanceOf(HttpRequest);
         expect(request).toMatchObject({
             method: HttpMethod.GET,
-            url: '/get-one',
+            staticUrl: '/get-one',
             payload: {ref: 'abc'}
         });
     });
@@ -72,7 +72,7 @@ describe('ModelApiService', () => {
         }
         const request = api.buildRequest(new Foo(), 'getOne');
         expect(request).toMatchObject({
-            url: '/user/abc/group1',
+            staticUrl: '/user/abc/group1',
             payload: {ref: 'abc', group: 'group1'}
         });
     });
@@ -85,7 +85,7 @@ describe('ModelApiService', () => {
         }
         const request = api.buildRequest(new Foo(), 'getOne', {ref: 'def', other: 'custom'});
         expect(request).toMatchObject({
-            url: '/user/def/custom',
+            staticUrl: '/user/def/custom',
             payload: {ref: 'abc'}
         });
     });
@@ -100,7 +100,7 @@ describe('ModelApiService', () => {
         expect(isPromiseLike(request)).toBe(true);
         request = await request;
         expect(request).toMatchObject({
-            url: '/test',
+            staticUrl: '/test',
             payload: {ref: 'def'}
         });
     });
@@ -131,7 +131,7 @@ describe('ModelApiService', () => {
         expect(isPromiseLike(request)).toBe(true);
         request = await request;
         expect(request).toMatchObject({
-            url: '/test',
+            staticUrl: '/test',
             payload: {ref: 'abc', bar: {baz: 'new baz', qux: {quux: 'new quux'}}}
         });
     });
@@ -141,7 +141,6 @@ describe('ApiTransformer', () => {
     const transformService = Injector.Get(TransformService);
 
     describe('model => HttpRequest', () => {
-
         test('Transform basic model', () => {
             @Endpoint('getOne', '/user/{ref}/{other}')
             class Foo {
@@ -156,7 +155,7 @@ describe('ApiTransformer', () => {
             expect(result).toBeInstanceOf(TransformResult);
             expect(result.ready).toBe(true);
             expect(result.result).toBeInstanceOf(HttpRequest);
-            expect(result.result.url).toEqual('/user/def/custom');
+            expect(result.result.staticUrl).toEqual('/user/def/custom');
             expect(result.result.method).toEqual(HttpMethod.GET);
             expect(result.result.payload).toMatchObject({ref: 'abc'});
         });
@@ -174,7 +173,7 @@ describe('ApiTransformer', () => {
             await result.promise;
             expect(result.ready).toBe(true);
             expect(result.result).toBeInstanceOf(HttpRequest);
-            expect(result.result.url).toEqual('/user/def');
+            expect(result.result.staticUrl).toEqual('/user/def');
             expect(result.result.method).toEqual(HttpMethod.GET);
             expect(result.result.payload).toMatchObject({ref: 'def'});
         });
