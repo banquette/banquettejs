@@ -20,7 +20,8 @@ import {
     ValidationResultStatus,
     ValidatorContainerInterface,
     ValidatorInterface,
-    ViolationInterface
+    ViolationInterface,
+    Type
 } from "../src";
 import { ValidateAfterDelay } from "./__mocks__/type/validate-after-delay.test-validator";
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
@@ -451,17 +452,36 @@ describe('validators', () => {
          */
         runTests([
             [5, null, () => expectResult(V.Url().validate('https://www.example.com'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('http://www.example.com'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('www.example.com'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('example.com'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('http://blog.example.com'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('http://www.example.com/product'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('http://www.example.com/products?id=1&page=2'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('http://www.example.com#up'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('http://255.255.255.255'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('255.255.255.255'), {valid: true})],
-                [5, null, () => expectResult(V.Url().validate('http://invalid.com/perl.cgi?key= | http://web-site.com/cgi-bin/perl.cgi?key1=value1&key2'), {valid: false})],
-                [5, null, () => expectResult(V.Url().validate('http://www.site.com:8008'), {valid: true})]
+            [5, null, () => expectResult(V.Url().validate('http://www.example.com'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('www.example.com'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('example.com'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('http://blog.example.com'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('http://www.example.com/product'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('http://www.example.com/products?id=1&page=2'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('http://www.example.com#up'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('http://255.255.255.255'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('255.255.255.255'), {valid: true})],
+            [5, null, () => expectResult(V.Url().validate('http://invalid.com/perl.cgi?key= | http://web-site.com/cgi-bin/perl.cgi?key1=value1&key2'), {valid: false})],
+            [5, null, () => expectResult(V.Url().validate('http://www.site.com:8008'), {valid: true})]
+        ]);
+    });
+
+    describe('IsType', () => {
+        runTests([
+            [5, null, () => expectResult(V.IsType(Type.Null).validate(null), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Null).validate('null'), {valid: false})],
+            [5, null, () => expectResult(V.IsType(Type.Null | Type.String).validate('null'), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Number).validate('2'), {valid: false})],
+            [5, null, () => expectResult(V.IsType(Type.Number).validate(2), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Numeric).validate(2), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Numeric).validate('2'), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Object).validate(null), {valid: false})],
+            [5, null, () => expectResult(V.IsType(Type.Array).validate([]), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Object).validate([]), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Symbol).validate(Symbol()), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Undefined).validate(undefined), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Boolean).validate(!1), {valid: true})],
+            [5, null, () => expectResult(V.IsType(Type.Boolean).validate(1), {valid: false})]
         ]);
     });
 

@@ -17,6 +17,7 @@ import { Or } from "./type/or";
 import { Pattern } from "./type/pattern";
 import { Phone } from "./type/phone";
 import { SameAs } from "./type/same-as";
+import { IsType } from "./type/is-type";
 import { Url } from "./type/url";
 import { Valid } from "./type/valid";
 import { ValidatorFactory } from "./validator.factory";
@@ -53,6 +54,7 @@ export const V = VExtend({
     Pattern,
     Phone,
     SameAs,
+    IsType,
     Url,
     Valid
 });

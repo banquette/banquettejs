@@ -21,6 +21,7 @@ export * from './type/or';
 export * from './type/pattern';
 export * from './type/phone';
 export * from './type/same-as';
+export * from './type/is-type';
 export * from './type/url';
 export * from './type/valid';
 
