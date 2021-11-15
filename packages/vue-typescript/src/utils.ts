@@ -13,7 +13,7 @@ import {
 } from "@banquette/utils-type";
 import { WritableComputedOptions } from "@vue/reactivity";
 import { WatchOptions } from "@vue/runtime-core";
-import { computed, nextTick, Ref, ref, toRefs, watch, getCurrentInstance, ComponentPublicInstance } from "vue";
+import { computed, nextTick, Ref, ref, toRefs, watch, getCurrentInstance } from "vue";
 import {
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,

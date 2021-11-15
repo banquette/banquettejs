@@ -26,4 +26,11 @@ export class Vue implements ComponentPublicInstance {
     public $watch(source: string | Function, cb: Function, options: WatchOptions|undefined): WatchStopHandle {
         return null as any;
     };
+
+    /**
+     * Test if a slot is defined and not empty.
+     */
+   hasSlot(name: string): boolean {
+        return Object.keys(this.$slots).indexOf(name) > -1;
+    }
 }
