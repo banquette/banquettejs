@@ -60,34 +60,45 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
     /**
      * Set the new value of the control.
      */
-    public setValue(value: any): void {
-        if (areEqual(this.lastValue, value)) {
-            return ;
-        }
-        const beforeValueChangeEvent = new BeforeValueChangeFormEvent(this, this.lastValue, value);
-        this.dispatch(Events.BeforeValueChange, beforeValueChangeEvent);
-        if (!beforeValueChangeEvent.changeAccepted) {
-            return ;
-        }
-        // The value may have been overridden in the event.
-        value = beforeValueChangeEvent.newValue;
-        (this as Writeable<FormControl>).value = value;
-        this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
-        this.lastValue = cloneDeepPrimitive(this.value);
-        if (this.viewModel && (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset))) {
-            this.viewModel.setValue(value);
-        }
-        if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
-            this.updateValue();
-        }
-        this.markBasicState(BasicState.Dirty);
-        if (!areEqual(this.defaultValue, value)) {
-            this.markBasicState(BasicState.Changed);
-        } else {
-            this.unmarkBasicState(BasicState.Changed);
-        }
-        this.validateIfStrategyMatches(ValidationStrategy.OnChange);
-    }
+    public setValue = (() => {
+        let locked: boolean = false;
+        return (value: any): void => {
+            try {
+                if (areEqual(this.lastValue, value) || locked) {
+                    return;
+                }
+                locked = true;
+                const beforeValueChangeEvent = new BeforeValueChangeFormEvent(this, this.lastValue, value);
+                this.dispatch(Events.BeforeValueChange, beforeValueChangeEvent);
+                if (!beforeValueChangeEvent.changeAccepted) {
+                    if (this.viewModel) {
+                        this.viewModel.setValue(this.lastValue);
+                    }
+                    return;
+                }
+                // The value may have been overridden in the event.
+                value = beforeValueChangeEvent.newValue;
+                (this as Writeable<FormControl>).value = value;
+                this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
+                this.lastValue = cloneDeepPrimitive(this.value);
+                if (this.viewModel && (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset))) {
+                    this.viewModel.setValue(value);
+                }
+                if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
+                    this.updateValue();
+                }
+                this.markBasicState(BasicState.Dirty);
+                if (!areEqual(this.defaultValue, value)) {
+                    this.markBasicState(BasicState.Changed);
+                } else {
+                    this.unmarkBasicState(BasicState.Changed);
+                }
+                this.validateIfStrategyMatches(ValidationStrategy.OnChange);
+            } finally {
+                locked = false;
+            }
+        };
+    })();
 
     /**
      * Set the default value of the control.
