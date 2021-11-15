@@ -1,4 +1,5 @@
 import { ExceptionInterface } from "./exception.interface";
+import { isNullOrUndefined } from "@banquette/utils-type";
 
 /**
  * Base class for all exceptions of the Webeak dev tools.
@@ -61,6 +62,17 @@ import { ExceptionInterface } from "./exception.interface";
  *   - a system error MUST be in the end user language, and be translated if necessary. The error may be shown to the end user.
  */
 export abstract class Exception implements ExceptionInterface {
+    /**
+     * Gets the whole list of available messages by concatenating the current message with
+     * the stack of the previous exception (if there is one).
+     */
+    public get messagesStack(): string[] {
+        if (!isNullOrUndefined(this.previous)) {
+            return [this.message].concat(this.previous.messagesStack);
+        }
+        return [this.message];
+    }
+
     public constructor(public readonly message: string,
                        public readonly previous?: Exception|null,
                        public readonly extra?: any) {
