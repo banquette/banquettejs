@@ -1,6 +1,8 @@
 import { FormComponentInterface } from "./form-component.interface";
 import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
+import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
+import { UnsubscribeFunction } from "@banquette/event";
 
 export interface FormControlInterface extends FormComponentInterface {
     /**
@@ -32,4 +34,11 @@ export interface FormControlInterface extends FormComponentInterface {
      * Inverse of `focus()`.
      */
     blur(): void;
+
+    /**
+     * Register a callback that will be called before the value of the control changes.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction;
 }

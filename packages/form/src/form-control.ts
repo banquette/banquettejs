@@ -10,6 +10,8 @@ import { FormControlInterface } from "./form-control.interface";
 import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
 import { FormError } from "./form-error";
+import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
+import { UnsubscribeFunction } from "@banquette/event";
 
 export class FormControl extends AbstractFormComponent implements FormControlInterface {
     /**
@@ -62,6 +64,13 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
         if (areEqual(this.lastValue, value)) {
             return ;
         }
+        const beforeValueChangeEvent = new BeforeValueChangeFormEvent(this, this.lastValue, value);
+        this.dispatch(Events.BeforeValueChange, beforeValueChangeEvent);
+        if (!beforeValueChangeEvent.changeAccepted) {
+            return ;
+        }
+        // The value may have been overridden in the event.
+        value = beforeValueChangeEvent.newValue;
         (this as Writeable<FormControl>).value = value;
         this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
         this.lastValue = cloneDeepPrimitive(this.value);
@@ -165,6 +174,15 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
     public doReset(): void {
         this.setValue(this.defaultValue);
         super.doReset();
+    }
+
+    /**
+     * Register a callback that will be called before the value of the control changes.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    public onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction {
+        return this.subscribe<BeforeValueChangeFormEvent>(Events.BeforeValueChange, callback, true);
     }
 
     /**

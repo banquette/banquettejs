@@ -6,14 +6,58 @@ import {
     FormObject,
     StateChangedFormEvent,
     BasicState,
-    FilterGroup
+    FilterGroup, BeforeValueChangeFormEvent
 } from "../src";
 import { createTestForm } from "./__mocks__/utils";
 import { areEqual } from "@banquette/utils-misc";
 import { ViewModelMock } from "./__mocks__/view-model.mock";
 import { NotEmpty } from "@banquette/validation";
+import { FormControl } from "../src";
 
 class Foo {}
+
+/**
+ * Before value change
+ */
+describe('BeforeValueChange', () => {
+    let form: FormGroupInterface;
+
+    beforeEach(() => {
+        form = createTestForm();
+    });
+
+    test('trigger before the value has changed', () => {
+        const control = form.get<FormControl>('username');
+        control.setValue('before');
+        control.onBeforeValueChange((event: BeforeValueChangeFormEvent) => {
+            expect(control.value).toEqual('before');
+            expect(event.oldValue).toEqual('before');
+            expect(event.newValue).toEqual('new');
+        });
+        control.setValue('new');
+        expect.assertions(3);
+    });
+
+    test('the change can be canceled in the subscriber', () => {
+        const control = form.get<FormControl>('username');
+        control.setValue('before');
+        control.onBeforeValueChange((event: BeforeValueChangeFormEvent) => {
+            event.refuse();
+        });
+        control.setValue('new');
+        expect(control.value).toEqual('before');
+    });
+
+    test('the value can be modified in the subscriber', () => {
+        const control = form.get<FormControl>('username');
+        control.setValue('before');
+        control.onBeforeValueChange((event: BeforeValueChangeFormEvent) => {
+            event.newValue = 'other';
+        });
+        control.setValue('new');
+        expect(control.value).toEqual('other');
+    });
+});
 
 /**
  * Value changed

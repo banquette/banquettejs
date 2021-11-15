@@ -5,6 +5,11 @@ import { enumToArray } from "@banquette/utils-array";
  */
 export const Events = {
     /**
+     * Emitted before the value is changed, so modifications can be made bof a form component has changed.
+     */
+    BeforeValueChange: Symbol('before-value-change'),
+
+    /**
      * Emitted after the value of a form component has changed.
      */
     ValueChanged: Symbol('value-changed'),
