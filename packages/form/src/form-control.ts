@@ -76,6 +76,9 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
                     }
                     return;
                 }
+                if (!areEqual(beforeValueChangeEvent.newValue, value) && this.viewModel) {
+                    this.viewModel.setValue(beforeValueChangeEvent.newValue);
+                }
                 // The value may have been overridden in the event.
                 value = beforeValueChangeEvent.newValue;
                 (this as Writeable<FormControl>).value = value;
