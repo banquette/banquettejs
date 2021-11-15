@@ -31,6 +31,31 @@ describe('global', () => {
             [BasicState.Concrete]: false
         });
     });
+
+    test('resetting a control reset its states', () => {
+        const username = new ViewModelMock(form.get('username'));
+
+        username.focus();
+        username.setValue('test');
+        username.control.reset();
+        checkStates(form, {
+            [BasicState.Focused]: false,
+            [BasicState.Dirty]: false,
+            [BasicState.Touched]: false,
+            [BasicState.Changed]: false,
+            [BasicState.Concrete]: true
+        });
+    });
+
+    test('resetting a control reset its value', () => {
+        const username = new ViewModelMock(form.get('username'));
+
+        username.control.setDefaultValue('default value');
+        username.setValue('test');
+        username.control.reset();
+        expect(username.value).toEqual('#default value');
+        expect(username.control.value).toEqual('default value');
+    });
 });
 
 /**

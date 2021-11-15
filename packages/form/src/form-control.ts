@@ -64,6 +64,7 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
         }
         (this as Writeable<FormControl>).value = value;
         this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
+        this.lastValue = cloneDeepPrimitive(this.value);
         if (this.viewModel && (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset))) {
             this.viewModel.setValue(value);
         }
@@ -76,7 +77,6 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
         } else {
             this.unmarkBasicState(BasicState.Changed);
         }
-        this.lastValue = cloneDeepPrimitive(this.value);
         this.validateIfStrategyMatches(ValidationStrategy.OnChange);
     }
 
@@ -267,12 +267,13 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
             get focused():           boolean { return that.focused },
             get unfocused():         boolean { return that.unfocused },
             get errors():            FormError[] { return that.errors },
-            get defaultValue():      any { return that.defaultValue }
+            get defaultValue():      any { return that.defaultValue },
+            get value():             any { return that.value }
         },
             this.buildContextualizedApi<Omit<FormViewControlInterface,
                 'id' | 'formId' | 'valid' | 'invalid' | 'validated' | 'notValidated' | 'validating' | 'notValidating' | 'validatedAndValid' |
                 'busy' | 'notBusy' | 'disabled' | 'enabled' | 'dirty' | 'pristine' | 'touched' | 'untouched' | 'changed' |
-                'unchanged' | 'focused' | 'unfocused' | 'errors' | 'defaultValue'>>({
+                'unchanged' | 'focused' | 'unfocused' | 'errors' | 'defaultValue' | 'value'>>({
                 setValue: this.setValue,
                 markAsDisabled: this.markAsDisabled,
                 markAsEnabled: this.markAsEnabled,

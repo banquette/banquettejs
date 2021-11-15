@@ -126,6 +126,11 @@ export interface FormViewControlInterface {
     readonly defaultValue: any;
 
     /**
+     * The current value of the control.
+     */
+    readonly value: any;
+
+    /**
      * Update the value of the control with the value of the view.
      */
     setValue(value: any): void;
