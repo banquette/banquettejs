@@ -13,7 +13,7 @@ import {
 } from "@banquette/utils-type";
 import { WritableComputedOptions } from "@vue/reactivity";
 import { WatchOptions } from "@vue/runtime-core";
-import { computed, nextTick, Ref, ref, toRefs, watch, getCurrentInstance } from "vue";
+import { computed, nextTick, Ref, ref, toRefs, watch, ComponentPublicInstance } from "vue";
 import {
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,
@@ -289,6 +289,35 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         writable: false,
         value: ctor
     });
+
+    options.beforeCreate = function(this: ComponentPublicInstance) {
+        const inst = (this.$ as any).setupState[COMPONENT_INSTANCE_ATTR_NAME];
+
+        // If the component inherits from the "Vue" class this means the user
+        // may want to access theses attributes or methods.
+        if (inst instanceof Vue) {
+            defineGetter(inst, '$props', () => this.$props);
+            defineGetter(inst, '$attrs', () => this.$attrs);
+            defineGetter(inst, '$slots', () => this.$slots);
+            defineGetter(inst, '$emit', () => this.$emit);
+            defineGetter(inst, '$', () => this.$);
+            defineGetter(inst, '$data', () => this.$data);
+            defineGetter(inst, '$el', () => this.$el);
+            defineGetter(inst, '$options', () => this.$options);
+            defineGetter(inst, '$refs', () => this.$refs);
+            defineGetter(inst, '$root', () => this.$root);
+            defineGetter(inst, '$forceUpdate', () => this.$forceUpdate);
+            defineGetter(inst, '$nextTick', () => this.$nextTick);
+            defineGetter(inst, '$watch', () => this.$watch);
+            defineGetter(inst, '$parent', () => {
+                const $parent = this.$parent as any;
+                if ($parent && isObject($parent._) && isObject($parent._.setupState)) {
+                    return $parent._.setupState[COMPONENT_INSTANCE_ATTR_NAME];
+                }
+                return null;
+            });
+        }
+    };
     return options;
 }
 
@@ -311,31 +340,6 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
             for (const propRefName of Object.keys(propsRefs)) {
                 output[propRefName] = propsRefs[propRefName];
                 defineRefProxy(inst, propRefName, output);
-            }
-
-            const vueInstance: any = getCurrentInstance();
-            if (vueInstancesMap.has(vueInstance)) {
-                throw new UsageException('The same vue instance has been initialized twice.');
-            }
-
-            // If the component inherits from the "Vue" class this means the user
-            // may want to access theses attributes or methods.
-            if (inst instanceof Vue) {
-                // Working because exposed in the input context
-                defineGetter(inst, '$props', () => props);
-                defineGetter(inst, '$attrs', () => ctx.attrs);
-                defineGetter(inst, '$slots', () => ctx.slots);
-                defineGetter(inst, '$emit', () => ctx.emit);
-                defineGetter(inst, '$', () => vueInstance.ctx.$);
-                defineGetter(inst, '$data', () => vueInstance.ctx.$data);
-                defineGetter(inst, '$el', () => vueInstance.ctx.$el);
-                defineGetter(inst, '$options', () => vueInstance.ctx.$options);
-                defineGetter(inst, '$refs', () => vueInstance.ctx.$refs);
-                defineGetter(inst, '$root', () => ctx.slots);
-                defineGetter(inst, '$forceUpdate', () => vueInstance.ctx.$forceUpdate);
-                defineGetter(inst, '$nextTick', () => vueInstance.ctx.$nextTick);
-                defineGetter(inst, '$watch', () => vueInstance.ctx.$watch);
-                defineGetter(inst, '$parent', () => vueInstance.ctx.$parent ? vueInstance.ctx.$parent[COMPONENT_INSTANCE_ATTR_NAME] : null);
             }
             rootProps = props;
         }
