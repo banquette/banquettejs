@@ -18,8 +18,9 @@ export abstract class AbstractViewModel implements ViewModelInterface {
     }
 
     /**
-     * Shortcuts to state flags of the form control.
+     * Shortcuts to the control.
      */
+    public get control()            : FormViewControlInterface { return this.getControl() }
     public get id()                 : number { return this.getControl().id }
     public get formId()             : string { return this.getControl().formId }
     public get fullId()             : string { return this.formId + '_' + this.id }
@@ -50,14 +51,14 @@ export abstract class AbstractViewModel implements ViewModelInterface {
     public tabindex: number = 0;
 
     /**
-     * Wrap the control into a function so watchers put on the view model will not include it.
-     */
-    private getControl!: () => FormViewControlInterface;
-
-    /**
      * The value transformer in use.
      */
     public readonly valueTransformer: ValueTransformerInterface;
+
+    /**
+     * Wrap the control into a function so watchers put on the view model will not include it.
+     */
+    private getControl!: () => FormViewControlInterface;
 
     public constructor(control: FormViewControlInterface, valueTransformer: ValueTransformerInterface = NoopTransformer) {
         this.getControl = () => control;

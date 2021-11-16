@@ -1,4 +1,5 @@
 import { ValueTransformerInterface } from "./value-transformer/value-transformer.interface";
+import { FormViewControlInterface } from "../form-view-control.interface";
 
 export interface ViewModelInterface {
     /**
@@ -10,6 +11,11 @@ export interface ViewModelInterface {
      * HTML tab index (for keyboard navigation).
      */
     tabindex: number;
+
+    /**
+     * A reference to the `FormControl` behind the view model.
+     */
+    readonly control: FormViewControlInterface;
 
     /**
      * The value transformer in use.

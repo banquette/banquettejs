@@ -3,6 +3,8 @@ import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
 import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { UnsubscribeFunction } from "@banquette/event";
+import { StateChangedFormEvent } from "./event/state-changed.form-event";
+import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 
 export interface FormControlInterface extends FormComponentInterface {
     /**
@@ -41,4 +43,18 @@ export interface FormControlInterface extends FormComponentInterface {
      * @return A method to call to unsubscribe.
      */
     onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called when the value of the component changes.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onValueChanged(callback: (event: ValueChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called when the value of a flag changes.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
 }

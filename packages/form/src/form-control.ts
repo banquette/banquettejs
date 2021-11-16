@@ -315,7 +315,10 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
                 markAsNotBusy: this.markAsNotBusy,
                 unsetViewModel: this.unsetViewModel,
                 setDefaultValue: this.setDefaultValue,
-                reset: this.reset
+                reset: this.reset,
+                onStateChanged: this.onStateChanged,
+                onValueChanged: this.onValueChanged,
+                onBeforeValueChange: this.onBeforeValueChange
             }, CallContext.ViewModel)
         ) as FormViewControlInterface;
     }

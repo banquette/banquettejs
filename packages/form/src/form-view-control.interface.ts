@@ -1,5 +1,9 @@
 import { FormViewModelInterface } from "./form-view-model.interface";
 import { FormError } from "./form-error";
+import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
+import { UnsubscribeFunction } from "@banquette/event";
+import { ValueChangedFormEvent } from "./event/value-changed.form-event";
+import { StateChangedFormEvent } from "./event/state-changed.form-event";
 
 /**
  * Bridge between a FormControl and a view in the direction "View -> FormControl".
@@ -189,4 +193,25 @@ export interface FormViewControlInterface {
      * Resetting the control does not impact the following states: `ContextualizedState.Disabled`, `BasicState.Busy`, `BasicState.Validating`, `BasicState.Concrete`.
      */
     reset(): void;
+
+    /**
+     * Register a callback that will be called before the value of the control changes.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called when the value of the component changes.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onValueChanged(callback: (event: ValueChangedFormEvent) => void): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called when the value of a flag changes.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onStateChanged(callback: (event: StateChangedFormEvent) => void): UnsubscribeFunction;
 }
