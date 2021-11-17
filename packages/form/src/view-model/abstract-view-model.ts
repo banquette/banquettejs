@@ -23,7 +23,7 @@ export abstract class AbstractViewModel implements ViewModelInterface {
     public get control()            : FormViewControlInterface { return this.getControl() }
     public get id()                 : number { return this.getControl().id }
     public get formId()             : string { return this.getControl().formId }
-    public get fullId()             : string { return this.formId + '_' + this.id }
+    public get fullId()             : string|null { return this.formId ? (this.formId + '_' + this.id) : null }
     public get valid()              : boolean { return this.getControl().valid }
     public get invalid()            : boolean { return this.getControl().invalid }
     public get validated()          : boolean { return this.getControl().validated }
