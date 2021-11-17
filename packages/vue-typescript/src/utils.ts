@@ -33,7 +33,6 @@ import { WatchFunction } from "./decorator/watch.decorator";
 import { AliasesMap, AliasResolver, PrefixOrAlias } from "./type";
 import { VueBuilder } from "./vue-builder";
 import { Vue } from "./vue";
-import { MetadataContainer, InjectableMetadataInterface } from "@banquette/dependency-injection";
 
 export type DecoratedConstructor = Constructor & {[DECORATORS_OPTIONS_HOLDER_NAME]: DecoratorsDataInterface};
 
