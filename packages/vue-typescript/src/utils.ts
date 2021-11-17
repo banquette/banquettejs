@@ -9,11 +9,11 @@ import {
     isNullOrUndefined,
     isObject,
     isString,
-    isUndefined
+    isUndefined, GenericCallback
 } from "@banquette/utils-type";
 import { WritableComputedOptions } from "@vue/reactivity";
 import { WatchOptions } from "@vue/runtime-core";
-import { computed, nextTick, Ref, ref, toRefs, watch, ComponentPublicInstance } from "vue";
+import { computed, nextTick, Ref, ref, watch, ComponentPublicInstance, toRef } from "vue";
 import {
     DECORATORS_OPTIONS_HOLDER_NAME,
     HOOKS_MAP,
@@ -33,6 +33,7 @@ import { WatchFunction } from "./decorator/watch.decorator";
 import { AliasesMap, AliasResolver, PrefixOrAlias } from "./type";
 import { VueBuilder } from "./vue-builder";
 import { Vue } from "./vue";
+import { MetadataContainer, InjectableMetadataInterface } from "@banquette/dependency-injection";
 
 export type DecoratedConstructor = Constructor & {[DECORATORS_OPTIONS_HOLDER_NAME]: DecoratorsDataInterface};
 
@@ -322,7 +323,7 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
 }
 
 export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
-    return (props: any, ctx: any): any => {
+    return (props: any): any => {
         let inst = parentInst;
         const output: Record<any, any> = {};
         if (inst === null) {
@@ -334,12 +335,30 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
             inst = instantiate(ctor, data.component as ComponentDecoratorOptions);
         }
         if (props !== null) {
-            const propsRefs = toRefs(props);
-
-            // Props
-            for (const propRefName of Object.keys(propsRefs)) {
-                output[propRefName] = propsRefs[propRefName];
-                defineRefProxy(inst, propRefName, output);
+            for (const propName of Object.keys(props)) {
+                let propRef = toRef(props, propName);
+                if (!isUndefined(data.props[propName]) && isFunction(data.props[propName].validate)) {
+                    propRef = ((proxified: Ref,  validate: GenericCallback) => {
+                        let lastOriginalValue: any = Symbol('unassigned');
+                        let lastModifiedValue: any;
+                        return new Proxy(proxified, {
+                            get(target: any, name: string): any {
+                                if (name === 'value') {
+                                    if (lastOriginalValue !== target[name]) {
+                                        lastOriginalValue = target[name];
+                                        lastModifiedValue = validate(target[name]);
+                                    }
+                                    if (!isUndefined(lastModifiedValue)) {
+                                        return lastModifiedValue;
+                                    }
+                                }
+                                return target[name];
+                            },
+                        });
+                    })(propRef, data.props[propName].validate as GenericCallback);
+                }
+                output[propName] = propRef;
+                defineRefProxy(inst, propName, output);
             }
             rootProps = props;
         }
@@ -574,7 +593,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                     composableInst,
                     targetProperty,
                     data.imports[targetProperty].prefixOrAlias
-                )(null, null);
+                )(null);
 
                 for (const subProp of Object.keys(composableDecorationData.props)) {
                     const realPropName: string|false = resolveImportPublicName(targetProperty, subProp, importOptions.prefixOrAlias as PrefixOrAlias);

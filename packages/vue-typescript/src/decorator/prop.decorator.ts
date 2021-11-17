@@ -7,7 +7,7 @@ import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 /* Hack to get to the PropOptions<T, D> which is not exported by Vue. */
-export type PropOptions = Exclude<VueProp<any>, PropType<any>>;
+export type PropOptions = Exclude<VueProp<any>, PropType<any>> & {validate?: (value: any) => any};
 
 /**
  * Allow you to define that a property of a component's class should be declared as a Vue prop.
