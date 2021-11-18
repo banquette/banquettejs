@@ -4,6 +4,9 @@ import { Component } from "../decorator/component.decorator";
 import { Expose } from "../decorator/expose.decorator";
 import { Prop } from "../decorator/prop.decorator";
 import { getComponentOptions } from "../utils";
+import { Composable } from "../decorator/composable.decorator";
+import { Import } from "../decorator/import.decorator";
+import { getChildComponentInstance } from "./utils";
 
 @Component({
     name: 'button',
@@ -55,5 +58,87 @@ describe('@Prop()', () => {
             }
         })
         expect(wrapper.find('#count').text()).toContain('count: 10');
+    });
+});
+
+describe('@Import()', () => {
+    @Composable()
+    class Remote {
+        @Prop({type: String, required: true, default: '/default'}) public url!: string;
+    }
+
+    test('basic import with auto prefix',  () => {
+        @Component({name: 'test', template: `<div id="url">{{ remote.url }}</div>`})
+        class Test {
+            @Expose() @Import(Remote) private remote!: Remote;
+        }
+
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test remote:url="/test"></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        expect(wrapper.find('#url').text()).toEqual('/test');
+    });
+
+    test('import with prefix override',  () => {
+        @Component({name: 'test', template: `<div id="url">{{ remote.url }}</div>`})
+        class Test {
+            @Expose() @Import(Remote, 'override') private remote!: Remote;
+        }
+
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test override:url="/test"></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        expect(wrapper.find('#url').text()).toEqual('/test');
+    });
+
+    test('import with no prefix',  () => {
+        @Component({name: 'test', template: `<div id="url">{{ remote.url }}</div>`})
+        class Test {
+            @Expose() @Import(Remote, false) private remote!: Remote;
+        }
+
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test url="/test"></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        expect(wrapper.find('#url').text()).toEqual('/test');
+    });
+
+    test('import with composable prop overriding host prop',  () => {
+        @Component({name: 'test', template: `
+                <div id="url">{{ remote.url }}</div>
+                <div id="host-from-template">{{ url }}</div>
+                <div id="host-from-ctrl">{{ hostValue() }}</div>
+            `})
+        class Test {
+            @Prop({type: String, required: true, default: '/default-host'}) public url!: string;
+            @Expose() @Import(Remote, false) private remote!: Remote;
+
+            @Expose() public hostValue(): string {
+                return this.url;
+            }
+        }
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test url="/test"></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {});
+        const testComponent = getChildComponentInstance(wrapper, Test);
+        expect(wrapper.find('#url').text()).toEqual('/test');
+        expect(wrapper.find('#host-from-template').text()).toEqual('/test');
+        expect(testComponent.hostValue()).toBeUndefined();
     });
 });
