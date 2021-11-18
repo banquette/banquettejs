@@ -9,7 +9,7 @@ import {
     isNullOrUndefined,
     isObject,
     isString,
-    isUndefined, GenericCallback
+    isUndefined, GenericCallback, isType, ensureString
 } from "@banquette/utils-type";
 import { WritableComputedOptions } from "@vue/reactivity";
 import { WatchOptions } from "@vue/runtime-core";
@@ -164,8 +164,8 @@ function resolveImportPublicName(originalPrefix: string|undefined, originalName:
     if (isString(prefixOrAlias)) {
         return prefixOrAlias + ':' + originalName;
     }
-    if (isObject(prefixOrAlias)) {
-        return (prefixOrAlias as AliasesMap)[originalName] || false;
+    if (isType<AliasesMap>(prefixOrAlias, isObject)) {
+        return !isUndefined(prefixOrAlias[originalName]) ? ensureString(prefixOrAlias[originalName]) : false;
     }
     if (isFunction(prefixOrAlias)) {
         return (prefixOrAlias as AliasResolver)(originalName);
