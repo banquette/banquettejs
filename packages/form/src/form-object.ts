@@ -74,6 +74,9 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
      * @throws UsageException If the identifier is invalid
      */
     public set(identifier: string, component: FormComponentInterface): void {
+        if (identifier.indexOf('/') > -1) {
+            return this.setByPath(identifier, component);
+        }
         identifier = FormObject.ValidateIdentifier(identifier);
         if (!isUndefined(this.children_[identifier])) {
             if (this.children_[identifier].decorated === component) {
@@ -86,6 +89,31 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             this.children_[identifier].propagateStatesToParent();
         });
         this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<string>(this, this.children_[identifier].decorated, identifier));
+    }
+
+    /**
+     * Set a component deep into the form tree, creating missing containers if necessary.
+     */
+    public setByPath(path: string, component: FormComponentInterface): void {
+        const parts: string[] = path.split('/');
+        if (parts.length === 1) {
+            return this.set(parts[0], component);
+        }
+        let container: FormComponentInterface = this;
+        do {
+            if (!container.isGroup()) {
+                throw new UsageException(`A component was found at "${container.path}", but is not a container.`);
+            }
+            const next = parts.splice(0, 1)[0];
+            if (parts.length > 0) {
+                if (!container.has(next)) {
+                    container.set(next, new FormObject());
+                }
+                container = container.get(next);
+            } else {
+                container.set(next, component);
+            }
+        } while (parts.length > 0);
     }
 
     /**
@@ -265,9 +293,6 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         identifier = trim(identifier);
         if (!identifier) {
             throw new UsageException('You cannot add a child with an empty identifier to a form object.');
-        }
-        if (identifier.indexOf('/') > -1) {
-            throw new UsageException(`Invalid identifier "${identifier}", the character "/" is reserved.`);
         }
         return identifier;
     }

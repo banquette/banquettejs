@@ -59,7 +59,7 @@ describe('Create manually', () => {
     test('Invalid form group child name', () => {
         expect(() => form.set(`
           `, new FormControl())).toThrow(UsageException);
-        expect(() => form.set('test/path', new FormControl())).toThrow(UsageException);
+        expect(() => form.set('', new FormControl())).toThrow(UsageException);
         expect(() => form.set('test-path', new FormControl())).not.toThrow(UsageException);
     });
 });
@@ -239,6 +239,20 @@ describe('Manipulate groups', () => {
         expectContents(formObj, {name: 'John', email: undefined});
         formObj.set('email', createConcreteControl('test@domain.tld'));
         expectContents(formObj, {name: 'John', email: 'test@domain.tld'});
+    });
+
+    test('set() deep (FormObject)', () => {
+        const formObj: FormObject = new FormObject();
+        formObj.set('category/name', createConcreteControl('test'));
+        formObj.getByPattern('**').markAsConcrete();
+        expectContents(formObj, {category: {name: 'test'}});
+    });
+
+    test('set() deep with array (FormObject)', () => {
+        const formObj: FormObject = new FormObject();
+        formObj.set('tags/0/name', createConcreteControl('test'));
+        formObj.getByPattern('**').markAsConcrete();
+        expectContents(formObj, {tags: {'0': {name: 'test'}}});
     });
 
     test('merge() (FormObject)', () => {
