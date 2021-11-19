@@ -245,7 +245,7 @@ export class HttpService {
             return ;
         }
         queuedRequest.response.error = error;
-        queuedRequest.response.setStatus(HttpResponseStatus.Error);
+        queuedRequest.response.setStatus(error instanceof RequestCanceledException ? HttpResponseStatus.Canceled : HttpResponseStatus.Error);
         queuedRequest.reject(queuedRequest.response);
         this.eventDispatcher.dispatch(Events.RequestFailure, new RequestEvent(queuedRequest.request));
         this.removeFromQueue(queuedRequest);
