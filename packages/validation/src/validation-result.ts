@@ -11,7 +11,8 @@ export enum ValidationResultStatus {
     Waiting,
     Error,
     Valid,
-    Invalid
+    Invalid,
+    Canceled
 }
 
 interface ElaborateMatch {
@@ -30,6 +31,7 @@ export class ValidationResult {
     public readonly error!: boolean;
     public readonly errorDetail: Exception|null;
     public readonly waiting!: boolean;
+    public readonly canceled!: boolean;
     private cancelCallback: GenericCallback|null;
     private previousPromise: Promise<any>|null;
     private promiseResolve: ((result: ValidationResult) => any)|null;
@@ -161,6 +163,7 @@ export class ValidationResult {
                 child.cancel(mask);
             }
         }
+        this.setStatus(ValidationResultStatus.Canceled);
     }
 
     /**
@@ -247,8 +250,10 @@ export class ValidationResult {
      * This method IS NOT meant to set a validation error, its meant to say the validation could not execute properly.
      */
     public fail(reason: any): void {
-        (this as Writeable<ValidationResult>).errorDetail = ExceptionFactory.EnsureException(reason);
-        this.setStatus(ValidationResultStatus.Error);
+        if (this.status !== ValidationResultStatus.Canceled) {
+            (this as Writeable<ValidationResult>).errorDetail = ExceptionFactory.EnsureException(reason);
+            this.setStatus(ValidationResultStatus.Error);
+        }
         if (this.promiseReject !== null) {
             this.promiseReject(reason);
         }
@@ -264,6 +269,7 @@ export class ValidationResult {
         (this as Writeable<ValidationResult>).invalid = this.status === ValidationResultStatus.Invalid;
         (this as Writeable<ValidationResult>).error = this.status === ValidationResultStatus.Error;
         (this as Writeable<ValidationResult>).waiting = this.status === ValidationResultStatus.Waiting;
+        (this as Writeable<ValidationResult>).canceled = this.status === ValidationResultStatus.Canceled;
     }
 
     private cleanupAsync(): void {
