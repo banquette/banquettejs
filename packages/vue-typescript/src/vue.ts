@@ -1,6 +1,7 @@
-import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle } from "vue";
+import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
 import { WatchOptions } from "@vue/runtime-core";
 import { DECORATORS_CTOR_NAME } from "./constants";
+import { isType, isArray, isString } from "@banquette/utils-type";
 
 /**
  * Fake implementation of the public attributes of the vue instance.
@@ -30,7 +31,19 @@ export class Vue implements ComponentPublicInstance {
     /**
      * Test if a slot is defined and not empty.
      */
-   hasSlot(name: string): boolean {
+    hasSlot(name: string): boolean {
         return Object.keys(this.$slots).indexOf(name) > -1;
+    }
+
+    /**
+     * Extract all the text content from an array of vnodes.
+     */
+    protected getVNodesText(nodes: VNode[]): string {
+        return nodes.map(node => {
+            if (isType<VNode[]>(node.children, isArray)) {
+                return this.getVNodesText(node.children);
+            }
+            return isString(node.children) ? node.children : '';
+        }).join('');
     }
 }
