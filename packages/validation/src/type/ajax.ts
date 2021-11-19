@@ -6,7 +6,7 @@ import {
     HttpRequestFactory,
     HttpRequestFactoryConfig,
     HttpResponse,
-    HttpService
+    HttpService, RequestCanceledException
 } from "@banquette/http";
 import { extend } from "@banquette/utils-object";
 import { isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
@@ -59,11 +59,15 @@ export class AjaxValidator implements SimplifiedValidatorInterface {
         }
         const response: HttpResponse<any> = this.http.send(request);
         const promiseWrapper = new Promise((resolve, reject) => {
-            response.promise.catch((reason: HttpResponse<any>) => {
-                reject(reason.error);
-            }).finally(() => {
+            response.promise.then(() => {
                 this.responseHandler(response, context.result);
                 resolve(context);
+            }).catch((reason: HttpResponse<any>) => {
+                if (reason.error instanceof RequestCanceledException) {
+                    context.result.cancel();
+                }
+                this.responseHandler(response, context.result);
+                reject(reason.error);
             });
         });
         context.result.delayResponse(promiseWrapper, () => {
