@@ -15,8 +15,11 @@ export interface ComponentDecoratorOptions {
 
     /**
      * Template string of the component.
+     *
+     * Or`false` to explicitly ask for the component to have no template.
+     * In which case a render function returning nothing will be added.
      */
-    template?: string;
+    template?: string|false;
 
     /**
      * Components / directives dependencies.
@@ -62,6 +65,9 @@ export function Component(options: ComponentDecoratorOptions|string = {}): any {
                     data.component = (data.component as any).default;
                 } else if (isType<Function>(data.component, isFunction)) {
                     data.component = data.component();
+                }
+                if (data.component.template === false) {
+                    output.render = () => '';
                 }
                 return output;
             }
