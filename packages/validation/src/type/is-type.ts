@@ -30,7 +30,7 @@ export enum Type {
 /**
  * A validator checking the value matches a type.
  */
-export const IsType = (type: Type, message: string = 'Invalid type of value. Expecting one of: %types%', tags: string[] = []): ValidatorInterface => {
+export const IsType = (target: Type, message: string = 'Invalid type of value. Expecting one of: %types%', type: string = 'is-type', tags: string[] = []): ValidatorInterface => {
     return createValidator({
         validate(context: ValidationContext): ValidationResult {
             let tests: Record<Type, [string, (value: any) => boolean]> = {
@@ -48,7 +48,7 @@ export const IsType = (type: Type, message: string = 'Invalid type of value. Exp
             const invalidTypes: string[] = [];
             for (let key of getObjectKeys(tests)) {
                 key = ensureNumber(key) as Type;
-                if ((type & key) === key) {
+                if ((target & key) === key) {
                     ++testsCount;
                     if (!tests[key][1](context.value)) {
                         invalidTypes.push(tests[key][0]);
@@ -56,7 +56,7 @@ export const IsType = (type: Type, message: string = 'Invalid type of value. Exp
                 }
             }
             if (invalidTypes.length > 0 && invalidTypes.length === testsCount) {
-                context.result.addViolation('is-type', message, {types: invalidTypes.join(',')})
+                context.result.addViolation(type, message, {types: invalidTypes.join(',')})
             }
             return context.result;
         }

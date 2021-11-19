@@ -90,7 +90,8 @@ export class AjaxValidator implements SimplifiedValidatorInterface {
 export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFactoryConfig|string,
                      responseHandler?: ResponseHandler,
                      message?: string,
-                     type?: string): ValidatorInterface => {
+                     type?: string,
+                     tags: string[] = []): ValidatorInterface => {
     const isFactoryConfig = (value: RequestFactory|HttpRequestFactoryConfig): value is HttpRequestFactoryConfig => isObject(value);
     const instance: AjaxValidator = Injector.Get<AjaxValidator>(AjaxValidator);
     if (requestFactory instanceof HttpRequest) {
@@ -118,5 +119,5 @@ export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFacto
     if (!isUndefined(type)) {
         instance.type = type;
     }
-    return createValidator(instance, [ASYNC_TAG]);
+    return createValidator(instance, [ASYNC_TAG].concat(tags));
 };
