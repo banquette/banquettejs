@@ -3,7 +3,7 @@ import { ComposableDecoratorOptions } from "./composable.decorator";
 import { ComputedDecoratorOptions } from "./computed.decorator";
 import { ImportDecoratorOptions } from "./import.decorator";
 import { LifecycleHook } from "./lifecycle.decorator";
-import { PropOptions } from "./prop.decorator";
+import { PropPrivateOptions } from "./prop.decorator";
 import { WatchDecoratorOptions } from "./watch.decorator";
 
 /**
@@ -26,7 +26,7 @@ export interface DecoratorsDataInterface {
     /**
      * Define the props to register.
      */
-    props: Record<string, PropOptions>;
+    props: Record<string, PropPrivateOptions>;
 
     /**
      * The list of the computed properties.

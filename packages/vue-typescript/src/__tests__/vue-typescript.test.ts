@@ -59,6 +59,22 @@ describe('@Prop()', () => {
         })
         expect(wrapper.find('#count').text()).toContain('count: 10');
     });
+
+    test('custom prop name',  () => {
+        @Component({name: 'test', template: `<div id="url">{{ url }}</div>`})
+        class Test {
+            @Expose() @Prop({name: 'custom:url', type: String}) private url!: string;
+        }
+
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test custom:url="/test"></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        expect(wrapper.find('#url').text()).toEqual('/test');
+    });
 });
 
 describe('@Import()', () => {
@@ -109,6 +125,24 @@ describe('@Import()', () => {
             name: 'app',
             components: [Test],
             template: `<test url="/test"></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        expect(wrapper.find('#url').text()).toEqual('/test');
+    });
+
+    test('import with alias map',  () => {
+        @Component({name: 'test', template: `<div id="url">{{ remote.url }}</div>`})
+        class Test {
+            @Expose() @Import(Remote, {
+                url: 'custom:url'
+            }) private remote!: Remote;
+        }
+
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test custom:url="/test"></test>`
         })
         class App { }
         const wrapper = mount(getComponentOptions(App), {})

@@ -33,6 +33,7 @@ import { WatchFunction } from "./decorator/watch.decorator";
 import { AliasesMap, AliasResolver, PrefixOrAlias } from "./type";
 import { VueBuilder } from "./vue-builder";
 import { Vue } from "./vue";
+import { PropOptions, PropPrivateOptions } from "./decorator/prop.decorator";
 
 export type DecoratedConstructor = Constructor & {[DECORATORS_OPTIONS_HOLDER_NAME]: DecoratorsDataInterface};
 
@@ -198,8 +199,13 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         }
     }
 
-    // No processing required here.
-    options.props = {...data.props};
+    // Rename props with a custom name.
+    const renamedProps: Record<string, PropPrivateOptions> = {};
+    for (const propName of Object.keys(data.props)) {
+        renamedProps[data.props[propName].name || propName] = {...data.props[propName]};
+    }
+    data.props = renamedProps;
+    options.props = renamedProps;
 
     // Merge composable props
     for (const targetProperty of Object.keys(data.imports)) {
@@ -214,6 +220,7 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
                         console.warn(`The prop "${subProp}" from the composable "${composableCtor.name}" overrides an already defined prop with the same name (${realPropName}).`);
                     }
                     options.props[realPropName] = composableDecorationData.props[subProp];
+                    options.props[realPropName].propertyName = realPropName;
                 }
             }
         }
@@ -356,8 +363,9 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                         });
                     })(propRef, data.props[propName].validate as GenericCallback);
                 }
-                output[propName] = propRef;
-                defineRefProxy(inst, propName, output);
+                const propPublicName = data.props[propName].name || propName;
+                output[propPublicName] = propRef;
+                defineRefProxy(inst, data.props[propName].propertyName, output, propPublicName);
             }
             rootProps = props;
         }
