@@ -722,10 +722,12 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * Do what needs to be done with a ValidationResult that just got settled.
      */
     protected handleValidationResult(result: ValidationResult): void {
+        if (result.canceled) {
+            return ;
+        }
         if (result.waiting) {
             throw new UsageException('The ValidationResult is still waiting.');
         }
-        this.clearResultFromValidationResultsStack(result);
         if (result.valid) {
             this.unmarkBasicState(BasicState.Invalid, this.id);
         } else {
@@ -739,6 +741,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         }
         this.unmarkBasicState(BasicState.NotValidated, this.id);
         this.unmarkBasicState(BasicState.Validating, this.id);
+        this.clearResultFromValidationResultsStack(result);
     }
 
     /**
