@@ -4,12 +4,13 @@ import { HttpMethod, UrlParameterType } from "./constants";
 import { HttpResponse } from "./http-response";
 import { UrlParameterInterface } from "./url-parameter.interface";
 import { replaceStringVariables } from "@banquette/utils-string";
-import { extend } from "@banquette/utils-object";
+import { extend, cloneDeep } from "@banquette/utils-object";
 import qs from 'qs';
 import { Injector } from "@banquette/dependency-injection";
 import { SharedConfiguration } from "@banquette/config";
 import { HttpConfigurationInterface } from "./http-configuration.interface";
 import { HttpConfigurationSymbol } from "./config";
+import { Writeable } from "@banquette/utils-type";
 
 let Configuration: HttpConfigurationInterface|null = null;
 
@@ -106,7 +107,7 @@ export class HttpRequest {
     }
 
     public incrementTryCount(): void {
-        (this as any).tryCount = this.tryCount + 1;
+        (this as Writeable<HttpRequest>).tryCount = this.tryCount + 1;
     }
 
     /**
@@ -116,7 +117,7 @@ export class HttpRequest {
         if (this.adapter) {
             throw new UsageException('An adapter has already been set.');
         }
-        (this as any).adapter = adapter;
+        (this as Writeable<HttpRequest>).adapter = adapter;
         if (this.canceled) {
             adapter.cancel();
         }
@@ -129,7 +130,7 @@ export class HttpRequest {
         if (this.response) {
             throw new UsageException('A response has already been set.');
         }
-        (this as any).response = response;
+        (this as Writeable<HttpRequest>).response = response;
     }
 
     /**
@@ -141,6 +142,31 @@ export class HttpRequest {
             return ;
         }
         this.adapter.cancel();
+    }
+
+    /**
+     * Create a new HttpRequest object with the same parameters as the current one,
+     * ready to be sent to the HttpService.
+     *
+     * This is useful if you want to make the same request again, as you cannot use the same HttpRequest object.
+     */
+    public clone(): HttpRequest {
+        return new HttpRequest(
+            this.method,
+            this.url,
+            Object.assign({}, this.params),
+            cloneDeep(this.payload),
+            this.payloadType,
+            this.responseType,
+            Object.assign({}, this.headers),
+            this.timeout,
+            this.retry,
+            this.retryDelay,
+            this.priority,
+            this.withCredentials,
+            this.mimeType,
+            cloneDeep(this.extras)
+        );
     }
 
     /**
