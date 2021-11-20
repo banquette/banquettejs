@@ -61,7 +61,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
      */
     public getNameOf(component: FormComponentInterface): string|null {
         for (const name of Object.keys(this.children_)) {
-            if (this.children_[name].decorated === component) {
+            if (this.children_[name].decorated.id === component.id) {
                 return name;
             }
         }
@@ -79,7 +79,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         }
         identifier = FormObject.ValidateIdentifier(identifier);
         if (!isUndefined(this.children_[identifier])) {
-            if (this.children_[identifier].decorated === component) {
+            if (this.children_[identifier].decorated.id === component.id) {
                 return;
             }
             this.children_[identifier].unsetParent();

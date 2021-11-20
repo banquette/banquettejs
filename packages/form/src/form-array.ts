@@ -118,7 +118,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
      */
     public getNameOf(component: FormComponentInterface): number|null {
         for (let i = 0; i < this.children_.length; ++i) {
-            if (this.children_[i].decorated === component) {
+            if (this.children_[i].decorated.id === component.id) {
                 return i;
             }
         }
@@ -130,7 +130,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
      */
     public set(index: number, component: FormComponentInterface): void {
         if (index < this.children_.length) {
-            if (this.children_[index].decorated === component) {
+            if (this.children_[index].decorated.id === component.id) {
                 return;
             }
             this.remove(index);

@@ -324,7 +324,7 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
     protected getIndexOf(component: FormComponentInterface): IdentifierType|null {
         let match: IdentifierType|null = null;
         this.forEachDecorated((candidate: FormChildComponentInterface, identifier: IdentifierType) => {
-            if (component === candidate.decorated) {
+            if (component.id === candidate.decorated.id) {
                 match = identifier;
                 return false;
             }
