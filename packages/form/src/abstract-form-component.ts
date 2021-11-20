@@ -422,6 +422,14 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public abstract setValue(value: ValueType, context?: CallContext): void;
 
     /**
+     * Set the default value of the control.
+     *
+     * Calling this method will also set the field back an "unchanged" state.
+     * Further reset of the control will set this value back into the "real" value of the control.
+     */
+    public abstract setDefaultValue(value: ValueType): void;
+
+    /**
      * Sets the parent component.
      */
     public setParent(parent: FormParentComponentInterface): FormChildComponentInterface {
@@ -621,6 +629,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             this.activeControl.blur();
         }
         this.unmarkBasicState([BasicState.Touched, BasicState.Dirty], this.id);
+        this.markBasicState(BasicState.NotValidated, this.id);
         this.validationStatus = ValidationStatus.Unknown;
         this.clearErrors();
     }
@@ -1034,6 +1043,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
                 get decorated(): FormComponentInterface { return that }
             }, this.buildContextualizedApi<Omit<FormChildComponentInterface, 'decorated'>>({
                 setValue: this.setValue,
+                setDefaultValue: this.setDefaultValue,
                 unsetParent: this.unsetParent,
                 enable: this.enable,
                 disable: this.disable,

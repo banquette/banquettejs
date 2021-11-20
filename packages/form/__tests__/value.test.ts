@@ -131,6 +131,24 @@ describe('Control value', () => {
         expect(tags.value).toEqual(expectPartialObjectMatch(targetExpectedValue));
         checkValueInChildren(tags, targetExpectedValue);
     });
+
+    test('set default value from a FormObject', () => {
+        const modifiedValues = {username: 'new username', email: 'new email', category: {name: 'new category name'}};
+        const defaultValues = {username: 'default username', category: {name: 'default cat name'}};
+
+        // Modify some values
+        form.setValue(modifiedValues);
+        form.setDefaultValue(defaultValues);
+
+        // Expect no modification at this point
+        expect(form.value).toEqual(expectPartialObjectMatch(modifiedValues));
+
+        // Reset to apply default values.
+        form.reset();
+
+        // Now we should have the default values and controls must have been reset.
+        expect(form.value).toEqual(expectPartialObjectMatch(defaultValues));
+    });
 });
 
 describe('View model value', () => {

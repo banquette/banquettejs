@@ -223,6 +223,21 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
     }
 
     /**
+     * Set the default value of child defined in the input object.
+     */
+    public setDefaultValue(values: Record<string, any>): void {
+        for (let i = 0, c = Math.min(this.children_.length, values.length); i < c; ++i) {
+            if (!isNullOrUndefined(values[i])) {
+                this.children_[i].setDefaultValue(values[i]);
+            }
+        }
+        this.updateValue();
+        if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
+            this.parent.updateValue();
+        }
+    }
+
+    /**
      * Call a function for each child.
      * If the callback returns `false`, the loop is stopped.
      */
@@ -282,7 +297,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }
-        if (!areEqual(oldValue, this.value)) {
+        if (!areEqual(oldValue, this.value) && !this.hasContext(CallContext.Reset)) {
             this.validateIfStrategyMatches(ValidationStrategy.OnChange);
         }
     }

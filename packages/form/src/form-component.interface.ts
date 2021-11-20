@@ -287,6 +287,14 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     setValue(value: ValueType): void;
 
     /**
+     * Set the default value of the control.
+     *
+     * Calling this method will also set the field back an "unchanged" state.
+     * Further reset of the control will set this value back into the "real" value of the control.
+     */
+    setDefaultValue(value: ValueType): void;
+
+    /**
      * Force validate the component and all its children.
      * By calling this method the validation will always run immediately, no matter the validation strategy.
      */

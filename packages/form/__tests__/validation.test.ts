@@ -275,6 +275,16 @@ describe('Implicit validation', () => {
         expect(categoryName.valid).toEqual(true);
     });
 
+    test('reset does not trigger a validation', () => {
+        const categoryName = form.get('category/name');
+        categoryName.setValidationStrategy(ValidationStrategy.OnChange);
+        categoryName.setValue('valid');
+        categoryName.setDefaultValue('invalid');
+        categoryName.reset();
+        expect(categoryName.valid).toEqual(true);
+        expect(categoryName.validated).toEqual(false);
+    });
+
     /**
      * OnChange
      */

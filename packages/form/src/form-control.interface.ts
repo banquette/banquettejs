@@ -8,14 +8,6 @@ import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 
 export interface FormControlInterface extends FormComponentInterface {
     /**
-     * Set the default value of the control.
-     *
-     * Calling this method will also set the field back an "unchanged" state.
-     * Further reset of the control will set this value back into the "real" value of the control.
-     */
-    setDefaultValue(value: any): void;
-
-    /**
      * Set the view model the control will communicate with.
      *
      * @return A object the view model must use to interact with the control.

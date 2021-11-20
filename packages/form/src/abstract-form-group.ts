@@ -382,7 +382,19 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
             get root(): FormComponentInterface { return that.root },
             get activeControl(): FormControlInterface|null { return that.activeControl },
             set activeControl(control: FormControlInterface|null) { that.activeControl = control },
-        }, this.buildContextualizedApi<Omit<FormParentComponentInterface, 'decorated' | 'path' | 'root' | 'activeControl'>>({
+            pushContext: (context: CallContext, recursive: boolean) => {
+                this.pushContext(context);
+                if (recursive && this.parent !== null) {
+                    this.parent.pushContext(context, true);
+                }
+            },
+            popContext: (recursive: boolean) => {
+                this.popContext();
+                if (recursive && this.parent !== null) {
+                    this.parent.popContext(true);
+                }
+            }
+        }, this.buildContextualizedApi<Omit<FormParentComponentInterface, 'decorated' | 'path' | 'root' | 'activeControl' | 'pushContext' | 'popContext'>>({
                 updateValue: this.updateValue,
                 getConcreteValidationStrategy: this.getConcreteValidationStrategy,
                 markBasicState: this.markBasicState,

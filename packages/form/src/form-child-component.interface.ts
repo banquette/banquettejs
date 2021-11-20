@@ -16,6 +16,11 @@ export interface FormChildComponentInterface {
     setValue(value: any): void;
 
     /**
+     * Update the default value of the component.
+     */
+    setDefaultValue(value: any): void;
+
+    /**
      * Unset the parent component.
      */
     unsetParent(): void;

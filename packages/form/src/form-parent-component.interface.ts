@@ -2,7 +2,7 @@ import { FormComponentInterface } from "./form-component.interface";
 import { FormControlInterface } from "./form-control.interface";
 import { FormGroupInterface } from "./form-group.interface";
 import { ConcreteValidationStrategy } from "./type";
-import { BasicState } from "./constant";
+import { BasicState, CallContext } from "./constant";
 import { FormEvent } from "./event/form-event";
 
 /**
@@ -68,4 +68,14 @@ export interface FormParentComponentInterface {
      * Dispatch an event.
      */
     dispatch(type: symbol, event: FormEvent|(() => FormEvent)): void;
+
+    /**
+     * Push a call context in the parent component.
+     */
+    pushContext(context: CallContext, recursive: boolean): void;
+
+    /**
+     * Pop a call context from the parent component.
+     */
+    popContext(recursive: boolean): void;
 }
