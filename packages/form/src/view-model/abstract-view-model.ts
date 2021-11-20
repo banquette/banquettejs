@@ -73,6 +73,13 @@ export abstract class AbstractViewModel implements ViewModelInterface {
     }
 
     /**
+     * Update the value without triggering a control update.
+     */
+    public updateValueFromControl(value: any): void {
+        this._value = value;
+    }
+
+    /**
      * Shortcut for `control.setState(VisualState.Focused, true)`.
      */
     public onFocus(): void {

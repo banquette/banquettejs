@@ -36,4 +36,9 @@ export interface ViewModelInterface {
      * Mark the control as unfocused.
      */
     onBlur(): void;
+
+    /**
+     * Update the value without triggering a control update.
+     */
+    updateValueFromControl(value: any): void;
 }
