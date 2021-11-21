@@ -301,7 +301,14 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
                     if (promisesStack.length === 0) {
                         return localResult;
                     }
-                    localResult.delayResponse(Promise.all(promisesStack));
+                    localResult.delayResponse(new Promise((resolve, reject) => {
+                        Promise.all(promisesStack).then((results: boolean[]) => {
+                            if (results.indexOf(false) > -1) {
+                                localResult.addViolation(VirtualViolationType);
+                            }
+                            resolve(results);
+                        }).catch(reject);
+                    }));
                     return localResult;
                 }
             });

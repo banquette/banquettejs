@@ -219,6 +219,24 @@ describe('Explicit validation', () => {
             '/name': expect.arrayContaining([expect.objectContaining({type: 'not-empty'})])
         });
     });
+
+    test('validate returns false when the validation fails with sync validators',  () => {
+        const form = new FormObject({
+            name: createConcreteControl('', NotEqual('invalid'))
+        });
+        form.setValidationStrategy(ValidationStrategy.OnChange);
+        form.get('name').setValue('invalid');
+        expect(form.validate()).toEqual(false);
+    });
+
+    test('validate returns false when the validation fails with async validators', async () => {
+        const form = new FormObject({
+            name: createConcreteControl('', ValidateAfterDelay(50, NotEqual('invalid')))
+        });
+        form.setValidationStrategy(ValidationStrategy.None);
+        form.get('name').setValue('invalid');
+        expect(await form.validate()).toEqual(false);
+    });
 });
 
 /**
