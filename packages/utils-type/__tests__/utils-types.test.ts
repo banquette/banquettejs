@@ -1,7 +1,6 @@
 import 'reflect-metadata';
-import { isUndefined } from "lodash";
 import { noop } from "../src/utils";
-import { isPojo, isPrimitive, isPromiseLike, isObject } from "../src";
+import { isPojo, isPrimitive, isPromiseLike, isObject, isUndefined } from "../src";
 
 class Foo {}
 

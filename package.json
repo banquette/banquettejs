@@ -25,7 +25,6 @@
     },
     "dependencies": {
         "inversify": "^5.0.5",
-        "lodash": "^4.17.20",
         "observable-slim": "^0.1.5",
         "qs": "^6.10.1",
         "reflect-metadata": "^0.1.13",
@@ -38,7 +37,6 @@
         "@rollup/plugin-buble": "^0.21.3",
         "@rollup/plugin-replace": "^2.4.1",
         "@types/jest": "^27.0.2",
-        "@types/lodash": "^4.14.168",
         "@types/qs": "^6.9.7",
         "@vue/compiler-sfc": "^3.0.5",
         "@vue/test-utils": "^2.0.0-rc.15",
