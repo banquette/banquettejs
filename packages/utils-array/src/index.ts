@@ -1,4 +1,5 @@
 
+export * from './array-intersect';
 export * from './array-unique';
 export * from './ensure-in-enum';
 export * from './enum-to-array';
