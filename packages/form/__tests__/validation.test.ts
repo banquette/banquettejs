@@ -237,6 +237,16 @@ describe('Explicit validation', () => {
         form.get('name').setValue('invalid');
         expect(await form.validate()).toEqual(false);
     });
+
+    test('explicit validation on a container with no validator waits for already running async child validator', async () => {
+        const form = new FormObject({
+            name: createConcreteControl('', ValidateAfterDelay(50, NotEqual('invalid')))
+        });
+        form.get('name').setValue('invalid');
+        await form.validate();
+        expect(form.invalid).toEqual(true);
+        expect(form.validating).toEqual(false);
+    });
 });
 
 /**

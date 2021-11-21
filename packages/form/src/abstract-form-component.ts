@@ -32,6 +32,7 @@ import { ConcreteValidationStrategy, ContextStackItem, State } from "./type";
 import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
 import { uniqueId } from "@banquette/utils-random";
+import { ValidationEndFormEvent } from "./event/validation-end.form-event";
 
 export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
     /**
@@ -594,6 +595,24 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     }
 
     /**
+     * Register a callback that will be called each time the validation is started.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    public onValidationStart(callback: (event: FormEvent) => void, selfOnly?: boolean): UnsubscribeFunction {
+        return this.subscribe<FormEvent>(Events.ValidationStart, callback, selfOnly);
+    }
+
+    /**
+     * Register a callback that will be called each time a validation ends.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    public onValidationEnd(callback: (event: ValidationEndFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction {
+        return this.subscribe<ValidationEndFormEvent>(Events.ValidationEnd, callback, selfOnly);
+    }
+
+    /**
      * Subscribe to an event.
      * You can alternatively use shortcut methods (like "onValueChange") to subscribe to events.
      */
@@ -680,6 +699,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * Here we simply validate the current validator if we have one.
      */
     protected doValidate(validator: ValidatorInterface|null): Promise<boolean>|boolean {
+        this.dispatch(Events.ValidationStart, () => new FormEvent(this));
         this.markBasicState(BasicState.Validating, this.id);
         // If no validator, we can consider the value as valid.
         if (validator === null) {
@@ -751,6 +771,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         this.unmarkBasicState(BasicState.NotValidated, this.id);
         this.unmarkBasicState(BasicState.Validating, this.id);
         this.clearResultFromValidationResultsStack(result);
+        this.dispatch(Events.ValidationEnd, () => new ValidationEndFormEvent(this, result));
     }
 
     /**

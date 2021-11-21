@@ -87,9 +87,6 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
                 if (this.viewModel && (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset))) {
                     this.viewModel.setValue(value);
                 }
-                if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
-                    this.updateValue();
-                }
                 this.markBasicState(BasicState.Dirty);
                 if (!areEqual(this.defaultValue, value)) {
                     this.markBasicState(BasicState.Changed);
@@ -98,6 +95,9 @@ export class FormControl extends AbstractFormComponent implements FormControlInt
                 }
                 if (!this.hasContext(CallContext.Reset)) {
                     this.validateIfStrategyMatches(ValidationStrategy.OnChange);
+                }
+                if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
+                    this.updateValue();
                 }
             } finally {
                 locked = false;

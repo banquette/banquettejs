@@ -6,13 +6,17 @@ import {
     FormObject,
     StateChangedFormEvent,
     BasicState,
-    FilterGroup, BeforeValueChangeFormEvent
+    FilterGroup,
+    BeforeValueChangeFormEvent,
+    ValidationStrategy,
+    FormControl,
+    ValidationEndFormEvent
 } from "../src";
-import { createTestForm } from "./__mocks__/utils";
+import { createTestForm, createConcreteControl } from "./__mocks__/utils";
 import { areEqual } from "@banquette/utils-misc";
 import { ViewModelMock } from "./__mocks__/view-model.mock";
-import { NotEmpty } from "@banquette/validation";
-import { FormControl } from "../src";
+import { NotEmpty, NotEqual, ValidationResult } from "@banquette/validation";
+import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";
 
 class Foo {}
 
@@ -305,4 +309,97 @@ describe('StateChanged', () => {
             expect(areEqual(testItem.expected, changes)).toEqual(true);
         });
     }
+});
+
+/**
+ * Validation
+ */
+describe('Validation', () => {
+    let form: FormGroupInterface;
+
+    beforeEach(() => {
+        form = new FormObject({
+            syncAttr: createConcreteControl('default value', NotEqual('invalid')),
+            asyncAttr: createConcreteControl('default value', ValidateAfterDelay(50, NotEqual('invalid'))),
+            container: new FormObject({
+                syncAttr: createConcreteControl('default value', NotEqual('invalid')),
+                asyncAttr: createConcreteControl('default value', ValidateAfterDelay(50, NotEqual('invalid')))
+            })
+        });
+        form.setValidationStrategy(ValidationStrategy.OnChange);
+    });
+
+    test('ValidationStart is called when a validation starts', () => {
+        let sources: any = [];
+        const control = form.get('syncAttr');
+        control.onValidationStart((event) => {
+            sources.push(event.source);
+        });
+        control.setValue('new');
+        expect(sources.length).toEqual(1);
+        expect(sources).toMatchObject([
+            expect.objectContaining({path: '/syncAttr'})
+        ]);
+    });
+
+    test('ValidationStart can be called when a child validation starts', () => {
+        let sources: any = [];
+        form.onValidationStart((event) => {
+            sources.push(event.source);
+        }, false);
+        form.get('syncAttr').setValue('new');
+        expect(sources.length).toEqual(2);
+        expect(sources).toMatchObject([
+            expect.objectContaining({path: '/syncAttr'}),
+            expect.objectContaining({path: '/'})
+        ]);
+    });
+
+    test('ValidationStart only works on the component the event has been set on by default', () => {
+        let sources: any = [];
+        form.onValidationStart((event) => {
+            sources.push(event.source);
+        });
+        form.get('syncAttr').setValue('new');
+        expect(sources.length).toEqual(1);
+        expect(sources).toMatchObject([
+            expect.objectContaining({path: '/'})
+        ]);
+    });
+
+    test('ValidationStart is called each time the validation starts, even if already running', async () => {
+        const fn: any = jest.fn();
+        form.onValidationStart(fn);
+        form.get('asyncAttr').setValue('new');
+        form.get('asyncAttr').setValue('invalid');
+        await form.validate();
+        expect(form.invalid).toEqual(true);
+        expect(fn).toBeCalledTimes(3);
+    });
+
+    test('ValidationStart is called even if there is no validator on the component', () => {
+        const fn: any = jest.fn();
+        form.get('syncAttr').onValidationStart(fn);
+        form.get('syncAttr').setValue('new');
+        expect(fn).toBeCalledTimes(1);
+    });
+
+    test('ValidationEnd contains the validation result', () => {
+        form.get('syncAttr').onValidationEnd((event: ValidationEndFormEvent) => {
+            expect(event.result).toBeInstanceOf(ValidationResult);
+        });
+        form.get('syncAttr').setValue('new');
+        expect.assertions(1);
+    });
+
+    test('ValidationEnd always contains a non pending validation result', async () => {
+        form.onValidationEnd((event: ValidationEndFormEvent) => {
+            expect(event.result.waiting).toBe(false);
+            expect(event.result.invalid).toBe(true);
+        });
+        form.setValidationStrategy(ValidationStrategy.None);
+        form.get('asyncAttr').setValue('invalid');
+        await form.validate();
+        expect.assertions(2);
+    });
 });

@@ -26,6 +26,7 @@ export * from './event/form-event';
 export * from './event/state-changed.form-event';
 export * from './event/before-value-change.form-event';
 export * from './event/value-changed.form-event';
+export * from './event/validation-end.form-event';
 
 /**
  * Exceptions

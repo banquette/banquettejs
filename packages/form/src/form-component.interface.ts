@@ -10,6 +10,8 @@ import { FormParentComponentInterface } from "./form-parent-component.interface"
 import { State } from "./type";
 import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
+import { FormEvent } from "./event/form-event";
+import { ValidationEndFormEvent } from "./event/validation-end.form-event";
 
 export interface FormComponentInterface<ValueType = unknown, ChildrenType = unknown> {
     /**
@@ -357,4 +359,23 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
      * @return A method to call to unsubscribe.
      */
     onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called each time the validation is started.
+     * This event will trigger each time the validation start for the component, even if another one is already running,
+     * or if the validation is triggered by a child update.
+     *
+     * If you want a unique event notifying when the validation start, use `onStateChanged` instead.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onValidationStart(callback: (event: FormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called each time a validation ends.
+     * Just like `onValidateStart`, this will be called a lot, use `onStateChanged` if you only want less detail.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onValidationEnd(callback: (event: ValidationEndFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
 }

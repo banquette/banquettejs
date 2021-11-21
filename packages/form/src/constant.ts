@@ -23,7 +23,13 @@ export const Events = {
      * Form groups related events.
      */
     ComponentAdded: Symbol('component-added'),
-    ComponentRemoved: Symbol('component-removed')
+    ComponentRemoved: Symbol('component-removed'),
+
+    /**
+     * Validation related events.
+     */
+    ValidationStart: Symbol('validation-start'),
+    ValidationEnd: Symbol('validation-end')
 };
 
 /**
@@ -33,7 +39,9 @@ export const InheritedEvents = {
     ValueChanged: Symbol('inherited-value-changed'),
     StateChanged: Symbol('inherited-state-changed'),
     ComponentAdded: Symbol('inherited-component-added'),
-    ComponentRemoved: Symbol('inherited-component-removed')
+    ComponentRemoved: Symbol('inherited-component-removed'),
+    ValidationStart: Symbol('inherited-validation-start'),
+    ValidationEnd: Symbol('inherited-validation-end'),
 };
 
 /**
@@ -44,12 +52,16 @@ export const EventsInheritanceMap = {
     [Events.StateChanged]: InheritedEvents.StateChanged,
     [Events.ComponentAdded]: InheritedEvents.ComponentAdded,
     [Events.ComponentRemoved]: InheritedEvents.ComponentRemoved,
+    [Events.ValidationStart]: InheritedEvents.ValidationStart,
+    [Events.ValidationEnd]: InheritedEvents.ValidationEnd,
 
     // So the map can be used with already inherited events
     [InheritedEvents.ValueChanged]: InheritedEvents.ValueChanged,
     [InheritedEvents.StateChanged]: InheritedEvents.StateChanged,
     [InheritedEvents.ComponentAdded]: InheritedEvents.ComponentAdded,
-    [InheritedEvents.ComponentRemoved]: InheritedEvents.ComponentRemoved
+    [InheritedEvents.ComponentRemoved]: InheritedEvents.ComponentRemoved,
+    [InheritedEvents.ValidationStart]: InheritedEvents.ValidationStart,
+    [InheritedEvents.ValidationEnd]: InheritedEvents.ValidationEnd
 };
 
 /**
