@@ -6,6 +6,7 @@ export * from './form-array';
 export * from './form-control';
 export * from './form.factory';
 export * from './form.factory';
+export * from './form-error';
 export * from './form-components-collection';
 export * from './constant';
 export * from './config';

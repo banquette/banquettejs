@@ -532,7 +532,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     /**
      * Add one or multiple errors to the component.
      */
-    public addError(type: string, message?: string): void {
+    public addError(type: string, message?: string|null): void {
         const error = new FormError(this.path, type, message);
         this.errors.push(error);
         this.markBasicState(BasicState.Invalid, this.id);

@@ -9,6 +9,7 @@ import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
 import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";
 import '../../http/__tests__/__mocks__/xml-http-request.mock';
 import { ViewModelMock } from "./__mocks__/view-model.mock";
+import { FormError } from "../src";
 
 /**
  * Assign validators
@@ -497,5 +498,53 @@ describe('Errors', () => {
             '/name': expect.arrayContaining([expect.objectContaining({type: 'not-equal', message: 'Name is invalid.'})]),
             '/category': expect.arrayContaining([expect.objectContaining({type: 'max'})])
         });
+    });
+
+    test('an error can be added manually', () => {
+        form.addError('custom', 'Test message');
+        expect(form.invalid).toEqual(true);
+        expect(form.errors).toMatchObject([
+            {path: '/', type: 'custom', message: 'Test message'}
+        ]);
+    });
+
+    test('errors can be added to a direct child', () => {
+        form.clearErrorsDeep();
+        form.addChildError('name', {type: 'custom', message: 'Test message'});
+        expect(form.invalid).toEqual(true);
+        expect(form.errorsDeep).toMatchObject([
+            {path: '/name', type: 'custom', message: 'Test message'}
+        ]);
+    });
+
+    test('errors can be mapped to deep children', () => {
+        form.clearErrorsDeep();
+        form.addChildrenErrors({
+            'name': {type: 'custom', message: 'Test message'},
+            '/category/name': {type: 'custom-deep', message: 'Test message deep'}
+        });
+        expect(form.invalid).toEqual(true);
+        expect(form.errorsDeep).toMatchObject([
+            {path: '/name', type: 'custom', message: 'Test message'},
+            {path: '/category/name', type: 'custom-deep', message: 'Test message deep'},
+        ]);
+    });
+
+    test('calling addChildError on "/" add the error to the current component', () => {
+        form.clearErrorsDeep();
+        form.addChildError('/', {type: 'custom', message: 'Test message'});
+        expect(form.invalid).toEqual(true);
+        expect(form.errors).toMatchObject([
+            {path: '/', type: 'custom', message: 'Test message'}
+        ]);
+    });
+
+    test('calling addChildError targeting an non existent component throws an error', () => {
+        form.clearErrorsDeep();
+        form.addChildError('name', {type: 'custom', message: 'Test message'});
+        expect(form.invalid).toEqual(true);
+        expect(form.errorsDeep).toMatchObject([
+            {path: '/name', type: 'custom', message: 'Test message'}
+        ]);
     });
 });

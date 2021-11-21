@@ -1,5 +1,6 @@
 import { ValidatorInterface } from "@banquette/validation";
 import { BasicState, CallContext, ContextualizedState, InverseState, ValidationStrategy } from "./constant";
+import { FormError } from "./form-error";
 
 type ValidatorsTreeValue = ValidatorsTree | ValidatorInterface | undefined;
 
@@ -37,3 +38,8 @@ export type State = BasicState | ContextualizedState | InverseState;
  * Filters used while iterating over the children of a group.
  */
 export type ForEachFilters = Partial<Record<State, boolean>>;
+
+/**
+ * A FormError with no path.
+ */
+export type UnassignedFormError = Omit<FormError, 'path' | 'message'> & {message?: string|null};

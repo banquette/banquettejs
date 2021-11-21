@@ -44,16 +44,15 @@ describe('Create manually', () => {
         expect(form.get('username').value).toEqual('default username');
         expect(form.get('email').value).toEqual(undefined);
     });
+
     test('FormArray value', () => {
         expect(form.get<FormArray>('tags').value).toStrictEqual(['a', undefined, 'c']);
     });
+
     test('FormArray item value', () => {
         expect(form.get<FormArray>('tags').get<FormControl>(0).value).toEqual('a');
         expect(form.get<FormArray>('tags').get<FormControl>(1).value).toEqual(undefined);
         expect(form.get<FormArray>('tags').get<FormControl>(2).value).toEqual('c');
-    });
-    test('Non existing control', () => {
-        expect(() => form.get('nonExisting')).toThrow(ComponentNotFoundException);
     });
 
     test('Invalid form group child name', () => {
@@ -234,6 +233,26 @@ describe('Manipulate groups', () => {
     /**
      * FormObject
      */
+    test('get() (FormObject)', () => {
+        const formObj: FormObject = FormFactoryTest.CreateAsConcrete({name: 'John'}) as FormObject;
+        expect(formObj.get('name')).toBeInstanceOf(FormControl);
+    });
+
+    test('get() can take a path (FormObject)', () => {
+        const formObj: FormObject = FormFactoryTest.CreateAsConcrete({category: {name: 'John'}}) as FormObject;
+        expect(formObj.get('/category/name')).toBeInstanceOf(FormControl);
+    });
+
+    test('get() called with "/" returns the current component (FormObject)', () => {
+        const formObj: FormObject = FormFactoryTest.CreateAsConcrete({category: {name: 'John'}}) as FormObject;
+        expect(formObj.get('/')).toBeInstanceOf(FormObject);
+    });
+
+    test('get() called for an non existing control throw an exception (FormObject)', () => {
+        const formObj: FormObject = FormFactoryTest.CreateAsConcrete({name: 'John'}) as FormObject;
+        expect(() => formObj.get('nonExisting')).toThrow(ComponentNotFoundException);
+    });
+
     test('set() (FormObject)', () => {
         const formObj: FormObject = FormFactoryTest.CreateAsConcrete({name: 'John'}) as FormObject;
         expectContents(formObj, {name: 'John', email: undefined});
@@ -297,6 +316,26 @@ describe('Manipulate groups', () => {
     /**
      * FormArray
      */
+    test('get() (FormArray)', () => {
+        const formArr: FormArray = FormFactoryTest.CreateAsConcrete(['a']) as FormArray;
+        expect(formArr.get(0)).toBeInstanceOf(FormControl);
+    });
+
+    test('get() can take a path (FormArray)', () => {
+        const formArray: FormArray = FormFactoryTest.CreateAsConcrete([{name: 'John'}]) as FormArray;
+        expect(formArray.get('/0/name')).toBeInstanceOf(FormControl);
+    });
+
+    test('get() called with "/" returns the current component (FormArray)', () => {
+        const formArray: FormArray = FormFactoryTest.CreateAsConcrete([{name: 'John'}]) as FormArray;
+        expect(formArray.get('/')).toBeInstanceOf(FormArray);
+    });
+
+    test('get() called for an non existing control throw an exception (FormArray)', () => {
+        const formArray: FormArray = FormFactoryTest.CreateAsConcrete(['a']) as FormArray;
+        expect(() => formArray.get(1)).toThrow(ComponentNotFoundException);
+    });
+
     test('append() (FormArray)', () => {
         const formArr: FormArray = FormFactoryTest.CreateAsConcrete(['a']) as FormArray;
         expectContents(formArr, ['a']);

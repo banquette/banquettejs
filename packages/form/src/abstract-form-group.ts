@@ -21,7 +21,7 @@ import { FormComponentsCollection } from "./form-components-collection";
 import { FormControlInterface } from "./form-control.interface";
 import { FormGroupInterface } from "./form-group.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
-import { ForEachFilters } from "./type";
+import { ForEachFilters, UnassignedFormError } from "./type";
 import { FormError } from "./form-error";
 
 export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType> extends AbstractFormComponent<ValueType, ChildrenType> implements FormGroupInterface<IdentifierType> {
@@ -155,6 +155,28 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
     }
 
     /**
+     * Add an error to a child component.
+     * `name` can be a component name of a path to a deeper child.
+     */
+    public addChildError(name: string, error: UnassignedFormError|UnassignedFormError[]): void {
+        const child: FormComponentInterface = this.get(name);
+        const errors: UnassignedFormError[] = ensureArray(error);
+        for (const item of errors) {
+            child.addError(item.type, item.message);
+        }
+    }
+
+    /**
+     * Assign a map of errors to child components.
+     * The map is a key/value pair where the key can be the name of a direct child or the path to a deeper one.
+     */
+    public addChildrenErrors(map: Record<string, UnassignedFormError|UnassignedFormError[]>): void {
+        for (const childName of Object.keys(map)) {
+            this.addChildError(childName, map[childName]);
+        }
+    }
+
+    /**
      * Remove all errors from the component and its children.
      */
     public clearErrorsDeep(): void {
@@ -196,6 +218,9 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
      */
     public getByPath<T extends FormComponentInterface>(path: string): T {
         path = ltrim(path, '/');
+        if (path === '') {
+            return this as any;
+        }
         const pos: number = path.indexOf('/');
         if (pos < 0) {
             return this.get(path);

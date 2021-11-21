@@ -315,7 +315,7 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     /**
      * Add an error to the component.
      */
-    addError(type: string, message: string): void;
+    addError(type: string, message?: string|null): void;
 
     /**
      * Remove all errors from the component.
