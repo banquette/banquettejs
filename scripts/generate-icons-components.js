@@ -12,6 +12,11 @@ function camelize(input) {
 }
 
 const imports = [];
+
+if (fs.existsSync(componentsBasePath)) {
+    fs.rmdirSync(componentsBasePath, {recursive: true});
+}
+fs.mkdirSync(componentsBasePath);
 fs.readdirSync(libBasePath).forEach(function(type) {
     const typePath = libBasePath + "/" + type;
     if (!fs.statSync(typePath).isDirectory()) {
