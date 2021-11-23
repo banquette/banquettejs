@@ -1,6 +1,9 @@
-
-import { isScalar, isObject, Primitive, isUndefined, ensureString } from "@banquette/utils-type";
-import { replaceStringVariables } from "@banquette/utils-string";
+import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
+import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isScalar } from "@banquette/utils-type/is-scalar";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Primitive } from "@banquette/utils-type/types";
 import { ChoiceInterface } from "./choice.interface";
 
 export enum SearchType {

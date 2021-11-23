@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { registerExplicitDependency } from "../utils";
 
 /**

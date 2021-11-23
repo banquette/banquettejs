@@ -1,3 +1,4 @@
+import { UsageException } from "@banquette/exception";
 import {
     HttpMethod,
     PayloadTypeJson,
@@ -6,23 +7,20 @@ import {
     HttpRequestBuilder,
     UrlParameterType
 } from "@banquette/http";
-import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
-import {
-    ensureObject,
-    isObject,
-    isUndefined,
-    isFunction,
-    isString,
-    ensureString,
-    isType,
-    isArray
-} from "@banquette/utils-type";
-import { ApiEndpointOptions, ApiEndpointParameterOptions } from "./api-endpoint.options";
+import { extend } from "@banquette/utils-object/extend";
+import { ensureObject } from "@banquette/utils-type/ensure-object";
+import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isType } from "@banquette/utils-type/is-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ValidatorInterface } from "@banquette/validation";
-import { MissingRequiredParameterException } from "./exception/missing-required-parameter.exception";
-import { extend } from "@banquette/utils-object";
-import { UsageException } from "@banquette/exception";
+import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
+import { ApiEndpointOptions, ApiEndpointParameterOptions } from "./api-endpoint.options";
 import { InvalidParameterException } from "./exception/invalid-parameter.exception";
+import { MissingRequiredParameterException } from "./exception/missing-required-parameter.exception";
 import { UnsupportedParametersException } from "./exception/unsupported-parameters.exception";
 
 interface ParametersBag {

@@ -1,6 +1,7 @@
-import { TransformerInterface, TransformContext, TransformResult, TransformNotSupportedException } from "../../src";
 import { Exception } from "@banquette/exception";
-import { isUndefined, ensureInteger } from "@banquette/utils-type";
+import { ensureInteger } from "@banquette/utils-type/ensure-integer";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { TransformerInterface, TransformContext, TransformResult, TransformNotSupportedException } from "../../src";
 
 interface Config {
     /**

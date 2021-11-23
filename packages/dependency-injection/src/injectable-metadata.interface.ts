@@ -1,4 +1,4 @@
-import { Constructor } from "@banquette/utils-type";
+import { Constructor } from "@banquette/utils-type/types";
 import { InjectableIdentifier } from "./type/injectable-identifier.type";
 import { InjectableType } from "./type/injectable.type";
 

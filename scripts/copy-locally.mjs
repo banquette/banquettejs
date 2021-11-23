@@ -33,10 +33,10 @@ for (const target of targets) {
     fs.mkdirSync(targetBasePath);
     for (const p of packages) {
         console.log(`Copy files for package ${chalk.blue(p)}.`);
+        const distBasePath = path.resolve(__dirname, `../dist/${p}`);
         const sourceBasePath = path.resolve(__dirname, `../packages/${p}`);
         const pathsToCopy = [
-            [`${sourceBasePath}/dist`, path.join(targetBasePath, `${p}/dist`)],
-            [`${sourceBasePath}/build`, path.join(targetBasePath, `${p}/build`)],
+            [distBasePath, path.join(targetBasePath, `${p}`)],
             [`${sourceBasePath}/package.json`, path.join(targetBasePath, `${p}/package.json`)]
         ];
         for (let i = 0; i < pathsToCopy.length; ++i) {

@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 
 /**
  * Add a value to an object if it's not undefined.

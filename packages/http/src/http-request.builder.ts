@@ -1,5 +1,6 @@
 import { UsageException } from "@banquette/exception";
-import { isUndefined, Primitive } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Primitive } from "@banquette/utils-type/types";
 import { HttpMethod, UrlParameterType } from "./constants";
 import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";

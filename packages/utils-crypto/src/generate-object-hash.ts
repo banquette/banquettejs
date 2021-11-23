@@ -1,4 +1,4 @@
-import { ensureSerializable } from "@banquette/utils-type";
+import { ensureSerializable } from "@banquette/utils-type/ensure-serializable";
 import { md5 } from "./md5";
 
 /**

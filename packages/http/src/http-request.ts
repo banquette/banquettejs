@@ -1,16 +1,17 @@
+import { SharedConfiguration } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
 import { UsageException } from "@banquette/exception";
+import { cloneDeep } from "@banquette/utils-object/clone-deep";
+import { extend } from "@banquette/utils-object/extend";
+import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
+import { Writeable } from "@banquette/utils-type/types";
 import { AdapterInterface } from "./adapter/adapter.interface";
+import { HttpConfigurationSymbol } from "./config";
 import { HttpMethod, UrlParameterType } from "./constants";
+import { HttpConfigurationInterface } from "./http-configuration.interface";
 import { HttpResponse } from "./http-response";
 import { UrlParameterInterface } from "./url-parameter.interface";
-import { replaceStringVariables } from "@banquette/utils-string";
-import { extend, cloneDeep } from "@banquette/utils-object";
 import qs from 'qs';
-import { Injector } from "@banquette/dependency-injection";
-import { SharedConfiguration } from "@banquette/config";
-import { HttpConfigurationInterface } from "./http-configuration.interface";
-import { HttpConfigurationSymbol } from "./config";
-import { Writeable } from "@banquette/utils-type";
 
 let Configuration: HttpConfigurationInterface|null = null;
 

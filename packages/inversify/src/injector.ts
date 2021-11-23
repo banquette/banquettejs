@@ -4,7 +4,9 @@ import {
     InjectableType,
     InjectorAdapterInterface
 } from "@banquette/dependency-injection";
-import { ensureArray, isObject, isUndefined } from "@banquette/utils-type";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Container, inject, injectable, interfaces, LazyServiceIdentifer, multiInject } from "inversify";
 
 const PARAM_TYPES = "inversify:paramtypes";

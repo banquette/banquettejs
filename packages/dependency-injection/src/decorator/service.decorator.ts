@@ -1,4 +1,5 @@
-import { Constructor, ensureArray } from "@banquette/utils-type";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { Constructor } from "@banquette/utils-type/types";
 import { InjectableMetadataInterface } from "../injectable-metadata.interface";
 import { Injector } from "../injector";
 import { registerImplicitDependencies } from "../utils";

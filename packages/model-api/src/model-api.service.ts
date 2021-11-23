@@ -1,11 +1,12 @@
 import { Service, Inject } from "@banquette/dependency-injection";
 import { HttpRequest, HttpService } from "@banquette/http";
 import { TransformService, TransformResult } from "@banquette/model";
-import { ApiTransformerSymbol } from "./transformer/root/api";
-import { ModelApiMetadataService } from "./model-api-metadata.service";
-import { isPromiseLike, isType } from "@banquette/utils-type";
-import { Not } from "@banquette/utils-misc";
+import { Not } from "@banquette/utils-misc/not";
+import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
+import { isType } from "@banquette/utils-type/is-type";
 import { ApiResponse } from "./api-response";
+import { ModelApiMetadataService } from "./model-api-metadata.service";
+import { ApiTransformerSymbol } from "./transformer/root/api";
 
 @Service()
 export class ModelApiService {

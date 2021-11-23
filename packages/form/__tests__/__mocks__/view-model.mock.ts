@@ -1,4 +1,4 @@
-import { proxy } from "@banquette/utils-misc";
+import { proxy } from "@banquette/utils-misc/proxy";
 import { FormControl, FormViewControlInterface } from "../../src";
 
 export class ViewModelMock {

@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection";
+import { isString } from "@banquette/utils-type/is-string";
 import { ModelWatcherService, ModelChangeEvent, Json, JsonTransformerSymbol, T, Relation } from "../src";
-import { isString } from "@banquette/utils-type";
+
 
 const watcher = Injector.Get(ModelWatcherService);
 

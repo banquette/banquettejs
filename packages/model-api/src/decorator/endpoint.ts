@@ -1,7 +1,7 @@
-import { HttpMethod } from "@banquette/http";
 import { ApiEndpointOptionsWithName, ApiEndpointParameterOptions } from "@banquette/api";
 import { Injector } from "@banquette/dependency-injection";
-import { Constructor } from "@banquette/utils-type";
+import { HttpMethod } from "@banquette/http";
+import { Constructor } from "@banquette/utils-type/types";
 import { ModelApiMetadataService } from "../model-api-metadata.service";
 
 const metadata = Injector.Get(ModelApiMetadataService);

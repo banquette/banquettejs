@@ -1,14 +1,12 @@
-import {
-    ensureArray,
-    isArray,
-    isConstructor,
-    isDate,
-    isElement,
-    isFunction,
-    isObject,
-    isPromiseLike,
-    isRegExp
-} from "@banquette/utils-type";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isConstructor } from "@banquette/utils-type/is-constructor";
+import { isDate } from "@banquette/utils-type/is-date";
+import { isElement } from "@banquette/utils-type/is-element";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
+import { isRegExp } from "@banquette/utils-type/is-reg-exp";
 
 /**
  * Copy values from objs into dst, optionally recursively.

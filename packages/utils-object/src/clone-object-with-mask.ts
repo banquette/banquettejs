@@ -1,4 +1,6 @@
-import { isArray, isObject, isUndefined } from "@banquette/utils-type";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { cloneDeep } from "./clone-deep";
 
 /**

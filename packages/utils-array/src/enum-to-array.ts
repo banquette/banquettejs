@@ -1,5 +1,5 @@
-import { getObjectKeys } from "@banquette/utils-object";
-import { isNumeric } from "@banquette/utils-type";
+import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { isNumeric } from "@banquette/utils-type/is-numeric";
 
 /**
  * Convert an enum into a array containing its values.

@@ -1,5 +1,7 @@
 import { UsageException } from "@banquette/exception";
-import { isArray, isObject, isUndefined } from "@banquette/utils-type";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { isValidatorContainer, splitPath } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";

@@ -1,4 +1,4 @@
-import { enumToArray } from "@banquette/utils-array";
+import { enumToArray } from "@banquette/utils-array/enum-to-array";
 
 /**
  * Events emitted by form components.

@@ -1,5 +1,5 @@
 import { UsageException } from "@banquette/exception";
-import { isNonEmptyString } from "@banquette/utils-string";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 

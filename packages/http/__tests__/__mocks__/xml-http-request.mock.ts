@@ -1,8 +1,11 @@
-import { UsageException } from "@banquette/exception";
 import { EventDispatcher } from "@banquette/event";
-import { randomInt } from "@banquette/utils-random";
-import { ensureSameType, isFunction, isObject, isString, isUndefined } from "@banquette/utils-type";
-import { base64decodeUrlSafe } from "@banquette/utils-base64";
+import { UsageException } from "@banquette/exception";
+import { randomInt } from "@banquette/utils-random/random-int";
+import { ensureSameType } from "@banquette/utils-type/ensure-same-type";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { XSSIPrefix, httpStatusToText } from "../../src";
 import { TestResponses } from "./test-responses";
 import { XhrConfig } from "./xhr-config.type";
@@ -77,7 +80,7 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                     // @ts-ignore
                     let value = urlParams.get(key);
                     if (isString(value) && value.substring(0, 5) === 'json-') {
-                        value = JSON.parse(base64decodeUrlSafe(value.substring(5)));
+                        value = JSON.parse(window.atob(value.substring(5)));
                         (config as any)[key] = value;
                     } else {
                         (config as any)[key] = ensureSameType(value, (config as any)[key]);

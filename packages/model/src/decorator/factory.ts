@@ -1,7 +1,7 @@
-import { Constructor } from "@banquette/utils-type";
-import { ModelFactory } from "../type";
 import { Injector } from "@banquette/dependency-injection";
+import { Constructor } from "@banquette/utils-type/types";
 import { ModelMetadataService } from "../model-metadata.service";
+import { ModelFactory } from "../type";
 
 const metadata = Injector.Get(ModelMetadataService);
 

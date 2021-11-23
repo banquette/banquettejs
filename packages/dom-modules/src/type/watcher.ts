@@ -1,7 +1,7 @@
 import { Inject } from "@banquette/dependency-injection";
-import { throttle } from "@banquette/utils-misc";
-import { DomModule } from "../decorator/dom-module.decorator";
+import { throttle } from "@banquette/utils-misc/throttle";
 import { AbstractDomModule } from "../abstract.dom-module";
+import { DomModule } from "../decorator/dom-module.decorator";
 import { DomModulesScanner } from "../dom-modules-scanner";
 
 @DomModule('watcher')

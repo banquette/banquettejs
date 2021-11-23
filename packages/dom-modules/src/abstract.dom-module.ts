@@ -1,6 +1,6 @@
 import { UsageException } from "@banquette/exception";
-import { areEqual } from "@banquette/utils-misc";
-import { Pojo } from "@banquette/utils-type";
+import { areEqual } from "@banquette/utils-misc/are-equal";
+import { Pojo } from "@banquette/utils-type/types";
 
 export abstract class AbstractDomModule {
     /**

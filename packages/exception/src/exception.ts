@@ -1,5 +1,5 @@
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { ExceptionInterface } from "./exception.interface";
-import { isNullOrUndefined } from "@banquette/utils-type";
 
 /**
  * Base class for all exceptions of the Webeak dev tools.

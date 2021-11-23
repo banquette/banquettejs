@@ -1,5 +1,5 @@
 import { ConfigurationInterface } from "@banquette/config";
-import { Constructor } from "@banquette/utils-type";
+import { Constructor } from "@banquette/utils-type/types";
 import { AdapterInterface } from "./adapter/adapter.interface";
 
 /**

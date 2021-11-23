@@ -1,5 +1,6 @@
 import { Service } from "@banquette/dependency-injection";
-import { isFunction, isObject } from "@banquette/utils-type";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
 import { StorageAdapterTag } from "../constant";
 import { AbstractAdapter } from "./abstract.adapter";
 import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";

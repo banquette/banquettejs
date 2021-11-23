@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { proxy } from "./proxy";
 
 export interface WeakObjectRef<T> {

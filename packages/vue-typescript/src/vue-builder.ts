@@ -1,6 +1,10 @@
 import { UsageException } from "@banquette/exception";
-import { noop } from "@banquette/utils-misc";
-import { Constructor, ensureArray, isFunction, isObject, isUndefined } from "@banquette/utils-type";
+import { noop } from "@banquette/utils-misc/noop";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { AppConfig } from "@vue/runtime-core";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { App, ComponentPublicInstance, createApp, Directive } from "vue";

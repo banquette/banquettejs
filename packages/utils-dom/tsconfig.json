@@ -2,7 +2,7 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "declaration": true,
-        "declarationDir": "build",
+        "declarationDir": "../../dist",
         "rootDir": "..",
         "paths": {
             "@banquette/api": ["packages/api/src/index.ts"],
@@ -26,27 +26,23 @@
             ],
             "@banquette/promise": ["packages/promise/src/index.ts"],
             "@banquette/storage": ["packages/storage/src/index.ts"],
-            "@banquette/utils-array": ["packages/utils-array/src/index.ts"],
-            "@banquette/utils-base64": ["packages/utils-base64/src/index.ts"],
-            "@banquette/utils-color": ["packages/utils-color/src/index.ts"],
-            "@banquette/utils-crypto": ["packages/utils-crypto/src/index.ts"],
-            "@banquette/utils-date": ["packages/utils-date/src/index.ts"],
-            "@banquette/utils-easing": ["packages/utils-easing/src/index.ts"],
+            "@banquette/utils-array/*": ["packages/utils-array/src/*"],
+            "@banquette/utils-crypto/*": ["packages/utils-crypto/src/*"],
+            "@banquette/utils-date/*": ["packages/utils-date/src/*"],
+            "@banquette/utils-easing/*": ["packages/utils-easing/src/*"],
             "@banquette/utils-glob": ["packages/utils-glob/src/index.ts"],
-            "@banquette/utils-json": ["packages/utils-json/src/index.ts"],
-            "@banquette/utils-misc": ["packages/utils-misc/src/index.ts"],
-            "@banquette/utils-object": ["packages/utils-object/src/index.ts"],
-            "@banquette/utils-random": ["packages/utils-random/src/index.ts"],
-            "@banquette/utils-reflection": [
-                "packages/utils-reflection/src/index.ts"
+            "@banquette/utils-misc/*": ["packages/utils-misc/src/*"],
+            "@banquette/utils-object/*": ["packages/utils-object/src/*"],
+            "@banquette/utils-random/*": ["packages/utils-random/src/*"],
+            "@banquette/utils-reflection/*": [
+                "packages/utils-reflection/src/*"
             ],
-            "@banquette/utils-string": ["packages/utils-string/src/index.ts"],
-            "@banquette/utils-type": ["packages/utils-type/src/index.ts"],
+            "@banquette/utils-string/*": ["packages/utils-string/src/*"],
+            "@banquette/utils-type/*": ["packages/utils-type/src/*"],
             "@banquette/validation": ["packages/validation/src/index.ts"],
             "@banquette/vue-dom-module": [
                 "packages/vue-dom-module/src/index.ts"
             ],
-            "@banquette/vue-form": ["packages/vue-form/src/index.ts"],
             "@banquette/vue-typescript": [
                 "packages/vue-typescript/src/index.ts"
             ]

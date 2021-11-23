@@ -9,9 +9,11 @@ import {
     NetworkException,
     RequestException
 } from "@banquette/http";
-import { waitForDelay } from "@banquette/utils-misc";
-import { extend } from "@banquette/utils-object";
-import { ensureArray, isArray, isUndefined } from "@banquette/utils-type";
+import { waitForDelay } from "@banquette/utils-misc/timeout";
+import { extend } from "@banquette/utils-object/extend";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import {
     ASYNC_TAG,
     V,

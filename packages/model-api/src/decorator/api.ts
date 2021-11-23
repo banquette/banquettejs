@@ -1,8 +1,8 @@
-import { TransformerInterface, Raw, Transformable } from "@banquette/model";
-import { ApiTransformerSymbol } from "../transformer/root/api";
 import { Injector } from "@banquette/dependency-injection";
+import { TransformerInterface, Raw, Transformable } from "@banquette/model";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { ModelApiMetadataService } from "../model-api-metadata.service";
-import { ensureArray } from "@banquette/utils-type";
+import { ApiTransformerSymbol } from "../transformer/root/api";
 
 const metadata = Injector.Get(ModelApiMetadataService);
 

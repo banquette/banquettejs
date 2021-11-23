@@ -1,4 +1,4 @@
-import { GenericCallback } from "@banquette/utils-type";
+import { GenericCallback } from "@banquette/utils-type/types";
 
 /**
  * Call a function and negate its output.

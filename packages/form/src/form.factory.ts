@@ -1,7 +1,9 @@
 import { SharedConfiguration } from "@banquette/config";
 import { Injector } from "@banquette/dependency-injection";
-import { isNonEmptyString } from "@banquette/utils-string";
-import { isArray, isObject, isUndefined } from "@banquette/utils-type";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ValidatorInterface } from "@banquette/validation";
 import { FormConfigurationSymbol } from "./config";
 import { FormArray } from "./form-array";

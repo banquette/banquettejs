@@ -1,7 +1,11 @@
 import { InjectableMetadataInterface, Injector, MetadataContainer, Service } from "@banquette/dependency-injection";
 import { ExceptionFactory, UsageException } from "@banquette/exception";
-import { isNullOrUndefined, isUndefined, Constructor } from "@banquette/utils-type";
-import { camelCase, kebabCase, trim } from "@banquette/utils-string";
+import { camelCase } from "@banquette/utils-string/case/camel-case";
+import { kebabCase } from "@banquette/utils-string/case/kebab-case";
+import { trim } from "@banquette/utils-string/format/trim";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { AbstractDomModule } from "./abstract.dom-module";
 import { DomModuleConstructor, ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from "./constant";
 

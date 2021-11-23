@@ -1,4 +1,5 @@
-import { Constructor, isFunction } from "@banquette/utils-type";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { Constructor } from "@banquette/utils-type/types";
 import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 

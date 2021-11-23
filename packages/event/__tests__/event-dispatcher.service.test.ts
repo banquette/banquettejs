@@ -1,6 +1,7 @@
-import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection";
-import { waitForDelay } from "@banquette/utils-misc";
+import { Exception, UsageException } from "@banquette/exception";
+import { waitForDelay } from "@banquette/utils-misc/timeout";
+import 'reflect-metadata';
 import {
     EventArg,
     EventDispatcherInterface,
@@ -8,7 +9,6 @@ import {
     DispatchResult,
     DispatchResultStatus
 } from "../src";
-import { Exception, UsageException } from "@banquette/exception";
 
 interface Subscribers {
     [key: string]: [

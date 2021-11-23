@@ -1,5 +1,7 @@
-import { getObjectValue } from "@banquette/utils-object";
-import { isArray, isObject, isString } from "@banquette/utils-type";
+import { getObjectValue } from "@banquette/utils-object/get-object-value";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
 
 /**
  * Replace all variables corresponding to the syntax "%variableName% in the input with the corresponding

@@ -1,7 +1,7 @@
-import { isString } from "@banquette/utils-type";
+import { isString } from "@banquette/utils-type/is-string";
 import { SYNC_TAG } from "../constant";
-import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
 import { createValidator } from "../create-validator";
+import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorFactory } from "../validator.factory";

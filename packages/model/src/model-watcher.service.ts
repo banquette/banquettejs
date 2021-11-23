@@ -1,8 +1,10 @@
 import { Service, Inject } from "@banquette/dependency-injection";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isNumeric } from "@banquette/utils-type/is-numeric";
+import { Constructor } from "@banquette/utils-type/types";
 import { ModelChangeEvent, ModelChangeType } from "./event/model-change.event";
-import { ModelTransformMetadataService } from "./model-transform-metadata.service";
-import { ensureArray, Constructor, isNumeric } from "@banquette/utils-type";
 import { ModelMetadataService } from "./model-metadata.service";
+import { ModelTransformMetadataService } from "./model-transform-metadata.service";
 
 const ObservableSlim = require('observable-slim/observable-slim.js');
 

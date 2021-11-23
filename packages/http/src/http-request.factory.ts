@@ -1,4 +1,5 @@
-import { isUndefined, isValidNumber } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isValidNumber } from "@banquette/utils-type/is-valid-number";
 import { HttpMethod } from "./constants";
 import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";

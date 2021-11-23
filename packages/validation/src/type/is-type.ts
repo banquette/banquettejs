@@ -1,19 +1,18 @@
+import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { ensureNumber } from "@banquette/utils-type/ensure-number";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isBoolean } from "@banquette/utils-type/is-boolean";
+import { isNumeric } from "@banquette/utils-type/is-numeric";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isSymbol } from "@banquette/utils-type/is-symbol";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isValidNumber } from "@banquette/utils-type/is-valid-number";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";
-import {
-    isString,
-    isUndefined,
-    isSymbol,
-    isArray,
-    isObject,
-    isBoolean,
-    isNumeric,
-    isValidNumber, ensureNumber
-} from "@banquette/utils-type";
-import { getObjectKeys } from "@banquette/utils-object";
 
 export enum Type {
     String      = 1,

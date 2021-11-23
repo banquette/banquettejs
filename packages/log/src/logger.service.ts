@@ -2,17 +2,16 @@ import { SharedConfiguration } from "@banquette/config";
 import { Inject, Service } from "@banquette/dependency-injection";
 import { FingerprintService } from "@banquette/fingerprint";
 import { StorageService } from "@banquette/storage";
-import { noop, proxy } from "@banquette/utils-misc";
-import { extend } from "@banquette/utils-object";
-import { getCaller } from "@banquette/utils-reflection";
-import {
-    ensureArray,
-    ensureSerializable,
-    ensureString,
-    isArray,
-    isNullOrUndefined,
-    isUndefined
-} from "@banquette/utils-type";
+import { noop } from "@banquette/utils-misc/noop";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { extend } from "@banquette/utils-object/extend";
+import { getCaller } from "@banquette/utils-reflection/get-caller";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureSerializable } from "@banquette/utils-type/ensure-serializable";
+import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { LogLevel } from './constants';
 import { LogMessageInterface } from "./log-message.interface";
 import { LoggerInterface } from "./logger.interface";

@@ -1,10 +1,12 @@
 import { Inject, Service } from "@banquette/dependency-injection";
-import { Constructor, isNullOrUndefined, isUndefined, Complete } from "@banquette/utils-type";
 import { UsageException } from "@banquette/exception";
-import { ModelExtendedIdentifier } from "./type";
-import { TransformerInterface } from "./transformer/transformer.interface";
+import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor, Complete } from "@banquette/utils-type/types";
 import { ModelMetadataService } from "./model-metadata.service";
-import { getSymbolDescription } from "@banquette/utils-object";
+import { TransformerInterface } from "./transformer/transformer.interface";
+import { ModelExtendedIdentifier } from "./type";
 import { ensureCompleteTransformer } from "./utils";
 
 const WILDCARD = '*';

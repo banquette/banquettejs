@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { cloneDeepPrimitive } from "@banquette/utils-object";
-import { isArray, isObject } from "@banquette/utils-type";
+import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
 import { FormArray, FormControl, FormGroupInterface, FormObject } from "../src";
 import { createTestForm } from "./__mocks__/utils";
 import { ViewModelMock } from "./__mocks__/view-model.mock";

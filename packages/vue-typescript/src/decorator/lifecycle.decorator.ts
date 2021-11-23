@@ -1,9 +1,11 @@
 import { UsageException } from "@banquette/exception";
-import { isNonEmptyString } from "@banquette/utils-string";
-import { ensureArray, isFunction, isUndefined } from "@banquette/utils-type";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { HOOKS } from "../constants";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
 import { getDecoratorsData } from "../utils";
+import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 export type LifecycleHook = typeof HOOKS [number];
 

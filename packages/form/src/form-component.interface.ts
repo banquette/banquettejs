@@ -2,16 +2,16 @@ import { UnsubscribeFunction } from "@banquette/event";
 import { MatchResult } from "@banquette/utils-glob";
 import { ValidatorInterface } from "@banquette/validation";
 import { ValidationStrategy } from "./constant";
+import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
+import { ValidationEndFormEvent } from "./event/validation-end.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 import { FormChildComponentInterface } from "./form-child-component.interface";
 import { FormControlInterface } from "./form-control.interface";
-import { FormParentComponentInterface } from "./form-parent-component.interface";
-import { State } from "./type";
 import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
-import { FormEvent } from "./event/form-event";
-import { ValidationEndFormEvent } from "./event/validation-end.form-event";
+import { FormParentComponentInterface } from "./form-parent-component.interface";
+import { State } from "./type";
 
 export interface FormComponentInterface<ValueType = unknown, ChildrenType = unknown> {
     /**

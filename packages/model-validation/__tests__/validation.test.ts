@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { Assert, V, ModelValidationMetadataService, validate } from "../src";
 import { Injector } from "@banquette/dependency-injection";
 import { UsageException } from "@banquette/exception";
-import { Constructor } from "@banquette/utils-type";
-import { ValidatorInterface } from "@banquette/validation";
 import { ModelMetadataService, Alias, ModelAliasNotFoundException } from "@banquette/model";
+import { Constructor } from "@banquette/utils-type/types";
+import { ValidatorInterface } from "@banquette/validation";
+import { Assert, V, ModelValidationMetadataService, validate } from "../src";
 
 describe('Metadata storage', () => {
     class User {

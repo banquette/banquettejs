@@ -1,4 +1,4 @@
-import { isString } from "@banquette/utils-type";
+import { isString } from "@banquette/utils-type/is-string";
 import { randomInt } from "./random-int";
 
 export const ALPHABETS = {

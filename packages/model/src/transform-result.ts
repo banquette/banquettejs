@@ -1,6 +1,6 @@
 import { Exception, ExceptionFactory } from "@banquette/exception";
-import { Writeable, GenericCallback, Modify } from "@banquette/utils-type";
-import { proxy } from "@banquette/utils-misc";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { Writeable, Modify, GenericCallback } from "@banquette/utils-type/types";
 
 export enum TransformResultStatus {
     Waiting,

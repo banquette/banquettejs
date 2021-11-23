@@ -1,7 +1,7 @@
 import { TransformerInterface } from "@banquette/model";
-import { FormTransformerInterface } from "./form-transformer.interface";
-import { isUndefined } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { FormRelatedTransformers } from "../contants";
+import { FormTransformerInterface } from "./form-transformer.interface";
 
 /**
  * Test if a transformer is a form transformer specialization.

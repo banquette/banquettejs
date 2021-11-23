@@ -1,4 +1,4 @@
-import { GenericCallback } from "@banquette/utils-type";
+import { GenericCallback } from "@banquette/utils-type/types";
 
 /**
  * Throttle call to a function to ensure it is not called more frequently than a specified timing.

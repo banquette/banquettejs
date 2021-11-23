@@ -1,11 +1,14 @@
 import { SharedConfiguration } from "@banquette/config";
 import { Inject, Injector, Service } from "@banquette/dependency-injection";
-import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { EventDispatcherInterface, EventDispatcherService, DispatchResult } from "@banquette/event";
 import { Exception, ExceptionFactory, UsageException } from "@banquette/exception";
 import { ObservablePromise, ProgressCallback, RejectCallback, ResolveCallback } from "@banquette/promise";
-import { noop, proxy } from "@banquette/utils-misc";
-import { isNonEmptyString } from "@banquette/utils-string";
-import { Constructor, isNullOrUndefined, isString, Pojo } from '@banquette/utils-type';
+import { noop } from "@banquette/utils-misc/noop";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isString } from "@banquette/utils-type/is-string";
+import { Constructor, Pojo } from "@banquette/utils-type/types";
 import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
 import { AdapterInterface } from "./adapter/adapter.interface";
@@ -26,7 +29,6 @@ import { HttpResponse } from "./http-response";
 import { NetworkWatcherService } from './network-watcher.service';
 import { QueuedRequestInterface } from './queued-request.interface';
 import { httpStatusToText } from "./utils";
-import { DispatchResult } from "../../event/src/dispatch-result";
 
 @Service()
 export class HttpService {

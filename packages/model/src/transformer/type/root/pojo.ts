@@ -1,8 +1,9 @@
 import { Module } from "@banquette/dependency-injection";
-import { Complete, isObject } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type/is-object";
+import { Complete } from "@banquette/utils-type/types";
 import { ModelTransformerTag } from "../../../constants";
-import { TransformContext } from "../../transform-context";
 import { TransformResult } from "../../../transform-result";
+import { TransformContext } from "../../transform-context";
 import { TransformPipeline } from "../../transform-pipeline";
 import { TransformerInterface } from "../../transformer.interface";
 import { AbstractRootTransformer } from "./abstract-root-transformer";

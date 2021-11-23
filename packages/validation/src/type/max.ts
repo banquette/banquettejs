@@ -1,4 +1,9 @@
-import { ensureString, isArray, isNumber, isNumeric, isObject, isString } from "@banquette/utils-type";
+import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isNumber } from "@banquette/utils-type/is-number";
+import { isNumeric } from "@banquette/utils-type/is-numeric";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";

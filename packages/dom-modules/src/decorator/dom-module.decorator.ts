@@ -1,5 +1,5 @@
 import { Module } from "@banquette/dependency-injection";
-import { Constructor } from "@banquette/utils-type";
+import { Constructor } from "@banquette/utils-type/types";
 import { ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from "../constant";
 
 /**

@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { Endpoint, Api, ModelApiService, ApiTransformerSymbol } from "../src";
 import { Injector } from "@banquette/dependency-injection";
 import {
@@ -11,7 +12,6 @@ import {
     XhrAdapter
 } from "@banquette/http";
 import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
-import { isPromiseLike } from "@banquette/utils-type";
 import { TransformService, TransformResult, Relation, Model, TransformFailedException } from "@banquette/model";
 import { UsageException } from "@banquette/exception";
 import { EndpointNotFoundException } from "@banquette/api";

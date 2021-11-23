@@ -1,4 +1,9 @@
 import 'reflect-metadata';
+import { Exception } from "@banquette/exception";
+import { HttpMethod, PayloadTypeJson, ResponseTypeJson } from "@banquette/http";
+import { isString } from "@banquette/utils-type/is-string";
+import { Constructor } from "@banquette/utils-type/types";
+import { NotEmpty, Min } from "@banquette/validation";
 import {
     ApiEndpoint,
     ApiEndpointParameterOptions,
@@ -6,10 +11,6 @@ import {
     ApiEndpointParameterInterface,
     InvalidParameterException
 } from "../src";
-import { HttpMethod, PayloadTypeJson, ResponseTypeJson } from "@banquette/http";
-import { Exception } from "@banquette/exception";
-import { Constructor, isString } from "@banquette/utils-type";
-import { NotEmpty, Min } from "@banquette/validation";
 
 export const endpointParameterDefaults = {
     required: false,

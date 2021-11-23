@@ -1,4 +1,4 @@
-import { Constructor } from "@banquette/utils-type";
+import { Constructor } from "@banquette/utils-type/types";
 import { onProgressCallback, onRejectCallback, onResolveCallback } from "./types";
 
 export interface ObservablePromiseInterface<CompleteT> extends Promise<CompleteT> {

@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "@banquette/utils-type";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { enumToArray } from "./enum-to-array";
 
 /**

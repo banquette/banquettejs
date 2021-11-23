@@ -1,4 +1,4 @@
-import { GenericCallback } from "@banquette/utils-type";
+import { GenericCallback } from "@banquette/utils-type/types";
 
 /**
  * Bind a function to a context, optionally partially applying any arguments.

@@ -1,5 +1,5 @@
-import { isObject, isUndefined } from "@banquette/utils-type";
-import { base64encodeUrlSafe } from "@banquette/utils-base64";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { XhrConfig } from "./xhr-config.type";
 
 let idIncrement: number = 0;
@@ -13,7 +13,7 @@ export function buildTestUrl(config: Partial<XhrConfig>) {
     for (const key of Object.keys(config)) {
         let value: any = config[key as keyof XhrConfig];
         if (isObject(value)) {
-            value = 'json-' + base64encodeUrlSafe(JSON.stringify(value));
+            value = 'json-' + window.btoa(JSON.stringify(value));
         }
         params.push(key + '=' + value);
     }

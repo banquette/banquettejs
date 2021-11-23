@@ -1,6 +1,12 @@
 import { UsageException } from "@banquette/exception";
-import { noop, proxy } from "@banquette/utils-misc";
-import { Constructor, ensureArray, isObject, isPromiseLike, isType, isUndefined } from "@banquette/utils-type";
+import { noop } from "@banquette/utils-misc/noop";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
+import { isType } from "@banquette/utils-type/is-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { CancelException } from "./exception/cancel.exception";
 import { TimeoutException } from "./exception/timeout.exception";
 import { ObservablePromiseInterface } from "./observable-promise.interface";
@@ -10,7 +16,8 @@ import { PromiseObserverInterface } from "./promise-observer.interface";
 import { PromiseStatus } from "./promise-status";
 import { ThenableInterface } from "./thenable.interface";
 import {
-    ExecutorFunction, onFinallyCallback,
+    ExecutorFunction,
+    onFinallyCallback,
     onRejectCallback,
     onResolveCallback,
     ProgressCallback,

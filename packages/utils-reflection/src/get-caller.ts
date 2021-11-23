@@ -1,5 +1,7 @@
-import { trim } from "@banquette/utils-string";
-import { isArray, isString, isUndefined } from "@banquette/utils-type";
+import { trim } from "@banquette/utils-string/format/trim";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 
 /**
  * Try to get the function and class name of a certain index in the callstack.

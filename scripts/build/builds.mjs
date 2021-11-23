@@ -32,7 +32,7 @@ function createBuildVariants(config) {
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
             entry: resolve(`packages/${config.package}/src/index.ts`),
-            outputFile: resolve(`packages/${config.package}/dist/index.cjs.dev.js`),
+            outputFile: resolve(`dist/${config.package}/_bundles/index.cjs.dev.js`),
             format: 'cjs',
             env: 'development',
             moduleName: config.module,
@@ -43,7 +43,7 @@ function createBuildVariants(config) {
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
             entry: resolve(`packages/${config.package}/src/index.ts`),
-            outputFile: resolve(`packages/${config.package}/dist/index.cjs.prod.js`),
+            outputFile: resolve(`dist/${config.package}/_bundles/index.cjs.prod.js`),
             format: 'cjs',
             env: 'production',
             moduleName: config.module,
@@ -52,38 +52,39 @@ function createBuildVariants(config) {
         },
         // ES (for bundlers)
         [`${config.package}-esm`]: {
+            preserveModules: false,
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
             entry: resolve(`packages/${config.package}/src/index.ts`),
-            outputDir: `packages/${config.package}/build/${config.package}/src`,
+            outputDir: `dist/${config.package}`,
             format: 'es',
             moduleName: config.module,
             externals,
             banner: generateBanner(config.package, 'ES2015')
         },
         // UMD (for browser)
-        [`${config.package}-umd-dev`]: {
-            package: config.package,
-            rootDir: resolve(`packages/${config.package}`),
-            entry: resolve(`packages/${config.package}/src/index.ts`),
-            outputFile: resolve(`packages/${config.package}/dist/index.umd.dev.js`),
-            format: 'umd',
-            env: 'development',
-            moduleName: config.module,
-            externals,
-            banner: generateBanner(config.package, 'UMD')
-        },
-        [`${config.package}-umd-prod`]: {
-            package: config.package,
-            rootDir: resolve(`packages/${config.package}`),
-            entry: resolve(`packages/${config.package}/src/index.ts`),
-            outputFile: resolve(`packages/${config.package}/dist/index.umd.prod.js`),
-            format: 'umd',
-            env: 'production',
-            moduleName: config.module,
-            externals,
-            banner: generateBanner(config.package, 'UMD')
-        }
+        // [`${config.package}-umd-dev`]: {
+        //     package: config.package,
+        //     rootDir: resolve(`packages/${config.package}`),
+        //     entry: resolve(`packages/${config.package}/src/index.ts`),
+        //     outputFile: resolve(`packages/${config.package}/dist/index.umd.dev.js`),
+        //     format: 'umd',
+        //     env: 'development',
+        //     moduleName: config.module,
+        //     externals,
+        //     banner: generateBanner(config.package, 'UMD')
+        // },
+        // [`${config.package}-umd-prod`]: {
+        //     package: config.package,
+        //     rootDir: resolve(`packages/${config.package}`),
+        //     entry: resolve(`packages/${config.package}/src/index.ts`),
+        //     outputFile: resolve(`packages/${config.package}/dist/index.umd.prod.js`),
+        //     format: 'umd',
+        //     env: 'production',
+        //     moduleName: config.module,
+        //     externals,
+        //     banner: generateBanner(config.package, 'UMD')
+        // }
     };
 }
 
@@ -169,10 +170,6 @@ export const Builds = Object.assign({},
         module: 'Banquette.Utils.Array'
     }),
     createBuildVariants({
-        package: 'utils-base64',
-        module: 'Banquette.Utils.Base64'
-    }),
-    createBuildVariants({
         package: 'utils-date',
         module: 'Banquette.Utils.Date'
     }),
@@ -187,10 +184,6 @@ export const Builds = Object.assign({},
     createBuildVariants({
         package: 'utils-glob',
         module: 'Banquette.Utils.Glob'
-    }),
-    createBuildVariants({
-        package: 'utils-json',
-        module: 'Banquette.Utils.Json'
     }),
     createBuildVariants({
         package: 'utils-object',
@@ -213,16 +206,8 @@ export const Builds = Object.assign({},
         module: 'Banquette.Utils.Crypto'
     }),
     createBuildVariants({
-        package: 'utils-color',
-        module: 'Banquette.Utils.Color'
-    }),
-    createBuildVariants({
         package: 'validation',
         module: 'Banquette.Validation'
-    }),
-    createBuildVariants({
-        package: 'vue-form',
-        module: 'Banquette.Vue.Form'
     }),
     createBuildVariants({
         package: 'vue-typescript',

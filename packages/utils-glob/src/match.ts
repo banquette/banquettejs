@@ -1,6 +1,6 @@
-import { trimArray } from "@banquette/utils-array";
-import { escapeRegex } from "@banquette/utils-string";
-import { isUndefined } from "@banquette/utils-type";
+import { trimArray } from "@banquette/utils-array/trim-array";
+import { escapeRegex } from "@banquette/utils-string/format/escape-regex";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { MatchType } from "./constant";
 import { MatchResult } from "./match-result";
 

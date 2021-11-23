@@ -1,8 +1,10 @@
 import { Service, Inject } from "@banquette/dependency-injection";
-import { ValidatorInterface, Container } from "@banquette/validation";
-import { ModelExtendedIdentifier, ModelMetadataService } from "@banquette/model";
-import { Constructor, isNullOrUndefined, isUndefined } from "@banquette/utils-type";
 import { UsageException } from "@banquette/exception";
+import { ModelExtendedIdentifier, ModelMetadataService } from "@banquette/model";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
+import { ValidatorInterface, Container } from "@banquette/validation";
 
 @Service()
 export class ModelValidationMetadataService {

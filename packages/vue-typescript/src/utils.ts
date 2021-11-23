@@ -1,16 +1,20 @@
 import { UsageException } from "@banquette/exception";
-import { areEqual, proxy, noop } from "@banquette/utils-misc";
-import { extend, getObjectKeys, getObjectValue } from "@banquette/utils-object";
-import {
-    Constructor,
-    ensureArray,
-    isArray,
-    isFunction,
-    isNullOrUndefined,
-    isObject,
-    isString,
-    isUndefined, GenericCallback, isType, ensureString
-} from "@banquette/utils-type";
+import { areEqual } from "@banquette/utils-misc/are-equal";
+import { noop } from "@banquette/utils-misc/noop";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { extend } from "@banquette/utils-object/extend";
+import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { getObjectValue } from "@banquette/utils-object/get-object-value";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isType } from "@banquette/utils-type/is-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor, GenericCallback } from "@banquette/utils-type/types";
 import { WritableComputedOptions } from "@vue/reactivity";
 import { WatchOptions } from "@vue/runtime-core";
 import { computed, nextTick, Ref, ref, watch, ComponentPublicInstance, toRef } from "vue";
@@ -29,11 +33,11 @@ import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
+import { PropPrivateOptions } from "./decorator/prop.decorator";
 import { WatchFunction } from "./decorator/watch.decorator";
 import { AliasesMap, AliasResolver, PrefixOrAlias } from "./type";
-import { VueBuilder } from "./vue-builder";
 import { Vue } from "./vue";
-import { PropOptions, PropPrivateOptions } from "./decorator/prop.decorator";
+import { VueBuilder } from "./vue-builder";
 
 export type DecoratedConstructor = Constructor & {[DECORATORS_OPTIONS_HOLDER_NAME]: DecoratorsDataInterface};
 

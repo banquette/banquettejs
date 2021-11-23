@@ -7,13 +7,9 @@
         "directory": "packages/utils-date"
     },
     "license": "Apache-2.0",
-    "main": "dist/index.cjs.prod.js",
-    "module": "build/index.js",
-    "types": "build",
-    "exports": {
-        ".": "./dist/index.cjs.dev.js",
-        "./package.json": "./package.json"
-    },
+    "main": "_bundles/index.cjs.prod.js",
+    "module": "index.js",
+    "types": "index.d.ts",
     "dependencies": {},
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

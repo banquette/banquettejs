@@ -1,16 +1,15 @@
 import { Service } from "@banquette/dependency-injection";
-import {
-    Constructor,
-    ensureArray,
-    isUndefined,
-    ensureString,
-    isString,
-    isSymbol,
-    isFunction, isNullOrUndefined
-} from "@banquette/utils-type";
-import { ModelAlias, ModelExtendedIdentifier, ModelFactory } from "./type";
 import { UsageException } from "@banquette/exception";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isString } from "@banquette/utils-type/is-string";
+import { isSymbol } from "@banquette/utils-type/is-symbol";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { ModelAliasNotFoundException } from "./exception/model-alias-not-found.exception";
+import { ModelAlias, ModelExtendedIdentifier, ModelFactory } from "./type";
 
 @Service()
 export class ModelMetadataService {

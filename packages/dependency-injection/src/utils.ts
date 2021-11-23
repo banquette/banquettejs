@@ -1,11 +1,15 @@
 import { UsageException } from "@banquette/exception";
-import { Constructor, ensureArray, isFunction, isObject, isSymbol, isUndefined } from "@banquette/utils-type";
+import { getConstructorArgumentsTypes } from "@banquette/utils-reflection/get-constructor-arguments-types";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isSymbol } from "@banquette/utils-type/is-symbol";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { InjectableMetadataInterface } from "./injectable-metadata.interface";
 import { MetadataContainer } from "./metadata.container";
 import { InjectableIdentifier } from "./type/injectable-identifier.type";
 import { InjectableType } from "./type/injectable.type";
 import { LazyInjectableIdentifier } from "./type/lazy-injectable-identifier";
-import { getConstructorArgumentsTypes } from "@banquette/utils-reflection";
 
 /**
  * Create the metadata object defining the type and dependencies of an injectable.

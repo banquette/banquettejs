@@ -20,10 +20,21 @@ function loadTsConfig(path) {
     return config;
 }
 
+const ignoredPackages = ['__tests__'];
+const treeShakablePackages = [/^utils-((?!glob$).)*$/];
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 const packagesDir = path.join(rootDir, 'packages');
 const packages = fs.readdirSync(packagesDir);
+
+function isTreeShakable(packageName) {
+    for (const pattern of treeShakablePackages) {
+        if (packageName.match(pattern)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // Update packages' tsconfig.json
 for (const packageName of packages) {
@@ -36,7 +47,14 @@ for (const packageName of packages) {
         const config = loadTsConfig(tsconfigPath);
         for (const subPackageName of packages) {
             if (subPackageName !== packageName) {
-                config.compilerOptions.paths[`@banquette/${subPackageName}`] = [`packages/${subPackageName}/src/index.ts`];
+                if (ignoredPackages.indexOf(subPackageName) > -1) {
+                    continue ;
+                }
+                if (isTreeShakable(subPackageName)) {
+                    config.compilerOptions.paths[`@banquette/${subPackageName}/*`] = [`packages/${subPackageName}/src/*`];
+                } else {
+                    config.compilerOptions.paths[`@banquette/${subPackageName}`] = [`packages/${subPackageName}/src/index.ts`];
+                }
             }
         }
         console.log(`Update ${chalk.cyan('tsconfig.json')} of package ${chalk.blue(packageName)}.`);
@@ -51,7 +69,14 @@ for (const packageName of packages) {
 const testTsConfigPath = path.join(rootDir, 'tsconfig.test.json');
 const testConfig = loadTsConfig(testTsConfigPath);
 for (const packageName of packages) {
-    testConfig.compilerOptions.paths[`@banquette/${packageName}`] = [`packages/${packageName}/src/index.ts`];
+    if (ignoredPackages.indexOf(packageName) > -1) {
+        continue ;
+    }
+    if (isTreeShakable(packageName)) {
+        testConfig.compilerOptions.paths[`@banquette/${packageName}/*`] = [`packages/${packageName}/src/*`];
+    } else {
+        testConfig.compilerOptions.paths[`@banquette/${packageName}`] = [`packages/${packageName}/src/index.ts`];
+    }
 }
 console.log(`Update ${chalk.blue('jest')} ${chalk.cyan('tsconfig.json')}.`);
 fs.writeFileSync(testTsConfigPath, stringify(testConfig, {indent: 4}) + "\n");
@@ -59,7 +84,14 @@ fs.writeFileSync(testTsConfigPath, stringify(testConfig, {indent: 4}) + "\n");
 // Update jest.config.js
 jestConfig.moduleNameMapper = {};
 for (const packageName of packages) {
-    jestConfig.moduleNameMapper[`@banquette/${packageName}$`] = `<rootDir>/packages/${packageName}/src/index.ts`;
+    if (ignoredPackages.indexOf(packageName) > -1) {
+        continue ;
+    }
+    if (isTreeShakable(packageName)) {
+        jestConfig.moduleNameMapper[`@banquette/${packageName}/(.*)$`] = `<rootDir>/packages/${packageName}/src/$1`;
+    } else {
+        jestConfig.moduleNameMapper[`@banquette/${packageName}$`] = `<rootDir>/packages/${packageName}/src/index.ts`;
+    }
 }
 console.log(`Update ${chalk.cyan('jest.config.js')}.`);
 fs.writeFileSync(path.join(rootDir, 'jest.config.js'), `module.exports = ${stringify(jestConfig, {indent: 4})}\n`);

@@ -1,15 +1,18 @@
 import { Inject } from "@banquette/dependency-injection";
+import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
+import { isCompound } from "@banquette/utils-type/is-compound";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isScalar } from "@banquette/utils-type/is-scalar";
+import { Complete } from "@banquette/utils-type/types";
 import { ModelMetadataService } from "../../../model-metadata.service";
 import { ModelTransformMetadataService } from "../../../model-transform-metadata.service";
 import { ModelFactoryService } from "../../../model.factory.service";
 import { TransformContext } from "../../transform-context";
-import { Complete, isObject, isScalar, isCompound } from "@banquette/utils-type";
 import { TransformerInterface } from "../../transformer.interface";
 import { RootTransformerInterface } from "../../root-transformer.interface";
 import { TransformResult } from "../../../transform-result";
 import { TransformPipeline } from "../../transform-pipeline";
 import { UsageException, ExceptionFactory } from "@banquette/exception";
-import { getSymbolDescription } from "@banquette/utils-object";
 import { ensureCompleteTransformer } from "../../../utils";
 
 export abstract class AbstractRootTransformer implements RootTransformerInterface {

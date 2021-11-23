@@ -1,8 +1,9 @@
-import { Complete, isUndefined } from "@banquette/utils-type";
-import { TransformerInterface } from "./transformer/transformer.interface";
-import { TransformNotSupportedException } from "./exception/transform-not-supported.exception";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Complete } from "@banquette/utils-type/types";
 import { TransformInverseNotSupportedException } from "./exception/transform-inverse-not-supported.exception";
+import { TransformNotSupportedException } from "./exception/transform-not-supported.exception";
 import { RootTransformerInterface } from "./transformer/root-transformer.interface";
+import { TransformerInterface } from "./transformer/transformer.interface";
 
 /**
  * Ensure all methods defined in TransformerInterface are implemented

@@ -7,13 +7,9 @@
         "directory": "packages/model-api"
     },
     "license": "Apache-2.0",
-    "main": "dist/index.cjs.prod.js",
-    "module": "build/index.js",
-    "types": "build",
-    "exports": {
-        ".": "./dist/index.cjs.dev.js",
-        "./package.json": "./package.json"
-    },
+    "main": "_bundles/index.cjs.prod.js",
+    "module": "index.js",
+    "types": "index.d.ts",
     "dependencies": {
         "@banquette/core": "^0.0.5",
         "@banquette/fingerprint": "^0.0.5",

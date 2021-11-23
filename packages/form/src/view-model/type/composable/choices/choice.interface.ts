@@ -1,4 +1,4 @@
-import { Primitive } from "@banquette/utils-type";
+import { Primitive } from "@banquette/utils-type/types";
 
 /**
  * The view representation of a choice.

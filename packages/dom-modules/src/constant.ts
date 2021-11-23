@@ -1,7 +1,4 @@
-/**
- * Tag used to differentiate dom modules from other modules in the injector.
- */
-import { Constructor } from "@banquette/utils-type";
+import { Constructor } from "@banquette/utils-type/types";
 
 /**
  * Name of the property holding the name of the module in the object's constructor.

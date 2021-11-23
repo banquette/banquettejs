@@ -1,7 +1,8 @@
 import { UsageException } from "@banquette/exception";
-import { getObjectKeys } from "@banquette/utils-object";
-import { isNonEmptyString } from "@banquette/utils-string";
-import { isFunction, isUndefined } from "@banquette/utils-type";
+import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Prop as VueProp, PropType } from "vue";
 import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";

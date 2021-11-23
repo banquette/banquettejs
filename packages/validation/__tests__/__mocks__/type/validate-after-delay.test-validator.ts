@@ -1,5 +1,6 @@
-import { waitForDelay } from "@banquette/utils-misc";
-import { isObject, isType } from "@banquette/utils-type";
+import { waitForDelay } from "@banquette/utils-misc/timeout";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isType } from "@banquette/utils-type/is-type";
 import {
     ASYNC_TAG,
     createValidator,

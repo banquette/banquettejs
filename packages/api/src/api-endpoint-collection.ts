@@ -1,9 +1,10 @@
-import { isUndefined, isString } from "@banquette/utils-type";
 import { UsageException } from "@banquette/exception";
-import { EndpointNotFoundException } from "./exception/endpoint-not-found.exception";
 import { HttpMethod } from "@banquette/http";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointParameterOptions, ApiEndpointOptionsWithName } from "./api-endpoint.options";
+import { EndpointNotFoundException } from "./exception/endpoint-not-found.exception";
 
 export class ApiEndpointCollection {
     /**

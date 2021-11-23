@@ -1,15 +1,19 @@
 import { Module, Inject } from "@banquette/dependency-injection";
-import { Complete, isObject } from "@banquette/utils-type";
+import { UsageException } from "@banquette/exception";
+import { FormObject, FormComponentInterface } from "@banquette/form";
 import {
     ModelTransformerTag,
     TransformContext,
     TransformerInterface,
     TransformResult,
     TransformPipeline,
-    AbstractRootTransformer, ModelMetadataService, ModelTransformMetadataService, ModelFactoryService
+    AbstractRootTransformer,
+    ModelMetadataService,
+    ModelTransformMetadataService,
+    ModelFactoryService
 } from "@banquette/model";
-import { FormObject, FormComponentInterface } from "@banquette/form";
-import { UsageException } from "@banquette/exception";
+import { isObject } from "@banquette/utils-type/is-object";
+import { Complete } from "@banquette/utils-type/types";
 import { FormComponentFactory } from "../../form-component.factory";
 
 export const FormTransformerSymbol = Symbol('form-component');

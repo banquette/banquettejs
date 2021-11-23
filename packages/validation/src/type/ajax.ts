@@ -6,13 +6,18 @@ import {
     HttpRequestFactory,
     HttpRequestFactoryConfig,
     HttpResponse,
-    HttpService, RequestCanceledException
+    HttpService,
+    RequestCanceledException
 } from "@banquette/http";
-import { extend } from "@banquette/utils-object";
-import { isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
+import { extend } from "@banquette/utils-object/extend";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isType } from "@banquette/utils-type/is-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ASYNC_TAG } from "../constant";
-import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
 import { createValidator } from "../create-validator";
+import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from '../validator.interface';

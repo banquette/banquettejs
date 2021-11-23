@@ -1,4 +1,7 @@
 import 'reflect-metadata';
+import { areEqual } from "@banquette/utils-misc/are-equal";
+import { NotEmpty, NotEqual, ValidationResult } from "@banquette/validation";
+import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";
 import {
     FormGroupInterface,
     ValueChangedFormEvent,
@@ -13,10 +16,7 @@ import {
     ValidationEndFormEvent
 } from "../src";
 import { createTestForm, createConcreteControl } from "./__mocks__/utils";
-import { areEqual } from "@banquette/utils-misc";
 import { ViewModelMock } from "./__mocks__/view-model.mock";
-import { NotEmpty, NotEqual, ValidationResult } from "@banquette/validation";
-import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";
 
 class Foo {}
 

@@ -1,7 +1,7 @@
-import { Constructor } from "@banquette/utils-type";
-import { getFunctionArguments } from "./get-function-arguments";
-import { getConstructorArgumentsTypes } from "./get-constructor-arguments-types";
 import { UsageException } from "@banquette/exception";
+import { Constructor } from "@banquette/utils-type/types";
+import { getConstructorArgumentsTypes } from "./get-constructor-arguments-types";
+import { getFunctionArguments } from "./get-function-arguments";
 
 /**
  * Get a key/value pair containing an entry for each argument of a constructor function, where:

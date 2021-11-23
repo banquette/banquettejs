@@ -1,14 +1,12 @@
-import {
-    ensureInteger,
-    ensureNumber,
-    ensureString,
-    ensureBoolean,
-    ensureScalarOrCompound
-} from "@banquette/utils-type";
 import { UsageException } from "@banquette/exception";
-import { TransformerInterface } from "../transformer.interface";
-import { TransformContext } from "../transform-context";
+import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
+import { ensureInteger } from "@banquette/utils-type/ensure-integer";
+import { ensureNumber } from "@banquette/utils-type/ensure-number";
+import { ensureScalarOrCompound } from "@banquette/utils-type/ensure-scalar-or-compound";
+import { ensureString } from "@banquette/utils-type/ensure-string";
 import { TransformResult } from "../../transform-result";
+import { TransformContext } from "../transform-context";
+import { TransformerInterface } from "../transformer.interface";
 
 export enum Type {
     /**

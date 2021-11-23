@@ -1,6 +1,6 @@
 import { SharedConfiguration } from "@banquette/config";
 import { InjectLazy, Service } from "@banquette/dependency-injection";
-import { isUndefined } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { StorageAdapterTag } from "../constant";
 import { AbstractAdapter } from "./abstract.adapter";
 import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";

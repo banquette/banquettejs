@@ -1,4 +1,6 @@
-import { Constructor, isUndefined, isObject } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { VueWrapper } from "@vue/test-utils";
 import { VUE_CLASS_COMPONENT_OPTIONS_NAME, COMPONENT_INSTANCE_ATTR_NAME } from "../constants";
 

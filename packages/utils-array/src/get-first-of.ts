@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 
 /**
  * Gets the first defined value of the list or arg.

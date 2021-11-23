@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import {rollup, watch as rollupWatch} from 'rollup';
 import buble from 'rollup-plugin-buble';
@@ -11,7 +11,6 @@ import { terser } from "rollup-plugin-terser";
 import chalk from 'chalk';
 import vue from 'rollup-plugin-vue';
 import postcss from 'rollup-plugin-postcss';
-import inlineVueContentsVue from "../plugin/inline-vue-contents-vue.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,6 +48,19 @@ export function camelCase(input) {
     return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
+function getAllFiles(dirPath, output) {
+    let files = fs.readdirSync(dirPath);
+    output = output || [];
+    files.forEach(function(file) {
+        if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+            output = getAllFiles(dirPath + "/" + file, output);
+        } else {
+            output.push(path.join(dirPath, "/", file));
+        }
+    });
+    return output;
+}
+
 /**
  * Generate a rollup configuration base on a more abstract definition.
  */
@@ -56,6 +68,7 @@ export function getRollupConfig(buildConfig) {
     const vars = {__VERSION__: getVersion()};
     const externals = Externals.concat(buildConfig.externals || []);
     const rollupConfig = {
+        preserveModules: buildConfig.preserveModules || false,
         watch: {
             buildDelay: 0,
             clearScreen: true,
@@ -64,8 +77,8 @@ export function getRollupConfig(buildConfig) {
         input: buildConfig.entry,
         external: (candidate) => {
             for (const pattern of externals) {
-                if (pattern instanceof RegExp) {
-                    return candidate.match(pattern);
+                if (pattern instanceof RegExp && candidate.match(pattern)) {
+                    return true;
                 }
                 if (pattern === candidate) {
                     return true;
@@ -73,10 +86,7 @@ export function getRollupConfig(buildConfig) {
             }
             return false;
         },
-        plugins: [
-            inlineVueContentsVue()
-            // alias(Object.assign({}, aliases, buildConfig.alias))
-        ].concat(buildConfig.plugins || []),
+        plugins: [].concat(buildConfig.plugins || []),
         output: {
             format: buildConfig.format,
             banner: buildConfig.banner,
@@ -131,11 +141,21 @@ export function getRollupConfig(buildConfig) {
 
 function writeOutput(config, output) {
     if (config.output.format === 'es') {
-        const dir = output.dir || path.dirname(output.file);
-        const packageRoot = dir.substring(0, dir.length - (4 /* /src */ + config._name.length + 6 /* build/ */));
-        fs.renameSync(dir, packageRoot + '_build');
-        fs.rmdirSync(packageRoot + 'build', {recursive: true});
-        fs.renameSync(packageRoot + '_build', packageRoot + 'build');
+        const baseDir = output.dir || path.dirname(output.file);
+        const typesDir = path.join(baseDir, 'src');
+        fs.copySync(typesDir, baseDir);
+        fs.rmdirSync(typesDir, {recursive: true});
+        fs.rmdirSync(path.join(baseDir, '__tests__'), {recursive: true});
+
+        const files = getAllFiles(path.resolve(__dirname, '../../', output.dir));
+        for (let i = 0; i < files.length; ++i) {
+            let fcontent = fs.readFileSync(files[i]).toString();
+            let reg = /('|")(\.\.\/)+node_modules\/style-inject\/[^'|"]+('|")/;
+            if (fcontent.match(reg)) {
+                fcontent = fcontent.replace(reg, "'style-inject'");
+                fs.writeFileSync(files[i], fcontent);
+            }
+        }
     }
 }
 
@@ -194,15 +214,9 @@ export function cleanupBuilds(configs) {
         const packageName = config.package;
         if (packageName && cleaned.indexOf(packageName) < 0) {
             console.log(`${chalk.red('Cleaning')} builds of package ${chalk.blue(packageName)}.`);
-            const packageRootDir = path.resolve(__dirname, `../../packages/${packageName}`);
-            const targets = [
-                packageRootDir + '/dist',
-                packageRootDir + '/build'
-            ];
-            for (const target of targets) {
-                if (fs.existsSync(target)) {
-                    fs.rmdirSync(target, {recursive: true});
-                }
+            const target = path.resolve(__dirname, `../../dist/${packageName}`);
+            if (fs.existsSync(target)) {
+                fs.rmdirSync(target, {recursive: true});
             }
             cleaned.push(packageName);
         }

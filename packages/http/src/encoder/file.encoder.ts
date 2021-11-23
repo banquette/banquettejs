@@ -1,7 +1,7 @@
 import { Injector } from "@banquette/dependency-injection";
 import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
-import { isNullOrUndefined } from "@banquette/utils-type";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { EncoderTag, Events } from "../constants";
 import { RequestEvent } from "../event/request.event";
 

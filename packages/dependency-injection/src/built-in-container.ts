@@ -1,10 +1,11 @@
 import { UsageException } from "@banquette/exception";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { InjectableMetadataInterface } from "./injectable-metadata.interface";
 import { MetadataContainer } from "./metadata.container";
 import { InjectableIdentifier } from "./type/injectable-identifier.type";
 import { InjectableType } from "./type/injectable.type";
 import { LazyInjectableIdentifier } from "./type/lazy-injectable-identifier";
-import { isUndefined, isArray } from "@banquette/utils-type";
 
 /**
  * A very basic container, only meant to cover the limited needs of the tools.

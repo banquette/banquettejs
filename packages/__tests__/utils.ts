@@ -1,5 +1,5 @@
-import { noop } from "../utils-misc";
-import { ensureString, isArray } from "../utils-type";
+import { noop } from "../utils-misc/src";
+import { isArray, ensureString } from "../utils-type/src";
 
 let currentTestingFunction: Function = noop;
 

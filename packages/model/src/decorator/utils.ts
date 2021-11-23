@@ -1,7 +1,11 @@
-import { Constructor, isUndefined, isFunction, isNumber, isType } from "@banquette/utils-type";
-import { getFunctionArguments } from "@banquette/utils-reflection";
-import { isNonEmptyString } from "@banquette/utils-string";
 import { UsageException } from "@banquette/exception";
+import { getFunctionArguments } from "@banquette/utils-reflection/get-function-arguments";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isNumber } from "@banquette/utils-type/is-number";
+import { isType } from "@banquette/utils-type/is-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 
 /**
  * Utility function that ensures the decorator has been set on a property and which

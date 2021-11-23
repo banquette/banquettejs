@@ -1,7 +1,11 @@
 import { UsageException } from "@banquette/exception";
-import { noop } from "@banquette/utils-misc";
-import { isNonEmptyString, kebabCase } from "@banquette/utils-string";
-import { Constructor, isNullOrUndefined, isString, isUndefined } from "@banquette/utils-type";
+import { noop } from "@banquette/utils-misc/noop";
+import { kebabCase } from "@banquette/utils-string/case/kebab-case";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { DirectiveBinding, DirectiveHook, VNode } from "vue";
 import { VueBuilder } from "../vue-builder";
 

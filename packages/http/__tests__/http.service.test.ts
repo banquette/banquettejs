@@ -4,7 +4,7 @@ import { Injector } from "@banquette/dependency-injection";
 import { EventDispatcherService } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import { ObservablePromise } from "@banquette/promise";
-import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc";
+import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc/timeout";
 import {
     XhrAdapter,
     HttpConfigurationSymbol,

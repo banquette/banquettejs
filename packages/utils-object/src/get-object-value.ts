@@ -1,13 +1,11 @@
-import {
-    ensureArray,
-    ensureBoolean,
-    ensureNumber,
-    ensureObject,
-    ensureString,
-    isArray,
-    isObject,
-    isUndefined
-} from "@banquette/utils-type";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
+import { ensureNumber } from "@banquette/utils-type/ensure-number";
+import { ensureObject } from "@banquette/utils-type/ensure-object";
+import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 
 /**
  * Extract a value from an object and ensure it is a string.

@@ -1,17 +1,17 @@
+import { UnsubscribeFunction } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
-import { areEqual } from "@banquette/utils-misc";
-import { cloneDeepPrimitive } from "@banquette/utils-object";
-import { Writeable } from "@banquette/utils-type";
+import { areEqual } from "@banquette/utils-misc/are-equal";
+import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
+import { Writeable } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
 import { BasicState, CallContext, Events, ValidationStrategy } from "./constant";
+import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 import { FormControlInterface } from "./form-control.interface";
+import { FormError } from "./form-error";
 import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
-import { FormError } from "./form-error";
-import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
-import { UnsubscribeFunction } from "@banquette/event";
 
 export class FormControl extends AbstractFormComponent implements FormControlInterface {
     /**

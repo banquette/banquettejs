@@ -1,4 +1,6 @@
-import { isObject, isUndefined, isObjectLiteral, isArray } from "@banquette/utils-type";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObjectLiteral, isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 
 /**
  * Compares two objects and returns the difference between them.

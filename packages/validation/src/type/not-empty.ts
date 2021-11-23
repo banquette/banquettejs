@@ -1,4 +1,5 @@
-import { isNullOrUndefined, isObject } from "@banquette/utils-type";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isObject } from "@banquette/utils-type/is-object";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { ValidationContext } from "../validation-context";

@@ -1,4 +1,4 @@
-import { GenericCallback } from "@banquette/utils-type";
+import { GenericCallback } from "@banquette/utils-type/types";
 
 /**
  * Slightly modified versin of:

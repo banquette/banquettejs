@@ -1,7 +1,12 @@
 import { Service } from "@banquette/dependency-injection";
 import { UsageException } from "@banquette/exception";
-import { extend, getSymbolDescription } from "@banquette/utils-object";
-import { ensureArray, isObject, isString, isSymbol, isUndefined } from "@banquette/utils-type";
+import { extend } from "@banquette/utils-object/extend";
+import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isSymbol } from "@banquette/utils-type/is-symbol";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ConfigurationInterface, ConfigurationValue } from "./configuration.interface";
 
 @Service()

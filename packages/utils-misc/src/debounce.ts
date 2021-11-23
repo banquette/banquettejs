@@ -1,4 +1,4 @@
-import { GenericCallback } from "@banquette/utils-type";
+import { GenericCallback } from "@banquette/utils-type/types";
 
 /**
  * Ensure a function is only called after not being called for a certain amount of time.

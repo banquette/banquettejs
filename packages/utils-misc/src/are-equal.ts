@@ -1,5 +1,6 @@
-import { areObjectsEqual } from "@banquette/utils-object";
-import { isObjectLiteral, isArray } from "@banquette/utils-type";
+import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObjectLiteral } from "@banquette/utils-type/is-object";
 
 /**
  * Test if two values are strictly equal, no matter their type.

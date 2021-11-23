@@ -1,15 +1,14 @@
 import 'reflect-metadata';
 import { HttpResponse } from "@banquette/http";
-import { waitForDelay } from "@banquette/utils-misc";
+import { waitForDelay } from "@banquette/utils-misc/timeout";
 import { Ajax, And, Invalid, Max, Min, NotEmpty, NotEqual, Valid, ValidationResult } from "@banquette/validation";
+import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
+import '../../http/__tests__/__mocks__/xml-http-request.mock';
+import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";
 import { ValidationStrategy, FormControl, FormGroupInterface, FormObject } from "../src";
 import { FormFactoryTest } from "./__mocks__/form-factory-test";
 import { createConcreteControl, createTestForm } from "./__mocks__/utils";
-import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
-import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";
-import '../../http/__tests__/__mocks__/xml-http-request.mock';
 import { ViewModelMock } from "./__mocks__/view-model.mock";
-import { FormError } from "../src";
 
 /**
  * Assign validators

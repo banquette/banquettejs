@@ -1,12 +1,14 @@
 import { Module } from "@banquette/dependency-injection";
-import { Complete, isString, isObject } from "@banquette/utils-type";
-import { ModelTransformerTag } from "../../../constants";
-import { TransformContext } from "../../transform-context";
-import { TransformResult } from "../../../transform-result";
-import { TransformerInterface } from "../../transformer.interface";
-import { TransformPipeline } from "../../transform-pipeline";
 import { UsageException, ExceptionFactory } from "@banquette/exception";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { Complete } from "@banquette/utils-type/types";
+import { ModelTransformerTag } from "../../../constants";
 import { InvalidJsonException } from "../../../exception/invalid-json.exception";
+import { TransformResult } from "../../../transform-result";
+import { TransformContext } from "../../transform-context";
+import { TransformPipeline } from "../../transform-pipeline";
+import { TransformerInterface } from "../../transformer.interface";
 import { AbstractRootTransformer } from "./abstract-root-transformer";
 
 export const JsonTransformerSymbol = Symbol('json');

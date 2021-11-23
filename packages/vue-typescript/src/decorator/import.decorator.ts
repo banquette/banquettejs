@@ -1,6 +1,9 @@
 import { UsageException } from "@banquette/exception";
-import { isNonEmptyString } from "@banquette/utils-string";
-import { Constructor, isFunction, isNullOrUndefined, isUndefined } from "@banquette/utils-type";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Constructor } from "@banquette/utils-type/types";
 import { PrefixOrAlias } from "../type";
 import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";

@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { LazyInjectableIdentifier } from "../type/lazy-injectable-identifier";
 import { registerExplicitDependency } from "../utils";
 

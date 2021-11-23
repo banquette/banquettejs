@@ -1,4 +1,7 @@
+import { ApiEndpoint } from "@banquette/api";
 import { Module, Inject, InjectLazy } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { HttpResponse } from "@banquette/http";
 import {
     ModelTransformerTag,
     TransformContext,
@@ -10,12 +13,9 @@ import {
     TransformService,
     PojoTransformer
 } from "@banquette/model";
-import { isUndefined } from "@banquette/utils-type";
-import { ApiEndpoint } from "@banquette/api";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { NotEmpty } from "@banquette/validation";
 import { ModelApiMetadataService } from "../../model-api-metadata.service";
-import { HttpResponse } from "@banquette/http";
-import { UsageException } from "@banquette/exception";
 
 export const ApiTransformerSymbol = Symbol('api');
 

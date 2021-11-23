@@ -1,4 +1,5 @@
-import { isNumber, isString } from "@banquette/utils-type";
+import { isNumber } from "@banquette/utils-type/is-number";
+import { isString } from "@banquette/utils-type/is-string";
 import { trim } from "./format/trim";
 
 /**

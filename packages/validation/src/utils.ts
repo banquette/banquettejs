@@ -1,4 +1,4 @@
-import { isObject } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type/is-object";
 import { ValidatorContainerInterface } from "./validator-container.interface";
 
 /**

@@ -1,7 +1,10 @@
-import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isType } from "@banquette/utils-type/is-type";
 import { WatchOptions } from "@vue/runtime-core";
+import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
 import { DECORATORS_CTOR_NAME } from "./constants";
-import { isType, isArray, isString, isObject } from "@banquette/utils-type";
 
 /**
  * Fake implementation of the public attributes of the vue instance.

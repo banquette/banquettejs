@@ -1,4 +1,4 @@
-import { isFunction } from "@banquette/utils-type";
+import { isFunction } from "@banquette/utils-type/is-function";
 
 /**
  * Try to get arguments names of a function at runtime.

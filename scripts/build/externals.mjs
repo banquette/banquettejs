@@ -5,5 +5,6 @@ export const Externals = [
     'reflect-metadata',
     'inversify',
     'vue',
-    'qs'
+    'qs',
+    /style\-inject/
 ];

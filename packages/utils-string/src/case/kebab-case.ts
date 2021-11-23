@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "@banquette/utils-type";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 
 export function kebabCase(input: string): string {
     if (!isNullOrUndefined(input)) {

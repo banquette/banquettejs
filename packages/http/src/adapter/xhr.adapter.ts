@@ -1,8 +1,8 @@
 import { Module } from "@banquette/dependency-injection";
 import { UsageException } from "@banquette/exception";
 import { ObservablePromise } from "@banquette/promise";
-import { isUndefined } from "@banquette/utils-type";
-import { proxy } from "@banquette/utils-misc";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { HttpRequestProgressStatus } from "../constants";
 import { StatusChangeEvent } from "../event/status-change.event";
 import { TransferProgressEvent } from "../event/transfer-progress.event";

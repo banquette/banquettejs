@@ -1,8 +1,9 @@
 import { Injector } from "@banquette/dependency-injection";
 import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
 import { ExceptionFactory } from "@banquette/exception";
-import { trim } from "@banquette/utils-string";
-import { isString, isUndefined } from "@banquette/utils-type";
+import { trim } from "@banquette/utils-string/format/trim";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { DecoderTag, Events } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";

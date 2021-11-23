@@ -1,10 +1,13 @@
-import { Not } from "@banquette/utils-misc";
-import { ensureArray, isNullOrUndefined, isType, isUndefined } from "@banquette/utils-type";
+import { Not } from "@banquette/utils-misc/not";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isType } from "@banquette/utils-type/is-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { DispatchResult } from "./dispatch-result";
 import { EventArg } from './event-arg';
 import { EventDispatcherInterface } from "./event-dispatcher.interface";
 import { SubscriberInterface } from "./subscriber.interface";
 import { UnsubscribeFunction } from "./type";
-import { DispatchResult } from "./dispatch-result";
 
 export class EventDispatcher implements EventDispatcherInterface {
     private static DEFAULT_TAG = Symbol('default');

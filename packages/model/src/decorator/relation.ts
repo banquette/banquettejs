@@ -1,9 +1,9 @@
 import { Injector } from "@banquette/dependency-injection";
-import { isNonEmptyString } from "@banquette/utils-string";
-import { isFunction } from "@banquette/utils-type";
 import { UsageException } from "@banquette/exception";
-import { ModelExtendedIdentifier } from "../type";
+import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
+import { isFunction } from "@banquette/utils-type/is-function";
 import { ModelMetadataService } from "../model-metadata.service";
+import { ModelExtendedIdentifier } from "../type";
 
 const metadata = Injector.Get(ModelMetadataService);
 

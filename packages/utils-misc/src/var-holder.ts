@@ -1,6 +1,9 @@
 import { UsageException } from "@banquette/exception";
-import { ensureArray, isObject, isString, isUndefined } from "@banquette/utils-type";
-import { getObjectKeys } from "@banquette/utils-object";
+import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 
 /**
  * A generic key/value pair storage you can use to store data in memory.

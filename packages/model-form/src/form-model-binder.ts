@@ -1,4 +1,5 @@
 import { Module, Inject } from "@banquette/dependency-injection";
+import { UsageException, ExceptionFactory } from "@banquette/exception";
 import {
     FormObject,
     FormComponentInterface,
@@ -21,15 +22,19 @@ import {
     ModelChangeEvent,
     ModelChangeType
 } from "@banquette/model";
-import { FormTransformerSymbol } from "./transformer/root/form";
-import { UsageException, ExceptionFactory } from "@banquette/exception";
-import { proxy } from "@banquette/utils-misc";
-import { Constructor, isUndefined, Complete, isObject, ensureArray, isString, isArray } from "@banquette/utils-type";
-import { isFormTransformer } from "./transformer/utils";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Complete, Constructor } from "@banquette/utils-type/types";
+import { FormControlTransformerSymbol, FormArrayTransformerSymbol, FormObjectTransformerSymbol } from "./contants";
 import { FormControl as FormControlTransformer } from "./transformer/form-control";
 import { FormObject as FormObjectTransformer } from "./transformer/form-object";
 import { FormTransformerInterface } from "./transformer/form-transformer.interface";
-import { FormControlTransformerSymbol, FormArrayTransformerSymbol, FormObjectTransformerSymbol } from "./contants";
+import { FormTransformerSymbol } from "./transformer/root/form";
+import { isFormTransformer } from "./transformer/utils";
 
 interface TransformersTree {
     ctor: Constructor<any>;

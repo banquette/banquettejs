@@ -1,3 +1,5 @@
+import { Injector } from "@banquette/dependency-injection";
+import { FormObject as FormObjectObject } from '@banquette/form';
 import {
     TransformContext,
     TransformResult,
@@ -5,12 +7,10 @@ import {
     ensureCompleteTransformer,
     TransformerInterface
 } from "@banquette/model";
-import { FormObject as FormObjectObject } from '@banquette/form';
-import { FormTransformerInterface } from "./form-transformer.interface";
-import { Complete } from "@banquette/utils-type";
-import { Injector } from "@banquette/dependency-injection";
-import { FormComponentFactory } from "../form-component.factory";
+import { Complete } from "@banquette/utils-type/types";
 import { FormObjectTransformerSymbol } from "../contants";
+import { FormComponentFactory } from "../form-component.factory";
+import { FormTransformerInterface } from "./form-transformer.interface";
 
 const factory = Injector.Get(FormComponentFactory);
 

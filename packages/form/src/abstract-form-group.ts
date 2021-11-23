@@ -1,7 +1,10 @@
 import { UnsubscribeFunction } from "@banquette/event";
-import { MatchResult, MatchType } from "@banquette/utils-glob";
-import { ltrim, trim } from "@banquette/utils-string";
-import { ensureArray, isBoolean, isUndefined } from "@banquette/utils-type";
+import { MatchType, MatchResult } from "@banquette/utils-glob";
+import { ltrim } from "@banquette/utils-string/format/ltrim";
+import { trim } from "@banquette/utils-string/format/trim";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isBoolean } from "@banquette/utils-type/is-boolean";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { createValidator, ValidationContext, ValidationResult, ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
 import {
@@ -19,10 +22,10 @@ import { FormChildComponentInterface } from "./form-child-component.interface";
 import { FormComponentInterface } from "./form-component.interface";
 import { FormComponentsCollection } from "./form-components-collection";
 import { FormControlInterface } from "./form-control.interface";
+import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
 import { ForEachFilters, UnassignedFormError } from "./type";
-import { FormError } from "./form-error";
 
 export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType> extends AbstractFormComponent<ValueType, ChildrenType> implements FormGroupInterface<IdentifierType> {
     /**

@@ -1,4 +1,4 @@
-import { Constructor } from "@banquette/utils-type";
+import { Constructor } from "@banquette/utils-type/types";
 
 /**
  * Represent a valid configuration value.

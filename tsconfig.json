@@ -3,7 +3,6 @@
         "target": "es5",
         "lib": ["es6", "es5", "dom"],
         "module": "es2015",
-        // this enables stricter inference for data properties on `this`
         "strict": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,

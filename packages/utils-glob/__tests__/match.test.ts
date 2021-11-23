@@ -1,4 +1,9 @@
-import { isArray, isNumber, isNumeric, isObject, isString, isUndefined } from "@banquette/utils-type";
+import { isArray } from "@banquette/utils-type/is-array";
+import { isNumber } from "@banquette/utils-type/is-number";
+import { isNumeric } from "@banquette/utils-type/is-numeric";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { MatchType, match, MatchResult } from "../src";
 
 function buildCandidatesIndex(input: any, parent: string = '/'): any {

@@ -1,7 +1,8 @@
 import { Inject, Service } from "@banquette/dependency-injection";
 import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
-import { proxy } from "@banquette/utils-misc";
-import { isNullOrUndefined, isObject } from "@banquette/utils-type";
+import { proxy } from "@banquette/utils-misc/proxy";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isObject } from "@banquette/utils-type/is-object";
 import { Events } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 

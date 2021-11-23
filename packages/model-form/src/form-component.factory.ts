@@ -1,8 +1,8 @@
 import { Service, Inject } from "@banquette/dependency-injection";
 import { FormControl, FormComponentInterface, FormArray, FormObject } from "@banquette/form";
-import { ModelValidationMetadataService } from "@banquette/model-validation";
 import { ModelExtendedIdentifier } from "@banquette/model";
-import { ensureArray } from "@banquette/utils-type";
+import { ModelValidationMetadataService } from "@banquette/model-validation";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
 
 @Service()
 export class FormComponentFactory {

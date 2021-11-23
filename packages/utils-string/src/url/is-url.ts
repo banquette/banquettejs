@@ -1,4 +1,4 @@
-import { isString } from "@banquette/utils-type";
+import { isString } from "@banquette/utils-type/is-string";
 
 /**
  * Test if the input looks like an URL string.

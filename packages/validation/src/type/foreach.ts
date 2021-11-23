@@ -1,5 +1,6 @@
 import { UsageException } from "@banquette/exception";
-import { isIterable, isObject } from "@banquette/utils-type";
+import { isIterable } from "@banquette/utils-type/is-iterable";
+import { isObject } from "@banquette/utils-type/is-object";
 import { isValidatorContainer } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
