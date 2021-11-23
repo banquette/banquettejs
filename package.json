@@ -12,6 +12,7 @@
         "clean": "node scripts/build/clean.mjs",
         "build:aliases": "node scripts/update-tsconfigs-aliases.mjs",
         "build:changelog": "node scripts/generate-changelog.js",
+        "build:icons": "node scripts/generate-icons-components.js",
         "test": "npm run clean && jest --passWithNoTests",
         "release": "bash scripts/release.sh",
         "release:local": "bash scripts/release-local.sh",
@@ -20,6 +21,7 @@
     },
     "dependencies": {
         "inversify": "^5.0.5",
+        "material-design-icons": "^3.0.1",
         "observable-slim": "^0.1.5",
         "qs": "^6.10.1",
         "reflect-metadata": "^0.1.13",

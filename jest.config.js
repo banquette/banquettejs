@@ -40,6 +40,7 @@ module.exports = {
         "@banquette/utils-type/(.*)$": "<rootDir>/packages/utils-type/src/$1",
         "@banquette/validation$": "<rootDir>/packages/validation/src/index.ts",
         "@banquette/vue-dom-module$": "<rootDir>/packages/vue-dom-module/src/index.ts",
+        "@banquette/vue-material-icons$": "<rootDir>/packages/vue-material-icons/src/index.ts",
         "@banquette/vue-typescript$": "<rootDir>/packages/vue-typescript/src/index.ts"
     },
     "modulePathIgnorePatterns": [

@@ -43,6 +43,9 @@
             "@banquette/validation": ["packages/validation/src/index.ts"],
             "@banquette/vue-dom-module": [
                 "packages/vue-dom-module/src/index.ts"
+            ],
+            "@banquette/vue-material-icons": [
+                "packages/vue-material-icons/src/index.ts"
             ]
         }
     },
