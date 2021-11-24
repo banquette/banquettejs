@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { NotEmpty } from "@banquette/validation";
 import {
     BasicState,
     ContextualizedState,
@@ -508,6 +509,33 @@ describe('virtual', () => {
         //
         expect(formArr.children.length).toEqual(2);
         checkStates(formArr, {[BasicState.Concrete]: false});
+    });
+
+    test('a virtual control is always validated', () => {
+        const control = new FormControl();
+
+        // Validated because there is no validator by default
+        expect(control.validated).toEqual(true);
+
+        // Assign a validator but still virtual
+        control.setValidator(NotEmpty());
+        expect(control.validated).toEqual(true);
+
+        // Not validated if the control becomes concrete
+        control.markAsConcrete();
+        expect(control.validated).toEqual(false);
+
+        // Back to virtual should make if validated again
+        control.markAsVirtual();
+        expect(control.validated).toEqual(true);
+    });
+
+    test('validate() removes custom errors', () => {
+        const control = new FormControl();
+
+        control.addError('misc', 'Test');
+        control.validate();
+        expect(control.invalid).toEqual(false);
     });
 });
 

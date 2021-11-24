@@ -461,7 +461,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      */
     public setValidator(validator: ValidatorInterface|null): void {
         (this as Writeable<AbstractFormComponent>).validator = validator;
-        if (this.validator !== null) {
+        if (this.validator !== null && this.concrete) {
             this.markBasicState(BasicState.NotValidated, this.id);
         } else {
             this.unmarkBasicState(BasicState.NotValidated, this.id);
@@ -523,6 +523,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      */
     public markAsVirtual(): void {
         this.unmarkBasicState(BasicState.Concrete, this.id);
+        this.unmarkBasicState(BasicState.NotValidated, this.id);
     }
 
     /**
@@ -530,6 +531,9 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      */
     public markAsConcrete(): void {
         this.markBasicState(BasicState.Concrete, this.id);
+        if (this.validator !== null) {
+            this.markBasicState(BasicState.NotValidated, this.id);
+        }
     }
 
     /**
@@ -650,8 +654,10 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         if (this.activeControl !== null && this.activeControl.id === this.id) {
             this.activeControl.blur();
         }
+        if (this.concrete) {
+            this.markBasicState(BasicState.NotValidated, this.id);
+        }
         this.unmarkBasicState([BasicState.Touched, BasicState.Dirty], this.id);
-        this.markBasicState(BasicState.NotValidated, this.id);
         this.validationStatus = ValidationStatus.Unknown;
         this.clearErrors();
     }
@@ -760,10 +766,10 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         if (result.waiting) {
             throw new UsageException('The ValidationResult is still waiting.');
         }
+        (this as Writeable<AbstractFormComponent>).errors = [];
         if (result.valid) {
             this.unmarkBasicState(BasicState.Invalid, this.id);
         } else {
-            (this as Writeable<AbstractFormComponent>).errors = [];
             for (const violation of result.violations) {
                 if (violation.type !== VirtualViolationType) {
                     this.addError(violation.type, violation.message);
