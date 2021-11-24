@@ -524,3 +524,46 @@ describe('events dispatching', () => {
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestFailure, expect.any(Object));
     });
 });
+
+
+/**
+ * Headers
+ */
+describe('headers', () => {
+    let request: HttpRequest;
+
+    beforeEach(() => {
+        request = HttpRequestFactory.Create({url: ''});
+    });
+
+    test('add and get a header', () => {
+        request.headers.set('content-type', 'text/plain');
+        expect(request.headers.get('content-type')).toEqual('text/plain');
+    });
+
+    test('get an non existing header', () => {
+        expect(request.headers.get('non-existing')).toBeNull();
+        expect(request.headers.get('non-existing', 'default value')).toEqual('default value');
+    });
+
+    describe('name normalization', () => {
+        const tests: Record<string, string> = {
+            'x-aPi-key': 'X-Api-Key',
+            'www-authenticate': 'WWW-Authenticate',
+            'content-type': 'Content-Type',
+            'content  type': 'Content-Type',
+            tcn: 'TCN',
+            te: 'TE',
+            DNS: 'Dns'
+        };
+        for (const item of Object.keys(tests)) {
+            test(item, () => {
+                request.headers.empty();
+                request.headers.set(item, 'test');
+                expect(request.headers.all()).toStrictEqual({
+                    [tests[item]]: 'test'
+                });
+            });
+        }
+    });
+});

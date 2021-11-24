@@ -4,10 +4,11 @@ import { UsageException } from "@banquette/exception";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { Writeable } from "@banquette/utils-type/types";
+import { Writeable, Primitive } from "@banquette/utils-type/types";
 import { AdapterInterface } from "./adapter/adapter.interface";
 import { HttpConfigurationSymbol } from "./config";
 import { HttpMethod, UrlParameterType } from "./constants";
+import { HeadersBag } from "./headers-bag";
 import { HttpConfigurationInterface } from "./http-configuration.interface";
 import { HttpResponse } from "./http-response";
 import { UrlParameterInterface } from "./url-parameter.interface";
@@ -30,6 +31,11 @@ export class HttpRequest {
      * Number of times the request tried to execute.
      */
     public readonly tryCount: number = 0;
+
+    /**
+     * Headers to send with the request.
+     */
+    public readonly headers: HeadersBag;
 
     /**
      * The static url is the finalize version of the url, including all parameters.
@@ -80,7 +86,7 @@ export class HttpRequest {
      * @param payload           Body of the request.
      * @param payloadType       Format of the payload.
      * @param responseType      Format of the response.
-     * @param headers           Additional headers to send with the request.
+     * @param headers           Headers to send with the request.
      * @param timeout           Maximum duration of the request (in milliseconds).
      * @param retry             Maximum number of tries allowed for the request.
      * @param retryDelay        Time to wait before trying again in case of error.
@@ -96,7 +102,7 @@ export class HttpRequest {
                        public payload: any,
                        public payloadType: symbol,
                        public responseType: symbol,
-                       public headers: Record<string, string>,
+                       headers: HeadersBag|Record<string, Primitive>,
                        public timeout: number|null,
                        public retry: number|null,
                        public retryDelay: number|'auto'|null,
@@ -104,7 +110,7 @@ export class HttpRequest {
                        public withCredentials: boolean,
                        public mimeType: string|null,
                        public extras: Record<string, any>) {
-
+        this.headers = headers instanceof HeadersBag ? headers : HeadersBag.FromMap(headers);
     }
 
     public incrementTryCount(): void {

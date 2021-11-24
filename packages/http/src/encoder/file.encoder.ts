@@ -33,8 +33,8 @@ function onBeforeRequest(event: RequestEvent) {
     const crlf = "\r\n";
     const postDataStart = dashes + boundary + crlf + "Content-Disposition: form-data;" + "name=\"file\";" + "filename=\"" + encodeURIComponent(file.name) + "\"" + crlf + "Content-Type: " + file.type + crlf + crlf;
     const postDataEnd = crlf + dashes + boundary + dashes;
-    event.request.headers['Content-Type'] = `multipart/related;type=application/dicom;boundary=${boundary}`;
-    event.request.headers['Accept'] = 'application/dicom+json';
+    event.request.headers.set('Content-Type', `multipart/related;type=application/dicom;boundary=${boundary}`);
+    event.request.headers.set('Accept', 'application/dicom+json');
     event.request.payload = new Blob([new Blob([postDataStart]), file, new Blob([postDataEnd])]);
 }
 Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<RequestEvent>(

@@ -230,3 +230,39 @@ export const HttpStatus: Record<number, string> = {
     526: 'Invalid SSL Certificate',
     527: 'Railgun Error'
 };
+
+/**
+ * Headers not following the generic naming rule.
+ *
+ * @source https://github.com/middyjs/middy/blob/main/packages/http-header-normalizer/index.js
+ */
+export const HttpHeadersExceptionsMap: Record<string, string> = {
+    'alpn': 'ALPN',
+    'c-pep': 'C-PEP',
+    'c-pep-info': 'C-PEP-Info',
+    'caldav-timezones': 'CalDAV-Timezones',
+    'content-id': 'Content-ID',
+    'content-md5': 'Content-MD5',
+    'dasl': 'DASL',
+    'dav': 'DAV',
+    'dnt': 'DNT',
+    'etag': 'ETag',
+    'getprofile': 'GetProfile',
+    'http2-settings': 'HTTP2-Settings',
+    'last-event-id': 'Last-Event-ID',
+    'mime-version': 'MIME-Version',
+    'optional-www-authenticate': 'Optional-WWW-Authenticate',
+    'sec-websocket-accept': 'Sec-WebSocket-Accept',
+    'sec-websocket-extensions': 'Sec-WebSocket-Extensions',
+    'sec-websocket-key': 'Sec-WebSocket-Key',
+    'sec-websocket-protocol': 'Sec-WebSocket-Protocol',
+    'sec-websocket-version': 'Sec-WebSocket-Version',
+    'slug': 'SLUG',
+    'tcn': 'TCN',
+    'te': 'TE',
+    'ttl': 'TTL',
+    'www-authenticate': 'WWW-Authenticate',
+    'x-att-deviceid': 'X-ATT-DeviceId',
+    'x-dnsprefetch-control': 'X-DNSPrefetch-Control',
+    'x-uidh': 'X-UIDH'
+};

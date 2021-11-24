@@ -63,8 +63,9 @@ export class XhrAdapter implements AdapterInterface {
             if (request.mimeType !== null) {
                 this.xhr.overrideMimeType(request.mimeType);
             }
-            for (const headerName of Object.keys(request.headers)) {
-                this.xhr.setRequestHeader(headerName, request.headers[headerName]);
+            const headers = request.headers.all();
+            for (const headerName of Object.keys(headers)) {
+                this.xhr.setRequestHeader(headerName, headers[headerName]);
             }
 
             // Send

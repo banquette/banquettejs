@@ -26,6 +26,7 @@ function onBeforeRequest(event: RequestEvent) {
     }
     try {
         event.request.payload = JSON.stringify(event.request.payload);
+        event.request.headers.set('Content-Type', 'application/json');
     } catch (e) {
         throw new UsageException('Failed to encode request payload to JSON.', ExceptionFactory.EnsureException(e));
     }
