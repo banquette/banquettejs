@@ -525,6 +525,7 @@ describe('Form components collection', () => {
 
         test('setValidator()', () => {
             const form = createTestForm();
+            form.getByPattern('**').markAsConcrete();
             checkValueOfEachMatchingPattern(form, ':control', 'validated', true);
             form.getByPattern(':control').setValidator(NotEmpty());
             checkValueOfEachMatchingPattern(form, ':control', 'validated', false);

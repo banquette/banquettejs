@@ -254,6 +254,7 @@ describe('StateChanged', () => {
             title: 'BasicState.NotValidated / BasicState.Validating',
             action: () => {
                 const control = form.get('username');
+                control.markAsConcrete();
                 control.setValidator(NotEmpty());
                 control.validate();
             },

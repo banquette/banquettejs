@@ -21,22 +21,23 @@ describe('Assign validators', () => {
     });
 
     test('the default validation strategy is `Inherit`', () => {
-        const control: FormControl = new FormControl();
+        const control: FormControl = createConcreteControl();
         expect(control.validationStrategy).toEqual(ValidationStrategy.Inherit);
     });
 
     test('a control with no validator is always validated', () => {
-        const control: FormControl = new FormControl();
+        const control: FormControl = createConcreteControl();
         expect(control.validated).toEqual(true);
     });
 
     test('a control with a validator is not validated by default', () => {
-        const control: FormControl = new FormControl(null, NotEmpty());
+        const control: FormControl = createConcreteControl(null, NotEmpty());
+        control.markAsConcrete();
         expect(control.validated).toEqual(false);
     });
 
     test('removing the validator of a control makes it validated', () => {
-        const control: FormControl = new FormControl(null, NotEmpty());
+        const control: FormControl = createConcreteControl(null, NotEmpty());
         expect(control.validated).toEqual(false);
         control.setValidator(null);
         expect(control.validated).toEqual(true);
@@ -44,6 +45,7 @@ describe('Assign validators', () => {
 
     test('the validated status propagates up', () => {
         const control: FormControl = form.get('category/tags/1/name');
+        control.markAsConcrete();
         expect(form.validated).toEqual(true);
         control.setValidator(NotEmpty());
         expect(form.validated).toEqual(false);
@@ -55,14 +57,14 @@ describe('Assign validators', () => {
  */
 describe('Explicit validation', () => {
     test('a FormControl can be validated manually', () => {
-        const control = new FormControl('', NotEmpty());
+        const control = createConcreteControl('', NotEmpty());
         expect(control.validated).toEqual(false);
         control.validate();
         expect(control.validated).toEqual(true);
     });
 
     test('a FormControl is validated when its value change if the strategy is `ValidationStrategy.OnChange`', () => {
-        const control = new FormControl('', NotEmpty());
+        const control = createConcreteControl('', NotEmpty());
         control.setValidationStrategy(ValidationStrategy.OnChange);
         expect(control.validated).toEqual(false);
         control.setValue('new');
@@ -70,14 +72,14 @@ describe('Explicit validation', () => {
     });
 
     test('validate a FormControl (sync)', () => {
-        const control = new FormControl('', Invalid());
+        const control = createConcreteControl('', Invalid());
         expect(control.valid).toEqual(true);
         control.validate();
         expect(control.valid).toEqual(false);
     });
 
     test('validate a FormControl (async)', async () => {
-        const control = new FormControl('', ValidateAfterDelay(20, Invalid()));
+        const control = createConcreteControl('', ValidateAfterDelay(20, Invalid()));
         expect(control.valid).toEqual(true);
         await control.validate();
         expect(control.valid).toEqual(false);
@@ -85,7 +87,7 @@ describe('Explicit validation', () => {
 
     test('re validate a FormControl while another async validator is still running (with race condition)', async () => {
         let waitDelay = {duration: 200};
-        const control = new FormControl('valid', ValidateAfterDelay(waitDelay, NotEqual('invalid')));
+        const control = createConcreteControl('valid', ValidateAfterDelay(waitDelay, NotEqual('invalid')));
         expect(control.valid).toEqual(true);
         control.validate();
         // Change the delay so the second validate() finishes before the first one.
@@ -98,7 +100,7 @@ describe('Explicit validation', () => {
     });
 
     test('re validate async validator while still running FormControl', async () => {
-        const control = new FormControl('', Ajax({
+        const control = createConcreteControl('', Ajax({
             url: buildTestUrl({delay: 2000, timeout: 300000})
         }, (response: HttpResponse<any>, result: ValidationResult) => {
             if (control.value === 'invalid') {
@@ -113,7 +115,7 @@ describe('Explicit validation', () => {
     });
 
     test('replace sync validator while async validator is running on a FormControl', async () => {
-        const control = new FormControl('', ValidateAfterDelay(50, Invalid()));
+        const control = createConcreteControl('', ValidateAfterDelay(50, Invalid()));
         const promise = control.validate();
 
         control.setValidator(Valid());
@@ -123,7 +125,7 @@ describe('Explicit validation', () => {
     });
 
     test('remove validator while async validator is running on a FormControl', async () => {
-        const control = new FormControl('', ValidateAfterDelay(50, Invalid()));
+        const control = createConcreteControl('', ValidateAfterDelay(50, Invalid()));
         const promise = control.validate();
 
         control.setValidator(null);
