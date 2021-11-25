@@ -2,6 +2,7 @@ import { Injector } from "@banquette/dependency-injection";
 import { Exception, UsageException } from "@banquette/exception";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
 import 'reflect-metadata';
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import {
     EventArg,
     EventDispatcherInterface,
@@ -13,7 +14,8 @@ import {
 interface Subscribers {
     [key: string]: [
         number?,            // Priority
-        symbol[]?,          // Tags
+        (symbol[]|null)?,   // Filtering tags
+        symbol[]?,          // Propagation tags
         boolean?,           // Stop propagation?
         number?,            // Delay (for async functions)
         (string|Exception)? // Exception to throw
@@ -34,7 +36,7 @@ const eventDispatcher = Injector.Get<EventDispatcherInterface>(EventDispatcherSe
  * Basics
  */
 test('Basic sync events', () => {
-    const t1 = subscribeAndTrack(event1, {'a': [0, [], false]});
+    const t1 = subscribeAndTrack(event1, {'a': [0, [], [], false]});
     expectFromDispatch(event2, []);
     expectFromDispatch(event1, ['a']);
 
@@ -44,19 +46,19 @@ test('Basic sync events', () => {
 });
 
 test('Basic async events', async () => {
-    const t1 = subscribeAndTrack(event1, {'a': [0, [], false, 50]});
+    const t1 = subscribeAndTrack(event1, {'a': [0, [], [], false, 50]});
     await expectFromDispatchAsync(t1, event2, []);
     await expectFromDispatchAsync(t1, event1, ['a']);
 
-    const t2 = subscribeAndTrack(event2, {'b': [0, [], false, 50]});
+    const t2 = subscribeAndTrack(event2, {'b': [0, [], [], false, 50]});
     await expectFromDispatchAsync(t2, event1, []);
     await expectFromDispatchAsync(t2, event2, ['b']);
 });
 
 test('Async events (unordered)', async () => {
     const tracker = subscribeAndTrack(event1, {
-        'a': [0, [], false, 150],
-        'b': [0, [], false, 50],
+        'a': [0, [], [], false, 150],
+        'b': [0, [], [], false, 50],
         'c': [],
     });
     await expectFromDispatchAsync(tracker, event1, ['c', 'b', 'a']);
@@ -64,53 +66,73 @@ test('Async events (unordered)', async () => {
 
 test('Async events (sequential)', async () => {
     const tracker = subscribeAndTrack(event1, {
-        'a': [0, [], false, 150],
-        'b': [0, [], false, 50],
+        'a': [0, [], [], false, 150],
+        'b': [0, [], [], false, 50],
         'c': [],
     });
     await expectFromDispatchAsync(tracker, event1, ['a', 'b', 'c'], true);
 });
 
-test('tags', async () => {
+test('propagation tags', async () => {
     let tracker = subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1], true],
+        'encoder1': [0, [], [tag1], true],
         'other': [0],
-        'encoder2': [0, [tag1]],
+        'encoder2': [0, [], [tag1]],
     });
     await expectFromDispatchAsync(tracker, event1, ['encoder1', 'other']);
     tracker = subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1]],
+        'encoder1': [0, [], [tag1]],
         'other': [0],
-        'encoder2': [0, [tag1]],
+        'encoder2': [0, [], [tag1]],
     });
     await expectFromDispatchAsync(tracker, event1, ['encoder1', 'other', 'encoder2']);
     tracker = subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1]],
-        'other': [0, [tag2, tag1], true],
-        'encoder2': [0, [tag1]]
+        'encoder1': [0, [], [tag1]],
+        'other': [0, [], [tag2, tag1], true],
+        'encoder2': [0, [], [tag1]]
     });
     await expectFromDispatchAsync(tracker, event1, ['encoder1', 'other']);
 });
 
-test('tags (sync)', async () => {
+test('propagation tags (sync)',  () => {
     subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1], true],
+        'encoder1': [0, [], [tag1], true],
         'other': [0],
-        'encoder2': [0, [tag1]],
+        'encoder2': [0, [], [tag1]],
     });
     expectFromDispatch(event1, ['encoder1', 'other']);
     subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1]],
+        'encoder1': [0, [], [tag1]],
         'other': [0],
-        'encoder2': [0, [tag1]],
+        'encoder2': [0, [], [tag1]],
     });
     expectFromDispatch(event1, ['encoder1', 'other', 'encoder2']);
     subscribeAndTrack(event1, {
-        'encoder1': [0, [tag1]],
-        'other': [0, [tag2, tag1], true],
-        'encoder2': [0, [tag1]]
+        'encoder1': [0, [], [tag1]],
+        'other': [0, [], [tag2, tag1], true],
+        'encoder2': [0, [], [tag1]]
     });
     expectFromDispatch(event1, ['encoder1', 'other']);
+});
+
+test('dispatch tags (sync)', () => {
+    subscribeAndTrack(event1, {
+        'a': [0, [tag1], [], false],
+        'b': [0, [], [], false],
+        'c': [0, [tag2], [], false],
+        'd': [0, null, [], false],
+    });
+    expectFromDispatch(event1, ['a', 'd'], false, [tag1]);
+});
+
+test('dispatch tags (async)', async () => {
+    const t1 = subscribeAndTrack(event1, {
+        'a': [0, [tag1], [], false],
+        'b': [0, [], [], false],
+        'c': [0, [tag2], [], false],
+        'd': [0, null, [], false],
+    });
+    await expectFromDispatchAsync(t1, event1, ['a', 'd'], false, [tag1]);
 });
 
 /**
@@ -119,7 +141,7 @@ test('tags (sync)', async () => {
 test('Dispatch throws sync', () => {
     subscribeAndTrack(event1, {
         'a': [],
-        'b': [0, [], false, 0, 'fail']
+        'b': [0, [], [], false, 0, 'fail']
     });
     const result: DispatchResult = eventDispatcher.dispatch<string>(event1);
     expect(result.error).toEqual(true);
@@ -130,8 +152,8 @@ test('Dispatch throws sync', () => {
 
 test('Dispatch throws async', async () => {
     subscribeAndTrack(event1, {
-        'a': [0, [], false, 50],
-        'b': [0, [], false, 50, 'fail']
+        'a': [0, [], [], false, 50],
+        'b': [0, [], [], false, 50, 'fail']
     });
     const result: DispatchResult = eventDispatcher.dispatch<string>(event1);
     expect(result.promise).not.toBeNull();
@@ -241,7 +263,11 @@ function subscribeAndTrack(type: symbol, subscribers: Subscribers): SubscribersT
                     return p();
                 }
             };
-        })(key, subscribers[key][2] || false, subscribers[key][3] || 0, subscribers[key][4] || null), subscribers[key][0], subscribers[key][1] || []);
+        })(key, subscribers[key][3] || false, subscribers[key][4] || 0, subscribers[key][5] || null),
+            subscribers[key][0],
+            !isUndefined(subscribers[key][1]) ? (subscribers[key][1] as any) : [],
+            subscribers[key][2] || []
+        );
     }
     return tracker;
 }
@@ -249,8 +275,8 @@ function subscribeAndTrack(type: symbol, subscribers: Subscribers): SubscribersT
 /**
  * Dispatch an event and check if the results of a tracker are what is in "expected".
  */
-function expectFromDispatch(type: symbol, expected: string[], sequential: boolean = false): void {
-    const result: DispatchResult = eventDispatcher.dispatch<string>(type, null, sequential);
+function expectFromDispatch(type: symbol, expected: string[], sequential: boolean = false, tags: symbol[] = []): void {
+    const result: DispatchResult = eventDispatcher.dispatch<string>(type, null, sequential, tags);
     expect(result.promise).toBeNull();
     expect(result.status).toEqual(DispatchResultStatus.Ready);
     expect(result.results).toStrictEqual(expected);
@@ -259,8 +285,8 @@ function expectFromDispatch(type: symbol, expected: string[], sequential: boolea
 /**
  * Dispatch an event and check if the results of a tracker are what is in "expected".
  */
-async function expectFromDispatchAsync(tracker: SubscribersTracker, type: symbol, expected: string[], sequential: boolean = false): Promise<void> {
-    const result = eventDispatcher.dispatch(type, null, sequential);
+async function expectFromDispatchAsync(tracker: SubscribersTracker, type: symbol, expected: string[], sequential: boolean = false, tags: symbol[] = []): Promise<void> {
+    const result = eventDispatcher.dispatch(type, null, sequential, tags);
     await result.promise;
     expect(tracker.calledStack).toStrictEqual(expected);
 }

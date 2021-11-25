@@ -1,3 +1,4 @@
+import { arrayIntersect } from "@banquette/utils-array/array-intersect";
 import { Not } from "@banquette/utils-misc/not";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -9,9 +10,9 @@ import { EventDispatcherInterface } from "./event-dispatcher.interface";
 import { SubscriberInterface } from "./subscriber.interface";
 import { UnsubscribeFunction } from "./type";
 
-export class EventDispatcher implements EventDispatcherInterface {
-    private static DEFAULT_TAG = Symbol('default');
+const DEFAULT_TAG = Symbol();
 
+export class EventDispatcher implements EventDispatcherInterface {
     /**
      * Object holding an array of callbacks for each event name.
      */
@@ -30,19 +31,24 @@ export class EventDispatcher implements EventDispatcherInterface {
     /**
      * Subscribe to an event.
      *
-     * @param type     symbol   The type of event.
-     * @param callback function The function to call when the event is triggered.
-     * @param priority number   (optional, default: 0) The level of priority, the higher the first.
-     * @param tags     symbol[] (optional, default: []) The tags to associate with the subscriber.
+     * @param type              symbol   The type of event.
+     * @param callback          function The function to call when the event is triggered.
+     * @param priority          number   (optional, default: 0) The level of priority, the higher the first.
+     * @param filteringTags     symbol[] (optional, default: []) A list of tags used to filter the dispatches.
+     * @param propagationTags   symbol[] (optional, default: []) Any subscriber matching a tag on this list will not be
+     *                                                           called when the propagation is stopped from this subscriber.
      *
      * @return A function to call to unsubscribe.
      */
-    public subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void, priority: number = 0, tags: symbol[] = []): UnsubscribeFunction {
+    public subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void,
+                                         priority: number = 0,
+                                         filteringTags: symbol[]|null = null,
+                                         propagationTags: symbol[] = []): UnsubscribeFunction {
         const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
-        if (!tags.length) {
-            tags.push(EventDispatcher.DEFAULT_TAG);
+        if (!propagationTags.length) {
+            propagationTags.push(DEFAULT_TAG);
         }
-        subscribers.push({callback: callback as (event: EventArg) => void, priority, tags});
+        subscribers.push({callback: callback as (event: EventArg) => void, priority, filteringTags, propagationTags});
         subscribers.sort((a: SubscriberInterface, b: SubscriberInterface) => {
             return b.priority - a.priority;
         });
@@ -74,9 +80,10 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Trigger an event.
      * The promise will resolve when all subscribers have been executed.
      */
-    public dispatch<T = any>(type: symbol, event?: EventArg|null, sequential: boolean = false): DispatchResult<T> {
+    public dispatch<T = any>(type: symbol, event?: EventArg|null, sequential: boolean = false, tags: symbol[] = []): DispatchResult<T> {
         const e = !isType<EventArg>(event, Not(isNullOrUndefined)) ? new EventArg() : event;
         const propagationStoppedTags: symbol[] = [];
+        let propagationStopped: boolean = false;
         const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
         const result = new DispatchResult<T>();
         let index = -1;
@@ -86,13 +93,15 @@ export class EventDispatcher implements EventDispatcherInterface {
                 return ;
             }
             const subscriber = subscribers[index];
-            if (index > 0 && e.isPropagationStopped()) {
+            if (index > 0 && e.propagationStopped) {
                 // We could add duplicates this way but it doesn't matter.
                 // The cost of removing them exceed the benefit imho.
-                Array.prototype.push.apply(propagationStoppedTags, subscribers[index - 1].tags);
+                Array.prototype.push.apply(propagationStoppedTags, subscribers[index - 1].propagationTags);
                 e.restorePropagation();
+                propagationStopped = true;
             }
-            if (subscriber.tags.filter((tag: symbol) => propagationStoppedTags.indexOf(tag) < 0).length > 0) {
+            if (!arrayIntersect(propagationStoppedTags, subscriber.propagationTags).length &&
+                (subscriber.filteringTags === null || !tags.length || arrayIntersect(tags, subscriber.filteringTags).length > 0)) {
                 try {
                     const subResult: any = subscriber.callback(e);
                     result.registerCall({

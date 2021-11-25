@@ -6,13 +6,17 @@ export interface EventDispatcherInterface {
     /**
      * Subscribe to an event.
      */
-    subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void, priority?: number, tags?: symbol[]): UnsubscribeFunction;
+    subscribe<T extends EventArg>(type: symbol,
+                                  callback: (event: T) => void,
+                                  priority?: number,
+                                  filteringTags?: symbol[],
+                                  propagationTags?: symbol[]): UnsubscribeFunction;
 
     /**
      * Trigger an event.
      * The promise will resolve when all subscribers have been executed.
      */
-    dispatch<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean): DispatchResult<T>;
+    dispatch<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean, tags?: symbol[]): DispatchResult<T>;
 
     /**
      * Try to trigger and event but keep the call in a queue if no listeners have been registered yet.
