@@ -654,7 +654,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         if (this.activeControl !== null && this.activeControl.id === this.id) {
             this.activeControl.blur();
         }
-        if (this.concrete) {
+        if (this.concrete && this.validator !== null) {
             this.markBasicState(BasicState.NotValidated, this.id);
         }
         this.unmarkBasicState([BasicState.Touched, BasicState.Dirty], this.id);
