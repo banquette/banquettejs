@@ -188,7 +188,8 @@ describe('requests forgery', () => {
             retryDelay: null,
             priority: 0,
             withCredentials: false,
-            mimeType: null
+            mimeType: null,
+            tags: []
         }));
     });
 
@@ -238,6 +239,29 @@ describe('payloads', () => {
             obj[key] = value;
         });
         expect(obj).toStrictEqual(payload);
+    });
+
+    test(`request payload is encoded`, async () => {
+        const payload = {'test': '2'};
+        const response = http.send(HttpRequestFactory.Create({
+            url: buildTestUrl({responseKey: 'PayloadAsJson'}),
+            payload,
+            payloadType: PayloadTypeJson
+        }));
+        await response.promise;
+        expect(lastPayload).toStrictEqual(JSON.stringify(payload));
+    });
+
+    test(`tagged request payload is still encoded`, async () => {
+        const payload = {'test': '2'};
+        const response = http.send(HttpRequestFactory.Create({
+            url: buildTestUrl({responseKey: 'PayloadAsJson'}),
+            payload,
+            payloadType: PayloadTypeJson,
+            tags: [Symbol('custom-tag')]
+        }));
+        await response.promise;
+        expect(lastPayload).toStrictEqual(JSON.stringify(payload));
     });
 });
 
@@ -489,11 +513,11 @@ describe('events dispatching', () => {
             url: buildTestUrl({responseKey: 'ValidJson'})
         }));
         await waitForNextCycle();
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object), true, []);
         await response.promise;
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object), true, []);
     });
 
     test(`request failing 2 times`, async () => {
@@ -503,10 +527,10 @@ describe('events dispatching', () => {
         }));
         await response.promise;
         expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(8); // RequestQueued x3 + RequestSuccess + BeforeRequest x3 + BeforeResponse
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object), true, []);
     });
 
     test(`request failing definitely`, async () => {
@@ -518,10 +542,10 @@ describe('events dispatching', () => {
             await response.promise;
         } catch (e) { /* Nothing to do, that's not the point of this test */ }
         expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(4); // RequestQueued + RequestFailure + BeforeRequest + BeforeResponse
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object));
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestFailure, expect.any(Object));
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestFailure, expect.any(Object), true, []);
     });
 });
 

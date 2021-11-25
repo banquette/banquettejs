@@ -93,6 +93,7 @@ export class HttpRequest {
      * @param priority          The higher the priority the sooner the request will be executed.
      * @param withCredentials   If true, cookies and auth headers are included in the request.
      * @param mimeType          MimeType of the payload.
+     * @param tags              Tags that will be sent with emitted events.
      * @param extras            Any additional data you want to associated with the request.
      *                          This object will not be sent with the request.
      */
@@ -109,6 +110,7 @@ export class HttpRequest {
                        public priority: number,
                        public withCredentials: boolean,
                        public mimeType: string|null,
+                       public tags: symbol[],
                        public extras: Record<string, any>) {
         this.headers = headers instanceof HeadersBag ? headers : HeadersBag.FromMap(headers);
     }
@@ -172,6 +174,7 @@ export class HttpRequest {
             this.priority,
             this.withCredentials,
             this.mimeType,
+            this.tags,
             cloneDeep(this.extras)
         );
     }

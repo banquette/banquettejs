@@ -1,5 +1,5 @@
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { EventDispatcherService } from "@banquette/event";
 import { DecoderTag, Events } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 
@@ -13,9 +13,10 @@ function onAfterRequest(event: ResponseEvent) {
     }
 }
 
-Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<ResponseEvent>(
+Injector.Get(EventDispatcherService).subscribe<ResponseEvent>(
     Events.BeforeResponse,
     onAfterRequest,
     16, // Slightly higher priority so it is checked before the others
+    null,
     [DecoderTag]
 );

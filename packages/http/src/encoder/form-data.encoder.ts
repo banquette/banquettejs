@@ -1,5 +1,5 @@
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { EventDispatcherService } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -42,9 +42,10 @@ function onBeforeRequest(event: RequestEvent) {
         event.request.payload = formData;
     }
 }
-Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<RequestEvent>(
+Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
     Events.BeforeRequest,
     onBeforeRequest,
     0,
+    null,
     [EncoderTag]
 );

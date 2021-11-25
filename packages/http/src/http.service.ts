@@ -12,7 +12,7 @@ import { Constructor, Pojo } from "@banquette/utils-type/types";
 import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
 import { AdapterInterface } from "./adapter/adapter.interface";
-import { Events, HttpMethod, HttpResponseStatus } from "./constants";
+import { Events, HttpMethod, HttpResponseStatus, EncoderTag, DecoderTag } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 import { RequestProgressEvent } from "./event/request-progress.event";
 import { RequestEvent } from "./event/request.event";
@@ -197,14 +197,28 @@ export class HttpService {
             queuedRequest.triesLeft--;
             queuedRequest.isExecuting = true;
             this.runningRequestsCount++;
-            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(Events.BeforeRequest, new RequestEvent(queuedRequest.request)));
+
+            // Before request.
+            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(
+                Events.BeforeRequest,
+                new RequestEvent(queuedRequest.request),
+                true,
+                queuedRequest.request.tags
+            ));
             HttpService.EnsureValidRequest(queuedRequest.request);
             queuedRequest.tryCount++;
             queuedRequest.request.incrementTryCount();
             const adapterPromise: ObservablePromise = adapter.execute(queuedRequest.request as AdapterRequest);
             adapterPromise.progress(queuedRequest.progress);
             const adapterResponse: AdapterResponse = await adapterPromise;
-            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(Events.BeforeResponse, new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest)));
+
+            // Before response.
+            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(
+                Events.BeforeResponse,
+                new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest),
+                true,
+                queuedRequest.request.tags
+            ));
             this.handleRequestResponse(adapterResponse, queuedRequest);
         } catch (e) {
             this.handleRequestFailure(queuedRequest, ExceptionFactory.EnsureException(e));
@@ -231,7 +245,7 @@ export class HttpService {
         }
         queuedRequest.response.setStatus(HttpResponseStatus.Success);
         queuedRequest.resolve(queuedRequest.response);
-        this.eventDispatcher.dispatch(Events.RequestSuccess, new RequestEvent(queuedRequest.request));
+        this.eventDispatcher.dispatch(Events.RequestSuccess, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 
@@ -242,14 +256,14 @@ export class HttpService {
         if (error instanceof NetworkException && !(error instanceof RequestTimeoutException) && !(error instanceof RequestCanceledException) && queuedRequest.triesLeft > 0) {
             queuedRequest.executeAt = HttpService.CalculateNextTryTime(queuedRequest);
             queuedRequest.isExecuting = false;
-            this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(queuedRequest.request));
+            this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
             this.processQueue();
             return ;
         }
         queuedRequest.response.error = error;
         queuedRequest.response.setStatus(error instanceof RequestCanceledException ? HttpResponseStatus.Canceled : HttpResponseStatus.Error);
         queuedRequest.reject(queuedRequest.response);
-        this.eventDispatcher.dispatch(Events.RequestFailure, new RequestEvent(queuedRequest.request));
+        this.eventDispatcher.dispatch(Events.RequestFailure, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 
@@ -307,7 +321,7 @@ export class HttpService {
             response
         });
         this.scheduleQueueForProcess();
-        this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(request));
+        this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(request), true, request.tags);
     }
 
     /**

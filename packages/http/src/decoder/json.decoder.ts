@@ -1,5 +1,5 @@
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { EventDispatcherService } from "@banquette/event";
 import { ExceptionFactory } from "@banquette/exception";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isString } from "@banquette/utils-type/is-string";
@@ -69,9 +69,10 @@ function onAfterRequest(event: ResponseEvent) {
     }
 }
 
-Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<ResponseEvent>(
+Injector.Get(EventDispatcherService).subscribe<ResponseEvent>(
     Events.BeforeResponse,
     onAfterRequest,
     0,
+    null,
     [DecoderTag]
 );

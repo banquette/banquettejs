@@ -1,5 +1,5 @@
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { EventDispatcherService } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { EncoderTag, Events } from "../constants";
@@ -37,9 +37,10 @@ function onBeforeRequest(event: RequestEvent) {
     event.request.headers.set('Accept', 'application/dicom+json');
     event.request.payload = new Blob([new Blob([postDataStart]), file, new Blob([postDataEnd])]);
 }
-Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<RequestEvent>(
+Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
     Events.BeforeRequest,
     onBeforeRequest,
     0,
+    null,
     [EncoderTag]
 );

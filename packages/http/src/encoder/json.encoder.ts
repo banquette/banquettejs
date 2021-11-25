@@ -1,5 +1,5 @@
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { EventDispatcherService } from "@banquette/event";
 import { ExceptionFactory, UsageException } from "@banquette/exception";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -31,9 +31,10 @@ function onBeforeRequest(event: RequestEvent) {
         throw new UsageException('Failed to encode request payload to JSON.', ExceptionFactory.EnsureException(e));
     }
 }
-Injector.Get<EventDispatcherInterface>(EventDispatcherService).subscribe<RequestEvent>(
+Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
     Events.BeforeRequest,
     onBeforeRequest,
     0,
+    null,
     [EncoderTag]
 );

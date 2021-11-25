@@ -22,6 +22,7 @@ export class HttpRequestBuilder {
     private _retryDelay: number|'auto'|null = null;
     private _priority: number|null = null;
     private _params: Record<string, UrlParameterInterface> = {};
+    private _tags: symbol[] = [];
     private _extras: Record<string, any> = {};
 
     /**
@@ -121,7 +122,6 @@ export class HttpRequestBuilder {
         return this;
     }
 
-
     /**
      * Set a generic body for the request.
      */
@@ -191,6 +191,29 @@ export class HttpRequestBuilder {
     }
 
     /**
+     * Add multiple tags to the request.
+     */
+    public tags(tags: symbol[]): HttpRequestBuilder {
+        this._tags = this._tags.concat(tags);
+        return this;
+    }
+
+    /**
+     * Add a tag to the request.
+     */
+    public tag(tag: symbol): HttpRequestBuilder {
+        this._tags.push(tag);
+        return this;
+    }
+    /**
+     * Remove all tags.
+     */
+    public clearTags(): HttpRequestBuilder {
+        this._tags = [];
+        return this;
+    }
+
+    /**
      * Merge an object of extra with the current one.
      */
     public extras(extras: Record<string, any>): HttpRequestBuilder {
@@ -236,6 +259,7 @@ export class HttpRequestBuilder {
             priority: this._priority,
             withCredentials: this._withCredentials,
             mimeType: this._mimeType,
+            tags: this._tags,
             extras: this._extras
         });
     }

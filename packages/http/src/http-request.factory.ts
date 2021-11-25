@@ -1,3 +1,4 @@
+import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { isValidNumber } from "@banquette/utils-type/is-valid-number";
 import { HttpMethod } from "./constants";
@@ -20,6 +21,7 @@ export interface HttpRequestFactoryConfig {
     priority?: number|null,
     withCredentials?: boolean|null,
     mimeType?: string|null,
+    tags?: symbol|symbol[]|null,
     extras?: any
 }
 
@@ -42,6 +44,7 @@ export class HttpRequestFactory {
             isValidNumber(input.priority) ? input.priority : 0,
             input.withCredentials || false,
             input.mimeType || null,
+            ensureArray(input.tags || []),
             input.extras || {}
         );
     }
