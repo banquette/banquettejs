@@ -4,7 +4,7 @@ import { slugify } from "@banquette/utils-string/format/slugify";
  * Holds the response of an adapter.
  *
  * Adapters don't return an HttpResponse as it's the responsibility of the HttpService to handle it.
- * The AdapterResponse is more basic and holy account for information directly related to the Http communication.
+ * The AdapterResponse is more basic and only account for information directly related to the Http communication.
  */
 export class AdapterResponse {
     public constructor(public readonly status: number,
