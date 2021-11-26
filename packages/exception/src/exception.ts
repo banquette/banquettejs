@@ -63,6 +63,11 @@ import { ExceptionInterface } from "./exception.interface";
  */
 export abstract class Exception implements ExceptionInterface {
     /**
+     * A unique slug that uniquely identify the exception.
+     */
+    abstract readonly id: string;
+
+    /**
      * Gets the whole list of available messages by concatenating the current message with
      * the stack of the previous exception (if there is one).
      */

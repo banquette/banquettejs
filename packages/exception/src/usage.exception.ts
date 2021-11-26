@@ -18,5 +18,5 @@ import { Exception } from "./exception";
  * @see https://github.com/microsoft/TypeScript/issues/8306
  */
 /* final */ export class UsageException extends Exception {
-
+    public readonly id: string = 'usage';
 }
