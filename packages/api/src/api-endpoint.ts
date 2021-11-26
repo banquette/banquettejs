@@ -16,6 +16,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Primitive } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
 import { ApiEndpointOptions, ApiEndpointParameterOptions } from "./api-endpoint.options";
@@ -84,7 +85,7 @@ export class ApiEndpoint {
     /**
      * Try to create an http request for the endpoint.
      */
-    public buildRequest(payload: any = null, parameters: Record<string, string> = {}): HttpRequest {
+    public buildRequest(payload: any = null, parameters: Record<string, Primitive> = {}): HttpRequest {
         const parametersBag = this.sortAndValidateParameters(parameters);
         return new HttpRequestBuilder()
             .url(this.url)
@@ -120,7 +121,7 @@ export class ApiEndpoint {
     /**
      * Separate the parameters given as input into url and query parameters and validate them.
      */
-    private sortAndValidateParameters(parameters: Record<string, string>): ParametersBag {
+    private sortAndValidateParameters(parameters: Record<string, Primitive>): ParametersBag {
         // Make a copy of the parameters so we don't modify the object given by the user.
         const parametersClone = Object.assign({}, parameters);
         const output: ParametersBag = {url: {}, query: {}};
