@@ -1,9 +1,9 @@
-import { AbstractViewModel } from "../abstract-view-model";
+import { ViewModel } from "../view-model";
 
 /**
  * The view model logic behind a generic text form control.
  */
-export class TextViewModel extends AbstractViewModel {
+export class TextViewModel extends ViewModel {
     /**
      * The label of the select field as a whole.
      */

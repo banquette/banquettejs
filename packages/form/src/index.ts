@@ -41,7 +41,7 @@ export * from './view-model/value-transformer/value-transformer.interface';
 export * from './view-model/value-transformer/noop-transformer.interface';
 export * from './view-model/view-model.interface';
 export * from './view-model/view-model-composable.interface';
-export * from './view-model/abstract-view-model';
+export * from './view-model/view-model';
 export * from './view-model/type/composable/choices/choice.interface';
 export * from './view-model/type/composable/choices/choices.composable';
 export * from './view-model/type/composable/remote/remote.composable';

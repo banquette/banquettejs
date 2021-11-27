@@ -4,7 +4,7 @@ import { ValueTransformerInterface } from "./value-transformer/value-transformer
 import { FormError } from "../form-error";
 import { ViewModelInterface } from "./view-model.interface";
 
-export abstract class AbstractViewModel implements ViewModelInterface {
+export class ViewModel implements ViewModelInterface {
     /**
      * The current "view" value of the form control.
      */

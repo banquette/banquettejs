@@ -1,11 +1,11 @@
-import { AbstractViewModel } from "../abstract-view-model";
+import { ViewModel } from "../view-model";
 import { ChoicesComposable, SelectionChangeCallback } from "./composable/choices/choices.composable";
 import { RemoteComposable } from "./composable/remote/remote.composable";
 
 /**
  * Base class for choices based form components.
  */
-export abstract class AbstractChoiceViewModel extends AbstractViewModel {
+export abstract class AbstractChoiceViewModel extends ViewModel {
     /**
      * Composables.
      */
