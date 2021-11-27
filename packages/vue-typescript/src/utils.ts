@@ -8,8 +8,10 @@ import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isArray } from "@banquette/utils-type/is-array";
+import { isConstructor } from "@banquette/utils-type/is-constructor";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
@@ -74,15 +76,12 @@ function injectVuePropertiesInCtor(source: any, target: any): void {
 }
 
 /**
- * Take a constructor or __vccOpts object and ensure a constructor is returned.
+ * Ensure the constructor a vue-typescript component is returned, or null if the component is not a class component.
  */
-function getCtorFromVccOption(input: any): Constructor {
-    let ctor = isFunction(input) ? input : null;
+function getCtorFromVccOption(input: any): Constructor|null {
+    let ctor = isConstructor(input) ? input : null;
     if (ctor === null && isObject(input) && !isUndefined(input[DECORATORS_CTOR_NAME])) {
         ctor = input[DECORATORS_CTOR_NAME];
-    }
-    if (ctor === null) {
-        throw new UsageException(`Failed to retrieve component's constructor. Maybe you gave the wrong input to the "components" option?`);
     }
     return ctor;
 }
@@ -235,9 +234,15 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         options.components = {};
         for (const key of getObjectKeys(data.component.components)) {
             let componentConstructor = getCtorFromVccOption(data.component.components[key]);
-            const componentDecoratorsData = getDecoratorsData(componentConstructor.prototype);
-            const componentName = !isUndefined(componentDecoratorsData.component) ? componentDecoratorsData.component.name! : key;
-            options.components[componentName] = data.component.components[key];
+            if (componentConstructor !== null) {
+                const componentDecoratorsData = getDecoratorsData(componentConstructor.prototype);
+                const componentName = !isUndefined(componentDecoratorsData.component) ? componentDecoratorsData.component.name! : key;
+                options.components[componentName] = data.component.components[key];
+            } else if (!isNumeric(key)) {
+                options.components[key] = data.component.components[key];
+            } else {
+                throw new UsageException(`You must provide a name for the components added to the "components" option if they don't use \`VueTypescript\`.`);
+            }
         }
     }
     // Directives

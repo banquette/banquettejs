@@ -7,6 +7,8 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
+import { Component as VueComponent } from "@vue/runtime-core";
+import { Directive } from "vue";
 import { VUE_CLASS_COMPONENT_OPTIONS_NAME } from "../constants";
 import { generateVccOpts, getDecoratorsData } from "../utils";
 import { VueBuilder } from "../vue-builder";
@@ -30,8 +32,8 @@ export interface ComponentDecoratorOptions {
     /**
      * Components / directives dependencies.
      */
-    components?: Record<string, Constructor>|Constructor[];
-    directives?: Record<string, Constructor>|Constructor[];
+    components?: Record<string, VueComponent>|VueComponent[];
+    directives?: Record<string, Directive>|Directive[];
 
     /**
      * Group(s) on which the component should be registered in the VueBuilder.

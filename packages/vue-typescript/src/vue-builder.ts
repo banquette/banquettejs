@@ -5,7 +5,7 @@ import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
-import { AppConfig } from "@vue/runtime-core";
+import { AppConfig, Component } from "@vue/runtime-core";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { App, ComponentPublicInstance, createApp, Directive } from "vue";
 
@@ -32,7 +32,7 @@ export class VueBuilder {
     /**
      * Components and directives to declare in a new Vue instance, indexed by group name.
      */
-    private static Components: Record<string, Record<string, Constructor>> = {};
+    private static Components: Record<string, Record<string, Component>> = {};
     private static Directives: Record<string, Record<string, Directive>> = {};
 
     /**
@@ -51,7 +51,7 @@ export class VueBuilder {
      * When an instance of Vue is created using the factory, the component will be declared in the instance
      * if the group matches one of the groups the user is asking for.
      */
-    public static RegisterComponent(name: string, component: Constructor, group: string|string[] = VueBuilder.DEFAULT_GROUP): void {
+    public static RegisterComponent(name: string, component: Component, group: string|string[] = VueBuilder.DEFAULT_GROUP): void {
         const groups = ensureArray(group);
         for (let group of groups) {
             if (isUndefined(VueBuilder.Components[group])) {
