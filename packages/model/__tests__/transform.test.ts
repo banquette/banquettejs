@@ -95,7 +95,7 @@ describe('General mechanics', () => {
 
         test('Multiple properties (deep with custom error)', () => {
             class TestException extends SystemException {
-                public readonly id: string = 'test';
+                public slug: string = 'test';
             }
             class Sub {
                 @Pojo(GenericTransformerTest({transformError: new TestException('fail')}))
@@ -225,7 +225,7 @@ describe('General mechanics', () => {
 
         test('Multiple properties (deep with error)', async () => {
             class TestException extends SystemException {
-                public readonly id: string = 'test';
+                public slug: string = 'test';
             }
             class Sub {
                 @Pojo(GenericTransformerTest({delay: 50, transformError: new TestException('fail')}))

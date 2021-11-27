@@ -7,5 +7,5 @@ import { SystemException } from "@banquette/exception";
  * An error in the HTTP transaction will trigger a NetworkException instead.
  */
 export class RequestException extends SystemException {
-    public readonly id: string = 'request';
+    public slug: string = 'request';
 }

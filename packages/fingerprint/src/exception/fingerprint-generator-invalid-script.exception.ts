@@ -4,5 +4,5 @@ import { SystemException } from "@banquette/exception";
  * Thrown after the generator script successfully loaded but cannot be exploited because of various possible reasons.
  */
 export class FingerprintGeneratorInvalidScriptException extends SystemException {
-    public readonly id: string = 'fingerprint-generator-invalid-script';
+    public slug: string = 'fingerprint-generator-invalid-script';
 }

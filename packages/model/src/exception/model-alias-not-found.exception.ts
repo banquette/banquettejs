@@ -5,7 +5,7 @@ import { ModelAlias } from "../type";
  * Exception thrown when the alias of a model cannot be found.
  */
 export class ModelAliasNotFoundException extends SystemException {
-    public readonly id: string = 'model-alias-not-found';
+    public slug: string = 'model-alias-not-found';
 
     public constructor(public alias: ModelAlias, message: string, previous?: Exception|null, extra?: any) {
         super(message, previous, extra);
