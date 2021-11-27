@@ -44,6 +44,12 @@ export abstract class AbstractViewModel implements ViewModelInterface {
     public get focused()            : boolean { return this.getControl().focused }
     public get unfocused()          : boolean { return this.getControl().unfocused }
     public get errors()             : FormError[] { return this.getControl().errors }
+    public get errorsMap()          : Record<string, string|null> {
+        return this.getControl().errors.reduce((acc: Record<string, string|null>, item: FormError) => {
+            acc[item.type] = item.message;
+            return acc;
+        }, {});
+    }
 
     /**
      * HTML tab index (for keyboard navigation).
