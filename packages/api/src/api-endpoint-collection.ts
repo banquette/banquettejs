@@ -38,7 +38,7 @@ export class ApiEndpointCollection {
      */
     public getEndpoint(name: string): ApiEndpoint {
         if (isUndefined(this.endpoints[name])) {
-            throw new EndpointNotFoundException(name, `No endpoint name ${name} has been found.`);
+            throw new EndpointNotFoundException(name, `No endpoint name "${name}" has been found.`);
         }
         return this.endpoints[name];
     }
