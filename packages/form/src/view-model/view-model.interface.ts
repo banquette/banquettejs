@@ -28,6 +28,11 @@ export interface ViewModelInterface {
     initialize(): void;
 
     /**
+     * Cleanup before the view model is destroyed.
+     */
+    dispose(): void;
+
+    /**
      * Mark the control as focused.
      */
     onFocus(): void;

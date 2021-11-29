@@ -79,6 +79,13 @@ export class ViewModel implements ViewModelInterface {
     }
 
     /**
+     * @inheritDoc
+     */
+    public dispose(): void {
+        // Override me
+    }
+
+    /**
      * Update the value without triggering a control update.
      */
     public updateValueFromControl(value: any): void {
