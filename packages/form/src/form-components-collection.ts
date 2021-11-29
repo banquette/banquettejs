@@ -170,12 +170,11 @@ export class FormComponentsCollection {
      * Insert a component at a specific index, moving all elements after it.
      */
     public insert(index: number, component: FormComponentInterface): void {
+        index = Math.min(index, this.collection.length);
         if (index < this.collection.length) {
             this.collection.splice(index, 0, component);
-        } else if (index === this.collection.length) {
-            this.collection.push(component);
         } else {
-            throw new UsageException(`There is no component at index "${index}" and index "${index}" is not the next contiguous identifier.`);
+            this.collection.push(component);
         }
     }
 

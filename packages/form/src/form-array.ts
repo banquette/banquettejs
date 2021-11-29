@@ -87,12 +87,11 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         }
         this.updateCollection(() => {
             const child: FormChildComponentInterface = component.setParent(this.buildParentComponentDecorator());
+            index = Math.min(index, this.children_.length);
             if (index < this.children_.length) {
                 this.children_.splice(index, 0, child);
-            } else if (index === this.children_.length) {
-                this.children_.push(child);
             } else {
-                throw new UsageException(`There is no component at index "${index}" and index "${index}" is not the next contiguous identifier.`);
+                this.children_.push(child);
             }
             child.propagateStatesToParent();
         });
