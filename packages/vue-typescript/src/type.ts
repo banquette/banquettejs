@@ -1,3 +1,7 @@
+import { Constructor } from "@banquette/utils-type/types";
+import { DECORATORS_OPTIONS_HOLDER_NAME } from "./constants";
+import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
+
 /**
  * Define a prefix.
  */
@@ -22,3 +26,8 @@ export type Alias = AliasResolver|AliasesMap;
  * Regroup all types of prefix/alias definition.
  */
 export type PrefixOrAlias = Prefix|Alias;
+
+/**
+ * A constructor extended with VueTypescript's metadata.
+ */
+export type DecoratedConstructor = Constructor & {[DECORATORS_OPTIONS_HOLDER_NAME]: DecoratorsDataInterface};

@@ -23,7 +23,9 @@ export function Lifecycle(type: LifecycleHook|LifecycleHook[]): Function {
             if (isUndefined(data.hooks[type])) {
                 data.hooks[type] = [];
             }
+            // @ts-ignore
             if (data.hooks[type].indexOf(propertyKey) < 0) {
+                // @ts-ignore
                 data.hooks[type].push(propertyKey);
             }
         }

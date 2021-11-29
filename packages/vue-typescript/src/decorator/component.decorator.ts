@@ -4,13 +4,13 @@ import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
-import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { Component as VueComponent } from "@vue/runtime-core";
 import { Directive } from "vue";
 import { VUE_CLASS_COMPONENT_OPTIONS_NAME } from "../constants";
-import { generateVccOpts, getDecoratorsData } from "../utils";
+import { generateVccOpts } from "../generate-vccopts";
+import { getDecoratorsData } from "../utils";
 import { VueBuilder } from "../vue-builder";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
@@ -71,10 +71,9 @@ export function Component(options: ComponentDecoratorOptions|string = {}): any {
                     output.template = data.component.template;
                 } else if (isObject(data.component.template) && (data.component.template as any).__esModule === true && (data.component as any).default) {
                     data.component = (data.component as any).default;
-                } else if (isType<Function>(data.component, isFunction)) {
+                } else if (isFunction(data.component)) {
                     data.component = data.component();
-                }
-                if (data.component.template === false) {
+                } else if (data.component.template === false) {
                     output.render = () => '';
                 }
                 return output;

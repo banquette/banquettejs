@@ -2,8 +2,10 @@ import { ComponentDecoratorOptions } from "./component.decorator";
 import { ComposableDecoratorOptions } from "./composable.decorator";
 import { ComputedDecoratorOptions } from "./computed.decorator";
 import { ImportDecoratorOptions } from "./import.decorator";
+import { InjectProvidedDecoratorOptions } from "./inject-provided.decorator";
 import { LifecycleHook } from "./lifecycle.decorator";
 import { PropPrivateOptions } from "./prop.decorator";
+import { ProvideDecoratorOptions } from "./provide.decorator";
 import { WatchDecoratorOptions } from "./watch.decorator";
 
 /**
@@ -44,9 +46,19 @@ export interface DecoratorsDataInterface {
     exposed: Record<string, string>;
 
     /**
+     * The list of provided properties.
+     */
+    provided: Record<string, ProvideDecoratorOptions>;
+
+    /**
+     * Map of values provided by parent components.
+     */
+    injected: Record<string, InjectProvidedDecoratorOptions>;
+
+    /**
      * Map of methods to call for lifecycle hooks.
      */
-    hooks: Record<LifecycleHook, string[]>;
+    hooks: Partial<Record<LifecycleHook, string[]>>;
 
     /**
      * Getter/setter or functions being watched.
@@ -62,4 +74,9 @@ export interface DecoratorsDataInterface {
      * References on HTML elements in the template.
      */
     templateRefs: Record<string, string>;
+
+    /**
+     * Name of the method to use as a render function.
+     */
+    renderMethod: string|null;
 }
