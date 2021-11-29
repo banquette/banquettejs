@@ -13,8 +13,8 @@ export function getChildComponentInstance<T extends Constructor>(wrapper: VueWra
         throw `"${ctor.name}" is not a vue-typescript component.`;
     }
     const component: any = wrapper.findComponent(opts);
-    if (isObject(component) && isObject(component.vm) && isObject(component.vm[COMPONENT_INSTANCE_ATTR_NAME])) {
-        return component.vm[COMPONENT_INSTANCE_ATTR_NAME];
+    if (isObject(component) && isObject(component.vm) && isObject(component.vm.$) && isObject(component.vm.$[COMPONENT_INSTANCE_ATTR_NAME])) {
+        return component.vm.$[COMPONENT_INSTANCE_ATTR_NAME];
     }
     throw `Unable to get the instance of "${ctor.name}".`;
 }
