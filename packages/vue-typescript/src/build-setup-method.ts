@@ -219,7 +219,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                             const sourceBaseProperty: string = parts[0];
                             if (!isUndefined(rootProps[upToDateSource])) {
                                 // If we are watching a prop, wrap it into a function.
-                                realSource = () => rootProps[upToDateSource];
+                                realSource = () => inst[sourceBaseProperty];
                             } else if (!isUndefined(virtualRefs[sourceBaseProperty])) {
                                 // If we already created a ref for this property.
                                 realSource = virtualRefs[sourceBaseProperty];
@@ -237,15 +237,12 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                                 // Otherwise, use the existing ref.
                                 realSource = output[sourceBaseProperty];
                             }
-                            const realSourceValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
                             stopHandles.push(watch(realSource as Ref, (...args: any[]) => {
                                 const process = () => {
-                                    if (parts.length === 1) {
-                                        return inst[_watchData.target].apply(inst, args);
-                                    }
                                     const oldValue = args[1];
+                                    const realSourceValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
                                     const newValue = getObjectValue(realSourceValue, parts.slice(1), undefined);
-                                    if (!areEqual(newValue, oldValue)) {
+                                    if (parts.length === 1 || !areEqual(newValue, oldValue)) {
                                         return inst[_watchData.target].apply(inst, [newValue, oldValue].concat(args.slice(2)));
                                     }
                                 };
