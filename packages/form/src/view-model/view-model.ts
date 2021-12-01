@@ -1,7 +1,7 @@
+import { FormError } from "../form-error";
 import { FormViewControlInterface } from "../form-view-control.interface";
 import { NoopTransformer } from "./value-transformer/noop-transformer.interface";
 import { ValueTransformerInterface } from "./value-transformer/value-transformer.interface";
-import { FormError } from "../form-error";
 import { ViewModelInterface } from "./view-model.interface";
 
 export class ViewModel implements ViewModelInterface {
@@ -20,31 +20,35 @@ export class ViewModel implements ViewModelInterface {
     /**
      * Shortcuts to the control.
      */
-    public get control()            : FormViewControlInterface { return this.getControl() }
-    public get id()                 : number { return this.getControl().id }
-    public get formId()             : string { return this.getControl().formId }
-    public get fullId()             : string|null { return this.formId ? (this.formId + '_' + this.id) : null }
-    public get valid()              : boolean { return this.getControl().valid }
-    public get invalid()            : boolean { return this.getControl().invalid }
-    public get validated()          : boolean { return this.getControl().validated }
-    public get notValidated()       : boolean { return this.getControl().notValidated }
-    public get validating()         : boolean { return this.getControl().validating }
-    public get notValidating()      : boolean { return this.getControl().notValidating }
-    public get validatedAndValid()  : boolean { return this.getControl().validatedAndValid }
-    public get busy()               : boolean { return this.getControl().busy }
-    public get notBusy()            : boolean { return this.getControl().notBusy }
-    public get disabled()           : boolean { return this.getControl().disabled }
-    public get enabled()            : boolean { return this.getControl().enabled }
-    public get dirty()              : boolean { return this.getControl().dirty }
-    public get pristine()           : boolean { return this.getControl().pristine }
-    public get touched()            : boolean { return this.getControl().touched }
-    public get untouched()          : boolean { return this.getControl().untouched }
-    public get changed()            : boolean { return this.getControl().changed }
-    public get unchanged()          : boolean { return this.getControl().unchanged }
-    public get focused()            : boolean { return this.getControl().focused }
-    public get unfocused()          : boolean { return this.getControl().unfocused }
-    public get errors()             : FormError[] { return this.getControl().errors }
-    public get errorsMap()          : Record<string, string|null> {
+    public get control()                : FormViewControlInterface { return this.getControl() }
+    public get id()                     : number { return this.getControl().id }
+    public get formId()                 : string { return this.getControl().formId }
+    public get fullId()                 : string|null { return this.formId ? (this.formId + '_' + this.id) : null }
+    public get valid()                  : boolean { return this.getControl().valid }
+    public get invalid()                : boolean { return this.getControl().invalid }
+    public get validated()              : boolean { return this.getControl().validated }
+    public get notValidated()           : boolean { return this.getControl().notValidated }
+    public get validating()             : boolean { return this.getControl().validating }
+    public get notValidating()          : boolean { return this.getControl().notValidating }
+    public get validatedAndValid()      : boolean { return this.getControl().validatedAndValid }
+    public get busy()                   : boolean { return this.getControl().busy }
+    public get notBusy()                : boolean { return this.getControl().notBusy }
+    public get enabled()                : boolean { return this.getControl().enabled }
+    public get disabled()               : boolean { return this.getControl().disabled }
+    public get dirty()                  : boolean { return this.getControl().dirty }
+    public get pristine()               : boolean { return this.getControl().pristine }
+    public get touched()                : boolean { return this.getControl().touched }
+    public get untouched()              : boolean { return this.getControl().untouched }
+    public get changed()                : boolean { return this.getControl().changed }
+    public get unchanged()              : boolean { return this.getControl().unchanged }
+    public get focused()                : boolean { return this.getControl().focused }
+    public get unfocused()              : boolean { return this.getControl().unfocused }
+    public get errors()                 : FormError[] { return this.getControl().errors }
+    public set busy(value: boolean)     { this.setWriteableFlag(value, 'markAsBusy', 'markAsNotBusy') }
+    public set notBusy(value: boolean)  { this.setWriteableFlag(value, 'markAsNotBusy', 'markAsBusy') }
+    public set enabled(value: boolean)  { this.setWriteableFlag(value, 'markAsEnabled', 'markAsDisabled') }
+    public set disabled(value: boolean) { this.setWriteableFlag(value, 'markAsDisabled', 'markAsEnabled') }
+    public get errorsMap()              : Record<string, string|null> {
         return this.getControl().errors.reduce((acc: Record<string, string|null>, item: FormError) => {
             acc[item.type] = item.message;
             return acc;
@@ -57,7 +61,7 @@ export class ViewModel implements ViewModelInterface {
     public tabindex: number = 0;
 
     /**
-     * The value transformer in use.
+     * The transformer used to transform the value between the view and the control.
      */
     public readonly valueTransformer: ValueTransformerInterface;
 
@@ -104,5 +108,12 @@ export class ViewModel implements ViewModelInterface {
      */
     public onBlur(): void {
         this.getControl().markAsBlurred();
+    }
+
+    /**
+     * Shorthand to call one method or the other depending on a flag.
+     */
+    private setWriteableFlag(value: boolean, ifTrue: keyof FormViewControlInterface, ifFalse: keyof FormViewControlInterface): void {
+        this.getControl()[value ? ifTrue : ifFalse]();
     }
 }

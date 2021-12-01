@@ -13,6 +13,16 @@ export interface ViewModelInterface {
     tabindex: number;
 
     /**
+     * Shorthand to get/set the `disabled` state of the control.
+     */
+    disabled: boolean;
+
+    /**
+     * Shorthand to get/set the `busy` state of the control.
+     */
+    busy: boolean;
+
+    /**
      * A reference to the `FormControl` behind the view model.
      */
     readonly control: FormViewControlInterface;
@@ -25,7 +35,7 @@ export interface ViewModelInterface {
     /**
      * Initialize the view model.
      */
-    initialize(): void;
+    initialize(): Promise<void>|void;
 
     /**
      * Cleanup before the view model is destroyed.
