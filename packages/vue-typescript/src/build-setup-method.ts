@@ -200,7 +200,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 ((_watchData: {target: string, source: WatchFunction, options: WatchOptions}) => {
                     const virtualRefs: Record<string, Ref> = {};
                     let stopHandles: Function[] = [];
-                    let triggeredOnce: boolean = false;
+                    let triggeredOnce: boolean = _watchData.options.immediate !== true;
                     const applyWatch = () => {
                         for (const stopHandle of stopHandles) {
                             stopHandle();
@@ -246,7 +246,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                                         return inst[_watchData.target].apply(inst, [newValue, oldValue].concat(args.slice(2)));
                                     }
                                 };
-                                if (isFunction(realSource) && !triggeredOnce) {
+                                if (!triggeredOnce) {
                                     triggeredOnce = true;
                                     // Wait the next render cycle to let time to Vue to set the prop value in the instance.
                                     // Only required for the first trigger when watching props.
