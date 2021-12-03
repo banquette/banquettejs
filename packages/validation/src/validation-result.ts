@@ -204,6 +204,7 @@ export class ValidationResult {
      * Set a promise that will resolve when the validation result is ready.
      */
     public delayResponse(promise: Promise<any>, cancelCallback: GenericCallback|null = null): void {
+        this.setStatus(ValidationResultStatus.Waiting);
         if (this.promise === null) {
             (this as Writeable<ValidationResult>).promise = new Promise<ValidationResult>((resolve, reject) => {
                 this.promiseResolve = resolve;
@@ -214,12 +215,11 @@ export class ValidationResult {
                 this.promiseResolve = this.promiseReject = null;
                 this.cleanupAsync();
                 return this;
+            }).catch((reason: any) => {
+                this.fail(reason);
+                return this;
             });
-            (this as Modify<ValidationResult, {promise: Promise<ValidationResult>}>).promise.catch(proxy(this.fail, this));
         }
-        const localPromise: Promise<any> = this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]);
-        (this as Writeable<ValidationResult>).localPromise = localPromise;
-        this.previousPromise = localPromise;
 
         if (this.parent) {
             // Compiler doesn't see that "this.promise" is set above and create a "possibly null" error, thus the "as Promise...".
@@ -234,14 +234,17 @@ export class ValidationResult {
                 cancelCallback();
             };
         }
-        this.setStatus(ValidationResultStatus.Waiting);
-        localPromise.then(() => {
-            if (localPromise === this.previousPromise) {
-                (this.promiseResolve as Function)(this);
-            }
-            this.cancelCallback = null;
-            (this as Writeable<ValidationResult>).localPromise = null;
-        }).catch(proxy(this.promiseReject as GenericCallback, this));
+        const localPromise: Promise<any> = (this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]))
+            .then(() => {
+                if (localPromise === this.previousPromise) {
+                    (this.promiseResolve as Function)(this);
+                }
+                this.cancelCallback = null;
+                (this as Writeable<ValidationResult>).localPromise = null;
+            }).catch(proxy(this.promiseReject as GenericCallback, this));
+
+        (this as Writeable<ValidationResult>).localPromise = localPromise;
+        this.previousPromise = localPromise;
     }
 
     /**
