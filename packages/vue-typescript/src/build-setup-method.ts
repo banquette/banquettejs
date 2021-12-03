@@ -1,10 +1,9 @@
 import { UsageException } from "@banquette/exception";
-import { areEqual } from "@banquette/utils-misc/are-equal";
 import { noop } from "@banquette/utils-misc/noop";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -12,7 +11,6 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, GenericCallback } from "@banquette/utils-type/types";
 import { WritableComputedOptions } from "@vue/reactivity";
-import { WatchOptions } from "@vue/runtime-core";
 import {
     SetupContext,
     toRef,
@@ -24,7 +22,8 @@ import {
     getCurrentInstance,
     provide,
     readonly,
-    inject, isRef
+    inject,
+    isRef
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
@@ -32,7 +31,7 @@ import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
-import { WatchFunction } from "./decorator/watch.decorator";
+import { WatchOptions, WatchFunction } from "./decorator/watch.decorator";
 import { PrefixOrAlias } from "./type";
 import { defineRefProxy, isDecorated, getDecoratorsData, instantiate, resolveImportPublicName } from "./utils";
 
@@ -193,91 +192,112 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
         }
 
         // Watch
+        const rootPropsKeys = Object.keys(rootProps);
         for (const watchOptions of data.watch) {
-            const sources: Array<string|WatchFunction> = ensureArray(watchOptions.source);
-            for (let source of sources) {
-                source = isString(source) ? ((_s) => () => _s)(source as string) : source;
-                ((_watchData: {target: string, source: WatchFunction, options: WatchOptions}) => {
-                    const virtualRefs: Record<string, Ref> = {};
-                    let stopHandles: Function[] = [];
-                    let triggeredOnce: boolean = _watchData.options.immediate !== true;
-                    const applyWatch = () => {
-                        for (const stopHandle of stopHandles) {
-                            stopHandle();
+            const isArraySource = isArray(watchOptions.source);
+            const source: string[]|WatchFunction = isString(watchOptions.source) ? [watchOptions.source] : watchOptions.source;
+            ((_watchData: {target: string, source: WatchFunction|string[], options: WatchOptions, isArraySource: boolean}) => {
+                const virtualRefs: Record<string, Ref> = {};
+                let stopHandle: Function|null = null;
+                const applyWatch = (utdDateSources: string[], utdIsArraySource: boolean) => {
+                    if (stopHandle !== null) {
+                        stopHandle();
+                    }
+                    const realSources: Array<Ref|WatchFunction> = [];
+                    const realSourcesParts: string[][] = [];
+                    const opts = {..._watchData.options};
+                    for (const upToDateSource of utdDateSources) {
+                        const parts = upToDateSource.split('.');
+                        if (parts.length > 1) {
+                            opts.deep = true;
                         }
-                        stopHandles = [];
-                        ensureArray(cRef.effect.run()).forEach((upToDateSource: string) => {
-                            if (!upToDateSource) {
-                                return;
-                            }
-                            const parts = upToDateSource.split('.');
-                            const opts = {..._watchData.options};
-                            if (parts.length > 1) {
-                                opts.deep = true;
-                            }
-                            let realSource: Ref | WatchFunction | null = null;
-                            const sourceBaseProperty: string = parts[0];
-                            if (!isUndefined(rootProps[upToDateSource])) {
-                                // If we are watching a prop, wrap it into a function.
-                                realSource = () => inst[sourceBaseProperty];
-                            } else if (!isUndefined(virtualRefs[sourceBaseProperty])) {
-                                // If we already created a ref for this property.
-                                realSource = virtualRefs[sourceBaseProperty];
-                            } else if (isUndefined(output[sourceBaseProperty])) {
-                                // If the source is not already reactive, we have to create a ref so Vue can track it.
-                                realSource = ref(inst[sourceBaseProperty]);
-
+                        const sourceBaseProperty: string = parts[0];
+                        if (rootPropsKeys.indexOf(upToDateSource) > -1) {
+                            // If we are watching a prop, wrap it into a function.
+                            realSources.push(() => inst[sourceBaseProperty]);
+                        } else if (!isUndefined(output[sourceBaseProperty])) {
+                            // If we already have a ref for this property.
+                            realSources.push(output[sourceBaseProperty]);
+                        } else {
+                            // If we don't, we need to create one to make the prop reactive so Vue can track it.
+                            // If not already created.
+                            if (isUndefined(virtualRefs[sourceBaseProperty])) {
                                 // Then save it locally, we don't want this in the output.
-                                virtualRefs[sourceBaseProperty] = realSource as Ref;
+                                virtualRefs[sourceBaseProperty] = ref(inst[sourceBaseProperty]);
 
                                 // Now let's reassign the value of the instance to a proxy so the value is still accessible as
                                 // it should be (not forcing the user to do ".value" to access the value).
                                 defineRefProxy(inst, sourceBaseProperty, virtualRefs);
-                            } else {
-                                // Otherwise, use the existing ref.
-                                realSource = output[sourceBaseProperty];
                             }
-                            stopHandles.push(watch(realSource as Ref, (...args: any[]) => {
-                                const process = () => {
-                                    const oldValue = args[1];
-                                    const realSourceValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
-                                    const newValue = getObjectValue(realSourceValue, parts.slice(1), undefined);
-                                    if (parts.length === 1 || !areEqual(newValue, oldValue)) {
-                                        return inst[_watchData.target].apply(inst, [newValue, oldValue].concat(args.slice(2)));
-                                    }
-                                };
-                                if (!triggeredOnce) {
-                                    triggeredOnce = true;
-                                    // Wait the next render cycle to let time to Vue to set the prop value in the instance.
-                                    // Only required for the first trigger when watching props.
-                                    nextTick().then(process);
-                                } else {
-                                    process();
+                            // If we already created a ref for this property.
+                            realSources.push(virtualRefs[sourceBaseProperty]);
+                        }
+                        realSourcesParts.push(parts);
+                    }
+                    let haveTriggeredImmediately = _watchData.options.immediate !== true;
+                    let shouldDelayTrigger: boolean = !haveTriggeredImmediately && _watchData.options.synchronous !== true;
+                    const onWatchTrigger = (...args: any[]) => {
+                        const process = () => {
+                            const newValues: any[] = [];
+                            for (let i = 0; i < realSources.length; ++i) {
+                                const realSource = realSources[i];
+                                let realSourceValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
+                                if (realSourcesParts[i].length > 1) {
+                                    realSourceValue = getObjectValue(realSourceValue, realSourcesParts[i].slice(1), undefined);
                                 }
-                            }, opts));
-                        });
+                                newValues.push(realSourceValue);
+                            }
+                            return inst[_watchData.target].apply(inst, [
+                                utdIsArraySource ? newValues : newValues[0],
+                                utdIsArraySource ? args[0] : args[0][0]
+                            ].concat(args.slice(2)));
+                        };
+                        if (shouldDelayTrigger) {
+                            shouldDelayTrigger = false;
+                            // Wait the next render cycle to let time to Vue to set the prop value in the instance.
+                            // Only required for the first trigger when watching props.
+                            nextTick().then(process);
+                        } else {
+                            process();
+                        }
+                        haveTriggeredImmediately = true;
                     };
-                    //
-                    // For dynamic watchers.
-                    //
-                    // The computed is there to create a new watcher if any value used
-                    // in the watch source function is modified.
-                    //
-                    // So you can have:
-                    // @Watch(() => {
-                    //    return this.count > 10 ? 'big' : 'small';
-                    // })
-                    // public onChange() {...}
-                    //
-                    // If "count" is > 10 it will watch the "big" property.
-                    // If not it will watch the "small" property.
-                    //
-                    // If "count" changes, the computed will trigger and a new watcher will be created automatically.
-                    //
-                    const cRef = computed(proxy(source, inst), {onTrigger: applyWatch});
-                    applyWatch();
-                })({target: watchOptions.target, source, options: watchOptions.options});
-            }
+                    stopHandle = watch(realSources, onWatchTrigger, opts);
+                    if (!haveTriggeredImmediately) {
+                        // Workaround issue #5032:
+                        // https://github.com/vuejs/vue-next/issues/5032
+                        const fakeValues = (new Array(realSources.length) as undefined[]).fill(undefined);
+                        onWatchTrigger(fakeValues, fakeValues, noop);
+                    }
+                };
+                //
+                // For dynamic watchers.
+                //
+                // The computed is there to create a new watcher if any value used
+                // in the watch source function is modified.
+                //
+                // So you can have:
+                // @Watch(() => {
+                //    return this.count > 10 ? 'big' : 'small';
+                // })
+                // public onChange() {...}
+                //
+                // If "count" is > 10 it will watch the "big" property.
+                // If not it will watch the "small" property.
+                //
+                // If "count" changes, the computed will trigger and a new watcher will be created automatically.
+                //
+                if (isFunction(_watchData.source)) {
+                    const cRef = computed(proxy(_watchData.source, inst), {onTrigger: () => {
+                        const computedResult = cRef.effect.run();
+                        const isSingleSource = !isArray(computedResult);
+                        applyWatch(isSingleSource ? [computedResult] : computedResult, isSingleSource);
+                    }});
+                } else {
+                    applyWatch(_watchData.source, _watchData.isArraySource);
+                }
+            })({target: watchOptions.target, source, options: watchOptions.options, isArraySource});
+
         }
 
         // Decorated hooks

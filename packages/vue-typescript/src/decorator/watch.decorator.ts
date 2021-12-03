@@ -1,9 +1,11 @@
-import { WatchOptions } from "@vue/runtime-core";
+import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
 import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 export type WatchFunction = () => string|string[];
 export type WatchSource = string|string[]|WatchFunction;
+
+export type WatchOptions = VueWatchOptions & {synchronous?: boolean};
 
 export interface WatchDecoratorOptions {
     target: string;

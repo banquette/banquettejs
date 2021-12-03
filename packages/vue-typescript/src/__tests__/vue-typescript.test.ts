@@ -3,6 +3,7 @@ import { nextTick } from "vue";
 import { Component } from "../decorator/component.decorator";
 import { Expose } from "../decorator/expose.decorator";
 import { Prop } from "../decorator/prop.decorator";
+import { Watch } from "../decorator/watch.decorator";
 import { getComponentOptions } from "../utils";
 import { Composable } from "../decorator/composable.decorator";
 import { Import } from "../decorator/import.decorator";
@@ -74,6 +75,64 @@ describe('@Prop()', () => {
         class App { }
         const wrapper = mount(getComponentOptions(App), {})
         expect(wrapper.find('#url').text()).toEqual('/test');
+    });
+});
+
+
+describe('@Watch()', () => {
+    test('watching multiple attributes creates only 1 watcher',  async () => {
+        @Component({name: 'test', template: `<div id="count">{{ callCount }}</div>`})
+        class Test {
+            @Expose() public callCount = 0;
+
+            @Prop() private foo!: string;
+            @Prop() private bar!: string;
+
+            @Watch(['foo', 'bar'], {immediate: true})
+            public onFooBarChange() {
+                ++this.callCount;
+            }
+        }
+
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        await nextTick();
+        expect(wrapper.find('#count').text()).toEqual('1');
+    });
+
+    test('immediate trigger is asynchronous by default but can be made sync using the `synchronous` option',  async () => {
+        @Component({name: 'test', template: `<div id="count">{{ callCount }}</div>`})
+        class Test {
+            @Expose() public callCount = 0;
+
+            @Prop() private foo!: string;
+            @Prop() private bar!: string;
+
+            @Watch('foo', {immediate: true})
+            public onFooChangeAsync() {
+                ++this.callCount;
+            }
+
+            @Watch('bar', {immediate: true, synchronous: true})
+            public onBarChangeSync() {
+                this.callCount += 2;
+            }
+        }
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        expect(wrapper.find('#count').text()).toEqual('2');
+        await nextTick();
+        expect(wrapper.find('#count').text()).toEqual('3');
     });
 });
 
