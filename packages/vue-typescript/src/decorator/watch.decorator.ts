@@ -3,7 +3,7 @@ import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 export type WatchFunction = () => string|string[];
-export type WatchSource = string|WatchFunction|Array<string|WatchFunction>;
+export type WatchSource = string|string[]|WatchFunction;
 
 export interface WatchDecoratorOptions {
     target: string;
