@@ -69,6 +69,7 @@ export class DispatchResult<T = any> {
      * Set a promise that will resolve when all the subscriber have been called and finished their processing.
      */
     public delayResponse(promise: Promise<any>): void {
+        this.setStatus(DispatchResultStatus.Waiting);
         if (this.promise === null) {
             (this as Writeable<DispatchResult<T>>).promise = new Promise<DispatchResult<T>>((resolve) => {
                 this.promiseResolve = resolve;
@@ -79,15 +80,13 @@ export class DispatchResult<T = any> {
                 this.promiseResolve = null;
                 this.cleanupAsync();
                 return this;
+            }).catch((reason: any) => {
+                this.fail(reason);
+                return this;
             });
-            (this as Modify<DispatchResult, {promise: Promise<DispatchResult<T>>}>).promise.catch(proxy(this.fail, this));
         }
-        const localPromise: Promise<any> = this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]);
-        (this as Writeable<DispatchResult<T>>).localPromise = localPromise;
-        this.previousPromise = localPromise;
-
-        this.setStatus(DispatchResultStatus.Waiting);
-        localPromise.then(() => {
+        let localPromise: Promise<any> = (this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]))
+        .then(() => {
             // The timeout is required so the dispatcher can execute the next subscriber if the execution is sequential.
             // Otherwise, "localPromise" will always be equal to "previousPromise".
             // If it is still equal on the next cycle, we have reached the end.
@@ -97,7 +96,11 @@ export class DispatchResult<T = any> {
                 }
                 (this as Writeable<DispatchResult<T>>).localPromise = null;
             });
-        }).catch(proxy(this.fail, this));
+        }).catch((reason: any) => {
+            this.fail(reason);
+        });
+        (this as Writeable<DispatchResult<T>>).localPromise = localPromise;
+        this.previousPromise = localPromise;
     }
 
     /**
