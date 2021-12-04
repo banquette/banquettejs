@@ -229,6 +229,26 @@ test('unsubscribe', () => {
     expect(counter).toStrictEqual(5);
 })
 
+test('mutate the subscribers in a dispatch doesn\'t impact the current dispatch', () => {
+    let called: string[] = [];
+    let added = false;
+    eventDispatcher.clear();
+    eventDispatcher.subscribe(event1, () => {
+        called.push('a');
+        if (!added) {
+            added = true;
+            eventDispatcher.subscribe(event1, () => {
+                called.push('b');
+            }, 1);
+        }
+    }, 0);
+    eventDispatcher.dispatch(event1);
+    expect(called).toStrictEqual(['a']);
+    called = [];
+    eventDispatcher.dispatch(event1);
+    expect(called).toStrictEqual(['b', 'a']);
+})
+
 /**
  * Register multiple subscribers to the dispatcher and return an object
  * that will contain the key of each subscriber in the order they have been called after a dispatch.

@@ -76,7 +76,7 @@ describe('Adding', () => {
         // Array of events with custom name
         .add([Events.Initializing, Events.Ready], 'custom')
         // Link to another sequence
-        .add({sequences: ['Other'], priority: -1}, 'custom')
+        .add({sequences: ['Other'], priority: 1}, 'custom')
         // A sequence with a global error behavior
         .add([Events.Creating, Events.Initializing, {event: Events.Ready, onError: 'Error'}], 'last', SequenceErrorBasicBehavior.StopSequence)
 
@@ -100,7 +100,7 @@ describe('Adding', () => {
             [Events.HideLoader]
         ]);
         checkSequence(pipeline, 'custom', [
-            [['Other'], -1],
+            [['Other'], 1],
             [Events.Initializing],
             [Events.Ready]
         ]);
@@ -113,23 +113,23 @@ describe('Adding', () => {
 
     test('sequences are sorted by priority', () => {
         pipeline.add([Events.FetchAjax, Events.FetchMemory]);
-        pipeline.add({event: Events.Initializing, priority: -1});
-        pipeline.add({event: Events.Ready, priority: 1});
+        pipeline.add({event: Events.Ready, priority: -1});
+        pipeline.add({event: Events.Initializing, priority: 1});
 
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Initializing, -1],
+            [Events.Initializing, 1],
             [Events.FetchAjax],
             [Events.FetchMemory],
-            [Events.Ready, 1]
+            [Events.Ready, -1]
         ]);
     });
 
     test('adding the same event a second time will add it and not replace it', () => {
         pipeline.add(Events.Initializing);
-        pipeline.add({event: Events.Initializing, priority: -1, onError: SequenceErrorBasicBehavior.Ignore});
+        pipeline.add({event: Events.Initializing, priority: 1, onError: SequenceErrorBasicBehavior.Ignore});
 
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Initializing, -1, SequenceErrorBasicBehavior.Ignore],
+            [Events.Initializing, 1, SequenceErrorBasicBehavior.Ignore],
             [Events.Initializing]
         ]);
     });
@@ -333,9 +333,30 @@ describe('Running', () => {
         pipeline
             .subscribe(Events.ShowLoader, buildCallback('show-loader'))
             .subscribe(Events.HideLoader, buildCallback('hide-loader'))
-            .subscribe(Events.Fetch, buildCallback('fetch-ajax', {delay: 50, error: 'Request failed.'}))
+            .subscribe(Events.Fetch, buildCallback('fetch', {delay: 50, error: 'Request failed.'}))
         await pipeline.start('Fetch').promise;
-        expect(callstack).toStrictEqual(['show-loader', 'fetch-ajax']);
+        expect(callstack).toStrictEqual(['show-loader', 'fetch']);
+    });
+
+    test('a sequence can be mutated while it is running with no immediate impact on its behavior', () => {
+        const customEvent = Symbol();
+        let called: string[] = [];
+        let added = false;
+        pipeline.subscribe(Events.Fetch, () => {
+            called.push('a');
+            if (!added) {
+                added = true;
+                pipeline.add({event: customEvent, priority: 100}, 'Fetch');
+                pipeline.subscribe(customEvent, () => {
+                    called.push('b');
+                });
+            }
+        });
+        pipeline.start('Fetch');
+        expect(called).toStrictEqual(['a']);
+        called = [];
+        pipeline.start('Fetch');
+        expect(called).toStrictEqual(['b', 'a']);
     });
 
     // TODO: test other types of failures

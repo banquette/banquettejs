@@ -1,3 +1,4 @@
+import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isInteger } from "@banquette/utils-type/is-integer";
@@ -76,7 +77,7 @@ export class EventPipeline {
                 });
             }
             this.sequences[sequenceName].items.sort((a: SequenceItemInterface, b: SequenceItemInterface) => {
-                return a.priority - b.priority;
+                return b.priority - a.priority;
             });
         }
         return this;
@@ -152,7 +153,7 @@ export class EventPipeline {
                 return result;
             }
             const context = new SequenceContext(name, parentContext || null);
-            const subResult = this.runSequence(this.sequences[name], context);
+            const subResult = this.runSequence(cloneDeep(this.sequences[name]), context);
             if (subResult.promise !== null) {
                 result.delayResponse(subResult.promise);
             }

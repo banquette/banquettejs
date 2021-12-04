@@ -161,6 +161,6 @@ export class EventDispatcher implements EventDispatcherInterface {
      * Get the list of subscribers for a type of event.
      */
     private getSubscribersForType(type: symbol): SubscriberInterface[] {
-        return !isUndefined(this.subscribers[type]) ? this.subscribers[type] : [];
+        return !isUndefined(this.subscribers[type]) ? ([] as SubscriberInterface[]).concat(this.subscribers[type]) : [];
     }
 }
