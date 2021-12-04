@@ -78,7 +78,7 @@ export class ViewModel implements ViewModelInterface {
     /**
      * @inheritDoc
      */
-    public initialize(): void {
+    public initialize(): Promise<void>|void {
         // Override me
     }
 
