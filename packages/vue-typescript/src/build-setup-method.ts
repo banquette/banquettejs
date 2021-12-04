@@ -242,6 +242,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
                             const newValues: any[] = [];
+                            const oldValues: any[] = [];
                             for (let i = 0; i < realSources.length; ++i) {
                                 const realSource = realSources[i];
                                 let realSourceValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
@@ -249,10 +250,11 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                                     realSourceValue = getObjectValue(realSourceValue, realSourcesParts[i].slice(1), undefined);
                                 }
                                 newValues.push(realSourceValue);
+                                oldValues.push(i < args[1].length ? args[1][i] : undefined);
                             }
                             return inst[_watchData.target].apply(inst, [
                                 utdIsArraySource ? newValues : newValues[0],
-                                utdIsArraySource ? args[0] : args[0][0]
+                                utdIsArraySource ? oldValues : oldValues[0]
                             ].concat(args.slice(2)));
                         };
                         if (shouldDelayTrigger) {
@@ -294,8 +296,8 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                     const cRef = computed(proxy(_watchData.source, inst));
                     watchEffect(() => {
                         const computedResult = cRef.value;
-                        const isSingleSource = !isArray(computedResult);
-                        applyWatch(isSingleSource ? [computedResult] : computedResult, isSingleSource);
+                        const isArraySource = isArray(computedResult);
+                        applyWatch(!isArraySource ? [computedResult] : computedResult, isArraySource);
                     });
                 } else {
                     applyWatch(_watchData.source, _watchData.isArraySource);
