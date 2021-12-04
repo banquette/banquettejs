@@ -3,6 +3,7 @@ import { nextTick } from "vue";
 import { Component } from "../decorator/component.decorator";
 import { Expose } from "../decorator/expose.decorator";
 import { Prop } from "../decorator/prop.decorator";
+import { Ref } from "../decorator/ref.decorator";
 import { Watch } from "../decorator/watch.decorator";
 import { getComponentOptions } from "../utils";
 import { Composable } from "../decorator/composable.decorator";
@@ -80,6 +81,69 @@ describe('@Prop()', () => {
 
 
 describe('@Watch()', () => {
+    test('watch can take a function source',  async () => {
+        @Component({name: 'test', template: `<div id="count">{{ callCount }}</div>`})
+        class Test {
+            @Expose() public callCount = 0;
+
+            @Prop() private foo!: string;
+            @Prop() private bar!: string;
+
+            @Watch(function() {
+                return ['foo', 'bar'];
+            }, {immediate: true})
+            public onFooChangeAsync() {
+                ++this.callCount;
+            }
+        }
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        await nextTick();
+        expect(wrapper.find('#count').text()).toEqual('1');
+    });
+
+    test('watch function can react to external changes',  async () => {
+        @Component({name: 'test', template: false})
+        class Test {
+            @Expose() public callsCount = 0;
+            @Expose() public callsResults: string[] = [];
+
+            @Prop() private foo!: string;
+            @Prop() private bar!: string;
+
+            // So Vue can see the property.
+            @Ref() public condition: boolean = false;
+
+            @Watch(function(this: Test) {
+                const res =  this.condition ? 'foo' : 'bar';
+                this.callsResults.push(res);
+                return res;
+            }, {immediate: true})
+            public onFooChangeAsync() {
+                ++this.callsCount;
+            }
+        }
+        @Component({
+            name: 'app',
+            components: [Test],
+            template: `<test></test>`
+        })
+        class App { }
+        const wrapper = mount(getComponentOptions(App), {})
+        const testComponent = getChildComponentInstance(wrapper, Test);
+        expect(testComponent.callsResults).toStrictEqual(['bar']);
+        await nextTick();
+        testComponent.condition = true;
+        await nextTick();
+        expect(testComponent.callsResults).toStrictEqual(['bar', 'foo']);
+        expect(testComponent.callsCount).toEqual(2);
+    });
+
     test('watching multiple attributes creates only 1 watcher',  async () => {
         @Component({name: 'test', template: `<div id="count">{{ callCount }}</div>`})
         class Test {

@@ -23,7 +23,7 @@ import {
     provide,
     readonly,
     inject,
-    isRef
+    isRef, watchEffect
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
@@ -202,6 +202,9 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 const applyWatch = (utdDateSources: string[], utdIsArraySource: boolean) => {
                     if (stopHandle !== null) {
                         stopHandle();
+                        // If we already have a watcher the new one must always trigger immediately,
+                        // because it can only come from a change in the watch function.
+                        _watchData.options.immediate = true;
                     }
                     const realSources: Array<Ref|WatchFunction> = [];
                     const realSourcesParts: string[][] = [];
@@ -235,7 +238,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                         realSourcesParts.push(parts);
                     }
                     let haveTriggeredImmediately = _watchData.options.immediate !== true;
-                    let shouldDelayTrigger: boolean = !haveTriggeredImmediately && _watchData.options.synchronous !== true;
+                    let shouldDelayTrigger: boolean = stopHandle === null && !haveTriggeredImmediately && _watchData.options.synchronous !== true;
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
                             const newValues: any[] = [];
@@ -288,11 +291,12 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 // If "count" changes, the computed will trigger and a new watcher will be created automatically.
                 //
                 if (isFunction(_watchData.source)) {
-                    const cRef = computed(proxy(_watchData.source, inst), {onTrigger: () => {
-                        const computedResult = cRef.effect.run();
+                    const cRef = computed(proxy(_watchData.source, inst));
+                    watchEffect(() => {
+                        const computedResult = cRef.value;
                         const isSingleSource = !isArray(computedResult);
                         applyWatch(isSingleSource ? [computedResult] : computedResult, isSingleSource);
-                    }});
+                    });
                 } else {
                     applyWatch(_watchData.source, _watchData.isArraySource);
                 }
