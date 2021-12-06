@@ -13,7 +13,7 @@ import { FormError } from "./form-error";
 import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
 
-export class FormControl extends AbstractFormComponent implements FormControlInterface {
+export class FormControl<ValueType = unknown> extends AbstractFormComponent<ValueType> implements FormControlInterface {
     /**
      * A FormControl has no child.
      */
