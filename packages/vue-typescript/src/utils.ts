@@ -1,5 +1,4 @@
 import { UsageException } from "@banquette/exception";
-import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isConstructor } from "@banquette/utils-type/is-constructor";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -138,7 +137,7 @@ export function resolveImportPublicName(originalPrefix: string|undefined, origin
         return prefixOrAlias + ':' + originalName;
     }
     if (isType<AliasesMap>(prefixOrAlias, isObject)) {
-        return !isUndefined(prefixOrAlias[originalName]) ? ensureString(prefixOrAlias[originalName]) : false;
+        return !isUndefined(prefixOrAlias[originalName]) ? String(prefixOrAlias[originalName]) : false;
     }
     if (isFunction(prefixOrAlias)) {
         return (prefixOrAlias as AliasResolver)(originalName);
