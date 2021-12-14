@@ -98,6 +98,7 @@ export function getRollupConfig(buildConfig) {
     rollupConfig.plugins.push(postcss());
     if (buildConfig.outputFile) {
         rollupConfig.plugins.push(typescript({
+            check: true,
             tsconfig: path.join(buildConfig.rootDir, 'tsconfig.json'),
             tsconfigOverride: {
                 compilerOptions: {
@@ -109,6 +110,7 @@ export function getRollupConfig(buildConfig) {
         rollupConfig.output.file = buildConfig.outputFile;
     } else if (buildConfig.outputDir) {
         rollupConfig.plugins.push(typescript({
+            check: true,
             useTsconfigDeclarationDir: true,
             tsconfig: path.join(buildConfig.rootDir, 'tsconfig.json')
         }));
