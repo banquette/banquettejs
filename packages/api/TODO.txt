@@ -1,0 +1,2 @@
+
+- add a caching mechanism for endpoints (configurable via options in the `@Endpoint` decorator).
