@@ -11,6 +11,7 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, GenericCallback } from "@banquette/utils-type/types";
 import { WritableComputedOptions } from "@vue/reactivity";
+import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
 import {
     SetupContext,
     toRef,
@@ -18,12 +19,13 @@ import {
     ref,
     computed,
     watch,
-    nextTick,
     getCurrentInstance,
     provide,
     readonly,
     inject,
-    isRef, watchEffect
+    isRef,
+    watchEffect,
+    onBeforeMount, onMounted, nextTick
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
@@ -31,7 +33,7 @@ import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
-import { WatchOptions, WatchFunction } from "./decorator/watch.decorator";
+import { WatchOptions, WatchFunction, ImmediateStrategy } from "./decorator/watch.decorator";
 import { PrefixOrAlias } from "./type";
 import { defineRefProxy, isDecorated, getDecoratorsData, instantiate, resolveImportPublicName } from "./utils";
 
@@ -208,7 +210,10 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                     }
                     const realSources: Array<Ref|WatchFunction> = [];
                     const realSourcesParts: string[][] = [];
-                    const opts = {..._watchData.options};
+                    const opts: VueWatchOptions = {
+                        ..._watchData.options,
+                        immediate: !isUndefined(_watchData.options.immediate) && _watchData.options.immediate !== false
+                    };
                     for (const upToDateSource of utdDateSources) {
                         const parts = upToDateSource.split('.');
                         if (parts.length > 1) {
@@ -237,8 +242,8 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                         }
                         realSourcesParts.push(parts);
                     }
-                    let haveTriggeredImmediately = _watchData.options.immediate !== true;
-                    let shouldDelayTrigger: boolean = stopHandle === null && !haveTriggeredImmediately && _watchData.options.synchronous !== true;
+                    let haveTriggeredImmediately = opts.immediate !== true;
+                    let shouldDelayTrigger: boolean = stopHandle === null && opts.immediate === true && _watchData.options.immediate !== ImmediateStrategy.Sync && _watchData.options.immediate !== true;
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
                             const newValues: any[] = [];
@@ -259,9 +264,13 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                         };
                         if (shouldDelayTrigger) {
                             shouldDelayTrigger = false;
-                            // Wait the next render cycle to let time to Vue to set the prop value in the instance.
-                            // Only required for the first trigger when watching props.
-                            nextTick().then(process);
+                            if (_watchData.options.immediate === ImmediateStrategy.BeforeMount) {
+                                onBeforeMount(process);
+                            } else if (_watchData.options.immediate === ImmediateStrategy.Mounted) {
+                                onMounted(process);
+                            } else {
+                                nextTick().then(process);
+                            }
                         } else {
                             process();
                         }

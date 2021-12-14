@@ -5,7 +5,29 @@ import { DecoratorsDataInterface } from "./decorators-data.interface";
 export type WatchFunction = () => string|string[];
 export type WatchSource = string|string[]|WatchFunction;
 
-export type WatchOptions = VueWatchOptions & {synchronous?: boolean};
+export type WatchOptions = Omit<VueWatchOptions, 'immediate'> & {immediate?: boolean|ImmediateStrategy};
+
+export enum ImmediateStrategy {
+    /**
+     * The default behavior of VueJS, the callback is invoked immediately when the watcher is created.
+     */
+    Sync = 'sync',
+
+    /**
+     * Invoke the callback when the "beforeMount" hook is fired.
+     */
+    BeforeMount = 'beforeMount',
+
+    /**
+     * Invoke the callback when the "mounted" hook is fired.
+     */
+    Mounted = 'mounted',
+
+    /**
+     * Wait the next tick to invoke the callback, this ensures the component is totally initialized and rendered.
+     */
+    NextTick = 'nextTick'
+}
 
 export interface WatchDecoratorOptions {
     target: string;

@@ -1,13 +1,13 @@
 import { mount } from '@vue/test-utils';
 import { nextTick } from "vue";
 import { Component } from "../decorator/component.decorator";
+import { Composable } from "../decorator/composable.decorator";
 import { Expose } from "../decorator/expose.decorator";
+import { Import } from "../decorator/import.decorator";
 import { Prop } from "../decorator/prop.decorator";
 import { Ref } from "../decorator/ref.decorator";
-import { Watch } from "../decorator/watch.decorator";
+import { Watch, ImmediateStrategy } from "../decorator/watch.decorator";
 import { getComponentOptions } from "../utils";
-import { Composable } from "../decorator/composable.decorator";
-import { Import } from "../decorator/import.decorator";
 import { getChildComponentInstance } from "./utils";
 
 @Component({
@@ -169,7 +169,7 @@ describe('@Watch()', () => {
         expect(wrapper.find('#count').text()).toEqual('1');
     });
 
-    test('immediate trigger is asynchronous by default but can be made sync using the `synchronous` option',  async () => {
+    test('immediate trigger is synchronous by default but can be made async',  async () => {
         @Component({name: 'test', template: `<div id="count">{{ callCount }}</div>`})
         class Test {
             @Expose() public callCount = 0;
@@ -177,12 +177,12 @@ describe('@Watch()', () => {
             @Prop() private foo!: string;
             @Prop() private bar!: string;
 
-            @Watch('foo', {immediate: true})
+            @Watch('foo', {immediate: ImmediateStrategy.NextTick})
             public onFooChangeAsync() {
                 ++this.callCount;
             }
 
-            @Watch('bar', {immediate: true, synchronous: true})
+            @Watch('bar', {immediate: true})
             public onBarChangeSync() {
                 this.callCount += 2;
             }
