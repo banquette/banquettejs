@@ -485,3 +485,26 @@ describe('Property transformers', () => {
         });
     });
 });
+
+describe('Model inheritance', () => {
+    test('Inherited properties can be transformed', () => {
+        class A {
+            @Pojo() public aProp: string = 'a';
+        }
+
+        class B extends A {
+            @Pojo() public bProp: string = 'b';
+        }
+
+        class C extends B {
+            @Pojo() public cProp: string = 'c';
+        }
+
+        transformAndCheck(new C(), PojoTransformerSymbol, {
+            resultEqual: {aProp: 'a', bProp: 'b', cProp: 'c'}
+        }, {
+            resultInstanceOf: C,
+            resultMatchObject: {aProp: 'a', bProp: 'b', cProp: 'c'}
+        });
+    });
+});

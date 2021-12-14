@@ -10,6 +10,7 @@ import { ModelExtendedIdentifier } from "./type";
 import { ensureCompleteTransformer } from "./utils";
 
 const WILDCARD = '*';
+const OBJECT_CTOR = Object.getPrototypeOf(Object);
 
 @Service()
 export class ModelTransformMetadataService {
@@ -27,12 +28,16 @@ export class ModelTransformMetadataService {
      * Get a map of all transformable properties of a model and their respective transformer.
      */
     public getAll(identifier: ModelExtendedIdentifier, type: symbol): Record<string, Complete<TransformerInterface>> {
-        const ctor: Constructor = this.modelMetadata.resolveAlias(identifier);
-        let transforms = this.transformersMap.get(ctor);
-        if (!isNullOrUndefined(transforms) && !isUndefined(transforms[type])) {
-            return Object.assign({}, transforms[type]);
-        }
-        return {};
+        let output = {};
+        let ctor: Constructor = this.modelMetadata.resolveAlias(identifier);
+        do {
+            let transforms = this.transformersMap.get(ctor);
+            if (!isNullOrUndefined(transforms) && !isUndefined(transforms[type])) {
+                output = Object.assign(output, transforms[type]);
+            }
+            ctor = Object.getPrototypeOf(ctor);
+        } while (ctor && ctor !== OBJECT_CTOR);
+        return output;
     }
 
     /**
