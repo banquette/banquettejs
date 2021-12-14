@@ -62,7 +62,7 @@ export class ModelWatcherService {
     /**
      * Create the list of paths to watch for a given list of transformers identifiers.
      */
-    private createWatchPaths(ctor: Constructor, transformersTypes: symbol|symbol[], basePath: string = '/'): string[] {
+    private createWatchPaths(ctor: Constructor, transformersTypes: symbol|symbol[], basePath: string = '/', stack: Constructor[] = []): string[] {
         let watchedPaths: string[] = [];
         transformersTypes = ensureArray(transformersTypes);
         for (const type of transformersTypes) {
@@ -73,8 +73,10 @@ export class ModelWatcherService {
                     watchedPaths.push(currentPath);
                 }
                 const relation = this.modelMetadata.getRelation(ctor, key);
-                if (relation !== null) {
-                    watchedPaths = watchedPaths.concat(this.createWatchPaths(relation, transformersTypes, currentPath));
+                if (relation !== null && stack.indexOf(relation) < 0) {
+                    stack.push(relation);
+                    watchedPaths = watchedPaths.concat(this.createWatchPaths(relation, transformersTypes, currentPath, stack));
+                    stack.pop();
                 }
             }
         }
