@@ -2,7 +2,7 @@ import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
-import { Constructor } from "@banquette/utils-type/types";
+import { AbstractConstructor } from "@banquette/utils-type/types";
 import { WatchOptions } from "@vue/runtime-core";
 import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
 import { DECORATORS_CTOR_NAME } from "./constants";
@@ -43,7 +43,7 @@ export class Vue implements ComponentPublicInstance {
     /**
      * Try to get a reference on a specific parent component.
      */
-    protected getParent<T extends Constructor<Vue>>(component: T): InstanceType<T>|null {
+    protected getParent<T extends AbstractConstructor<Vue>>(component: T): InstanceType<T>|null {
         let $parent = this.$parent;
         while ($parent !== null) {
             if (isComponentInstance($parent, component)) {

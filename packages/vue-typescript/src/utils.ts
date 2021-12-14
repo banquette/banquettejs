@@ -6,7 +6,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor, AbstractConstructor } from "@banquette/utils-type/types";
 import { DECORATORS_OPTIONS_HOLDER_NAME, VUE_CLASS_COMPONENT_OPTIONS_NAME, DECORATORS_CTOR_NAME } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ComposableDecoratorOptions } from "./decorator/composable.decorator";
@@ -51,9 +51,15 @@ export function getCtorFromVccOption(input: any): Constructor|null {
     return ctor;
 }
 
-export function isComponentInstance<T extends Constructor<Vue>>(component: any, candidate: T): component is InstanceType<T> {
-    // @ts-ignore
-    return component instanceof candidate[DECORATORS_CTOR_NAME];
+export function isComponentInstance<T extends AbstractConstructor<Vue>>(component: any, candidate: T): component is InstanceType<T> {
+    if (isType<{[DECORATORS_CTOR_NAME]: Constructor<Vue>}>(candidate, (v) => isObject(v) && !isUndefined(v[DECORATORS_CTOR_NAME]))) {
+        return component instanceof candidate[DECORATORS_CTOR_NAME];
+    }
+    return isConstructor(candidate) && component instanceof candidate;
+}
+
+export function c(input: any): any {
+    return isObject(input) && !isUndefined(input[DECORATORS_CTOR_NAME]) ? input[DECORATORS_CTOR_NAME] : input;
 }
 
 export function defineGetter<T, K extends keyof T>(obj: T, key: K, getter: () => T[K]): void {
