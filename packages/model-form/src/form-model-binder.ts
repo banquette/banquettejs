@@ -68,6 +68,7 @@ export class FormModelBinder {
 
     private contextStack: Array<{ctor: Constructor, property: string}>;
     private canMutateForm: boolean = false;
+    private ignoreModelUpdate: boolean = false;
 
     private get currentContextCtor(): Constructor {
         if (this.contextStack.length > 0) {
@@ -97,12 +98,12 @@ export class FormModelBinder {
      */
     public bind<T extends object>(model: T, form: FormObject): T {
         this.form = form;
-        this.model = model;
         this.syncFormObjectWithModel(form, model);
         this.form.onControlAdded(proxy(this.throwOnUnauthorizedFormMutation, this), false);
         this.form.onControlRemoved(proxy(this.throwOnUnauthorizedFormMutation, this), false);
         this.form.onValueChanged(proxy(this.onFormValueChange, this), false);
-        return this.modelWatcher.watchTransformableProperties<T>(model, FormTransformerSymbol, proxy(this.onModelChange, this));
+        this.model = this.modelWatcher.watchTransformableProperties<T>(model, FormTransformerSymbol, proxy(this.onModelChange, this));
+        return this.model;
     }
 
     /**
@@ -259,6 +260,15 @@ export class FormModelBinder {
      * Called when a change on the model is detected.
      */
     private onModelChange(event: ModelChangeEvent<any>): void {
+        if (this.ignoreModelUpdate) {
+            return ;
+        }
+        if (event.type === ModelChangeType.Delete) {
+            try {
+                this.form.get(event.path).detach();
+            } catch (e) {}
+            return ;
+        }
         const pathParts = event.path.split('/');
         let formContainer: FormGroupInterface = this.form;
         let modelContainer = this.model;
@@ -269,7 +279,7 @@ export class FormModelBinder {
 
         for (i = 1; i < pathParts.length; ++i) {
             let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
-            if (treeChildName === '*' && event.type === ModelChangeType.Add && isArray(event.target)) {
+            if (treeChildName === '*' && event.type === ModelChangeType.Insert && isArray(event.target)) {
                 pushContext(this.currentContextCtor, pathParts[i - 1]);
                 continue ;
             }
@@ -281,9 +291,9 @@ export class FormModelBinder {
             if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
                 pushContext(treeContainer.ctor, pathParts[i]);
             }
-            // Required if a change is made to an object used a value for FormControl.
-            // The "path" will then go deeper than what the form is made of,
-            // so we must stop when a FormControl is reached.
+            // Required if a change is made to an object used as value in a FormControl.
+            // If we do nothing the "path" will lead the binder deep inside the value of the FormControl,
+            // which is not a valid form tree, so we must stop when a FormControl is reached.
             if (treeContainer.transformer.type === FormControlTransformerSymbol) {
                 pushContext(this.currentContextCtor, pathParts[i]);
                 break ;
@@ -310,26 +320,31 @@ export class FormModelBinder {
      * Called when a value change in the form, at any level.
      */
     private onFormValueChange(event: ValueChangedFormEvent): void {
-        //
-        // The event will trigger a lot more because when a change occurs all parent components will emit their own event.
-        // But we're only interested about changes on form controls.
-        //
-        // All mutations on the structure of the form MUST be performed on the model, that will reflect back
-        // on the form. The form is only allowed to change values, not the hierarchy of components.
-        //
-        if (!(event.source instanceof FormControl)) {
-            return ;
-        }
-        const pathParts = event.source.path.split('/');
-        let modelContainer = this.model;
-        for (let i = 1; i < pathParts.length - 1; ++i) {
-            if (!isObject(modelContainer[pathParts[i]])) {
-                return ;
+        try {
+            this.ignoreModelUpdate = true;
+            //
+            // The event will trigger a lot more because when a change occurs all parent components will emit their own event.
+            // But we're only interested about changes on form controls.
+            //
+            // All mutations on the structure of the form MUST be performed on the model, that will reflect back
+            // on the form. The form is only allowed to change values, not the hierarchy of components.
+            //
+            if (!(event.source instanceof FormControl)) {
+                return;
             }
-            modelContainer = modelContainer[pathParts[i]];
-        }
-        if (isObject(modelContainer)) {
-            modelContainer[pathParts[pathParts.length - 1]] = event.newValue;
+            const pathParts = event.source.path.split('/');
+            let modelContainer = this.model;
+            for (let i = 1; i < pathParts.length - 1; ++i) {
+                if (!isObject(modelContainer[pathParts[i]])) {
+                    return;
+                }
+                modelContainer = modelContainer[pathParts[i]];
+            }
+            if (isObject(modelContainer)) {
+                modelContainer[pathParts[pathParts.length - 1]] = event.newValue;
+            }
+        } finally {
+            this.ignoreModelUpdate = false;
         }
     }
 

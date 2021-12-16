@@ -6,17 +6,35 @@ import { ModelChangeEvent, ModelChangeType } from "./event/model-change.event";
 import { ModelMetadataService } from "./model-metadata.service";
 import { ModelTransformMetadataService } from "./model-transform-metadata.service";
 
-const ObservableSlim = require('observable-slim/observable-slim.js');
+const Observable = require('object-observer/dist/object-observer');
 
-export interface ObservableSlimChange {
-    type: 'update' | 'add' | 'delete';
-    target: object;
-    property: string;
-    newValue: any;
-    previousValue: any;
-    currentPath: string;
-    jsonPointer: string;
-    proxy: ProxyHandler<any>;
+export interface ObservableChangeEvent {
+    /**
+     * Type of change.
+     */
+    type: 'insert' | 'update' | 'delete' | 'shuffle' | 'reverse';
+
+    /**
+     * Path to the changed property represented as an Array of nodes.
+     */
+    path: string[];
+
+    /**
+     * New value.
+     * `undefined` in delete, shuffle and reverse changes.
+     */
+    value?: string;
+
+    /**
+     * Old value.
+     * `undefined` in insert, shuffle or reverse changes.
+     */
+    oldValue: any;
+
+    /**
+     * An immediate subject of change, property of which has been changed.
+     */
+    object: object;
 }
 
 @Service()
@@ -35,20 +53,22 @@ export class ModelWatcherService {
         if (watchedPaths !== null) {
             watchedPaths = watchedPaths.map((item: string) => item[0] !== '/' ? ('/' + item) : item);
         }
-        return ObservableSlim.create(model, false, (changes: ObservableSlimChange[]) => {
+        const observed = Observable.Observable.from(model);
+        observed.observe((changes: ObservableChangeEvent[]) => {
             for (const change of changes) {
-                const filteredJsonPointer = change.jsonPointer.split('/').filter((item: string) => !isNumeric(item)).join('/');
+                const filteredJsonPointer = '/'+change.path.filter((item: string) => !isNumeric(item)).join('/');
                 if (watchedPaths === null || watchedPaths.indexOf(filteredJsonPointer) > -1) {
                     cb(new ModelChangeEvent<any>(
                         change.type as ModelChangeType,
-                        change.target,
-                        change.jsonPointer,
-                        change.previousValue,
-                        change.newValue
+                        change.object,
+                        '/' + change.path.join('/'),
+                        change.oldValue,
+                        change.value
                     ));
                 }
             }
         });
+        return observed;
     }
 
     /**

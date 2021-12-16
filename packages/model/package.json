@@ -14,7 +14,7 @@
         "@banquette/core": "^0.0.5",
         "@banquette/fingerprint": "^0.0.5",
         "@banquette/storage": "^0.0.5",
-        "observable-slim": "^0.1.5"
+        "object-observer": "^4.6.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

@@ -1,9 +1,11 @@
 import { EventArg } from "@banquette/event";
 
 export enum ModelChangeType {
-    Add     = 'add',
+    Insert  = 'insert',
     Update  = 'update',
-    Delete  = 'delete'
+    Delete  = 'delete',
+    Shuffle = 'shuffle',
+    Reverse = 'reverse',
 }
 
 export class ModelChangeEvent<T extends object> extends EventArg {
