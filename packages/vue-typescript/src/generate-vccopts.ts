@@ -28,7 +28,7 @@ import {
     defineGetter,
     resolveImportPublicName,
     getCtorFromVccOption,
-    injectVuePropertiesInCtor
+    injectVuePropertiesInCtor, getComponentInstance
 } from "./utils";
 import { Vue } from "./vue";
 import { VueBuilder } from "./vue-builder";
@@ -181,13 +181,7 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
             defineGetter(inst, '$forceUpdate', () => this.$forceUpdate);
             defineGetter(inst, '$nextTick', () => this.$nextTick);
             defineGetter(inst, '$watch', () => this.$watch);
-            defineGetter(inst, '$parent', () => {
-                const $parent = this.$parent as any;
-                if ($parent && isObject($parent.$) && isObject($parent.$[COMPONENT_INSTANCE_ATTR_NAME])) {
-                    return $parent.$[COMPONENT_INSTANCE_ATTR_NAME];
-                }
-                return null;
-            });
+            defineGetter(inst, '$parent', () => getComponentInstance(this.$parent));
         }
     };
     return options;

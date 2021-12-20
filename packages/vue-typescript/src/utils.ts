@@ -7,7 +7,12 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, AbstractConstructor } from "@banquette/utils-type/types";
-import { DECORATORS_OPTIONS_HOLDER_NAME, VUE_CLASS_COMPONENT_OPTIONS_NAME, DECORATORS_CTOR_NAME } from "./constants";
+import {
+    DECORATORS_OPTIONS_HOLDER_NAME,
+    VUE_CLASS_COMPONENT_OPTIONS_NAME,
+    DECORATORS_CTOR_NAME,
+    COMPONENT_INSTANCE_ATTR_NAME
+} from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ComposableDecoratorOptions } from "./decorator/composable.decorator";
 import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
@@ -60,6 +65,22 @@ export function isComponentInstance<T extends AbstractConstructor<Vue>>(componen
 
 export function c(input: any): any {
     return isObject(input) && !isUndefined(input[DECORATORS_CTOR_NAME]) ? input[DECORATORS_CTOR_NAME] : input;
+}
+
+/**
+ * Try to get the actual class behind a component.
+ */
+export function getComponentInstance(input: any): any {
+    if (!isObject(input)) {
+        return null;
+    }
+    if (isObject(input[COMPONENT_INSTANCE_ATTR_NAME])) {
+        return input[COMPONENT_INSTANCE_ATTR_NAME];
+    }
+    if (isObject(input.$) && isObject(input.$[COMPONENT_INSTANCE_ATTR_NAME])) {
+        return input.$[COMPONENT_INSTANCE_ATTR_NAME];
+    }
+    return input;
 }
 
 export function defineGetter<T, K extends keyof T>(obj: T, key: K, getter: () => T[K]): void {

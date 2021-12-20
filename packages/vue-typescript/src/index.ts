@@ -1,6 +1,6 @@
 export * from './vue-builder';
 export * from './vue';
-export { isComponentInstance, getComponentOptions, getDecoratorsData, c } from './utils';
+export { isComponentInstance, getComponentOptions, getDecoratorsData, c, getComponentInstance } from './utils';
 
 /**
  * Decorators
