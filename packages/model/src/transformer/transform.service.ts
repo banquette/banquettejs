@@ -32,15 +32,17 @@ export class TransformService {
     public transform(modelInstance: object, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult;
     public transform(modelInstanceOrParentContext: object|TransformContext, transformType?: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
         let parentContext: TransformContext|null = null;
+        let ctor: Constructor|null = null;
         if (modelInstanceOrParentContext instanceof TransformContext) {
             parentContext = modelInstanceOrParentContext;
             transformType = modelInstanceOrParentContext.type;
+            ctor = modelInstanceOrParentContext.ctor;
             modelInstanceOrParentContext = parentContext.value;
         }
         const context = new TransformContext(
             parentContext,
             transformType as symbol,
-            modelInstanceOrParentContext.constructor as Constructor,
+            ctor || modelInstanceOrParentContext.constructor as Constructor,
             modelInstanceOrParentContext,
             null,
             extra || {}
