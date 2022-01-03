@@ -6,6 +6,7 @@ import { InjectProvidedDecoratorOptions } from "./inject-provided.decorator";
 import { LifecycleHook } from "./lifecycle.decorator";
 import { PropPrivateOptions } from "./prop.decorator";
 import { ProvideDecoratorOptions } from "./provide.decorator";
+import { PrivateThemeableDecoratorOptions } from "./themeable.decorator";
 import { WatchDecoratorOptions } from "./watch.decorator";
 
 /**
@@ -79,4 +80,9 @@ export interface DecoratorsDataInterface {
      * Name of the method to use as a render function.
      */
     renderMethod: string|null;
+
+    /**
+     * Theming configuration.
+     */
+    themeable: PrivateThemeableDecoratorOptions|null;
 }

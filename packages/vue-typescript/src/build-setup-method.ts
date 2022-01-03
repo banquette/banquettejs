@@ -1,3 +1,4 @@
+import { UnsubscribeFunction } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import { noop } from "@banquette/utils-misc/noop";
 import { proxy } from "@banquette/utils-misc/proxy";
@@ -25,7 +26,9 @@ import {
     inject,
     isRef,
     watchEffect,
-    onBeforeMount, onMounted, nextTick
+    onBeforeMount,
+    onMounted,
+    nextTick
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
@@ -33,7 +36,11 @@ import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
+import { PrivateThemeableDecoratorOptions } from "./decorator/themeable.decorator";
 import { WatchOptions, WatchFunction, ImmediateStrategy } from "./decorator/watch.decorator";
+import { removeThemeStyles, setThemeStyles } from "./theme/utils";
+import { VueTheme } from "./theme/vue-theme";
+import { VueThemes } from "./theme/vue-themes";
 import { PrefixOrAlias } from "./type";
 import { defineRefProxy, isDecorated, getDecoratorsData, instantiate, resolveImportPublicName } from "./utils";
 
@@ -45,6 +52,7 @@ const vueInstancesMap: WeakMap<any, any> = new WeakMap<any, any>();
 export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
+        let theme: VueTheme|null = null;
         const output: Record<any, any> = {};
         if (inst === null) {
             // Trick so Vue doesn't stop and show a warning because there is no render function on the component.
@@ -53,33 +61,78 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 ctor.prototype.render = noop;
             }
             inst = instantiate(ctor, data.component as ComponentDecoratorOptions);
+
+            if (data.themeable && !isUndefined(inst[data.themeable.prop])) {
+                throw new UsageException(
+                    `The name "${data.themeable.prop}" is already used in the component's instance, ` +
+                    `please define another name for the prop that defines the name of the theme to use. ` +
+                    `You can set the "prop" option of the "@Themeable" decorator for that.`
+                );
+            }
         }
         if (props !== null) {
             for (const propName of Object.keys(props)) {
                 let propRef = toRef(props, propName);
-                if (!isUndefined(data.props[propName]) && isFunction(data.props[propName].validate)) {
-                    propRef = ((proxified: Ref,  validate: GenericCallback) => {
+                if (!isUndefined(data.props[propName]) && (isFunction(data.props[propName].validate) || data.props[propName].themeable)) {
+                    propRef = ((proxified: Ref, propName: string, validate: GenericCallback|null, themeable: boolean) => {
                         let lastOriginalValue: any = Symbol('unassigned');
                         let lastModifiedValue: any;
                         return new Proxy(proxified, {
                             get(target: any, name: string): any {
                                 if (name === 'value') {
-                                    if (lastOriginalValue !== target[name]) {
-                                        lastOriginalValue = target[name];
-                                        lastModifiedValue = validate(target[name]);
+                                    let newValue: any = target[name];
+                                    if (themeable && theme !== null && theme.hasProp(propName)) {
+                                        newValue = theme.getPropValue(propName);
                                     }
-                                    if (!isUndefined(lastModifiedValue)) {
-                                        return lastModifiedValue;
+                                    if (validate !== null) {
+                                        if (lastOriginalValue !== newValue) {
+                                            lastOriginalValue = newValue;
+                                            lastModifiedValue = validate(newValue);
+                                        }
+                                        if (!isUndefined(lastModifiedValue)) {
+                                            return lastModifiedValue;
+                                        }
+                                    } else {
+                                        return newValue;
                                     }
                                 }
                                 return target[name];
                             },
                         });
-                    })(propRef, data.props[propName].validate as GenericCallback);
+                    })(propRef, propName, data.props[propName].validate || null, data.props[propName].themeable);
                 }
                 const propPublicName = data.props[propName].name || propName;
                 output[propPublicName] = propRef;
                 defineRefProxy(inst, data.props[propName].propertyName, output, propPublicName);
+
+                // Watch the prop that sets the current theme.
+                if (data.themeable && propName === data.themeable.prop) {
+                    (function() {
+                        let unsubscribe: UnsubscribeFunction|null = null;
+                        const onChange = () => {
+                            if (unsubscribe !== null) {
+                                unsubscribe();
+                            }
+                            if (!data.themeable || !inst[data.themeable.prop]) {
+                                return ;
+                            }
+                            const themeName = inst[data.themeable.prop];
+                            VueThemes.GetSafe(data.themeable.name, themeName, (_theme: VueTheme) => {
+                                if (theme !== null) {
+                                    removeThemeStyles(inst, theme);
+                                }
+                                theme = _theme;
+                                setThemeStyles(inst, theme, data.themeable as PrivateThemeableDecoratorOptions);
+                                inst.$forceUpdate();
+                                unsubscribe = _theme.onChange(() => {
+                                    inst.$forceUpdate();
+                                });
+                            });
+                        };
+                        watch(propRef, onChange);
+                        onMounted(onChange);
+                    })();
+                }
             }
             rootProps = props;
         }

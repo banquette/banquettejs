@@ -125,7 +125,8 @@ export function getDecoratorsData(prototype: any | DecoratedConstructor): Decora
                 templateRefs: {},
                 provided: {},
                 injected: {},
-                renderMethod: null
+                renderMethod: null,
+                themeable: null
             } as DecoratorsDataInterface
         });
     }

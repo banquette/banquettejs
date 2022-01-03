@@ -19,5 +19,11 @@ export * from './decorator/reactive.decorator';
 export * from './decorator/ref.decorator';
 export * from './decorator/render.decorator';
 export * from './decorator/template-ref.decorator';
+export * from './decorator/themeable.decorator';
 export * from './decorator/watch.decorator';
 export * from './decorator/directive.decorator';
+
+/**
+ * Themes
+ */
+export * from './theme/vue-themes';

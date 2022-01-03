@@ -61,7 +61,6 @@ export function Component(options: ComponentDecoratorOptions|string = {}): any {
             options = {name: options} as ComponentDecoratorOptions;
         }
         data.component = options;
-
         Object.defineProperty(ctor, VUE_CLASS_COMPONENT_OPTIONS_NAME, {
             enumerable: true,
             configurable: true,
