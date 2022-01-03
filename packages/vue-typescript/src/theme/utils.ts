@@ -1,4 +1,4 @@
-import { randomString } from "@banquette/utils-random/random-string";
+import { randomString, ALPHABETS } from "@banquette/utils-random/random-string";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { PrivateThemeableDecoratorOptions } from "../decorator/themeable.decorator";
@@ -26,7 +26,7 @@ function getThemeMetadata(theme: VueTheme): ThemeMetadata {
 function getUniqueRandomId(): string {
     let candidate: string;
     do {
-        candidate = randomString(8);
+        candidate = randomString(1, ALPHABETS.ALPHA) + randomString(7);
     } while (knownRandomIds.indexOf(candidate) > -1);
     knownRandomIds.push(candidate);
     return candidate;
