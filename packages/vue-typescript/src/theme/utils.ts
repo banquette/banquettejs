@@ -1,4 +1,6 @@
 import { randomString, ALPHABETS } from "@banquette/utils-random/random-string";
+import { ltrim } from "@banquette/utils-string/format/ltrim";
+import { rtrim } from "@banquette/utils-string/format/rtrim";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { PrivateThemeableDecoratorOptions } from "../decorator/themeable.decorator";
@@ -42,13 +44,14 @@ export function setThemeStyles(component: Vue, theme: VueTheme, configuration: P
         component.$el.classList.add(newClassName);
 
         if (!themeMetadata.useCount) {
+            const scopeId = (component.$.type as any)['__scopeId'] || null;
             let styles = trim(theme.rawCss);
             if (styles.length > 0) {
-                styles = styles.replace('.theme', `.${themeMetadata.className}`);
+                styles = injectContextInCssSource(styles, themeMetadata.className, scopeId);
             }
             const cssVarsKeys = Object.keys(theme.cssVars);
             if (cssVarsKeys.length > 0) {
-                styles += `.${themeMetadata.className}`;
+                styles += `.${themeMetadata.className}` + (scopeId !== null ? `[${scopeId}]` : '');
                 styles += '{';
                 for (const key of cssVarsKeys) {
                     if (!isUndefined(configuration.cssVars[key])) {
@@ -58,10 +61,6 @@ export function setThemeStyles(component: Vue, theme: VueTheme, configuration: P
                 styles += '}';
             }
             if (styles.length > 0) {
-                const scopeId = (component.$.type as any)['__scopeId'];
-                if (!isUndefined(scopeId)) {
-                    styles = injectScopeIdInCssSource(styles, '['+scopeId+']');
-                }
                 const style = document.createElement('style');
                 style.setAttribute('type', 'text/css');
                 style.innerHTML = styles;
@@ -86,68 +85,99 @@ export function removeThemeStyles(component: Vue, theme: VueTheme): void {
 }
 
 /**
- * Very basic utility that to mimic Vue's scope id injection to be able to override styles at runtime.
+ * Very basic utility function that takes a raw css sources and inject the class of the theme and optionally the component's scope id.
  * The utility is not meant to be fool proof and is only tested for basic css syntax.
  */
-export function injectScopeIdInCssSource(source: string, injection: string): string {
-    const injectionTriggers = [',', '{'];
-    const injectionTargets = [':'];
-    const scopesDelimiters = [['(', ')'], ['[', ']'], ['{', '}'], ["'", "'", true], ['"', '"', true]];
+export function injectContextInCssSource(source: string, themeClassName: string|null, scopeId: string|null): string {
+    source = trim(source.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,''));
+    const selectors = extractCssSelectors(source);
+
+    for (let i = selectors.length - 1; i >= 0; --i) {
+        const selector = selectors[i];
+
+        // Ignore animations
+        if (selector[0][0] === '@') {
+            continue ;
+        }
+        // Add the theme class
+        if (themeClassName !== null) {
+            const isRootSelector = selector[0][0] === '&';
+            if (isRootSelector) {
+                const trimed = ltrim(selector[0].substring(1));
+                source = source.substring(0, selector[1]) + trimed + source.substring(selector[2]);
+                selector[2] -= selector[0].length - trimed.length;
+                selector[0] = trimed;
+            }
+            if (isRootSelector && ['.', '#'].indexOf(selector[0][0]) < 0) {
+                let j = 0;
+                for (; j < selector[0].length && selector[0][j].match(/[a-z_-]+/i); ++j) ;
+                selector[0] = selector[0].substring(0, j) + '.' + themeClassName + selector[0].substring(j);
+            } else {
+                selector[0] = '.' + themeClassName + (!isRootSelector ? ' ' : '') + selector[0];
+            }
+            source =
+                source.substring(0, selector[1]) +
+                selector[0] +
+                source.substring(selector[2]);
+
+            selector[2] += themeClassName.length + (isRootSelector ? 1 : 2);
+        }
+
+        // Add scope id
+        if (scopeId !== null) {
+            source =
+                source.substring(0, selector[2]) +
+                `[${scopeId}]` +
+                source.substring(selector[2]);
+        }
+    }
+    return source;
+}
+
+/**
+ * Parse a css source with no comments and extract the list of selectors and their position in the source.
+ */
+function extractCssSelectors(source: string): Array<[string, number, number]> {
+    let currentSelector = '';
+    const scopesDelimiters = [['{', '}'], ['(', ')'], ['[', ']'], ["'", "'", true], ['"', '"', true]];
     const scopesStartDelimiters = scopesDelimiters.reduce((acc, item) => {
         acc.push(item[0]);
         return acc;
     }, []);
-    let injectionCandidateIndex: number|null = null;
     let openedScopesIndexes: number[] = [];
     let currentScopeIndex: number|null = null;
-    let inSelector = false;
-    let escaped: boolean = false;
-    let frozen: boolean = false;
+    let selectors: Array<[string, number, number]> = [];
+    const appendSelector = (currentIndex: number) => {
+        const trimedSelector = trim(currentSelector);
+        if (trimedSelector.length > 0) {
+            selectors.push([
+                trimedSelector,
+                (currentIndex - currentSelector.length) + (currentSelector.length - ltrim(currentSelector).length),
+                currentIndex - currentSelector.length + rtrim(currentSelector).length
+            ]);
+        }
+        currentSelector = '';
+    };
     for (let i = 0; i < source.length; ++i) {
         const c = source[i];
-        if (c === '\\') {
-            escaped = !escaped;
-            continue ;
+        if (scopesStartDelimiters.indexOf(c) > -1) {
+            openedScopesIndexes.push(scopesStartDelimiters.indexOf(c));
+            currentScopeIndex = openedScopesIndexes[openedScopesIndexes.length - 1];
+            if (currentScopeIndex === 0) {
+                appendSelector(i);
+            }
         }
-        if (escaped) {
-            continue ;
+        if (openedScopesIndexes.indexOf(0) < 0) {
+            if (c === ',') {
+                appendSelector(i);
+            } else {
+                currentSelector += c;
+            }
         }
         if (currentScopeIndex !== null && c === scopesDelimiters[currentScopeIndex][1]) {
             openedScopesIndexes.pop();
             currentScopeIndex = openedScopesIndexes.length > 0 ? openedScopesIndexes[openedScopesIndexes.length - 1] : null;
-            if (currentScopeIndex === null) {
-                frozen = false;
-            }
-            continue ;
-        }
-        // Skip animations.
-        if (c === '@') {
-            frozen = true;
-        }
-        if (currentScopeIndex === null && !frozen) {
-            if (injectionTargets.indexOf(c) > -1) {
-                injectionCandidateIndex = i;
-            }
-            if (injectionTriggers.indexOf(c) > -1) {
-                let j = (injectionCandidateIndex || i) - 1;
-                for (; j >= 0 && source[j].match(/\s/); --j) ;
-                if (j > 0) {
-                    source = source.substring(0, j + 1) + injection + source.substring(j + 1);
-                    i += injection.length;
-                }
-                injectionCandidateIndex = null;
-            }
-            if (c.match(/\s/)) {
-                inSelector = false;
-            } else if (!inSelector) {
-                inSelector = true;
-                injectionCandidateIndex = null;
-            }
-        }
-        if (scopesStartDelimiters.indexOf(c) > -1) {
-            openedScopesIndexes.push(scopesStartDelimiters.indexOf(c));
-            currentScopeIndex = openedScopesIndexes[openedScopesIndexes.length - 1];
         }
     }
-    return source;
+    return selectors;
 }
