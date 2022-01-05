@@ -28,6 +28,7 @@ export class Vue implements ComponentPublicInstance {
 
     public $emit(eventName: string, ...args: any[]): void { }
     public $forceUpdate(): void { }
+    public $forceUpdateComputed(): void { }
     public $nextTick<T>(fn: ((this: T) => void) | undefined): Promise<void> { return Promise.resolve() }
     public $watch(source: string | Function, cb: Function, options: WatchOptions|undefined): WatchStopHandle {
         return null as any;

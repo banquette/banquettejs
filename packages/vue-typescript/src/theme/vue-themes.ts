@@ -11,6 +11,11 @@ export class VueThemes {
     private static Themes: Record<string, Record<string, VueTheme>> = {};
 
     /**
+     * Themes to use if none is defined when the component is used.
+     */
+    private static DefaultsThemes: Record<string, string> = {};
+
+    /**
      * Event dispatcher used to get notification from themes when a change is made.
      */
     private static Dispatcher = new EventDispatcher();
@@ -48,6 +53,35 @@ export class VueThemes {
             });
         } else {
             cb(VueThemes.Themes[target][name]);
+        }
+    }
+
+    /**
+     * Set the theme to use if none is defined when the component is used.
+     */
+    public static SetDefault(target: string, name: string): void {
+        VueThemes.DefaultsThemes[target] = name;
+    }
+
+    /**
+     * Get the theme to use for a component.
+     */
+    public static GetDefault(target: string): string|null {
+        return VueThemes.DefaultsThemes[target] || null;
+    }
+
+    /**
+     * Remove a theme.
+     * If `name` is null, all themes of the target are removed.
+     */
+    public static Remove(target: string, name: string|null): void {
+        if (isUndefined(VueThemes.Themes[target])) {
+            return ;
+        }
+        if (name === null) {
+            delete VueThemes.Themes[target];
+        } else {
+            delete VueThemes.Themes[target][name];
         }
     }
 }

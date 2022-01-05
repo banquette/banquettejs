@@ -11,7 +11,10 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, GenericCallback } from "@banquette/utils-type/types";
-import { WritableComputedOptions } from "@vue/reactivity";
+import {
+    WritableComputedOptions,
+    WritableComputedRef
+} from "@vue/reactivity";
 import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
 import {
     SetupContext,
@@ -42,7 +45,14 @@ import { removeThemeStyles, setThemeStyles } from "./theme/utils";
 import { VueTheme } from "./theme/vue-theme";
 import { VueThemes } from "./theme/vue-themes";
 import { PrefixOrAlias } from "./type";
-import { defineRefProxy, isDecorated, getDecoratorsData, instantiate, resolveImportPublicName } from "./utils";
+import {
+    defineRefProxy,
+    isDecorated,
+    getDecoratorsData,
+    instantiate,
+    resolveImportPublicName,
+    defineGetter
+} from "./utils";
 
 /**
  * A map between Vue instances and objects created by vue-typescript.
@@ -53,6 +63,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
         let theme: VueTheme|null = null;
+        let computedVersion: Ref = ref(1);
         const output: Record<any, any> = {};
         if (inst === null) {
             // Trick so Vue doesn't stop and show a warning because there is no render function on the component.
@@ -69,6 +80,9 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                     `You can set the "prop" option of the "@Themeable" decorator for that.`
                 );
             }
+            defineGetter(inst, '$forceUpdateComputed', () => () => {
+                computedVersion.value++;
+            });
         }
         if (props !== null) {
             for (const propName of Object.keys(props)) {
@@ -81,7 +95,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                             get(target: any, name: string): any {
                                 if (name === 'value') {
                                     let newValue: any = target[name];
-                                    if (themeable && theme !== null && theme.hasProp(propName)) {
+                                    if (themeable && theme !== null && theme.hasProp(propName) && data.props[propName].default === newValue) {
                                         newValue = theme.getPropValue(propName);
                                     }
                                     if (validate !== null) {
@@ -107,31 +121,45 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
 
                 // Watch the prop that sets the current theme.
                 if (data.themeable && propName === data.themeable.prop) {
-                    (function() {
+                    (function(configuration: PrivateThemeableDecoratorOptions) {
                         let unsubscribe: UnsubscribeFunction|null = null;
-                        const onChange = () => {
-                            if (unsubscribe !== null) {
-                                unsubscribe();
-                            }
-                            if (!data.themeable || !inst[data.themeable.prop]) {
-                                return ;
-                            }
-                            const themeName = inst[data.themeable.prop];
-                            VueThemes.GetSafe(data.themeable.name, themeName, (_theme: VueTheme) => {
+                        const forceUpdate = () => {
+                            inst.$forceUpdateComputed();
+                            inst.$forceUpdate();
+                        };
+                        const assignTheme = (themeName: string) => {
+                            VueThemes.GetSafe(configuration.name, themeName, (_theme: VueTheme) => {
                                 if (theme !== null) {
                                     removeThemeStyles(inst, theme);
                                 }
                                 theme = _theme;
                                 setThemeStyles(inst, theme, data.themeable as PrivateThemeableDecoratorOptions);
-                                inst.$forceUpdate();
+                                forceUpdate();
                                 unsubscribe = _theme.onChange(() => {
-                                    inst.$forceUpdate();
+                                    forceUpdate();
                                 });
                             });
                         };
+                        const onChange = () => {
+                            if (unsubscribe !== null) {
+                                unsubscribe();
+                            }
+                            if (inst[configuration.prop]) {
+                                assignTheme(inst[configuration.prop]);
+                            }
+                        };
                         watch(propRef, onChange);
-                        onMounted(onChange);
-                    })();
+                        onMounted(() => {
+                            if (!isNullOrUndefined(inst[configuration.prop])) {
+                                onChange();
+                            } else {
+                                const defaultTheme = VueThemes.GetDefault(configuration.name);
+                                if (defaultTheme !== null) {
+                                    assignTheme(defaultTheme);
+                                }
+                            }
+                        });
+                    })(data.themeable);
                 }
             }
             rootProps = props;
@@ -197,6 +225,19 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
         }
 
         // Computed
+        const createUpdatableComputed = <T>(options: any, debugOptions: any, name: string): WritableComputedRef<T> => {
+            return computed({
+                get: () => {
+                    // Trick to be able to force Vue to update the computed by changing the version.
+                    // The version is initialized at "1" and incremented from there, so the condition is always true.
+                    // Having a condition prevent the compiler to remove the instruction thinking it is dead code.
+                    if (computedVersion.value > 0) {
+                        return options.get();
+                    }
+                },
+                set: options.set
+            }, debugOptions);
+        };
         for (const computedName of Object.keys(data.computed)) {
             let c: ReturnType<typeof computed>|null = null;
             const computedOptions: any = {...data.computed[computedName]};
@@ -212,7 +253,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
             }
 
             if (isFunction(inst[computedName])) {
-                c = computed(proxy(inst[computedName], inst), computedOptions);
+                c = createUpdatableComputed(proxy(inst[computedName], inst), computedOptions, computedName);
             } else if (!isUndefined(inst[computedName])) {
                 const descriptor = Object.getOwnPropertyDescriptor(ctor.prototype, computedName);
                 if (isUndefined(descriptor) || !isFunction(descriptor.get)) {
@@ -230,7 +271,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 if (isFunction(descriptor.set)) {
                     proxyGetterSetter.set = ((_cn) => (val: any) => (descriptor.set as Function).apply(inst, [val]))(computedName);
                 }
-                c = computed(proxyGetterSetter, computedOptions);
+                c = createUpdatableComputed(proxyGetterSetter, computedOptions, computedName);
                 Object.defineProperty(inst, computedName, {
                     enumerable: true,
                     configurable: true,
