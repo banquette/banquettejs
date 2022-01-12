@@ -1,10 +1,10 @@
 import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
 import { isString } from "@banquette/utils-type/is-string";
 import { Primitive, Writeable } from "@banquette/utils-type/types";
-import { ThemeEvents } from "./constant";
-import { ThemeUpdatedEventArg } from "./event/theme-updated.event-arg";
+import { PresetEvents } from "./constant";
+import { PresetUpdatedEventArg } from "./event/preset-updated.event-arg";
 
-export class VueTheme {
+export class VuePreset {
     /**
      * Raw CSS to inject in the head (as written by the end-user).
      * Selectors will be scoped automatically if the component has scoped styles.
@@ -33,15 +33,15 @@ export class VueTheme {
     /**
      * Alias of `appendCss`.
      */
-    public css(source: string): VueTheme {
+    public css(source: string): VuePreset {
         return this.appendCss(source);
     }
 
     /**
      * Append raw css code to already registered one.
      */
-    public appendCss(source: string): VueTheme {
-        (this as Writeable<VueTheme>).rawCss += source;
+    public appendCss(source: string): VuePreset {
+        (this as Writeable<VuePreset>).rawCss += source;
         this.scheduleChangeNotification();
         return this;
     }
@@ -49,8 +49,8 @@ export class VueTheme {
     /**
      * Add raw css code before already registered one.
      */
-    public prependCss(source: string): VueTheme {
-        (this as Writeable<VueTheme>).rawCss = source + this.rawCss;
+    public prependCss(source: string): VuePreset {
+        (this as Writeable<VuePreset>).rawCss = source + this.rawCss;
         this.scheduleChangeNotification();
         return this;
     }
@@ -58,8 +58,8 @@ export class VueTheme {
     /**
      * Remove registered css.
      */
-    public clearCss(): VueTheme {
-        (this as Writeable<VueTheme>).rawCss = '';
+    public clearCss(): VuePreset {
+        (this as Writeable<VuePreset>).rawCss = '';
         this.scheduleChangeNotification();
         return this;
     }
@@ -67,9 +67,9 @@ export class VueTheme {
     /**
      * Define the value of a css variable.
      */
-    public cssVar(vars: Record<string, Primitive>): VueTheme;
-    public cssVar(name: string, value: Primitive): VueTheme;
-    public cssVar(nameOrVars: string|Record<string, Primitive>, value?: Primitive): VueTheme {
+    public cssVar(vars: Record<string, Primitive>): VuePreset;
+    public cssVar(name: string, value: Primitive): VuePreset;
+    public cssVar(nameOrVars: string|Record<string, Primitive>, value?: Primitive): VuePreset {
         if (isString(nameOrVars)) {
             nameOrVars = {[nameOrVars]: value as Primitive};
         }
@@ -81,9 +81,9 @@ export class VueTheme {
     /**
      * Define the value of a prop.
      */
-    public prop(props: Record<string, any>): VueTheme;
-    public prop(name: string, value: any): VueTheme;
-    public prop(nameOrProps: string|Record<string, any>, value?: any): VueTheme {
+    public prop(props: Record<string, any>): VuePreset;
+    public prop(name: string, value: any): VuePreset;
+    public prop(nameOrProps: string|Record<string, any>, value?: any): VuePreset {
         if (isString(nameOrProps)) {
             nameOrProps = {[nameOrProps]: value as Primitive};
         }
@@ -95,14 +95,14 @@ export class VueTheme {
     /**
      * Remove all props overrides.
      */
-    public clearProps(): VueTheme {
-        (this as Writeable<VueTheme>).props = {};
+    public clearProps(): VuePreset {
+        (this as Writeable<VuePreset>).props = {};
         this.scheduleChangeNotification();
         return this;
     }
 
     /**
-     * Test if a prop has been defined in the theme.
+     * Test if a prop has been defined in the preset.
      */
     public hasProp(name: string): boolean {
         return Object.keys(this.props).indexOf(name) > -1;
@@ -116,14 +116,14 @@ export class VueTheme {
     }
 
     /**
-     * Be notified when any value changes in the theme.
+     * Be notified when any value changes in the preset.
      */
-    public onChange(cb: (event: ThemeUpdatedEventArg) => any): UnsubscribeFunction {
-        return this.eventDispatcher.subscribe(ThemeEvents.Updated, cb);
+    public onChange(cb: (event: PresetUpdatedEventArg) => any): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(PresetEvents.Updated, cb);
     }
 
     /**
-     * Schedule a `ThemeEvents.Updated` on the next JS cycle.
+     * Schedule a `PresetEvents.Updated` on the next JS cycle.
      */
     private scheduleChangeNotification(): void {
         if (this.changeNotificationScheduled) {
@@ -140,6 +140,6 @@ export class VueTheme {
      * Immediately notify listeners that a change occured.
      */
     private notifyChange(): void {
-        this.eventDispatcher.dispatch(ThemeEvents.Updated, new ThemeUpdatedEventArg(this));
+        this.eventDispatcher.dispatch(PresetEvents.Updated, new PresetUpdatedEventArg(this));
     }
 }

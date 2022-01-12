@@ -5,30 +5,30 @@ import { Constructor } from "@banquette/utils-type/types";
 import { getDecoratorsData } from "../utils";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
-export interface ThemeableDecoratorOptions {
+export interface PresetDecoratorOptions {
     /**
-     * Name of the component for the theme container.
+     * Name of the component for the preset container.
      * If multiple components share the same name they will share the variables with the same name.
      */
     name: string;
 
     /**
-     * Name of the prop to use to define the name of the theme when using the component.
-     * If not defined, the default name is "theme".
+     * Name of the prop to use to define the name of the preset when using the component.
+     * If not defined, the default name is "preset".
      */
     prop?: string;
 
     /**
-     * Css variables exposed to the theme.
+     * Css variables exposed to the preset.
      */
     cssVars?: string|string[]|Record<string, string>;
 }
 
-export type PrivateThemeableDecoratorOptions = Omit<Required<ThemeableDecoratorOptions>, 'cssVars'> & {cssVars: Record<string, string>};
+export type PrivatePresetDecoratorOptions = Omit<Required<PresetDecoratorOptions>, 'cssVars'> & {cssVars: Record<string, string>};
 
-export function Themeable(name: string): any;
-export function Themeable(options: ThemeableDecoratorOptions): any;
-export function Themeable(options: ThemeableDecoratorOptions|string): any {
+export function Preset(name: string): any;
+export function Preset(options: PresetDecoratorOptions): any;
+export function Preset(options: PresetDecoratorOptions|string): any {
     return (ctor: Constructor) => {
         const data: DecoratorsDataInterface = getDecoratorsData(ctor.prototype) as DecoratorsDataInterface;
         if (isString(options)) {
@@ -46,7 +46,7 @@ export function Themeable(options: ThemeableDecoratorOptions|string): any {
         } else if (isUndefined(options.cssVars)) {
             options.cssVars = {};
         }
-        options.prop = options.prop || 'theme';
-        data.themeable = options as PrivateThemeableDecoratorOptions;
+        options.prop = options.prop || 'preset';
+        data.preset = options as PrivatePresetDecoratorOptions;
     };
 }

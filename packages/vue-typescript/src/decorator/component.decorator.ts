@@ -33,7 +33,7 @@ export interface ComponentDecoratorOptions {
      * Components / directives dependencies.
      */
     components?: Record<string, VueComponent>|VueComponent[];
-    directives?: Record<string, Directive>|Directive[];
+    directives?: Record<string, Constructor<Directive>>|Constructor<Directive>[];
 
     /**
      * Group(s) on which the component should be registered in the VueBuilder.

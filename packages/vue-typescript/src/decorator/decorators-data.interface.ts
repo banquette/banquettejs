@@ -6,7 +6,7 @@ import { InjectProvidedDecoratorOptions } from "./inject-provided.decorator";
 import { LifecycleHook } from "./lifecycle.decorator";
 import { PropPrivateOptions } from "./prop.decorator";
 import { ProvideDecoratorOptions } from "./provide.decorator";
-import { PrivateThemeableDecoratorOptions } from "./themeable.decorator";
+import { PrivatePresetDecoratorOptions } from "./preset.decorator";
 import { WatchDecoratorOptions } from "./watch.decorator";
 
 /**
@@ -84,5 +84,5 @@ export interface DecoratorsDataInterface {
     /**
      * Theming configuration.
      */
-    themeable: PrivateThemeableDecoratorOptions|null;
+    preset: PrivatePresetDecoratorOptions|null;
 }

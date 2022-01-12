@@ -3,24 +3,24 @@ import { ltrim } from "@banquette/utils-string/format/ltrim";
 import { rtrim } from "@banquette/utils-string/format/rtrim";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { PrivateThemeableDecoratorOptions } from "../decorator/themeable.decorator";
+import { PrivatePresetDecoratorOptions } from "../decorator/preset.decorator";
 import { Vue } from "../vue";
-import { VueTheme } from "./vue-theme";
+import { VuePreset } from "./vue-preset";
 
-interface ThemeMetadata {
+interface PresetMetadata {
     className: string;
     useCount: 0;
     stylesEl: HTMLElement|null;
 }
 
-const themesMetadata: WeakMap<VueTheme, ThemeMetadata> = new WeakMap<VueTheme, ThemeMetadata>();
+const presetsMetadata: WeakMap<VuePreset, PresetMetadata> = new WeakMap<VuePreset, PresetMetadata>();
 const knownRandomIds: string[] = [];
 
-function getThemeMetadata(theme: VueTheme): ThemeMetadata {
-    let metadata = themesMetadata.get(theme);
+function getPresetMetadata(preset: VuePreset): PresetMetadata {
+    let metadata = presetsMetadata.get(preset);
     if (isUndefined(metadata)) {
         metadata = {className: getUniqueRandomId(), useCount: 0, stylesEl: null};
-        themesMetadata.set(theme, metadata);
+        presetsMetadata.set(preset, metadata);
     }
     return metadata;
 }
@@ -35,27 +35,27 @@ function getUniqueRandomId(): string {
 }
 
 /**
- * Add a class corresponding a theme to the root element of a component.
+ * Add a class corresponding a preset to the root element of a component.
  */
-export function setThemeStyles(component: Vue, theme: VueTheme, configuration: PrivateThemeableDecoratorOptions): void {
-    const themeMetadata = getThemeMetadata(theme);
-    let newClassName = themeMetadata.className;
+export function setPresetStyles(component: Vue, preset: VuePreset, configuration: PrivatePresetDecoratorOptions): void {
+    const presetMetadata = getPresetMetadata(preset);
+    let newClassName = presetMetadata.className;
     if (component.$el) {
         component.$el.classList.add(newClassName);
 
-        if (!themeMetadata.useCount) {
+        if (!presetMetadata.useCount) {
             const scopeId = (component.$.type as any)['__scopeId'] || null;
-            let styles = trim(theme.rawCss);
+            let styles = trim(preset.rawCss);
             if (styles.length > 0) {
-                styles = injectContextInCssSource(styles, themeMetadata.className, scopeId);
+                styles = injectContextInCssSource(styles, presetMetadata.className, scopeId);
             }
-            const cssVarsKeys = Object.keys(theme.cssVars);
+            const cssVarsKeys = Object.keys(preset.cssVars);
             if (cssVarsKeys.length > 0) {
-                styles += `.${themeMetadata.className}` + (scopeId !== null ? `[${scopeId}]` : '');
+                styles += `.${presetMetadata.className}` + (scopeId !== null ? `[${scopeId}]` : '');
                 styles += '{';
                 for (const key of cssVarsKeys) {
                     if (!isUndefined(configuration.cssVars[key])) {
-                        styles += `--${configuration.cssVars[key]}: ${theme.cssVars[key]};`;
+                        styles += `--${configuration.cssVars[key]}: ${preset.cssVars[key]};`;
                     }
                 }
                 styles += '}';
@@ -65,30 +65,30 @@ export function setThemeStyles(component: Vue, theme: VueTheme, configuration: P
                 style.setAttribute('type', 'text/css');
                 style.innerHTML = styles;
                 document.head.appendChild(style);
-                themeMetadata.stylesEl = style;
+                presetMetadata.stylesEl = style;
             }
         }
-        ++themeMetadata.useCount;
+        ++presetMetadata.useCount;
     }
 }
 
 /**
- * Remove the class corresponding a theme from the root element of a component.
+ * Remove the class corresponding a preset from the root element of a component.
  */
-export function removeThemeStyles(component: Vue, theme: VueTheme): void {
-    const themeMetadata = getThemeMetadata(theme);
-    component.$el.classList.remove(themeMetadata.className);
-    if (--themeMetadata.useCount === 0 && themeMetadata.stylesEl !== null) {
-        themeMetadata.stylesEl.remove();
-        themeMetadata.stylesEl = null;
+export function removePresetStyles(component: Vue, preset: VuePreset): void {
+    const presetMetadata = getPresetMetadata(preset);
+    component.$el.classList.remove(presetMetadata.className);
+    if (--presetMetadata.useCount === 0 && presetMetadata.stylesEl !== null) {
+        presetMetadata.stylesEl.remove();
+        presetMetadata.stylesEl = null;
     }
 }
 
 /**
- * Very basic utility function that takes a raw css sources and inject the class of the theme and optionally the component's scope id.
+ * Very basic utility function that takes a raw css sources and inject the class of the preset and optionally the component's scope id.
  * The utility is not meant to be fool proof and is only tested for basic css syntax.
  */
-export function injectContextInCssSource(source: string, themeClassName: string|null, scopeId: string|null): string {
+export function injectContextInCssSource(source: string, presetClassName: string|null, scopeId: string|null): string {
     source = trim(source.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,''));
     const selectors = extractCssSelectors(source);
 
@@ -99,8 +99,8 @@ export function injectContextInCssSource(source: string, themeClassName: string|
         if (selector[0][0] === '@') {
             continue ;
         }
-        // Add the theme class
-        if (themeClassName !== null) {
+        // Add the preset class
+        if (presetClassName !== null) {
             const isRootSelector = selector[0][0] === '&';
             if (isRootSelector) {
                 const trimed = ltrim(selector[0].substring(1));
@@ -111,16 +111,16 @@ export function injectContextInCssSource(source: string, themeClassName: string|
             if (isRootSelector && ['.', '#'].indexOf(selector[0][0]) < 0) {
                 let j = 0;
                 for (; j < selector[0].length && selector[0][j].match(/[a-z_-]+/i); ++j) ;
-                selector[0] = selector[0].substring(0, j) + '.' + themeClassName + selector[0].substring(j);
+                selector[0] = selector[0].substring(0, j) + '.' + presetClassName + selector[0].substring(j);
             } else {
-                selector[0] = '.' + themeClassName + (!isRootSelector ? ' ' : '') + selector[0];
+                selector[0] = '.' + presetClassName + (!isRootSelector ? ' ' : '') + selector[0];
             }
             source =
                 source.substring(0, selector[1]) +
                 selector[0] +
                 source.substring(selector[2]);
 
-            selector[2] += themeClassName.length + (isRootSelector ? 1 : 2);
+            selector[2] += presetClassName.length + (isRootSelector ? 1 : 2);
         }
 
         // Add scope id

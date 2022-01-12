@@ -4,6 +4,7 @@ import { noop } from "@banquette/utils-misc/noop";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
+import { trim } from "@banquette/utils-string/format/trim";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -39,11 +40,12 @@ import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
-import { PrivateThemeableDecoratorOptions } from "./decorator/themeable.decorator";
+import { PrivatePresetDecoratorOptions } from "./decorator/preset.decorator";
 import { WatchOptions, WatchFunction, ImmediateStrategy } from "./decorator/watch.decorator";
-import { removeThemeStyles, setThemeStyles } from "./theme/utils";
-import { VueTheme } from "./theme/vue-theme";
-import { VueThemes } from "./theme/vue-themes";
+import { DefaultPreset } from "./preset/constant";
+import { removePresetStyles, setPresetStyles } from "./preset/utils";
+import { VuePreset } from "./preset/vue-preset";
+import { VuePresets } from "./preset/vue-presets";
 import { PrefixOrAlias } from "./type";
 import {
     defineRefProxy,
@@ -62,7 +64,7 @@ const vueInstancesMap: WeakMap<any, any> = new WeakMap<any, any>();
 export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
-        let theme: VueTheme|null = null;
+        let activePresets: VuePreset[] = [];
         let computedVersion: Ref = ref(1);
         const output: Record<any, any> = {};
         if (inst === null) {
@@ -73,11 +75,11 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
             }
             inst = instantiate(ctor, data.component as ComponentDecoratorOptions);
 
-            if (data.themeable && !isUndefined(inst[data.themeable.prop])) {
+            if (data.preset && !isUndefined(inst[data.preset.prop])) {
                 throw new UsageException(
-                    `The name "${data.themeable.prop}" is already used in the component's instance, ` +
-                    `please define another name for the prop that defines the name of the theme to use. ` +
-                    `You can set the "prop" option of the "@Themeable" decorator for that.`
+                    `The name "${data.preset.prop}" is already used in the component's instance, ` +
+                    `please define another name for the prop that defines the name of the preset to use. ` +
+                    `You can set the "prop" option of the "@Preset" decorator for that.`
                 );
             }
             defineGetter(inst, '$forceUpdateComputed', () => () => {
@@ -87,16 +89,21 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
         if (props !== null) {
             for (const propName of Object.keys(props)) {
                 let propRef = toRef(props, propName);
-                if (!isUndefined(data.props[propName]) && (isFunction(data.props[propName].validate) || data.props[propName].themeable)) {
-                    propRef = ((proxified: Ref, propName: string, validate: GenericCallback|null, themeable: boolean) => {
+                if (!isUndefined(data.props[propName]) && data.preset !== null && propName !== data.preset.prop) {
+                    propRef = ((proxified: Ref, propName: string, validate: GenericCallback|null) => {
                         let lastOriginalValue: any = Symbol('unassigned');
                         let lastModifiedValue: any;
                         return new Proxy(proxified, {
                             get(target: any, name: string): any {
                                 if (name === 'value') {
                                     let newValue: any = target[name];
-                                    if (themeable && theme !== null && theme.hasProp(propName) && data.props[propName].default === newValue) {
-                                        newValue = theme.getPropValue(propName);
+                                    if (data.props[propName].default === newValue) {
+                                        for (const preset of activePresets) {
+                                            if (preset.hasProp(propName)) {
+                                                newValue = preset.getPropValue(propName);
+                                                // Continue until the last preset to give priority to the one defined the last.
+                                            }
+                                        }
                                     }
                                     if (validate !== null) {
                                         if (lastOriginalValue !== newValue) {
@@ -113,53 +120,64 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                                 return target[name];
                             },
                         });
-                    })(propRef, propName, data.props[propName].validate || null, data.props[propName].themeable);
+                    })(propRef, propName, data.props[propName].validate || null);
                 }
                 const propPublicName = data.props[propName].name || propName;
                 output[propPublicName] = propRef;
                 defineRefProxy(inst, data.props[propName].propertyName, output, propPublicName);
 
-                // Watch the prop that sets the current theme.
-                if (data.themeable && propName === data.themeable.prop) {
-                    (function(configuration: PrivateThemeableDecoratorOptions) {
+                // Watch the prop that sets the current preset.
+                if (data.preset && propName === data.preset.prop) {
+                    (function(configuration: PrivatePresetDecoratorOptions) {
                         let unsubscribe: UnsubscribeFunction|null = null;
+                        let fetchingQueue: string[] = [];
                         const forceUpdate = () => {
                             inst.$forceUpdateComputed();
                             inst.$forceUpdate();
                         };
-                        const assignTheme = (themeName: string) => {
-                            VueThemes.GetSafe(configuration.name, themeName, (_theme: VueTheme) => {
-                                if (theme !== null) {
-                                    removeThemeStyles(inst, theme);
-                                }
-                                theme = _theme;
-                                setThemeStyles(inst, theme, data.themeable as PrivateThemeableDecoratorOptions);
-                                forceUpdate();
-                                unsubscribe = _theme.onChange(() => {
+                        const assignPreset = (presetName: string) => {
+                            if (fetchingQueue.indexOf(presetName) < 0) {
+                                fetchingQueue.push(presetName);
+                                VuePresets.GetSafe(configuration.name, presetName, (_preset: VuePreset) => {
+                                    const queuePos = fetchingQueue.indexOf(presetName);
+                                    if (queuePos < 0) {
+                                        return ;
+                                    }
+                                    fetchingQueue.splice(queuePos, 1);
+                                    activePresets.push(_preset);
+                                    setPresetStyles(inst, _preset, data.preset as PrivatePresetDecoratorOptions);
                                     forceUpdate();
+                                    unsubscribe = _preset.onChange(() => {
+                                        forceUpdate();
+                                    });
                                 });
-                            });
+                            }
                         };
                         const onChange = () => {
                             if (unsubscribe !== null) {
                                 unsubscribe();
                             }
-                            if (inst[configuration.prop]) {
-                                assignTheme(inst[configuration.prop]);
+                            const presets = (inst[configuration.prop] || '').split(' ').reduce((acc: string[], item: string) => {
+                                item = trim(item);
+                                if (item.length) {
+                                    acc.push(item);
+                                }
+                                return acc;
+                            }, [DefaultPreset]);
+                            for (const activePreset of activePresets) {
+                                if (presets.indexOf(activePreset) < 0) {
+                                    removePresetStyles(inst, activePreset);
+                                }
+                            }
+                            fetchingQueue = fetchingQueue.filter((i) => presets.indexOf(i) > -1);
+                            activePresets = [];
+                            for (const preset of presets) {
+                                assignPreset(preset);
                             }
                         };
                         watch(propRef, onChange);
-                        onMounted(() => {
-                            if (!isNullOrUndefined(inst[configuration.prop])) {
-                                onChange();
-                            } else {
-                                const defaultTheme = VueThemes.GetDefault(configuration.name);
-                                if (defaultTheme !== null) {
-                                    assignTheme(defaultTheme);
-                                }
-                            }
-                        });
-                    })(data.themeable);
+                        onMounted(onChange);
+                    })(data.preset);
                 }
             }
             rootProps = props;
@@ -451,10 +469,10 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
             const composableCtor: Constructor = importOptions.composable;
             if (isDecorated(composableCtor.prototype)) {
                 const composableDecorationData = getDecoratorsData(composableCtor.prototype);
-                if (isUndefined(composableDecorationData.composable)) {
+                if (isUndefined(composableDecorationData.component) && isUndefined(composableDecorationData.composable)) {
                     throw new UsageException(`The class "${composableCtor.name}" cannot be used as a composable because the "@Composable()" decorator is missing.`);
                 }
-                const composableInst = !isNullOrUndefined(inst[targetProperty]) ? inst[targetProperty] : instantiate(composableCtor, composableDecorationData.composable);
+                const composableInst = !isNullOrUndefined(inst[targetProperty]) ? inst[targetProperty] : instantiate(composableCtor, composableDecorationData.composable || {});
                 const composableOutput = buildSetupMethod(
                     composableCtor,
                     composableDecorationData,
@@ -505,7 +523,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
             if (data.renderMethod !== null) {
                 const render = inst[data.renderMethod];
                 inst[data.renderMethod] = proxy(() => {
-                    return render(output, context);
+                    return render.apply(inst, [output, context]);
                 }, inst);
                 return inst[data.renderMethod];
             }
