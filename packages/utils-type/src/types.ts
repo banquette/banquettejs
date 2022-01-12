@@ -14,6 +14,11 @@ export type AbstractConstructor<T = unknown> = abstract new (...args: any[]) => 
 export type GenericCallback<T = any, R = any> = (...args: T[]) => R;
 
 /**
+ * A generic function that doesn't take or return anything.
+ */
+export type VoidCallback = () => void;
+
+/**
  * Remove the readonly of a type.
  */
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
