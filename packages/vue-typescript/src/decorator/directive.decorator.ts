@@ -29,9 +29,17 @@ export interface DirectiveDecoratorOptions {
 }
 
 let maxId: number = 0;
-const uidMap: Record<number, any> = {};
+const uidMap: Record<string, any> = {};
 
-function getOrCreateInstance(factory: () => any, el: Element & {__bvcDirInst?: number}): any {
+function getOrCreateInstance(ctor: Constructor & {__bvcDirCtorId?: number}, factory: () => any, el: Element & {__bvcDirInst?: number}): any {
+    if (isUndefined(ctor.__bvcDirCtorId)) {
+        Object.defineProperty(ctor, '__bvcDirCtorId', {
+            enumerable: false,
+            writable: false,
+            configurable: false,
+            value: ++maxId
+        });
+    }
     if (isUndefined(el.__bvcDirInst)) {
         Object.defineProperty(el, '__bvcDirInst', {
             enumerable: false,
@@ -40,7 +48,7 @@ function getOrCreateInstance(factory: () => any, el: Element & {__bvcDirInst?: n
             value: ++maxId
         });
     }
-    const identifier = el.__bvcDirInst as number;
+    const identifier: string = el.__bvcDirInst as number + '_' + ctor.__bvcDirCtorId;
     if (isUndefined(uidMap[identifier])) {
         uidMap[identifier] = factory();
     }
@@ -59,7 +67,7 @@ function defineProxy(ctor: Constructor, options: DirectiveDecoratorOptions, hook
     }
     const factory = !isNullOrUndefined(options.factory) ? options.factory : () => new ctor();
     return (...args: [Element, DirectiveBinding, VNode, VNode|null]) => {
-        const inst = getOrCreateInstance(factory, args[0]);
+        const inst = getOrCreateInstance(ctor, factory, args[0]);
         return inst[hook].apply(inst, args);
     };
 }
@@ -69,11 +77,11 @@ function defineProxy(ctor: Constructor, options: DirectiveDecoratorOptions, hook
  * You must put this on every class you want to be used like a Vue component.
  * The component will automatically be registered into the VueBuilder in the specified groups.
  */
-export function Directive(options: DirectiveDecoratorOptions|string = {}): any {
+export function Directive(name: string): any;
+export function Directive(options: DirectiveDecoratorOptions): any;
+export function Directive(optionsOrName: DirectiveDecoratorOptions|string = {}): any {
     return (ctor: Constructor) => {
-        if (isString(options)) {
-            options = {name: options};
-        }
+        const options: DirectiveDecoratorOptions = isString(optionsOrName) ? {name: optionsOrName} : optionsOrName;
         if (isUndefined(options.name)) {
             if (!isNonEmptyString(ctor.name)) {
                 throw new UsageException(
