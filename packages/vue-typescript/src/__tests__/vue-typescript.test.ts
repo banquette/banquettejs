@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { mount } from '@vue/test-utils';
 import { nextTick } from "vue";
 import { Component } from "../decorator/component.decorator";
@@ -7,7 +8,7 @@ import { Import } from "../decorator/import.decorator";
 import { Prop } from "../decorator/prop.decorator";
 import { Ref } from "../decorator/ref.decorator";
 import { Watch, ImmediateStrategy } from "../decorator/watch.decorator";
-import { getComponentOptions } from "../utils";
+import { getComponentOptions, c } from "../utils";
 import { getChildComponentInstance } from "./utils";
 
 @Component({
@@ -298,4 +299,23 @@ describe('@Import()', () => {
         expect(wrapper.find('#host-from-template').text()).toEqual('/test');
         expect(testComponent.hostValue()).toBeUndefined();
     });
+});
+
+describe('Component inheritance', () => {
+    @Component({
+        name: 'bar',
+        template: '<div></div>'
+    })
+    class Bar {
+
+    }
+    @Component({
+        name: 'foo',
+        template: `<div id="foo">{{ foo }}</div>`
+    })
+    class Foo extends c(Bar) {
+        @Expose() public foo: string = 'foo';
+    }
+    const wrapper = mount(getComponentOptions(Foo), {});
+    expect(wrapper.find('#foo').text()).toEqual('foo');
 });
