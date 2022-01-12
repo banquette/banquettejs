@@ -1,4 +1,5 @@
 import { UsageException } from "@banquette/exception";
+import { randomString, ALPHABETS } from "@banquette/utils-random/random-string";
 import { isConstructor } from "@banquette/utils-type/is-constructor";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -126,8 +127,8 @@ export function getDecoratorsData(prototype: any | DecoratedConstructor): Decora
                 provided: {},
                 injected: {},
                 renderMethod: null,
-                preset: null
-            } as DecoratorsDataInterface
+                themeable: null
+            } as Partial<DecoratorsDataInterface>
         });
     }
     return (prototype as DecoratedConstructor)[DECORATORS_OPTIONS_HOLDER_NAME];
@@ -178,4 +179,14 @@ export function instantiate(ctor: Constructor, options: ComponentDecoratorOption
         return options.factory();
     }
     return new ctor();
+}
+
+const knownRandomIds: string[] = [];
+export function getUniqueRandomId(): string {
+    let candidate: string;
+    do {
+        candidate = randomString(1, ALPHABETS.ALPHA) + randomString(7);
+    } while (knownRandomIds.indexOf(candidate) > -1);
+    knownRandomIds.push(candidate);
+    return candidate;
 }

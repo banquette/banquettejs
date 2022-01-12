@@ -1,9 +1,9 @@
 import { Primitive } from "@banquette/utils-type/types";
 
-export interface PresetDefinitionInterface {
-    // Name of the preset.
+export interface VariantDefinitionInterface {
+    // Name of the variant.
     [key: string]: {
-        cssVars?: Record<string, string>,
+        vars?: Record<string, string>,
         props?: Record<string, Primitive>;
         css?: string;
     }

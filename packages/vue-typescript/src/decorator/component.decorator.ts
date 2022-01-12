@@ -37,6 +37,7 @@ export interface ComponentDecoratorOptions {
 
     /**
      * Group(s) on which the component should be registered in the VueBuilder.
+     * The registration is skipped if `null`.
      */
     group?: string|string[]|null;
 
@@ -47,6 +48,8 @@ export interface ComponentDecoratorOptions {
     factory?: (() => any)|null;
 }
 
+export type PrivateComponentDecoratorOptions = Omit<ComponentDecoratorOptions, 'name'> & {name: string};
+
 /**
  * Define a class as a Vue component.
  * You must put this on every class you want to be used like a Vue component.
@@ -56,11 +59,11 @@ export function Component(name: string): any;
 export function Component(options: ComponentDecoratorOptions): any;
 export function Component(options: ComponentDecoratorOptions|string = {}): any {
     return (ctor: Constructor) => {
-        const data: DecoratorsDataInterface & {component: ComponentDecoratorOptions} = getDecoratorsData(ctor.prototype) as DecoratorsDataInterface & {component: ComponentDecoratorOptions};
+        const data: DecoratorsDataInterface = getDecoratorsData(ctor.prototype);
         if (isString(options)) {
-            options = {name: options} as ComponentDecoratorOptions;
+            options = {name: options};
         }
-        data.component = options;
+        data.component = options as PrivateComponentDecoratorOptions;
         Object.defineProperty(ctor, VUE_CLASS_COMPONENT_OPTIONS_NAME, {
             enumerable: true,
             configurable: true,

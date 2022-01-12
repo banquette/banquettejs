@@ -62,16 +62,16 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         renamedProps[data.props[propName].name || propName] = {...data.props[propName]};
     }
 
-    // Preset prop
-    if (data.preset) {
-        if (!isUndefined(renamedProps[data.preset.prop])) {
+    // Variant prop
+    if (data.themeable) {
+        if (!isUndefined(renamedProps[data.themeable.prop])) {
             throw new UsageException(
-                `A prop named "${data.preset.prop}" is already defined, `+
-                `please define another name for the prop that defines the name of the preset to use. `+
-                `You can set the "prop" option of the "@Preset" decorator for that.`
+                `A prop named "${data.themeable.prop}" is already defined, `+
+                `please define another name for the prop that defines the name of the variant to use. `+
+                `You can set the "prop" option of the "@Themeable" decorator for that.`
             );
         }
-        renamedProps[data.preset.prop] = {propertyName: data.preset.prop, type: String, default: null};
+        renamedProps[data.themeable.prop] = {propertyName: data.themeable.prop, type: String, default: null};
     }
     data.props = renamedProps;
     options.props = renamedProps;
@@ -179,7 +179,7 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
 
         // If the component inherits from the "Vue" class this means the user
         // may want to access theses attributes or methods.
-        if (inst instanceof Vue || data.preset !== null) {
+        if (inst instanceof Vue || data.themeable !== null) {
             defineGetter(inst, '$props', () => this.$props);
             defineGetter(inst, '$attrs', () => this.$attrs);
             defineGetter(inst, '$slots', () => this.$slots);

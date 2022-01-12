@@ -19,11 +19,13 @@ export * from './decorator/reactive.decorator';
 export * from './decorator/ref.decorator';
 export * from './decorator/render.decorator';
 export * from './decorator/template-ref.decorator';
-export * from './decorator/preset.decorator';
+export * from './decorator/themeable.decorator';
 export * from './decorator/watch.decorator';
 export * from './decorator/directive.decorator';
 
 /**
- * Presets
+ * Themes
  */
-export * from './preset/vue-presets';
+export { ThemeWildcard } from './theme/constant';
+export * from './theme/vue-themes';
+import './theme/theme.component';

@@ -1,4 +1,4 @@
-import { ComponentDecoratorOptions } from "./component.decorator";
+import { PrivateComponentDecoratorOptions } from "./component.decorator";
 import { ComposableDecoratorOptions } from "./composable.decorator";
 import { ComputedDecoratorOptions } from "./computed.decorator";
 import { ImportDecoratorOptions } from "./import.decorator";
@@ -6,7 +6,7 @@ import { InjectProvidedDecoratorOptions } from "./inject-provided.decorator";
 import { LifecycleHook } from "./lifecycle.decorator";
 import { PropPrivateOptions } from "./prop.decorator";
 import { ProvideDecoratorOptions } from "./provide.decorator";
-import { PrivatePresetDecoratorOptions } from "./preset.decorator";
+import { PrivateThemeableDecoratorOptions } from "./themeable.decorator";
 import { WatchDecoratorOptions } from "./watch.decorator";
 
 /**
@@ -18,7 +18,7 @@ export interface DecoratorsDataInterface {
      * Data relative to the @Component decorator.
      * Optional because only the @Component decorator can set it.
      */
-    component?: ComponentDecoratorOptions;
+    component: PrivateComponentDecoratorOptions;
 
     /**
      * Data relative to the @Composable decorator.
@@ -84,5 +84,5 @@ export interface DecoratorsDataInterface {
     /**
      * Theming configuration.
      */
-    preset: PrivatePresetDecoratorOptions|null;
+    themeable: PrivateThemeableDecoratorOptions|null;
 }
