@@ -1,6 +1,6 @@
 import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
 import { Primitive, Writeable } from "@banquette/utils-type/types";
-import { getUniqueRandomId } from "../utils";
+import { getUniqueRandomId, getActiveComponentsCount } from "../utils";
 import { ThemesEvents } from "./constant";
 import { ThemeVariantUpdatedEventArg } from "./event/theme-variant-updated.event-arg";
 import { VueTheme } from "./vue-theme";
@@ -35,6 +35,7 @@ export class VueThemeVariant {
     public constructor(public readonly theme: VueTheme,
                        public readonly name: string,
                        private eventDispatcher: EventDispatcher) {
+
     }
 
     /**
@@ -132,7 +133,7 @@ export class VueThemeVariant {
      * Schedule a `ThemesEvents.VariantUpdated` on the next JS cycle.
      */
     private scheduleChangeNotification(): void {
-        if (this.changeNotificationScheduled) {
+        if (this.changeNotificationScheduled || !getActiveComponentsCount()) {
             return ;
         }
         this.changeNotificationScheduled = true;

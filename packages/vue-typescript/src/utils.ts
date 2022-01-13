@@ -190,3 +190,16 @@ export function getUniqueRandomId(): string {
     knownRandomIds.push(candidate);
     return candidate;
 }
+
+let activeComponentsCount: number = 0;
+export function getActiveComponentsCount(): number {
+    return activeComponentsCount;
+}
+
+export function incrementActiveComponentsCount() {
+    ++activeComponentsCount;
+}
+
+export function decrementActiveComponentsCount() {
+    --activeComponentsCount;
+}

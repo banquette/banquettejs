@@ -43,6 +43,7 @@ export class VueTheme {
     private variants: Record<string, Record<string, VueThemeVariant>> = {};
 
     public constructor(public readonly name: string, private eventDispatcher: EventDispatcher) {
+
     }
 
     /**
@@ -121,9 +122,6 @@ export class VueTheme {
      * Ensure variants' names are valid or throw an error.
      */
     private validateName(name: string): void {
-        if (name === VariantWildcard) {
-            throw new UsageException(`The name "${VariantWildcard}" is reserved. Please call "getWildcard()" if you want to get the wildcard variant.`);
-        }
         if (name.match(/\s+/)) {
             throw new UsageException('The name of a variant cannot contain spaces.');
         }

@@ -28,7 +28,7 @@ import {
     watchEffect,
     onBeforeMount,
     onMounted,
-    nextTick
+    nextTick, onBeforeUnmount
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
 import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
@@ -52,7 +52,7 @@ import {
     getDecoratorsData,
     instantiate,
     resolveImportPublicName,
-    defineGetter
+    defineGetter, incrementActiveComponentsCount, decrementActiveComponentsCount
 } from "./utils";
 
 /**
@@ -163,8 +163,10 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                             }
                         };
                         watch(propRef, onChange);
-                        onMounted(onChange);
-                        VueThemes.OnCreated(onChange);
+                        onMounted(() => {
+                            onChange();
+                            VueThemes.OnCreated(onChange);
+                        });
                     })(data.themeable);
                 }
             }
@@ -515,6 +517,8 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 }, inst);
                 return inst[data.renderMethod];
             }
+            incrementActiveComponentsCount();
+            onBeforeUnmount(decrementActiveComponentsCount);
         }
         return output;
     };

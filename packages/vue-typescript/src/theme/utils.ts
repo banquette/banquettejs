@@ -73,9 +73,6 @@ export function setVariantStylesOverrides(component: Vue, variant: VueThemeVaria
         component.$el.classList.add(variant.id);
 
         if (!variantMetadata.useCount || variantMetadata.invalidated) {
-            if (variantMetadata.stylesEl !== null) {
-                variantMetadata.stylesEl.remove();
-            }
             const scopeId = (component.$.type as any)['__scopeId'] || null;
             let styles = trim(variant.rawCss);
             if (styles.length > 0) {
@@ -92,12 +89,14 @@ export function setVariantStylesOverrides(component: Vue, variant: VueThemeVaria
                 }
                 styles += '}';
             }
-            if (styles.length > 0) {
-                const style = document.createElement('style');
-                style.setAttribute('type', 'text/css');
-                style.innerHTML = styles;
-                document.head.appendChild(style);
-                variantMetadata.stylesEl = style;
+            if (styles.length > 0 && (variantMetadata.stylesEl === null || variantMetadata.stylesEl.innerHTML !== styles)) {
+                if (variantMetadata.stylesEl === null) {
+                    const style = document.createElement('style');
+                    style.setAttribute('type', 'text/css');
+                    document.head.appendChild(style);
+                    variantMetadata.stylesEl = style;
+                }
+                variantMetadata.stylesEl.innerHTML = styles;
             }
             variantMetadata.invalidated = false;
         }

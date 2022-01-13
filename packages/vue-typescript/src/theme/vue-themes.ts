@@ -4,6 +4,7 @@ import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { getActiveComponentsCount } from "../utils";
 import { ThemeWildcard, ThemesEvents } from "./constant";
 import { ThemeCreatedEventArg } from "./event/theme-created.event-arg";
 import { ThemeDefinitionInterface } from "./theme-definition.interface";
@@ -72,9 +73,11 @@ export class VueThemes {
                 VueThemes.SetCurrent(name);
             }
             // Do not dispatch synchronously to give time to the caller to finish its setup.
-            window.setTimeout(() => {
-                VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeCreatedEventArg(name, inst));
-            });
+            if (getActiveComponentsCount() > 0) {
+                window.setTimeout(() => {
+                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeCreatedEventArg(name, inst));
+                });
+            }
         }
         return VueThemes.Themes[name];
     }
