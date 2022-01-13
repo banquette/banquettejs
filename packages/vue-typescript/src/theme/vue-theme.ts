@@ -43,7 +43,6 @@ export class VueTheme {
     private variants: Record<string, Record<string, VueThemeVariant>> = {};
 
     public constructor(public readonly name: string, private eventDispatcher: EventDispatcher) {
-        (this as any).id = name;
     }
 
     /**

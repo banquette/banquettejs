@@ -35,7 +35,6 @@ export class VueThemeVariant {
     public constructor(public readonly theme: VueTheme,
                        public readonly name: string,
                        private eventDispatcher: EventDispatcher) {
-        (this as any).id = name;
     }
 
     /**
