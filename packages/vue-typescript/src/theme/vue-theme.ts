@@ -50,7 +50,7 @@ export class VueTheme {
     /**
      * Get or create a theme variant.
      */
-    public getVariant(selector: VariantSelector, componentName: string): VueThemeVariant {
+    public getVariant(selector: VariantSelector|VariantSelector[], componentName: string): VueThemeVariant {
         const normalizedVariantSelector = normalizeVariantSelector(selector);
         const variantId = normalizedVariantSelector.identifier;
         if (isUndefined(this.variants[componentName])) {
@@ -75,7 +75,7 @@ export class VueTheme {
     /**
      * Remove a variant.
      */
-    public removeVariant(selector: VariantSelector, componentName: string): void {
+    public removeVariant(selector: VariantSelector|VariantSelector[], componentName: string): void {
         const variantId = normalizeVariantSelector(selector).identifier;
         if (!isUndefined(this.variants[componentName]) && !isUndefined(this.variants[componentName].variants[variantId])) {
             this.variants[componentName].variants[variantId].onUseUnsubscribeFn();

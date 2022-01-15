@@ -12,30 +12,37 @@ export function useThemeVariants(themes: VueTheme[], componentName: string, prop
     let expectedVariants: string[]|null = null;
 
     for (const theme of themes) {
-        const candidates = theme.getVariants(componentName);
-        ext:
-        for (const candidate of candidates) {
-            const candidateVariants = candidate.selector.variants.filter((i) => i !== VariantWildcard);
-            if (candidateVariants.length > 0) {
-                if (expectedVariants === null) {
-                    expectedVariants = (props[variantPropName] || '').split(' ').reduce((acc: string[], item: string) => {
-                        item = trim(item);
-                        if (item.length) {
-                            acc.push(item);
-                        }
-                        return acc;
-                    }, []).sort() as string[];
+        const variantsCandidates = theme.getVariants(componentName);
+        for (const variantsCandidate of variantsCandidates) {
+            let i;
+            ext:
+            for (i = 0; i < variantsCandidate.selector.candidates.length; ++i) {
+                const selectorCandidate = variantsCandidate.selector.candidates[i];
+                const candidateVariants = selectorCandidate.variants.filter((i) => i !== VariantWildcard);
+                if (candidateVariants.length > 0) {
+                    if (expectedVariants === null) {
+                        expectedVariants = (props[variantPropName] || '').split(' ').reduce((acc: string[], item: string) => {
+                            item = trim(item);
+                            if (item.length) {
+                                acc.push(item);
+                            }
+                            return acc;
+                        }, []).sort() as string[];
+                    }
+                    if (arrayIntersect(candidateVariants, expectedVariants).length !== candidateVariants.length) {
+                        continue ;
+                    }
                 }
-                if (arrayIntersect(candidateVariants, expectedVariants).length !== candidateVariants.length) {
-                    continue ;
+                for (const key of Object.keys(selectorCandidate.props)) {
+                    if (selectorCandidate.props[key] !== props[key]) {
+                        continue ext;
+                    }
                 }
+                break ;
             }
-            for (const key of Object.keys(candidate.selector.props)) {
-                if (candidate.selector.props[key] !== props[key]) {
-                    continue ext;
-                }
+            if (i < variantsCandidate.selector.candidates.length) {
+                output.push(variantsCandidate);
             }
-            output.push(candidate);
         }
     }
     return output;
