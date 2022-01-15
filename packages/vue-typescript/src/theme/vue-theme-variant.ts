@@ -5,8 +5,9 @@ import { VarsMapInterface, PrivateThemeableDecoratorOptions } from "../decorator
 import { getActiveComponentsCount } from "../utils/components-count";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { Vue } from "../vue";
-import { ThemesEvents, VariantWildcard } from "./constant";
+import { ThemesEvents } from "./constant";
 import { ThemeVariantEventArg } from "./event/theme-variant.event-arg";
+import { VariantSelectorInterface } from "./variant-selector.interface";
 import { VueTheme } from "./vue-theme";
 
 export class VueThemeVariant {
@@ -14,11 +15,6 @@ export class VueThemeVariant {
      * Unique identifier that will be used to inject styles.
      */
     public readonly id: string = getUniqueRandomId();
-
-    /**
-     * Array of names the variant has to match.
-     */
-    public readonly matches: string[];
 
     /**
      * Raw CSS to inject in the head (as written by the end-user).
@@ -57,10 +53,9 @@ export class VueThemeVariant {
     private changeNotificationScheduled: boolean = false;
 
     public constructor(public readonly theme: VueTheme,
-                       public readonly name: string,
+                       public readonly selector: VariantSelectorInterface,
                        private eventDispatcher: EventDispatcher) {
-        //this.id += '-variant-' + name;
-        this.matches = name.split('#').filter((i) => i !== VariantWildcard);
+
     }
 
     /**

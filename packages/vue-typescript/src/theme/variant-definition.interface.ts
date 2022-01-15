@@ -1,8 +1,9 @@
 import { Primitive } from "@banquette/utils-type/types";
 import { VarsMapInterface } from "../decorator/themeable.decorator";
+import { VariantSelector } from "./constant";
 
 export interface VariantDefinitionInterface {
-    match: string|string[];
+    match: VariantSelector;
     vars?: VarsMapInterface,
     props?: Record<string, Primitive>;
     css?: string;

@@ -1,3 +1,4 @@
+import { Primitive } from "@banquette/utils-type/types";
 
 export const ThemesEvents = {
     /**
@@ -43,3 +44,8 @@ export const VariantWildcard = '*';
  * This const is not exported outside of `vue-typescript` so no other component can use it.
  */
 export const ThemeComponentSymbol = Symbol('theme-component');
+
+/**
+ * Used to match a variant.
+ */
+export type VariantSelector = Record<string, Primitive>|string;

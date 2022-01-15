@@ -81,6 +81,8 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
             });
         }
         if (props !== null) {
+            // Props
+            const propsRefs = [];
             for (const propName of Object.keys(props)) {
                 let propRef = toRef(props, propName);
                 if (!isUndefined(data.props[propName]) && data.themeable !== null && propName !== data.themeable.prop) {
@@ -119,52 +121,53 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 const propPublicName = data.props[propName].name || propName;
                 output[propPublicName] = propRef;
                 defineRefProxy(inst, data.props[propName].propertyName, output, propPublicName);
-
-                // Watch the prop that sets the current variants.
-                if (data.themeable && propName === data.themeable.prop) {
-                    (function(configuration: PrivateThemeableDecoratorOptions) {
-                        let activeVariantsAttributes: string[] = [];
-                        let unsubscribeFns: UnsubscribeFunction[] = [];
-                        let updateScheduled: boolean = false;
-                        const forceUpdate = () => {
-                            inst.$forceUpdateComputed();
-                            inst.$forceUpdate();
-                        };
-                        const scheduleForceUpdate = () => {
-                            if (!updateScheduled) {
-                                updateScheduled = true;
-                                inst.$nextTick(() => {
-                                    forceUpdate();
-                                    updateScheduled = false;
-                                });
-                            }
-                        };
-                        const onChange = () => {
-                            const themes = getThemesForComponent(inst);
-                            const variants = useThemeVariants(themes, data.component.name, inst[configuration.prop]);
-
-                            activeVariants = [];
-                            for (const unsubscribeFn of unsubscribeFns) {
-                                unsubscribeFn();
-                            }
-                            for (const activeClass of activeVariantsAttributes) {
-                                inst.$el.removeAttribute('data-' + activeClass);
-                            }
-                            for (const item of variants) {
-                                inst.$el.setAttribute('data-' + item.id, '');
-                                activeVariantsAttributes.push(item.id);
-                                item.use(inst, configuration);
-                                activeVariants.push(item);
-                                unsubscribeFns.push(item.onChange(scheduleForceUpdate));
-                            }
-                            forceUpdate();
-                        };
-                        watch(propRef, onChange);
-                        onMounted(onChange);
-                    })(data.themeable);
-                }
+                propsRefs.push(propRef);
             }
             rootProps = props;
+
+            // Watch props changes to update theming attributes accordingly.
+            if (data.themeable !== null) {
+                (function(configuration: PrivateThemeableDecoratorOptions) {
+                    let activeVariantsAttributes: string[] = [];
+                    let unsubscribeFns: UnsubscribeFunction[] = [];
+                    let updateScheduled: boolean = false;
+                    const forceUpdate = () => {
+                        inst.$forceUpdateComputed();
+                        inst.$forceUpdate();
+                    };
+                    const scheduleForceUpdate = () => {
+                        if (!updateScheduled) {
+                            updateScheduled = true;
+                            inst.$nextTick(() => {
+                                forceUpdate();
+                                updateScheduled = false;
+                            });
+                        }
+                    };
+                    const onChange = () => {
+                        const themes = getThemesForComponent(inst);
+                        const variants = useThemeVariants(themes, data.component.name, inst, configuration.prop);
+
+                        activeVariants = [];
+                        for (const unsubscribeFn of unsubscribeFns) {
+                            unsubscribeFn();
+                        }
+                        for (const activeClass of activeVariantsAttributes) {
+                            inst.$el.removeAttribute('data-' + activeClass);
+                        }
+                        for (const item of variants) {
+                            inst.$el.setAttribute('data-' + item.id, '');
+                            activeVariantsAttributes.push(item.id);
+                            item.use(inst, configuration);
+                            activeVariants.push(item);
+                            unsubscribeFns.push(item.onChange(scheduleForceUpdate));
+                        }
+                        forceUpdate();
+                    };
+                    watch(propsRefs, onChange);
+                    onMounted(onChange);
+                })(data.themeable);
+            }
         }
 
         // Reactive

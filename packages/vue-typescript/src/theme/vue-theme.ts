@@ -3,10 +3,10 @@ import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
-import { ThemesEvents } from "./constant";
+import { ThemesEvents, VariantSelector } from "./constant";
 import { ThemeVariantEventArg } from "./event/theme-variant.event-arg";
 import { injectContextInCssSource } from "./utils/inject-context-in-css-source";
-import { resolveVariantName } from "./utils/resolve-variant-name";
+import { normalizeVariantSelector } from "./utils/normalize-variant-selector";
 import { VueThemeVariant } from "./vue-theme-variant";
 
 interface VariantItem {
@@ -37,7 +37,7 @@ export class VueTheme {
     private variants: Record<string, ComponentVariants> = {};
 
     public constructor(public readonly name: string, private eventDispatcher: EventDispatcher) {
-        //this.id += '-theme-' + name;
+
     }
 
     /**
@@ -50,36 +50,37 @@ export class VueTheme {
     /**
      * Get or create a theme variant.
      */
-    public getVariant(matches: string|string[], componentName: string): VueThemeVariant {
-        const variantName = resolveVariantName(matches);
+    public getVariant(selector: VariantSelector, componentName: string): VueThemeVariant {
+        const normalizedVariantSelector = normalizeVariantSelector(selector);
+        const variantId = normalizedVariantSelector.identifier;
         if (isUndefined(this.variants[componentName])) {
             this.variants[componentName] = {variants: {}, styleElement: null};
         }
-        if (isUndefined(this.variants[componentName].variants[variantName])) {
-            const inst = new VueThemeVariant(this, variantName, this.eventDispatcher);
-            this.variants[componentName].variants[variantName] = {
+        if (isUndefined(this.variants[componentName].variants[variantId])) {
+            const inst = new VueThemeVariant(this, normalizedVariantSelector, this.eventDispatcher);
+            this.variants[componentName].variants[variantId] = {
                 variant: inst,
                 onUseUnsubscribeFn: inst.onUse((event: ThemeVariantEventArg) => {
                     if (event.variant === inst) {
-                        this.variants[componentName].variants[variantName].onUseUnsubscribeFn();
+                        this.variants[componentName].variants[variantId].onUseUnsubscribeFn();
                         this.invalidate();
                     }
                 }),
                 onChangeUnsubscribeFn: inst.onChange(() => this.invalidate()),
             };
         }
-        return this.variants[componentName].variants[variantName].variant;
+        return this.variants[componentName].variants[variantId].variant;
     }
 
     /**
      * Remove a variant.
      */
-    public removeVariant(matches: string|string[], componentName: string): void {
-        const variantName = resolveVariantName(matches);
-        if (!isUndefined(this.variants[componentName]) && !isUndefined(this.variants[componentName].variants[variantName])) {
-            this.variants[componentName].variants[variantName].onUseUnsubscribeFn();
-            this.variants[componentName].variants[variantName].onChangeUnsubscribeFn();
-            delete this.variants[componentName].variants[variantName];
+    public removeVariant(selector: VariantSelector, componentName: string): void {
+        const variantId = normalizeVariantSelector(selector).identifier;
+        if (!isUndefined(this.variants[componentName]) && !isUndefined(this.variants[componentName].variants[variantId])) {
+            this.variants[componentName].variants[variantId].onUseUnsubscribeFn();
+            this.variants[componentName].variants[variantId].onChangeUnsubscribeFn();
+            delete this.variants[componentName].variants[variantId];
         }
     }
 
