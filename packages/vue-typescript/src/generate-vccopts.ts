@@ -22,14 +22,13 @@ import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { PropPrivateOptions } from "./decorator/prop.decorator";
 import { PrefixOrAlias } from "./type";
-import {
-    isDecorated,
-    getDecoratorsData,
-    defineGetter,
-    resolveImportPublicName,
-    getCtorFromVccOption,
-    injectVuePropertiesInCtor, getComponentInstance
-} from "./utils";
+import { defineGetter } from "./utils/define-getter";
+import { getComponentInstance } from "./utils/get-component-instance";
+import { getCtorFromVccOption } from "./utils/get-ctor-from-vcc-option";
+import { getDecoratorsData } from "./utils/get-decorators-data";
+import { injectVueProperties } from "./utils/inject-vue-properties";
+import { isDecorated } from "./utils/is-decorated";
+import { resolveImportPublicName } from "./utils/resolve-import-public-name";
 import { Vue } from "./vue";
 import { VueBuilder } from "./vue-builder";
 
@@ -154,9 +153,9 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
     if (isUndefined(fullOptionsMap)) {
         vccOptionsMap.set(ctor, options);
     } else {
-        injectVuePropertiesInCtor(fullOptionsMap, options);
+        injectVueProperties(fullOptionsMap, options);
     }
-    injectVuePropertiesInCtor(ctor, options);
+    injectVueProperties(ctor, options);
 
     // Save the final options object into the prototype for caching.
     Object.defineProperty(ctor.prototype, DECORATORS_OPTIONS_HOLDER_CACHE_NAME, {
@@ -180,11 +179,11 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         // If the component inherits from the "Vue" class this means the user
         // may want to access theses attributes or methods.
         if (inst instanceof Vue || data.themeable !== null) {
+            defineGetter(inst, '$', () => this.$);
             defineGetter(inst, '$props', () => this.$props);
             defineGetter(inst, '$attrs', () => this.$attrs);
             defineGetter(inst, '$slots', () => this.$slots);
             defineGetter(inst, '$emit', () => this.$emit);
-            defineGetter(inst, '$', () => this.$);
             defineGetter(inst, '$data', () => this.$data);
             defineGetter(inst, '$el', () => this.$el);
             defineGetter(inst, '$options', () => this.$options);

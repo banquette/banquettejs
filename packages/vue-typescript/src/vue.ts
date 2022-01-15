@@ -6,7 +6,7 @@ import { AbstractConstructor } from "@banquette/utils-type/types";
 import { WatchOptions } from "@vue/runtime-core";
 import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
 import { DECORATORS_CTOR_NAME } from "./constants";
-import { isComponentInstance } from "./utils";
+import { isComponentInstance } from "./utils/is-component-instance";
 
 /**
  * Fake implementation of the public attributes of the vue instance.

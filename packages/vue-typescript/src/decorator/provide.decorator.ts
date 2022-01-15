@@ -1,7 +1,7 @@
 import { UsageException } from "@banquette/exception";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
-import { getDecoratorsData } from "../utils";
+import { getDecoratorsData } from "../utils/get-decorators-data";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 export interface ProvideDecoratorOptions {

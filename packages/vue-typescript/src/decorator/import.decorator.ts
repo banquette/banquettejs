@@ -5,7 +5,7 @@ import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { PrefixOrAlias } from "../type";
-import { getDecoratorsData } from "../utils";
+import { getDecoratorsData } from "../utils/get-decorators-data";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 export interface ImportDecoratorOptions {

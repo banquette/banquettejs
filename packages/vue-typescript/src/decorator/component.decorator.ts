@@ -10,7 +10,7 @@ import { Component as VueComponent } from "@vue/runtime-core";
 import { Directive } from "vue";
 import { VUE_CLASS_COMPONENT_OPTIONS_NAME } from "../constants";
 import { generateVccOpts } from "../generate-vccopts";
-import { getDecoratorsData } from "../utils";
+import { getDecoratorsData } from "../utils/get-decorators-data";
 import { VueBuilder } from "../vue-builder";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 

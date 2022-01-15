@@ -1,9 +1,14 @@
+import { flatten } from "@banquette/utils-object/flatten";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
-import { getDecoratorsData } from "../utils";
+import { Constructor, Primitive } from "@banquette/utils-type/types";
+import { getDecoratorsData } from "../utils/get-decorators-data";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
+
+export interface VarsMapInterface {
+    [key: string]: Primitive|VarsMapInterface;
+}
 
 export interface ThemeableDecoratorOptions {
     /**
@@ -15,7 +20,7 @@ export interface ThemeableDecoratorOptions {
     /**
      * Css variables exposed to the themes.
      */
-    vars?: string|string[]|Record<string, string>;
+    vars?: string|string[]|VarsMapInterface;
 }
 
 export type PrivateThemeableDecoratorOptions = Omit<Required<ThemeableDecoratorOptions>, 'vars'> & {vars: Record<string, string>};
@@ -35,6 +40,7 @@ export function Themeable(options: ThemeableDecoratorOptions = {}): any {
         } else if (isUndefined(options.vars)) {
             options.vars = {};
         }
+        options.vars = flatten(options.vars);
         options.prop = options.prop || 'variant';
         data.themeable = options as PrivateThemeableDecoratorOptions;
     };

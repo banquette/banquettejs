@@ -3,7 +3,7 @@ import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { DebuggerEvent } from "@vue/reactivity";
-import { getDecoratorsData } from "../utils";
+import { getDecoratorsData } from "../utils/get-decorators-data";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 import { Expose } from "./expose.decorator";
 

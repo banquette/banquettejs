@@ -6,14 +6,14 @@ export const ThemesEvents = {
     ThemeCreated: Symbol('theme-created'),
 
     /**
-     * Triggered when a new theme variant is created.
-     */
-    VariantCreated: Symbol('variant-created'),
-
-    /**
      * Triggered when any value of an existing theme variant is modified.
      */
-    VariantUpdated: Symbol('variant-updated')
+    VariantUpdated: Symbol('variant-updated'),
+
+    /**
+     * Triggered when a value is marked as used by a component.
+     */
+    VariantUsed: Symbol('variant-used')
 }
 
 /**

@@ -1,5 +1,5 @@
 import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
-import { getDecoratorsData } from "../utils";
+import { getDecoratorsData } from "../utils/get-decorators-data";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 export type WatchFunction = () => string|string[];

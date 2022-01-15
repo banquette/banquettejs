@@ -4,7 +4,7 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { HOOKS } from "../constants";
-import { getDecoratorsData } from "../utils";
+import { getDecoratorsData } from "../utils/get-decorators-data";
 import { DecoratorsDataInterface } from "./decorators-data.interface";
 
 export type LifecycleHook = typeof HOOKS [number];

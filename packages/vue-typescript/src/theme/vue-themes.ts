@@ -2,11 +2,13 @@ import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { trim } from "@banquette/utils-string/format/trim";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { getActiveComponentsCount } from "../utils";
+import { getActiveComponentsCount } from "../utils/components-count";
 import { ThemeWildcard, ThemesEvents } from "./constant";
-import { ThemeCreatedEventArg } from "./event/theme-created.event-arg";
+import { ThemeEventArg } from "./event/theme.event-arg";
 import { ThemeDefinitionInterface } from "./theme-definition.interface";
 import { VariantDefinitionInterface } from "./variant-definition.interface";
 import { VueTheme } from "./vue-theme";
@@ -64,36 +66,25 @@ export class VueThemes {
      * Get or create a theme.
      */
     public static Get(name: string): VueTheme {
-        VueThemes.ValidateName(name);
         if (isUndefined(VueThemes.Themes[name])) {
             const inst = new VueTheme(name, VueThemes.EventDispatcher);
             VueThemes.Themes[name] = inst;
 
-            if (VueThemes.CurrentTheme === null && VueThemes.CurrentThemeName === name) {
+            if (VueThemes.CurrentThemeName === name) {
                 VueThemes.SetCurrent(name);
+            }
+            if (name === ThemeWildcard) {
+                document.documentElement.classList.add(VueThemes.Themes[ThemeWildcard].id);
             }
             // Do not dispatch synchronously to give time to the caller to finish its setup.
             if (getActiveComponentsCount() > 0) {
                 window.setTimeout(() => {
-                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeCreatedEventArg(name, inst));
+                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeEventArg(inst));
+                    inst.invalidate();
                 });
             }
         }
         return VueThemes.Themes[name];
-    }
-
-    /**
-     * Get the wildcard theme.
-     *
-     * Values defined in this theme will apply to all components no matter their active theme.
-     * If another theme define the same value as the wildcard, the custom theme will always win.
-     */
-    public static GetWildcard(): VueTheme {
-        if (isUndefined(VueThemes.Themes[ThemeWildcard])) {
-            VueThemes.Themes[ThemeWildcard] = new VueTheme(ThemeWildcard, VueThemes.EventDispatcher);
-            document.documentElement.classList.add(VueThemes.Themes[ThemeWildcard].id);
-        }
-        return VueThemes.Themes[ThemeWildcard];
     }
 
     /**
@@ -109,25 +100,27 @@ export class VueThemes {
     /**
      * Subscribe to an event that will trigger each time a new theme is added.
      */
-    public static OnCreated(cb: (event: ThemeCreatedEventArg) => void): UnsubscribeFunction {
+    public static OnCreated(cb: (event: ThemeEventArg) => void): UnsubscribeFunction {
         return VueThemes.EventDispatcher.subscribe(ThemesEvents.ThemeCreated, cb);
     }
 
     /**
      * Shorthand to define multiple variants at once, as an object.
      */
-    public static Define(componentName: string, configuration: ThemeDefinitionInterface|VariantDefinitionInterface): void {
-        const themeConfiguration = VueThemes.IsVariantDefinitionInterface(configuration) ?
-                {[ThemeWildcard]: configuration} as ThemeDefinitionInterface :
+    public static Define(componentName: string, configuration: ThemeDefinitionInterface|VariantDefinitionInterface|VariantDefinitionInterface[]): void {
+        const themeConfiguration = isArray(configuration) || VueThemes.IsVariantDefinitionInterface(configuration) ?
+                {[ThemeWildcard]: ensureArray(configuration)} as ThemeDefinitionInterface :
                 configuration;
         for (const rawThemeName of Object.keys(themeConfiguration)) {
             const themesNames = rawThemeName.split(',').map((i) => trim(i));
             for (const themeName of themesNames) {
-                let theme: VueTheme = themeName === ThemeWildcard ? VueThemes.GetWildcard() : VueThemes.Get(themeName);
-                for (const variantName of Object.keys(themeConfiguration[rawThemeName])) {
-                    const variant: VueThemeVariant = theme.getVariant(variantName, componentName);
-                    for (const method of getObjectKeys(themeConfiguration[rawThemeName][variantName])) {
-                        (variant as any)[method](themeConfiguration[rawThemeName][variantName][method]);
+                let theme: VueTheme = VueThemes.Get(themeName);
+                for (const variantConf of themeConfiguration[rawThemeName]) {
+                    const variant: VueThemeVariant = theme.getVariant(variantConf.match, componentName);
+                    for (const method of getObjectKeys(variantConf)) {
+                        if (method !== 'match') {
+                            (variant as any)[method](variantConf[method]);
+                        }
                     }
                 }
             }
@@ -147,18 +140,9 @@ export class VueThemes {
     }
 
     /**
-     * Ensure themes' names are valid or throw an error.
-     */
-    private static ValidateName(name: string): void {
-        if (name === ThemeWildcard) {
-            throw new UsageException(`The name "${ThemeWildcard}" is reserved. Please call "VueThemes::GetWildcard()" if you want to get the wildcard theme.`);
-        }
-    }
-
-    /**
      * Test if the input is a VariantDefinitionInterface.
      */
     private static IsVariantDefinitionInterface(input: any): input is VariantDefinitionInterface {
-        return isObject(input) && ('props' in input || 'vars' in input || 'css' in input);
+        return isObject(input) && 'match' in input && ('props' in input || 'vars' in input || 'css' in input);
     }
 }

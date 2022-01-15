@@ -28,7 +28,8 @@ import {
     watchEffect,
     onBeforeMount,
     onMounted,
-    nextTick, onBeforeUnmount
+    nextTick,
+    onBeforeUnmount
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
 import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
@@ -37,23 +38,17 @@ import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
 import { PrivateThemeableDecoratorOptions } from "./decorator/themeable.decorator";
 import { WatchOptions, WatchFunction, ImmediateStrategy } from "./decorator/watch.decorator";
-import {
-    removeVariantStylesOverrides,
-    setVariantStylesOverrides,
-    resolveComponentVariants,
-    invalidateVariantStylesOverrides
-} from "./theme/utils";
+import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
+import { useThemeVariants } from "./theme/utils/use-theme-variants";
 import { VueThemeVariant } from "./theme/vue-theme-variant";
-import { VueThemes } from "./theme/vue-themes";
 import { PrefixOrAlias } from "./type";
-import {
-    defineRefProxy,
-    isDecorated,
-    getDecoratorsData,
-    instantiate,
-    resolveImportPublicName,
-    defineGetter, incrementActiveComponentsCount, decrementActiveComponentsCount
-} from "./utils";
+import { incrementActiveComponentsCount, decrementActiveComponentsCount } from "./utils/components-count";
+import { defineGetter } from "./utils/define-getter";
+import { defineRefProxy } from "./utils/define-ref-proxy";
+import { getDecoratorsData } from "./utils/get-decorators-data";
+import { instantiate } from "./utils/instantiate";
+import { isDecorated } from "./utils/is-decorated";
+import { resolveImportPublicName } from "./utils/resolve-import-public-name";
 
 /**
  * A map between Vue instances and objects created by vue-typescript.
@@ -128,45 +123,44 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 // Watch the prop that sets the current variants.
                 if (data.themeable && propName === data.themeable.prop) {
                     (function(configuration: PrivateThemeableDecoratorOptions) {
+                        let activeVariantsAttributes: string[] = [];
                         let unsubscribeFns: UnsubscribeFunction[] = [];
+                        let updateScheduled: boolean = false;
                         const forceUpdate = () => {
                             inst.$forceUpdateComputed();
                             inst.$forceUpdate();
                         };
-                        const assignVariant = (variant: VueThemeVariant) => {
-                            activeVariants.push(variant);
-                            setVariantStylesOverrides(inst, variant, data.themeable as PrivateThemeableDecoratorOptions);
-                            forceUpdate();
-                            unsubscribeFns.push(variant.onChange(() => {
-                                invalidateVariantStylesOverrides(variant);
-                                setVariantStylesOverrides(inst, variant, data.themeable as PrivateThemeableDecoratorOptions);
-                                forceUpdate();
-                            }));
+                        const scheduleForceUpdate = () => {
+                            if (!updateScheduled) {
+                                updateScheduled = true;
+                                inst.$nextTick(() => {
+                                    forceUpdate();
+                                    updateScheduled = false;
+                                });
+                            }
                         };
                         const onChange = () => {
-                            for (const fn of unsubscribeFns) {
-                                fn();
-                            }
-                            unsubscribeFns = [];
-                            for (const activeVariant of activeVariants) {
-                                invalidateVariantStylesOverrides(activeVariant);
-                            }
-                            const variants = resolveComponentVariants(inst, data.component.name, inst[configuration.prop]);
-                            for (const activeVariant of activeVariants) {
-                                if (variants.indexOf(activeVariant) < 0) {
-                                    removeVariantStylesOverrides(inst, activeVariant);
-                                }
-                            }
+                            const themes = getThemesForComponent(inst);
+                            const variants = useThemeVariants(themes, data.component.name, inst[configuration.prop]);
+
                             activeVariants = [];
-                            for (const variant of variants) {
-                                assignVariant(variant);
+                            for (const unsubscribeFn of unsubscribeFns) {
+                                unsubscribeFn();
                             }
+                            for (const activeClass of activeVariantsAttributes) {
+                                inst.$el.removeAttribute('data-' + activeClass);
+                            }
+                            for (const item of variants) {
+                                inst.$el.setAttribute('data-' + item.id, '');
+                                activeVariantsAttributes.push(item.id);
+                                item.use(inst, configuration);
+                                activeVariants.push(item);
+                                unsubscribeFns.push(item.onChange(scheduleForceUpdate));
+                            }
+                            forceUpdate();
                         };
                         watch(propRef, onChange);
-                        onMounted(() => {
-                            onChange();
-                            VueThemes.OnCreated(onChange);
-                        });
+                        onMounted(onChange);
                     })(data.themeable);
                 }
             }
@@ -517,7 +511,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                 }, inst);
                 return inst[data.renderMethod];
             }
-            incrementActiveComponentsCount();
+            onBeforeMount(incrementActiveComponentsCount);
             onBeforeUnmount(decrementActiveComponentsCount);
         }
         return output;

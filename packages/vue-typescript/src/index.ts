@@ -1,6 +1,5 @@
 export * from './vue-builder';
 export * from './vue';
-export { isComponentInstance, getComponentOptions, getDecoratorsData, c, getComponentInstance, getActiveComponentsCount } from './utils';
 
 /**
  * Decorators
@@ -29,3 +28,13 @@ export * from './decorator/directive.decorator';
 export { ThemeWildcard, VariantWildcard } from './theme/constant';
 export * from './theme/vue-themes';
 import './theme/theme.component';
+
+/**
+ * Utils
+ */
+export * from './utils/c';
+export * from './utils/components-count';
+export * from './utils/is-component-instance';
+export * from './utils/get-component-instance';
+export * from './utils/get-component-options';
+export * from './utils/get-decorators-data';
