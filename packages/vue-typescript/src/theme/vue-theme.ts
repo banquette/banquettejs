@@ -140,12 +140,12 @@ export class VueTheme {
                 }
                 let variantStyles = trim(variant.rawCss);
                 if (variantStyles.length > 0) {
-                    variantStyles = injectContextInCssSource(variantStyles, `.${variant.theme.id} [data-${variant.id}]`, variant.scopeId);
+                    variantStyles = injectContextInCssSource(variantStyles, `.${variant.theme.id} [data-${variant.uid}]`, variant.scopeId);
                     variantStyles += "\n";
                 }
                 const cssVarsKeys = Object.keys(variant.varsMap);
                 if (cssVarsKeys.length > 0) {
-                    variantStyles += `.${variant.theme.id} [data-${variant.id}]` + (variant.scopeId !== null ? `[${variant.scopeId}]` : '');
+                    variantStyles += `.${variant.theme.id} [data-${variant.uid}]` + (variant.scopeId !== null ? `[${variant.scopeId}]` : '');
                     variantStyles += " {\n";
                     for (const key of cssVarsKeys) {
                         if (!isUndefined(variant.configuration.vars[key])) {

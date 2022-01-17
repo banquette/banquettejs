@@ -1,4 +1,4 @@
-import { Primitive } from "@banquette/utils-type/types";
+import { VariantSelectorInterface } from "./variant-selector.interface";
 
 export const ThemesEvents = {
     /**
@@ -48,4 +48,9 @@ export const ThemeComponentSymbol = Symbol('theme-component');
 /**
  * Used to match a variant.
  */
-export type VariantSelector = Record<string, Primitive>|string;
+export type VariantSelector = string|VariantSelectorInterface;
+
+/**
+ * Used to match a parent component.
+ */
+export type ParentSelector = string| (VariantSelectorInterface & {name: string});

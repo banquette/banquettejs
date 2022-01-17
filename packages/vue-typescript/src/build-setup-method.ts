@@ -156,8 +156,8 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                             inst.$el.removeAttribute('data-' + activeClass);
                         }
                         for (const item of variants) {
-                            inst.$el.setAttribute('data-' + item.id, '');
-                            activeVariantsAttributes.push(item.id);
+                            inst.$el.setAttribute('data-' + item.uid, '');
+                            activeVariantsAttributes.push(item.uid);
                             item.use(inst, configuration);
                             activeVariants.push(item);
                             unsubscribeFns.push(item.onChange(scheduleForceUpdate));

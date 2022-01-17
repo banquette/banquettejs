@@ -1,49 +1,79 @@
 import { arrayIntersect } from "@banquette/utils-array/array-intersect";
 import { trim } from "@banquette/utils-string/format/trim";
+import { DecoratorsDataInterface } from "../../decorator/decorators-data.interface";
+import { getDecoratorsData } from "../../utils/get-decorators-data";
+import { isDecorated } from "../../utils/is-decorated";
 import { VariantWildcard } from "../constant";
 import { VueTheme } from "../vue-theme";
 import { VueThemeVariant } from "../vue-theme-variant";
+
+function matchVariants(variants: VueThemeVariant[], expectedVariants: string[], inst: any): VueThemeVariant[] {
+    let selected: VueThemeVariant[] = [];
+    for (const variant of variants) {
+        ext:
+        for (const selectorCandidate of variant.selector.candidates) {
+            const candidateVariants = selectorCandidate.variants.filter((i) => i !== VariantWildcard);
+
+            // Variant
+            if (candidateVariants.length > 0) {
+                if (arrayIntersect(candidateVariants, expectedVariants).length !== candidateVariants.length) {
+                    continue ;
+                }
+            }
+
+            // Props
+            for (const key of Object.keys(selectorCandidate.props)) {
+                if (selectorCandidate.props[key] !== inst[key]) {
+                    continue ext;
+                }
+            }
+
+            // Parent
+            if (selectorCandidate.parents.length > 0) {
+                ext2:
+                for (const parentSelectorCandidate of selectorCandidate.parents) {
+                    let $parentInst = inst.$parent;
+                    while ($parentInst) {
+                        if (isDecorated($parentInst.constructor.prototype)) {
+                            const decoratorsData: DecoratorsDataInterface = getDecoratorsData($parentInst.constructor.prototype);
+                            if (parentSelectorCandidate.name !== decoratorsData.component.name) {
+                                continue ;
+                            }
+                            continue ext2;
+                        }
+                        $parentInst = $parentInst.$parent;
+                    }
+                    continue ext;
+                }
+            }
+            selected.push(variant);
+            if (variant.applyIds.length > 0) {
+                selected = selected.concat(variants.filter((v) => {
+                    return v.publicId !== null && variant.applyIds.indexOf(v.publicId) > -1 && selected.indexOf(v) < 0;
+                }));
+            }
+            break ;
+        }
+    }
+    return selected;
+}
 
 /**
  * Gets the full list of variants to apply to a component.
  */
 export function useThemeVariants(themes: VueTheme[], componentName: string, props: any, variantPropName: string): VueThemeVariant[] {
-    const output: VueThemeVariant[] = [];
-    let expectedVariants: string[]|null = null;
+    let output: VueThemeVariant[] = [];
+    let expectedVariants: string[] = (props[variantPropName] || '').split(' ').reduce((acc: string[], item: string) => {
+        item = trim(item);
+        if (item.length) {
+            acc.push(item);
+        }
+        return acc;
+    }, []).sort() as string[];
 
     for (const theme of themes) {
         const variantsCandidates = theme.getVariants(componentName);
-        for (const variantsCandidate of variantsCandidates) {
-            let i;
-            ext:
-            for (i = 0; i < variantsCandidate.selector.candidates.length; ++i) {
-                const selectorCandidate = variantsCandidate.selector.candidates[i];
-                const candidateVariants = selectorCandidate.variants.filter((i) => i !== VariantWildcard);
-                if (candidateVariants.length > 0) {
-                    if (expectedVariants === null) {
-                        expectedVariants = (props[variantPropName] || '').split(' ').reduce((acc: string[], item: string) => {
-                            item = trim(item);
-                            if (item.length) {
-                                acc.push(item);
-                            }
-                            return acc;
-                        }, []).sort() as string[];
-                    }
-                    if (arrayIntersect(candidateVariants, expectedVariants).length !== candidateVariants.length) {
-                        continue ;
-                    }
-                }
-                for (const key of Object.keys(selectorCandidate.props)) {
-                    if (selectorCandidate.props[key] !== props[key]) {
-                        continue ext;
-                    }
-                }
-                break ;
-            }
-            if (i < variantsCandidate.selector.candidates.length) {
-                output.push(variantsCandidate);
-            }
-        }
+        output = ([] as VueThemeVariant[]).concat(matchVariants(variantsCandidates, expectedVariants, props));
     }
     return output;
 }

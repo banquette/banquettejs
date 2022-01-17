@@ -1,5 +1,6 @@
 import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
 import { flatten } from "@banquette/utils-object/flatten";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { Primitive, Writeable } from "@banquette/utils-type/types";
 import { VarsMapInterface, PrivateThemeableDecoratorOptions } from "../decorator/themeable.decorator";
 import { getActiveComponentsCount } from "../utils/components-count";
@@ -7,14 +8,19 @@ import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { Vue } from "../vue";
 import { ThemesEvents } from "./constant";
 import { ThemeVariantEvent } from "./event/theme-variant.event";
-import { VariantSelectorInterface } from "./variant-selector.interface";
+import { NormalizedVariantSelectorInterface } from "./normalized-variant-selector.interface";
 import { VueTheme } from "./vue-theme";
 
 export class VueThemeVariant {
     /**
      * Unique identifier that will be used to inject styles.
      */
-    public readonly id: string = getUniqueRandomId();
+    public readonly uid: string = getUniqueRandomId();
+
+    /**
+     * Public id of the variant, used to target the variant when using `apply`.
+     */
+    public readonly publicId: string|null = null;
 
     /**
      * Raw CSS to inject in the head (as written by the end-user).
@@ -31,6 +37,11 @@ export class VueThemeVariant {
      * Key/value pair holding propsMap values.
      */
     public readonly propsMap: Record<string, any> = {};
+
+    /**
+     * Ids of other variants to apply when the variant matches.
+     */
+    public readonly applyIds: string[] = [];
 
     /**
      * `true` if the variant has been used by a component.
@@ -53,9 +64,17 @@ export class VueThemeVariant {
     private changeNotificationScheduled: boolean = false;
 
     public constructor(public readonly theme: VueTheme,
-                       public readonly selector: VariantSelectorInterface,
+                       public readonly selector: NormalizedVariantSelectorInterface,
                        private eventDispatcher: EventDispatcher) {
 
+    }
+
+    /**
+     * Set the public id of the variant, used to target the variant when using `apply`.
+     */
+    public id(id: string): VueThemeVariant {
+        (this as Writeable<VueThemeVariant>).publicId = id;
+        return this;
     }
 
     /**
@@ -139,6 +158,15 @@ export class VueThemeVariant {
     public clearProps(): VueThemeVariant {
         (this as Writeable<VueThemeVariant>).propsMap = {};
         this.scheduleChangeNotification();
+        return this;
+    }
+
+    /**
+     * Set one or multiple ids of other variants to apply when the variant matches.
+     * Can only target variants of the same component and theme.
+     */
+    public apply(ids: string|string[]): VueThemeVariant {
+        (this as Writeable<VueThemeVariant>).applyIds = ensureArray(ids);
         return this;
     }
 

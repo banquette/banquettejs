@@ -143,6 +143,6 @@ export class VueThemes {
      * Test if the input is a VariantDefinitionInterface.
      */
     private static IsVariantDefinitionInterface(input: any): input is VariantDefinitionInterface {
-        return isObject(input) && 'match' in input && ('props' in input || 'vars' in input || 'css' in input);
+        return isObject(input) && 'match' in input && ('apply' in input || 'props' in input || 'vars' in input || 'css' in input);
     }
 }
