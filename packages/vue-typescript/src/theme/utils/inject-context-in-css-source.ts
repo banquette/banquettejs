@@ -12,6 +12,27 @@ export function injectContextInCssSource(source: string, contextId: string|null,
 
     for (let i = selectors.length - 1; i >= 0; --i) {
         const selector = selectors[i];
+        let deep: boolean = false;
+
+        // Search for :deep to skip the scope id injection
+        if (selector[0].substring(0, 5) === ':deep') {
+            let start = 0, end = 0;
+            for (let j = 0; j < selector[0].length; ++j) {
+                if (selector[0][j] === '(') {
+                    start = j + 1;
+                } else if (selector[0][j] === ')') {
+                    end = j;
+                    break ;
+                }
+            }
+            deep = true;
+            selector[0] = selector[0].substring(start, end);
+            source =
+                source.substring(0, selector[1]) +
+                selector[0] +
+                source.substring(selector[1] + end + 1);
+            selector[2] -= start + 1; // + 1 for the end parenthesis
+        }
 
         // Ignore animations
         if (selector[0][0] === '@') {
@@ -42,7 +63,7 @@ export function injectContextInCssSource(source: string, contextId: string|null,
         }
 
         // Add scope id
-        if (scopeId !== null) {
+        if (scopeId !== null && !deep) {
             source =
                 source.substring(0, selector[2]) +
                 `[${scopeId}]` +
