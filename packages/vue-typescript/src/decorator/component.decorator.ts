@@ -7,7 +7,7 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { Component as VueComponent } from "@vue/runtime-core";
-import { Directive } from "vue";
+import { Directive, EmitsOptions } from "vue";
 import { VUE_CLASS_COMPONENT_OPTIONS_NAME } from "../constants";
 import { generateVccOpts } from "../generate-vccopts";
 import { getDecoratorsData } from "../utils/get-decorators-data";
@@ -46,6 +46,11 @@ export interface ComponentDecoratorOptions {
      * If not defined, the constructor is simply called without any parameters.
      */
     factory?: (() => any)|null;
+
+    /**
+     * The "emits" option as expected by Vue.
+     */
+    emits?: EmitsOptions;
 }
 
 export type PrivateComponentDecoratorOptions = Omit<ComponentDecoratorOptions, 'name'> & {name: string};
