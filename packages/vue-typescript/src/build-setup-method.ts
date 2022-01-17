@@ -230,6 +230,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
         }
 
         // Computed
+        const instKeys = Object.keys(inst);
         const createUpdatableComputed = <T>(options: any, debugOptions: any, name: string): WritableComputedRef<T> => {
             return computed({
                 get: () => {
@@ -259,7 +260,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
 
             if (isFunction(inst[computedName])) {
                 c = createUpdatableComputed(proxy(inst[computedName], inst), computedOptions, computedName);
-            } else if (!isUndefined(inst[computedName])) {
+            } else if (instKeys.indexOf(computedName) > -1) {
                 const descriptor = Object.getOwnPropertyDescriptor(ctor.prototype, computedName);
                 if (isUndefined(descriptor) || !isFunction(descriptor.get)) {
                     console.warn(`Unable to create a computed for "${computedName}", no getter found.`);
