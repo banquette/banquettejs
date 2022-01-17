@@ -6,7 +6,7 @@ import { getActiveComponentsCount } from "../utils/components-count";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { Vue } from "../vue";
 import { ThemesEvents } from "./constant";
-import { ThemeVariantEventArg } from "./event/theme-variant.event-arg";
+import { ThemeVariantEvent } from "./event/theme-variant.event";
 import { VariantSelectorInterface } from "./variant-selector.interface";
 import { VueTheme } from "./vue-theme";
 
@@ -149,20 +149,20 @@ export class VueThemeVariant {
         (this as Writeable<VueThemeVariant>).used = true;
         (this as Writeable<VueThemeVariant>).configuration = configuration;
         (this as Writeable<VueThemeVariant>).scopeId = (component.$.type as any)['__scopeId'] || null;
-        this.eventDispatcher.dispatch(ThemesEvents.VariantUsed, new ThemeVariantEventArg(this));
+        this.eventDispatcher.dispatch(ThemesEvents.VariantUsed, new ThemeVariantEvent(this));
     }
 
     /**
      * Be notified when any value changes in the variant.
      */
-    public onChange(cb: (event: ThemeVariantEventArg) => any): UnsubscribeFunction {
+    public onChange(cb: (event: ThemeVariantEvent) => any): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(ThemesEvents.VariantUpdated, cb);
     }
 
     /**
      * Be notified when the variant is used.
      */
-    public onUse(cb: (event: ThemeVariantEventArg) => any): UnsubscribeFunction {
+    public onUse(cb: (event: ThemeVariantEvent) => any): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(ThemesEvents.VariantUsed, cb);
     }
 
@@ -184,6 +184,6 @@ export class VueThemeVariant {
      * Immediately notify listeners that a change occurred.
      */
     private notifyChange(): void {
-        this.eventDispatcher.dispatch(ThemesEvents.VariantUpdated, new ThemeVariantEventArg(this));
+        this.eventDispatcher.dispatch(ThemesEvents.VariantUpdated, new ThemeVariantEvent(this));
     }
 }

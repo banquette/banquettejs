@@ -4,7 +4,7 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { ThemesEvents, VariantSelector } from "./constant";
-import { ThemeVariantEventArg } from "./event/theme-variant.event-arg";
+import { ThemeVariantEvent } from "./event/theme-variant.event";
 import { injectContextInCssSource } from "./utils/inject-context-in-css-source";
 import { normalizeVariantSelector } from "./utils/normalize-variant-selector";
 import { VueThemeVariant } from "./vue-theme-variant";
@@ -60,7 +60,7 @@ export class VueTheme {
             const inst = new VueThemeVariant(this, normalizedVariantSelector, this.eventDispatcher);
             this.variants[componentName].variants[variantId] = {
                 variant: inst,
-                onUseUnsubscribeFn: inst.onUse((event: ThemeVariantEventArg) => {
+                onUseUnsubscribeFn: inst.onUse((event: ThemeVariantEvent) => {
                     if (event.variant === inst) {
                         this.variants[componentName].variants[variantId].onUseUnsubscribeFn();
                         this.invalidate();
@@ -122,7 +122,7 @@ export class VueTheme {
     /**
      * Subscribe to an event that will trigger each time a variant is modified.
      */
-    public onUpdated(cb: (event: ThemeVariantEventArg) => void): UnsubscribeFunction {
+    public onUpdated(cb: (event: ThemeVariantEvent) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(ThemesEvents.VariantUpdated, cb);
     }
 

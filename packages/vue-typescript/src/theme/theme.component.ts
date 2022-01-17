@@ -6,7 +6,7 @@ import { Render } from "../decorator/render.decorator";
 import { Watch } from "../decorator/watch.decorator";
 import { Vue } from "../vue";
 import { ThemeComponentSymbol } from "./constant";
-import { ThemeEventArg } from "./event/theme.event-arg";
+import { ThemeEvent } from "./event/theme.event";
 import { VueThemes } from "./vue-themes";
 
 @Component('bt-theme')
@@ -35,7 +35,7 @@ export default class ThemeComponent extends Vue {
                 this.unsubscribe = null;
             }
         } else if (this.unsubscribe === null) {
-            this.unsubscribe = VueThemes.OnCreated((event: ThemeEventArg) => {
+            this.unsubscribe = VueThemes.OnCreated((event: ThemeEvent) => {
                 if (event.theme.name === this.name) {
                     // Force re-render
                     this.$forceUpdate();

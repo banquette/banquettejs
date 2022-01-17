@@ -1,7 +1,7 @@
 import { EventArg } from "@banquette/event";
 import { VueTheme } from "../vue-theme";
 
-export class ThemeEventArg extends EventArg {
+export class ThemeEvent extends EventArg {
     public constructor(public readonly theme: VueTheme) {
         super();
     }

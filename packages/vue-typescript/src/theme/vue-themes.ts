@@ -8,7 +8,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { getActiveComponentsCount } from "../utils/components-count";
 import { ThemeWildcard, ThemesEvents } from "./constant";
-import { ThemeEventArg } from "./event/theme.event-arg";
+import { ThemeEvent } from "./event/theme.event";
 import { ThemeDefinitionInterface } from "./theme-definition.interface";
 import { VariantDefinitionInterface } from "./variant-definition.interface";
 import { VueTheme } from "./vue-theme";
@@ -79,7 +79,7 @@ export class VueThemes {
             // Do not dispatch synchronously to give time to the caller to finish its setup.
             if (getActiveComponentsCount() > 0) {
                 window.setTimeout(() => {
-                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeEventArg(inst));
+                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeEvent(inst));
                     inst.invalidate();
                 });
             }
@@ -100,7 +100,7 @@ export class VueThemes {
     /**
      * Subscribe to an event that will trigger each time a new theme is added.
      */
-    public static OnCreated(cb: (event: ThemeEventArg) => void): UnsubscribeFunction {
+    public static OnCreated(cb: (event: ThemeEvent) => void): UnsubscribeFunction {
         return VueThemes.EventDispatcher.subscribe(ThemesEvents.ThemeCreated, cb);
     }
 
