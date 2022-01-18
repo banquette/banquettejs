@@ -1,3 +1,4 @@
+import { Primitive } from "@banquette/utils-type/types";
 import { VariantSelectorInterface } from "./variant-selector.interface";
 
 export const ThemesEvents = {
@@ -5,6 +6,11 @@ export const ThemesEvents = {
      * Triggered when a new theme is created.
      */
     ThemeCreated: Symbol('theme-created'),
+
+    /**
+     * Triggered when a
+     */
+    ThemeComponentChanged: Symbol('theme-component-changed'),
 
     /**
      * Triggered when any value of an existing theme variant is modified.
@@ -54,3 +60,8 @@ export type VariantSelector = string|VariantSelectorInterface;
  * Used to match a parent component.
  */
 export type ParentSelector = string| (VariantSelectorInterface & {name: string});
+
+/**
+ * Custom callback type to check if a prop value matches the selector.
+ */
+export type PropCallback = (value: any) => boolean;

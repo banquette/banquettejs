@@ -1,5 +1,5 @@
 import { Primitive } from "@banquette/utils-type/types";
-import { ParentSelector } from "./constant";
+import { ParentSelector, PropCallback } from "./constant";
 
 /**
  * Represent a variant selector as written by the end-user.
@@ -13,7 +13,7 @@ export interface VariantSelectorInterface {
     /**
      * Props to match.
      */
-    props?: Record<string, Primitive>;
+    props?: Record<string, Primitive|PropCallback>;
 
     /**
      * Parent component to match.

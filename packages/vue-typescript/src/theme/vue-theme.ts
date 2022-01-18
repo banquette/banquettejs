@@ -2,8 +2,10 @@ import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { VoidCallback } from "@banquette/utils-type/types";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { ThemesEvents, VariantSelector } from "./constant";
+import { ThemeComponentChangedEvent } from "./event/theme-component-changed.event";
 import { ThemeVariantEvent } from "./event/theme-variant.event";
 import { injectContextInCssSource } from "./utils/inject-context-in-css-source";
 import { normalizeVariantSelector } from "./utils/normalize-variant-selector";
@@ -120,10 +122,29 @@ export class VueTheme {
     }
 
     /**
+     * Notify the theme that component has changed, so it can dispatch the info to other components
+     * that may depend on it indirectly.
+     */
+    public notifyComponentChange(name: string): void {
+        this.eventDispatcher.dispatch(ThemesEvents.ThemeComponentChanged, new ThemeComponentChangedEvent(this, name));
+    }
+
+    /**
      * Subscribe to an event that will trigger each time a variant is modified.
      */
     public onUpdated(cb: (event: ThemeVariantEvent) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(ThemesEvents.VariantUpdated, cb);
+    }
+
+    /**
+     * Subscribe to an event that will trigger when any component of the `componentNames` list notify the theme of a change.
+     */
+    public onComponentsChange(componentsNames: string[], cb: VoidCallback): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(ThemesEvents.ThemeComponentChanged, (event: ThemeComponentChangedEvent) => {
+            if (event.theme === this && componentsNames.indexOf(event.componentName) > -1) {
+                cb();
+            }
+        });
     }
 
     /**

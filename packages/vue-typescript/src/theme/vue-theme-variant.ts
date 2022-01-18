@@ -6,7 +6,7 @@ import { VarsMapInterface, PrivateThemeableDecoratorOptions } from "../decorator
 import { getActiveComponentsCount } from "../utils/components-count";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { Vue } from "../vue";
-import { ThemesEvents } from "./constant";
+import { ThemesEvents, PropCallback } from "./constant";
 import { ThemeVariantEvent } from "./event/theme-variant.event";
 import { NormalizedVariantSelectorInterface } from "./normalized-variant-selector.interface";
 import { VueTheme } from "./vue-theme";
@@ -36,7 +36,7 @@ export class VueThemeVariant {
     /**
      * Key/value pair holding propsMap values.
      */
-    public readonly propsMap: Record<string, any> = {};
+    public readonly propsMap: Record<string, Primitive|PropCallback> = {};
 
     /**
      * Ids of other variants to apply when the variant matches.
@@ -139,14 +139,14 @@ export class VueThemeVariant {
     /**
      * Define the value of a prop.
      */
-    public prop(name: string, value: Primitive): VueThemeVariant {
+    public prop(name: string, value: Primitive|PropCallback): VueThemeVariant {
         return this.props({[name]: value});
     }
 
     /**
      * Define multiple props as a key/value pair.
      */
-    public props(map: Record<string, Primitive>): VueThemeVariant {
+    public props(map: Record<string, Primitive|PropCallback>): VueThemeVariant {
         Object.assign(this.propsMap, map);
         this.scheduleChangeNotification();
         return this;
