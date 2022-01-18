@@ -169,7 +169,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                                 if (matchVariant(variantCandidate, expectedVariants, inst)) {
                                     variants.push(variantCandidate);
                                     if (variantCandidate.applyIds.length > 0) {
-                                        variants = variants.concat(variants.filter((v) => {
+                                        variants = variants.concat(variantsCandidates.filter((v) => {
                                             return v.publicId !== null && variantCandidate.applyIds.indexOf(v.publicId) > -1 && variants.indexOf(v) < 0;
                                         }));
                                     }
