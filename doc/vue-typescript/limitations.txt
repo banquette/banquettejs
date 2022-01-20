@@ -1,0 +1,3 @@
+
+- Component inheritance is not supported. The base class must NOT have a @Component() decorator.
+- @Computed() on getters are not supported in base classes. @Computed() on methods are supported everywhere though.
