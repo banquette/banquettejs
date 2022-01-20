@@ -5,10 +5,8 @@ import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { isObject } from "@banquette/utils-type/is-object";
-import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
-import { ObjectEmitsOptions } from "@vue/runtime-core";
 import { ComponentPublicInstance } from "vue";
 import { buildSetupMethod } from "./build-setup-method";
 import {

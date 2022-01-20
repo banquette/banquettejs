@@ -37,6 +37,7 @@ import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
+import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
 import { PrivateThemeableDecoratorOptions } from "./decorator/themeable.decorator";
 import { WatchOptions, WatchFunction, ImmediateStrategy } from "./decorator/watch.decorator";
 import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
@@ -47,6 +48,7 @@ import { PrefixOrAlias } from "./type";
 import { incrementActiveComponentsCount, decrementActiveComponentsCount } from "./utils/components-count";
 import { defineGetter } from "./utils/define-getter";
 import { defineRefProxy } from "./utils/define-ref-proxy";
+import { getComponentInstance } from "./utils/get-component-instance";
 import { getDecoratorsData } from "./utils/get-decorators-data";
 import { instantiate } from "./utils/instantiate";
 import { isDecorated } from "./utils/is-decorated";
@@ -106,7 +108,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                                     if (validate !== null) {
                                         if (lastOriginalValue !== newValue) {
                                             lastOriginalValue = newValue;
-                                            lastModifiedValue = validate(newValue);
+                                            lastModifiedValue = validate.apply(inst, [newValue]);
                                         }
                                         if (!isUndefined(lastModifiedValue)) {
                                             return lastModifiedValue;
@@ -209,6 +211,32 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                     watch(propsRefs, onChangeOnce);
                     onMounted(onChange);
                 })(data.themeable);
+
+                // Theme vars accessors
+                for (const propertyName of Object.keys(data.themeVars)) {
+                    ((_propertyName: string, _configuration: ThemeVarDecoratorOptions) => {
+                        Object.defineProperty(inst, _propertyName, {
+                            get: () => {
+                                let value = _configuration.defaultValue;
+                                for (const variant of activeVariants) {
+                                    if (Object.keys(variant.varsMap).indexOf(_configuration.name) > -1) {
+                                        value = variant.varsMap[_configuration.name];
+                                        break ;
+                                    }
+                                }
+                                if (isFunction(_configuration.validate)) {
+                                    value = _configuration.validate.apply(inst, [value]);
+                                }
+                                return value;
+                            },
+                            set: () => {
+                                throw new UsageException('Theme variables are readonly in the component.');
+                            },
+                            enumerable: false,
+                            configurable: false
+                        });
+                    })(propertyName, data.themeVars[propertyName]);
+                }
             }
         }
 
@@ -259,8 +287,7 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
                         if (isObject(v) && isObject(v._) && vueInstancesMap.has(v._)) {
                             return vueInstancesMap.get(v._);
                         }
-                        // Otherwise return the value as is.
-                        return v;
+                        return getComponentInstance(v) || v;
                     },
                     set: (value) => {
                         output[data.templateRefs[_templateRefName]].value = value

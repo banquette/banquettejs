@@ -161,7 +161,7 @@ export class VueTheme {
                 }
                 let variantStyles = trim(variant.rawCss);
                 if (variantStyles.length > 0) {
-                    variantStyles = injectContextInCssSource(variantStyles, `.${variant.theme.id} [data-${variant.uid}]`, variant.scopeId);
+                    variantStyles = injectContextInCssSource(variantStyles, variant.theme.id, variant.uid, variant.scopeId);
                     variantStyles += "\n";
                 }
                 const cssVarsKeys = Object.keys(variant.varsMap);

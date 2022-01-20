@@ -24,7 +24,8 @@ export function getDecoratorsData(prototype: any | DecoratedConstructor): Decora
                 provided: {},
                 injected: {},
                 renderMethod: null,
-                themeable: null
+                themeable: null,
+                themeVars: {}
             } as Partial<DecoratorsDataInterface>
         });
     }

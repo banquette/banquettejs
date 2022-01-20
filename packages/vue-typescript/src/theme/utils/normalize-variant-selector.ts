@@ -34,11 +34,9 @@ export function normalizeVariantSelector(selectors: VariantSelector|VariantSelec
             for (const key of keys) {
                 let value = trim(String(selector.props[key]));
                 if (key === 'variant') {
-                    normalizedSelector.variants = value.split(' ').map((i) => trim(i)).sort();
-                    value = normalizedSelector.variants.join(' ');
-                } else {
-                    normalizedSelector.props[key] = selector.props[key];
+                    value = value.split(' ').map((i) => trim(i)).sort().join(' ');
                 }
+                normalizedSelector.props[key] = selector.props[key];
                 output.identifier += '#' + key + ':' + typeof(selector.props[key]) + ':' + value;
             }
         }
