@@ -347,6 +347,26 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     matchPattern(pattern: string|string[]): MatchResult;
 
     /**
+     * Get all extra data.
+     */
+    getExtras(): Record<string, any>;
+
+    /**
+     * Replace all extra data.
+     */
+    setExtras(extras: Record<string, any>): void;
+
+    /**
+     * Get a single extra value.
+     */
+    getExtra<T = any>(name: string, defaultValue?: T): T;
+
+    /**
+     * Set a single extra value.
+     */
+    setExtra(name: string, value: any): void;
+
+    /**
      * Register a callback that will be called when the value of the component changes.
      *
      * @return A method to call to unsubscribe.

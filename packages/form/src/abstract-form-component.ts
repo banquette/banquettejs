@@ -402,6 +402,12 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     private treeId: string|null = null;
 
     /**
+     * An object containing any extra data from the outside.
+     * These values are not used internally.
+     */
+    private extras: Record<string, any> = {};
+
+    /**
      * Get/Set the FormControl currently on focus.
      * Only one FormControl can have the focus at any given time.
      */
@@ -581,6 +587,37 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      */
     public matchPattern(pattern: string|string[]): MatchResult {
         return matchBest(ensureArray(pattern), this.path, (this.activeStates as string[]).concat(this.additionalPatternTags));
+    }
+
+    /**
+     * Get all extra data.
+     */
+    public getExtras(): Record<string, any> {
+        return this.extras;
+    }
+
+    /**
+     * Replace all extra data.
+     */
+    public setExtras(extras: Record<string, any>): void {
+        this.extras = extras;
+    }
+
+    /**
+     * Get a single extra value.
+     */
+    public getExtra<T = any>(name: string, defaultValue?: any): T {
+        if (isUndefined(this.extras[name])) {
+            return defaultValue;
+        }
+        return this.extras[name];
+    }
+
+    /**
+     * Set a single extra value.
+     */
+    public setExtra(name: string, value: any): void {
+        this.extras[name] = value;
     }
 
     /**

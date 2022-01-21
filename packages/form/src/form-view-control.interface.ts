@@ -1,9 +1,9 @@
-import { FormViewModelInterface } from "./form-view-model.interface";
-import { FormError } from "./form-error";
-import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { UnsubscribeFunction } from "@banquette/event";
-import { ValueChangedFormEvent } from "./event/value-changed.form-event";
+import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
+import { ValueChangedFormEvent } from "./event/value-changed.form-event";
+import { FormError } from "./form-error";
+import { FormViewModelInterface } from "./form-view-model.interface";
 
 /**
  * Bridge between a FormControl and a view in the direction "View -> FormControl".
@@ -193,6 +193,26 @@ export interface FormViewControlInterface {
      * Resetting the control does not impact the following states: `ContextualizedState.Disabled`, `BasicState.Busy`, `BasicState.Validating`, `BasicState.Concrete`.
      */
     reset(): void;
+
+    /**
+     * Get all extra data.
+     */
+    getExtras(): Record<string, any>;
+
+    /**
+     * Replace all extra data.
+     */
+    setExtras(extras: Record<string, any>): void;
+
+    /**
+     * Get a single extra value.
+     */
+    getExtra<T = any>(name: string, defaultValue?: any): T;
+
+    /**
+     * Set a single extra value.
+     */
+    setExtra(name: string, value: any): void;
 
     /**
      * Register a callback that will be called before the value of the control changes.

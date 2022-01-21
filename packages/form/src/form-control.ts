@@ -324,6 +324,10 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 unsetViewModel: this.unsetViewModel,
                 setDefaultValue: this.setDefaultValue,
                 reset: this.reset,
+                setExtras: this.setExtras,
+                getExtras: this.getExtras,
+                setExtra: this.setExtra,
+                getExtra: this.getExtra,
                 onStateChanged: this.onStateChanged,
                 onValueChanged: this.onValueChanged,
                 onBeforeValueChange: this.onBeforeValueChange
