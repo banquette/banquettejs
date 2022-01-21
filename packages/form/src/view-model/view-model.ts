@@ -100,7 +100,9 @@ export class ViewModel implements ViewModelInterface {
      * Shortcut for `control.setState(VisualState.Focused, true)`.
      */
     public onFocus(): void {
-        this.getControl().markAsFocused();
+        if (!this.disabled) {
+            this.getControl().markAsFocused();
+        }
     }
 
     /**
