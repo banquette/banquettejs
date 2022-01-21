@@ -3,6 +3,11 @@
  */
 export interface FormViewModelInterface {
     /**
+     * Unique id of the view model.
+     */
+    id: number;
+
+    /**
      * Update the view value with the value from the form control.
      */
     setValue(controlValue: any): void;

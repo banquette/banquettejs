@@ -2,7 +2,8 @@ import { UnsubscribeFunction } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import { areEqual } from "@banquette/utils-misc/are-equal";
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
-import { Writeable } from "@banquette/utils-type/types";
+import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { Writeable, GenericCallback } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
 import { BasicState, CallContext, Events, ValidationStrategy } from "./constant";
@@ -36,6 +37,16 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * This is done like this mainly so you can only use a part of a form created via an annotated model.
      */
     private viewModels: FormViewModelInterface[] = [];
+
+    /**
+     * A reference on the view models currently doing a call.
+     */
+    private currentViewModels: FormViewModelInterface[] = [];
+
+    /**
+     * A reference on the view model that have the focus.
+     */
+    private focusedViewModel?: FormViewModelInterface|null;
 
     /**
      * The last known value.
@@ -86,11 +97,9 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 (this as Writeable<FormControl>).value = value;
                 this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
                 this.lastValue = cloneDeepPrimitive(this.value);
-                if (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset)) {
-                    this.viewModels.forEach((vm) => {
-                        vm.setValue(value);
-                    });
-                }
+                this.viewModels.forEach((vm) => {
+                    vm.setValue(value);
+                });
                 this.markBasicState(BasicState.Dirty);
                 if (!areEqual(this.defaultValue, value)) {
                     this.markBasicState(BasicState.Changed);
@@ -143,7 +152,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
             this.popContext();
         }
         viewModel.setValue(this.value);
-        return this.buildControlViewDecorator();
+        return this.buildControlViewDecorator(viewModel);
     }
 
     /**
@@ -221,6 +230,9 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
         this.activeControl = this;
         this.markBasicState(BasicState.Focused);
         this.validateIfStrategyMatches(ValidationStrategy.OnFocus);
+        if (this.currentViewModels.length) {
+            this.focusedViewModel = this.currentViewModels[this.currentViewModels.length - 1];
+        }
     }
 
     /**
@@ -236,6 +248,9 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
             this.validateIfStrategyMatches(ValidationStrategy.OnBlur);
         }
         this.unmarkBasicState(BasicState.Focused);
+        if (!this.currentViewModels.length || this.currentViewModels[this.currentViewModels.length - 1] === this.focusedViewModel) {
+            this.focusedViewModel = null;
+        }
     }
 
     /**
@@ -282,7 +297,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      *
      * Overall, it gives a better control over the capabilities given to the view model.
      */
-    private buildControlViewDecorator(): FormViewControlInterface {
+    private buildControlViewDecorator(viewModel: FormViewModelInterface): FormViewControlInterface {
         const that = this;
         return Object.assign({
             get id():                number { return that.id },
@@ -308,12 +323,13 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
             get unfocused():         boolean { return that.unfocused },
             get errors():            FormError[] { return that.errors },
             get defaultValue():      any { return that.defaultValue },
-            get value():             any { return that.value }
+            get value():             any { return that.value },
+            get focusedViewModel():  FormViewModelInterface|null { return that.focusedViewModel || null }
         },
-            this.buildContextualizedApi<Omit<FormViewControlInterface,
+            this.buildContextualizedViewModelApi<Omit<FormViewControlInterface,
                 'id' | 'formId' | 'valid' | 'invalid' | 'validated' | 'notValidated' | 'validating' | 'notValidating' | 'validatedAndValid' |
                 'busy' | 'notBusy' | 'disabled' | 'enabled' | 'dirty' | 'pristine' | 'touched' | 'untouched' | 'changed' |
-                'unchanged' | 'focused' | 'unfocused' | 'errors' | 'defaultValue' | 'value'>>({
+                'unchanged' | 'focused' | 'unfocused' | 'errors' | 'defaultValue' | 'value' | 'focusedViewModel'>>({
                 setValue: this.setValue,
                 markAsDisabled: this.markAsDisabled,
                 markAsEnabled: this.markAsEnabled,
@@ -331,7 +347,25 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 onStateChanged: this.onStateChanged,
                 onValueChanged: this.onValueChanged,
                 onBeforeValueChange: this.onBeforeValueChange
-            }, CallContext.ViewModel)
+            }, viewModel)
         ) as FormViewControlInterface;
+    }
+
+    /**
+     * Proxify each call to retain the source view model and apply the ViewModel call context.
+     */
+    private buildContextualizedViewModelApi<T>(map: Record<keyof T, GenericCallback>, viewModel: FormViewModelInterface): T {
+        const wrapped: any = {};
+        for (const key of getObjectKeys(map)) {
+            wrapped[key] = ((_key, _decorated) => (...args: any[]) => {
+                try {
+                    this.currentViewModels.push(viewModel);
+                    return _decorated.apply(this, args);
+                } finally {
+                    this.currentViewModels.pop();
+                }
+            })(key, this.proxifyWithContext(map[key], CallContext.ViewModel));
+        }
+        return wrapped;
     }
 }

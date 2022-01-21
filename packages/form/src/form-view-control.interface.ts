@@ -135,6 +135,11 @@ export interface FormViewControlInterface {
     readonly value: any;
 
     /**
+     * A reference on the view model instance that holds the focus.
+     */
+    readonly focusedViewModel:  FormViewModelInterface|null;
+
+    /**
      * Update the value of the control with the value of the view.
      */
     setValue(value: any): void;
