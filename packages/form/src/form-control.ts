@@ -30,12 +30,12 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
     public readonly defaultValue: any;
 
     /**
-     * The view of the control.
-     * If null, the form is locked as disabled, meaning its value will not automatically bubble up.
+     * The views of the control.
+     * If none, the control is disabled, meaning its value will not automatically bubble up.
      *
      * This is done like this mainly so you can only use a part of a form created via an annotated model.
      */
-    private viewModel: FormViewModelInterface|null = null;
+    private viewModels: FormViewModelInterface[] = [];
 
     /**
      * The last known value.
@@ -71,21 +71,25 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 const beforeValueChangeEvent = new BeforeValueChangeFormEvent(this, this.lastValue, value);
                 this.dispatch(Events.BeforeValueChange, beforeValueChangeEvent);
                 if (!beforeValueChangeEvent.changeAccepted) {
-                    if (this.viewModel) {
-                        this.viewModel.setValue(this.lastValue);
-                    }
+                    this.viewModels.forEach((vm) => {
+                        vm.setValue(this.lastValue);
+                    });
                     return;
                 }
-                if (!areEqual(beforeValueChangeEvent.newValue, value) && this.viewModel) {
-                    this.viewModel.setValue(beforeValueChangeEvent.newValue);
+                if (!areEqual(beforeValueChangeEvent.newValue, value)) {
+                    this.viewModels.forEach((vm) => {
+                        vm.setValue(beforeValueChangeEvent.newValue);
+                    });
                 }
                 // The value may have been overridden in the event.
                 value = beforeValueChangeEvent.newValue;
                 (this as Writeable<FormControl>).value = value;
                 this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
                 this.lastValue = cloneDeepPrimitive(this.value);
-                if (this.viewModel && (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset))) {
-                    this.viewModel.setValue(value);
+                if (!this.hasContext(CallContext.ViewModel) || this.hasContext(CallContext.Reset)) {
+                    this.viewModels.forEach((vm) => {
+                        vm.setValue(value);
+                    });
                 }
                 this.markBasicState(BasicState.Dirty);
                 if (!areEqual(this.defaultValue, value)) {
@@ -121,13 +125,10 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * @return A object the view model must use to interact with the control.
      */
     public setViewModel(viewModel: FormViewModelInterface): FormViewControlInterface {
-        if (this.viewModel === viewModel) {
+        if (this.viewModels.indexOf(viewModel) > -1) {
             throw new UsageException('The view model is already associated with this control.');
         }
-        if (this.viewModel) {
-            this.viewModel.unsetControl();
-        }
-        this.viewModel = viewModel;
+        this.viewModels.push(viewModel);
         try {
             // Because we are still setting the connection between the control and the view model
             // at this point, we have no call context yet, so we have to push it manually.
@@ -149,12 +150,11 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * Unset the view model assigned with the form control.
      */
     public unsetViewModel(viewModel: FormViewModelInterface): void {
-        // Ensure that we don't unassign another view model in case
-        // it has already been replaced when one ask for removal.
-        if (this.viewModel === viewModel) {
-            this.viewModel = null;
+        const pos = this.viewModels.push(viewModel);
+        if (pos > -1) {
+            this.viewModels.splice(pos, 1);
         }
-        if (this.viewModel === null) {
+        if (!this.viewModels.length) {
             this.markAsVirtual();
         }
     }
@@ -163,8 +163,8 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * Ask the view to get the focus on the control.
      */
     public focus(): void {
-        if (this.viewModel) {
-            this.viewModel.focus();
+        if (this.viewModels.length > 0) {
+            this.viewModels[0].focus();
         }
     }
 
@@ -172,9 +172,9 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * Inverse of `focus()`.
      */
     public blur(): void {
-        if (this.viewModel) {
-            this.viewModel.blur();
-        }
+        this.viewModels.forEach((vm) => {
+            vm.blur();
+        });
     }
 
     /**
