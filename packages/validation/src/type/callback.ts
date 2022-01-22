@@ -4,7 +4,7 @@ import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";
 
-type ValidationCallback = ((context: ValidationContext) => Promise<any>|undefined);
+type ValidationCallback = ((context: ValidationContext) => Promise<void>|void);
 
 /**
  * Delegate the validation to a custom callback given as parameter of the factory.
