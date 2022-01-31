@@ -1,4 +1,4 @@
-import { randomString, ALPHABETS } from "@banquette/utils-random/random-string";
+import { randomString } from "@banquette/utils-random/random-string";
 
 const knownRandomIds: string[] = [];
 

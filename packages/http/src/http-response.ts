@@ -1,4 +1,4 @@
-import { ObservablePromise } from "@banquette/promise";
+import { ObservablePromise } from "@banquette/promise/observable-promise";
 import { HttpResponseStatus } from "./constants";
 import { NetworkException } from "./exception/network.exception";
 import { RequestException } from "./exception/request.exception";

@@ -1,4 +1,4 @@
-import { Module } from "@banquette/dependency-injection";
+import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
 import { Constructor } from "@banquette/utils-type/types";
 import { ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from "../constant";
 

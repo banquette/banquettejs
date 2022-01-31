@@ -1,4 +1,5 @@
-import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { EventDispatcher } from "@banquette/event/event-dispatcher";
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";

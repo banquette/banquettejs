@@ -1,6 +1,6 @@
-import { HttpMethod } from "@banquette/http";
+import { HttpMethod } from "@banquette/http/constants";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
-import { ValidatorInterface } from "@banquette/validation";
 
 export type ApiEndpointParameterOptions = Partial<Omit<ApiEndpointParameterInterface, 'url'>>|ValidatorInterface|true|null;
 export type ApiEndpointOptionsWithName = ApiEndpointOptions & {name: string};

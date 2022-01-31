@@ -1,4 +1,4 @@
-import { ObservablePromise } from "@banquette/promise";
+import { ObservablePromise } from "@banquette/promise/observable-promise";
 import { AdapterRequest } from "./adapter-request";
 import { AdapterResponse } from "./adapter-response";
 

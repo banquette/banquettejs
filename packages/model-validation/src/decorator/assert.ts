@@ -1,7 +1,7 @@
-import { Injector } from "@banquette/dependency-injection";
-import { propertyDecorator } from "@banquette/model";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { propertyDecorator } from "@banquette/model/decorator/utils";
 import { Constructor } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ModelValidationMetadataService } from "../model-validation-metadata.service";
 
 const metadata = Injector.Get(ModelValidationMetadataService);

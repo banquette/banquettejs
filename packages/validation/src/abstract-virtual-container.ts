@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isType } from "@banquette/utils-type/is-type";

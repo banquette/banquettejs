@@ -1,5 +1,5 @@
-import { Injector } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { ModelMetadataService } from "../model-metadata.service";

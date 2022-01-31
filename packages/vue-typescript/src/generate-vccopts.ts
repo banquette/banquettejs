@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { extend } from "@banquette/utils-object/extend";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
@@ -33,12 +33,12 @@ import { Vue } from "./vue";
 import { VueBuilder } from "./vue-builder";
 
 /**
- * A cache for the __vccOpts objects.
+ * A cache for the Vue component options.
  */
 export const vccOptionsMap: WeakMap<any, any> = new WeakMap<any, any>();
 
 /**
- * Add the necessary data to a constructor so it can be used as a Vue component.
+ * Generate the option object that will be used by Vue to create a component.
  */
 export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface & {component: ComponentDecoratorOptions}) {
     if (!isUndefined(ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME]) && ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME][DECORATORS_CTOR_NAME] === ctor) {

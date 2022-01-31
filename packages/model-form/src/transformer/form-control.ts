@@ -1,7 +1,10 @@
-import { Injector } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { FormControl as FormControlObject } from '@banquette/form';
-import { TransformerInterface, TransformContext, TransformResult, Raw } from "@banquette/model";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { FormControl as FormControlObject } from '@banquette/form/form-control';
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformContext } from "@banquette/model/transformer/transform-context";
+import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
+import { Raw } from "@banquette/model/transformer/type/raw";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Complete } from "@banquette/utils-type/types";
 import { FormControlTransformerSymbol } from "../contants";
@@ -56,7 +59,8 @@ export function FormControl(transformer: TransformerInterface = Raw()): FormTran
          * @inheritDoc
          */
         transformInverse(context: TransformContext): TransformResult {
-            context.result.setResult((context.value as FormControlObject).value);
+            context.result.setResult((context.value as FormControlObject
+            ).value);
             return context.result;
         }
     };

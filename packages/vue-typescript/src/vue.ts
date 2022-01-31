@@ -6,6 +6,7 @@ import { AbstractConstructor } from "@banquette/utils-type/types";
 import { WatchOptions } from "@vue/runtime-core";
 import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
 import { DECORATORS_CTOR_NAME } from "./constants";
+import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { isComponentInstance } from "./utils/is-component-instance";
 
 /**
@@ -52,6 +53,32 @@ export class Vue implements ComponentPublicInstance {
             }
             $parent = $parent.$parent;
         }
+        return null;
+    }
+
+    /**
+     * Try to get a reference on a specific parent component.
+     */
+    protected getParentByName<T extends AbstractConstructor<Vue>>(name: string): InstanceType<T>|null {
+        let $parent = this.$parent;
+        while ($parent !== null) {
+
+            $parent = $parent.$parent;
+        }
+        return null;
+    }
+
+    /**
+     * Try to get the vue-typescript's metadata for a component.
+     */
+    protected getComponentMetadata(component: any): DecoratorsDataInterface|null {
+        return null;
+    }
+
+    /**
+     * Try to get the name of a Vue component.
+     */
+    protected getComponentName(component: any): string|null {
         return null;
     }
 

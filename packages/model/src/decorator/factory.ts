@@ -1,4 +1,4 @@
-import { Injector } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection/injector";
 import { Constructor } from "@banquette/utils-type/types";
 import { ModelMetadataService } from "../model-metadata.service";
 import { ModelFactory } from "../type";

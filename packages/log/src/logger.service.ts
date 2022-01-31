@@ -1,7 +1,8 @@
-import { SharedConfiguration } from "@banquette/config";
-import { Inject, Service } from "@banquette/dependency-injection";
-import { FingerprintService } from "@banquette/fingerprint";
-import { StorageService } from "@banquette/storage";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { FingerprintService } from "@banquette/fingerprint/fingerprint.service";
+import { StorageService } from "@banquette/storage/storage.service";
 import { noop } from "@banquette/utils-misc/noop";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { extend } from "@banquette/utils-object/extend";

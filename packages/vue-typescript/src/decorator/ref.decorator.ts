@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { getDecoratorsData } from "../utils/get-decorators-data";

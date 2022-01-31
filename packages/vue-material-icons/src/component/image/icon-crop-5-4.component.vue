@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript";
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 
 @Component('icon-crop-5-4')
 export default class IconCrop54 {

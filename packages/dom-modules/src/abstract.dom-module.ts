@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { areEqual } from "@banquette/utils-misc/are-equal";
 import { Pojo } from "@banquette/utils-type/types";
 

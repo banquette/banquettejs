@@ -1,6 +1,9 @@
-import { Service, Inject } from "@banquette/dependency-injection";
-import { HttpRequest, HttpService } from "@banquette/http";
-import { TransformService, TransformResult } from "@banquette/model";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { HttpRequest } from "@banquette/http/http-request";
+import { HttpService } from "@banquette/http/http.service";
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformService } from "@banquette/model/transformer/transform.service";
 import { Not } from "@banquette/utils-misc/not";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isType } from "@banquette/utils-type/is-type";

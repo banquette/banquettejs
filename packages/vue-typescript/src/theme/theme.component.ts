@@ -1,4 +1,4 @@
-import { UnsubscribeFunction } from "@banquette/event";
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { h } from "vue";
 import { Component } from "../decorator/component.decorator";
 import { Prop } from "../decorator/prop.decorator";

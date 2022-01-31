@@ -1,4 +1,4 @@
-import { Exception } from "@banquette/exception";
+import { Exception } from "@banquette/exception/exception";
 import { NetworkException } from "./network.exception";
 
 /**

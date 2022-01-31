@@ -1,9 +1,7 @@
-import {
-    InjectableIdentifier,
-    InjectableMetadataInterface,
-    InjectableType,
-    InjectorAdapterInterface
-} from "@banquette/dependency-injection";
+import { InjectableMetadataInterface } from "@banquette/dependency-injection/injectable-metadata.interface";
+import { InjectorAdapterInterface } from "@banquette/dependency-injection/injector.interface";
+import { InjectableIdentifier } from "@banquette/dependency-injection/type/injectable-identifier.type";
+import { InjectableType } from "@banquette/dependency-injection/type/injectable.type";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";

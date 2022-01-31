@@ -1,20 +1,20 @@
-import { ApiEndpoint } from "@banquette/api";
-import { Module, Inject, InjectLazy } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { HttpResponse } from "@banquette/http";
-import {
-    ModelTransformerTag,
-    TransformContext,
-    TransformPipeline,
-    TransformResult,
-    ModelMetadataService,
-    ModelTransformMetadataService,
-    ModelFactoryService,
-    TransformService,
-    PojoTransformer
-} from "@banquette/model";
+import { ApiEndpoint } from "@banquette/api/api-endpoint";
+import { InjectLazy } from "@banquette/dependency-injection/decorator/inject-lazy.decorator";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpResponse } from "@banquette/http/http-response";
+import { ModelTransformerTag } from "@banquette/model/constants";
+import { ModelMetadataService } from "@banquette/model/model-metadata.service";
+import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
+import { ModelFactoryService } from "@banquette/model/model.factory.service";
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformContext } from "@banquette/model/transformer/transform-context";
+import { TransformPipeline } from "@banquette/model/transformer/transform-pipeline";
+import { TransformService } from "@banquette/model/transformer/transform.service";
+import { PojoTransformer } from "@banquette/model/transformer/type/root/pojo";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { NotEmpty } from "@banquette/validation";
+import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { ModelApiMetadataService } from "../../model-api-metadata.service";
 
 export const ApiTransformerSymbol = Symbol('api');

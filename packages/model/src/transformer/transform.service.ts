@@ -1,5 +1,7 @@
-import { Service, InjectMultiple, Inject } from "@banquette/dependency-injection";
-import { ExceptionFactory } from "@banquette/exception";
+import { InjectMultiple } from "@banquette/dependency-injection/decorator/inject-multiple.decorator";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { Complete, Constructor } from "@banquette/utils-type/types";

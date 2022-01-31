@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { noop } from "@banquette/utils-misc/noop";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureArray } from "@banquette/utils-type/ensure-array";

@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isObject } from "@banquette/utils-type/is-object";

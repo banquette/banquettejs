@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { noop } from "@banquette/utils-misc/noop";
 import { kebabCase } from "@banquette/utils-string/case/kebab-case";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";

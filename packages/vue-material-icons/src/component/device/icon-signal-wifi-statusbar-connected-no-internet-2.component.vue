@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript";
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 
 @Component('icon-signal-wifi-statusbar-connected-no-internet-2')
 export default class IconSignalWifiStatusbarConnectedNoInternet2 {

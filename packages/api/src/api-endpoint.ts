@@ -1,12 +1,9 @@
-import { UsageException } from "@banquette/exception";
-import {
-    HttpMethod,
-    PayloadTypeJson,
-    ResponseTypeJson,
-    HttpRequest,
-    HttpRequestBuilder,
-    UrlParameterType
-} from "@banquette/http";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpMethod, UrlParameterType } from "@banquette/http/constants";
+import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
+import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
+import { HttpRequest } from "@banquette/http/http-request";
+import { HttpRequestBuilder } from "@banquette/http/http-request.builder";
 import { extend } from "@banquette/utils-object/extend";
 import { ensureObject } from "@banquette/utils-type/ensure-object";
 import { ensureString } from "@banquette/utils-type/ensure-string";
@@ -17,7 +14,7 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
 import { ApiEndpointOptions, ApiEndpointParameterOptions } from "./api-endpoint.options";
 import { InvalidParameterException } from "./exception/invalid-parameter.exception";

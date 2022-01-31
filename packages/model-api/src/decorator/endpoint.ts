@@ -1,6 +1,6 @@
-import { ApiEndpointOptionsWithName, ApiEndpointParameterOptions } from "@banquette/api";
-import { Injector } from "@banquette/dependency-injection";
-import { HttpMethod } from "@banquette/http";
+import { ApiEndpointOptionsWithName, ApiEndpointParameterOptions } from "@banquette/api/api-endpoint.options";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { HttpMethod } from "@banquette/http/constants";
 import { Constructor } from "@banquette/utils-type/types";
 import { ModelApiMetadataService } from "../model-api-metadata.service";
 

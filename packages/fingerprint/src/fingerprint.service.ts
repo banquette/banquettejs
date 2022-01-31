@@ -1,11 +1,15 @@
-import { Inject, InjectMultiple, Service } from "@banquette/dependency-injection";
-import { Exception, ExceptionFactory, UsageException } from "@banquette/exception";
-import { StorageService } from "@banquette/storage";
+import { InjectMultiple } from "@banquette/dependency-injection/decorator/inject-multiple.decorator";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { Exception } from "@banquette/exception/exception";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { StorageService } from "@banquette/storage/storage.service";
 import { noop } from "@banquette/utils-misc/noop";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { AdapterInterface } from "./adapter/adapter.interface";
-import { AdapterTag } from "./constant";
 import './adapter/fingerprintjs.adapter';
+import { AdapterTag } from "./constant";
 
 @Service()
 export class FingerprintService {

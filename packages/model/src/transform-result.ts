@@ -1,4 +1,5 @@
-import { Exception, ExceptionFactory } from "@banquette/exception";
+import { Exception } from "@banquette/exception/exception";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { Writeable, Modify, GenericCallback } from "@banquette/utils-type/types";
 

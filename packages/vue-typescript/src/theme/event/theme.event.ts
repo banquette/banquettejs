@@ -1,4 +1,4 @@
-import { EventArg } from "@banquette/event";
+import { EventArg } from "@banquette/event/event-arg";
 import { VueTheme } from "../vue-theme";
 
 export class ThemeEvent extends EventArg {

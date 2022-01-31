@@ -1,6 +1,11 @@
-import { UsageException } from "@banquette/exception";
-import { HttpResponse, HttpResponseStatus, RequestException, NetworkException, HttpRequest } from "@banquette/http";
-import { ObservablePromise, ResolveCallback, RejectCallback, ProgressCallback } from "@banquette/promise";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpResponseStatus } from "@banquette/http/constants";
+import { NetworkException } from "@banquette/http/exception/network.exception";
+import { RequestException } from "@banquette/http/exception/request.exception";
+import { HttpRequest } from "@banquette/http/http-request";
+import { HttpResponse } from "@banquette/http/http-response";
+import { ObservablePromise } from "@banquette/promise/observable-promise";
+import { RejectCallback, ResolveCallback, ProgressCallback } from "@banquette/promise/types";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isType } from "@banquette/utils-type/is-type";
 import { Writeable } from "@banquette/utils-type/types";

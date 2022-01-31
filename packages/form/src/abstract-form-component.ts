@@ -1,7 +1,10 @@
-import { EventDispatcher, EventDispatcherInterface, UnsubscribeFunction } from "@banquette/event";
-import { UsageException } from "@banquette/exception";
+import { EventDispatcher } from "@banquette/event/event-dispatcher";
+import { EventDispatcherInterface } from "@banquette/event/event-dispatcher.interface";
+import { UnsubscribeFunction } from "@banquette/event/type";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { removeFromArray } from "@banquette/utils-array/remove-from-array";
-import { MatchResult, matchBest } from "@banquette/utils-glob";
+import { matchBest } from "@banquette/utils-glob/match-best";
+import { MatchResult } from "@banquette/utils-glob/match-result";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { uniqueId } from "@banquette/utils-random/unique-id";
@@ -9,7 +12,8 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Writeable, GenericCallback } from "@banquette/utils-type/types";
-import { ValidationResult, ValidatorInterface } from "@banquette/validation";
+import { ValidationResult } from "@banquette/validation/validation-result";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import {
     BasicState,
     BasicStates,

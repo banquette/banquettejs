@@ -1,9 +1,8 @@
-import { UnsubscribeFunction } from "@banquette/event";
-import { UsageException } from "@banquette/exception";
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isType } from "@banquette/utils-type/is-type";
-import { ValidatorInterface } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ValidationStrategy } from "./constant";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";

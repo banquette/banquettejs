@@ -1,4 +1,6 @@
-import { Inject } from "@banquette/dependency-injection";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
 import { isCompound } from "@banquette/utils-type/is-compound";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -12,7 +14,6 @@ import { TransformerInterface } from "../../transformer.interface";
 import { RootTransformerInterface } from "../../root-transformer.interface";
 import { TransformResult } from "../../../transform-result";
 import { TransformPipeline } from "../../transform-pipeline";
-import { UsageException, ExceptionFactory } from "@banquette/exception";
 import { ensureCompleteTransformer } from "../../../utils";
 
 export abstract class AbstractRootTransformer implements RootTransformerInterface {

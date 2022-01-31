@@ -1,14 +1,13 @@
-import { Inject, Injector, Module } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import {
-    HttpMethod,
-    HttpRequest,
-    HttpRequestFactory,
-    HttpRequestFactoryConfig,
-    HttpResponse,
-    HttpService,
-    RequestCanceledException
-} from "@banquette/http";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpMethod } from "@banquette/http/constants";
+import { RequestCanceledException } from "@banquette/http/exception/request-canceled.exception";
+import { HttpRequest } from "@banquette/http/http-request";
+import { HttpRequestFactoryConfig, HttpRequestFactory } from "@banquette/http/http-request.factory";
+import { HttpResponse } from "@banquette/http/http-response";
+import { HttpService } from "@banquette/http/http.service";
 import { extend } from "@banquette/utils-object/extend";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";

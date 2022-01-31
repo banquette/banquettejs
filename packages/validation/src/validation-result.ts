@@ -1,10 +1,14 @@
-import { Exception, ExceptionFactory, UsageException } from "@banquette/exception";
-import { matchBest, MatchResult, MatchType } from "@banquette/utils-glob";
+import { Exception } from "@banquette/exception/exception";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { MatchType } from "@banquette/utils-glob/constant";
+import { matchBest } from "@banquette/utils-glob/match-best";
+import { MatchResult } from "@banquette/utils-glob/match-result";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { GenericCallback, Modify, Writeable } from "@banquette/utils-type/types";
+import { GenericCallback, Writeable } from "@banquette/utils-type/types";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { Violation } from "./violation";
 import { ViolationInterface } from "./violation.interface";

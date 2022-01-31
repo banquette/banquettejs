@@ -1,5 +1,7 @@
-import { UsageException } from "@banquette/exception";
-import { matchBest, MatchResult, MatchType } from "@banquette/utils-glob";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { MatchType } from "@banquette/utils-glob/constant";
+import { matchBest } from "@banquette/utils-glob/match-best";
+import { MatchResult } from "@banquette/utils-glob/match-result";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { normalizeMasks } from "./mask/normalize-mask";

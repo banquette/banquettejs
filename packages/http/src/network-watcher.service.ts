@@ -1,5 +1,7 @@
-import { Inject, Service } from "@banquette/dependency-injection";
-import { EventDispatcherInterface, EventDispatcherService } from "@banquette/event";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { EventDispatcherInterface } from "@banquette/event/event-dispatcher.interface";
+import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";

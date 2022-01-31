@@ -1,4 +1,4 @@
-import { Service } from "@banquette/dependency-injection";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { StorageAdapterTag } from "../constant";

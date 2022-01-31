@@ -1,5 +1,9 @@
-import { InjectableMetadataInterface, Injector, MetadataContainer, Service } from "@banquette/dependency-injection";
-import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { InjectableMetadataInterface } from "@banquette/dependency-injection/injectable-metadata.interface";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { MetadataContainer } from "@banquette/dependency-injection/metadata.container";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { camelCase } from "@banquette/utils-string/case/camel-case";
 import { kebabCase } from "@banquette/utils-string/case/kebab-case";
 import { trim } from "@banquette/utils-string/format/trim";

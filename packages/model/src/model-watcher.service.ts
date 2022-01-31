@@ -1,4 +1,5 @@
-import { Service, Inject } from "@banquette/dependency-injection";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { Constructor } from "@banquette/utils-type/types";

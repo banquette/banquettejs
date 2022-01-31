@@ -1,4 +1,5 @@
-import { Service, Inject } from "@banquette/dependency-injection";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { ModelMetadataService } from "./model-metadata.service";
 import { ModelExtendedIdentifier } from "./type";
 

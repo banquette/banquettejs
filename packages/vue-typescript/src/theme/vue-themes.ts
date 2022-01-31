@@ -1,5 +1,6 @@
-import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
-import { UsageException } from "@banquette/exception";
+import { EventDispatcher } from "@banquette/event/event-dispatcher";
+import { UnsubscribeFunction } from "@banquette/event/type";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";

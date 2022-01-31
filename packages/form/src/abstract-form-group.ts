@@ -1,11 +1,15 @@
-import { UnsubscribeFunction } from "@banquette/event";
-import { MatchType, MatchResult } from "@banquette/utils-glob";
+import { UnsubscribeFunction } from "@banquette/event/type";
+import { MatchType } from "@banquette/utils-glob/constant";
+import { MatchResult } from "@banquette/utils-glob/match-result";
 import { ltrim } from "@banquette/utils-string/format/ltrim";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isBoolean } from "@banquette/utils-type/is-boolean";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { createValidator, ValidationContext, ValidationResult, ValidatorInterface } from "@banquette/validation";
+import { createValidator } from "@banquette/validation/create-validator";
+import { ValidationContext } from "@banquette/validation/validation-context";
+import { ValidationResult } from "@banquette/validation/validation-result";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormComponent } from "./abstract-form-component";
 import {
     BasicState,
@@ -17,6 +21,7 @@ import {
     EventsInheritanceMap
 } from "./constant";
 import { FormEvent } from "./event/form-event";
+import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ComponentNotFoundException } from "./exception/component-not-found.exception";
 import { FormChildComponentInterface } from "./form-child-component.interface";
 import { FormComponentInterface } from "./form-component.interface";
@@ -104,6 +109,11 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
     protected constructor() {
         super();
         this.additionalPatternTags.push('group');
+        this.onStateChanged((event: StateChangedFormEvent) => {
+            if (event.state === BasicState.Concrete && event.newValue) {
+                this.updateValue();
+            }
+        });
     }
 
     /**

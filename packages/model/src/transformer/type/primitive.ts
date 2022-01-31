@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
 import { ensureInteger } from "@banquette/utils-type/ensure-integer";
 import { ensureNumber } from "@banquette/utils-type/ensure-number";

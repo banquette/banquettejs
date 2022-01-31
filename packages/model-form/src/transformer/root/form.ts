@@ -1,17 +1,17 @@
-import { Module, Inject } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { FormObject, FormComponentInterface } from "@banquette/form";
-import {
-    ModelTransformerTag,
-    TransformContext,
-    TransformerInterface,
-    TransformResult,
-    TransformPipeline,
-    AbstractRootTransformer,
-    ModelMetadataService,
-    ModelTransformMetadataService,
-    ModelFactoryService
-} from "@banquette/model";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { FormComponentInterface } from "@banquette/form/form-component.interface";
+import { FormObject } from "@banquette/form/form-object";
+import { ModelTransformerTag } from "@banquette/model/constants";
+import { ModelMetadataService } from "@banquette/model/model-metadata.service";
+import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
+import { ModelFactoryService } from "@banquette/model/model.factory.service";
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformContext } from "@banquette/model/transformer/transform-context";
+import { TransformPipeline } from "@banquette/model/transformer/transform-pipeline";
+import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
+import { AbstractRootTransformer } from "@banquette/model/transformer/type/root/abstract-root-transformer";
 import { isObject } from "@banquette/utils-type/is-object";
 import { Complete } from "@banquette/utils-type/types";
 import { FormComponentFactory } from "../../form-component.factory";

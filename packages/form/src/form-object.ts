@@ -1,9 +1,9 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { areEqual } from "@banquette/utils-misc/are-equal";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { ValidatorInterface } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormGroup } from "./abstract-form-group";
 import { CallContext, FilterGroup, Events, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";

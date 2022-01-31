@@ -1,4 +1,4 @@
-import { TransformerInterface } from "@banquette/model";
+import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
 import { Complete } from "@banquette/utils-type/types";
 
 export interface FormTransformerInterface extends TransformerInterface {

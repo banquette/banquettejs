@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { Constructor } from "@banquette/utils-type/types";
 import { getConstructorArgumentsTypes } from "./get-constructor-arguments-types";
 import { getFunctionArguments } from "./get-function-arguments";

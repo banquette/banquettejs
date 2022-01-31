@@ -1,5 +1,7 @@
-import { Injector } from "@banquette/dependency-injection";
-import { TransformerInterface, Raw, Transformable } from "@banquette/model";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { Transformable } from "@banquette/model/decorator/transformable";
+import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
+import { Raw } from "@banquette/model/transformer/type/raw";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { ModelApiMetadataService } from "../model-api-metadata.service";
 import { ApiTransformerSymbol } from "../transformer/root/api";

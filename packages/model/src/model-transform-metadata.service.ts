@@ -1,5 +1,6 @@
-import { Inject, Service } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";

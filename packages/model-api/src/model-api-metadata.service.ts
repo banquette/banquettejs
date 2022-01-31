@@ -1,14 +1,13 @@
-import {
-    ApiEndpointOptionsWithName,
-    ApiEndpointCollection,
-    ApiEndpointParameterOptions,
-    ApiEndpoint,
-    EndpointNotFoundException
-} from "@banquette/api";
-import { Service, Inject } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { HttpMethod } from "@banquette/http";
-import { ModelExtendedIdentifier, ModelMetadataService } from "@banquette/model";
+import { ApiEndpoint } from "@banquette/api/api-endpoint";
+import { ApiEndpointCollection } from "@banquette/api/api-endpoint-collection";
+import { ApiEndpointOptionsWithName, ApiEndpointParameterOptions } from "@banquette/api/api-endpoint.options";
+import { EndpointNotFoundException } from "@banquette/api/exception/endpoint-not-found.exception";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpMethod } from "@banquette/http/constants";
+import { ModelMetadataService } from "@banquette/model/model-metadata.service";
+import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { ModelPropertyMetadataInterface } from "./model-property-metadata.interface";

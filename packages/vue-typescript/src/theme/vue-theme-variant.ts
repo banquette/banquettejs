@@ -1,4 +1,5 @@
-import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { EventDispatcher } from "@banquette/event/event-dispatcher";
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { flatten } from "@banquette/utils-object/flatten";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { Primitive, Writeable } from "@banquette/utils-type/types";

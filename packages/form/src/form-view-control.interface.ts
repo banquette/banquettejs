@@ -1,4 +1,4 @@
-import { UnsubscribeFunction } from "@banquette/event";
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";

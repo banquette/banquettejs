@@ -1,5 +1,5 @@
-import { UsageException } from "@banquette/exception";
-import { HttpMethod } from "@banquette/http";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpMethod } from "@banquette/http/constants";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ApiEndpoint } from "./api-endpoint";

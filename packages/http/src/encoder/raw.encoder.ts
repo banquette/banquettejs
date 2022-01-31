@@ -1,5 +1,5 @@
-import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherService } from "@banquette/event";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { EncoderTag, Events } from "../constants";
 import { RequestEvent } from "../event/request.event";
 

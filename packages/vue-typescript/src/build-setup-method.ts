@@ -1,5 +1,5 @@
-import { UnsubscribeFunction } from "@banquette/event";
-import { UsageException } from "@banquette/exception";
+import { UnsubscribeFunction } from "@banquette/event/type";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { noop } from "@banquette/utils-misc/noop";
 import { once } from "@banquette/utils-misc/once";
 import { proxy } from "@banquette/utils-misc/proxy";

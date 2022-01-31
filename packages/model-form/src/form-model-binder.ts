@@ -1,27 +1,24 @@
-import { Module, Inject } from "@banquette/dependency-injection";
-import { UsageException, ExceptionFactory } from "@banquette/exception";
-import {
-    FormObject,
-    FormComponentInterface,
-    FormGroupInterface,
-    FormControl,
-    FormArray,
-    ValueChangedFormEvent,
-    ComponentNotFoundException
-} from "@banquette/form";
-import {
-    TransformService,
-    TransformerInterface,
-    ModelTransformMetadataService,
-    ModelMetadataService,
-    ensureCompleteTransformer,
-    ModelFactory,
-    TransformResult,
-    TransformContext,
-    ModelWatcherService,
-    ModelChangeEvent,
-    ModelChangeType
-} from "@banquette/model";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
+import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
+import { FormArray } from "@banquette/form/form-array";
+import { FormComponentInterface } from "@banquette/form/form-component.interface";
+import { FormControl } from "@banquette/form/form-control";
+import { FormGroupInterface } from "@banquette/form/form-group.interface";
+import { FormObject } from "@banquette/form/form-object";
+import { ModelChangeEvent, ModelChangeType } from "@banquette/model/event/model-change.event";
+import { ModelMetadataService } from "@banquette/model/model-metadata.service";
+import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
+import { ModelWatcherService } from "@banquette/model/model-watcher.service";
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformContext } from "@banquette/model/transformer/transform-context";
+import { TransformService } from "@banquette/model/transformer/transform.service";
+import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
+import { ModelFactory } from "@banquette/model/type";
+import { ensureCompleteTransformer } from "@banquette/model/utils";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isArray } from "@banquette/utils-type/is-array";

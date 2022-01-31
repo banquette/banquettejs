@@ -1,4 +1,5 @@
-import { Exception, SystemException } from "@banquette/exception";
+import { Exception } from "@banquette/exception/exception";
+import { SystemException } from "@banquette/exception/system.exception";
 
 /**
  * Exception thrown when the "transformInverse" method is called on a transformer that doesn't implement it.

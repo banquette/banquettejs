@@ -1,5 +1,6 @@
-import { Module } from "@banquette/dependency-injection";
-import { UsageException, ExceptionFactory } from "@banquette/exception";
+import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { Complete } from "@banquette/utils-type/types";

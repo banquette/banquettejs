@@ -1,5 +1,5 @@
-import { Service } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { extend } from "@banquette/utils-object/extend";
 import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
 import { ensureArray } from "@banquette/utils-type/ensure-array";

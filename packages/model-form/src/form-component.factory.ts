@@ -1,7 +1,11 @@
-import { Service, Inject } from "@banquette/dependency-injection";
-import { FormControl, FormComponentInterface, FormArray, FormObject } from "@banquette/form";
-import { ModelExtendedIdentifier } from "@banquette/model";
-import { ModelValidationMetadataService } from "@banquette/model-validation";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { FormArray } from "@banquette/form/form-array";
+import { FormComponentInterface } from "@banquette/form/form-component.interface";
+import { FormControl } from "@banquette/form/form-control";
+import { FormObject } from "@banquette/form/form-object";
+import { ModelValidationMetadataService } from "@banquette/model-validation/model-validation-metadata.service";
+import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 
 @Service()

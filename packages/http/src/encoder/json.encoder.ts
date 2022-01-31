@@ -1,6 +1,7 @@
-import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherService } from "@banquette/event";
-import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";

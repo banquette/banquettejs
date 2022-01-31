@@ -1,6 +1,9 @@
-import { ValidatorInterface, createValidator, ValidationContext, ValidationResult } from "@banquette/validation";
-import { ModelExtendedIdentifier } from "@banquette/model";
-import { Injector } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { ModelExtendedIdentifier } from "@banquette/model/type";
+import { createValidator } from "@banquette/validation/create-validator";
+import { ValidationContext } from "@banquette/validation/validation-context";
+import { ValidationResult } from "@banquette/validation/validation-result";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ModelValidationMetadataService } from "../model-validation-metadata.service";
 
 const metadata = Injector.Get(ModelValidationMetadataService);

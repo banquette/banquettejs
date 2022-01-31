@@ -5,33 +5,33 @@
         "declarationDir": "../../dist",
         "rootDir": "..",
         "paths": {
-            "@banquette/api": ["packages/api/src/index.ts"],
-            "@banquette/config": ["packages/config/src/index.ts"],
-            "@banquette/dependency-injection": [
-                "packages/dependency-injection/src/index.ts"
+            "@banquette/api/*": ["packages/api/src/*"],
+            "@banquette/config/*": ["packages/config/src/*"],
+            "@banquette/dependency-injection/*": [
+                "packages/dependency-injection/src/*"
             ],
-            "@banquette/dom-modules": ["packages/dom-modules/src/index.ts"],
-            "@banquette/event": ["packages/event/src/index.ts"],
-            "@banquette/exception": ["packages/exception/src/index.ts"],
-            "@banquette/fingerprint": ["packages/fingerprint/src/index.ts"],
-            "@banquette/form": ["packages/form/src/index.ts"],
-            "@banquette/http": ["packages/http/src/index.ts"],
-            "@banquette/inversify": ["packages/inversify/src/index.ts"],
-            "@banquette/log": ["packages/log/src/index.ts"],
-            "@banquette/model": ["packages/model/src/index.ts"],
-            "@banquette/model-api": ["packages/model-api/src/index.ts"],
-            "@banquette/model-form": ["packages/model-form/src/index.ts"],
-            "@banquette/model-validation": [
-                "packages/model-validation/src/index.ts"
+            "@banquette/dom-modules/*": ["packages/dom-modules/src/*"],
+            "@banquette/event/*": ["packages/event/src/*"],
+            "@banquette/exception/*": ["packages/exception/src/*"],
+            "@banquette/fingerprint/*": ["packages/fingerprint/src/*"],
+            "@banquette/form/*": ["packages/form/src/*"],
+            "@banquette/http/*": ["packages/http/src/*"],
+            "@banquette/inversify/*": ["packages/inversify/src/*"],
+            "@banquette/log/*": ["packages/log/src/*"],
+            "@banquette/model/*": ["packages/model/src/*"],
+            "@banquette/model-api/*": ["packages/model-api/src/*"],
+            "@banquette/model-form/*": ["packages/model-form/src/*"],
+            "@banquette/model-validation/*": [
+                "packages/model-validation/src/*"
             ],
-            "@banquette/promise": ["packages/promise/src/index.ts"],
-            "@banquette/storage": ["packages/storage/src/index.ts"],
+            "@banquette/promise/*": ["packages/promise/src/*"],
+            "@banquette/storage/*": ["packages/storage/src/*"],
             "@banquette/utils-array/*": ["packages/utils-array/src/*"],
             "@banquette/utils-crypto/*": ["packages/utils-crypto/src/*"],
             "@banquette/utils-date/*": ["packages/utils-date/src/*"],
             "@banquette/utils-dom/*": ["packages/utils-dom/src/*"],
             "@banquette/utils-easing/*": ["packages/utils-easing/src/*"],
-            "@banquette/utils-glob": ["packages/utils-glob/src/index.ts"],
+            "@banquette/utils-glob/*": ["packages/utils-glob/src/*"],
             "@banquette/utils-misc/*": ["packages/utils-misc/src/*"],
             "@banquette/utils-object/*": ["packages/utils-object/src/*"],
             "@banquette/utils-random/*": ["packages/utils-random/src/*"],
@@ -40,12 +40,10 @@
             ],
             "@banquette/utils-string/*": ["packages/utils-string/src/*"],
             "@banquette/utils-type/*": ["packages/utils-type/src/*"],
-            "@banquette/validation": ["packages/validation/src/index.ts"],
-            "@banquette/vue-dom-module": [
-                "packages/vue-dom-module/src/index.ts"
-            ],
-            "@banquette/vue-material-icons": [
-                "packages/vue-material-icons/src/index.ts"
+            "@banquette/validation/*": ["packages/validation/src/*"],
+            "@banquette/vue-dom-module/*": ["packages/vue-dom-module/src/*"],
+            "@banquette/vue-material-icons/*": [
+                "packages/vue-material-icons/src/*"
             ]
         }
     },

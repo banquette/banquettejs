@@ -1,4 +1,4 @@
-import { Service } from "@banquette/dependency-injection";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { FingerprintGeneratorInvalidScriptException } from "../exception/fingerprint-generator-invalid-script.exception";
 import { FingerprintGeneratorScriptTimeoutException } from "../exception/fingerprint-generator-script-timeout.exception";

@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/exception";
+import { SystemException } from "@banquette/exception/system.exception";
 
 /**
  * Exception thrown when a JSON string failed to decode.

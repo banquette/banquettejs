@@ -1,7 +1,7 @@
-import { Exception, ExceptionFactory } from "@banquette/exception";
-import { proxy } from "@banquette/utils-misc/proxy";
+import { Exception } from "@banquette/exception/exception";
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { Modify, Writeable } from "@banquette/utils-type/types";
+import { Writeable } from "@banquette/utils-type/types";
 import { DispatchCallInterface } from "./dispatch-call.interface";
 
 export enum DispatchResultStatus {

@@ -1,6 +1,6 @@
-import { SharedConfiguration } from "@banquette/config";
-import { Injector } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";

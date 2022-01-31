@@ -1,4 +1,4 @@
-import { Injector } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection/injector";
 import { Container } from "inversify";
 import { InversifyAdapter } from "./injector";
 

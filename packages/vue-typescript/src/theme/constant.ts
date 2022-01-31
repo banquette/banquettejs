@@ -1,4 +1,3 @@
-import { Primitive } from "@banquette/utils-type/types";
 import { VariantSelectorInterface } from "./variant-selector.interface";
 
 export const ThemesEvents = {

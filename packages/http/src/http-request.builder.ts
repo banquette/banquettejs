@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive } from "@banquette/utils-type/types";
 import { HttpMethod, UrlParameterType } from "./constants";

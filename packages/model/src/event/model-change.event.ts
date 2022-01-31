@@ -1,4 +1,4 @@
-import { EventArg } from "@banquette/event";
+import { EventArg } from "@banquette/event/event-arg";
 
 export enum ModelChangeType {
     Insert  = 'insert',

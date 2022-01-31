@@ -1,12 +1,10 @@
-import { Injector } from "@banquette/dependency-injection";
-import { FormObject as FormObjectObject } from '@banquette/form';
-import {
-    TransformContext,
-    TransformResult,
-    Model,
-    ensureCompleteTransformer,
-    TransformerInterface
-} from "@banquette/model";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { FormObject as FormObjectObject } from '@banquette/form/form-object';
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformContext } from "@banquette/model/transformer/transform-context";
+import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
+import { Model } from "@banquette/model/transformer/type/model";
+import { ensureCompleteTransformer } from "@banquette/model/utils";
 import { Complete } from "@banquette/utils-type/types";
 import { FormObjectTransformerSymbol } from "../contants";
 import { FormComponentFactory } from "../form-component.factory";

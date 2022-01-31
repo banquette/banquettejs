@@ -1,12 +1,12 @@
-import { Injector } from "@banquette/dependency-injection";
-import { FormArray as FormArrayObject, FormComponentInterface } from '@banquette/form';
-import {
-    TransformerInterface,
-    TransformContext,
-    TransformResult,
-    ensureCompleteTransformer,
-    TransformPipeline
-} from "@banquette/model";
+import { Injector } from "@banquette/dependency-injection/injector";
+
+import { FormArray as FormArrayObject } from '@banquette/form/form-array';
+import { FormComponentInterface } from "@banquette/form/form-component.interface";
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformContext } from "@banquette/model/transformer/transform-context";
+import { TransformPipeline } from "@banquette/model/transformer/transform-pipeline";
+import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
+import { ensureCompleteTransformer } from "@banquette/model/utils";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Complete } from "@banquette/utils-type/types";

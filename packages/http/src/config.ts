@@ -1,5 +1,5 @@
-import { SharedConfiguration } from "@banquette/config";
-import { Injector } from "@banquette/dependency-injection";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { Injector } from "@banquette/dependency-injection/injector";
 import { XhrAdapter } from "./adapter/xhr.adapter";
 import { HttpConfigurationInterface } from "./http-configuration.interface";
 

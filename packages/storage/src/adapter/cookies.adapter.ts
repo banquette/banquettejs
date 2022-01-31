@@ -1,5 +1,6 @@
-import { SharedConfiguration } from "@banquette/config";
-import { InjectLazy, Service } from "@banquette/dependency-injection";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { InjectLazy } from "@banquette/dependency-injection/decorator/inject-lazy.decorator";
+import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { StorageAdapterTag } from "../constant";
 import { AbstractAdapter } from "./abstract.adapter";

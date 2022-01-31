@@ -1,4 +1,4 @@
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isIterable } from "@banquette/utils-type/is-iterable";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isValidatorContainer } from "../utils";

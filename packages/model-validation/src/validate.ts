@@ -1,4 +1,4 @@
-import { ValidationResult } from "@banquette/validation";
+import { ValidationResult } from "@banquette/validation/validation-result";
 import { V } from "./v";
 
 /**

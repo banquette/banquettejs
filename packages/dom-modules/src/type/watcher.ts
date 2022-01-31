@@ -1,4 +1,4 @@
-import { Inject } from "@banquette/dependency-injection";
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { throttle } from "@banquette/utils-misc/throttle";
 import { AbstractDomModule } from "../abstract.dom-module";
 import { DomModule } from "../decorator/dom-module.decorator";

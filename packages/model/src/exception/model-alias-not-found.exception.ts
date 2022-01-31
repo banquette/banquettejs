@@ -1,4 +1,5 @@
-import { Exception, SystemException } from "@banquette/exception";
+import { Exception } from "@banquette/exception/exception";
+import { SystemException } from "@banquette/exception/system.exception";
 import { ModelAlias } from "../type";
 
 /**

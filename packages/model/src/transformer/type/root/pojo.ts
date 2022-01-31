@@ -1,4 +1,4 @@
-import { Module } from "@banquette/dependency-injection";
+import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
 import { isObject } from "@banquette/utils-type/is-object";
 import { Complete } from "@banquette/utils-type/types";
 import { ModelTransformerTag } from "../../../constants";
