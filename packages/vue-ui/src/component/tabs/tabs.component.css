@@ -1,0 +1,93 @@
+.bt-tabs {
+    background: var(--esdvjfdh, #fff);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 8%), 0 10px 10px -5px rgb(0 0 0 / 3%);
+    border-radius: var(--p3w063z4, 1rem);
+
+    .toggles-wrapper {
+        position: relative;
+        border-top-left-radius: var(--hsyr96ig, var(--p3w063z4, 1rem));
+        border-top-right-radius: var(--hsyr96ig, var(--p3w063z4, 1rem));
+        background: var(--jf5rwvh, #fff);
+        border-bottom: 2px solid #ededed;
+        font-size: var(--q7qdbfru, 1rem);
+    }
+
+    .toggles {
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        :deep(.bt-tab-toggle) {
+            --loc-zmwss3q7: var(--zmwss3q7, #ccc);
+            display: flex;
+            align-items: center;
+            padding: var(--daxrcke0, 1.4em 2em);
+            color: var(--loc-zmwss3q7);
+            font-weight: var(--jqr8f43x, 500);
+            background: var(--cz5v28qa, none);
+            border-radius: var(--ldqru6dd, none);
+            cursor: pointer;
+            transition: all 500ms ease-in-out;
+
+            & > svg {
+                width: 1.3em;
+                height: 1.3em;
+
+                &:last-child:not(:first-child) {
+                    margin: -0.5em -0.4em -0.5em 0.4em;
+                }
+
+                &:first-child:not(:last-child) {
+                    margin: -0.5em 0.4em -0.5em -0.4em;
+                }
+
+                & > path {
+                    fill: var(--loc-zmwss3q7);
+                }
+            }
+
+            &:hover {
+                --loc-zmwss3q7: var(--f1prnpa2, var(--zmwss3q7));
+            }
+
+            &.focused {
+                --loc-f1prnpa2: var(--f1prnpa2, var(--zmwss3q7));
+                color: var(--loc-f1prnpa2);
+                font-weight: var(--o9oak59zh, 700);
+                background: var(--o2ogv08f, none);
+                transition: all 500ms ease-in-out;
+
+                & > svg > path {
+                    fill: var(--loc-f1prnpa2);
+                }
+            }
+
+            &.disabled {
+                --loc-n307jz7h: var(--n307jz7h, #ccc);
+                color: var(--loc-n307jz7h);
+                font-weight: var(--ihvazk93, 300);
+                background: var(--s5g6ke0i, none);
+                pointer-events: none;
+
+                & > svg > path {
+                    fill: var(--loc-n307jz7h);
+                }
+            }
+        }
+    }
+
+    .content {
+        padding: var(--no3tawbl, 1.4em 2em);
+        background: var(--s786b50s, none);
+    }
+
+    .focus-indicator {
+        position: absolute;
+        height: var(--amdsk74u, 2px);
+        bottom: 0;
+        width: 100%;
+        transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        background-color: var(--n2xy70i0, #aaa);
+        transform: translateY(var(--amdsk74u, 2px));
+    }
+}

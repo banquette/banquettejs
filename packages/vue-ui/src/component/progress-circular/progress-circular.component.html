@@ -1,0 +1,18 @@
+<div class="bt-progress-circular">
+    <div class="inner">
+        <svg :viewBox="viewBox" :class="{indeterminate: isIndeterminate()}">
+            <path :d="d"
+                  :stroke-width="strokeWidth"
+                  :stroke-dasharray="strokeDasharray"
+                  class="path"
+            />
+        </svg>
+        <!-- To override the whole content -->
+        <slot name="content">
+            <span class="progress" v-if="showProgressText">
+                <!-- To only override the text -->
+                <slot><span v-if="!isIndeterminate()">{{ animatedProgressText }}%</span></slot>
+            </span>
+        </slot>
+    </div>
+</div>

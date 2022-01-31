@@ -1,0 +1,10 @@
+<div class="bt-tabs">
+    <div class="toggles-wrapper">
+        <!-- <bt-tab> slots will be teleported here -->
+        <ul ref="toggles" class="toggles" v-bt-teleport-tab="getTabs"></ul>
+        <div class="focus-indicator" ref="indicator"></div>
+    </div>
+    <div ref="content" class="content">
+        <slot></slot>
+    </div>
+</div>

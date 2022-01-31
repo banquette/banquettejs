@@ -1,0 +1,38 @@
+.bt-progress-horizontal {
+    --border-radius: var(--foxjm433, 2px);
+
+    height: var(--xomrxf6z, 6px);
+    background: var(--uqkcll89, #efefef);
+    border-radius: var(--border-radius);
+    width: 100%;
+    overflow: hidden;
+
+    .value {
+        height: 100%;
+        background: var(--xphbg2yf, #666);
+        border-radius: var(--border-radius);
+    }
+
+    &[data-indeterminate] .value {
+        width: 100%;
+        animation: anim-m0dz8ofr var(--qk1nmbdw, 0.8s) infinite linear;
+        transform-origin: 0 50%;
+    }
+
+    &:not([data-indeterminate]) .value {
+        transition: width var(--flk3iwhc, 0.3s) ease-out;
+    }
+}
+
+
+@keyframes anim-m0dz8ofr {
+    0% {
+        transform:  translateX(0) scaleX(0);
+    }
+    40% {
+        transform:  translateX(0) scaleX(0.4);
+    }
+    100% {
+        transform:  translateX(100%) scaleX(0.5);
+    }
+}

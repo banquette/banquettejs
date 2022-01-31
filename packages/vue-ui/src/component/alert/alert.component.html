@@ -1,0 +1,31 @@
+<div
+    class="bt-alert"
+    :data-is-fading-in="fadingIn ? '' : null"
+    :data-is-fading-out="fadingOut ? '' : null"
+>
+    <slot name="maximized" v-if="!minimized">
+        <template v-if="!!icon">
+            <component :is="icon"></component>
+        </template>
+        <div class="body">
+            <div class="title" v-if="hasSlot('title') || title">
+                <slot name="title">{{ title }}</slot>
+            </div>
+            <span class="message">
+                <slot :destroy="destroy" :minimize="minimize"></slot>
+                <div v-if="closable">
+                    <slot name="destroy" :destroy="destroy">
+                        <bt-button @click="destroy()">
+                            <svg fill="currentColor" height="24" viewBox="0 0 48 48" width="24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M24 4c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm10 27.17l-2.83 2.83-7.17-7.17-7.17 7.17-2.83-2.83 7.17-7.17-7.17-7.17 2.83-2.83 7.17 7.17 7.17-7.17 2.83 2.83-7.17 7.17 7.17 7.17z"/>
+                                <path d="M0 0h48v48h-48z" fill="none"/>
+                            </svg>
+                        </bt-button>
+                    </slot>
+                </div>
+            </span>
+            <bt-progress-horizontal v-if="ttl" :progress="timeLeft" :progress-max="ttl"></bt-progress-horizontal>
+        </div>
+    </slot>
+    <slot name="minimized" :destroy="destroy" :maximize="maximize" v-else></slot>
+</div>

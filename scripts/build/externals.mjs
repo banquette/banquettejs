@@ -6,5 +6,6 @@ export const Externals = [
     'inversify',
     'vue',
     'qs',
-    /style\-inject/
+    /style\-inject/,
+    /^@popperjs/
 ];

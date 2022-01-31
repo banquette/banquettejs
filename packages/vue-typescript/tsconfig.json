@@ -45,7 +45,8 @@
             "@banquette/vue-form/*": ["packages/vue-form/src/*"],
             "@banquette/vue-material-icons/*": [
                 "packages/vue-material-icons/src/*"
-            ]
+            ],
+            "@banquette/vue-ui/*": ["packages/vue-ui/src/*"]
         }
     },
     "exclude": []

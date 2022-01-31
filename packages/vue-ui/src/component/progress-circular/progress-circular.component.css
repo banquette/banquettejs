@@ -1,0 +1,62 @@
+.bt-progress-circular {
+    .inner {
+        position: relative;
+        display: inline-block;
+
+        .progress {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: var(--xwhylest, 10px);
+        }
+    }
+
+    :not(.indeterminate) .path {
+        transition: stroke-dasharray 0.3s ease-out;
+    }
+
+    .indeterminate {
+        animation: 1.4s linear 0s infinite normal none running anim-welreaxr;
+
+        .path {
+            animation: anim-9xnqvj3f 1.4s ease-in-out infinite;
+        }
+    }
+
+    svg {
+        width: var(--qcpx3dwi, 40px);
+        height: var(--qcpx3dwi, 40px);
+
+        .path {
+            fill: var(--l28ys2ii, none);
+            stroke: var(--g1n433fu, #444);
+        }
+    }
+}
+
+@keyframes anim-welreaxr {
+    0% {
+        transform:rotate(0deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes anim-9xnqvj3f {
+    0% {
+        stroke-dasharray: 1, 100;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 100, 100;
+        stroke-dashoffset: -20px;
+    }
+
+    100% {
+        stroke-dasharray: 100, 100;
+        stroke-dashoffset: -100px;
+    }
+}

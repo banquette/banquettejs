@@ -1,0 +1,29 @@
+<component
+    :is="tag"
+    ref="root"
+    :href="href"
+    :target="target"
+    tabindex="0"
+    class="bt-button"
+    :class="{'toggle-opened': isToggleSlotVisible, active}"
+    :disabled="disabledAttr"
+    @click="toggle($event)"
+    @focus="onFocus()"
+    @blur="onBlur()"
+    v-bt-click-outside="{callback: hideToggle, enabled: isToggleSlotVisible}"
+>
+    <div class="inner">
+        <slot name="working" v-if="working">
+            <bt-progress-circular :variant="workingProgressVariant" :progress="workingProgress"></bt-progress-circular>
+            <span class="working-text" v-if="isWorkingTextSlotVisible">
+                <slot name="working-text">{{ workingText }}</slot>
+            </span>
+        </slot>
+        <slot v-else></slot>
+    </div>
+    <!-- Slot shown conditionally. Can be controlled via a prop or vie the "toggle()" method -->
+    <!-- The main use of this slot is for dropdown actions -->
+    <template v-if="isToggleSlotVisible">
+        <slot name="toggle" :close="hideToggle"></slot>
+    </template>
+</component>

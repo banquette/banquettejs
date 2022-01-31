@@ -1,0 +1,16 @@
+<div class="bt-alerts-stack" :data-fixed="fixed" :data-position="position">
+    <slot></slot>
+    <template v-for="item in stack">
+        <bt-alert v-if="item.visible"
+               :ref="'a' + item.id"
+               :variant="item.variant"
+               :title="item.title"
+               :icon="item.icon"
+               :ttl="item.ttl"
+               :closable="item.closable"
+               @destroy="remove(item.id)"
+        >
+            {{ item.message }}
+        </bt-alert>
+    </template>
+</div>

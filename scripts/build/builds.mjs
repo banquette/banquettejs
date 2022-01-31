@@ -215,6 +215,10 @@ export const Builds = Object.assign({},
         module: 'Banquette.Vue.Form'
     }),
     createBuildVariants({
+        package: 'vue-ui',
+        module: 'Banquette.Vue.Ui'
+    }),
+    createBuildVariants({
         package: 'vue-material-icons',
         module: 'Banquette.Vue.MaterialIcons'
     }),
