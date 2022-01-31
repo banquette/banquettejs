@@ -23,7 +23,7 @@ export class TextViewModel extends ViewModel {
      * Input type.
      * Only applicable if not multiline.
      */
-    public inputType: string|null = 'text';
+    public type: string = 'text';
 
     /**
      * If `true` the component visible must be a textarea.
@@ -34,4 +34,9 @@ export class TextViewModel extends ViewModel {
      * Number of rows of the textarea.
      */
     public rows: string|null = null;
+
+    /**
+     * If `true` the label will float and take the place of the placeholder when possible.
+     */
+    public floatingLabel: boolean = true;
 }
