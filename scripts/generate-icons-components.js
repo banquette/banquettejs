@@ -39,7 +39,7 @@ fs.readdirSync(libBasePath).forEach(function(type) {
             fs.mkdirSync(componentDir);
         }
         const src = `<script lang="ts">
-import { Component } from "@banquette/vue-typescript";
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 
 @Component('${componentName}')
 export default class ${className} {
