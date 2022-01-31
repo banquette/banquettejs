@@ -2,6 +2,7 @@ import path from 'path';
 import { Aliases } from './alias.mjs';
 import { getVersion, capitalize, camelCase } from './utils.mjs';
 import { fileURLToPath } from 'url';
+import glob from 'glob';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +20,7 @@ function generateBanner(name, format) {
 
     return "/*!\n" +
         ` * Banquette ${capitalize(camelCase(name))} v${getVersion()} (${format})\n` +
-        ` * (c) 2021-${new Date().getFullYear()} Julien Pinto\n` +
+        ` * (c) 2022-${new Date().getFullYear()} Julien Pinto\n` +
         " * Released under Apache License, Version 2.0\n" +
         " */";
 }
@@ -55,7 +56,7 @@ function createBuildVariants(config) {
             preserveModules: false,
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
-            entry: resolve(`packages/${config.package}/src/index.ts`),
+            entry: glob.sync(resolve(`packages/${config.package}/src`) + "/**/index.ts"),
             outputDir: `dist/${config.package}`,
             format: 'es',
             moduleName: config.module,

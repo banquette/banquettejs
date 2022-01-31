@@ -19,7 +19,7 @@ function buildFromIndex(index) {
         }
         ++startedBuildsCount;
     }, () => {
-        //console.log('FINISHED FOR INDEX [' + index + '][' + highestBuildWatched + ']');
+        // console.log('FINISHED FOR INDEX [' + index + '][' + highestBuildWatched + ']');
         building = false;
         --startedBuildsCount;
         highestBuildWatched = Math.max(highestBuildWatched, index);
@@ -27,7 +27,14 @@ function buildFromIndex(index) {
             buildFromIndex(index + 1);
         } else {
             if (startedBuildsCount <= 0) {
-                childProcess.fork('scripts/copy-locally.mjs');
+                childProcess.fork('scripts/copy-locally.mjs', {
+                    execArgv: [
+                        'scripts/copy-locally.mjs',
+                        `:${builds[keys[index]].package}`,
+                        '--mask',
+                        'watch'
+                    ]
+                });
                 startedBuildsCount = 0;
             }
         }

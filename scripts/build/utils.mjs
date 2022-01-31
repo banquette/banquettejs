@@ -11,6 +11,7 @@ import { terser } from "rollup-plugin-terser";
 import chalk from 'chalk';
 import vue from 'rollup-plugin-vue';
 import postcss from 'rollup-plugin-postcss';
+import nested from 'postcss-nested';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -95,7 +96,9 @@ export function getRollupConfig(buildConfig) {
         }
     };
     rollupConfig.plugins.push(vue({css: false}));
-    rollupConfig.plugins.push(postcss());
+    rollupConfig.plugins.push(postcss({
+        plugins: [nested()]
+    }));
     if (buildConfig.outputFile) {
         rollupConfig.plugins.push(typescript({
             check: true,
@@ -191,6 +194,7 @@ export function watch(config, onBeforeBuild, onBuildEnd, onBuildFailed) {
         } else if (event.code === 'BUNDLE_START') {
             console.log(`${chalk.red('Building & watching')} package ${chalk.blue(config._name)} in ${chalk.blue(config.output.format)}${config._env !== null ? chalk.yellow(` (${config._env})`) : ''} format.`);
         } else if (event.code === 'BUNDLE_END') {
+            writeOutput(config, output);
             onBuildEnd();
         } else if (event.code === 'ERROR') {
             console.log(chalk.red(event.error.code));
@@ -245,7 +249,7 @@ export function filterBuilds(builds, filter, isWatch) {
             }
             return false;
         }).filter((key) => {
-            return !isWatch || key.match(/cjs-dev$/);
+            return !isWatch || key.match(/esm$/);
         })
         .reduce((obj, key) => {
             obj[key] = builds[key];
