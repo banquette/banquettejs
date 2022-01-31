@@ -1,0 +1,92 @@
+<div
+    ref="select"
+    class="bt-form-select"
+    :tabindex="vm.tabindex"
+    :data-has-value="vm.value ? '' : null"
+    :data-has-placeholder="vm.choices.selectionPlaceholder ? '' : null"
+    :data-has-help="hasSlot('help') ? '' : null"
+    :data-has-focus="vm.focused ? '' : null"
+    :data-is-disabled="vm.disabled ? '' : null"
+    :data-has-error="vm.invalid && vm.validated ? '' : null"
+    :data-has-floating-label="vm.floatingLabel ? '' : null"
+    @keydown="vm.onKeyDown"
+    @focus="vm.onFocus()"
+    @blur="vm.onBlur()"
+>
+    <div class="control-wrapper">
+        <label :for="vm.fullId" v-if="hasSlot('default')"><span><slot></slot></span></label>
+        <label :for="vm.fullId" v-else-if="vm.label"><span>{{ vm.label }}</span></label>
+
+        <a
+            ref="inputWrapper"
+            :class="{placeholder: !vm.choices.selectedItems.length, focused: vm.focused}"
+            data-control
+            @mousedown="toggleChoices()"
+        >
+            <span v-if="vm.choices.visible && vm.search.virtualBuffer" class="virtual-buffer">
+                {{ vm.search.virtualBuffer }}
+            </span>
+            <span v-else-if="vm.choices.selectedItems.length">{{ vm.choices.selectionResume }}</span>
+            <span v-else class="placeholder">{{ placeholder }}</span>
+
+            <bt-progress-circular v-if="busy || vm.validating"></bt-progress-circular>
+            <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </a>
+
+        <bt-dropdown ref="dropdown" class="dropdown" v-show="vm.choices.visible" :popper="{modifiers: [{name: 'offset', options: {offset: [0, 3]}}]}">
+            <div class="dropdown-inner" v-if="vm.search.isControlVisible">
+                <bt-form-text
+                    :control="vm.search.control"
+                    placeholder="..."
+                    @mousedown.stop="vm.choices.freeze()"
+                    @focus="vm.choices.freeze()"
+                    @blur="vm.choices.unfreeze(); focus()"
+                ></bt-form-text>
+            </div>
+            <bt-dropdown-divider v-if="vm.search.isControlVisible"></bt-dropdown-divider>
+            <div ref="dropdownScrollable" class="dropdown-scrollable">
+                <choice-slot-wrapper position="before">
+                    <slot name="choices-before"></slot>
+                </choice-slot-wrapper>
+                <template v-for="choice in vm.choices.items">
+                    <bt-form-select-choice v-if="!choice.external" :composable-choice="choice">
+                        <slot name="choice" :choice="choice">{{ choice.label }}</slot>
+                    </bt-form-select-choice>
+                </template>
+
+                <div class="nothing" v-if="!vm.choices.visibleChoicesCount">
+                    <slot name="nothing">
+                        <p>Aucun résultat</p>
+                        <p>
+                            <span v-if="!vm.search.control.value">Entrez un texte à rechercher ci-dessus</span>
+                            <span v-else-if="vm.search.minCharsLeft > 0">Encore <b>{{ vm.search.minCharsLeft }}</b> caractère<span v-if="vm.search.minCharsLeft > 1">s</span> pour lancer la recherche</span>
+                            <span v-else>Essayez de modifier votre recherche</span>
+                        </p>
+                    </slot>
+                </div>
+                <choice-slot-wrapper position="after">
+                    <slot name="choices"></slot>
+                </choice-slot-wrapper>
+
+                <!-- Invisible selection -->
+                <template v-for="choice in vm.choices.selectedItems" v-if="vm.search.isRemote">
+                    <bt-form-select-choice v-if="choice.selectionFrozen && choice.ghost" :composable-choice="choice">
+                        <slot name="choice" :choice="choice">{{ choice.label }}</slot>
+                    </bt-form-select-choice>
+                </template>
+            </div>
+        </bt-dropdown>
+
+        <div v-if="hasSlot('help')" class="help">
+            <slot name="help"></slot>
+        </div>
+
+        <slot name="errors">
+            <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
+                <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
+            </bt-form-error>
+        </slot>
+    </div>
+</div>

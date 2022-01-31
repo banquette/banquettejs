@@ -211,6 +211,10 @@ export const Builds = Object.assign({},
         module: 'Banquette.Validation'
     }),
     createBuildVariants({
+        package: 'vue-form',
+        module: 'Banquette.Vue.Form'
+    }),
+    createBuildVariants({
         package: 'vue-material-icons',
         module: 'Banquette.Vue.MaterialIcons'
     }),

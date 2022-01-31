@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Gotham SSm A", "Gotham SSm B", BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+.page {
+    background-color: rgb(244, 244, 245);
+    padding: 4rem;
+    min-height: 100vh;
+}
+
+.page > * {
+    max-width: 72rem;
+    margin: auto;
+}
+
+.title {
+    font-size: 4rem;
+    text-transform: uppercase;
+}
+
+.suites {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.suite-nav {
+    background: rgb(10,10,10);
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 4rem;
+    margin-top: 1rem;
+}
+
+.suite-nav-ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.toggler {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    font-size: 1rem;
+    padding: .75rem 1.25rem;
+    border-radius: .5rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+}
+
+.toggler:target {
+    background: rgb(255,255,255);
+    color: rgb(10,10,10);
+}

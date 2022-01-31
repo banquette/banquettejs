@@ -1,0 +1,31 @@
+<div
+    class="bt-form-checkbox"
+    :tabindex="vm.tabindex"
+    :data-is-disabled="vm.disabled ? '' : null"
+    :data-is-checked="vm.checked ? '' : null"
+    :data-has-focus="vm.focused ? '' : null"
+    :data-has-error="vm.invalid && vm.validated ? '' : null"
+    :data-has-group="vm.hasGroup ? '' : null"
+    @keydown="vm.onKeyDown"
+    @focus="vm.onFocus()"
+    @blur="vm.onBlur()"
+    @click="vm.toggle()"
+>
+    <div ref="inputWrapper" class="checkbox">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <g fill="none" fill-rule="evenodd">
+                <path d="M0 0h20v20H0z" />
+                <path class="fill" d="M1 10.243L7.321 17 19 4.763 17.156 3 7.321 13.346l-4.477-4.76z" />
+            </g>
+        </svg>
+    </div>
+    <label :for="vm.fullId" v-if="hasSlot('default')"><slot></slot></label>
+    <label :for="vm.fullId" v-else-if="hasSlot('label')"><slot name="label"></slot></label>
+    <label :for="vm.fullId" v-else-if="vm.label">{{ vm.label }}</label>
+
+    <slot name="errors">
+        <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
+            <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
+        </bt-form-error>
+    </slot>
+</div>

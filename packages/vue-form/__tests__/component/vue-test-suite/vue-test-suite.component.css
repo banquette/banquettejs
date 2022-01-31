@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.suite {
+    border-radius: 1.5rem;
+    color: rgb(31, 31, 31);
+    background: rgb(244, 244, 245);
+    box-shadow: rgb(218, 218, 222) 6px 6px 12px,
+    rgb(255, 255, 255) -6px -6px 12px;
+}
+
+.p-8 {
+    padding: 2rem;
+}
+
+.px-8 {
+    padding-inline: 2rem;
+}
+
+.flex-lr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.result-label {
+    text-align: center;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: .1rem;
+    font-weight: 900;
+    opacity: .25;
+}
+
+.ratio {
+    font-size: 3rem;
+    margin: 0;
+    line-height: 1;
+}

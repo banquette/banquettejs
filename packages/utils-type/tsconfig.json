@@ -41,6 +41,7 @@
             "@banquette/utils-string/*": ["packages/utils-string/src/*"],
             "@banquette/validation/*": ["packages/validation/src/*"],
             "@banquette/vue-dom-module/*": ["packages/vue-dom-module/src/*"],
+            "@banquette/vue-form/*": ["packages/vue-form/src/*"],
             "@banquette/vue-material-icons/*": [
                 "packages/vue-material-icons/src/*"
             ],

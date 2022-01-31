@@ -1,0 +1,17 @@
+<div class="suite">
+    <div class="flex-lr p-8">
+        <h2>
+            {{ suite.name }}
+        </h2>
+        <div class="result">
+            <h2 class="ratio">{{ validCount }} / {{ suite.tests.length }}</h2>
+            <span class="result-label">Valid</span>
+        </div>
+    </div>
+    <p v-if="suite.description" class="px-8">{{ suite.description }}</p>
+
+    <!-- Tests list for this suite -->
+    <div v-for="test in suite.tests">
+        <vue-test :component="suite.component" :test="test" v-if="test.valid !== true"></vue-test>
+    </div>
+</div>

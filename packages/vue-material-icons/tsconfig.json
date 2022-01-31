@@ -42,6 +42,7 @@
             "@banquette/utils-type/*": ["packages/utils-type/src/*"],
             "@banquette/validation/*": ["packages/validation/src/*"],
             "@banquette/vue-dom-module/*": ["packages/vue-dom-module/src/*"],
+            "@banquette/vue-form/*": ["packages/vue-form/src/*"],
             "@banquette/vue-typescript/*": ["packages/vue-typescript/src/*"]
         }
     },

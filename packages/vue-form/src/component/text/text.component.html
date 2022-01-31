@@ -1,0 +1,55 @@
+<div
+    class="bt-form-text"
+    :data-is-multiline="vm.multiline ? '' : null"
+    :data-has-value="vm.value ? '' : null"
+    :data-has-placeholder="vm.placeholder ? '' : null"
+    :data-has-help="hasSlot('help') ? '' : null"
+    :data-has-focus="vm.focused ? '' : null"
+    :data-is-disabled="vm.disabled ? '' : null"
+    :data-has-error="vm.invalid && vm.validated ? '' : null"
+    :data-has-floating-label="vm.floatingLabel ? '' : null"
+>
+    <div class="control-wrapper">
+        <label :for="vm.fullId" v-if="hasSlot('default')"><span><slot></slot></span></label>
+        <label :for="vm.fullId" v-else-if="vm.label"><span>{{ vm.label }}</span></label>
+
+        <div ref="inputWrapper" class="input-wrapper">
+            <slot name="before-control"></slot>
+            <input
+                v-if="!vm.multiline"
+                ref="input"
+                :id="vm.fullId"
+                :type="vm.type"
+                v-model="vm.value"
+                :disabled="vm.disabled || null"
+                :placeholder="vm.placeholder"
+                data-control
+                @focus="onFocus()"
+                @blur="onBlur()"
+            >
+            <textarea
+                v-else
+                ref="textarea"
+                :id="vm.fullId"
+                v-model="vm.value"
+                :disabled="vm.disabled || null"
+                :placeholder="vm.placeholder"
+                :rows="vm.rows"
+                data-control
+                @focus="onFocus()"
+                @blur="onBlur()"
+            ></textarea>
+            <slot name="after-control"></slot>
+            <bt-progress-circular v-if="vm.busy || vm.validating"></bt-progress-circular>
+
+            <slot name="errors">
+                <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
+                    <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
+                </bt-form-error>
+            </slot>
+        </div>
+    </div>
+    <div v-if="hasSlot('help')" class="help">
+        <slot name="help"></slot>
+    </div>
+</div>
