@@ -1,1 +1,1 @@
-export * from './button.component.vue';
+export { default as ButtonComponent } from './button.component.vue';

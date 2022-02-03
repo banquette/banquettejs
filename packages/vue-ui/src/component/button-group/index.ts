@@ -1,1 +1,1 @@
-export * from './button-group.component.vue';
+export { default as ButtonGroupComponent } from './button-group.component.vue';

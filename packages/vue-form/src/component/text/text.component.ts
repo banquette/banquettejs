@@ -8,9 +8,9 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import ProgressCircularComponent from "@banquette/vue-ui/component/progress-circular/progress-circular.component";
+import { ProgressCircularComponent } from "@banquette/vue-ui/component/progress-circular";
 import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
-import ErrorComponent from "../error/error.component";
+import { ErrorComponent } from "../error";
 
 /**
  * A generic text component the uses the generic view model from the `@banquette/form` package.

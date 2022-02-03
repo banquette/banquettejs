@@ -1,1 +1,1 @@
-export * from './dropdown.component.vue';
+export { default as DropdownComponent } from './dropdown.component.vue';

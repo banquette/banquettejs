@@ -10,6 +10,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { DropdownComponent } from "@banquette/vue-ui/component/dropdown"
 import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
 import { ChoicesSearchComposable } from "../../composable/choices-search.composable";
 import { ChoicesComposable, PropOrigin } from "../../composable/choices.composable";
@@ -19,8 +20,6 @@ import { BeforeSlotOrigin, AfterSlotOrigin } from "./constant";
 import ErrorComponent from "../error/error.component";
 import ChoiceSlotWrapperComponent from "./choice-slot-wrapper.component";
 import ChoiceComponent from "./choice/choice.component";
-import DropdownDividerComponent from "@banquette/vue-ui/component/dropdown/divider/dropdown-divider.component";
-import DropdownComponent from "@banquette/vue-ui/component/dropdown/dropdown.component";
 
 @Themeable({
     vars: {
@@ -107,7 +106,7 @@ import DropdownComponent from "@banquette/vue-ui/component/dropdown/dropdown.com
 })
 @Component({
     name: 'bt-form-select',
-    components: [ChoiceComponent, ChoiceSlotWrapperComponent, DropdownComponent, DropdownDividerComponent, ErrorComponent]
+    components: [ChoiceComponent, ChoiceSlotWrapperComponent, DropdownComponent, ErrorComponent]
 })
 export default class SelectComponent extends AbstractVueFormComponent<SelectViewModel> {
     /**
@@ -147,6 +146,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
 
     // Template refs
     @TemplateRef('inputWrapper') public inputWrapper!: HTMLElement;
+    // @ts-ignore
     @TemplateRef('dropdown') private dropdown!: DropdownComponent;
     @TemplateRef('dropdownScrollable') private dropdownScrollable!: HTMLElement;
 

@@ -1,1 +1,1 @@
-export * from './alert.component.vue';
+export { default as AlertComponent } from './alert.component.vue';
