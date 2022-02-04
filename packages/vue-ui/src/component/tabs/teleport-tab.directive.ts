@@ -2,7 +2,7 @@ import { Directive } from "@banquette/vue-typescript/decorator/directive.decorat
 import { DirectiveBinding } from "vue";
 
 @Directive('bt-teleport-tab')
-export default class TeleportTabDirective {
+export class TeleportTabDirective {
     public updated(el: HTMLElement, bindings: DirectiveBinding): void {
         this.updateTabs(el, bindings);
     }

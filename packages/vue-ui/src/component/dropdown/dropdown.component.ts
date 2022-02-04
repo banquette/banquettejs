@@ -4,8 +4,8 @@ import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
-import DropdownDividerComponent from "./divider/dropdown-divider.component";
-import DropdownItemComponent from "./item/dropdown-item.component";
+import DropdownDividerComponent from "./divider/dropdown-divider.component.vue";
+import DropdownItemComponent from "./item/dropdown-item.component.vue";
 
 @Themeable({
     vars: {

@@ -10,8 +10,9 @@ import { Vue } from "@banquette/vue-typescript/vue";
 import { FocusChangedEvent } from "./event/focus-changed.event";
 import { TabCreatedEvent } from "./event/tab-created.event";
 import { TabRemovedEvent } from "./event/tab-removed.event";
+import { TeleportTabDirective } from "./teleport-tab.directive";
 import TabComponent from "./tab/tab.component";
-import TeleportTabDirective from "./teleport-tab.directive";
+import './tab/tab.component.vue';
 
 @Themeable({
     vars: {

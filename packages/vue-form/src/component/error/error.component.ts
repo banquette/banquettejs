@@ -4,7 +4,7 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import StickToDirective from "@banquette/vue-ui/directive/stick-to.directive";
+import { StickToDirective } from "@banquette/vue-ui/directive/stick-to.directive";
 
 @Themeable({
     vars: {

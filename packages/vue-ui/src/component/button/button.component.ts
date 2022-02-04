@@ -8,7 +8,8 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
-import ClickOutsideDirective from "../../directive/click-outside.directive";
+import { ClickOutsideDirective } from "../../directive/click-outside.directive";
+import { ProgressCircularComponent } from "../progress-circular";
 
 @Themeable({
     vars: {
@@ -46,6 +47,7 @@ import ClickOutsideDirective from "../../directive/click-outside.directive";
 })
 @Component({
     name: 'bt-button',
+    components: [ProgressCircularComponent],
     directives: [ClickOutsideDirective]
 })
 export default class ButtonComponent extends Vue {

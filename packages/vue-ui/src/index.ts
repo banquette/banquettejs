@@ -1,4 +1,7 @@
 
+export * from './alert/alert.service';
+export * from './alert/constant';
+
 export * from './directive/click-outside.directive';
 export * from './directive/stick-to.directive';
 export * from './directive/tooltip.directive';

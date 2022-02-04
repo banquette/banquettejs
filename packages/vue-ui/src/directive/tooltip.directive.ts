@@ -2,7 +2,7 @@ import { Directive } from "@banquette/vue-typescript/decorator/directive.decorat
 import { DirectiveBinding, VNode, h, resolveComponent, render } from "vue";
 
 @Directive({name: 'bt-tooltip'})
-export default class TooltipDirective {
+export class TooltipDirective {
     public created(el: Element, bindings: DirectiveBinding, vNode: VNode, prevNode: VNode|null) {
         console.log('bind');
         const tooltipVnode = h(resolveComponent('bt-tooltip'));

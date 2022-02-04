@@ -7,8 +7,8 @@ import { ThemeVar } from "@banquette/vue-typescript/decorator/theme-var.decorato
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
-import ButtonComponent from "../button/button.component";
-import ProgressHorizontalComponent from "../progress-horizontal/progress-horizontal.component";
+import { ButtonComponent } from "../button";
+import { ProgressHorizontalComponent } from "../progress-horizontal";
 
 @Themeable({
     vars: {

@@ -19,7 +19,7 @@ import { ViewModelEvents } from "../../constant";
 import { BeforeSlotOrigin, AfterSlotOrigin } from "./constant";
 import ErrorComponent from "../error/error.component";
 import ChoiceSlotWrapperComponent from "./choice-slot-wrapper.component";
-import ChoiceComponent from "./choice/choice.component";
+import ChoiceComponent from "./choice/choice.component.vue";
 
 @Themeable({
     vars: {

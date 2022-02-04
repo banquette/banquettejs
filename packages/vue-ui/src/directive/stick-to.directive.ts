@@ -20,7 +20,7 @@ interface OptionsInterface {
  * A directive to make an element float around another.
  */
 @Directive('bt-stick-to')
-export default class StickToDirective {
+export class StickToDirective {
     /**
      * A unique mutation observer common to all instances.
      */

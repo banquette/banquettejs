@@ -11,7 +11,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { AlertEvents } from "../../alert/constant";
 import { ShowAlertEvent } from "../../alert/event/show-alert.event";
-import AlertComponent from "../alert/alert.component";
+import { AlertComponent } from "../alert";
 import { AlertOptionsInterface } from "./alert-options.interface";
 import { StackPosition } from "./constant";
 
