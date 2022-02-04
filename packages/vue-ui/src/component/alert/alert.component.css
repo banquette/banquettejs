@@ -48,6 +48,6 @@
 /**
  * `<bt-progress-horizontal>`
  */
-:deep(.bt-progress-horizontal) {
+.bt-alert:deep(.bt-progress-horizontal) {
     transform: translateY( var(--Siw2gbbg, 5px) );
 }
