@@ -95,10 +95,9 @@ export function getRollupConfig(buildConfig) {
             globals: Globals
         }
     };
-    rollupConfig.plugins.push(vue({css: false}));
-    rollupConfig.plugins.push(postcss({
-        plugins: [nested()]
-    }));
+
+    rollupConfig.plugins.push(vue({postcssPlugins: [nested]}));
+    rollupConfig.plugins.push(postcss());
     if (buildConfig.outputFile) {
         rollupConfig.plugins.push(typescript({
             check: true,
