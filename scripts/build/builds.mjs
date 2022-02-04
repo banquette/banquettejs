@@ -215,6 +215,10 @@ export const Builds = Object.assign({},
         module: 'Banquette.Vue.Form'
     }),
     createBuildVariants({
+        package: 'vue-form-generic',
+        module: 'Banquette.Vue.FormGeneric'
+    }),
+    createBuildVariants({
         package: 'vue-ui',
         module: 'Banquette.Vue.Ui'
     }),

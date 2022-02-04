@@ -41,6 +41,7 @@ module.exports = {
         "@banquette/validation/(.*)$": "<rootDir>/packages/validation/src/$1",
         "@banquette/vue-dom-module/(.*)$": "<rootDir>/packages/vue-dom-module/src/$1",
         "@banquette/vue-form/(.*)$": "<rootDir>/packages/vue-form/src/$1",
+        "@banquette/vue-form-generic/(.*)$": "<rootDir>/packages/vue-form-generic/src/$1",
         "@banquette/vue-material-icons/(.*)$": "<rootDir>/packages/vue-material-icons/src/$1",
         "@banquette/vue-typescript/(.*)$": "<rootDir>/packages/vue-typescript/src/$1",
         "@banquette/vue-ui/(.*)$": "<rootDir>/packages/vue-ui/src/$1"

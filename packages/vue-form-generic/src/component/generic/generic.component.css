@@ -1,0 +1,7 @@
+.bt-form-generic {
+    --spacing: var(--bqt-spacing, 1rem);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing);
+}
