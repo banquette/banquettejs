@@ -9,7 +9,7 @@ import { DirectiveBinding } from "vue";
  * A click handler that will only trigger if the click is performed outside of the host element.
  */
 @Directive('bt-click-outside')
-export default class ClickOutsideDirective {
+export class ClickOutsideDirective {
     private el!: HTMLElement;
     private enabled: boolean = true;
     private callback: ((event: MouseEvent, el: Element) => void)|null = null;
@@ -42,14 +42,12 @@ export default class ClickOutsideDirective {
         if (this.handlerProxy !== null) {
             return ;
         }
-        console.log('%cbindHandler', 'color: lime', this.el);
         this.handlerProxy = proxy(this.onClick, this);
         document.body.addEventListener('click', this.handlerProxy);
     }
 
     private unbindHandler(): void {
         if (this.handlerProxy !== null) {
-            console.log('%cunbindHandler', 'color: red', this.el);
             document.body.removeEventListener('click', this.handlerProxy);
             this.handlerProxy = null;
         }
@@ -58,7 +56,6 @@ export default class ClickOutsideDirective {
     private onClick(event: MouseEvent): void {
         let target: EventTarget|null = event.target;
         if (this.callback !== null && target instanceof Element && this.el !== event.target && !this.el.contains(target)) {
-            console.warn('bt-click-outisde', target, this.el);
             this.callback(event, this.el);
         }
     }

@@ -33,9 +33,7 @@ export default class TabComponent extends Vue {
     @Computed() public get preRender(): boolean {
         return this.parent && this.parent.preRender;
     }
-
     @Expose() public focused: boolean = false;
-    @Expose() public teleportTarget: any = null;
 
     /**
      * A reference on the parent component instance.
@@ -55,7 +53,6 @@ export default class TabComponent extends Vue {
         }
         this.parent = this.$parent;
         this.parent.register(this);
-        this.teleportTarget = this.parent.$refs.toggles;
         this.$forceUpdateComputed();
     }
 
