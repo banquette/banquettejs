@@ -4,7 +4,7 @@ export * from './vue';
 /**
  * Decorators
  */
-export * from './decorator/decorators-data.interface';
+export * from './decorator/component-metadata.interface';
 export * from './decorator/component.decorator';
 export * from './decorator/composable.decorator';
 export * from './decorator/computed.decorator';
@@ -34,8 +34,8 @@ import './theme/theme.component';
  * Utils
  */
 export * from './utils/c';
-export * from './utils/components-count';
-export * from './utils/is-component-instance';
+export { getActiveComponentsCount } from './utils/components-count';
 export * from './utils/get-component-instance';
-export * from './utils/get-component-options';
-export * from './utils/get-decorators-data';
+export * from './utils/get-component-metadata';
+export * from './utils/get-vcc-opts';
+export * from './utils/is-component-instance';

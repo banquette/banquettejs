@@ -4,8 +4,8 @@ import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isType } from "@banquette/utils-type/is-type";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export interface ThemeVarDecoratorOptions {
     name: string;
@@ -27,7 +27,7 @@ export function ThemeVar(nameOrOptions: ThemeVarDecoratorOptions|string, default
             nameOrOptions = {name: nameOrOptions, defaultValue};
         }
         nameOrOptions.name = trim(nameOrOptions.name);
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         data.themeVars[propertyKey] = nameOrOptions;
     };
 }

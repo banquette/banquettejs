@@ -4,8 +4,8 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { HOOKS } from "../constants";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export type LifecycleHook = typeof HOOKS [number];
 
@@ -14,7 +14,7 @@ export type LifecycleHook = typeof HOOKS [number];
  */
 export function Lifecycle(type: LifecycleHook|LifecycleHook[]): Function {
     return (prototype: any, propertyKey: string) => {
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         if (!isNonEmptyString(propertyKey) || !isFunction(prototype.constructor.prototype[propertyKey])) {
             throw new UsageException('You can only use @Lifecycle() on methods.');
         }

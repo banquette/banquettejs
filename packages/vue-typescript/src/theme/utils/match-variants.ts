@@ -1,8 +1,8 @@
 import { arrayIntersect } from "@banquette/utils-array/array-intersect";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { Primitive } from "@banquette/utils-type/types";
-import { DecoratorsDataInterface } from "../../decorator/decorators-data.interface";
-import { getDecoratorsData } from "../../utils/get-decorators-data";
+import { ComponentMetadataInterface } from "../../decorator/component-metadata.interface";
+import { getOrCreateComponentMetadata } from "../../utils/get-or-create-component-metadata";
 import { isDecorated } from "../../utils/is-decorated";
 import { VariantWildcard, PropCallback } from "../constant";
 import { VariantSelectorCandidateInterface } from "../variant-selector-candidate.interface";
@@ -39,8 +39,8 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
         for (const parentSelectorCandidate of selector.parents) {
             let $parentInst = componentInst.$parent;
             while ($parentInst && $parentInst.constructor && $parentInst.constructor.prototype) {
-                if (isDecorated($parentInst.constructor.prototype)) {
-                    const decoratorsData: DecoratorsDataInterface = getDecoratorsData($parentInst.constructor.prototype);
+                if (isDecorated($parentInst.constructor)) {
+                    const decoratorsData: ComponentMetadataInterface = getOrCreateComponentMetadata($parentInst.constructor.prototype);
 
                     // Check parent name
                     if (parentSelectorCandidate.name !== decoratorsData.component.name) {

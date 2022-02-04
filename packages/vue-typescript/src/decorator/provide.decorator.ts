@@ -1,8 +1,8 @@
 import { UsageException } from "@banquette/exception/usage.exception";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export interface ProvideDecoratorOptions {
     /**
@@ -25,7 +25,7 @@ export interface ProvideDecoratorOptions {
  */
 export function Provide(provideAs: string|null = null, readonly: boolean = true): Function {
     return (prototype: any, propertyKey: string) => {
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         if (!isNonEmptyString(propertyKey) || isFunction(prototype.constructor.prototype[propertyKey])) {
             throw new UsageException('You can only use @Provide() on properties.');
         }

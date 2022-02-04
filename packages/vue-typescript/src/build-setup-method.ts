@@ -34,7 +34,7 @@ import {
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
 import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
-import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
+import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
 import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
@@ -49,7 +49,7 @@ import { incrementActiveComponentsCount, decrementActiveComponentsCount } from "
 import { defineGetter } from "./utils/define-getter";
 import { defineRefProxy } from "./utils/define-ref-proxy";
 import { getComponentInstance } from "./utils/get-component-instance";
-import { getDecoratorsData } from "./utils/get-decorators-data";
+import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-metadata";
 import { instantiate } from "./utils/instantiate";
 import { isDecorated } from "./utils/is-decorated";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
@@ -59,7 +59,7 @@ import { resolveImportPublicName } from "./utils/resolve-import-public-name";
  */
 const vueInstancesMap: WeakMap<any, any> = new WeakMap<any, any>();
 
-export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
+export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
         let activeVariants: VueThemeVariant[] = [];
@@ -524,8 +524,8 @@ export function buildSetupMethod(ctor: Constructor, data: DecoratorsDataInterfac
         for (const targetProperty of Object.keys(data.imports)) {
             const importOptions: ImportDecoratorOptions = data.imports[targetProperty];
             const composableCtor: Constructor = importOptions.composable;
-            if (isDecorated(composableCtor.prototype)) {
-                const composableDecorationData = getDecoratorsData(composableCtor.prototype);
+            if (isDecorated(composableCtor)) {
+                const composableDecorationData = getOrCreateComponentMetadata(composableCtor.prototype);
                 if (isUndefined(composableDecorationData.component) && isUndefined(composableDecorationData.composable)) {
                     throw new UsageException(`The class "${composableCtor.name}" cannot be used as a composable because the "@Composable()" decorator is missing.`);
                 }

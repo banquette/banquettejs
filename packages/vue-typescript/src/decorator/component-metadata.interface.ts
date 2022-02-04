@@ -14,7 +14,7 @@ import { WatchDecoratorOptions } from "./watch.decorator";
  * An object containing the data defined by decorators.
  * @internal
  */
-export interface DecoratorsDataInterface {
+export interface ComponentMetadataInterface {
     /**
      * Data relative to the @Component decorator.
      * Optional because only the @Component decorator can set it.

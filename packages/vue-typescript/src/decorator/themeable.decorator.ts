@@ -3,8 +3,8 @@ import { isArray } from "@banquette/utils-type/is-array";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, Primitive } from "@banquette/utils-type/types";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export interface VarsMapInterface {
     [key: string]: Primitive|VarsMapInterface;
@@ -27,7 +27,7 @@ export type PrivateThemeableDecoratorOptions = Omit<Required<ThemeableDecoratorO
 
 export function Themeable(options: ThemeableDecoratorOptions = {}): any {
     return (ctor: Constructor) => {
-        const data: DecoratorsDataInterface = getDecoratorsData(ctor.prototype) as DecoratorsDataInterface;
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(ctor.prototype) as ComponentMetadataInterface;
         if (isString(options.vars)) {
             options.vars = [options.vars];
         }

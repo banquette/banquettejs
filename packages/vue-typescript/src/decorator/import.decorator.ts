@@ -5,8 +5,8 @@ import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { PrefixOrAlias } from "../type";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export interface ImportDecoratorOptions {
     /**
@@ -44,7 +44,7 @@ export function Import(composable?: Constructor, prefixOrAlias?: PrefixOrAlias):
 export function Import(options?: ImportDecoratorOptions): any;
 export function Import(composableOrOptions?: Constructor|ImportDecoratorOptions, prefixOrAlias?: PrefixOrAlias): any {
     return (prototype: any, propertyKey: string) => {
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         if (!isNonEmptyString(propertyKey) || isFunction(prototype.constructor.prototype[propertyKey])) {
             throw new UsageException('You can only use @Import() on properties.');
         }

@@ -3,8 +3,8 @@ import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { DebuggerEvent } from "@vue/reactivity";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 import { Expose } from "./expose.decorator";
 
 type DebugCallback = ((event: DebuggerEvent) => void)|string;
@@ -35,7 +35,7 @@ export function Computed(optionsOrExposeAs: ComputedDecoratorOptions|string|null
         if (isUndefined(propertyKey)) {
             throw new UsageException('You can only use @Computed() on properties.');
         }
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         const isObj = optionsOrExposeAs !== null && isObject(optionsOrExposeAs);
         data.computed[propertyKey] = {
             onTrigger: isObj ? getObjectValue(optionsOrExposeAs, 'onTrigger', undefined) : (onTrigger || undefined),

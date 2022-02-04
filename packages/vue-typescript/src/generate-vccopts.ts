@@ -5,6 +5,7 @@ import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { isObject } from "@banquette/utils-type/is-object";
+import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { ComponentPublicInstance } from "vue";
@@ -17,15 +18,15 @@ import {
     DECORATORS_CTOR_NAME,
     COMPONENT_INSTANCE_ATTR_NAME
 } from "./constants";
+import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
-import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { PropPrivateOptions } from "./decorator/prop.decorator";
 import { PrefixOrAlias } from "./type";
 import { defineGetter } from "./utils/define-getter";
 import { getComponentInstance } from "./utils/get-component-instance";
+import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-metadata";
 import { getCtorFromVccOption } from "./utils/get-ctor-from-vcc-option";
-import { getDecoratorsData } from "./utils/get-decorators-data";
 import { injectVueProperties } from "./utils/inject-vue-properties";
 import { isDecorated } from "./utils/is-decorated";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
@@ -40,7 +41,7 @@ export const vccOptionsMap: WeakMap<any, any> = new WeakMap<any, any>();
 /**
  * Generate the option object that will be used by Vue to create a component.
  */
-export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface & {component: ComponentDecoratorOptions}) {
+export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterface & {component: ComponentDecoratorOptions}) {
     if (!isUndefined(ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME]) && ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME][DECORATORS_CTOR_NAME] === ctor) {
         return ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME];
     }
@@ -79,8 +80,8 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
     for (const targetProperty of Object.keys(data.imports)) {
         const importOptions: ImportDecoratorOptions = data.imports[targetProperty];
         const composableCtor: Constructor = importOptions.composable;
-        if (isDecorated(composableCtor.prototype)) {
-            const composableDecorationData = getDecoratorsData(composableCtor.prototype);
+        if (isDecorated(composableCtor)) {
+            const composableDecorationData = getOrCreateComponentMetadata(composableCtor.prototype);
             for (const subProp of Object.keys(composableDecorationData.props)) {
                 const realPropName: string|false = resolveImportPublicName(targetProperty, subProp, importOptions.prefixOrAlias as PrefixOrAlias);
                 if (realPropName !== false) {
@@ -100,7 +101,7 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
         for (const key of getObjectKeys(data.component.components)) {
             let componentConstructor = getCtorFromVccOption(data.component.components[key]);
             if (componentConstructor !== null) {
-                const componentDecoratorsData = getDecoratorsData(componentConstructor.prototype);
+                const componentDecoratorsData = getOrCreateComponentMetadata(componentConstructor.prototype);
                 const componentName = !isUndefined(componentDecoratorsData.component) ? componentDecoratorsData.component.name! : key;
                 options.components[componentName] = data.component.components[key];
             } else if (!isNumeric(key)) {
@@ -198,5 +199,12 @@ export function generateVccOpts(ctor: Constructor, data: DecoratorsDataInterface
             defineGetter(inst, '$parent', () => getComponentInstance(this.$parent));
         }
     };
+
+    // Template
+    if (data.component.template === false) {
+        options.render = () => '';
+    } else if (isString(data.component.template)) {
+        options.template = data.component.template;
+    }
     return options;
 }

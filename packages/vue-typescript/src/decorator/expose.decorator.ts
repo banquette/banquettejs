@@ -1,7 +1,7 @@
 import { UsageException } from "@banquette/exception/usage.exception";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 /**
  * Expose a property or method to the template.
@@ -14,7 +14,7 @@ export function Expose(exposeAs: string|null = null): Function {
         if (!isNonEmptyString(propertyKey)) {
             throw new UsageException('You can only use @Expose() on properties or methods.');
         }
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         data.exposed[propertyKey] = exposeAs !== null ? exposeAs : propertyKey;
     };
 }

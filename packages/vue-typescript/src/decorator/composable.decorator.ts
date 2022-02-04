@@ -1,7 +1,7 @@
 import { isFunction } from "@banquette/utils-type/is-function";
 import { Constructor } from "@banquette/utils-type/types";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export interface ComposableDecoratorOptions {
     /**
@@ -18,7 +18,7 @@ export function Composable(factory?: () => any): any;
 export function Composable(options: ComposableDecoratorOptions): any;
 export function Composable(options: ComposableDecoratorOptions|(() => any) = {}): any {
     return (ctor: Constructor) => {
-        const data: DecoratorsDataInterface & {component: ComposableDecoratorOptions} = getDecoratorsData(ctor.prototype) as DecoratorsDataInterface & {component: ComposableDecoratorOptions};
+        const data: ComponentMetadataInterface & {component: ComposableDecoratorOptions} = getOrCreateComponentMetadata(ctor.prototype) as ComponentMetadataInterface & {component: ComposableDecoratorOptions};
         if (isFunction(options)) {
             options = {factory: options} as ComposableDecoratorOptions;
         }

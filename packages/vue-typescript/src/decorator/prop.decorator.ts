@@ -4,8 +4,8 @@ import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Prop as VueProp, PropType } from "vue";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 /* Hack to get to the PropOptions<T, D> which is not exported by Vue. */
 export type PropOptions = Exclude<VueProp<any>, PropType<any>> & {validate?: (value: any) => any, name?: string};
@@ -19,7 +19,7 @@ export function Prop(options: PropOptions = {}): Function {
         if (!isNonEmptyString(propertyKey) || isFunction(prototype.constructor.prototype[propertyKey])) {
             throw new UsageException('You can only use @Prop() on properties.');
         }
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         if (!isUndefined(data.props[propertyKey])) {
             for (const key of getObjectKeys(options)) {
                 data.props[propertyKey][key] = options[key];

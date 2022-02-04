@@ -10,9 +10,9 @@ import { Component as VueComponent } from "@vue/runtime-core";
 import { Directive, EmitsOptions } from "vue";
 import { VUE_CLASS_COMPONENT_OPTIONS_NAME } from "../constants";
 import { generateVccOpts } from "../generate-vccopts";
-import { getDecoratorsData } from "../utils/get-decorators-data";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { VueBuilder } from "../vue-builder";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export interface ComponentDecoratorOptions {
     /**
@@ -64,7 +64,8 @@ export function Component(name: string): any;
 export function Component(options: ComponentDecoratorOptions): any;
 export function Component(options: ComponentDecoratorOptions|string = {}): any {
     return (ctor: Constructor) => {
-        const data: DecoratorsDataInterface = getDecoratorsData(ctor.prototype);
+        let vccOpts: any = null;
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(ctor.prototype);
         if (isString(options)) {
             options = {name: options};
         }
@@ -73,17 +74,10 @@ export function Component(options: ComponentDecoratorOptions|string = {}): any {
             enumerable: true,
             configurable: true,
             get: () => {
-                const output = generateVccOpts(ctor, data);
-                if (isString(data.component.template)) {
-                    output.template = data.component.template;
-                } else if (isObject(data.component.template) && (data.component.template as any).__esModule === true && (data.component as any).default) {
-                    data.component = (data.component as any).default;
-                } else if (isFunction(data.component)) {
-                    data.component = data.component();
-                } else if (data.component.template === false) {
-                    output.render = () => '';
+                if (vccOpts === null) {
+                    vccOpts = generateVccOpts(ctor, data);
                 }
-                return output;
+                return vccOpts;
             }
         });
         if (isUndefined(options.name)) {

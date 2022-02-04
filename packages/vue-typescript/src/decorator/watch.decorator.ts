@@ -1,6 +1,6 @@
 import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
-import { getDecoratorsData } from "../utils/get-decorators-data";
-import { DecoratorsDataInterface } from "./decorators-data.interface";
+import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
+import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export type WatchFunction = () => string|string[];
 export type WatchSource = string|string[]|WatchFunction;
@@ -40,7 +40,7 @@ export interface WatchDecoratorOptions {
  */
 export function Watch(source: WatchSource, options: WatchOptions = {}): Function {
     return (prototype: any, propertyKey: string) => {
-        const data: DecoratorsDataInterface = getDecoratorsData(prototype);
+        const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
         data.watch.push({
             target: propertyKey,
             source,

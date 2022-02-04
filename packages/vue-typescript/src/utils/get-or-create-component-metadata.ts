@@ -1,13 +1,11 @@
 import { DECORATORS_OPTIONS_HOLDER_NAME } from "../constants";
-import { DecoratorsDataInterface } from "../decorator/decorators-data.interface";
-import { DecoratedConstructor } from "../type";
-import { isDecorated } from "./is-decorated";
+import { ComponentMetadataInterface } from "../decorator/component-metadata.interface";
 
 /**
- * Get or create the object used to store decorators' data.
+ * Get or create the object used to store the metadata defined through components' decorators.
  */
-export function getDecoratorsData(prototype: any | DecoratedConstructor): DecoratorsDataInterface {
-    if (!isDecorated(prototype)) {
+export function getOrCreateComponentMetadata(prototype: any): ComponentMetadataInterface {
+    if (!prototype.hasOwnProperty(DECORATORS_OPTIONS_HOLDER_NAME)) {
         Object.defineProperty(prototype, DECORATORS_OPTIONS_HOLDER_NAME, {
             configurable: true,
             enumerable: false,
@@ -26,8 +24,8 @@ export function getDecoratorsData(prototype: any | DecoratedConstructor): Decora
                 renderMethod: null,
                 themeable: null,
                 themeVars: {}
-            } as Partial<DecoratorsDataInterface>
+            } as Partial<ComponentMetadataInterface>
         });
     }
-    return (prototype as DecoratedConstructor)[DECORATORS_OPTIONS_HOLDER_NAME];
+    return prototype[DECORATORS_OPTIONS_HOLDER_NAME];
 }

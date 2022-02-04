@@ -6,16 +6,21 @@ import { AbstractConstructor } from "@banquette/utils-type/types";
 import { WatchOptions } from "@vue/runtime-core";
 import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
 import { DECORATORS_CTOR_NAME } from "./constants";
-import { DecoratorsDataInterface } from "./decorator/decorators-data.interface";
+import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
+import { getComponentMetadata } from "./utils/get-component-metadata";
 import { isComponentInstance } from "./utils/is-component-instance";
 
 /**
  * Fake implementation of the public attributes of the vue instance.
  * The real implementation will be swapped when the component is initialized if it extends this class.
  */
-export class Vue implements ComponentPublicInstance {
+export abstract class Vue implements ComponentPublicInstance {
     static [DECORATORS_CTOR_NAME]: any;
 
+    /**
+     * Placeholder attributes and methods.
+     * Overridden when vccOpts object is built.
+     */
     public $!: ComponentInternalInstance;
     public $attrs!: Record<string, unknown>;
     public $data: any;
@@ -34,6 +39,7 @@ export class Vue implements ComponentPublicInstance {
     public $watch(source: string | Function, cb: Function, options: WatchOptions|undefined): WatchStopHandle {
         return null as any;
     };
+    // End of placeholders.
 
     /**
      * Test if a slot is defined and not empty.
@@ -49,7 +55,7 @@ export class Vue implements ComponentPublicInstance {
         let $parent = this.$parent;
         while ($parent !== null) {
             if (isComponentInstance($parent, component)) {
-                return $parent;
+                return $parent as InstanceType<T>;
             }
             $parent = $parent.$parent;
         }
@@ -62,7 +68,9 @@ export class Vue implements ComponentPublicInstance {
     protected getParentByName<T extends AbstractConstructor<Vue>>(name: string): InstanceType<T>|null {
         let $parent = this.$parent;
         while ($parent !== null) {
-
+            if (this.getComponentName($parent) === name) {
+                return $parent as InstanceType<T>;
+            }
             $parent = $parent.$parent;
         }
         return null;
@@ -71,15 +79,16 @@ export class Vue implements ComponentPublicInstance {
     /**
      * Try to get the vue-typescript's metadata for a component.
      */
-    protected getComponentMetadata(component: any): DecoratorsDataInterface|null {
-        return null;
+    protected getComponentMetadata(component: any): ComponentMetadataInterface|null {
+        return getComponentMetadata(component);
     }
 
     /**
      * Try to get the name of a Vue component.
      */
     protected getComponentName(component: any): string|null {
-        return null;
+        const metadata = getComponentMetadata(component);
+        return metadata ? metadata.component.name : null;
     }
 
     /**

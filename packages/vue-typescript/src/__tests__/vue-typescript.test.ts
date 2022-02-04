@@ -8,7 +8,8 @@ import { Import } from "../decorator/import.decorator";
 import { Prop } from "../decorator/prop.decorator";
 import { Ref } from "../decorator/ref.decorator";
 import { Watch, ImmediateStrategy } from "../decorator/watch.decorator";
-import { getComponentOptions, c } from "../utils";
+import { c } from "../utils/c";
+import { getVccOpts } from "../utils/get-vcc-opts";
 import { getChildComponentInstance } from "./utils";
 
 @Component({
@@ -39,7 +40,7 @@ class ButtonComponent {
 }
 
 describe('@Expose()',  () => {
-    const wrapper = mount(getComponentOptions(ButtonComponent));
+    const wrapper = mount(getVccOpts(ButtonComponent));
 
     test('Exposing public property', async () => {
         expect(wrapper.find('#count').text()).toContain('count: 0');
@@ -55,7 +56,7 @@ describe('@Expose()',  () => {
 
 describe('@Prop()', () => {
     test('displays message',  () => {
-        const wrapper = mount(getComponentOptions(ButtonComponent), {
+        const wrapper = mount(getVccOpts(ButtonComponent), {
             propsData: {
                 defaultCount: 10
             }
@@ -75,7 +76,7 @@ describe('@Prop()', () => {
             template: `<test custom:url="/test"></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         expect(wrapper.find('#url').text()).toEqual('/test');
     });
 });
@@ -103,7 +104,7 @@ describe('@Watch()', () => {
             template: `<test></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         await nextTick();
         expect(wrapper.find('#count').text()).toEqual('1');
     });
@@ -135,7 +136,7 @@ describe('@Watch()', () => {
             template: `<test></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         const testComponent = getChildComponentInstance(wrapper, Test);
         expect(testComponent.callsResults).toStrictEqual(['bar']);
         await nextTick();
@@ -165,7 +166,7 @@ describe('@Watch()', () => {
             template: `<test></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         await nextTick();
         expect(wrapper.find('#count').text()).toEqual('1');
     });
@@ -194,7 +195,7 @@ describe('@Watch()', () => {
             template: `<test></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         expect(wrapper.find('#count').text()).toEqual('2');
         await nextTick();
         expect(wrapper.find('#count').text()).toEqual('3');
@@ -219,7 +220,7 @@ describe('@Import()', () => {
             template: `<test remote:url="/test"></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         expect(wrapper.find('#url').text()).toEqual('/test');
     });
 
@@ -235,7 +236,7 @@ describe('@Import()', () => {
             template: `<test override:url="/test"></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         expect(wrapper.find('#url').text()).toEqual('/test');
     });
 
@@ -251,7 +252,7 @@ describe('@Import()', () => {
             template: `<test url="/test"></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         expect(wrapper.find('#url').text()).toEqual('/test');
     });
 
@@ -269,7 +270,7 @@ describe('@Import()', () => {
             template: `<test custom:url="/test"></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {})
+        const wrapper = mount(getVccOpts(App), {})
         expect(wrapper.find('#url').text()).toEqual('/test');
     });
 
@@ -293,7 +294,7 @@ describe('@Import()', () => {
             template: `<test url="/test"></test>`
         })
         class App { }
-        const wrapper = mount(getComponentOptions(App), {});
+        const wrapper = mount(getVccOpts(App), {});
         const testComponent = getChildComponentInstance(wrapper, Test);
         expect(wrapper.find('#url').text()).toEqual('/test');
         expect(wrapper.find('#host-from-template').text()).toEqual('/test');
@@ -316,6 +317,6 @@ describe('Component inheritance', () => {
     class Foo extends c(Bar) {
         @Expose() public foo: string = 'foo';
     }
-    const wrapper = mount(getComponentOptions(Foo), {});
+    const wrapper = mount(getVccOpts(Foo), {});
     expect(wrapper.find('#foo').text()).toEqual('foo');
 });
