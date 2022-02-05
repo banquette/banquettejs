@@ -91,7 +91,7 @@ export class DispatchResult<T = any> {
             // Otherwise, "localPromise" will always be equal to "previousPromise".
             // If it is still equal on the next cycle, we have reached the end.
             window.setTimeout(() => {
-                if (localPromise === this.previousPromise) {
+                if (localPromise === this.previousPromise && this.promiseResolve) {
                     (this.promiseResolve as Function)(this);
                 }
                 (this as Writeable<DispatchResult<T>>).localPromise = null;
