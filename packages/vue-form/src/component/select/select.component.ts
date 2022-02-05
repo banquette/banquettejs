@@ -17,7 +17,7 @@ import { ChoicesComposable, PropOrigin } from "../../composable/choices.composab
 import { RemoteComposable } from "../../composable/remote.composable";
 import { ViewModelEvents } from "../../constant";
 import { BeforeSlotOrigin, AfterSlotOrigin } from "./constant";
-import ErrorComponent from "../error/error.component";
+import { ErrorComponent } from "../error";
 import ChoiceSlotWrapperComponent from "./choice-slot-wrapper.component";
 import ChoiceComponent from "./choice/choice.component.vue";
 
@@ -190,6 +190,9 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     }
 
     @Expose() public toggleChoices(): void {
+        if (this.vm.disabled) {
+            return ;
+        }
         this.vm.choices.toggle();
         if (this.vm.choices.visible) {
             this.dropdown.$el.style.width = this.$el.offsetWidth + 'px';
