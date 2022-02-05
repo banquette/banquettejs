@@ -159,7 +159,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * Unset the view model assigned with the form control.
      */
     public unsetViewModel(viewModel: FormViewModelInterface): void {
-        const pos = this.viewModels.push(viewModel);
+        const pos = this.viewModels.indexOf(viewModel);
         if (pos > -1) {
             this.viewModels.splice(pos, 1);
         }
