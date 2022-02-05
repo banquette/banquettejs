@@ -73,7 +73,9 @@ export class SelectViewModel extends AbstractChoiceViewModel {
      */
     public onFocus() {
         super.onFocus();
-        this.choices.show();
+        if (!this.disabled) {
+            this.choices.show();
+        }
     }
 
     /**
