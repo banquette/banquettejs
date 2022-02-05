@@ -84,9 +84,10 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 computedVersion.value++;
             });
         }
+        // Props
         if (props !== null) {
-            // Props
             const propsRefs = [];
+            rootProps = {};
             for (const propName of Object.keys(props)) {
                 let propRef = toRef(props, propName);
                 if (!isUndefined(data.props[propName]) && data.themeable !== null && propName !== data.themeable.prop) {
@@ -126,8 +127,8 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 output[propPublicName] = propRef;
                 defineRefProxy(inst, data.props[propName].propertyName, output, propPublicName);
                 propsRefs.push(propRef);
+                rootProps[propName] = propRef;
             }
-            rootProps = props;
 
             // Watch props changes to update theming attributes accordingly.
             if (data.themeable !== null) {
@@ -390,8 +391,12 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         }
                         const sourceBaseProperty: string = parts[0];
                         if (rootPropsKeys.indexOf(upToDateSource) > -1) {
-                            // If we are watching a prop, wrap it into a function.
-                            realSources.push(() => inst[sourceBaseProperty]);
+                            // If we are watching a prop, watch its ref.
+                            realSources.push(rootProps[upToDateSource]);
+
+                            // To following should work too but doesn't in some
+                            // situations and I don't understand why.
+                            // realSources.push(() => inst[sourceBaseProperty]);
                         } else if (!isUndefined(output[sourceBaseProperty])) {
                             // If we already have a ref for this property.
                             realSources.push(output[sourceBaseProperty]);
