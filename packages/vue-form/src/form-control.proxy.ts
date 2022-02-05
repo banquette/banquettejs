@@ -229,14 +229,14 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public setDefaultValue(value: any): void {
-        this.callControlMethod('setDefaultValue', value);
+        this.callControlMethod('setDefaultValue', false, value);
     }
 
     /**
      * @inheritDoc
      */
     public setValue(value: any): void {
-        this.callControlMethod('setValue', value);
+        this.callControlMethod('setValue', false, value);
     }
 
     /**
@@ -250,7 +250,7 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public getExtras(): Record<string, any> {
-        const result = this.callControlMethod('getExtra');
+        const result = this.callControlMethod('getExtra', false);
         if (result.done) {
             return result.returnValue;
         }
@@ -261,14 +261,14 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public setExtras(extras: Record<string, any>): void {
-        this.callControlMethod('setExtras', extras);
+        this.callControlMethod('setExtras', true, extras);
     }
 
     /**
      * @inheritDoc
      */
     public getExtra<T = any>(name: string, defaultValue: any): T {
-        const result = this.callControlMethod('getExtras', name, defaultValue);
+        const result = this.callControlMethod('getExtras', false, name, defaultValue);
         if (result.done) {
             return result.returnValue;
         }
@@ -279,7 +279,7 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public setExtra(name: string, value: any): void {
-        this.callControlMethod('setExtra', name, value);
+        this.callControlMethod('setExtra', false, name, value);
     }
 
     /**
@@ -331,7 +331,7 @@ export class FormControlProxy implements FormViewControlInterface {
      * Update the local `_form` and `_control` variables to reflect the props values.
      */
     @Watch(['form', 'control'], {immediate: ImmediateStrategy.NextTick})
-    private updateFormAndControl(): void {
+    private updateFormAndControl(newValues: any): void {
         this._form = this.resolveForm();
         const newControl: any = this.resolveControl(this._form || null);
         if (newControl !== this._control) {
@@ -349,7 +349,7 @@ export class FormControlProxy implements FormViewControlInterface {
      * Try to call a method on the control or queue the call if no control is available yet.
      * The queue will automatically be flushed when the control becomes available.
      */
-    private callControlMethod(method: keyof FormViewControlInterface, ...args: any[]): ProxifiedCallInterface {
+    private callControlMethod(method: keyof FormViewControlInterface, replayable: boolean = true, ...args: any[]): ProxifiedCallInterface {
         const call: ProxifiedCallInterface = {
             args,
             done: false,
@@ -358,7 +358,7 @@ export class FormControlProxy implements FormViewControlInterface {
         if (this.bridge) {
             call.returnValue = this.bridge[method].apply(this.bridge, args as any);
             call.done = true;
-        } else {
+        } else if (replayable) {
             if (isUndefined(this.methodsQueue[method])) {
                 this.methodsQueue[method] = [];
             }
@@ -371,7 +371,7 @@ export class FormControlProxy implements FormViewControlInterface {
      * Generic method to subscribe to an event on a possibly not existing control.
      */
     private subscribeToControl(methodName: keyof FormViewControlInterface, callback: GenericCallback): UnsubscribeFunction {
-        const call = this.callControlMethod(methodName, callback);
+        const call = this.callControlMethod(methodName, true, callback);
         return () => {
             if (call.done && isFunction(call.returnValue)) {
                 call.returnValue();
