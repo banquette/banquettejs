@@ -48,10 +48,11 @@ export default class TabComponent extends Vue {
      * Vue lifecycle method.
      */
     public mounted(): void {
-        if (this.getComponentName(this.$parent) !== 'bt-tabs') {
+        const $parent = this.getParent('bt-tabs');
+        if (!$parent) {
             throw new UsageException('A "<bt-tab>" must always be placed inside a <bt-tabs></bt-tabs> component.');
         }
-        this.parent = this.$parent;
+        this.parent = $parent;
         this.parent.register(this);
         this.$forceUpdateComputed();
     }

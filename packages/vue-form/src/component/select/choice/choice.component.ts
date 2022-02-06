@@ -43,7 +43,7 @@ export default class ChoiceComponent extends Vue {
      * Vue lifecycle hook.
      */
     public beforeMount(): void {
-        const $parent = this.getParentByName('bt-form-select');
+        const $parent = this.getParent('bt-form-select');
         if ($parent === null) {
             throw new UsageException(`A "<bt-form-select-choice>" component must be placed inside a "<bt-form-select>".`);
         }

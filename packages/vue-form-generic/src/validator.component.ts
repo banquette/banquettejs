@@ -13,7 +13,8 @@ import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractVueFormComponent } from "@banquette/vue-form/abstract-vue-form.component";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { isComponentInstance } from "@banquette/vue-typescript/utils/is-component-instance";
+import { maybeResolveTsInst } from "@banquette/vue-typescript/utils/converters";
+import { isInstanceOf } from "@banquette/vue-typescript/utils/is-instance-of";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { GenericComponent } from "./component/generic";
 import { ContainerValidatorInterface } from "./container-validator.interface";
@@ -101,16 +102,17 @@ export abstract class ValidatorComponent extends Vue {
      */
     public mounted(): void {
         let $parent: any = this.$parent;
-        do {
+        while ($parent) {
+            $parent = maybeResolveTsInst($parent);
             if ($parent instanceof AbstractVueFormComponent) {
                 this.parentFormComponent = $parent;
-            } else if (isComponentInstance($parent, GenericComponent)) {
+            } else if (isInstanceOf($parent, GenericComponent)) {
                 this.parentGenericForm = $parent;
             } else if (isType<ContainerValidatorInterface>($parent, () => isFunction($parent.registerChild))) {
                 this.parentValidator = $parent;
             }
             $parent = $parent.$parent;
-        } while ($parent);
+        }
         if (isUndefined(this.parentGenericForm)) {
             throw new UsageException(`A validator component must be placed inside a "form-generic".`);
         }
