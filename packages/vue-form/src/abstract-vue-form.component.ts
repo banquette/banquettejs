@@ -1,4 +1,5 @@
 import { EventPipeline } from "@banquette/event/pipeline/event-pipeline";
+import { AbstractFormComponent } from "@banquette/form/abstract-form-component";
 import { FormViewModelInterface } from "@banquette/form/form-view-model.interface";
 import { ViewModel } from "@banquette/form/view-model/view-model";
 import { noop } from "@banquette/utils-misc/noop";
@@ -92,6 +93,11 @@ export abstract class AbstractVueFormComponent<ViewModelType extends ViewModel> 
     public mounted(): void {
         if (this.autofocus) {
             this.forceFocus();
+        }
+        // Special shortcut if in bt-form-generic.
+        const parentFormGeneric: any = this.getParent('bt-form-generic');
+        if (parentFormGeneric !== null && parentFormGeneric.form instanceof AbstractFormComponent) {
+            this.proxy.setFallbackForm(parentFormGeneric.form);
         }
     }
 

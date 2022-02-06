@@ -103,6 +103,11 @@ export class FormControlProxy implements FormViewControlInterface {
     private _formRef!: WeakObjectRef<FormGroupInterface>|null;
 
     /**
+     * A form to fallback to if none is defined through the prop.
+     */
+    private fallbackForm: FormGroupInterface|null = null;
+
+    /**
      * The actual control instance, if available.
      *
      * This can be null at any time because the control can be destroyed or not yet created
@@ -283,6 +288,16 @@ export class FormControlProxy implements FormViewControlInterface {
     }
 
     /**
+     * The a fallback form to use to resolve controls paths if none is defined by the prop.
+     */
+    public setFallbackForm(form: FormGroupInterface|null): void {
+        this.fallbackForm = form;
+        if (!this._control) {
+            this.updateFormAndControl();
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     public onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction {
@@ -331,7 +346,7 @@ export class FormControlProxy implements FormViewControlInterface {
      * Update the local `_form` and `_control` variables to reflect the props values.
      */
     @Watch(['form', 'control'], {immediate: ImmediateStrategy.NextTick})
-    private updateFormAndControl(newValues: any): void {
+    private updateFormAndControl(): void {
         this._form = this.resolveForm();
         const newControl: any = this.resolveControl(this._form || null);
         if (newControl !== this._control) {
@@ -451,7 +466,7 @@ export class FormControlProxy implements FormViewControlInterface {
         if (this._formRef) {
             return this._formRef.obj;
         }
-        return null;
+        return this.form === null ? this.fallbackForm : null;
     }
 
     /**
