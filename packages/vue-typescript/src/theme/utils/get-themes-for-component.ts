@@ -1,5 +1,8 @@
+import { maybeResolveTsInst } from "../../utils/converters";
+import { getComponentName } from "../../utils/get-component-name";
 import { Vue } from "../../vue";
-import { ThemeWildcard, ThemeComponentSymbol } from "../constant";
+import { ThemeWildcard } from "../constant";
+import ThemeComponent from "../theme.component";
 import { VueTheme } from "../vue-theme";
 import { VueThemes } from "../vue-themes";
 
@@ -8,10 +11,11 @@ import { VueThemes } from "../vue-themes";
  */
 export function getThemesForComponent(componentInstance: Vue): VueTheme[] {
     let themes: VueTheme[] = [VueThemes.Get(ThemeWildcard)];
-    let parentComponent: any = componentInstance.$parent;
+    let parentComponent = componentInstance.$parent;
     while (parentComponent) {
-        if (parentComponent.s === ThemeComponentSymbol && VueThemes.Has(parentComponent.name)) {
-            themes.push(VueThemes.Get(parentComponent.name));
+        parentComponent = maybeResolveTsInst(parentComponent);
+        if (getComponentName(parentComponent) === 'bt-theme') {
+            themes.push(VueThemes.Get((parentComponent as ThemeComponent).name));
             break ;
         }
         parentComponent = parentComponent.$parent;

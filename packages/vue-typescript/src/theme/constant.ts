@@ -38,19 +38,6 @@ export const ThemeWildcard = '*';
 export const VariantWildcard = '*';
 
 /**
- * A symbol used by the "theme" component so the setup method can detect it
- * in the hierarchy of parents of a component.
- *
- * This is a workaround a circular dependency:
- * component.decorator.ts -> generate-vccopts.ts -> build-setup-method.ts -> theme.component.ts -> component.decorator.ts
- *
- * This way both the setup method and the theme component refer to the constants instead to one another.
- *
- * This const is not exported outside of `vue-typescript` so no other component can use it.
- */
-export const ThemeComponentSymbol = Symbol('theme-component');
-
-/**
  * Used to match a variant.
  */
 export type VariantSelector = string|VariantSelectorInterface;

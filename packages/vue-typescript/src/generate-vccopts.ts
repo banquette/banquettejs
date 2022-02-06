@@ -2,33 +2,33 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { extend } from "@banquette/utils-object/extend";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
+import { isConstructor } from "@banquette/utils-type/is-constructor";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
-import { ComponentPublicInstance } from "vue";
+import { Component } from "@vue/runtime-core";
 import { buildSetupMethod } from "./build-setup-method";
 import {
-    DECORATORS_OPTIONS_HOLDER_CACHE_NAME,
-    DECORATORS_OPTIONS_HOLDER_NAME,
+    DECORATORS_METADATA_CACHE,
+    DECORATORS_METADATA,
     PRE_CONSTRUCTION_HOOKS,
     HOOKS_MAP,
-    DECORATORS_CTOR_NAME,
-    COMPONENT_INSTANCE_ATTR_NAME
+    COMPONENT_CTOR,
+    COMPONENT_INSTANCE
 } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { PropPrivateOptions } from "./decorator/prop.decorator";
-import { PrefixOrAlias } from "./type";
+import { PrefixOrAlias, VccOpts, DecoratedComponentInstance } from "./type";
+import { maybeResolveTsInst, vccOptsToCtor } from "./utils/converters";
 import { defineGetter } from "./utils/define-getter";
-import { getComponentInstance } from "./utils/get-component-instance";
 import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-metadata";
-import { getCtorFromVccOption } from "./utils/get-ctor-from-vcc-option";
+import { isVccOpts, isDecoratedComponentConstructor } from "./utils/guards";
 import { injectVueProperties } from "./utils/inject-vue-properties";
-import { isDecorated } from "./utils/is-decorated";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
 import { Vue } from "./vue";
 import { VueBuilder } from "./vue-builder";
@@ -41,16 +41,16 @@ export const vccOptionsMap: WeakMap<any, any> = new WeakMap<any, any>();
 /**
  * Generate the option object that will be used by Vue to create a component.
  */
-export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterface & {component: ComponentDecoratorOptions}) {
-    if (!isUndefined(ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME]) && ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME][DECORATORS_CTOR_NAME] === ctor) {
-        return ctor.prototype[DECORATORS_OPTIONS_HOLDER_CACHE_NAME];
+export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterface & {component: ComponentDecoratorOptions}): VccOpts {
+    if (!isUndefined(ctor.prototype[DECORATORS_METADATA_CACHE]) && ctor.prototype[DECORATORS_METADATA_CACHE][COMPONENT_CTOR] === ctor) {
+        return ctor.prototype[DECORATORS_METADATA_CACHE];
     }
-    const options: any = {};
+    const options: Partial<VccOpts> = {};
 
     // Merge parent data
     let curCtor: Constructor = ctor;
     while ((curCtor = Object.getPrototypeOf(curCtor)) !== null) {
-        const parentOpts = !isUndefined(curCtor.prototype) ? curCtor.prototype[DECORATORS_OPTIONS_HOLDER_NAME] : null;
+        const parentOpts = !isUndefined(curCtor.prototype) ? curCtor.prototype[DECORATORS_METADATA] : null;
         if (parentOpts !== null && isObject(parentOpts)) {
             data = extend({}, [parentOpts, data], true);
         }
@@ -80,7 +80,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     for (const targetProperty of Object.keys(data.imports)) {
         const importOptions: ImportDecoratorOptions = data.imports[targetProperty];
         const composableCtor: Constructor = importOptions.composable;
-        if (isDecorated(composableCtor)) {
+        if (isDecoratedComponentConstructor(composableCtor)) {
             const composableDecorationData = getOrCreateComponentMetadata(composableCtor.prototype);
             for (const subProp of Object.keys(composableDecorationData.props)) {
                 const realPropName: string|false = resolveImportPublicName(targetProperty, subProp, importOptions.prefixOrAlias as PrefixOrAlias);
@@ -99,13 +99,14 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     if (!isUndefined(data.component.components)) {
         options.components = {};
         for (const key of getObjectKeys(data.component.components)) {
-            let componentConstructor = getCtorFromVccOption(data.component.components[key]);
+            const item = data.component.components[key];
+            let componentConstructor = isConstructor(item) ? item : (isVccOpts(item) ? vccOptsToCtor(item) : null);
             if (componentConstructor !== null) {
                 const componentDecoratorsData = getOrCreateComponentMetadata(componentConstructor.prototype);
-                const componentName = !isUndefined(componentDecoratorsData.component) ? componentDecoratorsData.component.name! : key;
-                options.components[componentName] = data.component.components[key];
+                const componentName = !isUndefined(componentDecoratorsData.component) ? componentDecoratorsData.component.name : key;
+                options.components[componentName] = item as Component;
             } else if (!isNumeric(key)) {
-                options.components[key] = data.component.components[key];
+                options.components[key] = item as Component;
             } else {
                 throw new UsageException(`You must provide a name for the components added to the "components" option if they don't use \`VueTypescript\`.`);
             }
@@ -162,7 +163,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     injectVueProperties(ctor, options);
 
     // Save the final options object into the prototype for caching.
-    Object.defineProperty(ctor.prototype, DECORATORS_OPTIONS_HOLDER_CACHE_NAME, {
+    Object.defineProperty(ctor.prototype, DECORATORS_METADATA_CACHE, {
         enumerable: false,
         configurable: true,
         writable: false,
@@ -170,18 +171,22 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     });
 
     // Save the ctor so we can retrieve it from the __vccOpts object.
-    Object.defineProperty(options, DECORATORS_CTOR_NAME, {
+    Object.defineProperty(options, COMPONENT_CTOR, {
         enumerable: false,
         configurable: true,
         writable: false,
         value: ctor
     });
 
-    options.beforeCreate = function(this: ComponentPublicInstance) {
-        const inst = (this.$ as any)[COMPONENT_INSTANCE_ATTR_NAME];
-
+    options.beforeCreate = function(this: DecoratedComponentInstance) {
+        const inst = this.$[COMPONENT_INSTANCE];
+        //
         // If the component inherits from the "Vue" class this means the user
         // may want to access theses attributes or methods.
+        //
+        // Also, theming depends on the use of $forceUpdate(),
+        // so getters are always defined if the component is themeable.
+        //
         if (inst instanceof Vue || data.themeable !== null) {
             defineGetter(inst, '$', () => this.$);
             defineGetter(inst, '$props', () => this.$props);
@@ -196,7 +201,11 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
             defineGetter(inst, '$forceUpdate', () => this.$forceUpdate);
             defineGetter(inst, '$nextTick', () => this.$nextTick);
             defineGetter(inst, '$watch', () => this.$watch);
-            defineGetter(inst, '$parent', () => getComponentInstance(this.$parent));
+            defineGetter(inst, '$parent', () => this.$parent);
+            defineGetter(inst, '$resolvedParent', () => {
+                const $parent = this.$parent;
+                return $parent !== null ? maybeResolveTsInst($parent) : null;
+            });
         }
     };
 
@@ -206,5 +215,5 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     } else if (isString(data.component.template)) {
         options.template = data.component.template;
     }
-    return options;
+    return options as VccOpts;
 }

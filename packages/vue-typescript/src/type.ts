@@ -1,5 +1,6 @@
 import { Constructor } from "@banquette/utils-type/types";
-import { DECORATORS_OPTIONS_HOLDER_NAME } from "./constants";
+import { ComponentOptionsWithObjectProps, ComponentPublicInstance } from "vue";
+import { DECORATORS_METADATA, VUE_CLASS_COMPONENT_OPTIONS, COMPONENT_INSTANCE, COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 
 /**
@@ -28,6 +29,36 @@ export type Alias = AliasResolver|AliasesMap;
 export type PrefixOrAlias = Prefix|Alias;
 
 /**
- * A constructor extended with VueTypescript's metadata.
+ * __vccOpts object type.
+ * That's the object expected by Vue to define class components.
  */
-export type DecoratedConstructor = Constructor & {[DECORATORS_OPTIONS_HOLDER_NAME]: ComponentMetadataInterface};
+export type VccOpts = ComponentOptionsWithObjectProps & {props: {
+    [key: string]: {propertyName: string}
+}, [COMPONENT_CTOR]: DecoratedComponentConstructor};
+
+/**
+ * A prototype extended with Vue Typescript's component metadata.
+ */
+export type DecoratedComponentPrototype = {
+    [DECORATORS_METADATA]: ComponentMetadataInterface,
+    constructor: DecoratedComponentConstructor
+};
+
+/**
+ * A constructor extended with Vue class component options.
+ */
+export type DecoratedComponentConstructor = Constructor & {
+    [VUE_CLASS_COMPONENT_OPTIONS]: VccOpts,
+    prototype: DecoratedComponentPrototype
+};
+
+/**
+ * A Vue component instance decorated with Vue Typescript's metadata.
+ */
+export type DecoratedComponentInstance = ComponentPublicInstance & {
+    $: {
+        type: VccOpts
+        [COMPONENT_INSTANCE]: DecoratedComponentInstance
+    },
+    $resolvedParent: ComponentPublicInstance|null
+};

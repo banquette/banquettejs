@@ -5,17 +5,11 @@ import { Prop } from "../decorator/prop.decorator";
 import { Render } from "../decorator/render.decorator";
 import { Watch } from "../decorator/watch.decorator";
 import { Vue } from "../vue";
-import { ThemeComponentSymbol } from "./constant";
 import { ThemeEvent } from "./event/theme.event";
 import { VueThemes } from "./vue-themes";
 
 @Component('bt-theme')
 export default class ThemeComponent extends Vue {
-    /**
-     * @see ThemeComponentSymbol
-     */
-    public s: symbol = ThemeComponentSymbol;
-
     /**
      * Name of the theme to apply.
      * If the theme doesn't exist yet, the component will update automatically when it becomes available.

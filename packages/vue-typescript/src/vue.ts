@@ -5,28 +5,30 @@ import { isType } from "@banquette/utils-type/is-type";
 import { AbstractConstructor } from "@banquette/utils-type/types";
 import { WatchOptions } from "@vue/runtime-core";
 import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
-import { DECORATORS_CTOR_NAME } from "./constants";
+import { COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
-import { getComponentMetadata } from "./utils/get-component-metadata";
-import { isComponentInstance } from "./utils/is-component-instance";
+import { VccOpts } from "./type";
+import { vccOptsToMetadata, maybeResolveTsInst, anyToComponentMetadata } from "./utils/converters";
+import { isInstanceOf } from "./utils/is-instance-of";
 
 /**
  * Fake implementation of the public attributes of the vue instance.
  * The real implementation will be swapped when the component is initialized if it extends this class.
  */
 export abstract class Vue implements ComponentPublicInstance {
-    static [DECORATORS_CTOR_NAME]: any;
+    static [COMPONENT_CTOR]: any;
 
     /**
      * Placeholder attributes and methods.
      * Overridden when vccOpts object is built.
      */
-    public $!: ComponentInternalInstance;
+    public $!: ComponentInternalInstance & {type: VccOpts};
     public $attrs!: Record<string, unknown>;
     public $data: any;
     public $el: any;
     public $options: any;
     public $parent: ComponentPublicInstance|null = null;
+    public $resolvedParent: ComponentPublicInstance|null = null;
     public $props: any;
     public $refs!: Record<string, any>;
     public $slots!: Slots;
@@ -51,11 +53,19 @@ export abstract class Vue implements ComponentPublicInstance {
     /**
      * Try to get a reference on a specific parent component.
      */
-    protected getParent<T extends AbstractConstructor<Vue>>(component: T): InstanceType<T>|null {
+    protected getParent<T extends AbstractConstructor<Vue>>(component: T|string): InstanceType<T>|null {
         let $parent = this.$parent;
         while ($parent !== null) {
-            if (isComponentInstance($parent, component)) {
-                return $parent as InstanceType<T>;
+            const resolved = maybeResolveTsInst($parent);
+            if (!isString(component)) {
+                if (isInstanceOf(resolved, component)) {
+                    return $parent as InstanceType<T>;
+                }
+            } else {
+                const metadata = anyToComponentMetadata($parent);
+                if (metadata && metadata.component.name === component) {
+                    return resolved as InstanceType<T>;
+                }
             }
             $parent = $parent.$parent;
         }
@@ -63,32 +73,17 @@ export abstract class Vue implements ComponentPublicInstance {
     }
 
     /**
-     * Try to get a reference on a specific parent component.
+     * Test if component is found in the parent hierarchy.
      */
-    protected getParentByName<T extends AbstractConstructor<Vue>>(name: string): InstanceType<T>|null {
-        let $parent = this.$parent;
-        while ($parent !== null) {
-            if (this.getComponentName($parent) === name) {
-                return $parent as InstanceType<T>;
-            }
-            $parent = $parent.$parent;
-        }
-        return null;
+    protected hasParent(component: any|string): boolean {
+        return this.getParent(component) !== null;
     }
 
     /**
-     * Try to get the vue-typescript's metadata for a component.
+     * Get the Vue Typescript's metadata object for the component.
      */
-    protected getComponentMetadata(component: any): ComponentMetadataInterface|null {
-        return getComponentMetadata(component);
-    }
-
-    /**
-     * Try to get the name of a Vue component.
-     */
-    protected getComponentName(component: any): string|null {
-        const metadata = getComponentMetadata(component);
-        return metadata ? metadata.component.name : null;
+    protected getMetadata(): ComponentMetadataInterface {
+        return vccOptsToMetadata(this.$.type);
     }
 
     /**

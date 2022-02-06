@@ -16,28 +16,28 @@ import { LifecycleHook } from "./decorator/lifecycle.decorator";
  * __vccOpts is an object Vue is looking for when dealing with class components.
  * So the name cannot be changed.
  */
-export const VUE_CLASS_COMPONENT_OPTIONS_NAME = '__vccOpts';
+export const VUE_CLASS_COMPONENT_OPTIONS = '__vccOpts';
 
 /**
  * Holds all the metadata written by the different decorators of vue-typescript.
  */
-export const DECORATORS_OPTIONS_HOLDER_NAME = '__bvcOpts';
+export const DECORATORS_METADATA = '__bvcMetadata';
 
 /**
- * Cache of DECORATORS_OPTIONS_HOLDER_NAME to avoid recalculating everything at each update.
+ * Cache of DECORATORS_METADATA to avoid recalculating everything at each update.
  */
-export const DECORATORS_OPTIONS_HOLDER_CACHE_NAME = '__bvcCache';
+export const DECORATORS_METADATA_CACHE = '__bvcCache';
 
 /**
- * Holds a reference on the component's constructor in VUE_CLASS_COMPONENT_OPTIONS_NAME.
+ * A reference on the component's constructor.
  */
-export const DECORATORS_CTOR_NAME = '__bvcCtor';
+export const COMPONENT_CTOR = '__bvcCtor';
 
 /**
  * Hidden attribute used to maintained a link between the Vue object and the real object instance.
  * Used to get the parent component instance.
  */
-export const COMPONENT_INSTANCE_ATTR_NAME = '__bvcInst';
+export const COMPONENT_INSTANCE = '__bvcInst';
 
 /**
  * Vue lifecycle hooks.

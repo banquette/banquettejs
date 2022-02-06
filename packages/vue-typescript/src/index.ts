@@ -33,9 +33,7 @@ import './theme/theme.component';
 /**
  * Utils
  */
-export * from './utils/c';
+export * from './utils/guards';
+export * from './utils/converters';
+export * from './utils/is-instance-of';
 export { getActiveComponentsCount } from './utils/components-count';
-export * from './utils/get-component-instance';
-export * from './utils/get-component-metadata';
-export * from './utils/get-vcc-opts';
-export * from './utils/is-component-instance';

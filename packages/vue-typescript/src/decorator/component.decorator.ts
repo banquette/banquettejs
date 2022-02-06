@@ -1,14 +1,12 @@
 import { UsageException } from "@banquette/exception/usage.exception";
 import { kebabCase } from "@banquette/utils-string/case/kebab-case";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { Component as VueComponent } from "@vue/runtime-core";
 import { Directive, EmitsOptions } from "vue";
-import { VUE_CLASS_COMPONENT_OPTIONS_NAME } from "../constants";
+import { VUE_CLASS_COMPONENT_OPTIONS } from "../constants";
 import { generateVccOpts } from "../generate-vccopts";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { VueBuilder } from "../vue-builder";
@@ -70,7 +68,7 @@ export function Component(options: ComponentDecoratorOptions|string = {}): any {
             options = {name: options};
         }
         data.component = options as PrivateComponentDecoratorOptions;
-        Object.defineProperty(ctor, VUE_CLASS_COMPONENT_OPTIONS_NAME, {
+        Object.defineProperty(ctor, VUE_CLASS_COMPONENT_OPTIONS, {
             enumerable: true,
             configurable: true,
             get: () => {

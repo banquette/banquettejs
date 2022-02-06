@@ -32,7 +32,7 @@ import {
     nextTick,
     onBeforeUnmount
 } from "vue";
-import { HOOKS_MAP, COMPONENT_INSTANCE_ATTR_NAME } from "./constants";
+import { HOOKS_MAP, COMPONENT_INSTANCE } from "./constants";
 import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
@@ -46,12 +46,12 @@ import { splitVariantString } from "./theme/utils/split-variant-string";
 import { VueThemeVariant } from "./theme/vue-theme-variant";
 import { PrefixOrAlias } from "./type";
 import { incrementActiveComponentsCount, decrementActiveComponentsCount } from "./utils/components-count";
+import { anyToTsInst } from "./utils/converters";
 import { defineGetter } from "./utils/define-getter";
 import { defineRefProxy } from "./utils/define-ref-proxy";
-import { getComponentInstance } from "./utils/get-component-instance";
 import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-metadata";
+import { isDecoratedComponentConstructor } from "./utils/guards";
 import { instantiate } from "./utils/instantiate";
-import { isDecorated } from "./utils/is-decorated";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
 
 /**
@@ -288,7 +288,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         if (isObject(v) && isObject(v._) && vueInstancesMap.has(v._)) {
                             return vueInstancesMap.get(v._);
                         }
-                        return getComponentInstance(v) || v;
+                        return anyToTsInst(v) || v;
                     },
                     set: (value) => {
                         output[data.templateRefs[_templateRefName]].value = value
@@ -529,7 +529,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         for (const targetProperty of Object.keys(data.imports)) {
             const importOptions: ImportDecoratorOptions = data.imports[targetProperty];
             const composableCtor: Constructor = importOptions.composable;
-            if (isDecorated(composableCtor)) {
+            if (isDecoratedComponentConstructor(composableCtor)) {
                 const composableDecorationData = getOrCreateComponentMetadata(composableCtor.prototype);
                 if (isUndefined(composableDecorationData.component) && isUndefined(composableDecorationData.composable)) {
                     throw new UsageException(`The class "${composableCtor.name}" cannot be used as a composable because the "@Composable()" decorator is missing.`);
@@ -576,7 +576,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         }
         if (props !== null) {
             const vueInstance = getCurrentInstance();
-            Object.defineProperty(vueInstance, COMPONENT_INSTANCE_ATTR_NAME, {
+            Object.defineProperty(vueInstance, COMPONENT_INSTANCE, {
                 enumerable: false,
                 configurable: false,
                 writable: false,

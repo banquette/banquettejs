@@ -3,7 +3,7 @@ import { isFunction } from "@banquette/utils-type/is-function";
 import { Primitive } from "@banquette/utils-type/types";
 import { ComponentMetadataInterface } from "../../decorator/component-metadata.interface";
 import { getOrCreateComponentMetadata } from "../../utils/get-or-create-component-metadata";
-import { isDecorated } from "../../utils/is-decorated";
+import { isDecoratedComponentConstructor } from "../../utils/guards";
 import { VariantWildcard, PropCallback } from "../constant";
 import { VariantSelectorCandidateInterface } from "../variant-selector-candidate.interface";
 import { VueThemeVariant } from "../vue-theme-variant";
@@ -37,14 +37,14 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
     // Parent
     if (selector.parents.length > 0) {
         for (const parentSelectorCandidate of selector.parents) {
-            let $parentInst = componentInst.$parent;
+            let $parentInst = componentInst.$resolvedParent;
             while ($parentInst && $parentInst.constructor && $parentInst.constructor.prototype) {
-                if (isDecorated($parentInst.constructor)) {
+                if (isDecoratedComponentConstructor($parentInst.constructor)) {
                     const decoratorsData: ComponentMetadataInterface = getOrCreateComponentMetadata($parentInst.constructor.prototype);
 
                     // Check parent name
                     if (parentSelectorCandidate.name !== decoratorsData.component.name) {
-                        $parentInst = $parentInst.$parent;
+                        $parentInst = $parentInst.$resolvedParent;
                         continue ;
                     }
 
@@ -59,7 +59,7 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
                         parentSelectorCandidate.props,
                         $parentInst
                     )) {
-                        $parentInst = $parentInst.$parent;
+                        $parentInst = $parentInst.$resolvedParent;
                         continue ;
                     }
                     return true;
