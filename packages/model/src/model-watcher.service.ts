@@ -58,7 +58,16 @@ export class ModelWatcherService {
         observed.observe((changes: ObservableChangeEvent[]) => {
             for (const change of changes) {
                 const filteredJsonPointer = '/'+change.path.filter((item: string) => !isNumeric(item)).join('/');
-                if (watchedPaths === null || watchedPaths.indexOf(filteredJsonPointer) > -1) {
+                let granted = watchedPaths === null;
+                if (watchedPaths !== null) {
+                    for (const path of watchedPaths) {
+                        if (path === filteredJsonPointer || (filteredJsonPointer.length > path.length && filteredJsonPointer.substring(0, path.length) === path)) {
+                            granted = true;
+                            break ;
+                        }
+                    }
+                }
+                if (granted) {
                     cb(new ModelChangeEvent<any>(
                         change.type as ModelChangeType,
                         change.object,
