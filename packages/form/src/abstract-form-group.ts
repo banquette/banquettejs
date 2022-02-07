@@ -111,7 +111,13 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
         this.additionalPatternTags.push('group');
         this.onStateChanged((event: StateChangedFormEvent) => {
             if (event.state === BasicState.Concrete && event.newValue) {
-                this.updateValue();
+                try {
+                    // Trick to prevent validation from occurring.
+                    this.pushContext(CallContext.Reset);
+                    this.updateValue();
+                } finally {
+                    this.popContext();
+                }
             }
         });
     }
