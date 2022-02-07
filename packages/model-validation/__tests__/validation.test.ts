@@ -1,9 +1,11 @@
 import 'reflect-metadata';
-import { Injector } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { ModelMetadataService, Alias, ModelAliasNotFoundException } from "@banquette/model";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { Alias } from "@banquette/model/decorator/alias";
+import { ModelAliasNotFoundException } from "@banquette/model/exception/model-alias-not-found.exception";
+import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { Constructor } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Assert, V, ModelValidationMetadataService, validate } from "../src";
 
 describe('Metadata storage', () => {

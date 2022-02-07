@@ -1,14 +1,13 @@
 import 'reflect-metadata';
-import { SharedConfiguration } from "@banquette/config";
-import { Injector } from "@banquette/dependency-injection";
-import { Exception, UsageException } from "@banquette/exception";
-import {
-    HttpConfigurationInterface,
-    HttpConfigurationSymbol,
-    HttpRequestFactory,
-    NetworkException,
-    RequestException
-} from "@banquette/http";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { Exception } from "@banquette/exception/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpConfigurationSymbol } from "@banquette/http/config";
+import { NetworkException } from "@banquette/http/exception/network.exception";
+import { RequestException } from "@banquette/http/exception/request.exception";
+import { HttpConfigurationInterface } from "@banquette/http/http-configuration.interface";
+import { HttpRequestFactory } from "@banquette/http/http-request.factory";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
 import { extend } from "@banquette/utils-object/extend";
 import { ensureArray } from "@banquette/utils-type/ensure-array";

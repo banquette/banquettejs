@@ -1,4 +1,4 @@
-import { ValidatorInterface } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { FormComponentInterface, FormControl, FormFactory } from "../../src";
 import { ViewModelMock } from "./view-model.mock";
 

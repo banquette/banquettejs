@@ -1,9 +1,8 @@
 module.exports = {
-    "preset": "ts-jest",
+    "preset": "ts-jest/presets/js-with-ts",
     "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "vue"],
     "transform": {
-        "^.+\\.vue$": "@vue/vue3-jest",
-        "^.+\\.(js|jsx)?$": "babel-jest"
+        "^.+\\.vue$": "@vue/vue3-jest"
     },
     "testEnvironment": "jsdom",
     "setupFilesAfterEnv": ["jest-extended"],
@@ -50,6 +49,9 @@ module.exports = {
         "__mocks__",
         "unused-packages",
         "^(?!.*\\.test\\.(?:t|j)s$).+$"
+    ],
+    transformIgnorePatterns: [
+        '<rootDir>/node_modules/(?!object-observer)'
     ],
     "unmockedModulePathPatterns": ["<rootDir>/node_modules/"]
 }

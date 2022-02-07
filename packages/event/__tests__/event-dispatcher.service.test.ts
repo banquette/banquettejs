@@ -1,8 +1,9 @@
-import { Injector } from "@banquette/dependency-injection";
-import { Exception, UsageException } from "@banquette/exception";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { Exception } from "@banquette/exception/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
-import 'reflect-metadata';
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import 'reflect-metadata';
 import {
     EventArg,
     EventDispatcherInterface,

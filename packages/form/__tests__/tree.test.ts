@@ -1,8 +1,9 @@
 import 'reflect-metadata';
-import { SharedConfiguration } from "@banquette/config";
-import { Injector } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { Min, NotEmpty } from "@banquette/validation";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { Min } from "@banquette/validation/type/min";
+import { NotEmpty } from "@banquette/validation/type/not-empty";
 import {
     FormConfigurationSymbol,
     ValidationStrategy,

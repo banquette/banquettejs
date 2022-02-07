@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { SharedConfiguration } from "@banquette/config";
-import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherService } from "@banquette/event";
-import { UsageException } from "@banquette/exception";
-import { ObservablePromise } from "@banquette/promise";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { ObservablePromise } from "@banquette/promise/observable-promise";
 import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc/timeout";
 import {
     XhrAdapter,

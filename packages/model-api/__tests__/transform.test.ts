@@ -1,22 +1,24 @@
 import 'reflect-metadata';
+import { EndpointNotFoundException } from "@banquette/api/exception/endpoint-not-found.exception";
+import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { XhrAdapter } from "@banquette/http/adapter/xhr.adapter";
+import { HttpConfigurationSymbol } from "@banquette/http/config";
+import { HttpMethod } from "@banquette/http/constants";
+import { HttpConfigurationInterface } from "@banquette/http/http-configuration.interface";
+import { HttpRequest } from "@banquette/http/http-request";
+import { HttpRequestFactory } from "@banquette/http/http-request.factory";
+import { HttpService } from "@banquette/http/http.service";
+import { Relation } from "@banquette/model/decorator/relation";
+import { TransformFailedException } from "@banquette/model/exception/transform-failed.exception";
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformService } from "@banquette/model/transformer/transform.service";
+import { Model } from "@banquette/model/transformer/type/model";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { Endpoint, Api, ModelApiService, ApiTransformerSymbol } from "../src";
-import { Injector } from "@banquette/dependency-injection";
-import {
-    HttpRequest,
-    HttpMethod,
-    HttpRequestFactory,
-    HttpService,
-    HttpConfigurationInterface,
-    HttpConfigurationSymbol,
-    XhrAdapter
-} from "@banquette/http";
 import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
-import { TransformService, TransformResult, Relation, Model, TransformFailedException } from "@banquette/model";
-import { UsageException } from "@banquette/exception";
-import { EndpointNotFoundException } from "@banquette/api";
+import { Endpoint, Api, ModelApiService, ApiTransformerSymbol } from "../src";
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
-import { SharedConfiguration } from "@banquette/config";
 import '../../http/__tests__/__mocks__/xml-http-request.mock';
 
 const http: HttpService = Injector.Get<HttpService>(HttpService);

@@ -1,8 +1,10 @@
 import 'reflect-metadata';
-import { Injector } from "@banquette/dependency-injection";
-import { HttpMethod, PayloadTypeJson, ResponseTypeJson } from "@banquette/http";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { HttpMethod } from "@banquette/http/constants";
+import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
+import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
+import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { EndpointNotFoundException, ApiMetadataService } from "../src";
-import { NotEmpty } from "@banquette/validation";
 import { endpointParameterDefaults } from "./endpoint.test";
 
 const metadata = Injector.Get(ApiMetadataService);

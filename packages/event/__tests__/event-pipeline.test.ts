@@ -1,13 +1,16 @@
 import 'reflect-metadata';
-import { Exception } from "@banquette/exception";
+import { Exception } from "@banquette/exception/exception";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isSymbol } from "@banquette/utils-type/is-symbol";
-import { PartialSequence } from "../src";
-import { SequenceErrorBasicBehavior, DefaultSequenceName } from "../src/constant";
-import { EventPipeline } from "../src/pipeline/event-pipeline";
-import { SequenceContext } from "../src/pipeline/sequence-context";
+import {
+    PartialSequence,
+    SequenceErrorBasicBehavior,
+    DefaultSequenceName,
+    EventPipeline,
+    SequenceContext
+} from "../src";
 
 /**
  * A fake set of events for testing.

@@ -1,9 +1,12 @@
 import 'reflect-metadata';
-import { Exception } from "@banquette/exception";
-import { HttpMethod, PayloadTypeJson, ResponseTypeJson } from "@banquette/http";
+import { Exception } from "@banquette/exception/exception";
+import { HttpMethod } from "@banquette/http/constants";
+import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
+import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { isString } from "@banquette/utils-type/is-string";
 import { Constructor } from "@banquette/utils-type/types";
-import { NotEmpty, Min } from "@banquette/validation";
+import { Min } from "@banquette/validation/type/min";
+import { NotEmpty } from "@banquette/validation/type/not-empty";
 import {
     ApiEndpoint,
     ApiEndpointParameterOptions,

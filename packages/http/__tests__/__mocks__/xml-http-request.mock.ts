@@ -1,5 +1,5 @@
-import { EventDispatcher } from "@banquette/event";
-import { UsageException } from "@banquette/exception";
+import { EventDispatcher } from "@banquette/event/event-dispatcher";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { randomInt } from "@banquette/utils-random/random-int";
 import { ensureSameType } from "@banquette/utils-type/ensure-same-type";
 import { isFunction } from "@banquette/utils-type/is-function";

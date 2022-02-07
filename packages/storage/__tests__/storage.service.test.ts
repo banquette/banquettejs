@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injector } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection/injector";
 import {
     AdapterInterface,
     SynchronousAdapterInterface,

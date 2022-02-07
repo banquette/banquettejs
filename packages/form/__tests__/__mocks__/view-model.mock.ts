@@ -17,6 +17,8 @@ export class ViewModelMock {
 
     public constructor(control: FormControl) {
         this.control = control.setViewModel({
+            id: control.id,
+
             /**
              * Try to get the focus on the control.
              */

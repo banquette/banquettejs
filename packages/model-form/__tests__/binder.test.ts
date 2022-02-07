@@ -1,14 +1,13 @@
 import 'reflect-metadata';
+import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
+import { Relation } from "@banquette/model/decorator/relation";
+import { TransformService } from "@banquette/model/transformer/transform.service";
 import { Form, FormModelBinder, FormObject, FormTransformerSymbol, FormArray } from "../src";
-import { Injector } from "@banquette/dependency-injection";
-import {
-    FormObject as FormObjectObject,
-    FormControl as FormControlObject,
-    FormArray as FormArrayObject,
-    ComponentNotFoundException
-} from '@banquette/form';
-import { UsageException } from "@banquette/exception";
-import { TransformService, Relation } from "@banquette/model";
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { FormObject as FormObjectObject } from '@banquette/form/form-object';
+import { FormControl as FormControlObject } from '@banquette/form/form-control';
+import { FormArray as FormArrayObject } from '@banquette/form/form-array';
 import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
 
 class A {
@@ -182,7 +181,7 @@ describe('Synchronization', () => {
             const model = Injector.Get(FormModelBinder).bind(new Foo(), form);
             form.getByPattern('**').markAsConcrete();
             delete model.bar;
-            expect(form.get('bar').value).toBeUndefined();
+            expect(() => form.get('bar')).toThrow(ComponentNotFoundException);
         });
 
         test('Set FormControl to null', () => {

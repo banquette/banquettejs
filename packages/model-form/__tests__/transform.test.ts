@@ -1,20 +1,20 @@
 import 'reflect-metadata';
+import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { Assert } from "@banquette/model-validation/decorator/assert";
+import { Relation } from "@banquette/model/decorator/relation";
+import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
+import { TransformResult } from "@banquette/model/transform-result";
+import { TransformService } from "@banquette/model/transformer/transform.service";
+import { Primitive, Type } from "@banquette/model/transformer/type/primitive";
+import { Min } from "@banquette/validation/type/min";
+import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { transformAndCheck, transformAndCheckAsync } from "../../model/__tests__/utils";
 import { FormTransformerSymbol, Form, FormControl, FormObject, FormArray } from "../src";
-import { FormObject as FormObjectObject, FormControl as FormControlObject, FilterGroup } from "@banquette/form";
+import { FormObject as FormObjectObject } from "@banquette/form/form-object";
+import { FormControl as FormControlObject } from "@banquette/form/form-control";
+import { FilterGroup } from "@banquette/form/constant";
 import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
-import {
-    Primitive,
-    Type,
-    TransformService,
-    TransformResult,
-    ModelTransformMetadataService,
-    Relation
-} from "@banquette/model";
-import { Injector } from "@banquette/dependency-injection";
-import { Assert } from "@banquette/model-validation";
-import { NotEmpty, Min } from "@banquette/validation";
-import { UsageException } from "@banquette/exception";
 
 describe('General mechanics', () => {
     test('Multiple levels, sync', () => {

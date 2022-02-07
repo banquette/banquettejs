@@ -71,7 +71,7 @@ export class FormModelBinder {
         if (this.contextStack.length > 0) {
             return this.contextStack[this.contextStack.length - 1].ctor;
         }
-        return this.model.constructor;
+        return this.model._ot.constructor;
     }
 
     private get currentContextProperty(): string|null {
@@ -95,11 +95,11 @@ export class FormModelBinder {
      */
     public bind<T extends object>(model: T, form: FormObject): T {
         this.form = form;
-        this.syncFormObjectWithModel(form, model);
+        this.model = this.modelWatcher.watchTransformableProperties<T>(model, FormTransformerSymbol, proxy(this.onModelChange, this));
+        this.syncFormObjectWithModel(form, this.model);
         this.form.onControlAdded(proxy(this.throwOnUnauthorizedFormMutation, this), false);
         this.form.onControlRemoved(proxy(this.throwOnUnauthorizedFormMutation, this), false);
         this.form.onValueChanged(proxy(this.onFormValueChange, this), false);
-        this.model = this.modelWatcher.watchTransformableProperties<T>(model, FormTransformerSymbol, proxy(this.onModelChange, this));
         return this.model;
     }
 
@@ -109,9 +109,9 @@ export class FormModelBinder {
      * Values of existing controls will be updated.
      */
     private syncFormObjectWithModel(component: FormObject, model: any): void {
-        const tree = this.getModelTransformersTree(model.constructor as Constructor);
+        const tree = this.getModelTransformersTree(model._ot.constructor as Constructor);
         for (const property of Object.keys(tree.children)) {
-            this.pushContext(model.constructor as Constructor, property);
+            this.pushContext(model._ot.constructor as Constructor, property);
             if (!isUndefined(tree.children[property])) {
                 this.syncFormWithModelPart(tree.children[property], component, model, property);
             }
@@ -269,7 +269,7 @@ export class FormModelBinder {
         const pathParts = event.path.split('/');
         let formContainer: FormGroupInterface = this.form;
         let modelContainer = this.model;
-        let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
+        let treeContainer: any = this.getModelTransformersTree(this.model._ot.constructor);
         let contextsDepth = 0;
         const pushContext = (ctor: Constructor, property: string) => ++contextsDepth && this.pushContext(ctor, property);
         let i;
@@ -304,7 +304,7 @@ export class FormModelBinder {
             if (treeContainer.transformer.type === FormControlTransformerSymbol) {
                 this.syncFormControlWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
             } else if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                pushContext(modelContainer.constructor as Constructor, cp);
+                pushContext(modelContainer._ot.constructor as Constructor, cp);
                 this.syncFormObjectWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
             } else if (treeContainer.transformer.type === FormArrayTransformerSymbol) {
                 this.syncFormArrayWithModelAttribute(treeContainer, formContainer, modelContainer, cp);

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injector } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection/injector";
 import { isString } from "@banquette/utils-type/is-string";
 import { ModelWatcherService, ModelChangeEvent, Json, JsonTransformerSymbol, T, Relation } from "../src";
 
@@ -105,7 +105,7 @@ describe('Basic mechanics', () => {
         watchAndCheck(foo, ['/bar/baz'], (proxy: Foo) => {
             bar.baz = 'modified 1';
             proxy.bar.baz = 'modified 2';
-        }, [['/bar/baz', 'modified 1', 'modified 2']]);
+        }, [['/bar/baz', '', 'modified 2']]);
     });
 });
 

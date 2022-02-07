@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 import { areEqual } from "@banquette/utils-misc/are-equal";
-import { NotEmpty, NotEqual, ValidationResult } from "@banquette/validation";
+import { NotEmpty } from "@banquette/validation/type/not-empty";
+import { NotEqual } from "@banquette/validation/type/not-equal";
+import { ValidationResult } from "@banquette/validation/validation-result";
 import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";
 import {
     FormGroupInterface,
@@ -290,7 +292,7 @@ describe('StateChanged', () => {
                 [BasicState.Concrete, true],
                 [BasicState.Concrete, false]
             ]
-        },
+        }
     ];
 
     for (const testItem of tests) {

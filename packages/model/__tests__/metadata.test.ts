@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injector } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection/injector";
 import {
     Alias,
     ModelAliasNotFoundException,
@@ -11,7 +11,7 @@ import {
     Primitive,
     Type
 } from "../src";
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { checkIfPropertyTransformer } from "./utils";
 
 describe('Create manually', () => {

@@ -1,7 +1,15 @@
 import 'reflect-metadata';
-import { HttpResponse } from "@banquette/http";
+import { HttpResponse } from "@banquette/http/http-response";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
-import { Ajax, And, Invalid, Max, Min, NotEmpty, NotEqual, Valid, ValidationResult } from "@banquette/validation";
+import { Ajax } from "@banquette/validation/type/ajax";
+import { And } from "@banquette/validation/type/and";
+import { Invalid } from "@banquette/validation/type/invalid";
+import { Max } from "@banquette/validation/type/max";
+import { Min } from "@banquette/validation/type/min";
+import { NotEmpty } from "@banquette/validation/type/not-empty";
+import { NotEqual } from "@banquette/validation/type/not-equal";
+import { Valid } from "@banquette/validation/type/valid";
+import { ValidationResult } from "@banquette/validation/validation-result";
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
 import '../../http/__tests__/__mocks__/xml-http-request.mock';
 import { ValidateAfterDelay } from "../../validation/__tests__/__mocks__/type/validate-after-delay.test-validator";

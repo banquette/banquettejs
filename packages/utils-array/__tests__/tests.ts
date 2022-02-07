@@ -1,6 +1,5 @@
 import { createGenericTestSuite } from "../../__tests__/utils";
-import { arrayUnique } from "../src";
-import { arrayIntersect } from "../src/array-intersect";
+import { arrayUnique, arrayIntersect } from "../src";
 
 /**
  * Tests are TODO.

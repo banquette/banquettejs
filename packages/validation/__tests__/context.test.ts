@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { UsageException } from "@banquette/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { ValidationContext } from "../src";
