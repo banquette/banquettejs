@@ -26,7 +26,7 @@ export class ModelMetadataService {
     /**
      * Holds relations between models.
      */
-    private relations: WeakMap<Constructor, Record<string, Constructor>> = new WeakMap<Constructor, Record<string, Constructor>>();
+    private relations: WeakMap<Constructor, Record<string, ModelExtendedIdentifier>> = new WeakMap<Constructor, Record<string, ModelExtendedIdentifier>>();
 
     /**
      * Define a custom factory that should be used any time a new instance of the model is created.
@@ -77,15 +77,20 @@ export class ModelMetadataService {
      */
     public registerRelation(from: ModelExtendedIdentifier, property: string, to: ModelExtendedIdentifier): void {
         const fromCtor = this.resolveAlias(from);
-        const toCtor = this.resolveAlias(to);
+        if (isUndefined(to)) {
+            throw new UsageException(
+                `Unable to register relation of property "${property}" of model "${fromCtor.name}". ` +
+                `You may have a circular dependency. Try to register a string alias instead.`
+            );
+        }
         if (!this.relations.has(fromCtor)) {
             this.relations.set(fromCtor, {});
         }
-        const relations = this.relations.get(fromCtor) as Record<string, Constructor>;
-        if (!isUndefined(relations[property]) && toCtor !== relations[property]) {
+        const relations = this.relations.get(fromCtor) as Record<string, ModelExtendedIdentifier>;
+        if (!isUndefined(relations[property]) && this.resolveAlias(to) !== this.resolveAlias(relations[property])) {
             throw new UsageException(`Two conflicting relations have been defined for "${property}" of model "${fromCtor.name}".`);
         }
-        relations[property] = toCtor;
+        relations[property] = to;
         this.relations.set(fromCtor, relations);
     }
 
@@ -96,7 +101,7 @@ export class ModelMetadataService {
     public getRelation(identifier: ModelExtendedIdentifier, property: string): Constructor|null {
         const ctor = this.resolveAlias(identifier);
         const relations = this.relations.get(ctor);
-        return !isNullOrUndefined(relations) && !isUndefined(relations[property]) ? relations[property] : null;
+        return !isNullOrUndefined(relations) && !isUndefined(relations[property]) ? this.resolveAlias(relations[property]) : null;
     }
 
     public clear(): void {
@@ -123,7 +128,7 @@ export class ModelMetadataService {
      * Remove all known relations.
      */
     public clearRelations(): void {
-        this.relations = new WeakMap<Constructor, Record<string, Constructor>>();
+        this.relations = new WeakMap<Constructor, Record<string, ModelExtendedIdentifier>>();
     }
 
     /**
