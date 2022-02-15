@@ -1,0 +1,1 @@
+export { default as IconSwapVert } from './icon-swap-vert.component.vue';

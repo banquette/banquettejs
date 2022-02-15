@@ -1,0 +1,1 @@
+export { default as IconSwapVerticalCircle } from './icon-swap-vertical-circle.component.vue';

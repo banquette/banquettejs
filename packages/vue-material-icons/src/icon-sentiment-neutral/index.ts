@@ -1,0 +1,1 @@
+export { default as IconSentimentNeutral } from './icon-sentiment-neutral.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconOpacity } from './icon-opacity.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconPersonAdd } from './icon-person-add.component.vue';

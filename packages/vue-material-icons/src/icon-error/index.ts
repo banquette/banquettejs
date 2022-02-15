@@ -1,0 +1,1 @@
+export { default as IconError } from './icon-error.component.vue';

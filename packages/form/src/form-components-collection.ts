@@ -322,14 +322,14 @@ export class FormComponentsCollection {
     }
 
     /**
-     * Subscribe to the `Events.StateChanged` form event of all components in the collection.
+     * Subscribe to the `FormEvents.StateChanged` form event of all components in the collection.
      */
     public onStateChanged(callback: (event: StateChangedFormEvent) => void): UnsubscribeFunction {
         return this.subscribeForEach<StateChangedFormEvent>('onStateChanged', callback);
     }
 
     /**
-     * Subscribe to the `Events.ValueChanged` form event of all components in the collection.
+     * Subscribe to the `FormEvents.ValueChanged` form event of all components in the collection.
      */
     public onValueChanged(callback: (event: ValueChangedFormEvent) => void): UnsubscribeFunction {
         return this.subscribeForEach<ValueChangedFormEvent>('onValueChanged', callback);

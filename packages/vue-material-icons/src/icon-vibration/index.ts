@@ -1,0 +1,1 @@
+export { default as IconVibration } from './icon-vibration.component.vue';

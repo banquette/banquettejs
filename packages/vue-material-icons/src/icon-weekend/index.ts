@@ -1,0 +1,1 @@
+export { default as IconWeekend } from './icon-weekend.component.vue';

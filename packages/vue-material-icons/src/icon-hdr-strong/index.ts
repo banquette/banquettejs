@@ -1,0 +1,1 @@
+export { default as IconHdrStrong } from './icon-hdr-strong.component.vue';

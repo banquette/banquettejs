@@ -1,0 +1,1 @@
+export { default as IconRadioButtonChecked } from './icon-radio-button-checked.component.vue';

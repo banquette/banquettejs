@@ -1,0 +1,1 @@
+export { default as IconClass } from './icon-class.component.vue';

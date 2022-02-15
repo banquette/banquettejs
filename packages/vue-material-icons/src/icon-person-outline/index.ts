@@ -1,0 +1,1 @@
+export { default as IconPersonOutline } from './icon-person-outline.component.vue';

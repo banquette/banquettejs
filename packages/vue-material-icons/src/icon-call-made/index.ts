@@ -1,0 +1,1 @@
+export { default as IconCallMade } from './icon-call-made.component.vue';

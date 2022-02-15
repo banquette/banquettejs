@@ -1,0 +1,1 @@
+export { default as IconImage } from './icon-image.component.vue';

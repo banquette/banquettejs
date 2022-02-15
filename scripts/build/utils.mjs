@@ -77,6 +77,7 @@ export function getRollupConfig(buildConfig) {
         },
         input: buildConfig.entry,
         external: (candidate) => {
+
             for (const pattern of externals) {
                 if (pattern instanceof RegExp && candidate.match(pattern)) {
                     return true;
@@ -154,7 +155,7 @@ function writeOutput(config, output) {
         const files = getAllFiles(path.resolve(__dirname, '../../', output.dir));
         for (let i = 0; i < files.length; ++i) {
             let fcontent = fs.readFileSync(files[i]).toString();
-            let reg = /('|")(\.\.\/)+node_modules\/style-inject\/[^'|"]+('|")/;
+            let reg = /('|")(\.?\.\/)+node_modules\/style-inject\/[^'|"]+('|")/;
             if (fcontent.match(reg)) {
                 fcontent = fcontent.replace(reg, "'style-inject'");
                 fs.writeFileSync(files[i], fcontent);

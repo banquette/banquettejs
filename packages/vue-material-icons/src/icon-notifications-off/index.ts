@@ -1,0 +1,1 @@
+export { default as IconNotificationsOff } from './icon-notifications-off.component.vue';

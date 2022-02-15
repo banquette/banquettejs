@@ -5,7 +5,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
-import { EncoderTag, Events } from "../constants";
+import { EncoderTag, HttpEvents } from "../constants";
 import { RequestEvent } from "../event/request.event";
 
 export const PayloadTypeJson = Symbol('json');
@@ -33,7 +33,7 @@ function onBeforeRequest(event: RequestEvent) {
     }
 }
 Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
-    Events.BeforeRequest,
+    HttpEvents.BeforeRequest,
     onBeforeRequest,
     0,
     null,

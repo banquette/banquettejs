@@ -1,0 +1,1 @@
+export { default as IconContentCopy } from './icon-content-copy.component.vue';

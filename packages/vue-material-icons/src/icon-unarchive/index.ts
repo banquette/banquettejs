@@ -1,0 +1,1 @@
+export { default as IconUnarchive } from './icon-unarchive.component.vue';

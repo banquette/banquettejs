@@ -1,0 +1,1 @@
+export { default as IconSms } from './icon-sms.component.vue';

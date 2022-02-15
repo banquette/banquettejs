@@ -1,0 +1,1 @@
+export { default as IconMultilineChart } from './icon-multiline-chart.component.vue';

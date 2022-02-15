@@ -1,0 +1,1 @@
+export { default as IconChildCare } from './icon-child-care.component.vue';

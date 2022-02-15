@@ -1,0 +1,1 @@
+export { default as IconRemoveFromQueue } from './icon-remove-from-queue.component.vue';

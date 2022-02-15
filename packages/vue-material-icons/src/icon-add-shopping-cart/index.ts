@@ -1,0 +1,1 @@
+export { default as IconAddShoppingCart } from './icon-add-shopping-cart.component.vue';

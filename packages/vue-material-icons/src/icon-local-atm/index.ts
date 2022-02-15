@@ -1,0 +1,1 @@
+export { default as IconLocalAtm } from './icon-local-atm.component.vue';

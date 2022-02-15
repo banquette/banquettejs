@@ -1,0 +1,1 @@
+export { default as IconMap } from './icon-map.component.vue';

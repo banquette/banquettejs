@@ -1,0 +1,1 @@
+export { default as IconLocalTaxi } from './icon-local-taxi.component.vue';

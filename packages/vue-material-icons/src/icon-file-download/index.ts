@@ -1,0 +1,1 @@
+export { default as IconFileDownload } from './icon-file-download.component.vue';

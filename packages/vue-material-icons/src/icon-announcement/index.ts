@@ -1,0 +1,1 @@
+export { default as IconAnnouncement } from './icon-announcement.component.vue';

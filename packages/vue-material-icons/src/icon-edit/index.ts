@@ -1,0 +1,1 @@
+export { default as IconEdit } from './icon-edit.component.vue';

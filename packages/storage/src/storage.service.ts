@@ -114,7 +114,7 @@ export class StorageService {
             return this.availableAdaptersOrdered[0] as T;
         }
         if (isSymbol(adapter)) {
-            return Injector.Get<AdapterInterface>(adapter) as T;
+            return Injector.Get(adapter) as T;
         }
         if (isConstructor(adapter) && isString(adapter.name)) {
             adapterStr = adapter.name;

@@ -1,0 +1,1 @@
+export { default as IconVideoCall } from './icon-video-call.component.vue';

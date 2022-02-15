@@ -4,10 +4,10 @@ import { HttpMethod } from "@banquette/http/constants";
 import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { NotEmpty } from "@banquette/validation/type/not-empty";
-import { EndpointNotFoundException, ApiMetadataService } from "../src";
+import { EndpointNotFoundException, ApiEndpointStorage } from "../src";
 import { endpointParameterDefaults } from "./endpoint.test";
 
-const metadata = Injector.Get(ApiMetadataService);
+const metadata = Injector.Get(ApiEndpointStorage);
 
 beforeEach(() => {
     metadata.clear();
@@ -18,7 +18,7 @@ test('Create endpoint multi arguments', () => {
     expect(metadata.getEndpoint('get_user')).toMatchObject({
         url: '/user/{id}',
         method: HttpMethod.GET,
-        parameters: {},
+        params: {},
         headers: {},
         payloadType: PayloadTypeJson,
         responseType: ResponseTypeJson
@@ -28,7 +28,7 @@ test('Create endpoint multi arguments', () => {
 test('Default endpoint parameter options', () => {
     metadata.registerEndpoint('get_user', '/user', HttpMethod.GET, {param: null});
     expect(metadata.getEndpoint('get_user')).toEqual(expect.objectContaining({
-        parameters: expect.objectContaining({
+        params: expect.objectContaining({
             param: expect.objectContaining(endpointParameterDefaults),
         })
     }));
@@ -40,7 +40,7 @@ test('Create endpoint multi arguments with params', () => {
     expect(metadata.getEndpoint('get_user')).toMatchObject({
         url: '/user',
         method: HttpMethod.GET,
-        parameters: expect.objectContaining({
+        params: expect.objectContaining({
             param: expect.objectContaining({validator: expect.objectContaining({validate: expect.any(Function)})})
         }),
         headers: {}
@@ -55,7 +55,7 @@ test('Create endpoint by object', () => {
     expect(metadata.getEndpoint('get_user')).toMatchObject({
         url: '/user/{id}',
         method: HttpMethod.GET,
-        parameters: {},
+        params: {},
         headers: {},
         payloadType: PayloadTypeJson,
         responseType: ResponseTypeJson

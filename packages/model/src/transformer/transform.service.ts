@@ -3,7 +3,9 @@ import { Inject } from "@banquette/dependency-injection/decorator/inject.decorat
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Complete, Constructor } from "@banquette/utils-type/types";
 import { ModelTransformerTag } from "../constants";
 import { NoCompatibleTransformerFoundException } from "../exception/no-compatible-transformer-found.exception";
@@ -33,6 +35,9 @@ export class TransformService {
     public transform(parentContext: TransformContext): TransformResult;
     public transform(modelInstance: object, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult;
     public transform(modelInstanceOrParentContext: object|TransformContext, transformType?: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
+        if (!(modelInstanceOrParentContext instanceof TransformContext) && isArray(modelInstanceOrParentContext)) {
+            return this.transformCollection(modelInstanceOrParentContext, transformType as symbol, extra, wildcardTransformer);
+        }
         let parentContext: TransformContext|null = null;
         let ctor: Constructor|null = null;
         if (modelInstanceOrParentContext instanceof TransformContext) {
@@ -60,6 +65,9 @@ export class TransformService {
     public transformInverse(parentContext: TransformContext): TransformResult;
     public transformInverse(value: any, modelType: ModelExtendedIdentifier, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult;
     public transformInverse(parentContextOrValue: TransformContext|any, modelType?: ModelExtendedIdentifier, transformType?: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
+        if (!(parentContextOrValue instanceof TransformContext) && isArray(parentContextOrValue)) {
+            return this.transformCollectionInverse(parentContextOrValue, modelType as ModelExtendedIdentifier, transformType as symbol, extra, wildcardTransformer);
+        }
         let parentContext: TransformContext | null = null;
         if (parentContextOrValue instanceof TransformContext) {
             parentContext = parentContextOrValue;
@@ -79,6 +87,74 @@ export class TransformService {
         return this.transformWithWildcard(wildcardTransformer, context, () => {
             return this.getTransformer(context).transformInverse(context);
         });
+    }
+
+    /**
+     * Call `transform` on multiple items in parallel.
+     *
+     * @private to keep the public Api simple.
+     */
+    private transformCollection(items: any[], transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
+        return this.transformParallel(items, (item: any) => {
+            return this.transform(item, transformType, extra, wildcardTransformer);
+        });
+    }
+
+    /**
+     * Call `transformInverse` on multiple items in parallel.
+     *
+     * @private to keep the public Api simple.
+     */
+    private transformCollectionInverse(values: any[], modelType: ModelExtendedIdentifier, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
+        return this.transformParallel(values, (value: any) => {
+            return this.transformInverse(value, modelType, transformType, extra, wildcardTransformer);
+        });
+    }
+
+    /**
+     * Generic way to apply a transform to multiple items in parallel while handling asynchronicity and keeping results in order.
+     */
+    private transformParallel(items: any[], callback: (item: any) => TransformResult): TransformResult {
+        const result = new TransformResult();
+        const promises: Promise<any>[] = [];
+        const map = new WeakMap<TransformResult, number>();
+        const transformedItems: Record<number, any> = {};
+        const buildFinalArray = () => {
+            const output: any[] = [];
+            for (let i = 0; i < items.length; ++i) {
+                output.push(transformedItems[i]);
+            }
+            return output;
+        };
+        for (let i = 0; i < items.length; ++i) {
+            const subResult = callback(items[i]);
+            if (subResult.promise !== null) {
+                promises.push(subResult.promise);
+
+                // Transformers are executed in parallel and some items may be asynchronous while other not.
+                // So to ensure the ordering is preserved, keep a map between the sub transform result and the item's index.
+                map.set(subResult, i);
+            } else {
+                transformedItems[i] = subResult.result;
+            }
+        }
+        if (promises.length > 0) {
+            result.delayResponse(new Promise<void>((resolve, reject) => {
+                Promise.all(promises).then((transformResults: TransformResult[]) => {
+                    for (const transformResult of transformResults) {
+                        const index: number|undefined = map.get(transformResult);
+                        if (!isUndefined(index)) {
+                            transformedItems[index] = transformResult.result;
+                        }
+                    }
+                    result.setResult(buildFinalArray());
+                    resolve();
+                }).catch(reject);
+            }));
+        } else {
+            result.setResult(buildFinalArray());
+        }
+        return result;
     }
 
     /**

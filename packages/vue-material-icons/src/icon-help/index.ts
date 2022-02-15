@@ -1,0 +1,1 @@
+export { default as IconHelp } from './icon-help.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMore } from './icon-more.component.vue';

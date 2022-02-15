@@ -1,0 +1,1 @@
+export { default as IconFilterVintage } from './icon-filter-vintage.component.vue';

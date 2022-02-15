@@ -1,0 +1,1 @@
+export { default as IconDrafts } from './icon-drafts.component.vue';

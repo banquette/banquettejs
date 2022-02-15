@@ -1,0 +1,1 @@
+export { default as IconSwitchCamera } from './icon-switch-camera.component.vue';

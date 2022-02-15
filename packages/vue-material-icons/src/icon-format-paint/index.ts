@@ -1,0 +1,1 @@
+export { default as IconFormatPaint } from './icon-format-paint.component.vue';

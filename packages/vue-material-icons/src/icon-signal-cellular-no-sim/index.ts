@@ -1,0 +1,1 @@
+export { default as IconSignalCellularNoSim } from './icon-signal-cellular-no-sim.component.vue';

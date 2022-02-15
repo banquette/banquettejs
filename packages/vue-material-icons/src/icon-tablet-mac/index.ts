@@ -1,0 +1,1 @@
+export { default as IconTabletMac } from './icon-tablet-mac.component.vue';

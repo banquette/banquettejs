@@ -1,0 +1,1 @@
+export { default as IconDvr } from './icon-dvr.component.vue';

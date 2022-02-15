@@ -1,0 +1,46 @@
+/**
+ * Unscoped styles so override sub components (input, select).
+ */
+.bt-table-pagination {
+    --bqt-spacing-s: var(--form-spacing-s);
+    --bqt-spacing: var(--form-spacing);
+    --bqt-control-spacing: var(--control-spacing);
+    --bqt-control-size: var(--size);
+    --bqt-radius: var(--radius);
+    --bqt-dropdown-align: center;
+    --bqt-dropdown-size: 3rem;
+
+    .bt-form-text {
+        height: 100%;
+        width: 100%;
+        --x73pwbop: 0 !important;
+
+        .control-wrapper,
+        .input-wrapper {
+            height: 100%;
+        }
+
+        .control-wrapper {
+            width: calc(var(--length, 3ch) + 1em);
+        }
+
+        [data-control] {
+            width: var(--length, 3ch);
+            min-width: 3ch;
+            height: 100%;
+            text-align: center;
+            padding: .5em;
+            font-weight: var(--font-style);
+        }
+    }
+
+    .bt-form-select {
+        --font-size: 87.5%;
+        width: auto;
+
+        .control-wrapper {
+            --x73pwbop: .3rem .2rem .3rem .5rem;
+            --yvwfinhn: .95em;
+        }
+    }
+}

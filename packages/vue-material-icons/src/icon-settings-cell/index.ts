@@ -1,0 +1,1 @@
+export { default as IconSettingsCell } from './icon-settings-cell.component.vue';

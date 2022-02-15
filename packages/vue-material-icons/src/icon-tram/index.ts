@@ -1,0 +1,1 @@
+export { default as IconTram } from './icon-tram.component.vue';

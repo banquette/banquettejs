@@ -1,0 +1,1 @@
+export { default as Icon3dRotation } from './icon-3d-rotation.component.vue';

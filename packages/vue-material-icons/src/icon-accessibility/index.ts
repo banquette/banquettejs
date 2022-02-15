@@ -1,0 +1,1 @@
+export { default as IconAccessibility } from './icon-accessibility.component.vue';

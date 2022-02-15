@@ -97,7 +97,7 @@ export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFacto
                      type?: string,
                      tags: string[] = []): ValidatorInterface => {
     const isFactoryConfig = (value: RequestFactory|HttpRequestFactoryConfig): value is HttpRequestFactoryConfig => isObject(value);
-    const instance: AjaxValidator = Injector.Get<AjaxValidator>(AjaxValidator);
+    const instance: AjaxValidator = Injector.Get(AjaxValidator);
     if (requestFactory instanceof HttpRequest) {
         const userRequest = requestFactory;
         requestFactory = () => userRequest.clone();

@@ -1,0 +1,1 @@
+export { default as IconAdb } from './icon-adb.component.vue';

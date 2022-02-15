@@ -1,0 +1,1 @@
+export { default as IconViewCarousel } from './icon-view-carousel.component.vue';

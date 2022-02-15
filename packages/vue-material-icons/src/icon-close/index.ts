@@ -1,0 +1,1 @@
+export { default as IconClose } from './icon-close.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconLooksOne } from './icon-looks-one.component.vue';

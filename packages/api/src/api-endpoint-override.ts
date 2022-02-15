@@ -1,0 +1,38 @@
+import { HttpMethod } from "@banquette/http/constants";
+import { HeadersBag } from "@banquette/http/headers-bag";
+import { Primitive } from "@banquette/utils-type/types";
+
+/**
+ * Allow to override part of the configuration of an endpoint, on use.
+ */
+export class ApiEndpointOverride {
+    /**
+     * Create a ApiEndpointOverride object.
+     *
+     * @param method            Http method.
+     * @param params            Url parameters.
+     * @param headers           Headers to send with the request.
+     * @param timeout           Maximum duration of the request (in milliseconds).
+     * @param retry             Maximum number of tries allowed for the request.
+     * @param retryDelay        Time to wait before trying again in case of error.
+     * @param priority          The higher the priority the sooner the request will be executed when the queue contains multiple requests.
+     * @param withCredentials   If true, cookies and auth headers are included in the request.
+     * @param mimeType          MimeType of the payload.
+     * @param tags              Tags that will be sent with emitted events.
+     * @param extras            Any additional data you want to associated with the request.
+     *                          This object will not be sent with the request.
+     */
+    public constructor(public method?: HttpMethod,
+                       public params?: Record<string, Primitive>,
+                       public headers?: HeadersBag|Record<string, Primitive>,
+                       public timeout?: number|null,
+                       public retry?: number|null,
+                       public retryDelay?: number|'auto'|null,
+                       public priority?: number,
+                       public withCredentials?: boolean,
+                       public mimeType?: string|null,
+                       public tags?: symbol|symbol[],
+                       public extras?: Record<string, any>) {
+
+    }
+}

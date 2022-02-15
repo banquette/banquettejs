@@ -1,0 +1,1 @@
+export { default as IconLibraryMusic } from './icon-library-music.component.vue';

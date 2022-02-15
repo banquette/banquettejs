@@ -1,0 +1,1 @@
+export { default as IconPanoramaFishEye } from './icon-panorama-fish-eye.component.vue';

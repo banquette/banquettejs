@@ -1,0 +1,1 @@
+export { default as IconFiberSmartRecord } from './icon-fiber-smart-record.component.vue';

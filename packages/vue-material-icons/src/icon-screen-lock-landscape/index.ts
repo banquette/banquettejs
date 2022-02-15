@@ -1,0 +1,1 @@
+export { default as IconScreenLockLandscape } from './icon-screen-lock-landscape.component.vue';

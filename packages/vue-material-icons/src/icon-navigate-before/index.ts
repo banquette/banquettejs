@@ -1,0 +1,1 @@
+export { default as IconNavigateBefore } from './icon-navigate-before.component.vue';

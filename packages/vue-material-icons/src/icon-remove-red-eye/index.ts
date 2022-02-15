@@ -1,0 +1,1 @@
+export { default as IconRemoveRedEye } from './icon-remove-red-eye.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconFolderSpecial } from './icon-folder-special.component.vue';

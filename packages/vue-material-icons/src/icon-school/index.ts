@@ -1,0 +1,1 @@
+export { default as IconSchool } from './icon-school.component.vue';

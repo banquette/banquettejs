@@ -1,0 +1,1 @@
+export { default as IconStayCurrentPortrait } from './icon-stay-current-portrait.component.vue';

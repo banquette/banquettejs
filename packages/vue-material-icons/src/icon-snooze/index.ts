@@ -1,0 +1,1 @@
+export { default as IconSnooze } from './icon-snooze.component.vue';

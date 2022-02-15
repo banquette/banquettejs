@@ -1,0 +1,1 @@
+export { default as IconCancel } from './icon-cancel.component.vue';

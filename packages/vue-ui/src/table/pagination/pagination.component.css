@@ -1,0 +1,107 @@
+.bt-table-pagination {
+    --size: var(--bqt-pagination-size, 1.575rem);
+    --spacing: var(--bqt-pagination-spacing, .5rem);
+    --radius: var(--bqt-pagination-radius, .5rem);
+    --bg: var(--bqt-pagination-bg, hsla(168, 2%, 50%, .15));
+    --bg-hover: var(--bqt-pagination-bg-hover, hsla(168, 2%, 50%, .25));
+    --font-size: var(--bqt-pagination-font-size, .75rem);
+    --font-style: var(--bqt-pagination-font-style, bold);
+    --color: var(--bqt-pagination-color, hsla(168, 2%, 50%, 1));
+    --form-spacing: var(--bqt-pagination-form-spacing, .25rem);
+    --form-spacing-s: var(--bqt-pagination-form-spacing-s, 0);
+    --control-spacing: var(--bqt-pagination-control-spacing, .25rem);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .summary {
+        font-size: calc(var(--font-size) * 1.15);
+        color: var(--color);
+    }
+
+    .actions,
+    .actions ul,
+    .actions li,
+    .actions li a {
+        display: flex;
+        align-items: center;
+    }
+
+    .actions {
+        gap: 1.5rem;
+        margin-left: auto;
+    }
+
+    .actions ul {
+        gap: var(--spacing);
+    }
+
+    li {
+        min-width: var(--size);
+    }
+
+    li:not(.page-item) {
+        a {
+            padding-inline: var(--spacing);
+
+            &[data-current] {
+                background: #fff;
+                border-color: #5e5e5e;
+            }
+        }
+    }
+
+    li:not(.first-last) {
+        font-size: var(--font-size);
+        height: var(--size);
+        background-color: var(--bg);
+        border-radius: var(--radius);
+        font-weight: var(--font-style);
+
+        a {
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+
+        &:hover {
+            --bg: var(--bg-hover);
+        }
+
+        svg {
+            padding: var(--form-spacing);
+            width: 100%;
+        }
+    }
+
+    .first-last {
+        transition: all .1s ease-in;
+
+        svg {
+            width: var(--size);
+            color: var(--color);
+            fill: currentColor;
+        }
+
+        &:hover {
+            transform: translateX(-2px);
+        }
+
+        &.last {
+
+            &:hover {
+                transform: translateX(2px);
+            }
+
+            svg {
+                transform: scaleX(-1);
+            }
+        }
+    }
+
+    [data-clickable="false"] {
+        opacity: .5;
+        pointer-events: none;
+    }
+}

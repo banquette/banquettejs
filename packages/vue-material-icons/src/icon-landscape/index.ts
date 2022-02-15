@@ -1,0 +1,1 @@
+export { default as IconLandscape } from './icon-landscape.component.vue';

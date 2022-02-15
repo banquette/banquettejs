@@ -1,0 +1,1 @@
+export { default as IconPanoramaVertical } from './icon-panorama-vertical.component.vue';

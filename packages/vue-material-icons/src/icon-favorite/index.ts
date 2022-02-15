@@ -1,0 +1,1 @@
+export { default as IconFavorite } from './icon-favorite.component.vue';

@@ -31,7 +31,7 @@ const event1: symbol = Symbol('event1');
 const event2: symbol = Symbol('event2');
 const tag1: symbol = Symbol('tag1');
 const tag2: symbol = Symbol('tag2');
-const eventDispatcher = Injector.Get<EventDispatcherInterface>(EventDispatcherService);
+const eventDispatcher = Injector.Get(EventDispatcherService);
 
 /**
  * Basics

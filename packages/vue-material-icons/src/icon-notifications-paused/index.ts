@@ -1,0 +1,1 @@
+export { default as IconNotificationsPaused } from './icon-notifications-paused.component.vue';

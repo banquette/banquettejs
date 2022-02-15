@@ -1,0 +1,1 @@
+export { default as IconVerticalAlignBottom } from './icon-vertical-align-bottom.component.vue';

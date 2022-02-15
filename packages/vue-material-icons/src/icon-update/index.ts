@@ -1,0 +1,1 @@
+export { default as IconUpdate } from './icon-update.component.vue';

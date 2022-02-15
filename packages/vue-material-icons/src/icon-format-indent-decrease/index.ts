@@ -1,0 +1,1 @@
+export { default as IconFormatIndentDecrease } from './icon-format-indent-decrease.component.vue';

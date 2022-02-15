@@ -1,0 +1,1 @@
+export { default as IconLocalPostOffice } from './icon-local-post-office.component.vue';

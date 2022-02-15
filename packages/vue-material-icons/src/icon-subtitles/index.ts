@@ -1,0 +1,1 @@
+export { default as IconSubtitles } from './icon-subtitles.component.vue';

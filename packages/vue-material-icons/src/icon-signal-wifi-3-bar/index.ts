@@ -1,0 +1,1 @@
+export { default as IconSignalWifi3Bar } from './icon-signal-wifi-3-bar.component.vue';

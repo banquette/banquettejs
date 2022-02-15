@@ -1,0 +1,1 @@
+export { default as IconNotificationsActive } from './icon-notifications-active.component.vue';

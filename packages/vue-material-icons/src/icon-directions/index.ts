@@ -1,0 +1,1 @@
+export { default as IconDirections } from './icon-directions.component.vue';

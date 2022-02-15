@@ -1,0 +1,1 @@
+export { default as IconFiberNew } from './icon-fiber-new.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconCloudUpload } from './icon-cloud-upload.component.vue';

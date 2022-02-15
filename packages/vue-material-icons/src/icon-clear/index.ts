@@ -1,0 +1,1 @@
+export { default as IconClear } from './icon-clear.component.vue';

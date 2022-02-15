@@ -1,0 +1,1 @@
+export { default as IconRoom } from './icon-room.component.vue';

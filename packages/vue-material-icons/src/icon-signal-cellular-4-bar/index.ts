@@ -1,0 +1,1 @@
+export { default as IconSignalCellular4Bar } from './icon-signal-cellular-4-bar.component.vue';

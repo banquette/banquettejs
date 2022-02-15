@@ -7,7 +7,7 @@ import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormGroup } from "./abstract-form-group";
-import { CallContext, FilterGroup, Events, ValidationStrategy } from "./constant";
+import { CallContext, FilterGroup, FormEvents, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";
 import { ComponentRemovedFormEvent } from "./event/component-removed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
@@ -52,7 +52,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             this.children_.push(component.setParent(this.buildParentComponentDecorator()));
             this.children_[this.children_.length - 1].propagateStatesToParent();
         });
-        this.dispatch(Events.ComponentAdded, () => {
+        this.dispatch(FormEvents.ComponentAdded, () => {
             const index: number = this.children_.length - 1;
             return new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index)
         });
@@ -69,7 +69,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             this.children_.unshift(component.setParent(this.buildParentComponentDecorator()));
             this.children_[0].propagateStatesToParent();
         });
-        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
+        this.dispatch(FormEvents.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
     }
 
     /**
@@ -95,7 +95,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             }
             child.propagateStatesToParent();
         });
-        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
+        this.dispatch(FormEvents.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
     }
 
     /**
@@ -148,7 +148,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             }
             child.propagateStatesToParent();
         });
-        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index));
+        this.dispatch(FormEvents.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index));
     }
 
     /**
@@ -173,7 +173,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             this.children_.splice(index, 1);
             removed.unsetParent();
         });
-        this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, removed.decorated, index));
+        this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, removed.decorated, index));
         return removed.decorated;
     }
 
@@ -186,7 +186,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             this.children_ = [];
         });
         for (let i = 0; i < children.length; ++i) {
-            this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, children[i].decorated, i));
+            this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, children[i].decorated, i));
         }
     }
 
@@ -295,7 +295,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         this.forEach((child: FormComponentInterface) => {
             this.value.push(child.value);
         }, this.foreachFilters[FilterGroup.UpdateValue]);
-        this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
+        this.dispatch(FormEvents.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }

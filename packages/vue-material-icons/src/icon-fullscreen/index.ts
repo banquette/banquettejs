@@ -1,0 +1,1 @@
+export { default as IconFullscreen } from './icon-fullscreen.component.vue';

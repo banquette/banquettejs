@@ -1,0 +1,1 @@
+export { default as IconSimCardAlert } from './icon-sim-card-alert.component.vue';

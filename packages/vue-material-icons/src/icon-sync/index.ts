@@ -1,0 +1,1 @@
+export { default as IconSync } from './icon-sync.component.vue';

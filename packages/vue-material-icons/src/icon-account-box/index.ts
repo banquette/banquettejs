@@ -1,0 +1,1 @@
+export { default as IconAccountBox } from './icon-account-box.component.vue';

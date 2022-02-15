@@ -1,0 +1,1 @@
+export { default as IconGroupWork } from './icon-group-work.component.vue';

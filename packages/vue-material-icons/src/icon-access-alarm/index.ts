@@ -1,0 +1,1 @@
+export { default as IconAccessAlarm } from './icon-access-alarm.component.vue';

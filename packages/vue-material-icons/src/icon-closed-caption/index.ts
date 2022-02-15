@@ -1,0 +1,1 @@
+export { default as IconClosedCaption } from './icon-closed-caption.component.vue';

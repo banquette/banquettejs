@@ -1,0 +1,1 @@
+export { default as IconCropPortrait } from './icon-crop-portrait.component.vue';

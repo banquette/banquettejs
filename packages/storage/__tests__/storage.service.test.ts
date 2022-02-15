@@ -9,27 +9,27 @@ import {
 } from "../src";
 
 test('default adapter (async)', async () => {
-    const storage = Injector.Get<StorageService>(StorageService);
+    const storage = Injector.Get(StorageService);
     await testAdapter(storage.getDefaultAdapter());
 });
 
 test('cookie adapter (async)', async () => {
-    const storage = Injector.Get<StorageService>(StorageService);
+    const storage = Injector.Get(StorageService);
     await testAdapter(storage.use(CookiesAdapter));
 });
 
 test('local storage adapter (async)', async () => {
-    const storage = Injector.Get<StorageService>(StorageService);
+    const storage = Injector.Get(StorageService);
     await testAdapter(storage.use(LocalStorageAdapter));
 });
 
 test('cookie adapter (sync)', () => {
-    const storage = Injector.Get<StorageService>(StorageService);
+    const storage = Injector.Get(StorageService);
     testAdapterSync(storage.use<CookiesAdapter>(CookiesAdapter));
 });
 
 test('local storage adapter (sync)',  () => {
-    const storage = Injector.Get<StorageService>(StorageService);
+    const storage = Injector.Get(StorageService);
     testAdapterSync(storage.use<LocalStorageAdapter>(LocalStorageAdapter));
 });
 

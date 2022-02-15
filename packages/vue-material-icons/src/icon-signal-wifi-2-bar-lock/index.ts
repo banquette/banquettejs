@@ -1,0 +1,1 @@
+export { default as IconSignalWifi2BarLock } from './icon-signal-wifi-2-bar-lock.component.vue';

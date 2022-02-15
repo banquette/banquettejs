@@ -1,0 +1,1 @@
+export { default as IconBorderOuter } from './icon-border-outer.component.vue';

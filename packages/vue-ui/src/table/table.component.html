@@ -1,0 +1,103 @@
+<!--
+-- Available slots:
+--  - default   : where columns are defined
+--  - loader    : when the list is fetching
+--  - error     : when the list failed to get or process remote data
+--  - empty     : when the list is ready but has no results
+--  - items     : the slot that will call the default slot for each item. Overriding this means overriding the whole rendering.
+--  - detail    : if defined, two lines will be created for each item, the detail row contains a single column.
+--  - thead     : to override the whole thead of the table.
+--  - tbody     : to override the whole tbody of the table.
+--  - tfoot     : to override the whole tfoot of the table.
+--  - before    : a user slot rendering before the table. No default content for this slot.
+--  - after     : a user slot rendering after the table. No default content for this slot.
+-->
+
+<!-- The default slot is rendered without any item while initializing to allow columns (visible or not) to register -->
+<slot v-if="vm.initializing"></slot>
+<div class="bt-table" v-else>
+    <slot name="before" :vm="vm"></slot>
+    <table class="table">
+        <slot name="thead" :vm="vm">
+            <thead>
+                <tr v-if="vm.pagination.enabled && vm.pagination.position !== 'bottom'" data-pagination>
+                    <td :colspan="vm.visibleColumns.length">
+                        <bt-table-pagination :vm="vm"></bt-table-pagination>
+                    </td>
+                </tr>
+                <tr>
+                    <th v-for="column in vm.visibleColumns">
+                        <!-- No ordering -->
+                        <template v-if="!column.orderingName">{{ column.title }}</template>
+
+                        <!-- Ordering supported -->
+                        <a class="ordering" href="" @click.prevent="vm.ordering.toggle(column.orderingName)" v-else>
+                            <span>{{ column.title }}</span>
+
+                            <!-- Maybe add an icon for each ordering state -->
+                            <span v-if="column.orderingStatus === 'asc'">⇈</span>
+                            <span v-else-if="column.orderingStatus === 'desc'">⇊</span>
+                        </a>
+                    </th>
+                </tr>
+                <tr v-if="hasSlot('filters')">
+                    <slot name="filters"></slot>
+                </tr>
+            </thead>
+        </slot>
+        <slot name="tbody" :vm="vm">
+            <tbody>
+                <!-- Fetching data from the server -->
+                <tr v-if="vm.fetching || vm.error">
+                    <td :colspan="vm.visibleColumns.length">
+                        <slot name="error" v-if="vm.error" :error="vm.errorDetail">
+                            <icon-report></icon-report>
+                            <ul>
+                                <li v-for="message in vm.errorDetail.messagesStack">{{ message }}</li>
+                            </ul>
+                        </slot>
+                        <slot name="loading" v-else>
+                            <div class="flex items-center justify-center min-h-[250px]">
+                                <bt-progress-circular :size="96"></bt-progress-circular>
+                            </div>
+                        </slot>
+                    </td>
+                </tr>
+
+                <!-- Results are ready -->
+                <template v-if="vm.ready">
+                    <tr v-if="!vm.visibleItems.length">
+                        <td :colspan="vm.visibleColumns.length">
+                            <slot name="empty" :vm="vm">
+                                <!-- Put a generic icon to empathize the list is empty -->
+                                No results placeholder.
+                            </slot>
+                        </td>
+                    </tr>
+                    <slot name="items" :vm="vm" v-else>
+                        <template v-for="item in vm.visibleItems">
+                            <tr>
+                                <slot :item="item.item" :toggleDetails="item.toggleDetails"></slot>
+                            </tr>
+                            <tr v-if="item.detailsVisible && hasSlot('detail')" class="details">
+                                <td :colspan="vm.visibleColumns.length">
+                                    <slot name="detail" :item="item"></slot>
+                                </td>
+                            </tr>
+                        </template>
+                    </slot>
+                </template>
+            </tbody>
+            <slot name="tfoot" :vm="vm">
+                <tfoot>
+                    <tr v-if="vm.pagination.enabled && vm.pagination.position !== 'top'">
+                        <td :colspan="vm.visibleColumns.length">
+                            <bt-table-pagination :vm="vm"></bt-table-pagination>
+                        </td>
+                    </tr>
+                </tfoot>
+            </slot>
+        </slot>
+    </table>
+    <slot name="after" :vm="vm"></slot>
+</div>

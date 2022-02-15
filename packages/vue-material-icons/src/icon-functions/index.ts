@@ -1,0 +1,1 @@
+export { default as IconFunctions } from './icon-functions.component.vue';

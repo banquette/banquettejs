@@ -1,0 +1,1 @@
+export { default as IconSpeakerNotesOff } from './icon-speaker-notes-off.component.vue';

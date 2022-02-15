@@ -1,0 +1,1 @@
+export { default as IconFavoriteBorder } from './icon-favorite-border.component.vue';

@@ -6,7 +6,7 @@ import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { Writeable, GenericCallback } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormComponent } from "./abstract-form-component";
-import { BasicState, CallContext, Events, ValidationStrategy } from "./constant";
+import { BasicState, CallContext, FormEvents, ValidationStrategy } from "./constant";
 import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 import { FormControlInterface } from "./form-control.interface";
@@ -80,7 +80,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 }
                 locked = true;
                 const beforeValueChangeEvent = new BeforeValueChangeFormEvent(this, this.lastValue, value);
-                this.dispatch(Events.BeforeValueChange, beforeValueChangeEvent);
+                this.dispatch(FormEvents.BeforeValueChange, beforeValueChangeEvent);
                 if (!beforeValueChangeEvent.changeAccepted) {
                     this.viewModels.forEach((vm) => {
                         vm.setValue(this.lastValue);
@@ -95,7 +95,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 // The value may have been overridden in the event.
                 value = beforeValueChangeEvent.newValue;
                 (this as Writeable<FormControl>).value = value;
-                this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
+                this.dispatch(FormEvents.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
                 this.lastValue = cloneDeepPrimitive(this.value);
                 this.viewModels.forEach((vm) => {
                     vm.setValue(value);
@@ -213,7 +213,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * @return A method to call to unsubscribe.
      */
     public onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction {
-        return this.subscribe<BeforeValueChangeFormEvent>(Events.BeforeValueChange, callback, true);
+        return this.subscribe<BeforeValueChangeFormEvent>(FormEvents.BeforeValueChange, callback, true);
     }
 
     /**
@@ -302,6 +302,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
         return Object.assign({
             get id():                number { return that.id },
             get formId():            string { return that.formId },
+            get path():              string { return that.path },
             get valid():             boolean { return that.valid },
             get invalid():           boolean { return that.invalid },
             get validated():         boolean { return that.validated },
@@ -327,7 +328,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
             get focusedViewModel():  FormViewModelInterface|null { return that.focusedViewModel || null }
         },
             this.buildContextualizedViewModelApi<Omit<FormViewControlInterface,
-                'id' | 'formId' | 'valid' | 'invalid' | 'validated' | 'notValidated' | 'validating' | 'notValidating' | 'validatedAndValid' |
+                'id' | 'formId' | 'path' | 'valid' | 'invalid' | 'validated' | 'notValidated' | 'validating' | 'notValidating' | 'validatedAndValid' |
                 'busy' | 'notBusy' | 'disabled' | 'enabled' | 'dirty' | 'pristine' | 'touched' | 'untouched' | 'changed' |
                 'unchanged' | 'focused' | 'unfocused' | 'errors' | 'defaultValue' | 'value' | 'focusedViewModel'>>({
                 setValue: this.setValue,

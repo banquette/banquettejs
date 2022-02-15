@@ -1,0 +1,1 @@
+export { default as IconStorage } from './icon-storage.component.vue';

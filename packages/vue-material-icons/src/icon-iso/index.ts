@@ -1,0 +1,1 @@
+export { default as IconIso } from './icon-iso.component.vue';

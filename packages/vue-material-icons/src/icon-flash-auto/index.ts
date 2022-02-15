@@ -1,0 +1,1 @@
+export { default as IconFlashAuto } from './icon-flash-auto.component.vue';

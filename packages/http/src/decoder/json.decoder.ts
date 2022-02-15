@@ -4,7 +4,7 @@ import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { DecoderTag, Events } from "../constants";
+import { DecoderTag, HttpEvents } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";
 import { ResponseTypeAutoDetect } from "./auto-detect.decoder";
@@ -70,7 +70,7 @@ function onAfterRequest(event: ResponseEvent) {
 }
 
 Injector.Get(EventDispatcherService).subscribe<ResponseEvent>(
-    Events.BeforeResponse,
+    HttpEvents.BeforeResponse,
     onAfterRequest,
     0,
     null,

@@ -1,0 +1,1 @@
+export { default as IconMood } from './icon-mood.component.vue';

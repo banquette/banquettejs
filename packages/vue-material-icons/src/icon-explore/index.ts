@@ -1,0 +1,1 @@
+export { default as IconExplore } from './icon-explore.component.vue';

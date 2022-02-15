@@ -1,0 +1,1 @@
+export { default as IconPeople } from './icon-people.component.vue';

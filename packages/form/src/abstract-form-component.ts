@@ -20,7 +20,7 @@ import {
     CallContext,
     ComponentRelatedCallContexts,
     ContextualizedState,
-    Events,
+    FormEvents,
     InverseState,
     StatesInverseMap,
     ValidationStatus,
@@ -630,7 +630,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * @return A method to call to unsubscribe.
      */
     public onValueChanged(callback: (event: ValueChangedFormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe<ValueChangedFormEvent>(Events.ValueChanged, callback, selfOnly);
+        return this.subscribe<ValueChangedFormEvent>(FormEvents.ValueChanged, callback, selfOnly);
     }
 
     /**
@@ -639,7 +639,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * @return A method to call to unsubscribe.
      */
     public onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe<StateChangedFormEvent>(Events.StateChanged, callback, selfOnly);
+        return this.subscribe<StateChangedFormEvent>(FormEvents.StateChanged, callback, selfOnly);
     }
 
     /**
@@ -648,7 +648,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * @return A method to call to unsubscribe.
      */
     public onValidationStart(callback: (event: FormEvent) => void, selfOnly?: boolean): UnsubscribeFunction {
-        return this.subscribe<FormEvent>(Events.ValidationStart, callback, selfOnly);
+        return this.subscribe<FormEvent>(FormEvents.ValidationStart, callback, selfOnly);
     }
 
     /**
@@ -657,7 +657,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * @return A method to call to unsubscribe.
      */
     public onValidationEnd(callback: (event: ValidationEndFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction {
-        return this.subscribe<ValidationEndFormEvent>(Events.ValidationEnd, callback, selfOnly);
+        return this.subscribe<ValidationEndFormEvent>(FormEvents.ValidationEnd, callback, selfOnly);
     }
 
     /**
@@ -749,7 +749,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * Here we simply validate the current validator if we have one.
      */
     protected doValidate(validator: ValidatorInterface|null): Promise<boolean>|boolean {
-        this.dispatch(Events.ValidationStart, () => new FormEvent(this));
+        this.dispatch(FormEvents.ValidationStart, () => new FormEvent(this));
         this.markBasicState(BasicState.Validating, this.id);
         // If no validator, we can consider the value as valid.
         if (validator === null) {
@@ -821,7 +821,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         this.unmarkBasicState(BasicState.NotValidated, this.id);
         this.unmarkBasicState(BasicState.Validating, this.id);
         this.clearResultFromValidationResultsStack(result);
-        this.dispatch(Events.ValidationEnd, () => new ValidationEndFormEvent(this, result));
+        this.dispatch(FormEvents.ValidationEnd, () => new ValidationEndFormEvent(this, result));
     }
 
     /**
@@ -955,10 +955,10 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     }
 
     /**
-     * Dispatch a `Events.StateChanged` form event if something is listening.
+     * Dispatch a `FormEvents.StateChanged` form event if something is listening.
      */
     protected dispatchStateChange(state: State, newValue: boolean): void {
-        this.dispatch(Events.StateChanged, () => new StateChangedFormEvent(this, state, newValue));
+        this.dispatch(FormEvents.StateChanged, () => new StateChangedFormEvent(this, state, newValue));
     }
 
     /**
@@ -970,7 +970,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             if (this.basicStates[state].indexOf(id) < 0) {
                 this.basicStates[state].push(id);
                 this.updateActiveState(state, false);
-                this.dispatch(Events.StateChanged, () => new StateChangedFormEvent(this, state, true));
+                this.dispatch(FormEvents.StateChanged, () => new StateChangedFormEvent(this, state, true));
             }
             if (this.parent !== null) {
                 this.parent.markBasicState(state, id);
@@ -990,7 +990,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
                 if (this.basicStates[state].length === 0) {
                     this.updateActiveState(state, true);
                 }
-                this.dispatch(Events.StateChanged, () => new StateChangedFormEvent(this, state, false));
+                this.dispatch(FormEvents.StateChanged, () => new StateChangedFormEvent(this, state, false));
             }
             if (this.parent !== null) {
                 this.parent.unmarkBasicState(state, id);

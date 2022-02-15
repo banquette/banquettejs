@@ -3,7 +3,7 @@ import { EventDispatcherService } from "@banquette/event/event-dispatcher.servic
 import { UsageException } from "@banquette/exception/usage.exception";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
-import { EncoderTag, Events } from "../constants";
+import { EncoderTag, HttpEvents } from "../constants";
 import { RequestEvent } from "../event/request.event";
 
 export const PayloadTypeFormData = Symbol('form-data');
@@ -43,7 +43,7 @@ function onBeforeRequest(event: RequestEvent) {
     }
 }
 Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
-    Events.BeforeRequest,
+    HttpEvents.BeforeRequest,
     onBeforeRequest,
     0,
     null,

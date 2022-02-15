@@ -1,0 +1,1 @@
+export { default as IconPermIdentity } from './icon-perm-identity.component.vue';

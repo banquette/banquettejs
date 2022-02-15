@@ -1,0 +1,1 @@
+export { default as IconKeyboardArrowLeft } from './icon-keyboard-arrow-left.component.vue';

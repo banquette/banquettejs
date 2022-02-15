@@ -15,7 +15,7 @@ import {
 /**
  * A fake set of events for testing.
  */
-const Events = {
+const TestEvents = {
     Creating: Symbol('creating'),
     Initializing: Symbol('initializing'),
     Ready: Symbol('ready'),
@@ -60,13 +60,13 @@ beforeEach(() => {
 describe('Adding', () => {
     test('different types of arguments `add()` can take', () => {
         const sequence: PartialSequence = [
-            Events.Creating, // Single event
+            TestEvents.Creating, // Single event
             'Other', // Another sequence
             ['Other', 'Second'], // Multiple other sequences
-            {event: Events.Initializing, priority: 0}, // With priority
-            {event: Events.Ready, onError: SequenceErrorBasicBehavior.Ignore}, // With basic error behavior
-            {event: Events.FetchAjax, onError: 'Other'}, // Calling another sequence on error
-            {event: Events.FetchMemory, onError: ['Other', 'Second']} // Calling a sequence of sequences on error
+            {event: TestEvents.Initializing, priority: 0}, // With priority
+            {event: TestEvents.Ready, onError: SequenceErrorBasicBehavior.Ignore}, // With basic error behavior
+            {event: TestEvents.FetchAjax, onError: 'Other'}, // Calling another sequence on error
+            {event: TestEvents.FetchMemory, onError: ['Other', 'Second']} // Calling a sequence of sequences on error
         ];
         const pipeline = (new EventPipeline).add({
             // Named sequences as a map
@@ -75,65 +75,65 @@ describe('Adding', () => {
         // Sequence with default name
         .add(sequence)
         // Single event to the default sequence
-        .add(Events.HideLoader)
+        .add(TestEvents.HideLoader)
         // Array of events with custom name
-        .add([Events.Initializing, Events.Ready], 'custom')
+        .add([TestEvents.Initializing, TestEvents.Ready], 'custom')
         // Link to another sequence
         .add({sequences: ['Other'], priority: 1}, 'custom')
         // A sequence with a global error behavior
-        .add([Events.Creating, Events.Initializing, {event: Events.Ready, onError: 'Error'}], 'last', SequenceErrorBasicBehavior.StopSequence)
+        .add([TestEvents.Creating, TestEvents.Initializing, {event: TestEvents.Ready, onError: 'Error'}], 'last', SequenceErrorBasicBehavior.StopSequence)
 
         checkSequence(pipeline, 'mapName', [
-            [Events.Creating],
+            [TestEvents.Creating],
             [['Other']],
             [['Other', 'Second']],
-            [Events.Initializing],
-            [Events.Ready, 0, SequenceErrorBasicBehavior.Ignore],
-            [Events.FetchAjax, 0, ['Other']],
-            [Events.FetchMemory, 0, ['Other', 'Second']]
+            [TestEvents.Initializing],
+            [TestEvents.Ready, 0, SequenceErrorBasicBehavior.Ignore],
+            [TestEvents.FetchAjax, 0, ['Other']],
+            [TestEvents.FetchMemory, 0, ['Other', 'Second']]
         ]);
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Creating],
+            [TestEvents.Creating],
             [['Other']],
             [['Other', 'Second']],
-            [Events.Initializing],
-            [Events.Ready, 0, SequenceErrorBasicBehavior.Ignore],
-            [Events.FetchAjax, 0, ['Other']],
-            [Events.FetchMemory, 0, ['Other', 'Second']],
-            [Events.HideLoader]
+            [TestEvents.Initializing],
+            [TestEvents.Ready, 0, SequenceErrorBasicBehavior.Ignore],
+            [TestEvents.FetchAjax, 0, ['Other']],
+            [TestEvents.FetchMemory, 0, ['Other', 'Second']],
+            [TestEvents.HideLoader]
         ]);
         checkSequence(pipeline, 'custom', [
             [['Other'], 1],
-            [Events.Initializing],
-            [Events.Ready]
+            [TestEvents.Initializing],
+            [TestEvents.Ready]
         ]);
         checkSequence(pipeline, 'last', [
-            [Events.Creating, 0, SequenceErrorBasicBehavior.StopSequence],
-            [Events.Initializing, 0, SequenceErrorBasicBehavior.StopSequence],
-            [Events.Ready, 0, ['Error']]
+            [TestEvents.Creating, 0, SequenceErrorBasicBehavior.StopSequence],
+            [TestEvents.Initializing, 0, SequenceErrorBasicBehavior.StopSequence],
+            [TestEvents.Ready, 0, ['Error']]
         ]);
     });
 
     test('sequences are sorted by priority', () => {
-        pipeline.add([Events.FetchAjax, Events.FetchMemory]);
-        pipeline.add({event: Events.Ready, priority: -1});
-        pipeline.add({event: Events.Initializing, priority: 1});
+        pipeline.add([TestEvents.FetchAjax, TestEvents.FetchMemory]);
+        pipeline.add({event: TestEvents.Ready, priority: -1});
+        pipeline.add({event: TestEvents.Initializing, priority: 1});
 
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Initializing, 1],
-            [Events.FetchAjax],
-            [Events.FetchMemory],
-            [Events.Ready, -1]
+            [TestEvents.Initializing, 1],
+            [TestEvents.FetchAjax],
+            [TestEvents.FetchMemory],
+            [TestEvents.Ready, -1]
         ]);
     });
 
     test('adding the same event a second time will add it and not replace it', () => {
-        pipeline.add(Events.Initializing);
-        pipeline.add({event: Events.Initializing, priority: 1, onError: SequenceErrorBasicBehavior.Ignore});
+        pipeline.add(TestEvents.Initializing);
+        pipeline.add({event: TestEvents.Initializing, priority: 1, onError: SequenceErrorBasicBehavior.Ignore});
 
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Initializing, 1, SequenceErrorBasicBehavior.Ignore],
-            [Events.Initializing]
+            [TestEvents.Initializing, 1, SequenceErrorBasicBehavior.Ignore],
+            [TestEvents.Initializing]
         ]);
     });
 });
@@ -143,58 +143,58 @@ describe('Adding', () => {
  */
 describe('Removing', () => {
     test('remove an event from a sequence', () => {
-        pipeline.add([Events.Initializing, Events.Ready]);
-        pipeline.remove(Events.Initializing);
+        pipeline.add([TestEvents.Initializing, TestEvents.Ready]);
+        pipeline.remove(TestEvents.Initializing);
 
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Ready]
+            [TestEvents.Ready]
         ]);
     });
 
     test('all matching events are removed in a single call to `remove()`', () => {
-        pipeline.add([Events.Initializing, Events.Ready, Events.Initializing, Events.HideLoader, Events.Initializing]);
-        pipeline.remove(Events.Initializing);
+        pipeline.add([TestEvents.Initializing, TestEvents.Ready, TestEvents.Initializing, TestEvents.HideLoader, TestEvents.Initializing]);
+        pipeline.remove(TestEvents.Initializing);
 
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Ready],
-            [Events.HideLoader]
+            [TestEvents.Ready],
+            [TestEvents.HideLoader]
         ]);
     });
 
     test('`remove()` can remove multiple types of events at once', () => {
-        pipeline.add([Events.Initializing, Events.Ready, Events.Initializing, Events.HideLoader, Events.Initializing]);
-        pipeline.remove([Events.Initializing, Events.Ready]);
+        pipeline.add([TestEvents.Initializing, TestEvents.Ready, TestEvents.Initializing, TestEvents.HideLoader, TestEvents.Initializing]);
+        pipeline.remove([TestEvents.Initializing, TestEvents.Ready]);
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.HideLoader]
+            [TestEvents.HideLoader]
         ]);
     });
 
     test('remove events from a sequence with a custom name', () => {
-        pipeline.add([Events.Initializing, Events.Ready, Events.Initializing, Events.HideLoader, Events.Initializing], 'custom');
+        pipeline.add([TestEvents.Initializing, TestEvents.Ready, TestEvents.Initializing, TestEvents.HideLoader, TestEvents.Initializing], 'custom');
 
         // Try to remove in the wrong sequence.
-        pipeline.remove([Events.Initializing, Events.Ready]);
+        pipeline.remove([TestEvents.Initializing, TestEvents.Ready]);
         checkSequence(pipeline, 'custom', [
-            [Events.Initializing],
-            [Events.Ready],
-            [Events.Initializing],
-            [Events.HideLoader],
-            [Events.Initializing]
+            [TestEvents.Initializing],
+            [TestEvents.Ready],
+            [TestEvents.Initializing],
+            [TestEvents.HideLoader],
+            [TestEvents.Initializing]
         ]);
 
         // Now the valid call.
-        pipeline.remove([Events.Initializing, Events.Ready], 'custom');
+        pipeline.remove([TestEvents.Initializing, TestEvents.Ready], 'custom');
         checkSequence(pipeline, 'custom', [
-            [Events.HideLoader]
+            [TestEvents.HideLoader]
         ]);
     });
 
     test('remove a call to another sequence', () => {
-        pipeline.add([Events.Initializing, 'Other', Events.HideLoader]);
+        pipeline.add([TestEvents.Initializing, 'Other', TestEvents.HideLoader]);
         pipeline.remove('Other');
         checkSequence(pipeline, DefaultSequenceName, [
-            [Events.Initializing],
-            [Events.HideLoader]
+            [TestEvents.Initializing],
+            [TestEvents.HideLoader]
         ]);
     });
 });
@@ -249,38 +249,38 @@ describe('Running', () => {
         callstack = [];
         pipeline.add({
             [DefaultSequenceName]: [
-                Events.Creating,
-                Events.Initializing,
-                Events.Ready
+                TestEvents.Creating,
+                TestEvents.Initializing,
+                TestEvents.Ready
             ],
             Error: [
-                Events.ShowError,
-                Events.HideLoader
+                TestEvents.ShowError,
+                TestEvents.HideLoader
             ],
             Fetch: [
-                Events.ShowLoader,
-                Events.Fetch,
-                Events.ProcessResult,
-                Events.HideLoader
+                TestEvents.ShowLoader,
+                TestEvents.Fetch,
+                TestEvents.ProcessResult,
+                TestEvents.HideLoader
             ],
             AdaptiveFetch: [
-                Events.ShowLoader,
+                TestEvents.ShowLoader,
                 'FetchAdapters',
-                Events.ProcessResult,
-                Events.HideLoader
+                TestEvents.ProcessResult,
+                TestEvents.HideLoader
             ],
             FetchAdapters: [
-                {event: Events.FetchAjax, onError: SequenceErrorBasicBehavior.Ignore},
-                {event: Events.FetchMemory, onError: SequenceErrorBasicBehavior.Ignore}
+                {event: TestEvents.FetchAjax, onError: SequenceErrorBasicBehavior.Ignore},
+                {event: TestEvents.FetchMemory, onError: SequenceErrorBasicBehavior.Ignore}
             ]
         });
     });
 
     test('The pipeline is synchronous if all subscribers are synchronous', () => {
         pipeline
-            .subscribe(Events.Initializing, buildCallback('a'))
-            .subscribe(Events.Creating, buildCallback('b'))
-            .subscribe(Events.Ready, buildCallback('c'));
+            .subscribe(TestEvents.Initializing, buildCallback('a'))
+            .subscribe(TestEvents.Creating, buildCallback('b'))
+            .subscribe(TestEvents.Ready, buildCallback('c'));
 
         pipeline.start();
         expect(callstack).toStrictEqual(['b', 'a', 'c']);
@@ -288,9 +288,9 @@ describe('Running', () => {
 
     test('The pipeline is asynchronous if any of subscriber is asynchronous', async () => {
         pipeline
-            .subscribe(Events.Initializing, buildCallback('a', {delay: 20}))
-            .subscribe(Events.Creating, buildCallback('b', {delay: 50}))
-            .subscribe(Events.Ready, buildCallback('c'));
+            .subscribe(TestEvents.Initializing, buildCallback('a', {delay: 20}))
+            .subscribe(TestEvents.Creating, buildCallback('b', {delay: 50}))
+            .subscribe(TestEvents.Ready, buildCallback('c'));
 
         const result = await pipeline.start();
         // Because the id is added to the callstack synchronously, even for async callbacks in the tests.
@@ -301,11 +301,11 @@ describe('Running', () => {
 
     test('Execute another sequence', async () => {
         pipeline
-            .subscribe(Events.ShowLoader, buildCallback('show-loader'))
-            .subscribe(Events.HideLoader, buildCallback('hide-loader'))
-            .subscribe(Events.FetchAjax, buildCallback('fetch-ajax', {delay: 50}))
-            .subscribe(Events.ProcessResult, buildCallback('process-result', {delay: 50}))
-            .subscribe(Events.FetchMemory, buildCallback('fetch-memory'))
+            .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
+            .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
+            .subscribe(TestEvents.FetchAjax, buildCallback('fetch-ajax', {delay: 50}))
+            .subscribe(TestEvents.ProcessResult, buildCallback('process-result', {delay: 50}))
+            .subscribe(TestEvents.FetchMemory, buildCallback('fetch-memory'))
 
         await pipeline.start('AdaptiveFetch').promise;
         expect(callstack).toStrictEqual(['show-loader', 'fetch-ajax', 'fetch-memory', 'process-result', 'hide-loader']);
@@ -313,10 +313,10 @@ describe('Running', () => {
 
     test('Propagation can be stopped in a asynchronous sub sequence', async () => {
         pipeline
-            .subscribe(Events.ShowLoader, buildCallback('show-loader'))
-            .subscribe(Events.HideLoader, buildCallback('hide-loader'))
-            .subscribe(Events.FetchAjax, buildCallback('fetch-ajax', {delay: 50, stopSequence: true}))
-            .subscribe(Events.FetchMemory, buildCallback('fetch-memory'))
+            .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
+            .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
+            .subscribe(TestEvents.FetchAjax, buildCallback('fetch-ajax', {delay: 50, stopSequence: true}))
+            .subscribe(TestEvents.FetchMemory, buildCallback('fetch-memory'))
 
         await pipeline.start('AdaptiveFetch').promise;
         expect(callstack).toStrictEqual(['show-loader', 'fetch-ajax', 'hide-loader']);
@@ -324,9 +324,9 @@ describe('Running', () => {
 
     test('Results are aggregated by event type', async () => {
         pipeline
-            .subscribe(Events.ShowLoader, buildCallback('show-loader'))
-            .subscribe(Events.HideLoader, buildCallback('hide-loader'))
-            .subscribe(Events.Fetch, buildCallback('fetch-ajax', {delay: 50, error: 'Request failed.'}))
+            .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
+            .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
+            .subscribe(TestEvents.Fetch, buildCallback('fetch-ajax', {delay: 50, error: 'Request failed.'}))
 
         await pipeline.start('Fetch').promise;
         expect(callstack).toStrictEqual(['show-loader', 'fetch-ajax']);
@@ -334,9 +334,9 @@ describe('Running', () => {
 
     test('Failure with default behavior', async () => {
         pipeline
-            .subscribe(Events.ShowLoader, buildCallback('show-loader'))
-            .subscribe(Events.HideLoader, buildCallback('hide-loader'))
-            .subscribe(Events.Fetch, buildCallback('fetch', {delay: 50, error: 'Request failed.'}))
+            .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
+            .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
+            .subscribe(TestEvents.Fetch, buildCallback('fetch', {delay: 50, error: 'Request failed.'}))
         await pipeline.start('Fetch').promise;
         expect(callstack).toStrictEqual(['show-loader', 'fetch']);
     });
@@ -345,7 +345,7 @@ describe('Running', () => {
         const customEvent = Symbol();
         let called: string[] = [];
         let added = false;
-        pipeline.subscribe(Events.Fetch, () => {
+        pipeline.subscribe(TestEvents.Fetch, () => {
             called.push('a');
             if (!added) {
                 added = true;

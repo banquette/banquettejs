@@ -1,0 +1,1 @@
+export { default as IconSmokingRooms } from './icon-smoking-rooms.component.vue';

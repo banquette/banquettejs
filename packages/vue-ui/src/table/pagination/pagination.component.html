@@ -1,0 +1,74 @@
+<div class="bt-table-pagination">
+    <!-- Optional summary -->
+    <div class="summary" v-if="vm.ready && vm.pagination.summary && vm.pagination.currentState">
+        <!-- TODO: Add a config for vue-ui and an option "paginationSummaryExpression" to define the text below -->
+        <template v-if="isOffset">
+            Résultat(s) <b>{{ vm.pagination.currentState.firstResultCount }} - {{ vm.pagination.currentState.lastResultCount }}</b>
+            sur <b>{{ vm.pagination.currentState.totalResultsCount }}</b> au total
+        </template>
+        <template v-else>
+            <b>{{ vm.pagination.currentState.totalResultsCount }}</b> élément(s) au total
+        </template>
+    </div>
+
+    <div class="actions">
+        <!-- The actual pagination -->
+        <ul v-if="vm.pagination.currentState">
+            <!-- First page -->
+            <li class="page-item first-last first" :data-clickable="vm.pagination.allowFirstPage && !vm.pagination.currentState.isFirstPage">
+                <a href="" @click.prevent="vm.pagination.goTo(isOffset ? 1 : 0)">
+                    <icon-keyboard-backspace></icon-keyboard-backspace>
+                </a>
+            </li>
+
+            <!-- Previous page -->
+            <li class="page-item" :data-clickable="!vm.pagination.currentState.isFirstPage && isOffset">
+                <a href="" @click.prevent="vm.pagination.previous()">
+                    <icon-chevron-left></icon-chevron-left>
+                </a>
+            </li>
+
+            <!-- Pages links or input -->
+            <li v-for="item of vm.pagination.currentState.navItems">
+                <a
+                    href=""
+                    :data-current="item.current ? '' : null"
+                    @click.prevent="vm.pagination.goTo(item.page)"
+                    v-if="item.type === 'link'"
+                >
+                    {{ item.text }}
+                </a>
+                <bt-form-text
+                    :style="`--length: ${item.text.length + 1}ch`"
+                    :form="form"
+                    control="page"
+                    placeholder="..."
+                    v-else
+                    @keydown="onPageTextControlKeyDown"
+                ></bt-form-text>
+            </li>
+
+            <!-- Next page -->
+            <li class="page-item" :data-clickable="!vm.pagination.currentState.isLastPage">
+                <a href="" @click.prevent="vm.pagination.next()">
+                    <icon-chevron-right></icon-chevron-right>
+                </a>
+            </li>
+
+            <!-- Last page -->
+            <li class="page-item first-last last" :data-clickable="vm.pagination.allowLastPage && !vm.pagination.currentState.isLastPage && isOffset">
+                <a href="" @click.prevent="vm.pagination.goTo(vm.pagination.currentState.totalPagesCount)">
+                    <icon-keyboard-backspace></icon-keyboard-backspace>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Number of items per page selection -->
+        <bt-form-select
+            v-if="vm.pagination.allowedItemsPerPage.length > 1"
+            :form="form"
+            control="itemsPerPage"
+            :choices="vm.pagination.allowedItemsPerPage"
+        ></bt-form-select>
+    </div>
+</div>

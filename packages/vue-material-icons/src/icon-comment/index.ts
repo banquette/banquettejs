@@ -1,0 +1,1 @@
+export { default as IconComment } from './icon-comment.component.vue';

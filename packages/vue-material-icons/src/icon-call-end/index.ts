@@ -1,0 +1,1 @@
+export { default as IconCallEnd } from './icon-call-end.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconAndroid } from './icon-android.component.vue';

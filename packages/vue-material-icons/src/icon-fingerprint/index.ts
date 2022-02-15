@@ -1,0 +1,1 @@
+export { default as IconFingerprint } from './icon-fingerprint.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconSubject } from './icon-subject.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconDirectionsBus } from './icon-directions-bus.component.vue';

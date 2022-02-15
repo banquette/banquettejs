@@ -1,0 +1,1 @@
+export { default as IconSettingsInputSvideo } from './icon-settings-input-svideo.component.vue';

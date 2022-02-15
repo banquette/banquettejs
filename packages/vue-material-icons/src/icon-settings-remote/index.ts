@@ -1,0 +1,1 @@
+export { default as IconSettingsRemote } from './icon-settings-remote.component.vue';

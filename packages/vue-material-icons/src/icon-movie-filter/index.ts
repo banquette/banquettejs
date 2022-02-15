@@ -1,0 +1,1 @@
+export { default as IconMovieFilter } from './icon-movie-filter.component.vue';

@@ -3,7 +3,7 @@ import { enumToArray } from "@banquette/utils-array/enum-to-array";
 /**
  * Events emitted by form components.
  */
-export const Events = {
+export const FormEvents = {
     /**
      * Emitted before the value is changed, so modifications can be made bof a form component has changed.
      */
@@ -35,7 +35,7 @@ export const Events = {
 /**
  * Events that are emitted from child to parent.
  */
-export const InheritedEvents = {
+export const InheritedFormEvents = {
     ValueChanged: Symbol('inherited-value-changed'),
     StateChanged: Symbol('inherited-state-changed'),
     ComponentAdded: Symbol('inherited-component-added'),
@@ -48,20 +48,20 @@ export const InheritedEvents = {
  * A map facilitating the conversion between events and their inherited equivalent.
  */
 export const EventsInheritanceMap = {
-    [Events.ValueChanged]: InheritedEvents.ValueChanged,
-    [Events.StateChanged]: InheritedEvents.StateChanged,
-    [Events.ComponentAdded]: InheritedEvents.ComponentAdded,
-    [Events.ComponentRemoved]: InheritedEvents.ComponentRemoved,
-    [Events.ValidationStart]: InheritedEvents.ValidationStart,
-    [Events.ValidationEnd]: InheritedEvents.ValidationEnd,
+    [FormEvents.ValueChanged]: InheritedFormEvents.ValueChanged,
+    [FormEvents.StateChanged]: InheritedFormEvents.StateChanged,
+    [FormEvents.ComponentAdded]: InheritedFormEvents.ComponentAdded,
+    [FormEvents.ComponentRemoved]: InheritedFormEvents.ComponentRemoved,
+    [FormEvents.ValidationStart]: InheritedFormEvents.ValidationStart,
+    [FormEvents.ValidationEnd]: InheritedFormEvents.ValidationEnd,
 
     // So the map can be used with already inherited events
-    [InheritedEvents.ValueChanged]: InheritedEvents.ValueChanged,
-    [InheritedEvents.StateChanged]: InheritedEvents.StateChanged,
-    [InheritedEvents.ComponentAdded]: InheritedEvents.ComponentAdded,
-    [InheritedEvents.ComponentRemoved]: InheritedEvents.ComponentRemoved,
-    [InheritedEvents.ValidationStart]: InheritedEvents.ValidationStart,
-    [InheritedEvents.ValidationEnd]: InheritedEvents.ValidationEnd
+    [InheritedFormEvents.ValueChanged]: InheritedFormEvents.ValueChanged,
+    [InheritedFormEvents.StateChanged]: InheritedFormEvents.StateChanged,
+    [InheritedFormEvents.ComponentAdded]: InheritedFormEvents.ComponentAdded,
+    [InheritedFormEvents.ComponentRemoved]: InheritedFormEvents.ComponentRemoved,
+    [InheritedFormEvents.ValidationStart]: InheritedFormEvents.ValidationStart,
+    [InheritedFormEvents.ValidationEnd]: InheritedFormEvents.ValidationEnd
 };
 
 /**

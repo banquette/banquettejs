@@ -2,7 +2,7 @@ import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { EncoderTag, Events } from "../constants";
+import { EncoderTag, HttpEvents } from "../constants";
 import { RequestEvent } from "../event/request.event";
 
 export const PayloadTypeFile = Symbol('file');
@@ -38,7 +38,7 @@ function onBeforeRequest(event: RequestEvent) {
     event.request.payload = new Blob([new Blob([postDataStart]), file, new Blob([postDataEnd])]);
 }
 Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
-    Events.BeforeRequest,
+    HttpEvents.BeforeRequest,
     onBeforeRequest,
     0,
     null,

@@ -1,0 +1,1 @@
+export { default as IconYoutubeSearchedFor } from './icon-youtube-searched-for.component.vue';

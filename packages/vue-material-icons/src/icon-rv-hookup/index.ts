@@ -1,0 +1,1 @@
+export { default as IconRvHookup } from './icon-rv-hookup.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconFirstPage } from './icon-first-page.component.vue';

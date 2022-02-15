@@ -1,0 +1,1 @@
+export { default as IconTurnedIn } from './icon-turned-in.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconAllOut } from './icon-all-out.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconSettingsBluetooth } from './icon-settings-bluetooth.component.vue';

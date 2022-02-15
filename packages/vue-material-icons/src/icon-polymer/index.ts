@@ -1,0 +1,1 @@
+export { default as IconPolymer } from './icon-polymer.component.vue';

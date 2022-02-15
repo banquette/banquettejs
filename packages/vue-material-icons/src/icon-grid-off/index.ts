@@ -1,0 +1,1 @@
+export { default as IconGridOff } from './icon-grid-off.component.vue';

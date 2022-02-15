@@ -1,0 +1,1 @@
+export { default as IconGridOn } from './icon-grid-on.component.vue';

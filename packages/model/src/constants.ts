@@ -7,7 +7,7 @@ export const ModelTransformerTag = Symbol('model-transformer');
 /**
  * Events emitted by the model module through the event dispatcher singleton.
  */
-export const Events = {
+export const ModelEvents = {
     /**
      * Emitted when a watched model changes.
      */

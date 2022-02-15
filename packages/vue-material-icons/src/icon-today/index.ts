@@ -1,0 +1,1 @@
+export { default as IconToday } from './icon-today.component.vue';

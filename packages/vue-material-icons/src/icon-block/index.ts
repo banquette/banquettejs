@@ -1,0 +1,1 @@
+export { default as IconBlock } from './icon-block.component.vue';

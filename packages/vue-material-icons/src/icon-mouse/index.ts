@@ -1,0 +1,1 @@
+export { default as IconMouse } from './icon-mouse.component.vue';

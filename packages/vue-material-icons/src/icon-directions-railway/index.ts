@@ -1,0 +1,1 @@
+export { default as IconDirectionsRailway } from './icon-directions-railway.component.vue';

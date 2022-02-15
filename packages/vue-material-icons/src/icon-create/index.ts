@@ -1,0 +1,1 @@
+export { default as IconCreate } from './icon-create.component.vue';

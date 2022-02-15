@@ -1,0 +1,1 @@
+export { default as IconStop } from './icon-stop.component.vue';

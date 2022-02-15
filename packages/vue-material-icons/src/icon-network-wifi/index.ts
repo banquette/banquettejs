@@ -1,0 +1,1 @@
+export { default as IconNetworkWifi } from './icon-network-wifi.component.vue';

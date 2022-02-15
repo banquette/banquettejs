@@ -1,0 +1,1 @@
+export { default as IconCloudQueue } from './icon-cloud-queue.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconViewHeadline } from './icon-view-headline.component.vue';

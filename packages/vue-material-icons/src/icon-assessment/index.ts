@@ -1,0 +1,1 @@
+export { default as IconAssessment } from './icon-assessment.component.vue';

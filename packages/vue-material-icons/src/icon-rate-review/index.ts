@@ -1,0 +1,1 @@
+export { default as IconRateReview } from './icon-rate-review.component.vue';

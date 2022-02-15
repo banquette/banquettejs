@@ -1,0 +1,1 @@
+export { default as IconAddToQueue } from './icon-add-to-queue.component.vue';

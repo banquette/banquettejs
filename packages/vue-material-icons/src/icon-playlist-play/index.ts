@@ -1,0 +1,1 @@
+export { default as IconPlaylistPlay } from './icon-playlist-play.component.vue';

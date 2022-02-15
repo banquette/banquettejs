@@ -1,0 +1,1 @@
+export { default as IconKeyboardArrowDown } from './icon-keyboard-arrow-down.component.vue';

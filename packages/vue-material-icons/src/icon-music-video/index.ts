@@ -1,0 +1,1 @@
+export { default as IconMusicVideo } from './icon-music-video.component.vue';

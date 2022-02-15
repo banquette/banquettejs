@@ -1,0 +1,1 @@
+export { default as IconViewAgenda } from './icon-view-agenda.component.vue';

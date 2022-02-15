@@ -1,0 +1,1 @@
+export { default as IconGpsFixed } from './icon-gps-fixed.component.vue';

@@ -1,5 +1,6 @@
 import { Exception } from "@banquette/exception/exception";
 import { ensureInteger } from "@banquette/utils-type/ensure-integer";
+import { isFunction } from "@banquette/utils-type/is-function";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { TransformerInterface, TransformContext, TransformResult, TransformNotSupportedException } from "../../src";
 
@@ -42,10 +43,17 @@ interface Config {
  */
 export function GenericTransformerTest({transform, inverse, delay, transformError, inverseError}: Config): TransformerInterface {
     const normalizedDelay = ensureInteger(delay, 0);
+    const resolveValue = (context: TransformContext, value: any): any => {
+        if (isFunction(value)) {
+            return value(context.value);
+        }
+        return value;
+    };
     const respond = (context: TransformContext, value: any, error: any) => {
         if (!isUndefined(error)) {
             throw error;
         }
+        value = resolveValue(context, value);
         if (isUndefined(value)) {
             throw new TransformNotSupportedException();
         }
@@ -55,7 +63,7 @@ export function GenericTransformerTest({transform, inverse, delay, transformErro
         const promise = new Promise<void>((resolve, reject) => {
             setTimeout(() => {
                 try {
-                    respond(context, value, error);
+                    respond(context, resolveValue(context, value), error);
                     resolve();
                 } catch (e) {
                     reject(e);

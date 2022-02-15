@@ -1,0 +1,1 @@
+export { default as IconLockOutline } from './icon-lock-outline.component.vue';

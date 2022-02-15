@@ -1,0 +1,1 @@
+export { default as IconEventAvailable } from './icon-event-available.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconDeleteForever } from './icon-delete-forever.component.vue';

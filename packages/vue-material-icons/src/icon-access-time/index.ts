@@ -1,0 +1,1 @@
+export { default as IconAccessTime } from './icon-access-time.component.vue';

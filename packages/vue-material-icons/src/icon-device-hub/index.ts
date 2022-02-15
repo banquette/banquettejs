@@ -1,0 +1,1 @@
+export { default as IconDeviceHub } from './icon-device-hub.component.vue';

@@ -28,7 +28,7 @@ import { ValidateAfterDelay } from "./__mocks__/type/validate-after-delay.test-v
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
 import '../../http/__tests__/__mocks__/xml-http-request.mock';
 
-const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfiguration);
+const config: SharedConfiguration = Injector.Get(SharedConfiguration);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {requestRetryCount: 2});
 
 function expectViolationsArrayContaining(violations: Array<{path?: string, type?: string}>|{path?: string, type?: string}): any {

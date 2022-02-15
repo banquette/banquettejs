@@ -1,0 +1,1 @@
+export { default as IconThumbsUpDown } from './icon-thumbs-up-down.component.vue';

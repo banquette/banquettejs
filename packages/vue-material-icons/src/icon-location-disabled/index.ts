@@ -1,0 +1,1 @@
+export { default as IconLocationDisabled } from './icon-location-disabled.component.vue';

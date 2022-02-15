@@ -1,0 +1,1 @@
+export { default as IconSubway } from './icon-subway.component.vue';

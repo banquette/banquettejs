@@ -1,0 +1,1 @@
+export { default as IconFeaturedVideo } from './icon-featured-video.component.vue';

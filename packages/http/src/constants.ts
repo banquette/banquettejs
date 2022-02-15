@@ -93,32 +93,32 @@ export const AdapterTag = Symbol('adapter');
 /**
  * Events emitted by the network module through the event dispatcher singleton.
  */
-export const Events = {
+export const HttpEvents = {
     /**
      * Emitted when the network connectivity is lost.
      */
-    NetworkOffline: Symbol('network:offline'),
+    NetworkOffline: Symbol('http:offline'),
 
     /**
      * Emitted when the network connectivity is back.
      */
-    NetworkOnline: Symbol('network:online'),
+    NetworkOnline: Symbol('http:online'),
 
     /**
      * Emitted when the network availability changes, no matter in which way.
      */
-    NetworkAvailabilityChange: Symbol('network:availability-change'),
+    NetworkAvailabilityChange: Symbol('http:network-availability-change'),
 
     /**
      * Emitted when a request has been added to the queue of the HTTP service.
      * A request can be queued multiple time if an error occurs.
      */
-    RequestQueued: Symbol('network:request-queued'),
+    RequestQueued: Symbol('http:request-queued'),
 
     /**
      * Emitted right before an HTTP request is executed.
      */
-    BeforeRequest: Symbol('network:before-request'),
+    BeforeRequest: Symbol('http:before-request'),
 
     /**
      * Emitted after a request has been executed successfully (on a network level).
@@ -126,20 +126,22 @@ export const Events = {
      * Having a response only mean the communication with the server worked, but
      * the response could still hold an error.
      */
-    BeforeResponse: Symbol('network:before-response'),
+    BeforeResponse: Symbol('http:before-response'),
 
     /**
      * Emitted after a request has been successfully executed.
      */
-    RequestSuccess: Symbol('network:request-success'),
+    RequestSuccess: Symbol('http:request-success'),
 
     /**
      * Emitted after a request failed to execute.
      *
      * The request may have failed for a network issue (no internet) or because the timeout is reached,
      * on because it has been canceled, this kind of thing.
+     *
+     * Any error returned from the server in the body of the request, but with a 200 Http code, will not trigger this event.
      */
-    RequestFailure: Symbol('network:request-failure')
+    RequestFailure: Symbol('http:request-failure')
 };
 
 /**

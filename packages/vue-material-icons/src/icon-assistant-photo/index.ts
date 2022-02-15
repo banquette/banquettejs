@@ -1,0 +1,1 @@
+export { default as IconAssistantPhoto } from './icon-assistant-photo.component.vue';

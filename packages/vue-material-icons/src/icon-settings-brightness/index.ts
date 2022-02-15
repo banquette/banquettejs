@@ -1,0 +1,1 @@
+export { default as IconSettingsBrightness } from './icon-settings-brightness.component.vue';

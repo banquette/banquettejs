@@ -1,0 +1,1 @@
+export { default as IconBorderHorizontal } from './icon-border-horizontal.component.vue';

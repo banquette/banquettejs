@@ -1,0 +1,1 @@
+export { default as IconDomain } from './icon-domain.component.vue';

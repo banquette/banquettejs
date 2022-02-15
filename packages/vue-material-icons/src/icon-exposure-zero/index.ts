@@ -1,0 +1,1 @@
+export { default as IconExposureZero } from './icon-exposure-zero.component.vue';

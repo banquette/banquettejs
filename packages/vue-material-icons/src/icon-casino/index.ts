@@ -1,0 +1,1 @@
+export { default as IconCasino } from './icon-casino.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconAirlineSeatLegroomNormal } from './icon-airline-seat-legroom-normal.component.vue';

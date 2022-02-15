@@ -1,0 +1,1 @@
+export { default as IconMemory } from './icon-memory.component.vue';

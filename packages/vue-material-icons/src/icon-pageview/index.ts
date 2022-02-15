@@ -1,0 +1,1 @@
+export { default as IconPageview } from './icon-pageview.component.vue';

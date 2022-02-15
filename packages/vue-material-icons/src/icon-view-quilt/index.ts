@@ -1,0 +1,1 @@
+export { default as IconViewQuilt } from './icon-view-quilt.component.vue';

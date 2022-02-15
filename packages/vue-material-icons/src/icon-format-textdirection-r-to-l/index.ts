@@ -1,0 +1,1 @@
+export { default as IconFormatTextdirectionRToL } from './icon-format-textdirection-r-to-l.component.vue';

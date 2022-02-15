@@ -1,0 +1,1 @@
+export { default as IconHealing } from './icon-healing.component.vue';

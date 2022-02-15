@@ -1,0 +1,1 @@
+export { default as IconExposureNeg2 } from './icon-exposure-neg-2.component.vue';

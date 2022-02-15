@@ -15,11 +15,11 @@ import { proxy } from "@banquette/utils-misc/proxy";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isString } from "@banquette/utils-type/is-string";
-import { Constructor, Pojo } from "@banquette/utils-type/types";
+import { Constructor, Primitive } from "@banquette/utils-type/types";
 import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
 import { AdapterInterface } from "./adapter/adapter.interface";
-import { Events, HttpMethod, HttpResponseStatus } from "./constants";
+import { HttpEvents, HttpMethod, HttpResponseStatus } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 import { RequestProgressEvent } from "./event/request-progress.event";
 import { RequestEvent } from "./event/request.event";
@@ -31,7 +31,6 @@ import { RequestTimeoutException } from "./exception/request-timeout.exception";
 import { RequestException } from "./exception/request.exception";
 import { HttpRequest } from "./http-request";
 import { HttpRequestBuilder } from "./http-request.builder";
-import { HttpRequestFactory } from "./http-request.factory";
 import { HttpResponse } from "./http-response";
 import { NetworkWatcherService } from './network-watcher.service';
 import { QueuedRequestInterface } from './queued-request.interface';
@@ -79,11 +78,11 @@ export class HttpService {
     /**
      * Do a GET request expecting a JSON response.
      */
-    public get<T>(url: string, headers?: Record<string, string>): HttpResponse<T> {
+    public get<T>(url: string, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.GET)
             .url(url)
-            .headers(headers || {})
+            .params(params || {})
             .getRequest()
         );
     }
@@ -91,12 +90,12 @@ export class HttpService {
     /**
      * Do a POST request that sends a JSON payload and expect a JSON response.
      */
-    public post<T>(url: string, body?: any, headers?: Record<string, string>): HttpResponse<T> {
+    public post<T>(url: string, body?: any, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.POST)
             .url(url)
             .payload(body)
-            .headers(headers || {})
+            .params(params || {})
             .getRequest()
         );
     }
@@ -104,12 +103,12 @@ export class HttpService {
     /**
      * Do a PUT request that sends a JSON payload and expect a JSON response.
      */
-    public put<T>(url: string, body?: any, headers?: Record<string, string>): HttpResponse<T> {
+    public put<T>(url: string, body?: any, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.PUT)
             .url(url)
             .payload(body)
-            .headers(headers || {})
+            .params(params || {})
             .getRequest()
         );
     }
@@ -117,12 +116,12 @@ export class HttpService {
     /**
      * Do a PATCH request that sends a JSON payload and expect a JSON response.
      */
-    public patch<T>(url: string, body?: any, headers?: Record<string, string>): HttpResponse<T> {
+    public patch<T>(url: string, body?: any, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.PATCH)
             .url(url)
             .payload(body)
-            .headers(headers || {})
+            .params(params || {})
             .getRequest()
         );
     }
@@ -130,27 +129,13 @@ export class HttpService {
     /**
      * Do a DELETE request.
      */
-    public delete<T>(url: string, headers?: Record<string, string>): HttpResponse<T> {
+    public delete<T>(url: string, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.DELETE)
             .url(url)
-            .headers(headers || {})
+            .params(params || {})
             .getRequest()
         );
-    }
-
-    /**
-     * Do a request.
-     *
-     * @deprecated Use HttpService::build() and HttpService::send() instead.
-     */
-    public request<T>(method: HttpMethod, url: string, payload: Pojo|null, headers?: any): HttpResponse<T> {
-        return this.send(HttpRequestFactory.Create({
-            method,
-            url,
-            payload,
-            headers
-        }));
     }
 
     /**
@@ -197,7 +182,7 @@ export class HttpService {
             return void this.removeFromQueue(queuedRequest);
         }
         try {
-            const adapter = Injector.Get<AdapterInterface>(this.adapterIdentifier);
+            const adapter = Injector.Get(this.adapterIdentifier);
             if (!queuedRequest.tryCount) {
                 queuedRequest.request.setAdapter(adapter);
             }
@@ -207,7 +192,7 @@ export class HttpService {
 
             // Before request.
             await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(
-                Events.BeforeRequest,
+                HttpEvents.BeforeRequest,
                 new RequestEvent(queuedRequest.request),
                 true,
                 queuedRequest.request.tags
@@ -221,7 +206,7 @@ export class HttpService {
 
             // Before response.
             await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(
-                Events.BeforeResponse,
+                HttpEvents.BeforeResponse,
                 new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest),
                 true,
                 queuedRequest.request.tags
@@ -252,7 +237,7 @@ export class HttpService {
         }
         queuedRequest.response.setStatus(HttpResponseStatus.Success);
         queuedRequest.resolve(queuedRequest.response);
-        this.eventDispatcher.dispatch(Events.RequestSuccess, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
+        this.eventDispatcher.dispatch(HttpEvents.RequestSuccess, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 
@@ -263,14 +248,14 @@ export class HttpService {
         if (error instanceof NetworkException && !(error instanceof RequestTimeoutException) && !(error instanceof RequestCanceledException) && queuedRequest.triesLeft > 0) {
             queuedRequest.executeAt = HttpService.CalculateNextTryTime(queuedRequest);
             queuedRequest.isExecuting = false;
-            this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
+            this.eventDispatcher.dispatch(HttpEvents.RequestQueued, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
             this.processQueue();
             return ;
         }
         queuedRequest.response.error = error;
         queuedRequest.response.setStatus(error instanceof RequestCanceledException ? HttpResponseStatus.Canceled : HttpResponseStatus.Error);
         queuedRequest.reject(queuedRequest.response);
-        this.eventDispatcher.dispatch(Events.RequestFailure, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
+        this.eventDispatcher.dispatch(HttpEvents.RequestFailure, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 
@@ -328,7 +313,7 @@ export class HttpService {
             response
         });
         this.scheduleQueueForProcess();
-        this.eventDispatcher.dispatch(Events.RequestQueued, new RequestEvent(request), true, request.tags);
+        this.eventDispatcher.dispatch(HttpEvents.RequestQueued, new RequestEvent(request), true, request.tags);
     }
 
     /**
@@ -392,7 +377,7 @@ export class HttpService {
         if (!Injector.Has(this.adapterIdentifier)) {
             throw new UsageException('You must register your adapter into the injector using the "@Module()" decorator.');
         }
-        this.eventDispatcher.subscribe(Events.NetworkAvailabilityChange, proxy(this.onNetworkAvailabilityChange, this));
+        this.eventDispatcher.subscribe(HttpEvents.NetworkAvailabilityChange, proxy(this.onNetworkAvailabilityChange, this));
         this.initialized = true;
     }
 

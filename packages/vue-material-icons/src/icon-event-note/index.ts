@@ -1,0 +1,1 @@
+export { default as IconEventNote } from './icon-event-note.component.vue';

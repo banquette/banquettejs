@@ -1,0 +1,1 @@
+export { default as IconPortableWifiOff } from './icon-portable-wifi-off.component.vue';

@@ -18,13 +18,13 @@
             "@banquette/http/*": ["packages/http/src/*"],
             "@banquette/inversify/*": ["packages/inversify/src/*"],
             "@banquette/model/*": ["packages/model/src/*"],
-            "@banquette/model-api/*": ["packages/model-api/src/*"],
             "@banquette/model-form/*": ["packages/model-form/src/*"],
             "@banquette/model-validation/*": [
                 "packages/model-validation/src/*"
             ],
             "@banquette/promise/*": ["packages/promise/src/*"],
             "@banquette/storage/*": ["packages/storage/src/*"],
+            "@banquette/ui/*": ["packages/ui/src/*"],
             "@banquette/utils-array/*": ["packages/utils-array/src/*"],
             "@banquette/utils-crypto/*": ["packages/utils-crypto/src/*"],
             "@banquette/utils-date/*": ["packages/utils-date/src/*"],
@@ -41,10 +41,6 @@
             "@banquette/utils-type/*": ["packages/utils-type/src/*"],
             "@banquette/validation/*": ["packages/validation/src/*"],
             "@banquette/vue-dom-module/*": ["packages/vue-dom-module/src/*"],
-            "@banquette/vue-form/*": ["packages/vue-form/src/*"],
-            "@banquette/vue-form-generic/*": [
-                "packages/vue-form-generic/src/*"
-            ],
             "@banquette/vue-material-icons/*": [
                 "packages/vue-material-icons/src/*"
             ],

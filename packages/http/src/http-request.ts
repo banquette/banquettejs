@@ -4,6 +4,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Writeable, Primitive } from "@banquette/utils-type/types";
 import { AdapterInterface } from "./adapter/adapter.interface";
 import { HttpConfigurationSymbol } from "./config";
@@ -90,7 +91,7 @@ export class HttpRequest {
      * @param timeout           Maximum duration of the request (in milliseconds).
      * @param retry             Maximum number of tries allowed for the request.
      * @param retryDelay        Time to wait before trying again in case of error.
-     * @param priority          The higher the priority the sooner the request will be executed.
+     * @param priority          The higher the priority the sooner the request will be executed when the queue contains multiple requests.
      * @param withCredentials   If true, cookies and auth headers are included in the request.
      * @param mimeType          MimeType of the payload.
      * @param tags              Tags that will be sent with emitted events.
@@ -140,6 +141,13 @@ export class HttpRequest {
             throw new UsageException('A response has already been set.');
         }
         (this as Writeable<HttpRequest>).response = response;
+    }
+
+    /**
+     * Set an url parameter.
+     */
+    public setParam(name: string, value: Primitive, type: UrlParameterType = UrlParameterType.Auto): void {
+        this.params[name] = {type, value: String(value)};
     }
 
     /**

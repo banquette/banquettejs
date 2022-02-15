@@ -1,0 +1,1 @@
+export { default as IconToys } from './icon-toys.component.vue';

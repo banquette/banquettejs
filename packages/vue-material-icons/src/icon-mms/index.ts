@@ -1,0 +1,1 @@
+export { default as IconMms } from './icon-mms.component.vue';

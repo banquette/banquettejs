@@ -1,0 +1,1 @@
+export { default as IconCropRotate } from './icon-crop-rotate.component.vue';

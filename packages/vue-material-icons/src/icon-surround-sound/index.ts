@@ -1,0 +1,1 @@
+export { default as IconSurroundSound } from './icon-surround-sound.component.vue';

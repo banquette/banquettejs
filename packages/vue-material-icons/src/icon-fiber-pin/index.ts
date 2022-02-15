@@ -1,0 +1,1 @@
+export { default as IconFiberPin } from './icon-fiber-pin.component.vue';

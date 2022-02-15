@@ -1,0 +1,1 @@
+export { default as IconAirlineSeatReclineNormal } from './icon-airline-seat-recline-normal.component.vue';

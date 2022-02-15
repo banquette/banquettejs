@@ -1,0 +1,1 @@
+export { default as IconFlag } from './icon-flag.component.vue';

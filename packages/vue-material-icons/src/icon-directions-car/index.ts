@@ -1,0 +1,1 @@
+export { default as IconDirectionsCar } from './icon-directions-car.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconLocalFlorist } from './icon-local-florist.component.vue';

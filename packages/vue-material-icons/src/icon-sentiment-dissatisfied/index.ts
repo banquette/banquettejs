@@ -1,0 +1,1 @@
+export { default as IconSentimentDissatisfied } from './icon-sentiment-dissatisfied.component.vue';

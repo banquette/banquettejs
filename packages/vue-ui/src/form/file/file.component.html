@@ -1,0 +1,37 @@
+<div
+    class="bt-form-file"
+    :data-is-multiple="vm.multiple ? '' : null"
+    :data-has-value="vm.value ? '' : null"
+    :data-has-placeholder="vm.placeholder ? '' : null"
+    :data-has-help="hasSlot('help') ? '' : null"
+    :data-has-focus="vm.focused ? '' : null"
+    :data-is-disabled="vm.disabled ? '' : null"
+    :data-has-error="vm.invalid && vm.validated ? '' : null"
+>
+    <div class="control-wrapper">
+        <label :for="vm.fullId" v-if="hasSlot('default')"><span><slot></slot></span></label>
+        <label :for="vm.fullId" v-else-if="vm.label"><span>{{ vm.label }}</span></label>
+
+        <div ref="inputWrapper" class="input-wrapper">
+            <input
+                ref="input"
+                type="file"
+                :multiple="vm.multiple ? '' : null"
+                :accept="vm.accept"
+                data-file-input
+                @change="vm.onFileSelectionChange"
+            />
+            <bt-button @click="$refs.input.click()"><slot name="button-text">Choose file</slot></bt-button>
+            <bt-progress-circular v-if="vm.busy || vm.validating"></bt-progress-circular>
+
+            <slot name="errors">
+                <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
+                    <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
+                </bt-form-error>
+            </slot>
+        </div>
+    </div>
+    <div v-if="hasSlot('help')" class="help">
+        <slot name="help"></slot>
+    </div>
+</div>

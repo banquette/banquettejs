@@ -1,0 +1,1 @@
+export { default as IconTablet } from './icon-tablet.component.vue';

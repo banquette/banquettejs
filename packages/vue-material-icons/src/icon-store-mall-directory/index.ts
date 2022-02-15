@@ -1,0 +1,1 @@
+export { default as IconStoreMallDirectory } from './icon-store-mall-directory.component.vue';

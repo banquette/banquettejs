@@ -1,0 +1,1 @@
+export { default as IconPrint } from './icon-print.component.vue';

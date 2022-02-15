@@ -8,21 +8,21 @@ import { HttpRequest } from "./http-request";
 import { UrlParameterInterface } from "./url-parameter.interface";
 
 export interface HttpRequestFactoryConfig {
-    method?: HttpMethod,
-    url: string,
-    params?: Record<string, UrlParameterInterface>,
-    payload?: any,
-    payloadType?: symbol,
-    responseType?: symbol,
-    headers?: any,
-    timeout?: number|null,
-    retry?: number|null,
-    retryDelay?: number|'auto'|null,
-    priority?: number|null,
-    withCredentials?: boolean|null,
-    mimeType?: string|null,
-    tags?: symbol|symbol[]|null,
-    extras?: any
+    method?: HttpMethod;
+    url: string;
+    params?: Record<string, UrlParameterInterface>;
+    payload?: any;
+    payloadType?: symbol;
+    responseType?: symbol;
+    headers?: any;
+    timeout?: number|null;
+    retry?: number|null;
+    retryDelay?: number|'auto'|null;
+    priority?: number|null;
+    withCredentials?: boolean|null;
+    mimeType?: string|null;
+    tags?: symbol|symbol[]|null;
+    extras?: any;
 }
 
 export class HttpRequestFactory {

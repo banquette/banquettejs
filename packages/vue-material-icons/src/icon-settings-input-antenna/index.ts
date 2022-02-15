@@ -1,0 +1,1 @@
+export { default as IconSettingsInputAntenna } from './icon-settings-input-antenna.component.vue';

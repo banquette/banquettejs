@@ -1,0 +1,1 @@
+export { default as IconWarning } from './icon-warning.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMoneyOff } from './icon-money-off.component.vue';

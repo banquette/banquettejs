@@ -1,0 +1,1 @@
+export { default as IconMoreHoriz } from './icon-more-horiz.component.vue';

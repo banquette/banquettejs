@@ -1,0 +1,1 @@
+export { default as IconSettingsInputComposite } from './icon-settings-input-composite.component.vue';

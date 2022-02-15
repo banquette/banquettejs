@@ -1,0 +1,1 @@
+export { default as IconPanoramaWideAngle } from './icon-panorama-wide-angle.component.vue';

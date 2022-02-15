@@ -1,0 +1,1 @@
+export { default as IconGrade } from './icon-grade.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconTerrain } from './icon-terrain.component.vue';

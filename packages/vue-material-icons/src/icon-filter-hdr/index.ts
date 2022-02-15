@@ -1,0 +1,1 @@
+export { default as IconFilterHdr } from './icon-filter-hdr.component.vue';

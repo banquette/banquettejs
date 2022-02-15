@@ -1,0 +1,1 @@
+export { default as IconConfirmationNumber } from './icon-confirmation-number.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconSlowMotionVideo } from './icon-slow-motion-video.component.vue';

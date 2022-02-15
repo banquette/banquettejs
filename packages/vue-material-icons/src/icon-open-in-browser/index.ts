@@ -1,0 +1,1 @@
+export { default as IconOpenInBrowser } from './icon-open-in-browser.component.vue';

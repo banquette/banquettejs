@@ -1,0 +1,1 @@
+export { default as IconFitnessCenter } from './icon-fitness-center.component.vue';

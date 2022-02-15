@@ -1,0 +1,1 @@
+export { default as IconHourglassFull } from './icon-hourglass-full.component.vue';

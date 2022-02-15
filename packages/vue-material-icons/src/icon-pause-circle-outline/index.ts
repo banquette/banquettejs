@@ -1,0 +1,1 @@
+export { default as IconPauseCircleOutline } from './icon-pause-circle-outline.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconNature } from './icon-nature.component.vue';

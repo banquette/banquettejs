@@ -1,0 +1,1 @@
+export { default as IconDesktopMac } from './icon-desktop-mac.component.vue';

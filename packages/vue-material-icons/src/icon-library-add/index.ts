@@ -1,0 +1,1 @@
+export { default as IconLibraryAdd } from './icon-library-add.component.vue';

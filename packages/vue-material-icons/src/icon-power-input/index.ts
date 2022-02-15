@@ -1,0 +1,1 @@
+export { default as IconPowerInput } from './icon-power-input.component.vue';

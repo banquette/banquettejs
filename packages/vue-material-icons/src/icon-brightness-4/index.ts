@@ -1,0 +1,1 @@
+export { default as IconBrightness4 } from './icon-brightness-4.component.vue';

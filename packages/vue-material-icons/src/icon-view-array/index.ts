@@ -1,0 +1,1 @@
+export { default as IconViewArray } from './icon-view-array.component.vue';

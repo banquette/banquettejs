@@ -1,0 +1,1 @@
+export { default as IconVolumeOff } from './icon-volume-off.component.vue';

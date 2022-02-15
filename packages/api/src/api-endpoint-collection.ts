@@ -3,7 +3,7 @@ import { HttpMethod } from "@banquette/http/constants";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ApiEndpoint } from "./api-endpoint";
-import { ApiEndpointParameterOptions, ApiEndpointOptionsWithName } from "./api-endpoint.options";
+import { ApiEndpointParameterOptions, ApiEndpointOptionsWithIdentifiers } from "./api-endpoint.options";
 import { EndpointNotFoundException } from "./exception/endpoint-not-found.exception";
 
 export class ApiEndpointCollection {
@@ -15,16 +15,16 @@ export class ApiEndpointCollection {
     /**
      * Register a new endpoint.
      */
-    public registerEndpoint(endpoint: ApiEndpointOptionsWithName): void;
+    public registerEndpoint(endpoint: ApiEndpointOptionsWithIdentifiers): void;
     public registerEndpoint(name: string, url: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>): void;
-    public registerEndpoint(optionsOrName: ApiEndpointOptionsWithName|string, url?: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>): void {
+    public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string, url?: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>): void {
         if (isString(optionsOrName)) {
             optionsOrName = {
                 name: optionsOrName,
                 url: String(url),
                 method: method || HttpMethod.GET,
-                parameters: params || {}
-            } as ApiEndpointOptionsWithName;
+                params: params || {}
+            } as ApiEndpointOptionsWithIdentifiers;
         }
         const endpoint = new ApiEndpoint(optionsOrName);
         if (!isUndefined(this.endpoints[optionsOrName.name])) {

@@ -1,0 +1,1 @@
+export { default as IconScreenLockPortrait } from './icon-screen-lock-portrait.component.vue';

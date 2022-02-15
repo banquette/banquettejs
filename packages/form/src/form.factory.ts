@@ -110,7 +110,7 @@ export class FormFactory {
      */
     private static ResolveKey(key: string): {key: string, extended: boolean} {
         if (FormFactory.Configuration === null) {
-            FormFactory.Configuration = Injector.Get<SharedConfiguration>(SharedConfiguration).get<FormConfigurationInterface>(FormConfigurationSymbol);
+            FormFactory.Configuration = Injector.Get(SharedConfiguration).get<FormConfigurationInterface>(FormConfigurationSymbol);
         }
         let extended: boolean = false;
         const prefix = FormFactory.Configuration.factory.extendedNamePrefix;

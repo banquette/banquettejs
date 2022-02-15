@@ -1,0 +1,1 @@
+export { default as IconChatBubbleOutline } from './icon-chat-bubble-outline.component.vue';

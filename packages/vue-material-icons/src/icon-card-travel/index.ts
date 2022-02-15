@@ -1,0 +1,1 @@
+export { default as IconCardTravel } from './icon-card-travel.component.vue';

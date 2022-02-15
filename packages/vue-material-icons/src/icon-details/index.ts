@@ -1,0 +1,1 @@
+export { default as IconDetails } from './icon-details.component.vue';

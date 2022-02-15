@@ -1,0 +1,1 @@
+export { default as IconTimerOff } from './icon-timer-off.component.vue';

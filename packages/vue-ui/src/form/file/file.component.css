@@ -1,0 +1,23 @@
+.bt-form-file {
+    .control-wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        label {
+            color: var(--qlzg7wcj, inherit);
+            font-size: var(--qxxvmuwg, inherit);
+            font-weight: var(--h87ir10e, 500);
+            margin: var(--radwsz7u, 0 0 0.675rem 0);
+        }
+    }
+
+    [data-file-input] {
+        display: none;
+    }
+
+    .help {
+        color: var(--fpv8mky0, #aaa);
+        margin-top: 0.5em;
+    }
+}

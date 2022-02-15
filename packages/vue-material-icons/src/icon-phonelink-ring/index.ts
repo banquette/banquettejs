@@ -1,0 +1,1 @@
+export { default as IconPhonelinkRing } from './icon-phonelink-ring.component.vue';

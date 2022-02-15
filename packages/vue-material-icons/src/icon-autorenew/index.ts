@@ -1,0 +1,1 @@
+export { default as IconAutorenew } from './icon-autorenew.component.vue';

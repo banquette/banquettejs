@@ -1,0 +1,1 @@
+export { default as IconReplay10 } from './icon-replay-10.component.vue';

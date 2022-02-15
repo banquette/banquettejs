@@ -1,0 +1,1 @@
+export { default as IconReplyAll } from './icon-reply-all.component.vue';

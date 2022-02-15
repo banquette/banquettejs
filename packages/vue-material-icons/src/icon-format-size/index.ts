@@ -1,0 +1,1 @@
+export { default as IconFormatSize } from './icon-format-size.component.vue';

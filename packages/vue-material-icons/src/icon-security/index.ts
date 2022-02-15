@@ -1,0 +1,1 @@
+export { default as IconSecurity } from './icon-security.component.vue';

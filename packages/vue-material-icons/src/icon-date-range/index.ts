@@ -1,0 +1,1 @@
+export { default as IconDateRange } from './icon-date-range.component.vue';

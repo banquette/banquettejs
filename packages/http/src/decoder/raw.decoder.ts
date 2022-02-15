@@ -1,6 +1,6 @@
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { DecoderTag, Events } from "../constants";
+import { DecoderTag, HttpEvents } from "../constants";
 import { ResponseEvent } from "../event/response.event";
 
 export const ResponseTypeRaw = Symbol('raw');
@@ -14,7 +14,7 @@ function onAfterRequest(event: ResponseEvent) {
 }
 
 Injector.Get(EventDispatcherService).subscribe<ResponseEvent>(
-    Events.BeforeResponse,
+    HttpEvents.BeforeResponse,
     onAfterRequest,
     16, // Slightly higher priority so it is checked before the others
     null,

@@ -20,6 +20,16 @@ export interface FormViewControlInterface {
     readonly formId: string;
 
     /**
+     * The absolute path of the component from the root of the form.
+     *
+     * The path is composed of each level name separated by "/".
+     *
+     * So the root node has a path of "/".
+     * If if has a child named "name", its path will by "/name".
+     */
+    readonly path: string;
+
+    /**
      * A component is `valid` when the validation has run and no error has been found.
      */
     readonly valid: boolean;

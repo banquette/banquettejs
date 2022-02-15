@@ -1,0 +1,1 @@
+export { default as IconVideoLibrary } from './icon-video-library.component.vue';

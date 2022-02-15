@@ -1,0 +1,1 @@
+export { default as IconSignalWifiOff } from './icon-signal-wifi-off.component.vue';

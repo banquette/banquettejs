@@ -1,0 +1,1 @@
+export { default as IconPets } from './icon-pets.component.vue';

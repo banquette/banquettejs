@@ -1,0 +1,1 @@
+export { default as IconVideogameAsset } from './icon-videogame-asset.component.vue';

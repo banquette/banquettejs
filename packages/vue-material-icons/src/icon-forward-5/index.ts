@@ -1,0 +1,1 @@
+export { default as IconForward5 } from './icon-forward-5.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconGif } from './icon-gif.component.vue';

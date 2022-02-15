@@ -1,0 +1,1 @@
+export { default as IconCheckBox } from './icon-check-box.component.vue';

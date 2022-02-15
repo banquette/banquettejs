@@ -1,0 +1,1 @@
+export { default as IconDirectionsWalk } from './icon-directions-walk.component.vue';

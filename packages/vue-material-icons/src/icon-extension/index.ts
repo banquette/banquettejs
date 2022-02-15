@@ -1,0 +1,1 @@
+export { default as IconExtension } from './icon-extension.component.vue';

@@ -1,15 +1,16 @@
 import { HttpMethod } from "@banquette/http/constants";
+import { Constructor } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
 
 export type ApiEndpointParameterOptions = Partial<Omit<ApiEndpointParameterInterface, 'url'>>|ValidatorInterface|true|null;
-export type ApiEndpointOptionsWithName = ApiEndpointOptions & {name: string};
+export type ApiEndpointOptionsWithIdentifiers = ApiEndpointOptions & {name: string, ctor?: Constructor};
 
 export interface ApiEndpointOptions {
     /**
      * The url of the endpoint.
      * The url can contain variables, surrounded by brackets "{" and "}":
-     * e.g.: /user/{id}
+     * e.g.?: /user/{id}
      */
     url: string;
 
@@ -29,7 +30,7 @@ export interface ApiEndpointOptions {
      *
      * To allow any parameter you can use the wildcard ("*") parameter name.
      */
-    parameters?: Record<string, ApiEndpointParameterOptions>;
+    params?: Record<string, ApiEndpointParameterOptions>;
 
     /**
      * Headers to include when building the request.
@@ -45,4 +46,44 @@ export interface ApiEndpointOptions {
      * Type of decoder to process the response.
      */
     responseType?: symbol;
+
+    /**
+     * Maximum duration of the request (in milliseconds).
+     */
+    timeout?: number|null;
+
+    /**
+     * If true, cookies and auth headers are included in the request.
+     */
+    withCredentials?: boolean|null;
+
+    /**
+     * MimeType of the payload.
+     */
+    mimeType?: string|null;
+
+    /**
+     * Maximum number of tries allowed for the request.
+     */
+    retry?: number|null;
+
+    /**
+     * Time to wait before trying again in case of error.
+     */
+    retryDelay?: number|'auto'|null;
+
+    /**
+     * The higher the priority the sooner the request will be executed when the queue contains multiple requests.
+     */
+    priority?: number|null;
+
+    /**
+     * Tags that will be sent with emitted events.
+     */
+    tags?: symbol[];
+
+    /**
+     * Any additional data that will be added to the request.
+     */
+    extras?: Record<string, any>;
 }

@@ -33,24 +33,3 @@ export * from './event/validation-end.form-event';
  * Exceptions
  */
 export * from './exception/component-not-found.exception';
-
-/**
- * View model
- */
-export * from './view-model/value-transformer/value-transformer.interface';
-export * from './view-model/value-transformer/noop-transformer.interface';
-export * from './view-model/view-model.interface';
-export * from './view-model/view-model';
-export * from './view-model/type/abstract-choice.view-model';
-export * from './view-model/type/checkbox-view.model';
-export * from './view-model/type/select.view-model';
-export * from './view-model/type/text.view-model';
-export * from './view-model/module/choices/event/choices-changed.event';
-export * from './view-model/module/choices/event/choice-focused.event';
-export * from './view-model/module/choices/event/selection-changed.event';
-export * from './view-model/module/choices/choices.module';
-export * from './view-model/module/choices/constant';
-export * from './view-model/module/choices-search/event/search-changed.event';
-export * from './view-model/module/choices-search/event/focus-changed.event';
-export * from './view-model/module/choices-search/choices-search.module';
-export * from './view-model/module/choices-search/constant';

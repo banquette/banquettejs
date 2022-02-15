@@ -1,0 +1,1 @@
+export { default as IconSortByAlpha } from './icon-sort-by-alpha.component.vue';

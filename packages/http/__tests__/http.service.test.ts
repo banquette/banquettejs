@@ -8,7 +8,7 @@ import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc/timeout";
 import {
     XhrAdapter,
     HttpConfigurationSymbol,
-    Events,
+    HttpEvents,
     HttpMethod,
     ResponseTypeAutoDetect,
     ResponseTypeJson,
@@ -33,9 +33,9 @@ import { buildTestUrl } from "./__mocks__/utils";
 import './__mocks__/xml-http-request.mock';
 
 const eventDispatcher: EventDispatcherService = Injector.Get(EventDispatcherService);
-const http: HttpService = Injector.Get<HttpService>(HttpService);
+const http: HttpService = Injector.Get(HttpService);
 
-const config: SharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfiguration);
+const config: SharedConfiguration = Injector.Get(SharedConfiguration);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     maxSimultaneousRequests: 5,
     requestRetryCount: 5,
@@ -128,7 +128,7 @@ describe('check the HttpRequest objects created by shortcut methods', () => {
         test(`${method}()`, ((_method) => {
             expect.assertions(1);
             return async () => {
-                const unsubscribe = eventDispatcher.subscribe(Events.RequestQueued, (event: RequestEvent) => {
+                const unsubscribe = eventDispatcher.subscribe(HttpEvents.RequestQueued, (event: RequestEvent) => {
                     unsubscribe();
                     expect(event.request).toMatchObject(HttpRequestFactory.Create({
                         method: HttpMethod.GET,
@@ -149,7 +149,7 @@ describe('check the HttpRequest objects created by shortcut methods', () => {
         test(`${method}()`, ((_method) => {
             expect.assertions(1);
             return async () => {
-                const unsubscribe = eventDispatcher.subscribe(Events.RequestQueued, (event: RequestEvent) => {
+                const unsubscribe = eventDispatcher.subscribe(HttpEvents.RequestQueued, (event: RequestEvent) => {
                     unsubscribe();
                     expect(event.request).toMatchObject(HttpRequestFactory.Create({
                         method: _method.toUpperCase() as HttpMethod,
@@ -214,7 +214,7 @@ describe('payloads', () => {
     let unsubscribeMethods: any[] = [];
 
     beforeAll(() => {
-        unsubscribeMethods.push(eventDispatcher.subscribe(Events.BeforeRequest, (event: RequestEvent) => {
+        unsubscribeMethods.push(eventDispatcher.subscribe(HttpEvents.BeforeRequest, (event: RequestEvent) => {
             lastPayload = event.request.payload;
         }, -1024 /* Very low priority and not tag to ensure being called last */));
     });
@@ -453,8 +453,8 @@ describe('request queue', () => {
     const runningRequests: HttpRequest[] = [];
     let unsubscribeMethods: Array<() => void> = [];
     beforeEach(() => {
-        unsubscribeMethods.push(eventDispatcher.subscribe(Events.BeforeRequest, (event: RequestEvent) => void runningRequests.push(event.request)));
-        unsubscribeMethods.push(eventDispatcher.subscribe(Events.RequestSuccess, (event: RequestEvent) => void runningRequests.splice(runningRequests.indexOf(event.request), 1)));
+        unsubscribeMethods.push(eventDispatcher.subscribe(HttpEvents.BeforeRequest, (event: RequestEvent) => void runningRequests.push(event.request)));
+        unsubscribeMethods.push(eventDispatcher.subscribe(HttpEvents.RequestSuccess, (event: RequestEvent) => void runningRequests.splice(runningRequests.indexOf(event.request), 1)));
     });
 
     afterEach(() => {
@@ -513,11 +513,11 @@ describe('events dispatching', () => {
             url: buildTestUrl({responseKey: 'ValidJson'})
         }));
         await waitForNextCycle();
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.RequestQueued, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeRequest, expect.any(Object), true, []);
         await response.promise;
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeResponse, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.RequestSuccess, expect.any(Object), true, []);
     });
 
     test(`request failing 2 times`, async () => {
@@ -527,10 +527,10 @@ describe('events dispatching', () => {
         }));
         await response.promise;
         expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(8); // RequestQueued x3 + RequestSuccess + BeforeRequest x3 + BeforeResponse
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestSuccess, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.RequestQueued, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeRequest, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeResponse, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.RequestSuccess, expect.any(Object), true, []);
     });
 
     test(`request failing definitely`, async () => {
@@ -542,10 +542,10 @@ describe('events dispatching', () => {
             await response.promise;
         } catch (e) { /* Nothing to do, that's not the point of this test */ }
         expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(4); // RequestQueued + RequestFailure + BeforeRequest + BeforeResponse
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestQueued, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeRequest, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.BeforeResponse, expect.any(Object), true, []);
-        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(Events.RequestFailure, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.RequestQueued, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeRequest, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeResponse, expect.any(Object), true, []);
+        expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.RequestFailure, expect.any(Object), true, []);
     });
 });
 

@@ -1,0 +1,1 @@
+export { default as IconBatteryAlert } from './icon-battery-alert.component.vue';

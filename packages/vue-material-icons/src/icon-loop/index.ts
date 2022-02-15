@@ -1,0 +1,1 @@
+export { default as IconLoop } from './icon-loop.component.vue';

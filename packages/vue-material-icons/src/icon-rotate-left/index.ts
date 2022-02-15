@@ -1,0 +1,1 @@
+export { default as IconRotateLeft } from './icon-rotate-left.component.vue';

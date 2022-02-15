@@ -1,0 +1,1 @@
+export { default as IconInfoOutline } from './icon-info-outline.component.vue';

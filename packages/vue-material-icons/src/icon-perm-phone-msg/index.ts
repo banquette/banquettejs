@@ -1,0 +1,1 @@
+export { default as IconPermPhoneMsg } from './icon-perm-phone-msg.component.vue';

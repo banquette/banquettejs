@@ -1,0 +1,1 @@
+export { default as IconLocalHotel } from './icon-local-hotel.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconTune } from './icon-tune.component.vue';

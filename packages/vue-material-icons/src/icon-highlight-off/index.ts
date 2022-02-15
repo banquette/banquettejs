@@ -1,0 +1,1 @@
+export { default as IconHighlightOff } from './icon-highlight-off.component.vue';

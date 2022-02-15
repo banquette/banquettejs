@@ -1,0 +1,1 @@
+export { default as IconKitchen } from './icon-kitchen.component.vue';

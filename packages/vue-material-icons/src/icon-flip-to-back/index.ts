@@ -1,0 +1,1 @@
+export { default as IconFlipToBack } from './icon-flip-to-back.component.vue';

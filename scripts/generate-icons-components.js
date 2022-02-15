@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const libBasePath = path.resolve(__dirname, '../node_modules/material-design-icons');
-const componentsBasePath = path.resolve(__dirname, '../packages/vue-material-icons/src/component');
+const componentsBasePath = path.resolve(__dirname, '../packages/vue-material-icons/src');
 
 function fileToComponentName(filename) {
     return 'icon-' + filename.replace(/^ic_(.*)_.*24px\.svg/, '$1').replace(/_/g, '-');
@@ -12,6 +12,7 @@ function camelize(input) {
 }
 
 const imports = [];
+const duplicates = [];
 
 if (fs.existsSync(componentsBasePath)) {
     fs.rmdirSync(componentsBasePath, {recursive: true});
@@ -33,11 +34,13 @@ fs.readdirSync(libBasePath).forEach(function(type) {
         const svg = fs.readFileSync(path.join(svgDir, icon)).toString();
         const componentName = fileToComponentName(icon);
         const className = camelize(fileToComponentName(icon));
-        const componentDir = path.join(componentsBasePath, type);
+        const componentDir = path.join(componentsBasePath, componentName);
         const componentPath = path.join(componentDir, componentName + '.component.vue');
-        if (!fs.existsSync(componentDir)) {
-            fs.mkdirSync(componentDir);
+        if (fs.existsSync(componentDir)) {
+            duplicates.push(componentName);
+            return ;
         }
+        fs.mkdirSync(componentDir);
         const src = `<script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 
@@ -49,7 +52,11 @@ export default class ${className} {
     ${svg}
 </template>`;
         fs.writeFileSync(componentPath, src);
-        imports.push(`import './component/${type}/${componentName + '.component.vue'}';`);
+
+        const indexPath = path.join(componentDir, 'index.ts');
+        fs.writeFileSync(indexPath, `export { default as ${ className } } from './${componentName + '.component.vue'}';`);
+        imports.push(`import './${componentName}/${componentName + '.component.vue'}';`);
     });
 });
-fs.writeFileSync(path.join(path.dirname(componentsBasePath), 'index.ts'), imports.join("\n"));
+console.log('Conflicting components names:', duplicates);
+fs.writeFileSync(path.join(path.dirname(componentsBasePath), '/src/index.ts'), imports.join("\n"));

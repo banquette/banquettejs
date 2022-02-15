@@ -1,0 +1,1 @@
+export { default as IconCollections } from './icon-collections.component.vue';

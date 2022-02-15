@@ -1,0 +1,1 @@
+export { default as IconLocalDrink } from './icon-local-drink.component.vue';

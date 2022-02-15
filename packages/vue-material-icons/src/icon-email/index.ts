@@ -1,0 +1,1 @@
+export { default as IconEmail } from './icon-email.component.vue';

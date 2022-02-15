@@ -137,7 +137,7 @@ describe('Create with factory', () => {
     for (const delimiters of [[null, '$'], ['$', null], ['PREFIX___', '__SUFFIX']]) {
         test(`Deep form with validators (${JSON.stringify(delimiters)}`, () => {
             // Ensure the conf is what the test expect.
-            const sharedConfiguration = Injector.Get<SharedConfiguration>(SharedConfiguration);
+            const sharedConfiguration = Injector.Get(SharedConfiguration);
             const formConfiguration: FormConfigurationInterface = sharedConfiguration.get(FormConfigurationSymbol);
             const oldExtendedNamePrefix = formConfiguration.factory.extendedNamePrefix;
             const oldExtendedNameSuffix = formConfiguration.factory.extendedNameSuffix;

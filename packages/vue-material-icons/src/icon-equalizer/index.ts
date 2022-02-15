@@ -1,0 +1,1 @@
+export { default as IconEqualizer } from './icon-equalizer.component.vue';

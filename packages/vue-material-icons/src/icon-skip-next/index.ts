@@ -1,0 +1,1 @@
+export { default as IconSkipNext } from './icon-skip-next.component.vue';

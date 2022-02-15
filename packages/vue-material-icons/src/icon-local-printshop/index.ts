@@ -1,0 +1,1 @@
+export { default as IconLocalPrintshop } from './icon-local-printshop.component.vue';

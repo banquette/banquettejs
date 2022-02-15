@@ -1,0 +1,1 @@
+export { default as IconExposurePlus1 } from './icon-exposure-plus-1.component.vue';

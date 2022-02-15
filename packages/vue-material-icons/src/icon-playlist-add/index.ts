@@ -1,0 +1,1 @@
+export { default as IconPlaylistAdd } from './icon-playlist-add.component.vue';

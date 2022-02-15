@@ -5,7 +5,7 @@ import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormGroup } from "./abstract-form-group";
-import { CallContext, FilterGroup, Events, ValidationStrategy } from "./constant";
+import { CallContext, FilterGroup, FormEvents, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";
 import { ComponentRemovedFormEvent } from "./event/component-removed.form-event";
 import { ValueChangedFormEvent } from "./event/value-changed.form-event";
@@ -88,7 +88,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             this.children_[identifier] = component.setParent(this.buildParentComponentDecorator());
             this.children_[identifier].propagateStatesToParent();
         });
-        this.dispatch(Events.ComponentAdded, () => new ComponentAddedFormEvent<string>(this, this.children_[identifier].decorated, identifier));
+        this.dispatch(FormEvents.ComponentAdded, () => new ComponentAddedFormEvent<string>(this, this.children_[identifier].decorated, identifier));
     }
 
     /**
@@ -138,7 +138,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             delete this.children_[identifier];
             removed.unsetParent();
         });
-        this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, removed.decorated, identifier));
+        this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, removed.decorated, identifier));
         return removed.decorated;
     }
 
@@ -151,7 +151,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             this.children_ = {};
         });
         for (const name of Object.keys(components)) {
-            this.dispatch(Events.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, components[name].decorated, name));
+            this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, components[name].decorated, name));
         }
     }
 
@@ -271,7 +271,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         this.forEach((child: FormComponentInterface, name: string) => {
             this.value[name] = child.value;
         }, this.foreachFilters[FilterGroup.UpdateValue]);
-        this.dispatch(Events.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
+        this.dispatch(FormEvents.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }

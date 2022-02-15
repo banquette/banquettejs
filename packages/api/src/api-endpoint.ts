@@ -15,6 +15,7 @@ import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { ApiEndpointOverride } from "./api-endpoint-override";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
 import { ApiEndpointOptions, ApiEndpointParameterOptions } from "./api-endpoint.options";
 import { InvalidParameterException } from "./exception/invalid-parameter.exception";
@@ -50,7 +51,7 @@ export class ApiEndpoint {
      *
      * To allow any parameter you can use the wildcard ("*") parameter name.
      */
-    public readonly parameters: Record<string, ApiEndpointParameterInterface>;
+    public readonly params: Record<string, ApiEndpointParameterInterface>;
 
     /**
      * Headers to include when building the request.
@@ -67,6 +68,46 @@ export class ApiEndpoint {
      */
     public readonly responseType: symbol;
 
+    /**
+     * Maximum duration of the request (in milliseconds).
+     */
+    public readonly timeout: number|null = null;
+
+    /**
+     * If true, cookies and auth headers are included in the request.
+     */
+    public readonly withCredentials: boolean = false;
+
+    /**
+     * MimeType of the payload.
+     */
+    public readonly mimeType: string|null = null;
+
+    /**
+     * Maximum number of tries allowed for the request.
+     */
+    public readonly retry: number|null = null;
+
+    /**
+     * Time to wait before trying again in case of error.
+     */
+    public readonly retryDelay: number|'auto'|null = null;
+
+    /**
+     * The higher the priority the sooner the request will be executed when the queue contains multiple requests.
+     */
+    public readonly priority: number|null = null;
+
+    /**
+     * Tags that will be sent with emitted events.
+     */
+    public readonly tags: symbol[] = [];
+
+    /**
+     * Any additional data that will be added to the request.
+     */
+    public readonly extras: Record<string, any> = {};
+
     public constructor(options: ApiEndpointOptions|string) {
         if (isString(options)) {
             options = {url: options};
@@ -74,24 +115,52 @@ export class ApiEndpoint {
         this.url = this.normalizeUrl(options.url);
         this.method = options.method || HttpMethod.GET;
         this.headers = ensureObject(options.headers);
-        this.parameters = extend(this.buildParametersFromUrl(this.url), this.normalizeParameters(options.parameters), true);
+        this.params = extend(this.buildParametersFromUrl(this.url), this.normalizeParameters(options.params), true);
         this.payloadType = options.payloadType || PayloadTypeJson;
         this.responseType = options.responseType || ResponseTypeJson;
     }
 
     /**
-     * Try to create an http request for the endpoint.
+     * Create an http request for the endpoint.
+     *
+     * @throws UsageException
+     * @throws InvalidParameterException
+     * @throws UnsupportedParametersException
+     * @throws MissingRequiredParameterException
      */
-    public buildRequest(payload: any = null, parameters: Record<string, Primitive> = {}): HttpRequest {
-        const parametersBag = this.sortAndValidateParameters(parameters);
+    public buildRequest(payload: any, configuration?: ApiEndpointOverride): HttpRequest;
+    public buildRequest(payload: any, params?: Record<string, Primitive>): HttpRequest;
+    public buildRequest(payload: any, paramsOrConfiguration?: ApiEndpointOverride|Record<string, Primitive>): HttpRequest {
+        const optionsOverrides = paramsOrConfiguration instanceof ApiEndpointOverride ? paramsOrConfiguration : null;
+        const swap = (key: keyof ApiEndpointOverride, defaultValue: any) => {
+            return optionsOverrides !== null && !isUndefined(optionsOverrides[key]) ? optionsOverrides[key] : defaultValue;
+        };
+        const finalParameters = swap('params', optionsOverrides === null ? paramsOrConfiguration : {});
+
+        // Try to inject missing parameters from the payload.
+        if (isObject(payload)) {
+            for (const prop of Object.keys(payload)) {
+                if (!isUndefined(this.params[prop]) && isUndefined(finalParameters[prop])) {
+                    finalParameters[prop] = payload[prop];
+                }
+            }
+        }
+        const parametersBag = this.sortAndValidateParameters(finalParameters);
         return new HttpRequestBuilder()
             .url(this.url)
             .params(parametersBag.url, UrlParameterType.Url)
             .params(parametersBag.query, UrlParameterType.Query)
-            .method(this.method)
+            .method(swap('method', this.method))
             .payload(payload, this.payloadType)
             .responseType(this.responseType)
-            .headers(this.headers)
+            .timeout(swap('timeout', this.timeout))
+            .withCredentials(swap('withCredentials', this.withCredentials))
+            .mimeType(swap('mimeType', this.mimeType))
+            .retry(swap('retry', this.retry))
+            .retryDelay(swap('retryDelay', this.retryDelay))
+            .headers(swap('headers', this.headers))
+            .tags(swap('tags', this.tags))
+            .extras(swap('extras', this.extras))
             .getRequest();
     }
 
@@ -117,6 +186,11 @@ export class ApiEndpoint {
 
     /**
      * Separate the parameters given as input into url and query parameters and validate them.
+     *
+     * @throws UsageException
+     * @throws InvalidParameterException
+     * @throws UnsupportedParametersException
+     * @throws MissingRequiredParameterException
      */
     private sortAndValidateParameters(parameters: Record<string, Primitive>): ParametersBag {
         // Make a copy of the parameters so we don't modify the object given by the user.
@@ -146,12 +220,12 @@ export class ApiEndpoint {
             return userValue;
         };
         let wildcard: ApiEndpointParameterInterface|null = null;
-        for (const paramName of Object.keys(this.parameters)) {
+        for (const paramName of Object.keys(this.params)) {
             if (paramName === '*') {
-                wildcard = this.parameters[paramName];
+                wildcard = this.params[paramName];
                 continue ;
             }
-            const conf = this.parameters[paramName];
+            const conf = this.params[paramName];
             const processed = processItem(paramName, parametersClone[paramName], conf);
             if (!isUndefined(processed)) {
                 output[conf.url ? 'url' : 'query'][paramName] = encodeURIComponent(processed);

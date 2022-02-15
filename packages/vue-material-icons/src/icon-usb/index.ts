@@ -1,0 +1,1 @@
+export { default as IconUsb } from './icon-usb.component.vue';

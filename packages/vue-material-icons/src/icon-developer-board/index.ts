@@ -1,0 +1,1 @@
+export { default as IconDeveloperBoard } from './icon-developer-board.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconStraighten } from './icon-straighten.component.vue';

@@ -16,7 +16,7 @@ import {
     CallContext,
     FilterGroup,
     ContextualizedState,
-    Events,
+    FormEvents,
     VirtualViolationType,
     EventsInheritanceMap
 } from "./constant";
@@ -286,14 +286,14 @@ export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType>
      * Register a callback that will be called when a component is added/set to the collection.
      */
     public onControlAdded(cb: (event: FormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe(Events.ComponentAdded, cb,  selfOnly);
+        return this.subscribe(FormEvents.ComponentAdded, cb,  selfOnly);
     }
 
     /**
      * Register a callback that will be called when a component is removed from the collection.
      */
     public onControlRemoved(cb: (event: FormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe(Events.ComponentRemoved, cb, selfOnly);
+        return this.subscribe(FormEvents.ComponentRemoved, cb, selfOnly);
     }
 
     /**

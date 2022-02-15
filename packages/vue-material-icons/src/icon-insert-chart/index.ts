@@ -1,0 +1,1 @@
+export { default as IconInsertChart } from './icon-insert-chart.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconCompare } from './icon-compare.component.vue';

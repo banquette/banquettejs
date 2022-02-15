@@ -1,0 +1,1 @@
+export { default as IconArtTrack } from './icon-art-track.component.vue';

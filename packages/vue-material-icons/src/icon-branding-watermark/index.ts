@@ -1,0 +1,1 @@
+export { default as IconBrandingWatermark } from './icon-branding-watermark.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconFilterTiltShift } from './icon-filter-tilt-shift.component.vue';

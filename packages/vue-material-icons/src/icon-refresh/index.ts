@@ -1,0 +1,1 @@
+export { default as IconRefresh } from './icon-refresh.component.vue';

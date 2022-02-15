@@ -1,0 +1,1 @@
+export { default as IconDonutLarge } from './icon-donut-large.component.vue';

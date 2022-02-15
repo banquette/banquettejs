@@ -1,0 +1,1 @@
+export { default as IconLocalLaundryService } from './icon-local-laundry-service.component.vue';

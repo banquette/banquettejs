@@ -1,0 +1,1 @@
+export { default as IconPictureInPicture } from './icon-picture-in-picture.component.vue';

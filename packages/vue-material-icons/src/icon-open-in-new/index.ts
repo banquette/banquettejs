@@ -1,0 +1,1 @@
+export { default as IconOpenInNew } from './icon-open-in-new.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconTonality } from './icon-tonality.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconTabletAndroid } from './icon-tablet-android.component.vue';

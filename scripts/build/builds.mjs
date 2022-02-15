@@ -127,10 +127,6 @@ export const Builds = Object.assign({},
         module: 'Banquette.Model'
     }),
     createBuildVariants({
-        package: 'model-api',
-        module: 'Banquette.Model.Api'
-    }),
-    createBuildVariants({
         package: 'model-form',
         module: 'Banquette.Model.Form'
     }),
@@ -157,6 +153,10 @@ export const Builds = Object.assign({},
     createBuildVariants({
         package: 'storage',
         module: 'Banquette.Storage'
+    }),
+    createBuildVariants({
+        package: 'ui',
+        module: 'Banquette.Ui'
     }),
     createBuildVariants({
         package: 'utils-type',
@@ -209,14 +209,6 @@ export const Builds = Object.assign({},
     createBuildVariants({
         package: 'validation',
         module: 'Banquette.Validation'
-    }),
-    createBuildVariants({
-        package: 'vue-form',
-        module: 'Banquette.Vue.Form'
-    }),
-    createBuildVariants({
-        package: 'vue-form-generic',
-        module: 'Banquette.Vue.FormGeneric'
     }),
     createBuildVariants({
         package: 'vue-ui',

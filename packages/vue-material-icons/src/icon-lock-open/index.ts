@@ -1,0 +1,1 @@
+export { default as IconLockOpen } from './icon-lock-open.component.vue';

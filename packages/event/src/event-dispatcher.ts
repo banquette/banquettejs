@@ -101,7 +101,7 @@ export class EventDispatcher implements EventDispatcherInterface {
                 propagationStopped = true;
             }
             if (!arrayIntersect(propagationStoppedTags, subscriber.propagationTags).length &&
-                (subscriber.filteringTags === null || !tags.length || arrayIntersect(tags, subscriber.filteringTags).length > 0)) {
+                (subscriber.filteringTags === null || (!tags.length && !subscriber.filteringTags.length) || arrayIntersect(tags, subscriber.filteringTags).length > 0)) {
                 try {
                     const subResult: any = subscriber.callback(e);
                     result.registerCall({

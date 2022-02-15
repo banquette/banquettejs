@@ -1,0 +1,1 @@
+export { default as IconMonochromePhotos } from './icon-monochrome-photos.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconScanner } from './icon-scanner.component.vue';

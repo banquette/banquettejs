@@ -1,0 +1,1 @@
+export { default as IconBluetoothAudio } from './icon-bluetooth-audio.component.vue';

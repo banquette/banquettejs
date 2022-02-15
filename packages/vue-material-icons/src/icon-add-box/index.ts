@@ -1,0 +1,1 @@
+export { default as IconAddBox } from './icon-add-box.component.vue';

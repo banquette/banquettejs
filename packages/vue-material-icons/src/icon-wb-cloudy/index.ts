@@ -1,0 +1,1 @@
+export { default as IconWbCloudy } from './icon-wb-cloudy.component.vue';

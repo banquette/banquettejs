@@ -1,0 +1,1 @@
+export { default as IconTimeToLeave } from './icon-time-to-leave.component.vue';

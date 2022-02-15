@@ -1,0 +1,1 @@
+export { default as IconAttachMoney } from './icon-attach-money.component.vue';

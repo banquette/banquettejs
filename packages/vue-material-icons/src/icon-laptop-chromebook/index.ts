@@ -1,0 +1,1 @@
+export { default as IconLaptopChromebook } from './icon-laptop-chromebook.component.vue';

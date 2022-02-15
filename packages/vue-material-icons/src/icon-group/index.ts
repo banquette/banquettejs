@@ -1,0 +1,1 @@
+export { default as IconGroup } from './icon-group.component.vue';
