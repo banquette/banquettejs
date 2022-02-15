@@ -211,7 +211,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
 
     // Template
     if (data.component.template === false) {
-        options.render = () => '';
+        options.render = () => false;
     } else if (isString(data.component.template)) {
         options.template = data.component.template;
     }
