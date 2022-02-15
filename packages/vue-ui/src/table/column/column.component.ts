@@ -1,5 +1,4 @@
 import { UsageException } from "@banquette/exception/usage.exception";
-import { ColumnInterface } from "@banquette/ui/table/column.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -48,21 +47,16 @@ export default class ColumnComponent extends Vue {
     @Ref() public parent!: any;
 
     /**
-     * The columns' properties shared with the list.
-     */
-    public column!: ColumnInterface;
-
-    /**
      * @inheritDoc
      */
     public mounted(): void {
         const parent = this.getParent('bt-table');
         if (!parent) {
-            throw new UsageException(`A "bt-column" component must be placed inside a "<bt-table>".`);
+            throw new UsageException(`A "<bt-table-column>" component must be placed inside a "<bt-table>".`);
         }
         this.parent = parent;
         if (this.parent.vm.initializing) {
-            this.column = this.parent.vm.addColumn({
+            this.parent.vm.addColumn({
                 id: this.id,
                 title: this.title,
                 orderingName: this.orderingName,
