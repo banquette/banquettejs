@@ -188,9 +188,12 @@ export default class FormComponent extends Vue {
             this.form.disable();
             this.updateState(Action.Load, Status.Working);
             if (this.loadRemote.isApplicable) {
-                const remoteData: any = await this.loadRemote.send(null, this.loadUrlParams, [FORM_GENERIC_LOAD_REQUESTS_TAG]);
+                const response = this.loadRemote.send(null, this.loadUrlParams, [FORM_GENERIC_LOAD_REQUESTS_TAG]);
+                await response.promise;
                 if (this.modelType !== null) {
-                    this.model = remoteData;
+                    this.model = response.result;
+                } else {
+                    this.loadData = response.result;
                 }
             } else if (this.modelType !== null) {
                 this.model = this.loadData;
@@ -220,7 +223,9 @@ export default class FormComponent extends Vue {
             this.updateState(Action.Load, Status.Success);
         };
         doLoad().catch((reason: any) => {
+            this.updateState(Action.Load, Status.Failure);
             this.setError(ErrorType.Load, reason);
+            console.error(reason);
         }).finally(() => {
             this.form.enable();
         });
@@ -270,6 +275,7 @@ export default class FormComponent extends Vue {
             }
             this.updateState(Action.Persist, Status.Failure);
             this.setError(ErrorType.Persist, reason);
+            console.error(reason);
         }).finally(() => {
             this.form.enable();
         });
