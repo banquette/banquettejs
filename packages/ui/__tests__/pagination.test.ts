@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { PaginationStrategy } from "../src";
+import { PaginationStrategy } from "../src/table/pagination/constant";
 import { PaginationModule } from "../src/table/pagination/pagination.module";
 
 describe('Properties', () => {
@@ -9,7 +9,7 @@ describe('Properties', () => {
     const defaultValues: Partial<Record<keyof PaginationModule, any>> = {
         enabled: true,
         page: 1,
-        highestId: 0,
+        pageId: null,
         itemsPerPage: 20,
         allowedItemsPerPage: [10, 20, 30, 50, 100],
         allowFirstPage: true,
