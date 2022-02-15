@@ -1,10 +1,10 @@
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 export type WatchFunction = () => string|string[];
 export type WatchSource = string|string[]|WatchFunction;
-
 export type WatchOptions = Omit<VueWatchOptions, 'immediate'> & {immediate?: boolean|ImmediateStrategy};
 
 export enum ImmediateStrategy {
@@ -35,16 +35,24 @@ export interface WatchDecoratorOptions {
     options: WatchOptions;
 }
 
+export type PrivateWatchOptions = Omit<WatchOptions, 'immediate'> & {immediate: ImmediateStrategy};
+export type PrivateWatchDecoratorOptions = Omit<WatchDecoratorOptions, 'options'> & {options: PrivateWatchOptions};
+
 /**
  * Make Vue call a method when changes are detected on a property.
  */
 export function Watch(source: WatchSource, options: WatchOptions = {}): Function {
     return (prototype: any, propertyKey: string) => {
         const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
+        if (isUndefined(options.immediate) || options.immediate === false) {
+            options.immediate = ImmediateStrategy.Mounted;
+        } else if (options.immediate === true) {
+            options.immediate = ImmediateStrategy.Sync;
+        }
         data.watch.push({
             target: propertyKey,
             source,
-            options
+            options: options as PrivateWatchOptions
         });
     };
 }

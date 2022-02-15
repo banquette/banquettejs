@@ -33,13 +33,13 @@ import {
     onBeforeUnmount
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE } from "./constants";
-import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
+import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
 import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
 import { PrivateThemeableDecoratorOptions } from "./decorator/themeable.decorator";
-import { WatchOptions, WatchFunction, ImmediateStrategy } from "./decorator/watch.decorator";
+import { WatchFunction, ImmediateStrategy, PrivateWatchOptions } from "./decorator/watch.decorator";
 import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
 import { matchVariant } from "./theme/utils/match-variants";
 import { splitVariantString } from "./theme/utils/split-variant-string";
@@ -90,7 +90,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             rootProps = {};
             for (const propName of Object.keys(props)) {
                 let propRef = toRef(props, propName);
-                if (!isUndefined(data.props[propName]) && data.themeable !== null && propName !== data.themeable.prop) {
+                if (!isUndefined(data.props[propName]) && (data.themeable === null || propName !== data.themeable.prop)) {
                     propRef = ((proxified: Ref, propName: string, validate: GenericCallback|null) => {
                         let lastOriginalValue: any = Symbol('unassigned');
                         let lastModifiedValue: any;
@@ -368,7 +368,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         for (const watchOptions of data.watch) {
             const isArraySource = isArray(watchOptions.source);
             const source: string[]|WatchFunction = isString(watchOptions.source) ? [watchOptions.source] : watchOptions.source;
-            ((_watchData: {target: string, source: WatchFunction|string[], options: WatchOptions, isArraySource: boolean}) => {
+            ((_watchData: {target: string, source: WatchFunction|string[], options: PrivateWatchOptions, isArraySource: boolean}) => {
                 const virtualRefs: Record<string, Ref> = {};
                 let stopHandle: Function|null = null;
                 const applyWatch = (utdDateSources: string[], utdIsArraySource: boolean) => {
@@ -376,13 +376,13 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         stopHandle();
                         // If we already have a watcher the new one must always trigger immediately,
                         // because it can only come from a change in the watch function.
-                        _watchData.options.immediate = true;
+                        _watchData.options.immediate = ImmediateStrategy.Sync;
                     }
                     const realSources: Array<Ref|WatchFunction> = [];
                     const realSourcesParts: string[][] = [];
                     const opts: VueWatchOptions = {
                         ..._watchData.options,
-                        immediate: !isUndefined(_watchData.options.immediate) && _watchData.options.immediate !== false
+                        immediate: true // Always ask Vue to trigger the watch immediately so we can control when the callback is called.
                     };
                     for (const upToDateSource of utdDateSources) {
                         const parts = upToDateSource.split('.');
@@ -416,12 +416,15 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         }
                         realSourcesParts.push(parts);
                     }
-                    let haveTriggeredImmediately = opts.immediate !== true;
-                    let shouldDelayTrigger: boolean = stopHandle === null && opts.immediate === true && _watchData.options.immediate !== ImmediateStrategy.Sync && _watchData.options.immediate !== true;
+                    let haveTriggeredImmediately = false;
+                    let initialCallConsumed = true;
+                    let shouldDelayTrigger: boolean = _watchData.options.immediate !== ImmediateStrategy.Sync;
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
                             const newValues: any[] = [];
                             const oldValues: any[] = [];
+
+                            initialCallConsumed = true;
                             for (let i = 0; i < realSources.length; ++i) {
                                 const realSource = realSources[i];
                                 let realSourceValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
@@ -438,6 +441,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         };
                         if (shouldDelayTrigger) {
                             shouldDelayTrigger = false;
+                            initialCallConsumed = false;
                             if (_watchData.options.immediate === ImmediateStrategy.BeforeMount) {
                                 onBeforeMount(process);
                             } else if (_watchData.options.immediate === ImmediateStrategy.Mounted) {
@@ -445,7 +449,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             } else {
                                 nextTick().then(process);
                             }
-                        } else {
+                        } else if (initialCallConsumed) {
                             process();
                         }
                         haveTriggeredImmediately = true;

@@ -8,7 +8,7 @@ import { PropPrivateOptions } from "./prop.decorator";
 import { ProvideDecoratorOptions } from "./provide.decorator";
 import { ThemeVarDecoratorOptions } from "./theme-var.decorator";
 import { PrivateThemeableDecoratorOptions } from "./themeable.decorator";
-import { WatchDecoratorOptions } from "./watch.decorator";
+import { PrivateWatchDecoratorOptions } from "./watch.decorator";
 
 /**
  * An object containing the data defined by decorators.
@@ -65,7 +65,7 @@ export interface ComponentMetadataInterface {
     /**
      * Getter/setter or functions being watched.
      */
-    watch: WatchDecoratorOptions[];
+    watch: PrivateWatchDecoratorOptions[];
 
     /**
      * Map of property names and composable ctor to import.
