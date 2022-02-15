@@ -421,6 +421,9 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     let shouldDelayTrigger: boolean = _watchData.options.immediate !== ImmediateStrategy.Sync;
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
+                            if (isUndefined(inst.$) || inst.$.isUnmounted) {
+                                return ;
+                            }
                             const newValues: any[] = [];
                             const oldValues: any[] = [];
 
