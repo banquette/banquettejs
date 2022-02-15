@@ -303,7 +303,7 @@ export class PaginationModule {
         if (this.currentState.isLastPage) {
             itemsInPage = this.itemsPerPage - (totalItems % this.itemsPerPage);
         }
-        this.currentState.lastResultCount = this.currentState.firstResultCount + itemsInPage - 1;
+        this.currentState.lastResultCount = Math.min(totalItems, this.currentState.firstResultCount + itemsInPage - 1);
         this.updateNavigationItems();
     }
 
