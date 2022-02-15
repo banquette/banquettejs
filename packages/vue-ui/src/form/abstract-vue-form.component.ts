@@ -95,7 +95,7 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
             this.forceFocus();
         }
         // Special shortcut if in bt-form-generic.
-        const parentFormGeneric: any = this.getParent('bt-form-generic');
+        const parentFormGeneric: any = this.getParent('bt-form');
         if (parentFormGeneric !== null && parentFormGeneric.form instanceof AbstractFormComponent) {
             this.proxy.setFallbackForm(parentFormGeneric.form);
         }
@@ -106,6 +106,7 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
      */
     public beforeUnmount(): void {
         this.vm.dispose();
+        this.eventPipeline.dispose();
         for (const cb of this.unsubscribeCallbacks) {
             cb();
         }
