@@ -7,10 +7,10 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { TeleportDirective } from "../misc/teleport.directive";
 import { FocusChangedEvent } from "./event/focus-changed.event";
 import { TabCreatedEvent } from "./event/tab-created.event";
 import { TabRemovedEvent } from "./event/tab-removed.event";
-import { TeleportTabDirective } from "./teleport-tab.directive";
 import TabComponent from "./tab/tab.component.vue";
 
 @Themeable({
@@ -58,7 +58,7 @@ import TabComponent from "./tab/tab.component.vue";
 @Component({
     name: 'bt-tabs',
     components: [TabComponent],
-    directives: [TeleportTabDirective],
+    directives: [TeleportDirective],
     emits: ['tabCreated', 'tabRemoved', 'focusChanged']
 })
 export default class TabsComponent extends Vue {

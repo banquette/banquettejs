@@ -16,6 +16,16 @@
 <!-- The default slot is rendered without any item while initializing to allow columns (visible or not) to register -->
 <slot v-if="vm.initializing"></slot>
 <div class="bt-table" v-else>
+    <!-- A bt-form is required so component validators can be used -->
+    <bt-form ref="form" v-show="true">
+        <!--
+        -- The slot is defined here so we can have a single form for all columns without wrapping the whole table.
+        --
+        -- In the slot the end-user defines "bt-table-filter" components, their "root" ref is then teleported
+        -- in the corresponding column in the table below using the "bt-teleport" directive.
+        -->
+        <slot name="filters" v-if="filterFormReady" :control="$refs.form.getOrCreateControl"></slot>
+    </bt-form>
     <slot name="before" :vm="vm"></slot>
     <table class="table">
         <slot name="thead" :vm="vm">
@@ -40,8 +50,10 @@
                         </a>
                     </th>
                 </tr>
-                <tr v-if="hasSlot('filters')">
-                    <slot name="filters"></slot>
+                <tr v-if="hasActiveFilters">
+                    <template v-for="column in vm.visibleColumns">
+                        <td v-bt-teleport="{ref: 'root', target: filtersMap[column.id]}"></td>
+                    </template>
                 </tr>
             </thead>
         </slot>
@@ -70,7 +82,7 @@
                         <td :colspan="vm.visibleColumns.length">
                             <slot name="empty" :vm="vm">
                                 <!-- Put a generic icon to empathize the list is empty -->
-                                No results placeholder.
+                                No results.
                             </slot>
                         </td>
                     </tr>

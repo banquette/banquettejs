@@ -1,26 +1,36 @@
 import { Injector } from "@banquette/dependency-injection/injector";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { AbstractFormComponent } from "@banquette/form/abstract-form-component";
+import { FormObject } from "@banquette/form/form-object";
 import { TableEvents } from "@banquette/ui/table/constant";
 import { TableViewModel } from "@banquette/ui/table/table-view-model";
 import { throttle } from "@banquette/utils-misc/throttle";
+import { ltrim } from "@banquette/utils-string/format/ltrim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { IconReport } from "@banquette/vue-material-icons/icon-report";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import FormComponent from "../form/form/component/form.component.vue";
 import { RemoteComposable } from "../misc/composable/remote.composable";
+import { TeleportDirective } from "../misc/teleport.directive";
 import { ProgressCircularComponent } from "../progress/progress-circular";
 import ColumnComponent from "./column/column.component.vue";
 import { FilteringComposable } from "./composable/filtering.composable";
 import { OrderingComposable } from "./composable/ordering.composable";
 import { PaginationComposable } from "./composable/pagination.composable";
+import FilterComponent from "./filter/filter.component.vue";
 import PaginationComponent from "./pagination/pagination.component.vue";
 
 @Component({
     name: 'bt-table',
-    components: [ColumnComponent, PaginationComponent, IconReport, ProgressCircularComponent]
+    components: [ColumnComponent, FilterComponent, PaginationComponent, TeleportDirective, FormComponent, IconReport, ProgressCircularComponent]
 })
 export default class TableComponent extends Vue {
     /**
@@ -44,10 +54,38 @@ export default class TableComponent extends Vue {
     @Import(RemoteComposable, false) public remoteComposable!: RemoteComposable;
 
     /**
+     * A map between columns ids and FilterComponent instances.
+     */
+    @Expose() public filtersMap: Record<string, any /* FilterComponent */> = {};
+
+    /**
+     * Returns `true` if at least one filter is found for the visible columns.
+     */
+    @Computed() public get hasActiveFilters(): boolean {
+        if (isUndefined(this.vm) || !this.filterFormReady) {
+            return false;
+        }
+        for (const column of this.vm.visibleColumns) {
+            if (!isUndefined(this.filtersMap[column.id])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Computed() public get filterFormReady(): boolean {
+        return isObject(this.$refs) && !isUndefined(this.$refs.form);
+    }
+
+    /**
      * The view model the view will use.
      */
     @Expose() public vm!: TableViewModel;
 
+    /**
+     * The form used by the filters.
+     */
+    private filteringForm!: FormObject;
     /**
      * Vue lifecycle method.
      */
@@ -66,11 +104,20 @@ export default class TableComponent extends Vue {
         // It's important to only fetch on mounted to let the columns register.
         // And we let a tick pass to let time for the watchers to trigger.
         this.$nextTick(() => {
+            this.filteringForm = this.watchFilteringForm();
             this.vm.fetch();
+            this.$forceUpdateComputed();
         });
         this.vm.localDispatcher.subscribe(TableEvents.UpdateView, throttle(() => {
             this.$forceUpdate();
         }, 50));
+    }
+
+    /**
+     * Register a FilterComponent instance so it can be rendered by the table.
+     */
+    public addFilter(columnId: string, filter: any /* FilterComponent */): void {
+        this.filtersMap[columnId] = filter;
     }
 
     /**
@@ -84,14 +131,44 @@ export default class TableComponent extends Vue {
      * Watch props.
      */
     @Watch(['id', 'syncUrl', 'saveState'], {immediate: ImmediateStrategy.NextTick})
-    protected syncConfigurationProps(): void {
+    private syncConfigurationProps(): void {
         this.vm.id = this.id;
         this.vm.syncUrl = this.syncUrl;
         this.vm.saveState = this.saveState;
     }
 
     @Watch('items', {immediate: ImmediateStrategy.Mounted})
-    protected onItemsChange(newValue: any[]): void {
+    private onItemsChange(newValue: any[]): void {
         this.vm.items = newValue;
+    }
+
+    /**
+     * Watch changes on the filters form components.
+     */
+    private watchFilteringForm(): FormObject {
+        if (!this.$refs.form || !this.$refs.form.form) {
+            throw new UsageException('Failed to bind filtering form.');
+        }
+        const form = this.$refs.form.form;
+        form.onValueChanged(() => {
+            const map: any = {};
+            form.getByPattern('**:control:valid').forEach((component: AbstractFormComponent) => {
+                const parts = ltrim(component.path, '/').split('/');
+                const lastKey = parts.pop();
+                if (!lastKey || !component.valid) {
+                    return ;
+                }
+                let container: any = map;
+                for (let i = 0; i < parts.length; ++i) {
+                    if (!isObject(container[parts[i]])) {
+                        container[parts[i]] = {};
+                    }
+                    container = container[parts[i]];
+                }
+                container[lastKey] = component.value;
+            });
+            this.vm.filtering.updateFilters(map);
+        });
+        return form;
     }
 }

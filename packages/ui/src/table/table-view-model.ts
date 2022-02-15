@@ -7,6 +7,8 @@ import { Module } from "@banquette/dependency-injection/decorator/module.decorat
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { Exception } from "@banquette/exception/exception";
+import { UsageException } from "@banquette/exception/usage.exception";
+import { HttpResponse } from "@banquette/http/http-response";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { uniqueId } from "@banquette/utils-random/unique-id";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -130,9 +132,9 @@ export class TableViewModel {
     public localDispatcher: EventDispatcher;
 
     /**
-     * Hold the result object of the last fetch.
+     * A map linking http responses to their result object for the table.
      */
-    private lastServerResult!: ServerResult;
+    private serverResultsMap = new WeakMap<HttpResponse<any>, ServerResult>();
 
     public constructor(@Inject(SharedConfiguration) private sharedConfiguration: SharedConfiguration,
                        @Inject(EventDispatcherService) private globalDispatcher: EventDispatcherService,
@@ -238,10 +240,9 @@ export class TableViewModel {
         if (!this.remote.isApplicable) {
             return ;
         }
-        const serverResult = new ServerResult();
-        this.lastServerResult = serverResult;
         const response = this.remote.send();
         response.promise.finally(() => {
+            const serverResult = this.getServerResult(response, false);
             if (!(response.result instanceof ServerResult) || response.result.id !== serverResult.id || response.isCanceled) {
                 return ;
             }
@@ -287,7 +288,8 @@ export class TableViewModel {
     private bindApiListeners(): void {
         const config = this.sharedConfiguration.get<UiConfigurationInterface>(UiConfigurationSymbol);
         this.globalDispatcher.subscribe(ApiEvents.BeforeRequest, (event: ApiRequestEvent) => {
-            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeRequest, new TableRequestEvent(this.lastServerResult, this.createEventState(), event.httpEvent));
+            const serverResult = this.getServerResult(event.httpEvent.request.response);
+            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeRequest, new TableRequestEvent(serverResult, this.createEventState(), event.httpEvent));
             const promise = result.promise;
             if (promise !== null) {
                 return new Promise<void>((resolve) => {
@@ -301,7 +303,8 @@ export class TableViewModel {
 
 
         this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiResponseEvent) => {
-            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeResponse, new TableResponseEvent(this.lastServerResult, this.createEventState(), event.httpEvent));
+            const serverResult = this.getServerResult(event.httpEvent.request.response, false);
+            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeResponse, new TableResponseEvent(serverResult, this.createEventState(), event.httpEvent));
             const promise = result.promise;
             if (promise !== null) {
                 return new Promise<void>((resolve) => {
@@ -333,7 +336,7 @@ export class TableViewModel {
                 itemsPerPage: this.pagination.itemsPerPage,
                 strategy: this.pagination.strategy
             },
-            filters: this.filtering.filters,
+            filters: this.filtering.getFilters(),
             ordering: {
                 columnName: this.ordering.columnName,
                 direction: this.ordering.direction
@@ -346,7 +349,7 @@ export class TableViewModel {
      */
     private updateVisibleItems(): void {
         if (this.remote.isApplicable && (!this.pagination.enabled || this.pagination.isRemotelyPaginated)) {
-            this.visibleItems = this.items;
+            this.visibleItems = ([] as any).concat(this.items);
         } else {
             this.visibleItems = this.pagination.digestFullItemsList(this.items);
         }
@@ -432,5 +435,20 @@ export class TableViewModel {
      */
     private updateView(): void {
         this.localDispatcher.dispatch(TableEvents.UpdateView);
+    }
+
+    /**
+     * Get (or create if necessary) the ServerResult object related to a http request.
+     */
+    private getServerResult(response: HttpResponse<any>, createIfMissing: boolean = true): ServerResult {
+        let serverResult = this.serverResultsMap.get(response);
+        if (isUndefined(serverResult)) {
+            if (!createIfMissing) {
+                throw new UsageException('No ServerResult has been found for this request. This is likely an internal bug.');
+            }
+            serverResult = new ServerResult();
+            this.serverResultsMap.set(response, serverResult);
+        }
+        return serverResult;
     }
 }

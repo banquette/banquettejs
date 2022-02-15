@@ -11,6 +11,10 @@ Injector.Get(SharedConfiguration).register<UiConfigurationInterface>(UiConfigura
             strategyParameterName: 'strategy'
         },
 
+        filtering: {
+            flattenConcatenator: '.'
+        },
+
         apiEventsPriorities: {
             beforeRequest: 1,
             beforeResponse: 1

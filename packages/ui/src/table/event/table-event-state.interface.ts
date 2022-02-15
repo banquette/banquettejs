@@ -1,6 +1,7 @@
 import { HttpMethod } from "@banquette/http/constants";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { Primitive } from "@banquette/utils-type/types";
+import { FiltersInterface } from "../filtering/filters.interface";
 import { OrderingDirection } from "../ordering/constant";
 import { PaginationStrategy } from "../pagination/constant";
 
@@ -22,7 +23,7 @@ export interface TableEventStateInterface {
         itemsPerPage: number;
         strategy: PaginationStrategy;
     },
-    filters: Record<string, Primitive>,
+    filters: FiltersInterface,
     ordering: {
         columnName: string|null;
         direction: OrderingDirection|null;

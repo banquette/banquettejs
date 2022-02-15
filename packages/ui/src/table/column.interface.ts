@@ -3,6 +3,7 @@ import { OrderingStatus } from "./ordering/constant";
 export interface ColumnInterface {
     /**
      * Unique id of the column. Used to reference the column internally, the name will never be visible to the user.
+     * Must be defined to use filtering.
      */
     readonly id: string;
 

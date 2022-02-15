@@ -1,6 +1,7 @@
 import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
+import { flatten } from "@banquette/utils-object/flatten";
 import { UiConfigurationSymbol } from "../../config";
 import { UiConfigurationInterface } from "../../ui-configuration.interface";
 import { TableProcessorTag, TableApiEvents } from "../constant";
@@ -32,6 +33,10 @@ function onBeforeRequest(event: TableRequestEvent) {
     }
     if (event.state.ordering.columnName !== null && event.state.ordering.direction !== null) {
         request.setParam(`order[${event.state.ordering.columnName}]`, event.state.ordering.direction);
+    }
+    const flattened = flatten(event.state.filters, config.filtering.flattenConcatenator);
+    for (const key of Object.keys(flattened)) {
+        request.setParam(key, flattened[key]);
     }
 }
 Injector.Get(EventDispatcherService).subscribe<TableRequestEvent>(
