@@ -1,6 +1,7 @@
 import { UsageException } from "@banquette/exception/usage.exception";
 import { areEqual } from "@banquette/utils-misc/are-equal";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { ltrim } from "@banquette/utils-string/format/ltrim";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
@@ -95,7 +96,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
      * Set a component deep into the form tree, creating missing containers if necessary.
      */
     public setByPath(path: string, component: FormComponentInterface): void {
-        const parts: string[] = path.split('/');
+        const parts: string[] = ltrim(path, '/').split('/');
         if (parts.length === 1) {
             return this.set(parts[0], component);
         }
