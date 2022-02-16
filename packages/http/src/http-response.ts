@@ -5,6 +5,13 @@ import { RequestException } from "./exception/request.exception";
 import { HttpRequest } from "./http-request";
 
 export class HttpResponse<T> {
+    private static MaxId = 0;
+
+    /**
+     * Unique id of the response.
+     */
+    public readonly id =  ++HttpResponse.MaxId;
+
     /**
      * Final URL of the response, may be different from the request url in case of redirects.
      */

@@ -4,7 +4,6 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Writeable, Primitive } from "@banquette/utils-type/types";
 import { AdapterInterface } from "./adapter/adapter.interface";
 import { HttpConfigurationSymbol } from "./config";
@@ -18,6 +17,13 @@ import qs from 'qs';
 let Configuration: HttpConfigurationInterface|null = null;
 
 export class HttpRequest {
+    private static MaxId = 0;
+
+    /**
+     * Unique id of the response.
+     */
+    public readonly id =  ++HttpRequest.MaxId;
+
     /**
      * The adapter in use to make the actual HTTP call.
      */
