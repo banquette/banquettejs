@@ -12,11 +12,13 @@ import { HttpMethod } from "@banquette/http/constants";
 import { HttpResponse } from "@banquette/http/http-response";
 import { FormModelBinder } from "@banquette/model-form/form-model-binder";
 import { TransformService } from "@banquette/model/transformer/transform.service";
+import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
 import { RemoteModule } from "@banquette/ui/misc/module/remote/remote.module";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isObjectLiteral } from "@banquette/utils-type/is-object";
+import { isObjectLiteral, isObject } from "@banquette/utils-type/is-object";
+import { isPojo } from "@banquette/utils-type/is-pojo";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
@@ -196,7 +198,15 @@ export default class FormComponent extends Vue {
                     this.loadData = response.result;
                 }
             } else if (this.modelType !== null) {
-                this.model = this.loadData;
+                let loadData = isObject(this.loadData) ? this.loadData : {};
+                if (isPojo(loadData)) {
+                    const transformResult = this.transformService.transformInverse(loadData, this.modelType, PojoTransformerSymbol);
+                    if (transformResult.promise !== null) {
+                        await transformResult.promise;
+                    }
+                    loadData = transformResult.result;
+                }
+                this.model = loadData;
             }
             if (this.model) {
                 this.binder = Injector.Get(FormModelBinder);
