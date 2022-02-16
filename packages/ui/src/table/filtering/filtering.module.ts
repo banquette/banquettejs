@@ -3,24 +3,42 @@ import { UnsubscribeFunction } from "@banquette/event/type";
 import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
+import { flatten } from "@banquette/utils-object/flatten";
+import { slugify } from "@banquette/utils-string/format/slugify";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isType } from "@banquette/utils-type/is-type";
 import { Primitive } from "@banquette/utils-type/types";
+import { ItemInterface } from "../item.interface";
+import { ModuleInterface } from "../module.interface";
 import { FilteringEvents } from "./constant";
 import { FilteringServerResponseInterface } from "./filtering-server-response.interface";
 import { FiltersInterface } from "./filters.interface";
 
-export class FilteringModule {
+export class FilteringModule implements ModuleInterface {
     /**
      * If `true`, the filters should be visible.
      */
     public enabled: boolean = true;
 
     /**
+     * Defines if the configuration of the module has changed until the last view update.
+     */
+    public changed: boolean = true;
+
+    /**
+     * Define if the filtering is done on the server.
+     * Possible values are:
+     *   - `true`: the filtering is done on the server
+     *   - `false`: the filtering is done locally
+     *   - 'auto': the filtering is done on the server if the items are fetched remotely
+     */
+    public remote: boolean|'auto' = 'auto';
+
+    /**
      * Check if there is at least one active filter.
      */
-    public get isFiltered(): boolean {
-        return Object.keys(this.filters).length > 0;
+    public get isApplicable(): boolean {
+        return Object.keys(this.getActiveFilters()).length > 0;
     }
 
     /**
@@ -40,9 +58,33 @@ export class FilteringModule {
     private eventDispatcher = new EventDispatcher();
 
     /**
+     * Filter a list of items using the internal configuration.
+     */
+    public apply(items: ItemInterface[]): ItemInterface[] {
+        const activeFilters = flatten(this.getActiveFilters(), '.');
+        for (const valuePath of Object.keys(activeFilters)) {
+            items = items.filter((item: ItemInterface) => {
+                const parts = valuePath.split('.');
+                let itemValue: any = item.item;
+                for (const part of parts) {
+                    if (isObject(itemValue)) {
+                        itemValue = itemValue[part];
+                    } else {
+                        itemValue = undefined;
+                        break ;
+                    }
+                }
+                return this.matchFilter(activeFilters[valuePath], itemValue);
+            });
+        }
+        this.changed = false;
+        return items;
+    }
+
+    /**
      * Get all active filters.
      */
-    public getFilters(): FiltersInterface {
+    public getActiveFilters(): FiltersInterface {
         const cloneAndFilter = (input: FiltersInterface): FiltersInterface|null => {
             const output: FiltersInterface = {};
             for (const key of Object.keys(input)) {
@@ -98,6 +140,7 @@ export class FilteringModule {
      */
     public digestServerResponse(response: FilteringServerResponseInterface): void {
         Object.assign(this.filters, response);
+        this.changed = false;
         this.eventDispatcher.dispatch(FilteringEvents.Invalidated);
     }
 
@@ -112,10 +155,19 @@ export class FilteringModule {
      * Trigger a `FilteringEvents.Changed` event.
      */
     private notifyChange(): void {
-        const exported = this.getFilters();
+        const exported = this.getActiveFilters();
         if (!areObjectsEqual(exported, this.lastNotifiedFilters)) {
+            this.changed = true;
             this.lastNotifiedFilters = exported;
             this.eventDispatcher.dispatch(FilteringEvents.Changed);
         }
+    }
+
+    /**
+     * Test if a value matches a filter.
+     */
+    private matchFilter(filterValue: Primitive, itemValue: any): boolean {
+        // TODO: Make a real comparison. The following is just a placeholder for now.
+        return slugify(String(itemValue)).includes(slugify(String(filterValue)));
     }
 }

@@ -1,10 +1,27 @@
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
 import { UnsubscribeFunction } from "@banquette/event/type";
+import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ItemInterface } from "../item.interface";
+import { ModuleInterface } from "../module.interface";
 import { OrderingEvents, OrderingDirection, OrderingCycleMap } from "./constant";
 import { OrderingServerResponseInterface } from "./ordering-server-response.interface";
 
-export class OrderingModule {
+export class OrderingModule implements ModuleInterface {
+    /**
+     * Define if the ordering is done on the server.
+     * Possible values are:
+     *   - `true`: the ordering is done on the server
+     *   - `false`: the ordering is done locally
+     *   - 'auto': the ordering is done on the server if the items are fetched remotely
+     */
+    public remote: boolean|'auto' = 'auto';
+
+    /**
+     * Defines if the configuration of the module has changed until the last view update.
+     */
+    public changed: boolean = true;
+
     /**
      * Define the id of the column to use for ordering.
      */
@@ -17,7 +34,7 @@ export class OrderingModule {
             return ;
         }
         this._columnName = columnName;
-        this.eventDispatcher.dispatch(OrderingEvents.Changed);
+        this.notifyChange();
     }
 
     /**
@@ -32,7 +49,14 @@ export class OrderingModule {
             return ;
         }
         this._direction = direction;
-        this.eventDispatcher.dispatch(OrderingEvents.Changed);
+        this.notifyChange();
+    }
+
+    /**
+     * Returns `true` if there is an active ordering rule.
+     */
+    public get isApplicable(): boolean {
+        return this._columnName !== null && this._direction !== null;
     }
 
     /**
@@ -41,12 +65,36 @@ export class OrderingModule {
     private eventDispatcher = new EventDispatcher();
 
     /**
+     * Order a list of items using the internal configuration.
+     */
+    public apply(items: ItemInterface[]): ItemInterface[] {
+        if (this._columnName === null || this._direction === null || !items.length) {
+            return items;
+        }
+        items.sort((a: ItemInterface, b: ItemInterface) => {
+            let av = a.item[this._columnName as string];
+            let bv = b.item[this._columnName as string];
+            if (this._direction === OrderingDirection.Descending) {
+                const cv = av;
+                av = bv;
+                bv = cv;
+            }
+            if (isString(av) || isString(bv)) {
+                return String(av).localeCompare(String(bv), 'en', {ignorePunctuation: true});
+            }
+            return av - bv ? 1 : -1;
+        });
+        this.changed = false;
+        return items;
+    }
+
+    /**
      * Make a column the active one for ordering and cycle through the possible status.
      */
     public toggle(columnName: string): void {
         this._columnName = columnName;
         this._direction = OrderingCycleMap[(OrderingCycleMap.indexOf(this.direction) + 1) % OrderingCycleMap.length];
-        this.eventDispatcher.dispatch(OrderingEvents.Changed);
+        this.notifyChange();
     }
 
     /**
@@ -60,6 +108,7 @@ export class OrderingModule {
             this._direction = response.direction;
         }
         this.eventDispatcher.dispatch(OrderingEvents.Invalidated);
+        this.changed = false;
     }
 
     /**
@@ -74,5 +123,13 @@ export class OrderingModule {
      */
     public onInvalidate(cb: () => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(OrderingEvents.Invalidated, cb);
+    }
+
+    /**
+     * Trigger a `OrderingEvents.Changed` event.
+     */
+    private notifyChange(): void {
+        this.changed = true;
+        this.eventDispatcher.dispatch(OrderingEvents.Changed);
     }
 }

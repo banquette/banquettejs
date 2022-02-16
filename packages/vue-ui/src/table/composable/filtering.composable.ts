@@ -10,14 +10,16 @@ export class FilteringComposable {
      * @see FilteringModule
      */
     @Prop({type: Object, default: {}}) public filters!: Record<string, Primitive>;
+    @Prop({type: [Boolean, String], default: 'auto'}) public remote!: boolean|'auto';
 
     /**
      * The actual module instance.
      */
     public module!: FilteringModule;
 
-    @Watch('filters', {immediate: ImmediateStrategy.NextTick})
+    @Watch(['filters', 'remote'], {immediate: ImmediateStrategy.NextTick})
     protected syncPaginationConfigurationProps(): void {
-        this.module.filters = this.filters;
+        this.module.updateFilters(this.filters);
+        this.module.remote = this.remote;
     }
 }

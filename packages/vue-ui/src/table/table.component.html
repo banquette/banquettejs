@@ -17,7 +17,7 @@
 <slot v-if="vm.initializing"></slot>
 <div class="bt-table" v-else>
     <!-- A bt-form is required so component validators can be used -->
-    <bt-form ref="form" v-show="true">
+    <bt-form ref="form" v-show="false">
         <!--
         -- The slot is defined here so we can have a single form for all columns without wrapping the whole table.
         --

@@ -11,15 +11,17 @@ export class OrderingComposable {
      */
     @Prop({type: String, default: null}) public name!: string|null;
     @Prop({type: String, default: null}) public direction!: OrderingDirection|null;
+    @Prop({type: [Boolean, String], default: 'auto'}) public remote!: boolean|'auto';
 
     /**
      * The actual module instance.
      */
     public module!: OrderingModule;
 
-    @Watch(['name', 'direction'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['name', 'direction', 'remote'], {immediate: ImmediateStrategy.NextTick})
     protected syncPaginationConfigurationProps(): void {
         this.module.columnName = this.name;
         this.module.direction = this.direction;
+        this.module.remote = this.remote;
     }
 }

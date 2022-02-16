@@ -4,24 +4,34 @@ import { UnsubscribeFunction } from "@banquette/event/type";
 import { ensureInteger } from "@banquette/utils-type/ensure-integer";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { isValidNumber } from "@banquette/utils-type/is-valid-number";
-import { Pojo, Primitive, Writeable } from "@banquette/utils-type/types";
+import { Pojo, Primitive } from "@banquette/utils-type/types";
 import { ItemInterface } from "../item.interface";
+import { ModuleInterface } from "../module.interface";
 import { PaginationEvents, PaginationPosition, PaginationStrategy } from "./constant";
 import { NavigationItemInterface } from "./navigation-item.interface";
 import { PaginatedServerResponseInterface } from "./paginated-server-response.interface";
 import { PaginationStateInterface } from "./pagination-state.interface";
 
 @Module()
-export class PaginationModule {
+export class PaginationModule implements ModuleInterface {
     /**
      * `true` to activate the pagination.
      */
     public enabled: boolean = true;
 
     /**
-     * If `true`, the pagination is controlled by the server.
+     * Defines if the configuration of the module has changed until the last view update.
      */
-    public readonly isRemotelyPaginated: boolean = false;
+    public changed: boolean = true;
+
+    /**
+     * Define if the pagination is done on the server.
+     * Possible values are:
+     *   - `true`: the pagination is done on the server
+     *   - `false`: the pagination is done locally
+     *   - 'auto': the pagination is done on the server if the items are fetched remotely
+     */
+    public remote: boolean|'auto' = 'auto';
 
     /**
      * Defines where the pagination should appear.
@@ -49,7 +59,7 @@ export class PaginationModule {
             this._page = value;
             // So the UI is reactive to the page change.
             this.currentState.page = value;
-            this.eventDispatcher.dispatch(PaginationEvents.Changed);
+            this.notifyChange();
         }
     }
 
@@ -67,7 +77,7 @@ export class PaginationModule {
     public set pageId(value: Primitive) {
         if (this.strategy === PaginationStrategy.Id && this._pageId !== value) {
             this._pageId = value;
-            this.eventDispatcher.dispatch(PaginationEvents.Changed);
+            this.notifyChange();
         }
     }
 
@@ -89,7 +99,7 @@ export class PaginationModule {
             return selected;
         }, this.allowedItemsPerPage[0]);
         if (this._itemsPerPage !== lastValue) {
-            this.eventDispatcher.dispatch(PaginationEvents.Changed);
+            this.notifyChange();
         }
     }
 
@@ -123,7 +133,7 @@ export class PaginationModule {
     public set strategy(value: PaginationStrategy) {
         if (this._strategy !== value) {
             this._strategy = value;
-            this.eventDispatcher.dispatch(PaginationEvents.Changed);
+            this.notifyChange();
         }
     }
 
@@ -251,7 +261,7 @@ export class PaginationModule {
         // Invalidate the config so external user will update.
         // That's in case a value has been modified from the server's response.
         this.eventDispatcher.dispatch(PaginationEvents.Invalidated);
-        (this as Writeable<PaginationModule>).isRemotelyPaginated = true;
+        this.changed = false;
     }
 
     /**
@@ -260,7 +270,7 @@ export class PaginationModule {
      */
     public digestFullItemsList(items: ItemInterface[]): ItemInterface[] {
         this.updateCurrentState(items.length);
-        (this as Writeable<PaginationModule>).isRemotelyPaginated = false;
+        this.changed = false;
         return this.sliceItemsForCurrentPage(items);
     }
 
@@ -327,5 +337,13 @@ export class PaginationModule {
             };
             this.currentState.navItems.push(item);
         }
+    }
+
+    /**
+     * Trigger a `PaginationEvents.Changed` event.
+     */
+    private notifyChange(): void {
+        this.changed = true;
+        this.eventDispatcher.dispatch(PaginationEvents.Changed);
     }
 }

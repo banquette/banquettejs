@@ -49,7 +49,7 @@ export default class TableComponent extends Vue {
      * Composables.
      */
     @Import(PaginationComposable, 'pagination') public paginationComposable!: PaginationComposable;
-    @Import(FilteringComposable, false) public filteringComposable!: FilteringComposable;
+    @Import(FilteringComposable, {remote: 'filtering:remote', filters: 'filters'}) public filteringComposable!: FilteringComposable;
     @Import(OrderingComposable, 'ordering') public orderingComposable!: OrderingComposable;
     @Import(RemoteComposable, false) public remoteComposable!: RemoteComposable;
 
@@ -104,7 +104,9 @@ export default class TableComponent extends Vue {
         // It's important to only fetch on mounted to let the columns register.
         // And we let a tick pass to let time for the watchers to trigger.
         this.$nextTick(() => {
-            this.filteringForm = this.watchFilteringForm();
+            this.$nextTick(() => {
+                this.filteringForm = this.watchFilteringForm();
+            });
             this.vm.fetch();
             this.$forceUpdateComputed();
         });
@@ -150,6 +152,8 @@ export default class TableComponent extends Vue {
             throw new UsageException('Failed to bind filtering form.');
         }
         const form = this.$refs.form.form;
+        form.setDefaultValue(this.vm.filtering.getActiveFilters());
+        form.reset();
         form.onValueChanged(() => {
             const map: any = {};
             form.getByPattern('**:control:valid').forEach((component: AbstractFormComponent) => {

@@ -27,6 +27,7 @@ import { TableRequestEvent } from "./event/table-request.event";
 import { TableResponseEvent } from "./event/table-response.event";
 import { FilteringModule } from "./filtering/filtering.module";
 import { ItemInterface } from "./item.interface";
+import { ModuleInterface } from "./module.interface";
 import { OrderingModule } from "./ordering/ordering.module";
 import { PaginationModule } from "./pagination/pagination.module";
 import { ServerResult } from "./server-result";
@@ -34,6 +35,7 @@ import { ServerResult } from "./server-result";
 // Auto-register built-in listener
 import './listener/request.listener';
 import './listener/response.listener';
+import './listener/response-transformer.listener';
 
 @Module()
 export class TableViewModel {
@@ -134,7 +136,7 @@ export class TableViewModel {
     /**
      * A map linking http responses to their result object for the table.
      */
-    private serverResultsMap = new WeakMap<HttpResponse<any>, ServerResult>();
+    private serverResultsMap: Record<number, ServerResult> = {};
 
     public constructor(@Inject(SharedConfiguration) private sharedConfiguration: SharedConfiguration,
                        @Inject(EventDispatcherService) private globalDispatcher: EventDispatcherService,
@@ -241,24 +243,22 @@ export class TableViewModel {
             return ;
         }
         const response = this.remote.send();
+        this.createServerResult(response);
         response.promise.finally(() => {
-            const serverResult = this.getServerResult(response, false);
-            if (!(response.result instanceof ServerResult) || response.result.id !== serverResult.id || response.isCanceled) {
+            const serverResult = this.getServerResult(response);
+            if (serverResult === null || !(response.result instanceof ServerResult) || response.result.id !== serverResult.id || response.isCanceled) {
                 return ;
+            }
+            if (!isNullOrUndefined(serverResult.ordering)) {
+                this.ordering.digestServerResponse(serverResult.ordering);
+            }
+            if (!isNullOrUndefined(serverResult.filtering)) {
+                this.filtering.digestServerResponse(serverResult.filtering);
             }
             if (!isNullOrUndefined(serverResult.pagination)) {
                 this.pagination.digestServerResponse(serverResult.pagination);
             }
             this.items = response.result.items;
-            if (!isNullOrUndefined(serverResult.filtering)) {
-                this.filtering.digestServerResponse(serverResult.filtering);
-            }
-            if (!isNullOrUndefined(serverResult.ordering)) {
-                this.ordering.digestServerResponse(serverResult.ordering);
-            }
-            this.updateVisibleItems();
-            this.status = Status.Ready;
-            this.updateView();
         });
         this.status = Status.Fetching;
         this.updateView();
@@ -289,6 +289,9 @@ export class TableViewModel {
         const config = this.sharedConfiguration.get<UiConfigurationInterface>(UiConfigurationSymbol);
         this.globalDispatcher.subscribe(ApiEvents.BeforeRequest, (event: ApiRequestEvent) => {
             const serverResult = this.getServerResult(event.httpEvent.request.response);
+            if (serverResult === null) {
+                return ;
+            }
             const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeRequest, new TableRequestEvent(serverResult, this.createEventState(), event.httpEvent));
             const promise = result.promise;
             if (promise !== null) {
@@ -303,7 +306,10 @@ export class TableViewModel {
 
 
         this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiResponseEvent) => {
-            const serverResult = this.getServerResult(event.httpEvent.request.response, false);
+            const serverResult = this.getServerResult(event.httpEvent.request.response);
+            if (serverResult === null) {
+                return ;
+            }
             const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeResponse, new TableResponseEvent(serverResult, this.createEventState(), event.httpEvent));
             const promise = result.promise;
             if (promise !== null) {
@@ -336,7 +342,7 @@ export class TableViewModel {
                 itemsPerPage: this.pagination.itemsPerPage,
                 strategy: this.pagination.strategy
             },
-            filters: this.filtering.getFilters(),
+            filters: this.filtering.getActiveFilters(),
             ordering: {
                 columnName: this.ordering.columnName,
                 direction: this.ordering.direction
@@ -348,11 +354,29 @@ export class TableViewModel {
      * Update the list of visible items.
      */
     private updateVisibleItems(): void {
-        if (this.remote.isApplicable && (!this.pagination.enabled || this.pagination.isRemotelyPaginated)) {
-            this.visibleItems = ([] as any).concat(this.items);
+        let items = ([] as ItemInterface[]).concat(this.items);
+
+        // Ordering
+        if (this.ordering.isApplicable && !this.isModuleRemoteDependent(this.ordering)) {
+            items = this.ordering.apply(items);
         } else {
-            this.visibleItems = this.pagination.digestFullItemsList(this.items);
+            this.ordering.changed = false;
         }
+
+        // Filtering
+        if (this.filtering.isApplicable && !this.isModuleRemoteDependent(this.filtering)) {
+            items = this.filtering.apply(items);
+        } else {
+            this.filtering.changed = false;
+        }
+
+        // Pagination
+        if (this.pagination.enabled && !this.isModuleRemoteDependent(this.pagination)) {
+            items = this.pagination.digestFullItemsList(items);
+        } else {
+            this.pagination.changed = false;
+        }
+        this.visibleItems = items;
         this.updateView();
     }
 
@@ -360,11 +384,25 @@ export class TableViewModel {
      * Called when the configuration of a module changes.
      */
     private onModuleConfigurationChange(): void {
-        if (this.remote.isApplicable && this.pagination.isRemotelyPaginated) {
+        if (!this.ready) {
+            return ;
+        }
+        if (this.remote.isApplicable && (
+            (this.pagination.changed && this.isModuleRemoteDependent(this.pagination)) ||
+            (this.filtering.changed && this.isModuleRemoteDependent(this.filtering)) ||
+            (this.ordering.changed && this.isModuleRemoteDependent(this.ordering))
+        )) {
             this.temperedFetch();
         } else {
             this.updateVisibleItems();
         }
+    }
+
+    /**
+     * Test if a module depends on an ajax request to work.
+     */
+    private isModuleRemoteDependent(module: ModuleInterface): boolean {
+        return module.remote === true || (module.remote === 'auto' && this.remote.isApplicable);
     }
 
     /**
@@ -438,17 +476,16 @@ export class TableViewModel {
     }
 
     /**
-     * Get (or create if necessary) the ServerResult object related to a http request.
+     * Create a the ServerResult for an Http response.
      */
-    private getServerResult(response: HttpResponse<any>, createIfMissing: boolean = true): ServerResult {
-        let serverResult = this.serverResultsMap.get(response);
-        if (isUndefined(serverResult)) {
-            if (!createIfMissing) {
-                throw new UsageException('No ServerResult has been found for this request. This is likely an internal bug.');
-            }
-            serverResult = new ServerResult();
-            this.serverResultsMap.set(response, serverResult);
-        }
-        return serverResult;
+    private createServerResult(response: HttpResponse<any>): void {
+        this.serverResultsMap[response.id] = new ServerResult();
+    }
+
+    /**
+     * Try to get the ServerResult corresponding to an Http response.
+     */
+    private getServerResult(response: HttpResponse<any>): ServerResult|null {
+        return this.serverResultsMap[response.id] || null;
     }
 }

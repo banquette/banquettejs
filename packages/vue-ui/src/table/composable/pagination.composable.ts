@@ -22,6 +22,7 @@ export class PaginationComposable {
     @Prop({type: String, default: PaginationPosition.Top}) public position!: PaginationPosition;
     @Prop({type: Boolean, default: true}) public summary!: boolean;
     @Prop({type: Number, default: 3}) public delta!: number;
+    @Prop({type: [Boolean, String], default: 'auto'}) public remote!: boolean|'auto';
 
     /**
      * The actual module instance.
@@ -40,7 +41,8 @@ export class PaginationComposable {
         'strategy',
         'position',
         'summary',
-        'delta'
+        'delta',
+        'remote'
     ], {immediate: ImmediateStrategy.NextTick})
     protected syncPaginationConfigurationProps(): void {
         this.module.page = this.page;
@@ -55,5 +57,6 @@ export class PaginationComposable {
         this.module.position = this.position;
         this.module.summary = this.summary;
         this.module.delta = this.delta;
+        this.module.remote = this.remote;
     }
 }
