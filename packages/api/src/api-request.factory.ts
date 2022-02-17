@@ -10,6 +10,8 @@ export interface ApiRequestConfig {
     method?: HttpMethod;
     params?: Record<string, UrlParameterInterface>;
     payload?: any;
+    payloadType?: symbol;
+    responseType?: symbol;
     headers?: any;
     timeout?: number|null;
     retry?: number|null;
@@ -33,6 +35,8 @@ export class ApiRequestFactory {
             config.method,
             config.params,
             config.payload,
+            config.payloadType,
+            config.responseType,
             config.headers,
             config.timeout,
             config.retry,

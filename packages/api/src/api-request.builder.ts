@@ -34,6 +34,8 @@ export class ApiRequestBuilder extends AbstractRequestBuilder<ApiRequest> {
             url: this._url,
             params: this._params,
             payload: this._payload,
+            payloadType: this._payloadType,
+            responseType: this._responseType,
             headers: this._headers,
             timeout: this._timeout,
             retry: this._retry,

@@ -23,6 +23,8 @@ export class ApiRequest {
      * @param method            Http method.
      * @param params            Url parameters.
      * @param payload           Body of the request.
+     * @param payloadType       Format of the payload.
+     * @param responseType      Format of the response.
      * @param headers           Headers to send with the request.
      * @param timeout           Maximum duration of the request (in milliseconds).
      * @param retry             Maximum number of tries allowed for the request.
@@ -40,6 +42,8 @@ export class ApiRequest {
                        public method?: HttpMethod,
                        public params?: Record<string, UrlParameterInterface>,
                        public payload?: any,
+                       public payloadType?: symbol,
+                       public responseType?: symbol,
                        public headers?: HeadersBag|Record<string, Primitive>,
                        public timeout?: number|null,
                        public retry?: number|null,
@@ -55,7 +59,6 @@ export class ApiRequest {
      * Export overridable endpoints' parameters.
      */
     public toEndpointOverride(): ApiEndpointOverride {
-
         return new ApiEndpointOverride(
             this.method,
             this.paramsToPrimitives(),
@@ -66,6 +69,8 @@ export class ApiRequest {
             this.priority,
             this.withCredentials,
             this.mimeType,
+            this.payloadType,
+            this.responseType,
             this.tags,
             this.extras
         );
