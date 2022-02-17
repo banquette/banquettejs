@@ -2,7 +2,7 @@ import { And } from "@banquette/validation/type/and";
 import { Valid } from "@banquette/validation/type/valid";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { ContainerValidatorComponent } from "../../container-validator.component";
+import { ContainerValidatorComponent } from "./container-validator.component";
 
 @Component({name: 'bt-validate-and', template: `<slot></slot>`})
 export default class ValidateAndComponent extends ContainerValidatorComponent {

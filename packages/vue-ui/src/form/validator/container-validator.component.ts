@@ -1,5 +1,5 @@
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { ValidatorComponent } from "./component/validator/validator.component";
+import { ValidatorComponent } from "./validator.component";
 import { ContainerValidatorInterface } from "./container-validator.interface";
 
 /**

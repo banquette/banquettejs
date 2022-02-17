@@ -3,7 +3,7 @@ import { Foreach } from "@banquette/validation/type/foreach";
 import { Valid } from "@banquette/validation/type/valid";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { ContainerValidatorComponent } from "../../container-validator.component";
+import { ContainerValidatorComponent } from "./container-validator.component";
 
 @Component({name: 'bt-validate-foreach', template: `<slot></slot>`})
 export default class ValidateForeachComponent extends ContainerValidatorComponent {
