@@ -24,8 +24,10 @@ export interface ComponentDecoratorOptions {
      *
      * Or`false` to explicitly ask for the component to have no template.
      * In which case a render function returning nothing will be added.
+     *
+     * If the string a the exact value "inherit", the template of the parent component will be used instead.
      */
-    template?: string|false;
+    template?: string|'inherit'|false;
 
     /**
      * Components / directives dependencies.

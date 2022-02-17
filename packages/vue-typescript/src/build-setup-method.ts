@@ -50,6 +50,7 @@ import { anyToTsInst } from "./utils/converters";
 import { defineGetter } from "./utils/define-getter";
 import { defineRefProxy } from "./utils/define-ref-proxy";
 import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-metadata";
+import { getPropertyDescriptor } from "./utils/get-property-descriptor";
 import { isDecoratedComponentConstructor } from "./utils/guards";
 import { instantiate } from "./utils/instantiate";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
@@ -331,7 +332,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             if (isFunction(inst[computedName])) {
                 c = createUpdatableComputed(proxy(inst[computedName], inst), computedOptions, computedName);
             } else if (instKeys.indexOf(computedName) > -1) {
-                const descriptor = Object.getOwnPropertyDescriptor(ctor.prototype, computedName);
+                const descriptor = getPropertyDescriptor(ctor, computedName);
                 if (isUndefined(descriptor) || !isFunction(descriptor.get)) {
                     console.warn(`Unable to create a computed for "${computedName}", no getter found.`);
                     continue ;
@@ -589,6 +590,9 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 writable: false,
                 value: inst
             });
+            onBeforeMount(incrementActiveComponentsCount);
+            onBeforeUnmount(decrementActiveComponentsCount);
+
             if (data.renderMethod !== null) {
                 const render = inst[data.renderMethod];
                 inst[data.renderMethod] = proxy(() => {
@@ -596,8 +600,6 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 }, inst);
                 return inst[data.renderMethod];
             }
-            onBeforeMount(incrementActiveComponentsCount);
-            onBeforeUnmount(decrementActiveComponentsCount);
         }
         return output;
     };

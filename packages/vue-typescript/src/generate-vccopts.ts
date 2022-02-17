@@ -49,9 +49,20 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
 
     // Merge parent data
     let curCtor: Constructor = ctor;
+    let isTemplateInherited = data.component.template === 'inherit';
     while ((curCtor = Object.getPrototypeOf(curCtor)) !== null) {
         const parentOpts = !isUndefined(curCtor.prototype) ? curCtor.prototype[DECORATORS_METADATA] : null;
         if (parentOpts !== null && isObject(parentOpts)) {
+            if (!isUndefined(parentOpts.component) && isFunction(parentOpts.component.factory) && !isFunction(data.component.factory)) {
+                throw new UsageException(
+                    `You must define a factory function for "${data.component.name}" because it inherits ` +
+                    `from "${parentOpts.component.name}" which defines one. `
+                );
+            }
+            if (isTemplateInherited && parentOpts.component && isString(parentOpts.component.template)) {
+                data.component.template = parentOpts.component.template;
+                isTemplateInherited = false;
+            }
             data = extend({}, [parentOpts, data], true);
         }
     }
@@ -212,7 +223,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     // Template
     if (data.component.template === false) {
         options.render = () => false;
-    } else if (isString(data.component.template)) {
+    } else if (isString(data.component.template) && data.component.template !== 'inherit') {
         options.template = data.component.template;
     }
     return options as VccOpts;

@@ -303,20 +303,44 @@ describe('@Import()', () => {
 });
 
 describe('Component inheritance', () => {
-    @Component({
-        name: 'bar',
-        template: '<div></div>'
-    })
-    class Bar {
+    test('Basic inheritance', () => {
+        @Component({
+            name: 'bar',
+            template: '<div></div>'
+        })
+        class Bar { }
 
-    }
-    @Component({
-        name: 'foo',
-        template: `<div id="foo">{{ foo }}</div>`
-    })
-    class Foo extends c(Bar) {
-        @Expose() public foo: string = 'foo';
-    }
-    const wrapper = mount(getMountOptions(Foo), {});
-    expect(wrapper.find('#foo').text()).toEqual('foo');
+        @Component({
+            name: 'foo',
+            template: `
+                <div id="foo">{{ foo }}</div>`
+        })
+        class Foo extends c(Bar) {
+            @Expose() public foo: string = 'foo';
+        }
+
+        const wrapper = mount(getMountOptions(Foo), {});
+        expect(wrapper.find('#foo').text()).toEqual('foo');
+    });
+
+    test('String template inheritance', () => {
+        @Component({
+            name: 'bar',
+            template: '<div id="foo">{{ foo }}</div>'
+        })
+        class Bar {
+            @Expose() public foo: string = 'foo';
+        }
+
+        @Component({
+            name: 'foo',
+            template: 'inherit'
+        })
+        class Foo extends c(Bar) {
+
+        }
+        const wrapper = mount(getMountOptions(Foo), {});
+        const el = wrapper.find('#foo');
+        expect(el.text()).toEqual('foo');
+    });
 });
