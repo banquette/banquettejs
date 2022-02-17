@@ -50,9 +50,24 @@ export class RemoteModule {
     public urlParams!: Record<string, Primitive>;
 
     /**
+     * Set the expected format of the payload.
+     */
+    public payloadType?: symbol;
+
+    /**
+     * Set the expected format of the response.
+     */
+    public responseType?: symbol;
+
+    /**
+     * If `false`, cancel any running request when `send()` is called.
+     */
+    public allowMultiple: boolean = false;
+
+    /**
      * Last response generated from the send().
      */
-    public response: HttpResponse<any>|null = null;
+    private response: HttpResponse<any>|null = null;
 
     /**
      * Check if the module is usable in the current configuration.
@@ -76,7 +91,7 @@ export class RemoteModule {
      * Call the server using the current configuration and process the results.
      */
     public send<T = any>(payload?: any, urlParams: Record<string, Primitive> = {}, tags: symbol[] = []): HttpResponse<T> {
-        if (this.response !== null && this.response.isPending) {
+        if (this.response !== null && this.response.isPending && !this.allowMultiple) {
             this.response.request.cancel();
         }
         this.response = this.api.send(this.api.build()
@@ -85,7 +100,8 @@ export class RemoteModule {
             .model(this.model)
             .method(this.method)
             .params(extend({}, [this.urlParams, urlParams]))
-            .payload(payload)
+            .payload(payload, this.payloadType)
+            .responseType(this.responseType)
             .tags(tags)
             .getRequest()
         );
