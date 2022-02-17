@@ -8,7 +8,7 @@ import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHan
 import { COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { VccOpts } from "./type";
-import { vccOptsToMetadata, maybeResolveTsInst, anyToComponentMetadata } from "./utils/converters";
+import { vccOptsToMetadata, maybeResolveTsInst, anyToComponentMetadata, anyToComponentCtor } from "./utils/converters";
 import { isInstanceOf } from "./utils/is-instance-of";
 
 /**
@@ -62,10 +62,16 @@ export abstract class Vue implements ComponentPublicInstance {
                     return $parent as InstanceType<T>;
                 }
             } else {
-                const metadata = anyToComponentMetadata($parent);
-                if (metadata && metadata.component.name === component) {
-                    return resolved as InstanceType<T>;
-                }
+                let prototype = anyToComponentCtor($parent);
+                do {
+                    // Loop over the prototype chain to get the metadata of all parents.
+                    // The component may be a parent class.
+                    const metadata = anyToComponentMetadata(prototype);
+                    if (metadata && metadata.component.name === component) {
+                        return resolved as InstanceType<T>;
+                    }
+                    prototype = Object.getPrototypeOf(prototype);
+                } while (prototype);
             }
             $parent = $parent.$parent;
         }
