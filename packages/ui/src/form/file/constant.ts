@@ -3,7 +3,12 @@
  */
 export enum UploadStatus {
     Uploading,
-    Succeed,
+    Succeeded,
     Failed,
     Paused
 }
+
+/**
+ * Tag added to the upload requests.
+ */
+export const FileUploadTag = Symbol('file-upload');

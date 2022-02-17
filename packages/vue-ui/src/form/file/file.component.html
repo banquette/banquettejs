@@ -1,7 +1,7 @@
 <div
     class="bt-form-file"
     :data-is-multiple="vm.multiple ? '' : null"
-    :data-has-value="vm.value ? '' : null"
+    :data-has-value="vm.files.length > 0 ? '' : null"
     :data-has-placeholder="vm.placeholder ? '' : null"
     :data-has-help="hasSlot('help') ? '' : null"
     :data-has-focus="vm.focused ? '' : null"
@@ -21,9 +21,30 @@
                 data-file-input
                 @change="vm.onFileSelectionChange"
             />
-            <bt-button @click="$refs.input.click()"><slot name="button-text">Choose file</slot></bt-button>
-            <bt-progress-circular v-if="vm.busy || vm.validating"></bt-progress-circular>
-
+            <div data-control>
+                <div class="browse-button" @click="$refs.input.click()">
+                    <slot name="button-text">Choose file</slot>
+                </div>
+                <div v-for="uploadFile in vm.files" class="file-item">
+                    <icon-insert-drive-file></icon-insert-drive-file>
+                    <div class="file-details">
+                        <div class="file-name">{{ uploadFile.file.name }}</div>
+                        <bt-progress-horizontal :progress="uploadFile.progress "></bt-progress-horizontal>
+                        <div class="file-size">{{ uploadFile.uploadedSizeText }} / {{ uploadFile.totalSizeText }} ({{ uploadFile.progress }}%)</div>
+                    </div>
+                    <div class="buttons">
+                        <bt-button @click="vm.start(uploadFile)" v-if="uploadFile.paused || uploadFile.failed">
+                            <icon-file-upload></icon-file-upload>
+                        </bt-button>
+                        <bt-button @click="vm.pause(uploadFile)" v-if="uploadFile.uploading">
+                            <icon-stop></icon-stop>
+                        </bt-button>
+                        <bt-button @click="vm.cancel(uploadFile)">
+                            <icon-close></icon-close>
+                        </bt-button>
+                    </div>
+                </div>
+            </div>
             <slot name="errors">
                 <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
                     <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
