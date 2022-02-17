@@ -141,7 +141,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Set the expected format of the response.
      */
-    public responseType(type: symbol): this {
+    public responseType(type?: symbol): this {
         this._responseType = type;
         return this;
     }

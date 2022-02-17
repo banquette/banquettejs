@@ -8,6 +8,18 @@ import { RequestEvent } from "../event/request.event";
 
 export const PayloadTypeFormData = Symbol('form-data');
 
+function buildFormData(formData: FormData, data: any, parentKey?: string): void {
+    if (isObject(data) && !(data instanceof Date) && !(data instanceof File)) {
+        for (const key of Object.keys(data)) {
+            buildFormData(formData, data[key], parentKey ? `${parentKey}[${key}]` : key);
+        }
+    } else if (parentKey && data instanceof File) {
+        formData.append(parentKey, data, data.name);
+    } else if (parentKey) {
+        formData.append(parentKey, !isNullOrUndefined(data) ? data : '');
+    }
+}
+
 /**
  * Maybe encode the request payload into a FormData object.
  */
@@ -15,32 +27,26 @@ function onBeforeRequest(event: RequestEvent) {
     if (event.request.payloadType !== PayloadTypeFormData) {
         return ;
     }
+    let formData = new FormData();
+    let payload: any = event.request.payload;
     event.stopPropagation();
-    if (event.request.tryCount || isNullOrUndefined(event.request.payload)) {
+    if (event.request.tryCount || isNullOrUndefined(payload)) {
         return ;
     }
     if (!isObject(event.request.payload)) {
         throw new UsageException('An object is expected as input to encode the payload as FormData.');
     }
-    if (event.request.payload instanceof HTMLFormElement) {
-        event.request.payload = new FormData(event.request.payload);
-    } else if (event.request.payload instanceof HTMLInputElement && !isNullOrUndefined(event.request.payload.files)) {
-        const formData = new FormData();
-        for (let i = 0; i < event.request.payload.files.length; ++i) {
-            const file: File|null = event.request.payload.files.item(i);
-            if (file) {
-                formData.append(`files${event.request.payload.multiple ? '[]' : ''}`, file, file.name);
-            }
+    if (payload instanceof HTMLFormElement) {
+        formData = new FormData(payload);
+    } else if (payload instanceof HTMLInputElement && payload.type !== 'file') {
+        const filesArray = payload.files !== null ? Array.from(payload.files) : [];
+        for (const file of filesArray) {
+            formData.append(`file${payload.multiple ? 's[]' : ''}`, file, file.name);
         }
-        event.request.payload = formData;
-    } else {
-        const formData = new FormData();
-        for (const key of Object.keys(event.request.payload)) {
-            const value = event.request.payload[key];
-            formData.append(key, value);
-        }
-        event.request.payload = formData;
+    }  else {
+        buildFormData(formData, payload);
     }
+    event.request.payload = formData;
 }
 Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
     HttpEvents.BeforeRequest,
