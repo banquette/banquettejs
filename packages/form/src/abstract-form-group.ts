@@ -32,7 +32,7 @@ import { FormGroupInterface } from "./form-group.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
 import { ForEachFilters, UnassignedFormError } from "./type";
 
-export abstract class AbstractFormGroup<IdentifierType, ValueType, ChildrenType> extends AbstractFormComponent<ValueType, ChildrenType> implements FormGroupInterface<IdentifierType> {
+export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = unknown, ChildrenType = unknown> extends AbstractFormComponent<ValueType, ChildrenType> implements FormGroupInterface<IdentifierType> {
     /**
      * The filters to apply in the different type iteration over child components.
      * This is configurable using the `setChildrenFilters`.
