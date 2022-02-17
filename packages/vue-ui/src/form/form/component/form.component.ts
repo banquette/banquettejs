@@ -9,6 +9,7 @@ import { ComponentNotFoundException } from "@banquette/form/exception/component-
 import { FormControl } from "@banquette/form/form-control";
 import { FormObject } from "@banquette/form/form-object";
 import { HttpMethod } from "@banquette/http/constants";
+import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { HttpResponse } from "@banquette/http/http-response";
 import { FormModelBinder } from "@banquette/model-form/form-model-binder";
 import { TransformService } from "@banquette/model/transformer/transform.service";
@@ -256,7 +257,8 @@ export default class FormComponent extends Vue {
             if (this.persistRemote.isApplicable) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
-                const response: HttpResponse<any> = this.persistRemote.send(this.form.value, {}, [FORM_GENERIC_PERSIST_REQUESTS_TAG]);
+                this.persistRemote.payloadType = PayloadTypeFormData;
+                const response: HttpResponse<any> = this.persistRemote.send(this.modelType ? this.model : this.form.value, {}, [FORM_GENERIC_PERSIST_REQUESTS_TAG]);
                 try {
                     await response.promise;
                     this.updateState(Action.Persist, Status.Success);
