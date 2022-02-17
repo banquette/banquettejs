@@ -19,7 +19,7 @@ import {
  */
 export function ctorToVccOpts(ctor: Constructor): VccOpts|null {
     if (isDecoratedComponentConstructor(ctor)) {
-        return ctor[VUE_CLASS_COMPONENT_OPTIONS];
+        return ctor[VUE_CLASS_COMPONENT_OPTIONS] || null;
     }
     return null;
 }
