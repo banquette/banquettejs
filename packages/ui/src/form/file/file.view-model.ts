@@ -166,7 +166,7 @@ export class FileViewModel extends FormViewModel {
         this.uploadRequestsMap.set(file, response.request);
         response.promise.progress((event) => {
             if (event instanceof TransferProgressEvent) {
-                file.progress = event.percent;
+                file.progress = Math.round(event.percent);
                 file.uploadedSize = event.loaded;
                 file.uploadedSizeText = humanFileSize(event.loaded);
             }
