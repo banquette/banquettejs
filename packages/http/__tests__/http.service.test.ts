@@ -171,10 +171,16 @@ describe('check the HttpRequest objects created by shortcut methods', () => {
  * Factory
  */
 describe('requests forgery', () => {
+    // The id is incremental so it must be removed to compare the requests.
+    function removeId(input: any) {
+        delete input.id;
+        return input;
+    }
+
     test('factory default values', () => {
-        expect(HttpRequestFactory.Create({
+        expect(removeId(HttpRequestFactory.Create({
             url: '//test',
-        })).toStrictEqual(HttpRequestFactory.Create({
+        }))).toStrictEqual(removeId(HttpRequestFactory.Create({
             method: HttpMethod.GET,
             url: '//test',
             params: {},
@@ -190,12 +196,12 @@ describe('requests forgery', () => {
             withCredentials: false,
             mimeType: null,
             tags: []
-        }));
+        })));
     });
 
     test('builder default request', () => {
         const requestBuilder = new HttpRequestBuilder();
-        expect(requestBuilder.url('//test').getRequest()).toMatchObject(HttpRequestFactory.Create({url: '//test'}));
+        expect(removeId(requestBuilder.url('//test').getRequest())).toMatchObject(removeId(HttpRequestFactory.Create({url: '//test'})));
     });
 
     test('builder with missing url', () => {
