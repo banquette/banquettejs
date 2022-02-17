@@ -149,7 +149,7 @@ export class ApiService {
         }
         if (endpoint === null) {
             if (isNullOrUndefined(request.url) || !request.url.length) {
-                throw new UsageException('You must define either an endpoint of a url.');
+                throw new UsageException('You must define either an endpoint or a url.');
             }
             const idx = request.method + ':' + request.url;
             if (isUndefined(this.generatedEndpoints[idx])) {
