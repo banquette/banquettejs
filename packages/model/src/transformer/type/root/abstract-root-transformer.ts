@@ -71,7 +71,7 @@ export abstract class AbstractRootTransformer implements RootTransformerInterfac
         let instance: any;
         let pipeline: TransformPipeline;
         try {
-            instance = this.modelFactory.create(context.ctor);
+            instance = this.modelFactory.create(context.ctor, context);
             pipeline = new TransformPipeline(context.result, this.getTransformableProperties(context));
         } catch (e) {
             throw new UsageException(
