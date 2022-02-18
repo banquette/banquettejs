@@ -63,7 +63,7 @@ export abstract class Vue implements ComponentPublicInstance {
                 }
             } else {
                 let prototype = anyToComponentCtor($parent);
-                do {
+                while (prototype) {
                     // Loop over the prototype chain to get the metadata of all parents.
                     // The component may be a parent class.
                     const metadata = anyToComponentMetadata(prototype);
@@ -71,7 +71,7 @@ export abstract class Vue implements ComponentPublicInstance {
                         return resolved as InstanceType<T>;
                     }
                     prototype = Object.getPrototypeOf(prototype);
-                } while (prototype);
+                }
             }
             $parent = $parent.$parent;
         }
