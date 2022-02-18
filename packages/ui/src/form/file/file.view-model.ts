@@ -171,6 +171,7 @@ export class FileViewModel extends FormViewModel {
                 file.uploadedSizeText = humanFileSize(event.loaded);
             }
         }).then(() => {
+            file.serverResponse = response.result;
             file.status = UploadStatus.Succeeded;
         }).catch((reason: Exception) => {
             file.error = reason.message;

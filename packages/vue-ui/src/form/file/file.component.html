@@ -29,7 +29,7 @@
                     <icon-insert-drive-file></icon-insert-drive-file>
                     <div class="file-details">
                         <div class="file-name">{{ uploadFile.file.name }}</div>
-                        <bt-progress-horizontal :progress="uploadFile.progress "></bt-progress-horizontal>
+                        <bt-progress-horizontal :progress="uploadFile.progress" v-if="uploadFile.uploading || uploadFile.paused"></bt-progress-horizontal>
                         <div class="file-size">{{ uploadFile.uploadedSizeText }} / {{ uploadFile.totalSizeText }} ({{ uploadFile.progress }}%)</div>
                     </div>
                     <div class="buttons">
