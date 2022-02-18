@@ -12,7 +12,7 @@ export class ModelFactoryService {
     /**
      * Create an instance of a model.
      */
-    public create<T = any>(identifier: ModelExtendedIdentifier): T {
-        return this.metadata.getFactory(this.metadata.resolveAlias(identifier))() as T;
+    public create<T = any>(identifier: ModelExtendedIdentifier, context?: any): T {
+        return this.metadata.getFactory(this.metadata.resolveAlias(identifier))(context) as T;
     }
 }
