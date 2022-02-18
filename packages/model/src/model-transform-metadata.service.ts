@@ -5,13 +5,11 @@ import { getSymbolDescription } from "@banquette/utils-object/get-symbol-descrip
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, Complete } from "@banquette/utils-type/types";
+import { ObjectCtor, Wildcard } from "./constants";
 import { ModelMetadataService } from "./model-metadata.service";
 import { TransformerInterface } from "./transformer/transformer.interface";
 import { ModelExtendedIdentifier } from "./type";
 import { ensureCompleteTransformer } from "./utils";
-
-const WILDCARD = '*';
-const OBJECT_CTOR = Object.getPrototypeOf(Object);
 
 @Service()
 export class ModelTransformMetadataService {
@@ -37,7 +35,7 @@ export class ModelTransformMetadataService {
                 output = Object.assign(output, transforms[type]);
             }
             ctor = Object.getPrototypeOf(ctor);
-        } while (ctor && ctor !== OBJECT_CTOR);
+        } while (ctor && ctor !== ObjectCtor);
         return output;
     }
 
@@ -48,7 +46,7 @@ export class ModelTransformMetadataService {
         const ctor: Constructor = this.modelMetadata.resolveAlias(identifier);
         const transforms = this.transformersMap.get(ctor);
         if (!isNullOrUndefined(transforms) && !isUndefined(transforms[type])) {
-            return transforms[type][WILDCARD] || null;
+            return transforms[type][Wildcard] || null;
         }
         return null;
     }
@@ -67,7 +65,7 @@ export class ModelTransformMetadataService {
             transforms[type] = {};
         }
         const properties = transforms[type];
-        if (!isUndefined(properties[property]) && property !== WILDCARD) {
+        if (!isUndefined(properties[property]) && property !== Wildcard) {
             throw new UsageException(
                 `Another transformer for "${getSymbolDescription(type)}" is already registered for "${ctor.name}::${property}".
                 Please call "replace()" instead if you want to override it.`
@@ -84,7 +82,7 @@ export class ModelTransformMetadataService {
      * Warning, but doing this every property of the object you will transform will be included, all the time.
      */
     public registerWildcard(identifier: ModelExtendedIdentifier, type: symbol, transformer: TransformerInterface): void {
-        this.register(identifier, type, WILDCARD, transformer);
+        this.register(identifier, type, Wildcard, transformer);
     }
 
     /**
@@ -112,7 +110,7 @@ export class ModelTransformMetadataService {
      * Remove a wildcard transformer.
      */
     public removeWildcard(identifier: ModelExtendedIdentifier, type: symbol): void {
-        this.remove(identifier, type, WILDCARD);
+        this.remove(identifier, type, Wildcard);
     }
 
     /**

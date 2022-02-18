@@ -8,6 +8,7 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isSymbol } from "@banquette/utils-type/is-symbol";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
+import { ObjectCtor } from "./constants";
 import { ModelAliasNotFoundException } from "./exception/model-alias-not-found.exception";
 import { ModelAlias, ModelExtendedIdentifier, ModelFactory } from "./type";
 
@@ -99,9 +100,15 @@ export class ModelMetadataService {
      * If the property is not a relation, null is returned.
      */
     public getRelation(identifier: ModelExtendedIdentifier, property: string): Constructor|null {
-        const ctor = this.resolveAlias(identifier);
-        const relations = this.relations.get(ctor);
-        return !isNullOrUndefined(relations) && !isUndefined(relations[property]) ? this.resolveAlias(relations[property]) : null;
+        let ctor = this.resolveAlias(identifier);
+        do {
+            const relations = this.relations.get(ctor);
+            if (!isNullOrUndefined(relations) && !isUndefined(relations[property])) {
+                return this.resolveAlias(relations[property]);
+            }
+            ctor = Object.getPrototypeOf(ctor);
+        } while (ctor && ctor !== ObjectCtor);
+        return null;
     }
 
     public clear(): void {

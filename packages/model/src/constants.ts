@@ -13,3 +13,13 @@ export const ModelEvents = {
      */
     ModelChange: Symbol('model:change')
 };
+
+/**
+ * Wildcard transformer name.
+ */
+export const Wildcard = '*';
+
+/**
+ * A reference on the base object constructor.
+ */
+export const ObjectCtor = Object.getPrototypeOf(Object);
