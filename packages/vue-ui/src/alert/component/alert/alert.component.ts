@@ -54,7 +54,7 @@ export default class AlertComponent extends Vue {
      * Time to live.
      * If > 0, defines the number of milliseconds the alert will stay alive.
      */
-    @Prop({type: Number, default: null, validate: (v: any) => parseInt(v, 10)}) public ttl!: number|null;
+    @Prop({type: Number, default: null, validate: (v: any) => parseInt(String(v), 10)}) public ttl!: number|null;
 
     /**
      * If `true` the end-user can close the alert by themselves.
@@ -172,9 +172,10 @@ export default class AlertComponent extends Vue {
             return ;
         }
         this.ttlTimeoutId = window.requestAnimationFrame(() => {
+            const ttl = this.ttl;
             this.ttlTimeoutId = null;
-            if (this.ttl !== null && this.ttlStartTime !== null) {
-                this.timeLeft = Math.max(0, this.ttl - ((new Date()).getTime() - this.ttlStartTime));
+            if (ttl !== null && this.ttlStartTime !== null) {
+                this.timeLeft = Math.max(0, ttl - ((new Date()).getTime() - this.ttlStartTime));
             } else {
                 this.timeLeft = null;
             }
