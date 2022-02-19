@@ -85,12 +85,6 @@ export default class ButtonComponent extends Vue {
     @Prop({type: Number, default: null}) public workingProgress!: number|null;
 
     /**
-     * The variants to pass to the `<bt-progress-circular>` component in the default
-     * content of the `working` slot.
-     */
-    @Prop({type: String, default: ''}) public workingProgressVariant!: string;
-
-    /**
      * External toggle status for the "toggle" slot.
      */
     @Prop({name: 'toggled', type: Boolean, default: null}) public toggledProp!: boolean|null;

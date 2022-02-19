@@ -14,7 +14,7 @@
 >
     <div class="inner">
         <slot name="working" v-if="working">
-            <bt-progress-circular :variant="workingProgressVariant" :progress="workingProgress"></bt-progress-circular>
+            <bt-progress-circular :progress="workingProgress"></bt-progress-circular>
             <span class="working-text" v-if="isWorkingTextSlotVisible">
                 <slot name="working-text">{{ workingText }}</slot>
             </span>
