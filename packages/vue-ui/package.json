@@ -11,7 +11,25 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "style-inject": "^0.3.0"
+        "style-inject": "^0.3.0",
+        "@banquette/api": "^0.0.5",
+        "@banquette/dependency-injection": "^0.0.5",
+        "@banquette/event": "^0.0.5",
+        "@banquette/exception": "^0.0.5",
+        "@banquette/form": "^0.0.5",
+        "@banquette/http": "^0.0.5",
+        "@banquette/model": "^0.0.5",
+        "@banquette/model-form": "^0.0.5",
+        "@banquette/ui": "^0.0.5",
+        "@banquette/utils-array": "^0.0.5",
+        "@banquette/utils-dom": "^0.0.5",
+        "@banquette/utils-misc": "^0.0.5",
+        "@banquette/utils-object": "^0.0.5",
+        "@banquette/utils-string": "^0.0.5",
+        "@banquette/utils-type": "^0.0.5",
+        "@banquette/validation": "^0.0.5",
+        "@banquette/vue-material-icons": "^0.0.5",
+        "@banquette/vue-typescript": "^0.0.5"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
