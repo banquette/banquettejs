@@ -1,6 +1,7 @@
 
 export * from './alert';
 export * from './button';
+export * from './debug';
 export * from './dropdown';
 export * from './form';
 export * from './misc';
