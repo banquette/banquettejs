@@ -11,7 +11,6 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/core": "^0.0.5",
         "@banquette/dom-modules": "^0.0.5",
         "@banquette/vue-typescript": "^0.0.5"
     }

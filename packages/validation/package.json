@@ -11,6 +11,13 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/core": "^0.0.2"
+        "@banquette/dependency-injection": "^0.0.5",
+        "@banquette/exception": "^0.0.5",
+        "@banquette/http": "^0.0.5",
+        "@banquette/utils-glob": "^0.0.5",
+        "@banquette/utils-misc": "^0.0.5",
+        "@banquette/utils-object": "^0.0.5",
+        "@banquette/utils-string": "^0.0.5",
+        "@banquette/utils-type": "^0.0.5"
     }
 }

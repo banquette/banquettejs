@@ -11,6 +11,8 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/core": "^0.0.2"
+        "@banquette/exception": "^0.0.5",
+        "@banquette/utils-misc": "^0.0.5",
+        "@banquette/utils-type": "^0.0.5"
     }
 }

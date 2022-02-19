@@ -11,7 +11,13 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
+        "@banquette/event": "^0.0.5",
         "@banquette/exception": "^0.0.5",
-        "@banquette/utils": "^0.0.5"
+        "@banquette/utils-array": "^0.0.5",
+        "@banquette/utils-misc": "^0.0.5",
+        "@banquette/utils-object": "^0.0.5",
+        "@banquette/utils-random": "^0.0.5",
+        "@banquette/utils-string": "^0.0.5",
+        "@banquette/utils-type": "^0.0.5"
     }
 }

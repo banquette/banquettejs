@@ -11,9 +11,11 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/core": "^0.0.5",
-        "@banquette/fingerprint": "^0.0.5",
-        "@banquette/storage": "^0.0.5"
+        "@banquette/dependency-injection": "^0.0.5",
+        "@banquette/exception": "^0.0.5",
+        "@banquette/model": "^0.0.5",
+        "@banquette/utils-type": "^0.0.5",
+        "@banquette/validation": "^0.0.5"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
