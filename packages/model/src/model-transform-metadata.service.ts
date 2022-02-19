@@ -32,7 +32,7 @@ export class ModelTransformMetadataService {
         do {
             let transforms = this.transformersMap.get(ctor);
             if (!isNullOrUndefined(transforms) && !isUndefined(transforms[type])) {
-                output = Object.assign(output, transforms[type]);
+                output = Object.assign(transforms[type], output);
             }
             ctor = Object.getPrototypeOf(ctor);
         } while (ctor && ctor !== ObjectCtor);
