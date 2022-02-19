@@ -45,6 +45,7 @@ import { WatchFunction, ImmediateStrategy, PrivateWatchOptions } from "./decorat
 import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
 import { matchVariant } from "./theme/utils/match-variants";
 import { splitVariantString } from "./theme/utils/split-variant-string";
+import { VueTheme } from "./theme/vue-theme";
 import { VueThemeVariant } from "./theme/vue-theme-variant";
 import { PrefixOrAlias } from "./type";
 import { incrementActiveComponentsCount, decrementActiveComponentsCount } from "./utils/components-count";
@@ -125,11 +126,11 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             },
                         });
                     })(propRef, propName, data.props[propName].validate || null);
+                    propsRefs.push(propRef);
                 }
                 const propPublicName = data.props[propName].name || propName;
                 output[propPublicName] = propRef;
                 defineRefProxy(inst, data.props[propName].propertyName, output, propPublicName);
-                propsRefs.push(propRef);
                 rootProps[propName] = propRef;
             }
 
@@ -161,30 +162,26 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         }
                         return attributesStr;
                     };
-                    const onChange = recursionSafeProxy(() => {
+                    const onChange = () => {
                         const themes = getThemesForComponent(inst);
-                        let variants: VueThemeVariant[] = [];
+                        const activeThemes: Array<{theme: VueTheme, trackedParentComponents: string[]}> = [];
                         let expectedVariants: string[] = splitVariantString(inst[configuration.prop] || '');
                         const lastActiveVariantsAttributes = ([] as string[]).concat(activeVariantsAttributes);
 
-                        // Reset previous state
-                        for (const unsubscribeFn of unsubscribeFns) {
-                            unsubscribeFn();
-                        }
                         activeVariants = [];
                         activeVariantsAttributes = [];
 
                         // Find relevant variants for the current context
                         for (const theme of themes) {
-                            const trackedParentComponentsNames: string[] = [];
                             const variantsCandidates = theme.getVariants(data.component.name);
+                            const activeTheme: {theme: VueTheme, trackedParentComponents: string[]} = {theme, trackedParentComponents: []};
                             for (const variantCandidate of variantsCandidates) {
                                 if (matchVariant(variantCandidate, expectedVariants, inst)) {
-                                    variants.push(variantCandidate);
+                                    activeVariants.push(variantCandidate);
                                     activeVariantsAttributes.push(variantCandidate.uid);
                                     if (variantCandidate.applyIds.length > 0) {
-                                        variants = variants.concat(variantsCandidates.filter((v) => {
-                                            if (v.publicId !== null && variantCandidate.applyIds.indexOf(v.publicId) > -1 && variants.indexOf(v) < 0) {
+                                        activeVariants = activeVariants.concat(variantsCandidates.filter((v) => {
+                                            if (v.publicId !== null && variantCandidate.applyIds.indexOf(v.publicId) > -1 && activeVariants.indexOf(v) < 0) {
                                                 activeVariantsAttributes.push(v.uid);
                                                 return true;
                                             }
@@ -197,37 +194,43 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                                 for (const variantSelectorCandidate of variantCandidate.selector.candidates) {
                                     for (const parentSelector of variantSelectorCandidate.parents) {
                                         if (parentSelector.name !== data.component.name /* To prevent infinite loop */ &&
-                                            trackedParentComponentsNames.indexOf(parentSelector.name) < 0) {
-                                            trackedParentComponentsNames.push(parentSelector.name);
+                                            activeTheme.trackedParentComponents.indexOf(parentSelector.name) < 0) {
+                                            activeTheme.trackedParentComponents.push(parentSelector.name);
                                         }
                                     }
                                 }
-                            }
 
-                            // Subscribe to changes of other components.
-                            if (trackedParentComponentsNames.length > 0) {
-                                unsubscribeFns.push(theme.onComponentsChange(trackedParentComponentsNames, onChangeOnce));
+                            }
+                            if (activeTheme.trackedParentComponents.length > 0) {
+                                activeThemes.push(activeTheme);
                             }
                         }
                         if (!areEqual(activeVariantsAttributes, lastActiveVariantsAttributes)) {
+                            // Reset previous state
+                            for (const unsubscribeFn of unsubscribeFns) {
+                                unsubscribeFn();
+                            }
+
                             for (const lastActiveAttribute of lastActiveVariantsAttributes) {
                                 inst.$el.removeAttribute('data-' + lastActiveAttribute);
                             }
                             // Apply changes to the DOM
-                            for (const item of variants) {
+                            for (const item of activeVariants) {
                                 inst.$el.setAttribute('data-' + item.uid, '');
                                 item.use(inst, configuration);
-                                activeVariants.push(item);
                                 unsubscribeFns.push(item.onChange(scheduleForceUpdate));
                             }
-                            for (const theme of themes) {
+                            for (const item of activeThemes) {
+                                // Subscribe to changes of other components.
+                                unsubscribeFns.push(item.theme.onComponentsChange(item.trackedParentComponents, onChangeOnce));
+
                                 // Notify the theme we have changed so other components can react to it.
-                                theme.notifyComponentChange(data.component.name);
+                                item.theme.notifyComponentChange(data.component.name);
                             }
                             lastAttributesStr = getAttributesStr();
                             forceUpdate();
                         }
-                    });
+                    };
                     const onChangeOnce = once(onChange);
                     watch(propsRefs, onChangeOnce);
                     onMounted(onChange);
