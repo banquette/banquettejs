@@ -304,10 +304,10 @@ export class PaginationModule implements ModuleInterface {
         this.currentState.totalPagesCount = Math.ceil(totalItems / this.itemsPerPage);
         this.currentState.page = Math.max(1, Math.min(this.currentState.totalPagesCount, this._page));
         this.currentState.isFirstPage = this.currentState.page === 1;
-        this.currentState.isLastPage = this.currentState.page === this.currentState.totalPagesCount;
+        this.currentState.isLastPage = Math.min(this.currentState.page, this.currentState.totalPagesCount) === this.currentState.totalPagesCount;
         this.currentState.totalResultsCount = totalItems;
         this.currentState.totalResultsPerPage = this.itemsPerPage;
-        this.currentState.firstResultCount = (this.itemsPerPage * (this.currentState.page - 1)) + 1;
+        this.currentState.firstResultCount = Math.min((this.itemsPerPage * (this.currentState.page - 1)) + 1, totalItems);
 
         let itemsInPage: number = this.itemsPerPage;
         if (this.currentState.isLastPage) {
