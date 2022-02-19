@@ -169,7 +169,7 @@ export class ApiEndpoint {
      */
     private buildParametersFromUrl(url: string): Record<string, ApiEndpointParameterInterface> {
         const output: Record<string, ApiEndpointParameterInterface> = {};
-        const reg: RegExp = new RegExp('{\s*([a-z0-9*._-]+)\s*}', 'gi');
+        const reg: RegExp = new RegExp('{\\s*([a-z0-9*._-]+)\\s*}', 'gi');
         let matches: RegExpMatchArray|null;
         while ((matches = reg.exec(url)) !== null) {
             if (isArray(matches) && matches.length > 1) {
