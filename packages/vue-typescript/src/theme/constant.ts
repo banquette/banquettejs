@@ -51,3 +51,8 @@ export type ParentSelector = string| (VariantSelectorInterface & {name: string})
  * Custom callback type to check if a prop value matches the selector.
  */
 export type PropCallback = (value: any) => boolean;
+
+/**
+ * Custom callback type to check if an attr value matches the selector.
+ */
+export type AttrCallback = (value: any) => boolean;

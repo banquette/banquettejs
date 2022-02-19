@@ -18,7 +18,7 @@ export function normalizeVariantSelector(selectors: VariantSelector|VariantSelec
         if (isString(selector)) {
             selector = {variant: selector};
         }
-        const normalizedSelector: VariantSelectorCandidateInterface = {variants: [], props: {}, parents: []};
+        const normalizedSelector: VariantSelectorCandidateInterface = {variants: [], props: {}, attrs: {}, parents: []};
 
         // Variant
         if (!isUndefined(selector.variant)) {
@@ -38,6 +38,16 @@ export function normalizeVariantSelector(selectors: VariantSelector|VariantSelec
                 }
                 normalizedSelector.props[key] = selector.props[key];
                 output.identifier += '#' + key + ':' + typeof(selector.props[key]) + ':' + value;
+            }
+        }
+
+        // Attrs
+        if (!isUndefined(selector.attrs)) {
+            const keys = Object.keys(selector.attrs).sort();
+            for (const key of keys) {
+                let value = trim(String(selector.attrs[key]));
+                normalizedSelector.attrs[key] = selector.attrs[key];
+                output.identifier += '#attr:' + key + ':' + typeof(selector.attrs[key]) + ':' + value;
             }
         }
 

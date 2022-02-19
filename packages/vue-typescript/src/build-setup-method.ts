@@ -1,8 +1,10 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { UsageException } from "@banquette/exception/usage.exception";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { noop } from "@banquette/utils-misc/noop";
 import { once } from "@banquette/utils-misc/once";
 import { proxy } from "@banquette/utils-misc/proxy";
+import { recursionSafeProxy } from "@banquette/utils-misc/recursion-safe-proxy";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isArray } from "@banquette/utils-type/is-array";
@@ -30,7 +32,7 @@ import {
     onBeforeMount,
     onMounted,
     nextTick,
-    onBeforeUnmount
+    onBeforeUnmount, onUpdated, callWithErrorHandling
 } from "vue";
 import { HOOKS_MAP, COMPONENT_INSTANCE } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
@@ -137,6 +139,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     let activeVariantsAttributes: string[] = [];
                     let unsubscribeFns: UnsubscribeFunction[] = [];
                     let updateScheduled: boolean = false;
+                    let lastAttributesStr = '';
                     const forceUpdate = () => {
                         inst.$forceUpdateComputed();
                         inst.$forceUpdate();
@@ -150,20 +153,26 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             });
                         }
                     };
-                    const onChange = () => {
+                    const getAttributesStr = () => {
+                        const el = inst.$el;
+                        let attributesStr: string = '';
+                        for (let i = 0; i < el.attributes.length; i++){
+                            attributesStr += el.attributes[i].nodeName + String(el.attributes[i].value);
+                        }
+                        return attributesStr;
+                    };
+                    const onChange = recursionSafeProxy(() => {
                         const themes = getThemesForComponent(inst);
                         let variants: VueThemeVariant[] = [];
                         let expectedVariants: string[] = splitVariantString(inst[configuration.prop] || '');
-
+                        const lastActiveVariantsAttributes = ([] as string[]).concat(activeVariantsAttributes);
 
                         // Reset previous state
-                        activeVariants = [];
                         for (const unsubscribeFn of unsubscribeFns) {
                             unsubscribeFn();
                         }
-                        for (const activeAttribute of activeVariantsAttributes) {
-                            inst.$el.removeAttribute('data-' + activeAttribute);
-                        }
+                        activeVariants = [];
+                        activeVariantsAttributes = [];
 
                         // Find relevant variants for the current context
                         for (const theme of themes) {
@@ -172,9 +181,14 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             for (const variantCandidate of variantsCandidates) {
                                 if (matchVariant(variantCandidate, expectedVariants, inst)) {
                                     variants.push(variantCandidate);
+                                    activeVariantsAttributes.push(variantCandidate.uid);
                                     if (variantCandidate.applyIds.length > 0) {
                                         variants = variants.concat(variantsCandidates.filter((v) => {
-                                            return v.publicId !== null && variantCandidate.applyIds.indexOf(v.publicId) > -1 && variants.indexOf(v) < 0;
+                                            if (v.publicId !== null && variantCandidate.applyIds.indexOf(v.publicId) > -1 && variants.indexOf(v) < 0) {
+                                                activeVariantsAttributes.push(v.uid);
+                                                return true;
+                                            }
+                                            return false;
                                         }));
                                     }
                                 }
@@ -194,24 +208,36 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             if (trackedParentComponentsNames.length > 0) {
                                 unsubscribeFns.push(theme.onComponentsChange(trackedParentComponentsNames, onChangeOnce));
                             }
-
-                            // Notify the theme we have changed so other components can react to it.
-                            theme.notifyComponentChange(data.component.name);
                         }
-
-                        // Apply changes to the DOM
-                        for (const item of variants) {
-                            inst.$el.setAttribute('data-' + item.uid, '');
-                            activeVariantsAttributes.push(item.uid);
-                            item.use(inst, configuration);
-                            activeVariants.push(item);
-                            unsubscribeFns.push(item.onChange(scheduleForceUpdate));
+                        if (!areEqual(activeVariantsAttributes, lastActiveVariantsAttributes)) {
+                            for (const lastActiveAttribute of lastActiveVariantsAttributes) {
+                                inst.$el.removeAttribute('data-' + lastActiveAttribute);
+                            }
+                            // Apply changes to the DOM
+                            for (const item of variants) {
+                                inst.$el.setAttribute('data-' + item.uid, '');
+                                item.use(inst, configuration);
+                                activeVariants.push(item);
+                                unsubscribeFns.push(item.onChange(scheduleForceUpdate));
+                            }
+                            for (const theme of themes) {
+                                // Notify the theme we have changed so other components can react to it.
+                                theme.notifyComponentChange(data.component.name);
+                            }
+                            lastAttributesStr = getAttributesStr();
+                            forceUpdate();
                         }
-                        forceUpdate();
-                    };
+                    });
                     const onChangeOnce = once(onChange);
                     watch(propsRefs, onChangeOnce);
                     onMounted(onChange);
+                    onUpdated(() => {
+                        const newAttributesStr = getAttributesStr();
+                        if (lastAttributesStr !== newAttributesStr) {
+                            lastAttributesStr = newAttributesStr;
+                            onChange();
+                        }
+                    });
                 })(data.themeable);
 
                 // Theme vars accessors

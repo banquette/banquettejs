@@ -4,7 +4,7 @@ import { Primitive } from "@banquette/utils-type/types";
 import { ComponentMetadataInterface } from "../../decorator/component-metadata.interface";
 import { getOrCreateComponentMetadata } from "../../utils/get-or-create-component-metadata";
 import { isDecoratedComponentConstructor } from "../../utils/guards";
-import { VariantWildcard, PropCallback } from "../constant";
+import { VariantWildcard, PropCallback, AttrCallback } from "../constant";
 import { VariantSelectorCandidateInterface } from "../variant-selector-candidate.interface";
 import { VueThemeVariant } from "../vue-theme-variant";
 import { splitVariantString } from "./split-variant-string";
@@ -13,6 +13,7 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
                               expectedVariants: string[],
                               actualVariants: string[],
                               expectedProps: Record<string, Primitive|PropCallback>,
+                              expectedAttrs: Record<string, Primitive|AttrCallback>,
                               componentInst: any): boolean {
 
     // Variant
@@ -31,6 +32,22 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
             }
         } else if (expectedProps[key] !== componentInst[key]) {
             return false;
+        }
+    }
+
+    // Attrs
+    if (Object.keys(expectedAttrs).length > 0) {
+        const $el = componentInst.$el;
+        for (const key of Object.keys(expectedAttrs)) {
+            const candidate = expectedAttrs[key];
+            const attrValue: any = $el.getAttribute(key);
+            if (isFunction(candidate)) {
+                if (!candidate(attrValue)) {
+                    return false;
+                }
+            } else if (expectedAttrs[key] !== attrValue) {
+                return false;
+            }
         }
     }
 
@@ -57,6 +74,7 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
                         parentCandidateVariants,
                         parentExpectedVariants,
                         parentSelectorCandidate.props,
+                        parentSelectorCandidate.attrs,
                         $parentInst
                     )) {
                         $parentInst = $parentInst.$resolvedParent;
@@ -80,6 +98,7 @@ export function matchVariant(variant: VueThemeVariant, expectedVariants: string[
             candidateVariants,
             expectedVariants,
             selectorCandidate.props,
+            selectorCandidate.attrs,
             componentInst
         )) {
             return true;
