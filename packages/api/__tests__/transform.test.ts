@@ -9,7 +9,7 @@ import { HttpConfigurationInterface } from "@banquette/http/http-configuration.i
 import { HttpRequest } from "@banquette/http/http-request";
 import { HttpRequestFactory } from "@banquette/http/http-request.factory";
 import { HttpService } from "@banquette/http/http.service";
-import { Http } from "@banquette/model/decorator/http";
+import { Http } from "../src/decorator/http";
 import { Relation } from "@banquette/model/decorator/relation";
 import { TransformFailedException } from "@banquette/model/exception/transform-failed.exception";
 import { TransformResult } from "@banquette/model/transform-result";
