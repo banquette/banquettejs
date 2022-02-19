@@ -18,13 +18,17 @@ export function injectContextInCssSource(source: string, themeId: string, varian
 
         // Search for :deep to skip the scope id injection
         if (selector[0].substring(0, 5) === ':deep') {
-            let start = 0, end = 0;
+            let start = 0, end = 0, opened = 0;
             for (let j = 0; j < selector[0].length; ++j) {
                 if (selector[0][j] === '(') {
-                    start = j + 1;
+                    if (!opened++) {
+                        start = j + 1;
+                    }
                 } else if (selector[0][j] === ')') {
-                    end = j;
-                    break ;
+                    if (!--opened) {
+                        end = j;
+                        break;
+                    }
                 }
             }
             deep = true;
