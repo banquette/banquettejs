@@ -50,6 +50,9 @@ for (const target of targets) {
     console.log(`Copying packages into: ${chalk.blue(target.path)}...`);
     const targetBasePath = path.resolve(target.path, 'node_modules/@banquette');
 
+    if (!fs.existsSync(targetBasePath)) {
+        fs.mkdirSync(targetBasePath);
+    }
     for (const p of packages) {
         console.log(`Copy files for package ${chalk.blue(p)}.`);
         const distBasePath = path.resolve(__dirname, `../dist/${p}`);
@@ -68,6 +71,14 @@ for (const target of targets) {
             }
         }
     }
+
+    console.log(`Copy ${chalk.blue('object-observer')}.`);
+    const localObjectObserverPath = path.resolve(__dirname, '../node_modules/object-observer');
+    const targetObjectObserverPath = path.resolve(target.path, 'node_modules/object-observer');
+    if (fs.existsSync(targetObjectObserverPath)) {
+        fs.rmdirSync(targetObjectObserverPath, {recursive: true});
+    }
+    fse.copySync(localObjectObserverPath, targetObjectObserverPath);
 
     // Update the package.json
     const packageJsonPath = path.resolve(target.path, 'package.json');
