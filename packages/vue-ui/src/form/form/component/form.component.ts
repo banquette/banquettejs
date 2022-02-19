@@ -10,6 +10,8 @@ import { FormControl } from "@banquette/form/form-control";
 import { FormObject } from "@banquette/form/form-object";
 import { HttpMethod } from "@banquette/http/constants";
 import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
+import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
+import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
 import { HttpResponse } from "@banquette/http/http-response";
 import { FormModelBinder } from "@banquette/model-form/form-model-binder";
 import { TransformService } from "@banquette/model/transformer/transform.service";
@@ -70,6 +72,14 @@ export default class FormComponent extends Vue {
     @Prop({name: 'persist:endpoint', type: String, default: null}) public persistEndpoint!: string|null;
     @Prop({name: 'persist:urlParams', type: Object, default: {}}) public persistUrlParams!: Record<string, string>;
     @Prop({name: 'persist:ajax', type: Boolean, default: true}) public persistAjax!: boolean;
+    @Prop({name: 'persist:payloadType', type: String, validate: (input: any) => {
+        if (input === 'form-data') {
+            return PayloadTypeFormData;
+        } else if (input === 'raw') {
+            return PayloadTypeRaw;
+        }
+        return PayloadTypeJson;
+    }}) public persistPayloadType!: symbol;
 
     /**
      * If `true` the form can be submitted by pressing the `Enter` key.
@@ -257,7 +267,7 @@ export default class FormComponent extends Vue {
             if (this.persistRemote.isApplicable) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
-                this.persistRemote.payloadType = PayloadTypeFormData;
+                this.persistRemote.payloadType = this.persistPayloadType;
                 const response: HttpResponse<any> = this.persistRemote.send(this.modelType ? this.model : this.form.value, {}, [FORM_GENERIC_PERSIST_REQUESTS_TAG]);
                 try {
                     await response.promise;
