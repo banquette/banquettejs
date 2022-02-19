@@ -1,6 +1,6 @@
 {
     "name": "@banquette/utils-crypto",
-    "version": "0.0.5",
+    "version": "0.1.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/@banquette/core/banquettejs.git",
@@ -10,6 +10,8 @@
     "main": "_bundles/index.cjs.prod.js",
     "module": "index.js",
     "types": "index.d.ts",
-    "dependencies": {"@banquette/utils-type": "^0.0.5"},
+    "dependencies": {
+        "@banquette/utils-type": "^0.1.0"
+    },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
