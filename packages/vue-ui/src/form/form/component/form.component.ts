@@ -338,7 +338,7 @@ export default class FormComponent extends Vue {
     /**
      * Make the form on error.
      */
-    private setError(errorType: ErrorType, reason: any): void {
+    protected setError(errorType: ErrorType, reason: any): void {
         reason = reason !== null ? ExceptionFactory.EnsureException(reason) : null;
         if (reason instanceof RemoteException && reason.slug === 'remote') {
             reason.slug = errorType;
@@ -350,7 +350,7 @@ export default class FormComponent extends Vue {
     /**
      * Remove a type of error.
      */
-    private removeError(error: ErrorType): void {
+    protected removeError(error: ErrorType): void {
         if (!isUndefined(this.errorsMap[error])) {
             delete this.errorsMap[error];
         }
@@ -359,14 +359,14 @@ export default class FormComponent extends Vue {
     /**
      * Remove all errors.
      */
-    private clearErrors(): void {
+    protected clearErrors(): void {
         this.errorsMap = {};
     }
 
     /**
      * Gets a collection of violations from the server and binds them to the form.
      */
-    private bindPersistErrorsToForm(validationException: RemoteValidationException): void {
+    protected bindPersistErrorsToForm(validationException: RemoteValidationException): void {
         // In case the form has been destroyed with the "default" slot,
         // we wait the next tick for the form the be rendered again.
         this.$nextTick(() => {
@@ -391,7 +391,7 @@ export default class FormComponent extends Vue {
     /**
      * Test if the form is in a certain state.
      */
-    private is(action: Action|null, status: Status|null = null): boolean {
+    protected is(action: Action|null, status: Status|null = null): boolean {
         if (action === null && status !== null) {
             return this.action !== null ? ((this.action & status) === status) : status === Status.Working;
         }
@@ -407,8 +407,7 @@ export default class FormComponent extends Vue {
     /**
      * Update the status of the component.
      */
-    private updateState(action: Action|null, status: Status|null = null): void {
-        const wasWorking = this.is(null, Status.Working);
+    protected updateState(action: Action|null, status: Status|null = null): void {
         this.action = action;
         if (this.action !== null && status !== null) {
             this.action |= status;
