@@ -161,6 +161,13 @@ function writeOutput(config, output) {
                 fs.writeFileSync(files[i], fcontent);
             }
         }
+
+        // Copy package.json and tsconfig.json files
+        const packageDir = path.resolve(__dirname, `../../packages/${config._name}`);
+        const distDir = path.resolve(__dirname, `../../dist/${config._name}`);
+        for (const file of ['package.json', 'tsconfig.json']) {
+            fs.copySync(path.join(packageDir, file), path.join(distDir, file));
+        }
     }
 }
 
