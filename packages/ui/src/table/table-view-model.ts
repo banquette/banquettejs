@@ -384,7 +384,7 @@ export class TableViewModel {
      * Called when the configuration of a module changes.
      */
     private onModuleConfigurationChange(): void {
-        if (!this.ready) {
+        if (this.initializing) {
             return ;
         }
         if (this.remote.isApplicable && (
