@@ -66,14 +66,20 @@ export class Choice {
     public ghost: boolean = false;
 
     /**
-     * The raw value of the choice, as given by the outside.
+     * The raw value to use in the form.
      */
     public value: any;
 
-    public constructor(label: string, value: any, identifier: Primitive, origin: symbol) {
+    /**
+     * The raw value of the choice, as is.
+     */
+    public originalValue: any;
+
+    public constructor(label: string, value: any, identifier: Primitive, origin: symbol, originalValue: any) {
         this.identifier = identifier;
         this.label = label;
         this.value = value;
         this.origin = origin;
+        this.originalValue = originalValue;
     }
 }

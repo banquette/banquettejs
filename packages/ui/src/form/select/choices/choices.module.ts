@@ -484,7 +484,8 @@ export class ChoicesModule {
             this.resolveChoiceLabel(choice),
             this.resolveChoiceValue(choice),
             identifier,
-            origin
+            origin,
+            choice
         );
         instance.disabled = this.resolveChoiceDisabledState(choice);
         instance.external = false;
