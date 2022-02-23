@@ -1,0 +1,17 @@
+<div class="bt-remote">
+    <!-- This slot is shown when there is no valid remote configuration -->
+    <slot name="waiting" v-if="waiting"></slot>
+
+    <!-- This slot is shown when the component is fetching remote data -->
+    <slot name="fetching" v-else-if="fetching" :response="response">
+        <bt-progress-circular></bt-progress-circular>
+    </slot>
+
+    <!-- This slot is shown when the component failed to fetch remote data -->
+    <slot name="error" v-else-if="error" :response="response">
+        {{ response.error.message }}
+    </slot>
+
+    <!-- The default slot is shown when remote data have been fetched successfully and are ready to consume -->
+    <slot v-else-if="ready" :response="response" :result="response.result"></slot>
+</div>

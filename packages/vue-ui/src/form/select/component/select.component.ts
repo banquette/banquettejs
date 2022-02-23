@@ -11,7 +11,7 @@ import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.de
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { DropdownComponent } from "../../../dropdown";
-import { RemoteComposable } from "../../../misc/composable/remote.composable";
+import { RemoteComposable } from "../../../misc/remote/remote.composable";
 import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
 import { ViewModelEvents } from "../../constant";
 import { ErrorComponent } from "../../error";

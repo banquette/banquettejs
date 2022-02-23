@@ -10,7 +10,7 @@ import { Component } from "@banquette/vue-typescript/decorator/component.decorat
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { RemoteComposable } from "../../misc/composable/remote.composable";
+import { RemoteComposable } from "../../misc/remote/remote.composable";
 import { ProgressHorizontalComponent } from "../../progress/progress-horizontal";
 import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 
