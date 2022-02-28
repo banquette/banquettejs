@@ -30,6 +30,11 @@ export class Mutation {
         /**
          * The value of the property after the mutation.
          */
-        public readonly newValue: any) {
+        public readonly newValue: any,
+
+        /**
+         * Object on which the change has occurred.
+         */
+        public readonly target: any) {
     }
 }

@@ -125,7 +125,7 @@ export abstract class AbstractObserver<T extends object> {
      * Called once on initialization, so child observers can be setup.
      */
     protected observe(target: T): void {
-        
+
     }
 
     /**
@@ -149,7 +149,8 @@ export abstract class AbstractObserver<T extends object> {
                 isUndefined(oldValue) ? MutationType.Insert : MutationType.Update,
                 [String(key)],
                 oldValue,
-                newValue
+                newValue,
+                this.target
             ));
         }
         return true;
@@ -167,7 +168,8 @@ export abstract class AbstractObserver<T extends object> {
             MutationType.Delete,
             [String(key)],
             oldValue,
-            undefined
+            undefined,
+            this.target
         ));
         return true;
     }
@@ -212,7 +214,8 @@ export abstract class AbstractObserver<T extends object> {
                     mutation.type,
                     [parent.name].concat(mutation.pathParts),
                     mutation.oldValue,
-                    mutation.newValue
+                    mutation.newValue,
+                    mutation.target
                 ));
             }
         }

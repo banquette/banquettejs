@@ -36,7 +36,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
             MutationType.Delete,
             [String(this.proxy.length)],
             removedItem,
-            undefined
+            undefined,
+            this.target
         ));
         return removedItem;
     };
@@ -54,7 +55,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
             MutationType.Delete,
             ['0'],
             removedItem,
-            undefined
+            undefined,
+            this.target
         ));
         return removedItem;
     };
@@ -72,7 +74,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
                 MutationType.Insert,
                 [String(i)],
                 undefined,
-                args[i]
+                args[i],
+                this.target
             ));
         }
         return unshiftResult;
@@ -89,7 +92,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
                 MutationType.Reverse,
                 [],
                 undefined,
-                this.proxy
+                this.proxy,
+                this.target
             ));
         }
         return this.proxy;
@@ -106,7 +110,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
                 MutationType.Sort,
                 [],
                 undefined,
-                this.proxy
+                this.proxy,
+                this.target
             ));
         }
         return this.proxy;
@@ -126,7 +131,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
                     MutationType.Update,
                     [String(i)],
                     clone[i],
-                    this.target[i]
+                    this.target[i],
+                    this.target
                 ));
             }
         }
@@ -145,7 +151,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
                 MutationType.Delete,
                 [String(positiveStart + i)],
                 spliceResult[i],
-                undefined
+                undefined,
+                this.target
             ));
         }
         for (let i = 0; i < newItems.length; ++i) {
@@ -154,7 +161,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
                 MutationType.Insert,
                 [String(positiveStart + i)],
                 undefined,
-                this.target[positiveStart + i]
+                this.target[positiveStart + i],
+                this.target
             ));
         }
         this.reassignNames();
@@ -178,7 +186,8 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
                     MutationType.Update,
                     [String(i)],
                     clone[i],
-                    this.target[i]
+                    this.target[i],
+                    this.target
                 ));
             }
         }

@@ -8,3 +8,4 @@ ObserverFactory.RegisterObserver(TypedArrayObserver);
 ObserverFactory.RegisterObserver(ObjectObserver);
 
 export { ObserverFactory };
+export { MutationType } from './constant';

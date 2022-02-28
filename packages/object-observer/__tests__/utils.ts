@@ -29,7 +29,8 @@ function cloneMutation(mutation: Mutation): Mutation {
         mutation.type,
         ([] as string[]).concat(mutation.pathParts),
         cloneDeep(mutation.oldValue),
-        cloneDeep(mutation.newValue)
+        cloneDeep(mutation.newValue),
+        mutation.target
     );
 }
 

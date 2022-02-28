@@ -44,7 +44,8 @@ export class TypedArrayObserver extends ArrayObserver<any> {
                     MutationType.Update,
                     [String(i)],
                     clone[i],
-                    this.target[i]
+                    this.target[i],
+                    this.target
                 ));
             }
         }
