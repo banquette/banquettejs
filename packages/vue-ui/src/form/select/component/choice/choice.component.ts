@@ -99,7 +99,8 @@ export default class ChoiceComponent extends Vue {
                 this.resolveChoiceLabel(),
                 this.value,
                 '__generated' + (++ChoiceComponent.MaxId),
-                this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin
+                this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin,
+                this.value
             );
             this.choice.disabled = !!this.disabled;
         } else {
