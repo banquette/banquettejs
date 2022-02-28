@@ -92,7 +92,7 @@ describe('Basic mechanics', () => {
         }, []);
     });
 
-    test('Changes are only detected if made through the proxy', () => {
+    test('Changes are only detected if made through the proxy (deep)', () => {
         class Bar {
             public baz: string = '';
         }
@@ -105,7 +105,7 @@ describe('Basic mechanics', () => {
         watchAndCheck(foo, ['/bar/baz'], (proxy: Foo) => {
             bar.baz = 'modified 1';
             proxy.bar.baz = 'modified 2';
-        }, [['/bar/baz', '', 'modified 2']]);
+        }, [['/bar/baz', 'modified 1', 'modified 2']]);
     });
 });
 

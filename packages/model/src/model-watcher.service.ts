@@ -1,42 +1,13 @@
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { MutationEvent } from "@banquette/object-observer/event/mutation.event";
+import { ObserverFactory } from "@banquette/object-observer/index";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { Constructor } from "@banquette/utils-type/types";
-import { ModelChangeEvent, ModelChangeType } from "./event/model-change.event";
+import { ModelChangeEvent } from "./event/model-change.event";
 import { ModelMetadataService } from "./model-metadata.service";
 import { ModelTransformMetadataService } from "./model-transform-metadata.service";
-
-const Observable = require('object-observer/dist/object-observer');
-
-export interface ObservableChangeEvent {
-    /**
-     * Type of change.
-     */
-    type: 'insert' | 'update' | 'delete' | 'shuffle' | 'reverse';
-
-    /**
-     * Path to the changed property represented as an Array of nodes.
-     */
-    path: string[];
-
-    /**
-     * New value.
-     * `undefined` in delete, shuffle and reverse changes.
-     */
-    value?: string;
-
-    /**
-     * Old value.
-     * `undefined` in insert, shuffle or reverse changes.
-     */
-    oldValue: any;
-
-    /**
-     * An immediate subject of change, property of which has been changed.
-     */
-    object: object;
-}
 
 @Service()
 export class ModelWatcherService {
@@ -54,31 +25,29 @@ export class ModelWatcherService {
         if (watchedPaths !== null) {
             watchedPaths = watchedPaths.map((item: string) => item[0] !== '/' ? ('/' + item) : item);
         }
-        const observed = Observable.Observable.from(model);
-        observed.observe((changes: ObservableChangeEvent[]) => {
-            for (const change of changes) {
-                const filteredJsonPointer = '/'+change.path.filter((item: string) => !isNumeric(item)).join('/');
-                let granted = watchedPaths === null;
-                if (watchedPaths !== null) {
-                    for (const path of watchedPaths) {
-                        if (path === filteredJsonPointer || (filteredJsonPointer.length > path.length && filteredJsonPointer.substring(0, path.length) === path)) {
-                            granted = true;
-                            break ;
-                        }
+        const observer = ObserverFactory.Create(model);
+        observer.subscribe((event: MutationEvent) => {
+            const filteredJsonPointer = '/'+event.mutation.pathParts.filter((item: string) => !isNumeric(item)).join('/');
+            let granted = watchedPaths === null;
+            if (watchedPaths !== null) {
+                for (const path of watchedPaths) {
+                    if (path === filteredJsonPointer || (filteredJsonPointer.length > path.length && filteredJsonPointer.substring(0, path.length) === path)) {
+                        granted = true;
+                        break ;
                     }
                 }
-                if (granted) {
-                    cb(new ModelChangeEvent<any>(
-                        change.type as ModelChangeType,
-                        change.object,
-                        '/' + change.path.join('/'),
-                        change.oldValue,
-                        change.value
-                    ));
-                }
+            }
+            if (granted) {
+                cb(new ModelChangeEvent<any>(
+                    event.mutation.type,
+                    event.mutation.target,
+                    event.mutation.path,
+                    event.mutation.oldValue,
+                    event.mutation.newValue
+                ));
             }
         });
-        return observed;
+        return observer.proxy;
     }
 
     /**

@@ -9,7 +9,7 @@ import { FormComponentInterface } from "@banquette/form/form-component.interface
 import { FormControl } from "@banquette/form/form-control";
 import { FormGroupInterface } from "@banquette/form/form-group.interface";
 import { FormObject } from "@banquette/form/form-object";
-import { ModelChangeEvent, ModelChangeType } from "@banquette/model/event/model-change.event";
+import { ModelChangeEvent } from "@banquette/model/event/model-change.event";
 import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
 import { ModelWatcherService } from "@banquette/model/model-watcher.service";
@@ -19,6 +19,7 @@ import { TransformService } from "@banquette/model/transformer/transform.service
 import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
 import { ModelFactory } from "@banquette/model/type";
 import { ensureCompleteTransformer } from "@banquette/model/utils";
+import { MutationType } from "@banquette/object-observer/index";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isArray } from "@banquette/utils-type/is-array";
@@ -71,7 +72,7 @@ export class FormModelBinder {
         if (this.contextStack.length > 0) {
             return this.contextStack[this.contextStack.length - 1].ctor;
         }
-        return this.model._ot.constructor;
+        return this.model.constructor;
     }
 
     private get currentContextProperty(): string|null {
@@ -109,9 +110,9 @@ export class FormModelBinder {
      * Values of existing controls will be updated.
      */
     private syncFormObjectWithModel(component: FormObject, model: any): void {
-        const tree = this.getModelTransformersTree(model._ot.constructor as Constructor);
+        const tree = this.getModelTransformersTree(model.constructor as Constructor);
         for (const property of Object.keys(tree.children)) {
-            this.pushContext(model._ot.constructor as Constructor, property);
+            this.pushContext(model.constructor as Constructor, property);
             if (!isUndefined(tree.children[property])) {
                 this.syncFormWithModelPart(tree.children[property], component, model, property);
             }
@@ -260,7 +261,7 @@ export class FormModelBinder {
         if (this.ignoreModelUpdate) {
             return ;
         }
-        if (event.type === ModelChangeType.Delete) {
+        if (event.type === MutationType.Delete) {
             try {
                 this.form.get(event.path).detach();
             } catch (e) {}
@@ -269,14 +270,14 @@ export class FormModelBinder {
         const pathParts = event.path.split('/');
         let formContainer: FormGroupInterface = this.form;
         let modelContainer = this.model;
-        let treeContainer: any = this.getModelTransformersTree(this.model._ot.constructor);
+        let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
         let contextsDepth = 0;
         const pushContext = (ctor: Constructor, property: string) => ++contextsDepth && this.pushContext(ctor, property);
         let i;
 
         for (i = 1; i < pathParts.length; ++i) {
             let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
-            if (treeChildName === '*' && event.type === ModelChangeType.Insert && isArray(event.target)) {
+            if (treeChildName === '*' && event.type === MutationType.Insert && isArray(event.target)) {
                 pushContext(this.currentContextCtor, pathParts[i - 1]);
                 continue ;
             }
@@ -304,7 +305,7 @@ export class FormModelBinder {
             if (treeContainer.transformer.type === FormControlTransformerSymbol) {
                 this.syncFormControlWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
             } else if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                pushContext(modelContainer._ot.constructor as Constructor, cp);
+                pushContext(modelContainer.constructor as Constructor, cp);
                 this.syncFormObjectWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
             } else if (treeContainer.transformer.type === FormArrayTransformerSymbol) {
                 this.syncFormArrayWithModelAttribute(treeContainer, formContainer, modelContainer, cp);

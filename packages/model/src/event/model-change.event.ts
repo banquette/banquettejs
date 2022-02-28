@@ -1,15 +1,8 @@
 import { EventArg } from "@banquette/event/event-arg";
-
-export enum ModelChangeType {
-    Insert  = 'insert',
-    Update  = 'update',
-    Delete  = 'delete',
-    Shuffle = 'shuffle',
-    Reverse = 'reverse',
-}
+import { MutationType } from "@banquette/object-observer/index";
 
 export class ModelChangeEvent<T extends object> extends EventArg {
-    public constructor(public type: ModelChangeType,
+    public constructor(public type: MutationType,
                        public target: T,
                        public path: string,
                        public oldValue: any,
