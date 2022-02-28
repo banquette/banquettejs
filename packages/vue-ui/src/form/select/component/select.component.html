@@ -26,7 +26,7 @@
             <span v-if="vm.choices.visible && vm.search.virtualBuffer" class="virtual-buffer">
                 {{ vm.search.virtualBuffer }}
             </span>
-            <span v-else-if="vm.choices.selectedItems.length"><slot name="resume" :resume="vm.choices.selectionResume">{{ vm.choices.selectionResume }}</slot></span>
+            <span v-else-if="vm.choices.selectedItems.length"><slot name="resume" :resume="vm.choices.selectionResume" :selected="vm.choices.selectedItems">{{ vm.choices.selectionResume }}</slot></span>
             <span v-else class="placeholder">{{ placeholder }}</span>
 
             <bt-progress-circular v-if="busy || vm.validating"></bt-progress-circular>
