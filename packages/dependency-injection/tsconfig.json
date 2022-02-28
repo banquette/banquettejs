@@ -20,6 +20,7 @@
             "@banquette/model-validation/*": [
                 "packages/model-validation/src/*"
             ],
+            "@banquette/object-observer/*": ["packages/object-observer/src/*"],
             "@banquette/promise/*": ["packages/promise/src/*"],
             "@banquette/storage/*": ["packages/storage/src/*"],
             "@banquette/ui/*": ["packages/ui/src/*"],

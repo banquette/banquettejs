@@ -20,6 +20,7 @@ module.exports = {
         "@banquette/model/(.*)$": "<rootDir>/packages/model/src/$1",
         "@banquette/model-form/(.*)$": "<rootDir>/packages/model-form/src/$1",
         "@banquette/model-validation/(.*)$": "<rootDir>/packages/model-validation/src/$1",
+        "@banquette/object-observer/(.*)$": "<rootDir>/packages/object-observer/src/$1",
         "@banquette/promise/(.*)$": "<rootDir>/packages/promise/src/$1",
         "@banquette/storage/(.*)$": "<rootDir>/packages/storage/src/$1",
         "@banquette/ui/(.*)$": "<rootDir>/packages/ui/src/$1",

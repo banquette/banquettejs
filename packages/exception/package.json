@@ -10,8 +10,6 @@
     "main": "_bundles/index.cjs.prod.js",
     "module": "index.js",
     "types": "index.d.ts",
-    "dependencies": {
-        "@banquette/utils-type": "^0.1.0"
-    },
+    "dependencies": {"@banquette/utils-type": "^0.1.0"},
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

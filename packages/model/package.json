@@ -11,6 +11,7 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
+        "object-observer": "^4.6.0",
         "@banquette/dependency-injection": "^0.1.0",
         "@banquette/event": "^0.1.0",
         "@banquette/exception": "^0.1.0",
@@ -19,8 +20,7 @@
         "@banquette/utils-reflection": "^0.1.0",
         "@banquette/utils-string": "^0.1.0",
         "@banquette/utils-type": "^0.1.0",
-        "@banquette/validation": "^0.1.0",
-        "object-observer": "^4.6.0"
+        "@banquette/validation": "^0.1.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

@@ -1,0 +1,15 @@
+{
+    "name": "@banquette/object-observer",
+    "version": "0.1.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "directory": "packages/log"
+    },
+    "license": "Apache-2.0",
+    "main": "_bundles/index.cjs.prod.js",
+    "module": "index.js",
+    "types": "index.d.ts",
+    "dependencies": {},
+    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+}

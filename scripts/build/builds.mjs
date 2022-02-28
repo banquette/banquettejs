@@ -159,6 +159,10 @@ export const Builds = Object.assign({},
         module: 'Banquette.Ui'
     }),
     createBuildVariants({
+        package: 'object-observer',
+        module: 'Banquette.ObjectObserver'
+    }),
+    createBuildVariants({
         package: 'utils-type',
         module: 'Banquette.Utils.Type'
     }),

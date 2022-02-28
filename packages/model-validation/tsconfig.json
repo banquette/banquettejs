@@ -20,6 +20,7 @@
             "@banquette/log/*": ["packages/log/src/*"],
             "@banquette/model/*": ["packages/model/src/*"],
             "@banquette/model-form/*": ["packages/model-form/src/*"],
+            "@banquette/object-observer/*": ["packages/object-observer/src/*"],
             "@banquette/promise/*": ["packages/promise/src/*"],
             "@banquette/storage/*": ["packages/storage/src/*"],
             "@banquette/ui/*": ["packages/ui/src/*"],

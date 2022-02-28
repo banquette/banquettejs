@@ -11,8 +11,8 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/vue-typescript": "^0.1.0",
-        "style-inject": "^0.3.0"
+        "style-inject": "^0.3.0",
+        "@banquette/vue-typescript": "^0.1.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
