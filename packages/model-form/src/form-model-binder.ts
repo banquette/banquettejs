@@ -96,12 +96,12 @@ export class FormModelBinder {
      */
     public bind<T extends object>(model: T, form: FormObject): T {
         this.form = form;
-        this.model = this.modelWatcher.watchTransformableProperties<T>(model, FormTransformerSymbol, proxy(this.onModelChange, this));
+        this.model = model;
         this.syncFormObjectWithModel(form, this.model);
         this.form.onControlAdded(proxy(this.throwOnUnauthorizedFormMutation, this), false);
         this.form.onControlRemoved(proxy(this.throwOnUnauthorizedFormMutation, this), false);
         this.form.onValueChanged(proxy(this.onFormValueChange, this), false);
-        return this.model;
+        return this.modelWatcher.watchTransformableProperties<T>(model, FormTransformerSymbol, proxy(this.onModelChange, this));
     }
 
     /**
