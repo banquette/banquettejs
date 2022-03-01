@@ -29,6 +29,7 @@ import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { toRaw } from "vue";
 import {
     Action,
     ErrorType,
@@ -221,7 +222,7 @@ export default class FormComponent extends Vue {
             }
             if (this.model) {
                 this.binder = Injector.Get(FormModelBinder);
-                this.model = this.binder.bind(this.model, this.form);
+                this.model = this.binder.bind(toRaw(this.model), this.form);
                 this.form.enable();
             } else {
                 //
