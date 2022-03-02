@@ -12,6 +12,7 @@ import { MutationEvent } from "../event/mutation.event";
 import { MutationsCollectionEvent } from "../event/mutations-collection.event";
 import { Mutation } from "../mutation";
 import { ObserverFactory } from "../observer.factory";
+import { extractObserver } from "../utils";
 
 /**
  * Because an observed value can be assigned to multiple observed objects,
@@ -66,7 +67,7 @@ export abstract class AbstractObserver<T extends object> {
             deleteProperty: proxy(this.deleteProperty, this)
         });
         Object.defineProperty(this.proxy, ObserverInstance, {
-            configurable: false,
+            configurable: true,
             enumerable: false,
             writable: false,
             value: this
@@ -87,13 +88,6 @@ export abstract class AbstractObserver<T extends object> {
      */
     public static Supports(target: any): boolean {
         throw new UsageException('`AbstractObserver::Supports()` must be overridden.');
-    }
-
-    /**
-     * Try to extract the observer instance from a value.
-     */
-    public static ExtractObserver(value: any): AbstractObserver<any>|null {
-        return isObject(value) ? (value[ObserverInstance] || null) : null;
     }
 
     /**
@@ -236,7 +230,7 @@ export abstract class AbstractObserver<T extends object> {
      */
     protected observeProperty(key: string, value: any): any {
         if (isObject(value)) {
-            const existingObserver = AbstractObserver.ExtractObserver(value);
+            const existingObserver = extractObserver(value);
             if (existingObserver instanceof AbstractObserver) {
                 if (existingObserver !== this) {
                     existingObserver.addParent(this, key);
@@ -256,7 +250,7 @@ export abstract class AbstractObserver<T extends object> {
      */
     protected detachValue(value: any): void {
         if (isObject(value)) {
-            const existingObserver = AbstractObserver.ExtractObserver(value);
+            const existingObserver = extractObserver(value);
             if (existingObserver instanceof AbstractObserver) {
                 if (existingObserver !== this) {
                     existingObserver.detach(this);

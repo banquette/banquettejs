@@ -2,6 +2,7 @@ import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { MutationType } from "../constant";
 import { Mutation } from "../mutation";
+import { extractObserver } from "../utils";
 import { AbstractObserver } from "./abstract.observer";
 
 export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> {
@@ -218,7 +219,7 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
      */
     private reassignNames(): void {
         for (let i = 0; i < this.target.length; i++) {
-            const observer = AbstractObserver.ExtractObserver(this.target[i]);
+            const observer = extractObserver(this.target[i]);
             if (observer !== null) {
                 (observer as any).updateName(String(i), this);
             }

@@ -1,7 +1,8 @@
 import { UsageException } from "@banquette/exception/usage.exception";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { AbstractObserver } from "./observer/abstract.observer";
+import { ObserverInterface } from "./observer/observer.interface";
 import { ObserverConstructor } from "./type";
+import { extractObserver } from "./utils";
 
 /**
  * Create the right observer for the type of input.
@@ -27,8 +28,8 @@ export class ObserverFactory {
     /**
      * Create an observer for the input.
      */
-    public static Create<T extends object>(target: T, parent?: AbstractObserver<any>, key?: string): AbstractObserver<T> {
-        const existingObserver = AbstractObserver.ExtractObserver(target);
+    public static Create<T extends object>(target: T, parent?: ObserverInterface<any>, key?: string): ObserverInterface<T> {
+        const existingObserver = extractObserver(target);
         if (existingObserver) {
             return existingObserver;
         }
@@ -37,7 +38,7 @@ export class ObserverFactory {
                 if (!isUndefined(parent) && isUndefined(key)) {
                     throw new UsageException('You must define a property name if the observer is not the root observer.');
                 }
-                return new candidate(key || '/', target, parent || null) as AbstractObserver<T>;
+                return new candidate(key || '/', target, (parent as any) || null);
             }
         }
         throw new UsageException(
