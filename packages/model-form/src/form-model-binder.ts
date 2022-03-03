@@ -373,7 +373,7 @@ export class FormModelBinder {
      * Get the whole tree of form transformers applicable to a model in a format easier
      * to manipulate in the form model binder.
      */
-    private getModelTransformersTree(ctor: Constructor): TransformersTree {
+    private getModelTransformersTree(ctor: Constructor, stack: Constructor[] = []): TransformersTree {
         const tree = this.transformersTrees.get(ctor);
         if (!isUndefined(tree)) {
             return tree;
@@ -422,7 +422,11 @@ export class FormModelBinder {
                         of "${ctor.name}" if you set a "FormObject" transformer on it.`
                     );
                 }
-                Object.assign(propertyTree, this.getModelTransformersTree(relation));
+                if (stack.indexOf(relation) < 0) {
+                    stack.push(relation);
+                    Object.assign(propertyTree, this.getModelTransformersTree(relation, stack));
+                    stack.pop();
+                }
             } else {
                 // If we arrive here we are guaranteed to be in the presence of FormControl transformer.
                 // This type of transformer only allow a value transformer as child.
