@@ -22,6 +22,9 @@ const options = ((args) => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const targets = fs.readFileSync(path.resolve(__dirname, `../.copy-local-targets`)).toString().trim().split(/\r?\n/).reduce((acc, item) => {
+    if (item[0] === '#') {
+        return acc;
+    }
     const pos = item.indexOf(':');
     acc.push({
         path: pos > -1 ? item.substring(pos + 1) : item,
