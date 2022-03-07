@@ -10,3 +10,4 @@ scripts-local
 packages/**/dist
 packages/**/build
 .copy-local-targets
+scripts/release-local.sh
