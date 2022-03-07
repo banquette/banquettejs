@@ -78,15 +78,14 @@
                 </template>
             </div>
         </bt-dropdown>
-
-        <div v-if="hasSlot('help')" class="help">
-            <slot name="help"></slot>
-        </div>
-
-        <slot name="errors">
-            <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
-                <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
-            </bt-form-error>
-        </slot>
     </div>
+    <div v-if="hasSlot('help')" class="help">
+        <slot name="help"></slot>
+    </div>
+
+    <slot name="errors">
+        <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
+            <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
+        </bt-form-error>
+    </slot>
 </div>

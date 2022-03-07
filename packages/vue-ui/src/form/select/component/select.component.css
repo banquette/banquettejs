@@ -176,6 +176,14 @@
             transform: translateY(calc(var(--loc-outline-width) * -1));
         }
     }
+
+    /**
+    * Help
+    */
+    .help {
+        color: var(--fpv8mky0, #aaa);
+        margin-top: 0.5em;
+    }
 }
 
 /**
