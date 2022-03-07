@@ -10,11 +10,11 @@ export interface ObserverInterface<T extends object> {
      * Subscribe to changes notifications in a synchronous way.
      * The callback will be called synchronously for each change.
      */
-    subscribe(cb: (event: MutationEvent) => void, type: MutationType|null, mask: string|null): UnsubscribeFunction;
+    subscribe(cb: (event: MutationEvent) => void, type?: MutationType|null, mask?: string|null): UnsubscribeFunction;
 
     /**
      * Subscribe to change notifications in batch.
      * The callback will only be called once per cycle, so it receives an array of events.
      */
-    subscribeAsync(cb: (events: MutationsCollectionEvent) => void, type: MutationType|null, mask: string|null): UnsubscribeFunction;
+    subscribeAsync(cb: (events: MutationsCollectionEvent) => void, type?: MutationType|null, mask?: string|null): UnsubscribeFunction;
 }

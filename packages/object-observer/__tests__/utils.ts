@@ -4,7 +4,7 @@ import { MutationType } from "../src/constant";
 import { MutationEvent } from "../src/event/mutation.event";
 import { MutationsCollectionEvent } from "../src/event/mutations-collection.event";
 import { Mutation } from "../src/mutation";
-import { AbstractObserver } from "../src/observer/abstract.observer";
+import { ObserverInterface } from "../src/observer/observer.interface";
 
 /**
  * Define the content of the array describing an expected mutation.
@@ -37,7 +37,7 @@ function cloneMutation(mutation: Mutation): Mutation {
 /**
  * Wrap an observer into an object that captures the events emitted.
  */
-export function wrapObserver(observer: AbstractObserver<any>,
+export function wrapObserver(observer: ObserverInterface<any>,
                              mutationType: MutationType|null = null,
                              mask: string|null = null,
                              subscriptionType: SubscriptionType = SubscriptionType.Sync) {
