@@ -7,5 +7,6 @@ export const Externals = [
     'vue',
     'qs',
     /style\-inject/,
-    /^@popperjs/
+    /^@popperjs/,
+    /^@tiptap/
 ];

@@ -5,6 +5,7 @@ export * from './file';
 export * from './form';
 export * from './select';
 export * from './text';
+export * from './tiptap';
 export * from './validator';
 
 export * from './constant';
