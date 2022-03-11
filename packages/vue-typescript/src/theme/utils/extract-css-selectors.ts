@@ -7,14 +7,12 @@ import { trim } from "@banquette/utils-string/format/trim";
  */
 export function extractCssSelectors(source: string): Array<[string, number, number]> {
     let currentSelector = '';
-    const scopesDelimiters = [['{', '}'], ['(', ')'], ['[', ']'], ["'", "'", true], ['"', '"', true]];
-    const scopesStartDelimiters = scopesDelimiters.reduce((acc, item) => {
-        acc.push(item[0]);
-        return acc;
-    }, []);
+    const scopesDelimiters: Array<[string, string, boolean?]> = [['{', '}'], ['(', ')'], ['[', ']'], ["'", "'", true], ['"', '"', true]];
+    const scopesStartDelimiters = ['{', '(', '[', "'", '"'];
     let openedScopesIndexes: number[] = [];
     let currentScopeIndex: number|null = null;
     let selectors: Array<[string, number, number]> = [];
+    let currentStrDelimiter: string|null = null;
     const appendSelector = (currentIndex: number) => {
         const trimedSelector = trim(currentSelector);
         if (trimedSelector.length > 0) {
@@ -28,23 +26,36 @@ export function extractCssSelectors(source: string): Array<[string, number, numb
     };
     for (let i = 0; i < source.length; ++i) {
         const c = source[i];
-        if (scopesStartDelimiters.indexOf(c) > -1) {
-            openedScopesIndexes.push(scopesStartDelimiters.indexOf(c));
+        const scopeIdx = scopesStartDelimiters.indexOf(c);
+        let newScope = false;
+        if (c === '@' && trim(currentSelector) === '' && currentStrDelimiter === null) {
+            for (; i < source.length && source[i] !== '{'; ++i);
+            continue ;
+        }
+        if (scopeIdx > -1 && currentStrDelimiter === null) {
+            if (scopesDelimiters[scopeIdx][2]) {
+                currentStrDelimiter = scopesDelimiters[scopeIdx][0];
+            }
+            openedScopesIndexes.push(scopeIdx);
             currentScopeIndex = openedScopesIndexes[openedScopesIndexes.length - 1];
             if (currentScopeIndex === 0) {
                 appendSelector(i);
             }
+            newScope = true;
         }
         if (openedScopesIndexes.indexOf(0) < 0) {
-            if (c === ',') {
+            if (c === ',' && currentStrDelimiter === null) {
                 appendSelector(i);
             } else {
                 currentSelector += c;
             }
         }
-        if (currentScopeIndex !== null && c === scopesDelimiters[currentScopeIndex][1]) {
+        if (!newScope && currentScopeIndex !== null && c === scopesDelimiters[currentScopeIndex][1]) {
             openedScopesIndexes.pop();
             currentScopeIndex = openedScopesIndexes.length > 0 ? openedScopesIndexes[openedScopesIndexes.length - 1] : null;
+            if (currentStrDelimiter === c) {
+                currentStrDelimiter = null;
+            }
         }
     }
     return selectors;

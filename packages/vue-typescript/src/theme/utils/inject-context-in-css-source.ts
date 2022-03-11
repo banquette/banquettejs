@@ -1,5 +1,5 @@
-import { ltrim } from "@banquette/utils-string/format/ltrim";
 import { trim } from "@banquette/utils-string/format/trim";
+import { insertInString } from "@banquette/utils-string/insert-in-string";
 import { extractCssSelectors } from "./extract-css-selectors";
 
 /**
@@ -7,71 +7,73 @@ import { extractCssSelectors } from "./extract-css-selectors";
  * The utility is not meant to be fool proof and is only tested for basic css syntax.
  */
 export function injectContextInCssSource(source: string, themeId: string, variantId: string, scopeId: string|null): string {
-    source = trim(source.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g,''));
-    const selectors = extractCssSelectors(source);
-
-    themeId = `.${themeId}`;
-    variantId = `[data-${variantId}]`;
-    for (let i = selectors.length - 1; i >= 0; --i) {
-        const selector = selectors[i];
-        let deep: boolean = false;
-
-        // Search for :deep to skip the scope id injection
-        if (selector[0].substring(0, 5) === ':deep') {
-            let start = 0, end = 0, opened = 0;
-            for (let j = 0; j < selector[0].length; ++j) {
-                if (selector[0][j] === '(') {
-                    if (!opened++) {
-                        start = j + 1;
-                    }
-                } else if (selector[0][j] === ')') {
-                    if (!--opened) {
-                        end = j;
-                        break;
+    source = trim(source.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, ''));
+    const selectors = extractCssSelectors(source).reverse();
+    const scopesDelimiters: Array<[string, string, boolean?]> = [['{', '}'], ['(', ')'], ['[', ']']];
+    const scopesStartDelimiters = ['{', '(', '['];
+    for (let i = 0; i < selectors.length; ++i) {
+        // Scope id
+        if (scopeId !== null) {
+            let scopeIdPos = null;
+            let strChar: string|null = null;
+            const openedScopesIndexes: number[] = [];
+            let currentScopeIndex: number|null = null;
+            for (let j = 0; j < selectors[i][0].length; j++) {
+                const c = selectors[i][0][j];
+                const scopeIdx = scopesStartDelimiters.indexOf(c);
+                if (scopeIdx > -1 && !strChar) {
+                    openedScopesIndexes.push(scopeIdx);
+                    currentScopeIndex = openedScopesIndexes[openedScopesIndexes.length - 1];
+                }
+                if (c === strChar) {
+                    strChar = null;
+                } else if (!strChar && (c === '"' || c === "'")) {
+                    strChar = c;
+                }
+                if (strChar) {
+                    continue ;
+                }
+                if (c === ' ' && !openedScopesIndexes.length) {
+                    scopeIdPos = null;
+                }
+                if (c === ':') {
+                    scopeIdPos = scopeIdPos === null ? j : scopeIdPos;
+                    if (selectors[i][0].substring(j, j + 5) === ':deep') {
+                        const offset1 = selectors[i][1] + j;
+                        const offset2 = source.indexOf('(', offset1 + 5);
+                        const offset3 = source.indexOf(')', offset1 + 5);
+                        if (offset2 > offset1 && offset3 > offset1) {
+                            source = source.substring(0, offset3) + source.substring(offset3 + 1);
+                            source = source.substring(0, offset1) + source.substring(offset2 + 1);
+                        }
+                        while (--j >= 0 && selectors[i][0][j].match(/\s/));
+                        scopeIdPos = j + 1;
+                        break ;
                     }
                 }
+                if (currentScopeIndex !== null && c === scopesDelimiters[currentScopeIndex][1]) {
+                    openedScopesIndexes.pop();
+                    currentScopeIndex = openedScopesIndexes.length > 0 ? openedScopesIndexes[openedScopesIndexes.length - 1] : null;
+                }
             }
-            deep = true;
-            selector[0] = selector[0].substring(start, end);
-            source =
-                source.substring(0, selector[1]) +
-                selector[0] +
-                source.substring(selector[1] + end + 1);
-            selector[2] -= start + 1; // + 1 for the end parenthesis
+            if (scopeIdPos === null) {
+                scopeIdPos = selectors[i][0].length;
+            }
+            source = insertInString(source, scopeIdPos + selectors[i][1], `[${scopeId}]` + (scopeIdPos === 0 ? ' ' : ''));
         }
 
-        // Ignore animations
-        if (selector[0][0] === '@') {
-            continue ;
-        }
-
-        // Add the variant id
-        const variantAndScope = variantId + ((scopeId !== null && !deep) ? `[${scopeId}]` : '');
-        const isRootSelector = selector[0][0] === '&';
-        if (isRootSelector) {
-            const trimed = ltrim(selector[0].substring(1));
-            source = source.substring(0, selector[1]) + trimed + source.substring(selector[2]);
-            selector[2] -= selector[0].length - trimed.length;
-            selector[0] = trimed;
-        }
-        if (isRootSelector && ['.', '#'].indexOf(selector[0][0]) < 0) {
-            let j = 0;
-            for (; j < selector[0].length && selector[0][j].match(/[a-z_#.-]+/i); ++j);
-            selector[0] = selector[0].substring(0, j) + variantAndScope + selector[0].substring(j);
+        // Variant id
+        if (selectors[i][0][0] === '&') {
+            source = source.substring(0, selectors[i][1]) + source.substring(selectors[i][1] + 1);
+            let offset = selectors[i][1];
+            while (source[offset].match(/\s/) && ++offset < source.length);
+            source = insertInString(source, offset, `[${variantId}]`);
         } else {
-           selector[0] = variantAndScope + (!isRootSelector ? ' ' : '') + selector[0];
+            source = insertInString(source, selectors[i][1], `[${variantId}] `);
         }
-        source =
-            source.substring(0, selector[1]) +
-            selector[0] +
-            source.substring(selector[2]);
-        selector[2] += variantAndScope.length + (isRootSelector ? 0 : 1);
 
-        // Add theme id
-        source =
-            source.substring(0, selector[1]) +
-            themeId + ' ' +
-            source.substring(selector[1]);
+        // Theme id
+        source = insertInString(source, selectors[i][1], `.${themeId} `);
     }
     return source;
 }
