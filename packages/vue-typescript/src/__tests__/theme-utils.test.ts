@@ -44,7 +44,7 @@ describe('Selectors extraction', () => {
     }
 });
 
-describe('Css selectors', () => {
+describe('Context injection', () => {
     const tid = 'themeId';
     const vid = 'variantId';
     const sid = 'data-v-12345';
