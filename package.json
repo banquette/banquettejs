@@ -34,6 +34,7 @@
         "@tiptap/extension-underline": "^2.0.0-beta.23",
         "@tiptap/starter-kit": "^2.0.0-beta.183",
         "@tiptap/vue-3": "^2.0.0-beta.90",
+        "@vueuse/core": "^8.2.0",
         "inversify": "^6.0.1",
         "material-design-icons": "^3.0.1",
         "object-observer": "^4.7.2",
