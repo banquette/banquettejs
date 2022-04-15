@@ -16,6 +16,7 @@
         "@banquette/form": "^0.1.0",
         "@banquette/model": "^0.1.0",
         "@banquette/model-validation": "^0.1.0",
+        "@banquette/object-observer": "^0.1.0",
         "@banquette/utils-misc": "^0.1.0",
         "@banquette/utils-type": "^0.1.0"
     },
