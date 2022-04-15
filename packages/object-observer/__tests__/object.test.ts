@@ -207,4 +207,31 @@ describe('Edge cases', () => {
         // Because the `wrapObserver` function does a subscribe.
         innerWrapper.expect([[MutationType.Insert, '/some', undefined, 'text']]);
     });
+
+    test('Readonly properties are ignored', () => {
+        const obj: any = {foo: 'foo'};
+        Object.defineProperty(obj, 'value', {
+            enumerable: true,
+            writable: false,
+            value: 2
+        })
+        const wrapper = wrapObserver(ObserverFactory.Create(obj));
+        wrapper.proxy.foo = 'foo_new';
+        wrapper.expect([[MutationType.Update, '/foo', 'foo', 'foo_new']]);
+    });
+
+    test('Readonly properties protected by a throwing setter are ignored', () => {
+        const obj: any = {foo: 'foo'};
+        let value: number = 2;
+        Object.defineProperty(obj, 'value', {
+            enumerable: true,
+            get: () => value,
+            set: () => {
+                throw "Readonly.";
+            }
+        })
+        const wrapper = wrapObserver(ObserverFactory.Create(obj));
+        wrapper.proxy.foo = 'foo_new';
+        wrapper.expect([[MutationType.Update, '/foo', 'foo', 'foo_new']]);
+    });
 });
