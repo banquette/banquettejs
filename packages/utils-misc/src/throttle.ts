@@ -10,23 +10,24 @@ import { GenericCallback } from "@banquette/utils-type/types";
  * @returns function
  */
 export function throttle(func: GenericCallback, threshold: number, scope: any = null): GenericCallback {
-    let last: number;
-    let deferTimer: number;
-
-    return function() {
-        // @ts-ignore
+    let lastCallTime: number = 0;
+    let timerId: number|null = null;
+    let args: any = [];
+    return function(this: any) {
         const context = scope || this;
         const now = (new Date()).getTime();
-        const args: any = arguments;
-        if (last && now < last + threshold) {
-            // hold on to it
-            clearTimeout(deferTimer);
-            deferTimer = window.setTimeout(() => {
-                last = now;
+        args = arguments;
+        if (timerId) {
+            window.clearTimeout(timerId);
+        }
+        if (lastCallTime && now < lastCallTime + threshold) {
+            timerId = window.setTimeout(() => {
+                timerId = null;
+                lastCallTime = (new Date()).getTime();
                 func.apply(context, args);
-            }, threshold);
+            }, (lastCallTime + threshold) - now);
         } else {
-            last = now;
+            lastCallTime = now;
             func.apply(context, args);
         }
     };
