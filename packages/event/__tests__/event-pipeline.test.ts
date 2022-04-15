@@ -337,7 +337,9 @@ describe('Running', () => {
             .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
             .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
             .subscribe(TestEvents.Fetch, buildCallback('fetch', {delay: 50, error: 'Request failed.'}))
-        await pipeline.start('Fetch').promise;
+        const result = pipeline.start('Fetch');
+        await result.promise;
+        expect(result.error).toEqual(true);
         expect(callstack).toStrictEqual(['show-loader', 'fetch']);
     });
 

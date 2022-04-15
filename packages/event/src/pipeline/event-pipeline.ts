@@ -146,13 +146,13 @@ export class EventPipeline {
      */
     private runSequences(names: string[], parentContext?: SequenceContext): DispatchResult {
         let index = -1;
-        const result = new DispatchResult();
+        const result = new DispatchResult(!isUndefined(parentContext) ? parentContext.result : null);
         const next = () => {
             const name = ++index < names.length ? names[index] : null;
             if (!name || isUndefined(this.sequences[name])) {
                 return result;
             }
-            const context = new SequenceContext(name, parentContext || null);
+            const context = new SequenceContext(name, result, parentContext || null);
             const subResult = this.runSequence(cloneDeep(this.sequences[name]), context);
             if (subResult.promise !== null) {
                 result.delayResponse(subResult.promise);
@@ -167,7 +167,7 @@ export class EventPipeline {
      */
     private runSequence(sequence: SequenceInterface, context: SequenceContext): DispatchResult {
         let index = -1;
-        const result = new DispatchResult();
+        const result = new DispatchResult(context.result);
         const onError = (reason: any, item: SequenceItemInterface, onFinish: () => void) => {
             if (item.onError === SequenceErrorBasicBehavior.Undefined) {
                 item.onError = sequence.onError || DefaultSequenceErrorBehavior;
@@ -187,6 +187,9 @@ export class EventPipeline {
                 context.stopSequence(true);
             }
             // Else is the behavior "Ignore", so we do nothing.
+
+            // Propagate the error to the parent result
+            result.fail(reason);
             onFinish();
         }
         const dispatchItem = (item: SequenceItemInterface, onFinish: () => void) => {
@@ -195,6 +198,9 @@ export class EventPipeline {
                 if (item.event !== null) {
                     context.event = item.event;
                     subResult = this.dispatcher.dispatch(item.event, context, true);
+                    if (subResult.error) {
+                        result.fail(subResult.errorDetail);
+                    }
                 } else if (item.sequences !== null) {
                     subResult = this.runSequences(item.sequences, context);
                 }
@@ -203,9 +209,9 @@ export class EventPipeline {
                     (result.localPromise as Promise<any>).then(() => {
                         // The promise of the sub result will always resolve, even on error.
                         // The error is contained in the DispatchResult object.
-                        const result = subResult as DispatchResult;
-                        if (result.error) {
-                            onError(result.errorDetail, item, onFinish);
+                        subResult = subResult as DispatchResult;
+                        if (subResult.error) {
+                            onError(subResult.errorDetail, item, onFinish);
                         } else {
                             onFinish();
                         }

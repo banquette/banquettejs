@@ -22,7 +22,7 @@ export class DispatchResult<T = any> {
     private previousPromise: Promise<any>|null;
     private promiseResolve: ((result: DispatchResult<T>) => any)|null;
 
-    public constructor() {
+    public constructor(public readonly parent: DispatchResult|null = null) {
         this.results = [];
         this.promise = null;
         this.localPromise = null;
@@ -68,7 +68,7 @@ export class DispatchResult<T = any> {
     /**
      * Set a promise that will resolve when all the subscriber have been called and finished their processing.
      */
-    public delayResponse(promise: Promise<any>): void {
+    public delayResponse(promise: Promise<DispatchResult>): void {
         this.setStatus(DispatchResultStatus.Waiting);
         if (this.promise === null) {
             (this as Writeable<DispatchResult<T>>).promise = new Promise<DispatchResult<T>>((resolve) => {
@@ -85,17 +85,20 @@ export class DispatchResult<T = any> {
                 return this;
             });
         }
-        let localPromise: Promise<any> = (this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]))
+        let localPromise: Promise<any> = (this.localPromise === null ? promise : Promise.all([this.localPromise, promise]))
         .then(() => {
             // The timeout is required so the dispatcher can execute the next subscriber if the execution is sequential.
             // Otherwise, "localPromise" will always be equal to "previousPromise".
             // If it is still equal on the next cycle, we have reached the end.
             window.setTimeout(() => {
                 if (localPromise === this.previousPromise && this.promiseResolve) {
-                    (this.promiseResolve as Function)(this);
+                    if (this.promiseResolve) {
+                        this.promiseResolve(this);
+                    }
                 }
                 (this as Writeable<DispatchResult<T>>).localPromise = null;
             });
+            return this;
         }).catch((reason: any) => {
             this.fail(reason);
         });
@@ -116,6 +119,9 @@ export class DispatchResult<T = any> {
             this.promiseResolve(this);
         }
         this.cleanupAsync();
+        if (this.parent !== null) {
+            this.parent.fail(reason);
+        }
     }
 
     /**

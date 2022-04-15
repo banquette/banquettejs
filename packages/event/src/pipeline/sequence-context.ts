@@ -1,5 +1,6 @@
 import { VarHolder } from "@banquette/utils-misc/var-holder";
 import { Writeable } from "@banquette/utils-type/types";
+import { DispatchResult } from "../dispatch-result";
 import { EventArg } from "../event-arg";
 
 export class SequenceContext extends EventArg {
@@ -20,7 +21,9 @@ export class SequenceContext extends EventArg {
      */
     public readonly sequenceStopped: boolean = false;
 
-    public constructor(public sequence: string, public parent: SequenceContext|null = null) {
+    public constructor(public sequence: string,
+                       public result: DispatchResult,
+                       public parent: SequenceContext|null = null) {
         super();
     }
 
