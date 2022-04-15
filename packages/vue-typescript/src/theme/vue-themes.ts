@@ -68,8 +68,8 @@ export class VueThemes {
      */
     public static Get(name: string): VueTheme {
         if (isUndefined(VueThemes.Themes[name])) {
-            const inst = new VueTheme(name, VueThemes.EventDispatcher);
-            VueThemes.Themes[name] = inst;
+            const theme = new VueTheme(name, VueThemes.EventDispatcher);
+            VueThemes.Themes[name] = theme;
 
             if (VueThemes.CurrentThemeName === name) {
                 VueThemes.SetCurrent(name);
@@ -80,8 +80,8 @@ export class VueThemes {
             // Do not dispatch synchronously to give time to the caller to finish its setup.
             if (getActiveComponentsCount() > 0) {
                 window.setTimeout(() => {
-                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeEvent(inst));
-                    inst.invalidate();
+                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeEvent(theme));
+                    theme.injectInDOM();
                 });
             }
         }
@@ -144,6 +144,6 @@ export class VueThemes {
      * Test if the input is a VariantDefinitionInterface.
      */
     private static IsVariantDefinitionInterface(input: any): input is VariantDefinitionInterface {
-        return isObject(input) && 'match' in input && ('apply' in input || 'props' in input || 'vars' in input || 'css' in input);
+        return isObject(input) && 'match' in input && ('apply' in input || 'props' in input || 'cssVars' in input || 'cssSelectors' in input || 'cssCode' in input);
     }
 }

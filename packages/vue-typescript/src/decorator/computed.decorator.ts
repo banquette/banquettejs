@@ -25,6 +25,8 @@ export interface ComputedDecoratorOptions {
     exposeAs?: string|null|false;
 }
 
+export type ComputedMetadata = Record<string, Omit<ComputedDecoratorOptions, 'exposedAs'>>;
+
 /**
  * Mark a property as reactive so its changes are tracked by Vue and it can be used in the template.
  */

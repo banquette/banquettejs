@@ -1,9 +1,12 @@
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
 import { UnsubscribeFunction } from "@banquette/event/type";
-import { flatten } from "@banquette/utils-object/flatten";
+import { flattenObject } from "@banquette/utils-object/flatten-object";
+import { kebabCase } from "@banquette/utils-string/case/kebab-case";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive, Writeable } from "@banquette/utils-type/types";
-import { VarsMapInterface, PrivateThemeableDecoratorOptions } from "../decorator/themeable.decorator";
+import { VarsMapInterface, ThemeableMetadata } from "../decorator/themeable.decorator";
 import { getActiveComponentsCount } from "../utils/components-count";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { Vue } from "../vue";
@@ -32,7 +35,12 @@ export class VueThemeVariant {
     /**
      * Key/value pair of css variables to override.
      */
-    public readonly varsMap: Record<string, Primitive> = {};
+    public readonly cssVarsMap: Record<string, Primitive> = {};
+
+    /**
+     * Key/value pair of css selectors and their css rules to apply.
+     */
+    public readonly cssSelectorsMap: Record<string, Record<string, Primitive>> = {};
 
     /**
      * Key/value pair holding propsMap values.
@@ -57,12 +65,7 @@ export class VueThemeVariant {
     /**
      * The themeable configuration relative to the variant.
      */
-    public readonly configuration!: PrivateThemeableDecoratorOptions;
-
-    /**
-     * Track if a change event has been scheduled.
-     */
-    private changeNotificationScheduled: boolean = false;
+    public readonly configuration!: ThemeableMetadata;
 
     public constructor(public readonly theme: VueTheme,
                        public readonly selector: NormalizedVariantSelectorInterface,
@@ -79,16 +82,16 @@ export class VueThemeVariant {
     }
 
     /**
-     * Alias of `appendCss`.
+     * Alias of `appendCssCode`.
      */
-    public css(source: string): VueThemeVariant {
-        return this.appendCss(source);
+    public cssCode(source: string): VueThemeVariant {
+        return this.appendCssCode(source);
     }
 
     /**
      * Append raw css code to already registered one.
      */
-    public appendCss(source: string): VueThemeVariant {
+    public appendCssCode(source: string): VueThemeVariant {
         (this as Writeable<VueThemeVariant>).rawCss += source;
         this.scheduleChangeNotification();
         return this;
@@ -97,7 +100,7 @@ export class VueThemeVariant {
     /**
      * Add raw css code before already registered one.
      */
-    public prependCss(source: string): VueThemeVariant {
+    public prependCssCode(source: string): VueThemeVariant {
         (this as Writeable<VueThemeVariant>).rawCss = source + this.rawCss;
         this.scheduleChangeNotification();
         return this;
@@ -106,7 +109,7 @@ export class VueThemeVariant {
     /**
      * Remove registered css.
      */
-    public clearCss(): VueThemeVariant {
+    public clearCssCode(): VueThemeVariant {
         (this as Writeable<VueThemeVariant>).rawCss = '';
         this.scheduleChangeNotification();
         return this;
@@ -115,15 +118,15 @@ export class VueThemeVariant {
     /**
      * Define the value of a css variable.
      */
-    public var(name: string, value: Primitive): VueThemeVariant {
-        return this.vars({[name]: value});
+    public cssVar(name: string, value: string): VueThemeVariant {
+        return this.cssVars({[name]: value});
     }
 
     /**
      * Define multiple css vars as a key/value pair.
      */
-    public vars(map: VarsMapInterface): VueThemeVariant {
-        Object.assign(this.varsMap, flatten(map));
+    public cssVars(map: VarsMapInterface): VueThemeVariant {
+        Object.assign(this.cssVarsMap, flattenObject(map));
         this.scheduleChangeNotification();
         return this;
     }
@@ -131,8 +134,44 @@ export class VueThemeVariant {
     /**
      * Remove all css variables overrides.
      */
-    public clearVars(): VueThemeVariant {
-        (this as Writeable<VueThemeVariant>).varsMap = {};
+    public clearCssVars(): VueThemeVariant {
+        (this as Writeable<VueThemeVariant>).cssVarsMap = {};
+        this.scheduleChangeNotification();
+        return this;
+    }
+
+    /**
+     * Define the css properties to associate to a single css selector.
+     */
+    public cssSelector(name: string, values: Record<string, Primitive>): VueThemeVariant {
+        return this.cssSelectors({[name]: values});
+    }
+
+    /**
+     * Define the css properties of multiple css selectors at once.
+     */
+    public cssSelectors(map: VarsMapInterface): VueThemeVariant {
+        const flattened = flattenObject(map, '.', -1);
+        for (const selector of Object.keys(flattened)) {
+            if (isUndefined(this.cssSelectorsMap[selector])) {
+                this.cssSelectorsMap[selector] = {};
+            }
+            if (isObject(flattened[selector])) {
+                for (const rule of Object.keys(flattened[selector])) {
+                    const normalizedRule = kebabCase(rule);
+                    this.cssSelectorsMap[selector][normalizedRule] = flattened[selector][rule];
+                }
+            }
+        }
+        this.scheduleChangeNotification();
+        return this;
+    }
+
+    /**
+     * Remove all css selectors overrides.
+     */
+    public clearCssSelectors(): VueThemeVariant {
+        (this as Writeable<VueThemeVariant>).cssSelectorsMap = {};
         this.scheduleChangeNotification();
         return this;
     }
@@ -174,7 +213,7 @@ export class VueThemeVariant {
     /**
      * Mark the variant as used.
      */
-    public use(component: Vue, configuration: PrivateThemeableDecoratorOptions): void {
+    public use(component: Vue, configuration: ThemeableMetadata): void {
         (this as Writeable<VueThemeVariant>).used = true;
         (this as Writeable<VueThemeVariant>).configuration = configuration;
         (this as Writeable<VueThemeVariant>).scopeId = (component.$.type as any)['__scopeId'] || null;
@@ -198,16 +237,19 @@ export class VueThemeVariant {
     /**
      * Schedule a `ThemesEvents.VariantUpdated` on the next JS cycle.
      */
-    private scheduleChangeNotification(): void {
-        if (this.changeNotificationScheduled || !getActiveComponentsCount()) {
-            return ;
-        }
-        this.changeNotificationScheduled = true;
-        window.setTimeout(() => {
-            this.notifyChange();
-            this.changeNotificationScheduled = false;
-        });
-    }
+    private scheduleChangeNotification = (() => {
+        let scheduled = false;
+        return (): void => {
+            if (scheduled || !getActiveComponentsCount()) {
+                return;
+            }
+            scheduled = true;
+            queueMicrotask(() => {
+                this.notifyChange();
+                scheduled = false;
+            });
+        };
+    })();
 
     /**
      * Immediately notify listeners that a change occurred.

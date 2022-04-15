@@ -2,7 +2,7 @@ import { maybeResolveTsInst } from "../../utils/converters";
 import { getComponentName } from "../../utils/get-component-name";
 import { Vue } from "../../vue";
 import { ThemeWildcard } from "../constant";
-import ThemeComponent from "../theme.component";
+import { ThemeComponent } from "../theme.component";
 import { VueTheme } from "../vue-theme";
 import { VueThemes } from "../vue-themes";
 

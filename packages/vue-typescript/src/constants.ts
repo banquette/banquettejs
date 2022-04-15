@@ -40,6 +40,11 @@ export const COMPONENT_CTOR = '__bvcCtor';
 export const COMPONENT_INSTANCE = '__bvcInst';
 
 /**
+ * Holds the list of active theme variants.
+ */
+export const ACTIVE_VARIANTS = '__bvcVariants';
+
+/**
  * Vue lifecycle hooks.
  * @link https://v3.vuejs.org/guide/composition-api-lifecycle-hooks.html#lifecycle-hooks
  */

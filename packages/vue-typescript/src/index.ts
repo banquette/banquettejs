@@ -1,5 +1,6 @@
 export * from './vue-builder';
 export * from './vue';
+export * from './component-aware.composable';
 
 /**
  * Decorators
@@ -28,7 +29,8 @@ export * from './decorator/directive.decorator';
  */
 export { ThemeWildcard, VariantWildcard } from './theme/constant';
 export * from './theme/vue-themes';
-import './theme/theme.component';
+export * from './theme/theme.component';
+export * from './theme/bind-theme.directive';
 
 /**
  * Utils

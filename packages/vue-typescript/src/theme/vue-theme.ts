@@ -30,11 +30,6 @@ export class VueTheme {
     public readonly id: string = getUniqueRandomId();
 
     /**
-     * If `true`, the theme is queue for update.
-     */
-    private invalidated: boolean = false;
-
-    /**
      * An object holding all the variants of a theme, indexed by component name.
      */
     private variants: Record<string, ComponentVariants> = {};
@@ -60,16 +55,16 @@ export class VueTheme {
             this.variants[componentName] = {variants: {}, styleElement: null};
         }
         if (isUndefined(this.variants[componentName].variants[variantId])) {
-            const inst = new VueThemeVariant(this, normalizedVariantSelector, this.eventDispatcher);
+            const variant = new VueThemeVariant(this, normalizedVariantSelector, this.eventDispatcher);
             this.variants[componentName].variants[variantId] = {
-                variant: inst,
-                onUseUnsubscribeFn: inst.onUse((event: ThemeVariantEvent) => {
-                    if (event.variant === inst) {
+                variant,
+                onUseUnsubscribeFn: variant.onUse((event: ThemeVariantEvent) => {
+                    if (event.variant === variant) {
                         this.variants[componentName].variants[variantId].onUseUnsubscribeFn();
-                        this.invalidate();
+                        this.injectInDOM();
                     }
                 }),
-                onChangeUnsubscribeFn: inst.onChange(() => this.invalidate()),
+                onChangeUnsubscribeFn: variant.onChange(() => this.injectInDOM()),
             };
         }
         return this.variants[componentName].variants[variantId].variant;
@@ -109,17 +104,64 @@ export class VueTheme {
     }
 
     /**
-     * Invalid the theme, forcing its styles to recompute and components using it to update.
+     * Inject the <style> element containing all the active styles of the theme.
      */
-    public invalidate(): void {
-        if (this.invalidated) {
-            return ;
+    public injectInDOM(): void {
+        for (const componentName of Object.keys(this.variants)) {
+            let componentStyles = '';
+            const component = this.variants[componentName];
+            for (const variantName of Object.keys(component.variants)) {
+                const variant = component.variants[variantName].variant;
+                if (!variant.used) {
+                    continue ;
+                }
+                let variantStyles = trim(variant.rawCss);
+                for (const selectorKey of Object.keys(variant.cssSelectorsMap)) {
+                    const selectorAttributes = Object.keys(variant.cssSelectorsMap[selectorKey]);
+                    if (!isUndefined(variant.configuration.css.selectors[selectorKey]) && selectorAttributes.length > 0) {
+                        variantStyles += variant.configuration.css.selectors[selectorKey] + " {\n";
+                        for (const rule of selectorAttributes) {
+                            variantStyles += `${rule}: ${variant.cssSelectorsMap[selectorKey][rule]};\n`;
+                        }
+                        variantStyles += "}\n";
+                    }
+                }
+                if (variantStyles.length > 0) {
+                    variantStyles = injectContextInCssSource(variantStyles, variant.theme.id, `data-${variant.uid}`, variant.scopeId);
+                    variantStyles += "\n";
+                }
+                const cssVarsKeys = Object.keys(variant.cssVarsMap);
+                if (cssVarsKeys.length > 0) {
+                    variantStyles += `.${variant.theme.id} [data-${variant.uid}]` + (variant.scopeId !== null ? `[${variant.scopeId}]` : '');
+                    variantStyles += " {\n";
+                    for (const key of cssVarsKeys) {
+                        if (!isUndefined(variant.configuration.css.vars[key])) {
+                            let varName = variant.configuration.css.vars[key];
+                            let prefix = '';
+                            if (varName[0] === '@') {
+                                varName = varName.substring(1);
+                                prefix = variant.configuration.componentName;
+                            }
+                            variantStyles += `    --${prefix}${varName}: ${variant.cssVarsMap[key]};` + "\n";
+                        }
+                    }
+                    variantStyles += "}\n";
+                }
+                componentStyles += variantStyles;
+            }
+            if (componentStyles.length > 0) {
+                if (component.styleElement === null) {
+                    const style = document.createElement('style');
+                    style.setAttribute('type', 'text/css');
+                    document.head.appendChild(style);
+                    component.styleElement = style;
+                }
+                component.styleElement.innerHTML = componentStyles;
+            } else if (component.styleElement !== null) {
+                component.styleElement.remove();
+                component.styleElement = null;
+            }
         }
-        this.invalidated = true;
-        window.setTimeout(() => {
-            this.injectThemeStyles();
-            this.invalidated = false;
-        });
     }
 
     /**
@@ -146,50 +188,5 @@ export class VueTheme {
                 cb();
             }
         });
-    }
-
-    /**
-     * Inject the <style> element containing all the active styles of the theme.
-     */
-    private injectThemeStyles(): void {
-        for (const componentName of Object.keys(this.variants)) {
-            let componentStyles = '';
-            const component = this.variants[componentName];
-            for (const variantName of Object.keys(component.variants)) {
-                const variant = component.variants[variantName].variant;
-                if (!variant.used) {
-                    continue ;
-                }
-                let variantStyles = trim(variant.rawCss);
-                if (variantStyles.length > 0) {
-                    variantStyles = injectContextInCssSource(variantStyles, variant.theme.id, variant.uid, variant.scopeId);
-                    variantStyles += "\n";
-                }
-                const cssVarsKeys = Object.keys(variant.varsMap);
-                if (cssVarsKeys.length > 0) {
-                    variantStyles += `.${variant.theme.id} [data-${variant.uid}]` + (variant.scopeId !== null ? `[${variant.scopeId}]` : '');
-                    variantStyles += " {\n";
-                    for (const key of cssVarsKeys) {
-                        if (!isUndefined(variant.configuration.vars[key])) {
-                            variantStyles += `    --${variant.configuration.vars[key]}: ${variant.varsMap[key]};` + "\n";
-                        }
-                    }
-                    variantStyles += "}\n";
-                }
-                componentStyles += variantStyles;
-            }
-            if (componentStyles.length > 0) {
-                if (component.styleElement === null) {
-                    const style = document.createElement('style');
-                    style.setAttribute('type', 'text/css');
-                    document.head.appendChild(style);
-                    component.styleElement = style;
-                }
-                component.styleElement.innerHTML = componentStyles;
-            } else if (component.styleElement !== null) {
-                component.styleElement.remove();
-                component.styleElement = null;
-            }
-        }
     }
 }

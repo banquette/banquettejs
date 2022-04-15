@@ -1,14 +1,15 @@
-import { PrivateComponentDecoratorOptions } from "./component.decorator";
+import { ComponentMetadata } from "./component.decorator";
 import { ComposableDecoratorOptions } from "./composable.decorator";
-import { ComputedDecoratorOptions } from "./computed.decorator";
+import { ComputedMetadata } from "./computed.decorator";
+import { ExposeMetadata } from "./expose.decorator";
 import { ImportDecoratorOptions } from "./import.decorator";
 import { InjectProvidedDecoratorOptions } from "./inject-provided.decorator";
 import { LifecycleHook } from "./lifecycle.decorator";
-import { PropPrivateOptions } from "./prop.decorator";
+import { PropMetadata } from "./prop.decorator";
 import { ProvideDecoratorOptions } from "./provide.decorator";
 import { ThemeVarDecoratorOptions } from "./theme-var.decorator";
-import { PrivateThemeableDecoratorOptions } from "./themeable.decorator";
-import { PrivateWatchDecoratorOptions } from "./watch.decorator";
+import { ThemeableMetadata } from "./themeable.decorator";
+import { WatchMetadata } from "./watch.decorator";
 
 /**
  * An object containing the data defined by decorators.
@@ -19,7 +20,7 @@ export interface ComponentMetadataInterface {
      * Data relative to the @Component decorator.
      * Optional because only the @Component decorator can set it.
      */
-    component: PrivateComponentDecoratorOptions;
+    component: ComponentMetadata;
 
     /**
      * Data relative to the @Composable decorator.
@@ -30,12 +31,12 @@ export interface ComponentMetadataInterface {
     /**
      * Define the props to register.
      */
-    props: Record<string, PropPrivateOptions>;
+    props: Record<string, PropMetadata>;
 
     /**
      * The list of the computed properties.
      */
-    computed: Record<string, Omit<ComputedDecoratorOptions, 'exposedAs'>>;
+    computed: ComputedMetadata;
 
     /**
      * The list of reactive properties.
@@ -45,7 +46,7 @@ export interface ComponentMetadataInterface {
     /**
      * The list properties/methods exposed to the template.
      */
-    exposed: Record<string, string>;
+    exposed: Record<string, ExposeMetadata>;
 
     /**
      * The list of provided properties.
@@ -65,7 +66,7 @@ export interface ComponentMetadataInterface {
     /**
      * Getter/setter or functions being watched.
      */
-    watch: PrivateWatchDecoratorOptions[];
+    watch: WatchMetadata[];
 
     /**
      * Map of property names and composable ctor to import.
@@ -85,7 +86,7 @@ export interface ComponentMetadataInterface {
     /**
      * Theming configuration.
      */
-    themeable: PrivateThemeableDecoratorOptions|null;
+    themeable: ThemeableMetadata|null;
 
     /**
      * Map of theme vars accessors.

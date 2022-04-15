@@ -2,11 +2,12 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { noop } from "@banquette/utils-misc/noop";
 import { kebabCase } from "@banquette/utils-string/case/kebab-case";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
-import { DirectiveBinding, DirectiveHook, VNode } from "vue";
+import { DirectiveBinding, DirectiveHook, VNode, watch, WatchStopHandle, ref } from "vue";
 import { VueBuilder } from "../vue-builder";
 
 export interface DirectiveDecoratorOptions {
@@ -14,7 +15,7 @@ export interface DirectiveDecoratorOptions {
      * Name of the directive for VueJS.
      * @see https://v3.vuejs.org/guide/component-registration.html#component-names
      */
-    name?: string;
+    name: string;
 
     /**
      * Group(s) on which the component should be registered in the VueBuilder.
@@ -25,13 +26,16 @@ export interface DirectiveDecoratorOptions {
      * Function to call to create an instance of the directive.
      * If not defined, the constructor is simply called without any parameters.
      */
-    factory?: (() => any)|null;
+    factory: (() => any);
 }
+
+type ExtendedCtor = Constructor & {__bvcDirCtorId?: number};
+type ExtendedElement = Element & {__bvcDirInst?: number};
 
 let maxId: number = 0;
 const uidMap: Record<string, any> = {};
 
-function getOrCreateInstance(ctor: Constructor & {__bvcDirCtorId?: number}, factory: () => any, el: Element & {__bvcDirInst?: number}): any {
+function getOrCreateInstance(ctor: ExtendedCtor, factory: () => any, el: ExtendedElement): any {
     if (isUndefined(ctor.__bvcDirCtorId)) {
         Object.defineProperty(ctor, '__bvcDirCtorId', {
             enumerable: false,
@@ -55,9 +59,17 @@ function getOrCreateInstance(ctor: Constructor & {__bvcDirCtorId?: number}, fact
     return uidMap[identifier];
 }
 
-function removeInstance(el: Element & {__bvcDirInst?: number}): void {
-    if (!isUndefined(el.__bvcDirInst) && !isUndefined(uidMap[el.__bvcDirInst])) {
-        delete uidMap[el.__bvcDirInst];
+function getInstanceUid(ctor: ExtendedCtor, el: ExtendedElement): string|null {
+    if (!isUndefined(ctor.__bvcDirCtorId) && !isUndefined(el.__bvcDirInst)) {
+        return el.__bvcDirInst as number + '_' + ctor.__bvcDirCtorId;
+    }
+    return null;
+}
+
+function removeInstance(ctor: ExtendedCtor, el: ExtendedElement): void {
+    const uid = getInstanceUid(ctor, el);
+    if (uid && !isUndefined(uidMap[uid])) {
+        delete uidMap[uid];
     }
 }
 
@@ -65,9 +77,8 @@ function defineProxy(ctor: Constructor, options: DirectiveDecoratorOptions, hook
     if (isUndefined(ctor.prototype[hook])) {
         return noop;
     }
-    const factory = !isNullOrUndefined(options.factory) ? options.factory : () => new ctor();
     return (...args: [Element, DirectiveBinding, VNode, VNode|null]) => {
-        const inst = getOrCreateInstance(ctor, factory, args[0]);
+        const inst = getOrCreateInstance(ctor, options.factory, args[0]);
         return inst[hook].apply(inst, args);
     };
 }
@@ -78,10 +89,10 @@ function defineProxy(ctor: Constructor, options: DirectiveDecoratorOptions, hook
  * The component will automatically be registered into the VueBuilder in the specified groups.
  */
 export function Directive(name: string): any;
-export function Directive(options: DirectiveDecoratorOptions): any;
-export function Directive(optionsOrName: DirectiveDecoratorOptions|string = {}): any {
+export function Directive(options: Partial<DirectiveDecoratorOptions>): any;
+export function Directive(optionsOrName: Partial<DirectiveDecoratorOptions>|string = {}): any {
     return (ctor: Constructor) => {
-        const options: DirectiveDecoratorOptions = isString(optionsOrName) ? {name: optionsOrName} : optionsOrName;
+        const options: any = isString(optionsOrName) ? {name: optionsOrName} : optionsOrName;
         if (isUndefined(options.name)) {
             if (!isNonEmptyString(ctor.name)) {
                 throw new UsageException(
@@ -91,8 +102,23 @@ export function Directive(optionsOrName: DirectiveDecoratorOptions|string = {}):
             }
             options.name = kebabCase(ctor.name) as string;
         }
+        options.group = options.group || undefined;
+        options.factory = isFunction(options.factory) ? options.factory : () => new ctor();
         VueBuilder.RegisterDirective(options.name, {
-            created: defineProxy(ctor, options, 'created'),
+            created: (() => {
+                const userCallback = defineProxy(ctor, options, 'created');
+                return (...args: [Element, DirectiveBinding, VNode, VNode | null]) => {
+                    const inst = getOrCreateInstance(ctor, options.factory, args[0]);
+                    userCallback.apply(null, args);
+
+                    // If the used defined a "bindingUpdated" method, watch the bindings for changes.
+                    if (inst && isFunction(inst.bindingUpdated) && isObject(args[1].value)) {
+                        inst.__watchStopHandle = watch(ref(args[1].value), () => {
+                            inst.bindingUpdated.apply(inst, args);
+                        }, {deep: true});
+                    }
+                };
+            })(),
             beforeMount: defineProxy(ctor, options, 'beforeMount'),
             mounted: defineProxy(ctor, options, 'mounted'),
             beforeUpdate: defineProxy(ctor, options, 'beforeUpdate'),
@@ -101,8 +127,12 @@ export function Directive(optionsOrName: DirectiveDecoratorOptions|string = {}):
             unmounted: (() => {
                 const userCallback = defineProxy(ctor, options, 'unmounted');
                 return (...args: [Element, DirectiveBinding, VNode, VNode | null]) => {
+                    const inst = getOrCreateInstance(ctor, options.factory, args[0]);
+                    if (inst.__watchStopHandle) {
+                        inst.__watchStopHandle();
+                    }
                     userCallback.apply(null, args);
-                    removeInstance(args[0]);
+                    removeInstance(ctor, args[0]);
                 };
             })()
         }, options.group, ctor);

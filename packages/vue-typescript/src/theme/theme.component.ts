@@ -9,7 +9,7 @@ import { ThemeEvent } from "./event/theme.event";
 import { VueThemes } from "./vue-themes";
 
 @Component('bt-theme')
-export default class ThemeComponent extends Vue {
+export class ThemeComponent extends Vue {
     /**
      * Name of the theme to apply.
      * If the theme doesn't exist yet, the component will update automatically when it becomes available.

@@ -1,10 +1,20 @@
+import { getObjectValue } from "@banquette/utils-object/get-object-value";
+import { trim } from "@banquette/utils-string/format/trim";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { AbstractConstructor } from "@banquette/utils-type/types";
 import { WatchOptions } from "@vue/runtime-core";
-import { ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle, VNode } from "vue";
+import {
+    ComponentPublicInstance,
+    ComponentInternalInstance,
+    Slots,
+    WatchStopHandle,
+    VNode,
+    Comment,
+    Fragment
+} from "vue";
 import { COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { VccOpts } from "./type";
@@ -44,10 +54,33 @@ export abstract class Vue implements ComponentPublicInstance {
     // End of placeholders.
 
     /**
-     * Test if a slot is defined and not empty.
+     * Test if a slot is defined.
      */
     public hasSlot(name: string): boolean {
         return isObject(this.$slots) && Object.keys(this.$slots).indexOf(name) > -1;
+    }
+
+    /**
+     * Test if a slot is defined and not empty.
+     */
+    public hasNonEmptySlot(name: string): boolean {
+        if (!this.hasSlot(name)) {
+            return false;
+        }
+        const isNonEmptyNode = function(node: VNode) {
+            if (node.type === Fragment) {
+                if (isArray(node.children)) {
+                    for (const child of node.children) {
+                        if (isNonEmptyNode(child as VNode)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            return node.type !== Comment;
+        };
+        return (this.$slots as any)[name]().findIndex((node: VNode) => isNonEmptyNode(node)) > -1;
     }
 
     /**

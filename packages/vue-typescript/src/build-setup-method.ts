@@ -1,10 +1,8 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { areEqual } from "@banquette/utils-misc/are-equal";
 import { noop } from "@banquette/utils-misc/noop";
-import { once } from "@banquette/utils-misc/once";
 import { proxy } from "@banquette/utils-misc/proxy";
-import { recursionSafeProxy } from "@banquette/utils-misc/recursion-safe-proxy";
+import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isArray } from "@banquette/utils-type/is-array";
@@ -32,21 +30,17 @@ import {
     onBeforeMount,
     onMounted,
     nextTick,
-    onBeforeUnmount, onUpdated, callWithErrorHandling
+    onBeforeUnmount,
+    toRaw
 } from "vue";
-import { HOOKS_MAP, COMPONENT_INSTANCE } from "./constants";
+import { ComponentAwareComposable } from "./component-aware.composable";
+import { HOOKS_MAP, COMPONENT_INSTANCE, ACTIVE_VARIANTS } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
 import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
-import { PrivateThemeableDecoratorOptions } from "./decorator/themeable.decorator";
 import { WatchFunction, ImmediateStrategy, PrivateWatchOptions } from "./decorator/watch.decorator";
-import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
-import { matchVariant } from "./theme/utils/match-variants";
-import { splitVariantString } from "./theme/utils/split-variant-string";
-import { VueTheme } from "./theme/vue-theme";
-import { VueThemeVariant } from "./theme/vue-theme-variant";
 import { PrefixOrAlias } from "./type";
 import { incrementActiveComponentsCount, decrementActiveComponentsCount } from "./utils/components-count";
 import { anyToTsInst } from "./utils/converters";
@@ -66,7 +60,6 @@ const vueInstancesMap: WeakMap<any, any> = new WeakMap<any, any>();
 export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
-        let activeVariants: VueThemeVariant[] = [];
         let computedVersion: Ref = ref(1);
         const output: Record<any, any> = {};
         if (inst === null) {
@@ -77,12 +70,20 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             }
             inst = instantiate(ctor, data.component);
 
-            if (data.themeable && !isUndefined(inst[data.themeable.prop])) {
-                throw new UsageException(
-                    `The name "${data.themeable.prop}" is already used in the component's instance, ` +
-                    `please define another name for the prop that defines the name of the variant to use. ` +
-                    `You can set the "prop" option of the "@Themeable" decorator for that.`
-                );
+            if (data.themeable) {
+                if (!isUndefined(inst[data.themeable.prop])) {
+                    throw new UsageException(
+                        `The name "${data.themeable.prop}" is already used in the component's instance, ` +
+                        `please define another name for the prop that defines the name of the variant to use. ` +
+                        `You can set the "prop" option of the "@Themeable" decorator for that.`
+                    );
+                }
+                Object.defineProperty(inst, ACTIVE_VARIANTS, {
+                    enumerable: false,
+                    configurable: false,
+                    writable: true,
+                    value: []
+                });
             }
             defineGetter(inst, '$forceUpdateComputed', () => () => {
                 computedVersion.value++;
@@ -100,29 +101,29 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         let lastModifiedValue: any;
                         return new Proxy(proxified, {
                             get(target: any, name: string): any {
+                                let value: any = target[name];
                                 if (name === 'value') {
-                                    let newValue: any = target[name];
-                                    if (data.props[propName].default === newValue) {
-                                        for (const variant of activeVariants) {
+                                    if (data.props[propName].default === value && inst[ACTIVE_VARIANTS]) {
+                                        for (const variant of inst[ACTIVE_VARIANTS]) {
                                             if (Object.keys(variant.propsMap).indexOf(propName) > -1) {
-                                                newValue = variant.propsMap[propName];
-                                                // Continue until the last variant to give priority to the one defined the last.
+                                                value = variant.propsMap[propName];
+                                                // Continue until the last variant to give priority to the one defined last.
                                             }
                                         }
                                     }
                                     if (validate !== null) {
-                                        if (lastOriginalValue !== newValue) {
-                                            lastOriginalValue = newValue;
-                                            lastModifiedValue = validate.apply(inst, [newValue]);
+                                        if (lastOriginalValue !== value) {
+                                            lastOriginalValue = value;
+                                            lastModifiedValue = validate.apply(inst, [value]);
                                         }
                                         if (!isUndefined(lastModifiedValue)) {
                                             return lastModifiedValue;
                                         }
                                     } else {
-                                        return newValue;
+                                        return value;
                                     }
                                 }
-                                return target[name];
+                                return value;
                             },
                         });
                     })(propRef, propName, data.props[propName].validate || null);
@@ -136,123 +137,18 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
 
             // Watch props changes to update theming attributes accordingly.
             if (data.themeable !== null) {
-                (function(configuration: PrivateThemeableDecoratorOptions) {
-                    let activeVariantsAttributes: string[] = [];
-                    let unsubscribeFns: UnsubscribeFunction[] = [];
-                    let updateScheduled: boolean = false;
-                    let lastAttributesStr = '';
-                    const forceUpdate = () => {
-                        inst.$forceUpdateComputed();
-                        inst.$forceUpdate();
-                    };
-                    const scheduleForceUpdate = () => {
-                        if (!updateScheduled) {
-                            updateScheduled = true;
-                            inst.$nextTick(() => {
-                                forceUpdate();
-                                updateScheduled = false;
-                            });
-                        }
-                    };
-                    const getAttributesStr = () => {
-                        const el = inst.$el;
-                        let attributesStr: string = '';
-                        for (let i = 0; i < el.attributes.length; i++){
-                            attributesStr += el.attributes[i].nodeName + String(el.attributes[i].value);
-                        }
-                        return attributesStr;
-                    };
-                    const onChange = () => {
-                        const themes = getThemesForComponent(inst);
-                        const activeThemes: Array<{theme: VueTheme, trackedParentComponents: string[]}> = [];
-                        let expectedVariants: string[] = splitVariantString(inst[configuration.prop] || '');
-                        const lastActiveVariantsAttributes = ([] as string[]).concat(activeVariantsAttributes);
-
-                        activeVariants = [];
-                        activeVariantsAttributes = [];
-
-                        // Find relevant variants for the current context
-                        for (const theme of themes) {
-                            const variantsCandidates = theme.getVariants(data.component.name);
-                            const activeTheme: {theme: VueTheme, trackedParentComponents: string[]} = {theme, trackedParentComponents: []};
-                            for (const variantCandidate of variantsCandidates) {
-                                if (matchVariant(variantCandidate, expectedVariants, inst)) {
-                                    activeVariants.push(variantCandidate);
-                                    activeVariantsAttributes.push(variantCandidate.uid);
-                                    if (variantCandidate.applyIds.length > 0) {
-                                        activeVariants = activeVariants.concat(variantsCandidates.filter((v) => {
-                                            if (v.publicId !== null && variantCandidate.applyIds.indexOf(v.publicId) > -1 && activeVariants.indexOf(v) < 0) {
-                                                activeVariantsAttributes.push(v.uid);
-                                                return true;
-                                            }
-                                            return false;
-                                        }));
-                                    }
-                                }
-
-                                // Find if the variant depends on parent components
-                                for (const variantSelectorCandidate of variantCandidate.selector.candidates) {
-                                    for (const parentSelector of variantSelectorCandidate.parents) {
-                                        if (parentSelector.name !== data.component.name /* To prevent infinite loop */ &&
-                                            activeTheme.trackedParentComponents.indexOf(parentSelector.name) < 0) {
-                                            activeTheme.trackedParentComponents.push(parentSelector.name);
-                                        }
-                                    }
-                                }
-
-                            }
-                            if (activeTheme.trackedParentComponents.length > 0) {
-                                activeThemes.push(activeTheme);
-                            }
-                        }
-                        if (!areEqual(activeVariantsAttributes, lastActiveVariantsAttributes)) {
-                            // Reset previous state
-                            for (const unsubscribeFn of unsubscribeFns) {
-                                unsubscribeFn();
-                            }
-
-                            for (const lastActiveAttribute of lastActiveVariantsAttributes) {
-                                inst.$el.removeAttribute('data-' + lastActiveAttribute);
-                            }
-                            // Apply changes to the DOM
-                            for (const item of activeVariants) {
-                                inst.$el.setAttribute('data-' + item.uid, '');
-                                item.use(inst, configuration);
-                                unsubscribeFns.push(item.onChange(scheduleForceUpdate));
-                            }
-                            for (const item of activeThemes) {
-                                // Subscribe to changes of other components.
-                                unsubscribeFns.push(item.theme.onComponentsChange(item.trackedParentComponents, onChangeOnce));
-
-                                // Notify the theme we have changed so other components can react to it.
-                                item.theme.notifyComponentChange(data.component.name);
-                            }
-                            lastAttributesStr = getAttributesStr();
-                            forceUpdate();
-                        }
-                    };
-                    const onChangeOnce = once(onChange);
-                    watch(propsRefs, onChangeOnce);
-                    onMounted(onChange);
-                    onUpdated(() => {
-                        const newAttributesStr = getAttributesStr();
-                        if (lastAttributesStr !== newAttributesStr) {
-                            lastAttributesStr = newAttributesStr;
-                            onChange();
-                        }
-                    });
-                })(data.themeable);
-
                 // Theme vars accessors
                 for (const propertyName of Object.keys(data.themeVars)) {
                     ((_propertyName: string, _configuration: ThemeVarDecoratorOptions) => {
                         Object.defineProperty(inst, _propertyName, {
                             get: () => {
                                 let value = _configuration.defaultValue;
-                                for (const variant of activeVariants) {
-                                    if (Object.keys(variant.varsMap).indexOf(_configuration.name) > -1) {
-                                        value = variant.varsMap[_configuration.name];
-                                        break ;
+                                if (data.themeable) {
+                                    for (const variant of inst[ACTIVE_VARIANTS]) {
+                                        if (Object.keys(variant.cssVarsMap).indexOf(_configuration.name) > -1) {
+                                            value = variant.cssVarsMap[_configuration.name];
+                                            break;
+                                        }
                                     }
                                 }
                                 if (isFunction(_configuration.validate)) {
@@ -271,12 +167,40 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             }
         }
 
+        // Template refs
+        for (const refPropertyName of Object.keys(data.templateRefs)) {
+            ((_templateRefName: string) => {
+                Object.defineProperty(inst, _templateRefName, {
+                    get: () => {
+                        if (!inst.$refs) {
+                        //    console.log('get', _templateRefName, 'NO $refs');
+                            return null;
+                        }
+                        //console.log(inst.$refs);
+                        const v = inst.$refs[data.templateRefs[_templateRefName]];
+                       // console.log('get', _templateRefName, v);
+                        if (isNullOrUndefined(v)) {
+                            return null;
+                        }
+                        // Special case when a ref is set of a <component/> component.
+                        // Try to resolve the component instance if possible.
+                        if (isObject(v) && isObject(v._) && vueInstancesMap.has(v._)) {
+                            return vueInstancesMap.get(v._);
+                        }
+                        return anyToTsInst(v) || v;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+            })(refPropertyName);
+        }
+
         // Reactive
         for (const itemName of data.reactive) {
             const itemRef = ref(inst[itemName]);
             // For properties exposed to the template.
             if (!isUndefined(data.exposed[itemName])) {
-                const exposedName = resolveImportPublicName(importName, data.exposed[itemName], prefixOrAlias);
+                const exposedName = resolveImportPublicName(importName, data.exposed[itemName].exposeAs, prefixOrAlias);
                 if (exposedName !== false) {
                     output[exposedName] = itemRef;
                     defineRefProxy(inst, itemName, output, exposedName);
@@ -289,44 +213,23 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
 
         // Expose
         for (const exposedInstanceName of Object.keys(data.exposed)) {
+            const exposedName = resolveImportPublicName(importName, data.exposed[exposedInstanceName].exposeAs, prefixOrAlias);
+            if (exposedName === false) {
+                continue ;
+            }
             // For methods
             if (isFunction(inst[exposedInstanceName])) {
-                const exposedName = resolveImportPublicName(importName, data.exposed[exposedInstanceName], prefixOrAlias);
-                if (exposedName !== false) {
-                    output[exposedName] = proxy(inst[exposedInstanceName], inst);
-                }
-            } else {
-                // For property exposed to the template without a @Ref().
-                const exposedName = resolveImportPublicName(importName, data.exposed[exposedInstanceName], prefixOrAlias);
-                if (exposedName !== false && isUndefined(output[exposedName])) {
+                output[exposedName] = proxy(inst[exposedInstanceName], inst);
+            }
+            // For property exposed to the template without a @Ref().
+            else if (isUndefined(output[exposedName])) {
+                if (data.exposed[exposedInstanceName].observe) {
                     output[exposedName] = ref(inst[exposedInstanceName]);
                     defineRefProxy(inst, exposedInstanceName, output, exposedName);
+                } else {
+                    output[exposedName] = inst[exposedInstanceName];
                 }
             }
-        }
-
-        // Template refs
-        for (const refPropertyName of Object.keys(data.templateRefs)) {
-            output[data.templateRefs[refPropertyName]] = ref(null);
-            ((_templateRefName: string) => {
-                Object.defineProperty(inst, _templateRefName, {
-                    get: () => {
-                        const v = output[data.templateRefs[_templateRefName]].value;
-
-                        // Special case when a ref is set of a <component/> component.
-                        // Try to resolve the component instance if possible.
-                        if (isObject(v) && isObject(v._) && vueInstancesMap.has(v._)) {
-                            return vueInstancesMap.get(v._);
-                        }
-                        return anyToTsInst(v) || v;
-                    },
-                    set: (value) => {
-                        output[data.templateRefs[_templateRefName]].value = value
-                    },
-                    enumerable: true,
-                    configurable: true,
-                });
-            })(refPropertyName);
         }
 
         // Computed
@@ -386,10 +289,99 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 });
             }
             if (!isUndefined(data.exposed[computedName])) {
-                const exposedName = resolveImportPublicName(importName, data.exposed[computedName], prefixOrAlias);
+                const exposedName = resolveImportPublicName(importName, data.exposed[computedName].exposeAs, prefixOrAlias);
                 if (exposedName !== false) {
                     output[exposedName] = c;
                 }
+            }
+        }
+
+        // Decorated hooks
+        for (const hook of getObjectKeys(data.hooks)) {
+            const hookMethod = HOOKS_MAP[hook as LifecycleHook];
+            if (isFunction(hookMethod)) {
+                // @ts-ignore
+                data.hooks[hook].forEach((methodName) => {
+                    hookMethod(proxy(inst[methodName], inst));
+                });
+            }
+        }
+
+        // Provided
+        for (const property of getObjectKeys(data.provided)) {
+            let providedRef = ref(inst[property]);
+            if (data.provided[property].readonly) {
+                providedRef = readonly(providedRef);
+            }
+            provide(data.provided[property].provideAs, providedRef);
+            defineRefProxy(inst, property, {[property]: providedRef});
+        }
+
+        // Injected
+        for (const property of getObjectKeys(data.injected)) {
+            let injectResult = inject(data.injected[property].target, data.injected[property].defaultValue);
+
+            // If the inject is not found the default value is returned, so create a ref with it.
+            if (!isRef(injectResult)) {
+                injectResult = ref(injectResult);
+            }
+            defineRefProxy(inst, property, {[property]: injectResult});
+            output[property] = injectResult;
+        }
+
+        // Composable
+        if (props === null && Object.keys(data.imports).length > 0) {
+            throw new UsageException(`The class "${inst.constructor.name}" cannot contain imports because it is used as a composable. Composables cannot be nested.`);
+        }
+        for (const targetProperty of Object.keys(data.imports)) {
+            const importOptions: ImportDecoratorOptions = data.imports[targetProperty];
+            const composableCtor: Constructor = importOptions.composable;
+            if (isDecoratedComponentConstructor(composableCtor)) {
+                const composableDecorationData = getOrCreateComponentMetadata(composableCtor.prototype);
+                if (isUndefined(composableDecorationData.component) && isUndefined(composableDecorationData.composable)) {
+                    throw new UsageException(`The class "${composableCtor.name}" cannot be used as a composable because the "@Composable()" decorator is missing.`);
+                }
+                const composableInst = !isNullOrUndefined(inst[targetProperty]) ? inst[targetProperty] : instantiate(composableCtor, composableDecorationData.composable || {});
+                const composableOutput = buildSetupMethod(
+                    composableCtor,
+                    composableDecorationData,
+                    rootProps,
+                    composableInst,
+                    targetProperty,
+                    data.imports[targetProperty].prefixOrAlias
+                )(null, context);
+
+                if (composableInst instanceof ComponentAwareComposable) {
+                    Object.assign(composableInst, {component: inst});
+                }
+                for (const subProp of Object.keys(composableDecorationData.props)) {
+                    const realPropName: string|false = resolveImportPublicName(targetProperty, subProp, importOptions.prefixOrAlias as PrefixOrAlias);
+                    if (realPropName === false) {
+                        continue ;
+                    }
+                    composableInst[subProp] = inst[realPropName];
+                    const descriptor = Object.getOwnPropertyDescriptor(inst, realPropName)!;
+                    ((getter: any, setter: any) => {
+                        Object.defineProperty(composableInst, subProp, {
+                            get: getter,
+                            set: setter,
+                            enumerable: true,
+                            configurable: true,
+                        });
+                    })(descriptor.get, descriptor.set);
+                    delete inst[realPropName];
+                }
+                // Assign the composable instance to the hosting component.
+                Object.defineProperty(inst, targetProperty, {
+                    enumerable: true,
+                    configurable: true,
+                    value: composableInst
+                });
+                // Maybe export the import itself, if exposed.
+                if (!isUndefined(data.exposed[targetProperty])) {
+                    output[data.exposed[targetProperty].exposeAs] = composableInst;
+                }
+                Object.assign(output, composableOutput);
             }
         }
 
@@ -449,6 +441,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     let haveTriggeredImmediately = false;
                     let initialCallConsumed = true;
                     let shouldDelayTrigger: boolean = _watchData.options.immediate !== ImmediateStrategy.Sync;
+                    const deepWatcherPreviousValues: Record<string, any> = {};
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
                             if (!isUndefined(inst.$) && inst.$.isUnmounted) {
@@ -460,17 +453,31 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             initialCallConsumed = true;
                             for (let i = 0; i < realSources.length; ++i) {
                                 const realSource = realSources[i];
-                                let realSourceValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
+                                let realSourceNewValue = isFunction(realSource) ? (realSource as WatchFunction).apply(inst) : (realSource as Ref).value;
+
+                                // For shallow watchers, use the old value given by Vue.
+                                let realSourceOldValue = i < args[1].length ? args[1][i] : undefined;
                                 if (realSourcesParts[i].length > 1) {
-                                    realSourceValue = getObjectValue(realSourceValue, realSourcesParts[i].slice(1), undefined);
+                                    const path = realSourcesParts.join('.');
+                                    const relevantParts = realSourcesParts[i].slice(1);
+                                    realSourceNewValue = toRaw(getObjectValue(realSourceNewValue, relevantParts, undefined));
+
+                                    // Deep watchers must get their old value from the internal map, because Vue didn't save them.
+                                    realSourceOldValue = deepWatcherPreviousValues[path];
+                                    if (areEqual(realSourceOldValue, realSourceNewValue)) {
+                                        continue ;
+                                    }
+                                    deepWatcherPreviousValues[path] = cloneDeepPrimitive(realSourceNewValue);
                                 }
-                                newValues.push(realSourceValue);
-                                oldValues.push(i < args[1].length ? args[1][i] : undefined);
+                                newValues.push(realSourceNewValue);
+                                oldValues.push(realSourceOldValue);
                             }
-                            return inst[_watchData.target].apply(inst, [
-                                utdIsArraySource ? newValues : newValues[0],
-                                utdIsArraySource ? oldValues : oldValues[0]
-                            ].concat(args.slice(2)));
+                            if (newValues.length > 0) {
+                                return inst[_watchData.target].apply(inst, [
+                                    utdIsArraySource ? newValues : newValues[0],
+                                    utdIsArraySource ? oldValues : oldValues[0]
+                                ].concat(args.slice(2)));
+                            }
                         };
                         if (shouldDelayTrigger) {
                             shouldDelayTrigger = false;
@@ -523,94 +530,8 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     applyWatch(_watchData.source, _watchData.isArraySource);
                 }
             })({target: watchOptions.target, source, options: watchOptions.options, isArraySource});
-
         }
 
-        // Decorated hooks
-        for (const hook of getObjectKeys(data.hooks)) {
-            const hookMethod = HOOKS_MAP[hook as LifecycleHook];
-            if (isFunction(hookMethod)) {
-                // @ts-ignore
-                data.hooks[hook].forEach((methodName) => {
-                    hookMethod(proxy(inst[methodName], inst));
-                });
-            }
-        }
-
-        // Provided
-        for (const property of getObjectKeys(data.provided)) {
-            let providedRef = ref(inst[property]);
-            if (data.provided[property].readonly) {
-                providedRef = readonly(providedRef);
-            }
-            provide(data.provided[property].provideAs, providedRef);
-            defineRefProxy(inst, property, {[property]: providedRef});
-        }
-
-        // Injected
-        for (const property of getObjectKeys(data.injected)) {
-            let injectResult = inject(data.injected[property].target, data.injected[property].defaultValue);
-
-            // If the inject is not found the default value is returned, so create a ref with it.
-            if (!isRef(injectResult)) {
-                injectResult = ref(injectResult);
-            }
-            defineRefProxy(inst, property, {[property]: injectResult});
-            output[property] = injectResult;
-        }
-
-        // Composable
-        if (props === null && Object.keys(data.imports).length > 0) {
-            throw new UsageException(`The class "${inst.constructor.name}" cannot contain imports because it is used as a composable. Composables cannot be nested.`);
-        }
-        for (const targetProperty of Object.keys(data.imports)) {
-            const importOptions: ImportDecoratorOptions = data.imports[targetProperty];
-            const composableCtor: Constructor = importOptions.composable;
-            if (isDecoratedComponentConstructor(composableCtor)) {
-                const composableDecorationData = getOrCreateComponentMetadata(composableCtor.prototype);
-                if (isUndefined(composableDecorationData.component) && isUndefined(composableDecorationData.composable)) {
-                    throw new UsageException(`The class "${composableCtor.name}" cannot be used as a composable because the "@Composable()" decorator is missing.`);
-                }
-                const composableInst = !isNullOrUndefined(inst[targetProperty]) ? inst[targetProperty] : instantiate(composableCtor, composableDecorationData.composable || {});
-                const composableOutput = buildSetupMethod(
-                    composableCtor,
-                    composableDecorationData,
-                    rootProps,
-                    composableInst,
-                    targetProperty,
-                    data.imports[targetProperty].prefixOrAlias
-                )(null, context);
-
-                for (const subProp of Object.keys(composableDecorationData.props)) {
-                    const realPropName: string|false = resolveImportPublicName(targetProperty, subProp, importOptions.prefixOrAlias as PrefixOrAlias);
-                    if (realPropName === false) {
-                        continue ;
-                    }
-                    composableInst[subProp] = inst[realPropName];
-                    const descriptor = Object.getOwnPropertyDescriptor(inst, realPropName)!;
-                    ((getter: any, setter: any) => {
-                        Object.defineProperty(composableInst, subProp, {
-                            get: getter,
-                            set: setter,
-                            enumerable: true,
-                            configurable: true,
-                        });
-                    })(descriptor.get, descriptor.set);
-                    delete inst[realPropName];
-                }
-                // Assign the composable instance to the hosting component.
-                Object.defineProperty(inst, targetProperty, {
-                    enumerable: true,
-                    configurable: true,
-                    value: composableInst
-                });
-                // Maybe export the import itself, if exposed.
-                if (!isUndefined(data.exposed[targetProperty])) {
-                    output[data.exposed[targetProperty]] = composableInst;
-                }
-                Object.assign(output, composableOutput);
-            }
-        }
         if (props !== null) {
             const vueInstance = getCurrentInstance();
             Object.defineProperty(vueInstance, COMPONENT_INSTANCE, {

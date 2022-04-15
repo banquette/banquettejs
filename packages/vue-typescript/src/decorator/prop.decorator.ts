@@ -9,7 +9,7 @@ import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 /* Hack to get to the PropOptions<T, D> which is not exported by Vue. */
 export type PropOptions = Exclude<VueProp<any>, PropType<any>> & {validate?: (value: any) => any, name?: string};
-export type PropPrivateOptions = PropOptions & {propertyName: string};
+export type PropMetadata = PropOptions & {propertyName: string};
 
 /**
  * Allow you to define that a property of a component's class should be declared as a Vue prop.

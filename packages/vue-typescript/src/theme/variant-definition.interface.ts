@@ -20,17 +20,22 @@ export interface VariantDefinitionInterface {
     apply?: string|string[];
 
     /**
-     * Css vars overrides.
-     */
-    vars?: VarsMapInterface;
-
-    /**
      * Props overrides.
      */
     props?: Record<string, Primitive|PropCallback>;
 
     /**
+     * Css vars overrides.
+     */
+    cssVars?: VarsMapInterface;
+
+    /**
+     * Css selectors and their set of rules.
+     */
+    cssSelectors?: VarsMapInterface;
+
+    /**
      * Raw css override.
      */
-    css?: string;
+    cssCode?: string;
 }

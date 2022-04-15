@@ -1,7 +1,5 @@
-import { flatten } from "@banquette/utils-object/flatten";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { flattenObject } from "@banquette/utils-object/flatten-object";
+import { ensureObject } from "@banquette/utils-type/ensure-object";
 import { Constructor, Primitive } from "@banquette/utils-type/types";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
@@ -17,31 +15,35 @@ export interface ThemeableDecoratorOptions {
      */
     prop?: string;
 
-    /**
-     * Css variables exposed to the themes.
-     */
-    vars?: string|string[]|VarsMapInterface;
+    css?: {
+        /**
+         * Css variables exposed to the theme.
+         */
+        vars?: VarsMapInterface;
+
+        /**
+         * Selectors exposed to the theme.
+         */
+        selectors?: VarsMapInterface;
+    }
 }
 
-export type PrivateThemeableDecoratorOptions = Omit<Required<ThemeableDecoratorOptions>, 'vars'> & {vars: Record<string, string>};
+export type ThemeableMetadata = {
+    componentName: string;
+    prop: string;
+    css: {
+        vars: Record<string, string>;
+        selectors: Record<string, string>;
+    }
+};
 
 export function Themeable(options: ThemeableDecoratorOptions = {}): any {
     return (ctor: Constructor) => {
         const data: ComponentMetadataInterface = getOrCreateComponentMetadata(ctor.prototype) as ComponentMetadataInterface;
-        if (isString(options.vars)) {
-            options.vars = [options.vars];
-        }
-        if (isArray(options.vars)) {
-            const varsObj: Record<string, string> = {};
-            for (const cssVar of options.vars) {
-                varsObj[cssVar] = cssVar;
-            }
-            options.vars = varsObj;
-        } else if (isUndefined(options.vars)) {
-            options.vars = {};
-        }
-        options.vars = flatten(options.vars);
+        options.css = ensureObject(options.css) as {};
+        options.css.vars = flattenObject(options.css.vars || {});
+        options.css.selectors = flattenObject(options.css.selectors || {});
         options.prop = options.prop || 'variant';
-        data.themeable = options as PrivateThemeableDecoratorOptions;
+        data.themeable = Object.assign(options, {componentName: data.component.name, activeVariants: []}) as ThemeableMetadata;
     };
 }

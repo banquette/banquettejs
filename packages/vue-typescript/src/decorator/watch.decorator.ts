@@ -36,7 +36,7 @@ export interface WatchDecoratorOptions {
 }
 
 export type PrivateWatchOptions = Omit<WatchOptions, 'immediate'> & {immediate: ImmediateStrategy};
-export type PrivateWatchDecoratorOptions = Omit<WatchDecoratorOptions, 'options'> & {options: PrivateWatchOptions};
+export type WatchMetadata = Omit<WatchDecoratorOptions, 'options'> & {options: PrivateWatchOptions};
 
 /**
  * Make Vue call a method when changes are detected on a property.

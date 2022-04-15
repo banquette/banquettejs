@@ -46,6 +46,11 @@ export class VueBuilder {
     private static Options: Record<string, any> = {};
 
     /**
+     * Global properties available to all Vue apps.
+     */
+    private static GlobalProperties: Record<string, any> = {};
+
+    /**
      * Register a component into the factory.
      *
      * When an instance of Vue is created using the factory, the component will be declared in the instance
@@ -83,6 +88,13 @@ export class VueBuilder {
     }
 
     /**
+     * Register a property that will be accessible to all components of the app.
+     */
+    public static RegisterGlobalProperty(name: string, value: any): void {
+        VueBuilder.GlobalProperties[name] = value;
+    }
+
+    /**
      * Get the real directive object generated from the class constructor on which decorators have been set.
      */
     public static GetDirectiveDefinition(ctor: Constructor): DirectiveDefinition {
@@ -103,10 +115,11 @@ export class VueBuilder {
      * Create a new Vue instance.
      */
     public static CreateApp(group: string|string[] = VueBuilder.DEFAULT_GROUP, options: Partial<AppConfig> = {}): App<Element> {
-        const app = createApp(VueBuilder.MergeVueOptions({
-            errorHandler: noop,
-            warnHandler: noop,
-            globalProperties: {},
+        const app = createApp({});
+        const config = VueBuilder.MergeVueOptions({
+            errorHandler: console.error,
+            warnHandler: console.warn,
+            globalProperties: VueBuilder.GlobalProperties,
             optionMergeStrategies: {},
             performance: false,
             compilerOptions: {
@@ -115,7 +128,10 @@ export class VueBuilder {
                 delimiters: ['{{', '}}'],
                 comments: false
             }
-        }, VueBuilder.Options, options));
+        }, VueBuilder.Options, options);
+        for (const key of Object.keys(config)) {
+            (app.config as any)[key] = config[key];
+        }
         let groups = (group === '*' ? Object.keys(VueBuilder.Components).concat(Object.keys(VueBuilder.Directives)) : ensureArray(group));
         groups = groups.filter((item, index) => {
             return groups.indexOf(item) === index;

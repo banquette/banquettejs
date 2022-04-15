@@ -22,7 +22,7 @@ import {
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
-import { PropPrivateOptions } from "./decorator/prop.decorator";
+import { PropMetadata } from "./decorator/prop.decorator";
 import { PrefixOrAlias, VccOpts, DecoratedComponentInstance } from "./type";
 import { maybeResolveTsInst, vccOptsToCtor } from "./utils/converters";
 import { defineGetter } from "./utils/define-getter";
@@ -68,7 +68,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     }
 
     // Rename props with a custom name.
-    const renamedProps: Record<string, PropPrivateOptions> = {};
+    const renamedProps: Record<string, PropMetadata> = {};
     for (const propName of Object.keys(data.props)) {
         renamedProps[data.props[propName].name || propName] = {...data.props[propName]};
     }
@@ -225,6 +225,11 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
         options.render = () => false;
     } else if (isString(data.component.template) && data.component.template !== 'inherit') {
         options.template = data.component.template;
+    }
+
+    // Other options
+    if (!isUndefined(data.component.inheritAttrs)) {
+        options.inheritAttrs = data.component.inheritAttrs;
     }
     return options as VccOpts;
 }

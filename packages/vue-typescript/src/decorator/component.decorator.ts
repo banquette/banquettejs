@@ -42,6 +42,12 @@ export interface ComponentDecoratorOptions {
     group?: string|string[]|null;
 
     /**
+     * Define if external attributes that don't resolve to props should be forwarded to the root element of the component.
+     * Default: true.
+     */
+    inheritAttrs?: boolean;
+
+    /**
      * Function to call to create an instance of the component.
      * If not defined, the constructor is simply called without any parameters.
      */
@@ -53,7 +59,7 @@ export interface ComponentDecoratorOptions {
     emits?: EmitsOptions;
 }
 
-export type PrivateComponentDecoratorOptions = Omit<ComponentDecoratorOptions, 'name'> & {name: string};
+export type ComponentMetadata = Omit<ComponentDecoratorOptions, 'name'> & {name: string};
 
 /**
  * Define a class as a Vue component.
@@ -69,7 +75,7 @@ export function Component(options: ComponentDecoratorOptions|string = {}): any {
         if (isString(options)) {
             options = {name: options};
         }
-        data.component = options as PrivateComponentDecoratorOptions;
+        data.component = options as ComponentMetadata;
         Object.defineProperty(ctor, VUE_CLASS_COMPONENT_OPTIONS, {
             enumerable: true,
             configurable: true,

@@ -8,7 +8,7 @@ const knownRandomIds: string[] = [];
 export function getUniqueRandomId(): string {
     let candidate: string;
     do {
-        candidate = 'bt-' + randomString(6);
+        candidate = 'bt-' + randomString(6).toLowerCase();
     } while (knownRandomIds.indexOf(candidate) > -1);
     knownRandomIds.push(candidate);
     return candidate;
