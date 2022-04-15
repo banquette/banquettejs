@@ -1,7 +1,8 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { MatchResult } from "@banquette/utils-glob/match-result";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { ValidationStrategy } from "./constant";
+import { ValidationStrategy, FormEvents } from "./constant";
+import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ValidationEndFormEvent } from "./event/validation-end.form-event";
@@ -371,14 +372,14 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
      *
      * @return A method to call to unsubscribe.
      */
-    onValueChanged(callback: (event: ValueChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onValueChanged(callback: (event: ValueChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 
     /**
      * Register a callback that will be called when the value of a flag changes.
      *
      * @return A method to call to unsubscribe.
      */
-    onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onStateChanged(callback: (event: StateChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 
     /**
      * Register a callback that will be called each time the validation is started.
@@ -389,7 +390,7 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
      *
      * @return A method to call to unsubscribe.
      */
-    onValidationStart(callback: (event: FormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onValidationStart(callback: (event: FormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 
     /**
      * Register a callback that will be called each time a validation ends.
@@ -397,5 +398,12 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
      *
      * @return A method to call to unsubscribe.
      */
-    onValidationEnd(callback: (event: ValidationEndFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onValidationEnd(callback: (event: ValidationEndFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called when an error is added of removed from the component.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onErrorsChanged(callback: (event: ErrorsChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 }

@@ -29,6 +29,7 @@ import {
     EventsInheritanceMap,
     DefaultValidationStrategy
 } from "./constant";
+import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ValidationEndFormEvent } from "./event/validation-end.form-event";
@@ -553,6 +554,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         const error = new FormError(this.path, type, message);
         this.errors.push(error);
         this.markBasicState(BasicState.Invalid, this.id);
+        this.dispatch(FormEvents.ErrorsChanged, () => new ErrorsChangedFormEvent(this, this.errors.slice(0)));
     }
 
     /**
@@ -561,6 +563,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public clearErrors(): void {
         (this as Writeable<AbstractFormComponent>).errors = [];
         this.unmarkBasicState(BasicState.Invalid, this.id);
+        this.dispatch(FormEvents.ErrorsChanged, () => new ErrorsChangedFormEvent(this, []));
     }
 
     /**
@@ -629,8 +632,8 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      *
      * @return A method to call to unsubscribe.
      */
-    public onValueChanged(callback: (event: ValueChangedFormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe<ValueChangedFormEvent>(FormEvents.ValueChanged, callback, selfOnly);
+    public onValueChanged(callback: (event: ValueChangedFormEvent) => void, priority?: number, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe<ValueChangedFormEvent>(FormEvents.ValueChanged, callback, priority, selfOnly);
     }
 
     /**
@@ -638,8 +641,8 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      *
      * @return A method to call to unsubscribe.
      */
-    public onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe<StateChangedFormEvent>(FormEvents.StateChanged, callback, selfOnly);
+    public onStateChanged(callback: (event: StateChangedFormEvent) => void, priority?: number, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe<StateChangedFormEvent>(FormEvents.StateChanged, callback, priority, selfOnly);
     }
 
     /**
@@ -647,8 +650,8 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      *
      * @return A method to call to unsubscribe.
      */
-    public onValidationStart(callback: (event: FormEvent) => void, selfOnly?: boolean): UnsubscribeFunction {
-        return this.subscribe<FormEvent>(FormEvents.ValidationStart, callback, selfOnly);
+    public onValidationStart(callback: (event: FormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction {
+        return this.subscribe<FormEvent>(FormEvents.ValidationStart, callback, priority, selfOnly);
     }
 
     /**
@@ -656,19 +659,28 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      *
      * @return A method to call to unsubscribe.
      */
-    public onValidationEnd(callback: (event: ValidationEndFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction {
-        return this.subscribe<ValidationEndFormEvent>(FormEvents.ValidationEnd, callback, selfOnly);
+    public onValidationEnd(callback: (event: ValidationEndFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction {
+        return this.subscribe<ValidationEndFormEvent>(FormEvents.ValidationEnd, callback, priority, selfOnly);
+    }
+
+    /**
+     * Register a callback that will be called when an error is added of removed from the component.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    public onErrorsChanged(callback: (event: ErrorsChangedFormEvent) => void, priority?: number, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe<ErrorsChangedFormEvent>(FormEvents.ErrorsChanged, callback, priority, selfOnly);
     }
 
     /**
      * Subscribe to an event.
      * You can alternatively use shortcut methods (like "onValueChange") to subscribe to events.
      */
-    public subscribe<T extends FormEvent>(type: symbol, callback: (event: T) => void, selfOnly: boolean = true): UnsubscribeFunction {
+    public subscribe<T extends FormEvent>(type: symbol, callback: (event: T) => void, priority: number = 0, selfOnly: boolean = true): UnsubscribeFunction {
         const unsubscribeFunctions: Function[] = [];
         const dispatcher = this.getEventDispatcher();
 
-        unsubscribeFunctions.push(dispatcher.subscribe(type, callback));
+        unsubscribeFunctions.push(dispatcher.subscribe(type, callback, priority));
         if (!selfOnly && !isUndefined(EventsInheritanceMap[type])) {
             unsubscribeFunctions.push(dispatcher.subscribe(EventsInheritanceMap[type], callback));
         }
@@ -822,6 +834,9 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
         this.unmarkBasicState(BasicState.Validating, this.id);
         this.clearResultFromValidationResultsStack(result);
         this.dispatch(FormEvents.ValidationEnd, () => new ValidationEndFormEvent(this, result));
+        if (!this.errors.length) {
+            this.clearErrors(); // So the "ErrorsChanged" event is triggered.
+        }
     }
 
     /**

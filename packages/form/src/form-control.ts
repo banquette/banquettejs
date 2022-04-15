@@ -98,7 +98,9 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 this.dispatch(FormEvents.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
                 this.lastValue = cloneDeepPrimitive(this.value);
                 this.viewModels.forEach((vm) => {
-                    vm.setValue(value);
+                    if (vm !== this.focusedViewModel) {
+                        vm.setValue(value);
+                    }
                 });
                 this.markBasicState(BasicState.Dirty);
                 if (!areEqual(this.defaultValue, value)) {
@@ -212,8 +214,8 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      *
      * @return A method to call to unsubscribe.
      */
-    public onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction {
-        return this.subscribe<BeforeValueChangeFormEvent>(FormEvents.BeforeValueChange, callback, true);
+    public onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void, priority?: number): UnsubscribeFunction {
+        return this.subscribe<BeforeValueChangeFormEvent>(FormEvents.BeforeValueChange, callback, priority, true);
     }
 
     /**
@@ -347,7 +349,8 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 getExtra: this.getExtra,
                 onStateChanged: this.onStateChanged,
                 onValueChanged: this.onValueChanged,
-                onBeforeValueChange: this.onBeforeValueChange
+                onBeforeValueChange: this.onBeforeValueChange,
+                onErrorsChanged: this.onErrorsChanged
             }, viewModel)
         ) as FormViewControlInterface;
     }

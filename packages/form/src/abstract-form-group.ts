@@ -285,15 +285,15 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
     /**
      * Register a callback that will be called when a component is added/set to the collection.
      */
-    public onControlAdded(cb: (event: FormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe(FormEvents.ComponentAdded, cb,  selfOnly);
+    public onControlAdded(cb: (event: FormEvent) => void, priority?: number, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe(FormEvents.ComponentAdded, cb, priority, selfOnly);
     }
 
     /**
      * Register a callback that will be called when a component is removed from the collection.
      */
-    public onControlRemoved(cb: (event: FormEvent) => void, selfOnly: boolean = true): UnsubscribeFunction {
-        return this.subscribe(FormEvents.ComponentRemoved, cb, selfOnly);
+    public onControlRemoved(cb: (event: FormEvent) => void, priority?: number, selfOnly: boolean = true): UnsubscribeFunction {
+        return this.subscribe(FormEvents.ComponentRemoved, cb, priority, selfOnly);
     }
 
     /**

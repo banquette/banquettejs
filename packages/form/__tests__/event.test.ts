@@ -117,7 +117,7 @@ describe('ValueChanged', () => {
                 value = event.newValue;
                 source = event.source;
             }
-        }, false);
+        }, 0, false);
         control.setValue('new');
         expect(value).toEqual('new');
         expect(source).toStrictEqual(control);
@@ -171,7 +171,7 @@ describe('ValueChanged', () => {
                 expect(event.oldValue).toEqual('previous');
                 expect(event.newValue).toEqual('new');
             }
-        }, false);
+        }, 0, false);
         control.setValue('new');
         expect.assertions(4);
     });
@@ -349,7 +349,7 @@ describe('Validation', () => {
         let sources: any = [];
         form.onValidationStart((event) => {
             sources.push(event.source);
-        }, false);
+        }, 0, false);
         form.get('syncAttr').setValue('new');
         expect(sources.length).toEqual(2);
         expect(sources).toMatchObject([

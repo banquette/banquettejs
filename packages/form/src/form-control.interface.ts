@@ -1,3 +1,4 @@
+import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { FormComponentInterface } from "./form-component.interface";
 import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
@@ -34,19 +35,26 @@ export interface FormControlInterface extends FormComponentInterface {
      *
      * @return A method to call to unsubscribe.
      */
-    onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction;
+    onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void, priority?: number): UnsubscribeFunction;
 
     /**
      * Register a callback that will be called when the value of the component changes.
      *
      * @return A method to call to unsubscribe.
      */
-    onValueChanged(callback: (event: ValueChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onValueChanged(callback: (event: ValueChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 
     /**
      * Register a callback that will be called when the value of a flag changes.
      *
      * @return A method to call to unsubscribe.
      */
-    onStateChanged(callback: (event: StateChangedFormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onStateChanged(callback: (event: StateChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
+
+    /**
+     * Register a callback that will be called when an error is added of removed from the component.
+     *
+     * @return A method to call to unsubscribe.
+     */
+    onErrorsChanged(callback: (event: ErrorsChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 }

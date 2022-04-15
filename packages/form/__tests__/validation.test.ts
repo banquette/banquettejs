@@ -3,6 +3,8 @@ import { HttpResponse } from "@banquette/http/http-response";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
 import { Ajax } from "@banquette/validation/type/ajax";
 import { And } from "@banquette/validation/type/and";
+import { Compose } from "@banquette/validation/type/compose";
+import { Equal } from "@banquette/validation/type/equal";
 import { Invalid } from "@banquette/validation/type/invalid";
 import { Max } from "@banquette/validation/type/max";
 import { Min } from "@banquette/validation/type/min";
@@ -554,6 +556,21 @@ describe('Errors', () => {
         expect(form.invalid).toEqual(true);
         expect(form.errorsDeep).toMatchObject([
             {path: '/name', type: 'custom', message: 'Test message'}
+        ]);
+    });
+
+    test('a control can contain have multiple errors at the same time', () => {
+        const form = FormFactoryTest.CreateAsConcrete({
+            name$: ['', Compose(Max(3), Equal('abc'))],
+        }) as FormObject;
+        form.getByPattern('*').markAsConcrete();
+        form.get('name').setValue('invalid');
+        form.validate();
+        expect(form.invalid).toEqual(true);
+        expect(form.get('name').errors.length).toEqual(2);
+        expect(form.errorsDeep).toMatchObject([
+            {path: '/name', type: 'max'},
+            {path: '/name', type: 'equal'}
         ]);
     });
 });

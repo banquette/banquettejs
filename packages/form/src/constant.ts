@@ -29,7 +29,12 @@ export const FormEvents = {
      * Validation related events.
      */
     ValidationStart: Symbol('validation-start'),
-    ValidationEnd: Symbol('validation-end')
+    ValidationEnd: Symbol('validation-end'),
+
+    /**
+     * Errors
+     */
+    ErrorsChanged: Symbol('error-changed')
 };
 
 /**

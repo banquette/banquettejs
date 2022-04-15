@@ -74,10 +74,10 @@ export interface FormGroupInterface<IdentifierType = unknown> extends FormCompon
     /**
      * Register a callback that will be called when a control is added/set to the collection.
      */
-    onControlAdded(cb: (event: FormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onControlAdded(cb: (event: FormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 
     /**
      * Register a callback that will be called when a control is removed from the collection.
      */
-    onControlRemoved(cb: (event: FormEvent) => void, selfOnly?: boolean): UnsubscribeFunction;
+    onControlRemoved(cb: (event: FormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction;
 }
