@@ -1,5 +1,5 @@
 import { createGenericTestSuite } from "../../__tests__/utils";
-import { flatten } from "../src";
+import { flattenObject } from "../src";
 
 const BASE_OBJ = {
     foo: {
@@ -18,7 +18,7 @@ const BASE_OBJ = {
 };
 
 describe('flatten', () => {
-    createGenericTestSuite(flatten, [
+    createGenericTestSuite(flattenObject, [
         [BASE_OBJ, {
             'foo.bar.a': 'a',
             'foo.bar.b.b1': 'b1',
@@ -30,7 +30,7 @@ describe('flatten', () => {
         }]
     ], 'toStrictEqual');
 
-    createGenericTestSuite(flatten, [
+    createGenericTestSuite(flattenObject, [
         [BASE_OBJ, [{
             'foo->bar->a': 'a',
             'foo->bar->b->b1': 'b1',
@@ -42,7 +42,7 @@ describe('flatten', () => {
         }, '->']]
     ], 'toStrictEqual');
 
-    createGenericTestSuite(flatten, [
+    createGenericTestSuite(flattenObject, [
         [BASE_OBJ, [{
             'foo_bar': {
                 a: 'a',
@@ -58,7 +58,7 @@ describe('flatten', () => {
         }, '_', 1]]
     ], 'toStrictEqual');
 
-    createGenericTestSuite(flatten, [
+    createGenericTestSuite(flattenObject, [
         [BASE_OBJ, [{
             'foo.bar.a': 'a',
             'foo.bar.b': {
@@ -72,7 +72,7 @@ describe('flatten', () => {
         }, '.', 2]]
     ], 'toStrictEqual');
 
-    createGenericTestSuite(flatten, [
+    createGenericTestSuite(flattenObject, [
         [BASE_OBJ, [{
             'foo.bar': {a: 'a', c: 'c'},
             'foo.bar.b': {
@@ -85,7 +85,7 @@ describe('flatten', () => {
         }, '.', -1]]
     ], 'toStrictEqual');
 
-    createGenericTestSuite(flatten, [
+    createGenericTestSuite(flattenObject, [
         [BASE_OBJ, [{
             foo: {
                 bar: {

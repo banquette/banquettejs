@@ -60,7 +60,7 @@ function doFlatten(obj: any, concatenator: string, maxDepth: number, currentDept
  * `flatten(obj, '.', -2)` will produce an object with maximum 3 levels deep.
  * `flatten(obj, '.', 0)` will produce an object with maximum 1 level deep (the default behavior).
  */
-export function flatten(obj: any, concatenator: string = '.', maxDepth: number = 0): any {
+export function flattenObject(obj: any, concatenator: string = '.', maxDepth: number = 0): any {
     const result = doFlatten(obj, concatenator, Math.max(0, maxDepth), 0);
     if (maxDepth < 0) {
         let clone: any = {};
