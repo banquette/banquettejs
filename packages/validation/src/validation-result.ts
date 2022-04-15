@@ -245,6 +245,7 @@ export class ValidationResult {
                 }
                 this.cancelCallback = null;
                 (this as Writeable<ValidationResult>).localPromise = null;
+                return this;
             }).catch(proxy(this.promiseReject as GenericCallback, this));
 
         (this as Writeable<ValidationResult>).localPromise = localPromise;
