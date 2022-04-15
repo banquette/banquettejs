@@ -31,7 +31,9 @@ fs.readdirSync(libBasePath).forEach(function(type) {
         if (!icon.match(/24px\.svg$/)) {
             return ;
         }
-        const svg = fs.readFileSync(path.join(svgDir, icon)).toString();
+        const svg = fs.readFileSync(path.join(svgDir, icon)).toString()
+            .replace('width="24"', ':width="size"')
+            .replace('height="24"', ':height="size" :fill="color"');
         const componentName = fileToComponentName(icon);
         const className = camelize(fileToComponentName(icon));
         const componentDir = path.join(componentsBasePath, componentName);
@@ -43,9 +45,12 @@ fs.readdirSync(libBasePath).forEach(function(type) {
         fs.mkdirSync(componentDir);
         const src = `<script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 
 @Component('${componentName}')
 export default class ${className} {
+    @Prop({type: [String, Number], default: 24}) public size!: string|number;
+    @Prop({type: String, default: null}) public color!: string;
 }
 </script>
 <template>
