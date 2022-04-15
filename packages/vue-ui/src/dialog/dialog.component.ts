@@ -25,7 +25,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-dialog',
     components: [OverlayComponent],
-    emits: ['update:modelValue'],
+    emits: ['update:modelValue', 'close'],
     factory: () => Injector.Get(DialogComponent)
 })
 export default class DialogComponent extends Vue {
@@ -199,6 +199,7 @@ export default class DialogComponent extends Vue {
         if (this.lockScroll) {
             this.updateScrollLock(false);
         }
+        this.$emit('close');
     }
 
     /**
