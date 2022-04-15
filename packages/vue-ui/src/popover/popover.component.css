@@ -1,0 +1,125 @@
+.bt-popover {
+    --popover-text-color: var(--bt-popover-text-color, var(--bt-color-white));
+    --popover-font-family: var(--bt-popover-font-family, var(--bt-font-family-base));
+    --popover-font-size: var(--bt-popover-font-size, var(--bt-font-size-sm));
+    --popover-font-weight: var(--bt-popover-font-weight, var(--bt-font-weight-medium));
+
+    --popover-background-color: var(--bt-popover-background-color, var(--bt-color-gray-800));
+
+    --popover-border-color: var(--bt-popover-border-color, var(--bt-color-gray-800));
+    --popover-border-style: var(--bt-popover-border-style, solid);
+    --popover-border-width: var(--bt-popover-border-width, 1px);
+    --popover-border-radius: var(--bt-popover-border-radius, var(--bt-border-radius-base));
+
+    --popover-shadow: var(--bt-popover-shadow, var(--bt-shadow-popover));
+
+    --popover-z-index: var(--bt-popover-z-index, var(--bt-z-index-popover));
+}
+
+.bt-popover {
+    position: absolute;
+    z-index: var(--popover-z-index);
+
+    .inner-wrapper {
+        .arrow, .arrow::before {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+        }
+
+        .arrow::before {
+            content: '';
+            transform: rotate(45deg);
+            border-width: var(--popover-border-width);
+            border-style: var(--popover-border-style);
+            border-color: transparent;
+            background: var(--popover-background-color);
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            font-family: var(--popover-font-family);
+            font-size: var(--popover-font-size);
+            font-weight: var(--popover-font-weight);
+            color: var(--popover-text-color);
+            box-shadow: var(--popover-shadow);
+            background: var(--popover-background-color);
+            border-width: var(--popover-border-width);
+            border-style: var(--popover-border-style);
+            border-color: var(--popover-border-color);
+            border-radius: var(--popover-border-radius);
+            overflow: hidden;
+
+            padding: 0.7em 1em;
+            line-height: 1;
+            min-width: 10px;
+            word-wrap: break-word;
+            z-index: 0;
+
+            :slotted(svg) {
+                width: 1.3em;
+                height: 1.3em;
+
+                path {
+                    fill: var(--popover-text-color);
+                }
+            }
+        }
+    }
+
+    &[data-popper-placement^='top'] > .inner-wrapper {
+        transform-origin: bottom center;
+
+        & > .arrow {
+            bottom: -3px;
+
+            &::before {
+                border-bottom-color: var(--popover-border-color);
+                border-right-color: var(--popover-border-color);
+            }
+        }
+    }
+
+    &[data-popper-placement^='bottom'] > .inner-wrapper {
+        transform-origin: top center;
+
+        & > .arrow {
+            top: -5px;
+
+            &::before {
+                border-top-color: var(--popover-border-color);
+                border-left-color: var(--popover-border-color);
+            }
+        }
+    }
+
+    &[data-popper-placement^='left'] > .inner-wrapper {
+        transform-origin: right center;
+
+        & > .arrow {
+            right: -3px;
+
+            &::before {
+                border-right-color: var(--popover-border-color);
+                border-top-color: var(--popover-border-color);
+            }
+        }
+    }
+
+    &[data-popper-placement^='right'] > .inner-wrapper {
+        transform-origin: left center;
+
+        & > .arrow {
+            left: -5px;
+
+            &::before {
+                border-bottom-color: var(--popover-border-color);
+                border-left-color: var(--popover-border-color);
+            }
+        }
+    }
+}

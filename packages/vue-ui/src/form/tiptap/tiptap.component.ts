@@ -13,59 +13,61 @@ import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 
 @Themeable({
-    vars: {
-        color: 'slvxvxoa',
-        outlineWidth: 'm4vweagr',
-        outlineColor: 'aqqhi16f',
-        padding: 'x73pwbop',
-        borderRadius: 'b0whwn2z',
-        boxShadow: 'ejw144jm',
-        background: 'fafhipdb',
-        fontSize: 'yvwfinhn',
-
-        label: {
-            color: 'hjoqe90v',
-            margin: 'r60agvhh',
-            fontSize: 'xb4919f6',
-            fontWeight: 'cfvnkwve'
-        },
-
-        placeholder: {
-            color: 'qdw6a9fh',
-            fontSize: 'bec4uu9b'
-        },
-
-        focused: {
-            outlineWidth: 'e2xlw36v',
-            outlineColor: 'b1hj6140',
-            background: 'nfwwjp5t',
-            boxShadow: 'd6zvc2x5'
-        },
-
-        error: {
-            outlineWidth: 'x63if0mt',
-            outlineColor: 'q30w5vdm',
-            background: 'fv3912g0',
-            boxShadow: 'cub29qik',
-
-            focused: {
-                outlineWidth: 'i5th4lyv'
-            }
-        },
-
-        disabled: {
-            outline: 'fa2n3mu4',
-            background: 'w0bfunmz',
-            boxShadow: 'nqf8p3jj',
+    css: {
+        vars: {
+            color: 'slvxvxoa',
+            outlineWidth: 'm4vweagr',
+            outlineColor: 'aqqhi16f',
+            padding: 'x73pwbop',
+            borderRadius: 'b0whwn2z',
+            boxShadow: 'ejw144jm',
+            background: 'fafhipdb',
+            fontSize: 'yvwfinhn',
 
             label: {
-                color: 'b9gdkbqj',
-                fontWeight: 'h9nc2z49'
-            }
-        },
+                color: 'hjoqe90v',
+                margin: 'r60agvhh',
+                fontSize: 'xb4919f6',
+                fontWeight: 'cfvnkwve'
+            },
 
-        help: {
-            color: 'fpv8mky0'
+            placeholder: {
+                color: 'qdw6a9fh',
+                fontSize: 'bec4uu9b'
+            },
+
+            focused: {
+                outlineWidth: 'e2xlw36v',
+                outlineColor: 'b1hj6140',
+                background: 'nfwwjp5t',
+                boxShadow: 'd6zvc2x5'
+            },
+
+            error: {
+                outlineWidth: 'x63if0mt',
+                outlineColor: 'q30w5vdm',
+                background: 'fv3912g0',
+                boxShadow: 'cub29qik',
+
+                focused: {
+                    outlineWidth: 'i5th4lyv'
+                }
+            },
+
+            disabled: {
+                outline: 'fa2n3mu4',
+                background: 'w0bfunmz',
+                boxShadow: 'nqf8p3jj',
+
+                label: {
+                    color: 'b9gdkbqj',
+                    fontWeight: 'h9nc2z49'
+                }
+            },
+
+            help: {
+                color: 'fpv8mky0'
+            }
         }
     }
 })
@@ -130,10 +132,10 @@ export default class TiptapComponent extends AbstractVueFormComponent<FormViewMo
      * @inheritDoc
      */
     protected setupViewModel(): FormViewModel {
-        const vm = new FormViewModel(this.proxy, {
+        const vm = new FormViewModel(this.proxy/*, {
             controlToView: proxy(this.controlToView, this),
             viewToControl: proxy(this.viewToControl, this)
-        });
+        }*/);
         return vm;
     }
 

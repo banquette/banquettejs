@@ -1,0 +1,114 @@
+
+.bt-form-control-state-overlay {
+    cursor: pointer;
+    pointer-events: initial;
+
+    :deep(svg) {
+        width: 1.3em;
+        height: auto;
+        fill: var(--bt-color-gray-500);
+    }
+
+    &:hover :deep(svg) {
+        fill: var(--bt-color-primary);
+    }
+}
+
+.overlay {
+    line-height: 1;
+    background: #fff;
+    padding: 1em;
+    font-family: var(--bt-font-family-base);
+    font-size: var(--bt-font-size-base);
+    border-radius: var(--bt-border-radius-base);
+    box-shadow: var(--bt-shadow-popover);
+    z-index: var(--bt-z-index-popover);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    max-height: 90vh;
+    max-width: 350px;
+    overflow: auto;
+
+    .state {
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+    }
+
+    .bullet {
+        width: 10px;
+        height: 10px;
+        display: flex;
+        background: var(--bt-color-gray-300);
+        border-radius: 3px;
+        font-weight: var(--bt-font-weight-semibold);
+    }
+
+    .type {
+        font-weight: var(--bt-font-weight-semibold);
+        font-style: italic;
+        font-size: var(--bt-font-size-sm);
+        color: var(--bt-text-color-light);
+    }
+
+    .item {
+        margin-top: 0.2em;
+
+        .resume {
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            white-space: nowrap;
+
+            &.true {
+                color: var(--bt-color-green-500);
+
+                .bullet {
+                    background: var(--bt-color-green-500);
+                }
+            }
+
+            &.false {
+                color: var(--bt-color-red-500);
+
+                .bullet {
+                    background: var(--bt-color-red-500);
+                }
+            }
+        }
+
+        .name {
+            font-weight: var(--bt-font-weight-semibold);
+        }
+
+        .value {
+            font-style: italic;
+            font-size: var(--bt-font-size-sm);
+            color: var(--bt-text-color-light);
+        }
+
+        a {
+            color: var(--bt-color-primary);
+            font-size: var(--bt-font-size-sm);
+            font-weight: var(--bt-font-weight-semibold);
+            text-decoration: none;
+        }
+
+        .full-value {
+            margin-top: 0.5em;
+            padding: 0.6em;
+            background: var(--bt-color-gray-50);
+            border-radius: var(--bt-border-radius-base);
+            white-space: pre-wrap;
+        }
+    }
+
+    .close-link {
+        display: block;
+        font-size: 0.8em;
+        color: var(--bt-color-gray-500);
+        text-decoration: none;
+        text-align: center;
+    }
+}

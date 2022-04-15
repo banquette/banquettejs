@@ -1,53 +1,27 @@
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { PopoverComponent } from "../popover";
 import DropdownDividerComponent from "./divider/dropdown-divider.component.vue";
 import DropdownItemComponent from "./item/dropdown-item.component.vue";
+import { ThemeConfiguration } from "./theme-configuration";
 
-@Themeable({
-    vars: {
-        color: 'x7nz55ql',
-        backgroundColor: 's579u8ol',
-        zIndex: 'llgbyhb8',
-        borderRadius: 'c7jydqfq',
-        padding: 'm5bldo4o',
-        minWidth: 's47f5oaa',
-        item: {
-            fontSize: 'h3slruun',
-            lineHeight: 'k4dmqp86',
-            padding: 'o6tk2m410',
-            textAlign: 'ou5nge8t',
-            hover: {
-                backgroundColor: 'ych7qm36',
-                color: 'xb1x17az'
-            }
-        },
-        divider: {
-            color: 'zec7gi3x'
-        }
-    }
-})
+@Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-dropdown',
-    components: [DropdownItemComponent, DropdownDividerComponent]
+    components: [PopoverComponent, DropdownItemComponent, DropdownDividerComponent],
+    inheritAttrs: false
 })
 export default class DropdownComponent extends Vue {
-    @Prop({type: Object, default: {}}) public popper!: any;
+    @Prop({type: [Object, String], default: null}) public target!: HTMLElement|string|null;
 
-    @Expose() public target!: HTMLElement;
+    @Expose() public realTarget: HTMLElement|string|null = null;
 
-    @Computed() public get options(): any {
-        return {
-            target: this.target,
-            placement: 'bottom-start',
-            popper: this.popper
-        };
-    }
-
-    public mounted(): void {
-        this.target = this.$el.parentElement;
+    @Watch('target', {immediate: ImmediateStrategy.Mounted})
+    public onTargetChange(): void {
+        this.realTarget = this.target ? this.target : this.$el.parentElement;
     }
 }

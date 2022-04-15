@@ -1,5 +1,5 @@
 import { HttpMethod } from "@banquette/http/constants";
-import { RemoteModule } from "@banquette/ui/misc/module/remote/remote.module";
+import { RemoteModule } from "@banquette/ui/misc/remote/remote.module";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -24,12 +24,14 @@ export class RemoteComposable {
      */
     public module!: RemoteModule;
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams'], {immediate: ImmediateStrategy.BeforeMount})
     private syncConfigurationProps(): void {
-        this.module.url = this.url;
-        this.module.endpoint = this.endpoint;
-        this.module.method = ensureInEnum(this.method, HttpMethod, HttpMethod.GET);
-        this.module.urlParams = this.urlParams;
-        this.module.model = this.model;
+        this.module.updateConfiguration({
+            url: this.url,
+            endpoint: this.endpoint,
+            method: ensureInEnum(this.method, HttpMethod, HttpMethod.GET),
+            urlParams: this.urlParams,
+            model: this.model
+        });
     }
 }

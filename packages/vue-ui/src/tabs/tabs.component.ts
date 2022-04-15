@@ -1,60 +1,24 @@
+import { enumToArray } from "@banquette/utils-array/enum-to-array";
 import { getElementOffset } from "@banquette/utils-dom/get-element-offset";
-import { proxy } from "@banquette/utils-misc/proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
+import { VoidCallback } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { useResizeObserver } from "@vueuse/core";
 import { TeleportDirective } from "../misc/teleport.directive";
 import { FocusChangedEvent } from "./event/focus-changed.event";
 import { TabCreatedEvent } from "./event/tab-created.event";
 import { TabRemovedEvent } from "./event/tab-removed.event";
+import { TabsDirection } from "./tab/constant";
 import TabComponent from "./tab/tab.component.vue";
+import { ThemeConfiguration } from "./theme-configuration";
 
-@Themeable({
-    vars: {
-        background: 'esdvjfdh',
-        borderRadius: 'p3w063z4',
-
-        toggles: {
-            background: 'jf5rwvh',
-            borderRadius: 'hsyr96ig',
-            fontSize: 'q7qdbfru',
-
-            item: {
-                color: 'zmwss3q7',
-                fontWeight: 'jqr8f43x',
-                background: 'cz5v28qa',
-                borderRadius: 'ldqru6dd',
-                padding: 'daxrcke0'
-            },
-
-            current: {
-                color: 'f1prnpa2',
-                background: 'o2ogv08f',
-                fontWeight: 'o9oak59zh'
-            },
-
-            disabled: {
-                color: 'n307jz7h',
-                background: 's5g6ke0i',
-                fontWeight: 'ihvazk93'
-            },
-
-            indicator: {
-                color: 'n2xy70i0',
-                height: 'amdsk74u'
-            }
-        },
-
-        content: {
-            padding: 'no3tawbl',
-            background: 's786b50s'
-        }
-    }
-})
+@Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-tabs',
     components: [TabComponent],
@@ -62,6 +26,13 @@ import TabComponent from "./tab/tab.component.vue";
     emits: ['tabCreated', 'tabRemoved', 'focusChanged']
 })
 export default class TabsComponent extends Vue {
+    /**
+     * Type of positioning.
+     */
+    @Prop({type: String, default: TabsDirection.Top, validate: (value: any) => {
+        return enumToArray(TabsDirection).indexOf(value) > -1 ? value : TabsDirection.Top;
+    }}) public direction!: string;
+
     /**
      * If `true` the content of non-focused tabs is only hidden visually.
      * If `false`, the content of non-focused tabs is destroyed when the tab is not focused.
@@ -75,10 +46,14 @@ export default class TabsComponent extends Vue {
     @Prop({type: String, default: null}) public focused!: string;
 
     @Expose() public toggleElements: any[] = [];
+    @Expose() public hasFocusedTab: boolean = false;
+
+    @TemplateRef('indicator') private indicatorEl!: HTMLElement;
 
     private tabs: any/*TabComponent*/[] = [];
-    private focusedTab: any/*TabComponent*/|null = null;
     private observer: MutationObserver|null = null;
+    private focusedTab: any/*TabComponent*/|null = null;
+    private focusedTabResizeUnsubscribe: VoidCallback|null = null;
 
     /**
      * Vue lifecycle method.
@@ -91,9 +66,13 @@ export default class TabsComponent extends Vue {
      * Vue lifecycle method.
      */
     public beforeUnmount(): void {
-        if (this.observer !== null) {
+        if (this.observer) {
             this.observer.disconnect();
             this.observer = null;
+        }
+        if (this.focusedTabResizeUnsubscribe) {
+            this.focusedTabResizeUnsubscribe();
+            this.focusedTabResizeUnsubscribe = null;
         }
     }
 
@@ -129,7 +108,7 @@ export default class TabsComponent extends Vue {
                     }
                 }
                 if (i >= this.tabs.length) {
-                    this.focusedTab = null;
+                    this.setFocusedTab(null);
                     this.changeFocusIndicatorVisibility(false);
                 }
             }
@@ -150,15 +129,17 @@ export default class TabsComponent extends Vue {
                     this.focusedTab.onUnFocus();
                     this.$emit('focusChanged', new FocusChangedEvent(this.focusedTab, false));
                 }
-                this.focusedTab = tab;
-                this.$nextTick(proxy(this.updateFocusIndicator, this));
+                this.setFocusedTab(tab);
+                this.$nextTick(() => {
+                    this.updateFocusIndicator();
+                });
                 candidate.onFocus();
                 this.$emit('focusChanged', new FocusChangedEvent(tab, true));
             }
         }
         if (this.focusedTab !== tab && !tab.disabled) {
             this.changeFocusIndicatorVisibility(false);
-            this.focusedTab = null;
+            this.setFocusedTab(null);
         } else if (this.focusedTab !== null) {
             this.changeFocusIndicatorVisibility(true);
         }
@@ -182,12 +163,26 @@ export default class TabsComponent extends Vue {
         }
     }
 
+    private setFocusedTab(tab: any): void {
+        if (this.focusedTabResizeUnsubscribe) {
+            this.focusedTabResizeUnsubscribe();
+            this.focusedTabResizeUnsubscribe = null;
+        }
+        this.focusedTab = tab;
+        this.hasFocusedTab = this.focusedTab !== null;
+        if (this.focusedTab && this.focusedTab.$refs.toggle) {
+            this.focusedTabResizeUnsubscribe = useResizeObserver(this.focusedTab.$refs.toggle, () => {
+                this.updateFocusIndicator();
+            }).stop;
+        }
+    }
+
     /**
      * Show/hide the floating focus indicator.
      */
     private changeFocusIndicatorVisibility(visible: boolean): void {
-        if (this.$refs.indicator) {
-            this.$refs.indicator.style.display = visible ? 'block' : 'none';
+        if (this.indicatorEl) {
+            this.indicatorEl.style.display = visible ? 'block' : 'none';
         }
     }
 
@@ -195,12 +190,25 @@ export default class TabsComponent extends Vue {
      * Update the position of the floating focus indicator.
      */
     private updateFocusIndicator(): void {
-        if (!this.$refs.indicator || !this.focusedTab || !this.focusedTab.$refs.toggle) {
+        if (!this.indicatorEl || !this.focusedTab || !this.focusedTab.$refs.toggle) {
             return ;
         }
         const offset = getElementOffset(this.focusedTab.$refs.toggle, false);
-        this.$refs.indicator.style.left = `${offset.left}px`;
-        this.$refs.indicator.style.width = `${this.focusedTab.$refs.toggle.offsetWidth}px`;
+        const style = getComputedStyle(this.focusedTab.$refs.toggle);
+
+        // In case the direction changed.
+        this.indicatorEl.removeAttribute('style');
+        if (this.direction === TabsDirection.Top) {
+            const paddingLeft = parseFloat(style.paddingLeft);
+            const paddingRight = parseFloat(style.paddingRight);
+            this.indicatorEl.style.left = `${offset.left + paddingLeft}px`;
+            this.indicatorEl.style.width = `${this.focusedTab.$refs.toggle.offsetWidth - (paddingLeft + paddingRight)}px`;
+        } else if (this.direction === TabsDirection.Left || this.direction === TabsDirection.Right) {
+            const paddingTop = parseFloat(style.paddingTop);
+            const paddingBottom = parseFloat(style.paddingBottom);
+            this.indicatorEl.style.top = `${offset.top + paddingTop}px`;
+            this.indicatorEl.style.height = `${this.focusedTab.$refs.toggle.offsetHeight - (paddingTop + paddingBottom)}px`;
+        }
     }
 
     /**

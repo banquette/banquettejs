@@ -1,16 +1,23 @@
+import { areEqual } from "@banquette/utils-misc/are-equal";
+import { proxy } from "@banquette/utils-misc/proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
+import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
+import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { extend } from "@banquette/utils-object/extend";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { GenericCallback, VoidCallback } from "@banquette/utils-type/types";
 import { Directive } from "@banquette/vue-typescript/decorator/directive.decorator";
 import { createPopper, PositioningStrategy, Instance, OptionsGeneric } from "@popperjs/core";
-import { DirectiveBinding } from "vue";
+import { useResizeObserver } from "@vueuse/core";
+import { DirectiveBinding, toRaw } from "vue";
 
 interface OptionsInterface {
+    enabled: boolean;
     target: HTMLElement|string;
     placement?: PositioningStrategy;
     popper?: Partial<OptionsGeneric<any>>;
@@ -29,9 +36,11 @@ export class StickToDirective {
 
     private el!: HTMLElement & {__vueParentComponent?: any};
     private bindings!: DirectiveBinding;
+    private options!: OptionsInterface;
 
     private target: HTMLElement|null = null;
-    private unsubscribe: VoidCallback|null = null;
+    private mutationObserverUnsubscribeFn: VoidCallback|null = null;
+    private sizeObserverUnsubscribeFn: VoidCallback|null = null;
     private popper: Instance|null = null;
 
     /**
@@ -41,34 +50,72 @@ export class StickToDirective {
         this.updated(el, bindings);
     }
 
+    public forceUpdate(): void {
+        if (this.popper) {
+            this.popper.forceUpdate();
+        }
+    }
+
+    public bindingUpdated(el: HTMLElement, bindings: DirectiveBinding): void {
+        const newOptions = this.resolveOptions(bindings);
+        if (!areObjectsEqual(newOptions, this.options)) {
+            this.options = newOptions;
+            this.doUpdate();
+        }
+    }
+
     /**
      * Vue lifecycle.
      */
     public updated(el: HTMLElement, bindings: DirectiveBinding) {
+        // Attaching a Popper is kind of heavy duty, so only do it if something changed.
+        const bindingsClone = cloneDeepPrimitive(toRaw(bindings.value));
+        if (el === this.el && areEqual(bindingsClone, this.bindings.value)) {
+            return ;
+        }
         this.el = el;
         this.bindings = bindings;
-        const newTarget = this.resolveTarget();
-        if (newTarget !== null) {
-            this.attach(this.el, newTarget);
-        } else {
-            if (this.target !== null) {
-                this.destroyPopper();
-            }
-            if (bindings.modifiers.observe || bindings.modifiers.ref) {
-                this.observe();
-            }
-        }
-        this.target = newTarget;
+        this.options = this.resolveOptions(bindings);
+        bindings.value.forceUpdate = proxy(this.forceUpdate, this);
+        this.doUpdate();
     }
 
     /**
      * Vue lifecycle.
      */
     public unmounted(): void {
-        if (this.unsubscribe !== null) {
-            this.unsubscribe();
+        if (this.mutationObserverUnsubscribeFn !== null) {
+            this.mutationObserverUnsubscribeFn();
         }
-        this.destroyPopper();
+        /**
+         * Ugly fix to give time to the transition to execute before destroying popper.
+         * @see https://github.com/vuejs/core/issues/5685
+         * @see https://github.com/vuejs/core/issues/994
+         */
+        window.setTimeout(() => {
+            this.destroyPopper();
+        }, 2000);
+    }
+
+    private doUpdate(): void {
+        const newTarget = this.resolveTarget();
+        if (newTarget !== null) {
+            if (this.options.enabled) {
+                this.attach(this.el, newTarget);
+            } else {
+                this.destroyPopper();
+            }
+        } else {
+            // If the target is not found in the DOM, destroy the existing popper if there is one and
+            // observer DOM changes in the look for the target.
+            if (this.target !== null) {
+                this.destroyPopper();
+            }
+            if (this.bindings.modifiers.observe || this.bindings.modifiers.ref) {
+                this.observe();
+            }
+        }
+        this.target = newTarget;
     }
 
     /**
@@ -81,18 +128,29 @@ export class StickToDirective {
             floatingEl.style.position = 'absolute';
             existingPosition = 'absolute';
         }
-        this.destroyPopper();
-        const options = this.getOptions();
-        this.popper = createPopper(targetEl, floatingEl, Object.assign({
+        const popperOptions = Object.assign({
             strategy: existingPosition as PositioningStrategy
-        }, (isObject(options) && isObject(options.popper)) ? options.popper : {}));
+        }, (isObject(this.options) && isObject(this.options.popper)) ? this.options.popper : {})
+
+        // Only create a new popper if the target has changed
+        if (this.target !== targetEl || !this.popper) {
+            this.destroyPopper();
+            this.popper = createPopper(targetEl, floatingEl, popperOptions);
+
+            // The forceUpdate() reduces glitches when the target changes very quickly
+            // and the floating element transform is animated.
+            this.popper.forceUpdate();
+            this.observeTargetSize(targetEl);
+        } else {
+            this.popper.setOptions(popperOptions).catch(console.error);
+        }
     }
 
     /**
      * Try to resolve the target using the current value of the binding.
      */
     private resolveTarget(): HTMLElement|null {
-        let target = this.getOptions().target;
+        let target = this.options.target;
         if (target instanceof HTMLElement) {
             return target;
         }
@@ -123,15 +181,15 @@ export class StickToDirective {
      * Observe the DOM for changes and call `resolveTarget` again each time a change is detected.
      */
     private observe(): void {
-        if (this.unsubscribe !== null) {
+        if (this.mutationObserverUnsubscribeFn !== null) {
             return ;
         }
-        this.unsubscribe = StickToDirective.Observe(throttle(() => {
+        this.mutationObserverUnsubscribeFn = StickToDirective.Observe(throttle(() => {
             const newTarget = this.resolveTarget();
             if (newTarget !== null) {
-                if (this.unsubscribe !== null) {
-                    this.unsubscribe();
-                    this.unsubscribe = null;
+                if (this.mutationObserverUnsubscribeFn !== null) {
+                    this.mutationObserverUnsubscribeFn();
+                    this.mutationObserverUnsubscribeFn = null;
                 }
                 if (newTarget !== this.target) {
                     this.target = newTarget;
@@ -141,14 +199,32 @@ export class StickToDirective {
         }, 50));
     }
 
-    private getOptions(): OptionsInterface {
-        const options = isFunction(this.bindings.value) ? this.bindings.value() : this.bindings.value;
+    /**
+     * Observe the target resize to force Popper to update if a change is detected.
+     */
+    private observeTargetSize(target: HTMLElement): void {
+        this.sizeObserverUnsubscribeFn = useResizeObserver(target, () => {
+            if (this.popper) {
+                this.popper.forceUpdate();
+            }
+        }).stop;
+    }
+
+    /**
+     * Create a options object for Popper from the bindings value.
+     */
+    private resolveOptions(bindings: DirectiveBinding): OptionsInterface {
+        let options = isFunction(bindings.value) ? bindings.value() : bindings.value;
         if (options instanceof HTMLElement || !isObject(options)) {
-            return {target: options};
+            return {target: options, enabled: true};
         }
+        options = cloneDeepPrimitive(options);
         options.popper = extend({
             placement: options.placement || 'bottom'
-        }, options.popper || {})
+        }, options.popper || {});
+        if (isUndefined(options.enabled)) {
+            options.enabled = true;
+        }
         return options;
     }
 
@@ -156,6 +232,9 @@ export class StickToDirective {
      * Destroy the Popper instance if it exists.
      */
     private destroyPopper(): void {
+        if (this.sizeObserverUnsubscribeFn !== null) {
+            this.sizeObserverUnsubscribeFn();
+        }
         if (this.popper !== null) {
             this.popper.destroy();
             this.popper = null;

@@ -1,96 +1,30 @@
-import { TextViewModel } from "@banquette/ui/form/text/text.view-model";
-import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
+import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { ProgressCircularComponent } from "../../progress/progress-circular";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
-import { ErrorComponent } from "../error";
+import { BaseInputComponent } from "../base-input";
+import { BaseInputComposable } from "../base-input/base-input.composable";
+import { NewAbstractVueFormComponent } from "../new-abstract-vue-form.component";
+import { TextViewDataInterface } from "./text-view-data.interface";
+import { TextViewModel } from "./text.view-model";
+import { ThemeConfiguration } from "./theme-configuration";
 
-/**
- * A generic text component the uses the generic view model from the `@banquette/form` package.
- */
-@Themeable({
-    vars: {
-        color: 'slvxvxoa',
-        outlineWidth: 'm4vweagr',
-        outlineColor: 'aqqhi16f',
-        padding: 'x73pwbop',
-        borderRadius: 'b0whwn2z',
-        boxShadow: 'ejw144jm',
-        background: 'fafhipdb',
-        fontSize: 'yvwfinhn',
-
-        label: {
-            color: 'hjoqe90v',
-            margin: 'r60agvhh',
-            fontSize: 'xb4919f6',
-            fontWeight: 'cfvnkwve'
-        },
-
-        placeholder: {
-            color: 'qdw6a9fh',
-            fontSize: 'bec4uu9b'
-        },
-
-        focused: {
-            outlineWidth: 'e2xlw36v',
-            outlineColor: 'b1hj6140',
-            background: 'nfwwjp5t',
-            boxShadow: 'd6zvc2x5'
-        },
-
-        error: {
-            outlineWidth: 'x63if0mt',
-            outlineColor: 'q30w5vdm',
-            background: 'fv3912g0',
-            boxShadow: 'cub29qik',
-
-            focused: {
-                outlineWidth: 'i5th4lyv'
-            }
-        },
-
-        disabled: {
-            outline: 'fa2n3mu4',
-            background: 'w0bfunmz',
-            boxShadow: 'nqf8p3jj',
-
-            label: {
-                color: 'b9gdkbqj',
-                fontWeight: 'h9nc2z49'
-            }
-        },
-
-        help: {
-            color: 'fpv8mky0'
-        }
-    }
-})
+@Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-text',
-    components: [ProgressCircularComponent, ErrorComponent]
+    components: [BaseInputComponent]
 })
-export default class TextComponent extends AbstractVueFormComponent<TextViewModel> {
+export default class TextComponent extends NewAbstractVueFormComponent<TextViewDataInterface, TextViewModel> {
     /**
-     * The label of the field.
+     * Holds the props exposed by the base input.
      */
-    @Prop({type: String, default: null}) public label!: string|null;
-
-    /**
-     * A placeholder value to show when there is no value selected.
-     */
-    @Prop({type: String, default: null}) public placeholder!: string|null;
-
-    /**
-     * A help text to show to the user.
-     */
-    @Prop({type: String, default: null}) public help!: string|null;
+    @Import(BaseInputComposable, false) public base!: BaseInputComposable;
 
     /**
      * If `true` the text input is a textarea.
@@ -104,20 +38,15 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewMode
     @Prop({type: String, default: 'text'}) public type!: string;
 
     /**
+     * The value of the `autocomplete` HTML attribute.
+     */
+    @Prop({type: String, default: 'off'}) public autoComplete!: string;
+
+    /**
      * Define the number of rows of the textarea.
      * Only applicable if multiline.
      */
-    @Prop({type: [String, Number], default: null}) public rows!: string|number|null;
-
-    /**
-     * If `true` the label will float and take the place of the placeholder when possible.
-     */
-    @Prop({type: Boolean, default: true}) public floatingLabel!: boolean;
-
-    /**
-     * Where to show the errors tooltip relative to the input.
-     */
-    @Prop({type: String, default: 'bottom-start'}) public errorPlacement!: string;
+    @Prop({type: Number, default: null, validate: (v: any) => v !== null ? parseInt(v, 10) : null}) public rows!: number|null;
 
     // Template refs
     @TemplateRef('inputWrapper') public inputWrapper!: HTMLElement|null;
@@ -125,9 +54,9 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewMode
     @TemplateRef('textarea') private textarea!: HTMLElement|null;
 
     // Override the type to get autocompletion in the view.
-    public vm!: TextViewModel;
+    @Expose() public v!: TextViewDataInterface;
 
-    @Expose() public get activeElement(): HTMLElement {
+    @Computed() public get activeElement(): HTMLElement {
         if (!isNullOrUndefined(this.input)) {
             return this.input;
         }
@@ -136,7 +65,7 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewMode
         }
         // There should always be one of the references defined.
         // This is for the rare cases where there is a type switch and the getter is called before the new ref is set.
-        // So we don't have to check if there is an active element everywhere we need to access it.
+        // So we don't have to check if there is an active element everytime we need to access it.
         const that: TextComponent & {__fakeInput?: HTMLInputElement} = this;
         if (isUndefined(that.__fakeInput)) {
             that.__fakeInput = document.createElement('input') as HTMLInputElement;
@@ -148,10 +77,7 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewMode
      * @inheritDoc
      */
     protected setupViewModel(): TextViewModel {
-        return new TextViewModel(this.proxy, {
-            controlToView: ensureString,
-            viewToControl: (value: any): any => value
-        });
+        return new TextViewModel(this.proxy, this.base);
     }
 
     /**
@@ -171,14 +97,11 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewMode
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['label', 'placeholder', 'help', 'multiline', 'type', 'rows', 'floatingLabel'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['multiline', 'type', 'rows', 'autocomplete'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
-        this.vm.label = this.label;
-        this.vm.placeholder = this.placeholder;
-        this.vm.help = this.help;
-        this.vm.multiline = this.multiline;
-        this.vm.type = this.type;
-        this.vm.rows = String(this.rows);
-        this.vm.floatingLabel = this.floatingLabel;
+        this.v.multiline = this.multiline;
+        this.v.type = this.type;
+        this.v.rows = this.rows;
+        this.v.autoComplete = this.autoComplete;
     }
 }

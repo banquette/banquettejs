@@ -1,0 +1,298 @@
+
+.bt-form-base-input {
+    --form-base-input-text-color: var(--bt-form-base-input-text-color, var(--bt-text-color-base));
+    --form-base-input-label-color: var(--bt-form-base-input-label-color, var(--bt-text-color-light));
+    --form-base-input-help-color: var(--bt-form-base-input-help-color, var(--bt-text-color-light));
+    --form-base-input-help-font-size: var(--bt-form-base-input-help-font-size, var(--bt-font-size-sm));
+    --form-base-input-error-text-color: var(--bt-form-base-input-error-text-color, var(--bt-color-red-500));
+    --form-base-input-error-font-size: var(--bt-form-base-input-error-font-size, var(--bt-font-size-sm));
+    --form-base-input-text-addon-color: var(--bt-form-base-input-text-addon-color, var(--bt-text-color-light));
+
+    --form-base-input-font-family: var(--bt-form-base-input-font-family, var(--bt-font-family-base));
+    --form-base-input-font-size: var(--bt-form-base-input-font-size, var(--bt-font-size-base));
+    --form-base-input-font-weight: var(--bt-form-base-input-font-weight, var(--bt-font-weight-normal));
+
+    --form-base-input-border-color: var(--bt-form-base-input-border-color, var(--bt-color-gray-200));
+    --form-base-input-border-focus-color: var(--bt-form-base-input-border-focus-color, var(--bt-color-primary));
+    --form-base-input-border-error-color: var(--bt-form-base-input-border-error-color, var(--bt-color-red-500));
+    --form-base-input-border-disabled-color: var(--bt-form-base-input-border-disabled-color, var(--bt-color-gray-200));
+
+    --form-base-input-background-color: var(--bt-form-base-input-background-color, var(--bt-color-white));
+    --form-base-input-background-disabled-color: var(--bt-form-base-input-background-disabled-color, var(--bt-color-gray-50));
+    --form-base-input-addon-background-color: var(--bt-form-base-input-addon-background-color, var(--bt-color-gray-50));
+
+    --form-base-input-border-radius: var(--bt-form-base-input-border-radius, var(--bt-border-radius-base));
+    --form-base-input-border-width: var(--bt-form-base-input-border-width, var(--bt-border-width-base));
+    --form-base-input-border-style: var(--bt-form-base-input-border-style, var(--bt-border-style-base));
+
+    --form-base-input-placeholder-x: var(--bt-form-base-input-placeholder-x, 0.8rem);
+    --form-base-input-placeholder-y: var(--bt-form-base-input-placeholder-y, 0.75rem);
+
+    --form-base-input-label-transition-duration: 0.2s;
+}
+
+:global(.bt-form-base-input) {
+    font-family: var(--form-base-input-font-family);
+    font-size: var(--form-base-input-font-size);
+    font-weight: var(--form-base-input-font-weight);
+    color: var(--form-base-input-text-color);
+}
+
+.bt-form-base-input {
+    position: relative;
+
+    & > .input-group {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+        position: relative;
+
+        & > .input {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            box-shadow: 0 0 0 var(--form-base-input-border-width) var(--form-base-input-border-color) inset;
+            border-radius: var(--form-base-input-border-radius);
+            background-color: var(--form-base-input-background-color);
+            position: relative;
+        }
+    }
+
+    ::placeholder {
+        color: var(--form-base-input-label-color);
+    }
+
+    label {
+        display: block;
+        line-height: 1;
+        color: var(--form-base-input-label-color);
+        transition:
+            top var(--form-base-input-label-transition-duration) ease-in-out,
+            font-size var(--form-base-input-label-transition-duration) ease-in-out,
+            transform var(--form-base-input-label-transition-duration) ease-in-out;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    &[data-has-floating-label] label {
+        position: absolute;
+        background-color: var(--form-base-input-background-color);
+        top: var(--form-base-input-placeholder-y);
+        left: var(--form-base-input-placeholder-x);
+        padding: 0.1em 0.2em;
+    }
+
+    &[data-has-after-addon] > .input-group .input {
+        box-shadow:
+            1px 0 0 0 var(--form-base-input-border-color) inset,
+            0 1px 0 0 var(--form-base-input-border-color) inset,
+            0 -1px 0 0 var(--form-base-input-border-color) inset;
+    }
+
+    &[data-has-focus] {
+        & > .input-group > .input {
+            box-shadow:
+                1px 0 0 0 var(--form-base-input-border-focus-color) inset,
+                1px 0 0 0 var(--form-base-input-border-focus-color),
+                0 1px 0 0 var(--form-base-input-border-focus-color) inset,
+                0 -1px 0 0 var(--form-base-input-border-focus-color) inset;
+            z-index: 2;
+        }
+
+        & > label {
+            color: var(--form-base-input-border-focus-color);
+        }
+
+        &:not([data-has-after-addon]) > .input-group > .input {
+            box-shadow: 0 0 0 1px var(--form-base-input-border-focus-color) inset;
+        }
+    }
+
+    &[data-has-focus], &[data-has-value], &[data-has-placeholder], &:not([data-has-floating-label]) {
+        & > label {
+            top: 0;
+            font-size: 0.9em;
+            transform: translateY(calc(-50% - var(--form-base-input-border-width)));
+            z-index: 3;
+        }
+    }
+
+    .placeholder {
+        display: block;
+        line-height: 1;
+        color: var(--form-base-input-label-color);
+        pointer-events: none;
+        z-index: 3;
+
+        position: absolute;
+        top: var(--form-base-input-placeholder-y);
+        left: var(--form-base-input-placeholder-x);
+        padding: 0.1em 0;
+    }
+
+    & > .extras {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3em;
+        margin-top: 0.3em;
+    }
+
+    /**
+     * Addons
+     */
+    .addon {
+        display: flex;
+        flex-grow: 0;
+        padding: 0.5em 1em;
+        align-items: center;
+        color: var(--form-base-input-text-addon-color);
+        background: var(--form-base-input-addon-background-color);
+        border-radius: var(--form-base-input-border-radius);
+    }
+
+    .before, .after {
+        display: flex;
+        align-items: stretch;
+
+        :slotted(svg) {
+            width: 1.3em;
+            height: 1.3em;
+
+            path {
+                fill: var(--form-base-input-text-addon-color);
+            }
+        }
+    }
+
+    &[data-has-before-addon] > .input-group > .input {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    &[data-has-after-addon] > .input-group > .input {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &:not([data-has-after-addon]) > .input-group > .input {
+        box-shadow: 0 0 0 1px var(--form-base-input-border-color) inset;
+    }
+
+    .before > .addon {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow:
+            1px 0 0 0 var(--form-base-input-border-color) inset,
+            0 1px 0 0 var(--form-base-input-border-color) inset,
+            0 -1px 0 0 var(--form-base-input-border-color) inset;
+    }
+
+    .after  > .addon {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        box-shadow: 0 0 0 var(--form-base-input-border-width) var(--form-base-input-border-color) inset;
+    }
+
+    .before > .addon:not(:first-child) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .after > .addon:not(:last-child) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    /**
+     * Floating extras
+     */
+    .floating-extras {
+        position: relative;
+        padding-right: 0.75em;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+    }
+
+    /**
+     * Working
+     */
+    :deep(.bt-progress-circular) {
+        --bt-progress-circular-size: 1em;
+        --bt-progress-circular-fill: none;
+        --bt-progress-circular-stroke-color: var(--bt-color-gray-600);
+    }
+
+    /**
+     * Disabled
+     */
+    &[data-is-disabled] {
+        &[data-has-floating-label] > label {
+            background-color: var(--form-base-input-background-disabled-color);
+        }
+
+        & > .input-group > .input {
+            border-color: var(--form-base-input-border-disabled-color);
+            background-color: var(--form-base-input-background-disabled-color);
+            cursor: not-allowed;
+        }
+    }
+
+    /**
+     * Error
+     */
+    &[data-has-error] {
+        & > .input-group > .input {
+            box-shadow:
+                1px 0 0 0 var(--form-base-input-border-error-color) inset,
+                1px 0 0 0 var(--form-base-input-border-error-color),
+                0 1px 0 0 var(--form-base-input-border-error-color) inset,
+                0 -1px 0 0 var(--form-base-input-border-error-color) inset;
+            z-index: 1;
+        }
+
+        & > label {
+            color: var(--form-base-input-border-error-color);
+        }
+
+        & > .extras > .error {
+            color: var(--form-base-input-error-text-color);
+            font-size: var(--form-base-input-error-font-size);
+        }
+
+        &:not([data-has-after-addon]) > .input-group > .input {
+            box-shadow: 0 0 0 1px var(--form-base-input-border-error-color) inset;
+        }
+    }
+
+    .error-icon :deep(svg) {
+        fill: var(--form-base-input-error-text-color);
+    }
+
+    :global(.bt-form-base-input-errors-popover) {
+        --bt-popover-background-color: var(--bt-color-red);
+        --bt-popover-border-color: var(--bt-color-red);
+        --bt-popover-text-color: var(--bt-color-red-contrast);
+    }
+
+    /**
+     * Help
+     */
+    .help-icon :deep(svg) {
+        fill: var(--form-base-input-help-color);
+    }
+
+    .help {
+        color: var(--form-base-input-help-color);
+        font-size: var(--form-base-input-help-font-size);
+    }
+}
+
+/**
+ * Sub base inputs (as addon).
+ */
+:global(.bt-form-base-input .after .bt-form-base-input > .input-group > .input) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

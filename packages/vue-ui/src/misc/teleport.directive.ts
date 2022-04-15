@@ -12,7 +12,7 @@ interface OptionsInterface {
      * Name of the target ref.
      * If `null`, the root element of the component is teleported instead.
      */
-    ref: string;
+    ref: string|null;
 
     /**
      * One or multiple component instances to get the ref from.

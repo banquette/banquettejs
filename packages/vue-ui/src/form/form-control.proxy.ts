@@ -4,6 +4,7 @@ import { Injector } from "@banquette/dependency-injection/injector";
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { BeforeValueChangeFormEvent } from "@banquette/form/event/before-value-change.form-event";
+import { ErrorsChangedFormEvent } from "@banquette/form/event/errors-changed.form-event";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
 import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
 import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
@@ -30,6 +31,8 @@ import { FormStorage } from "./form-storage";
 import { ProxifiedCallInterface } from "./proxified-call.interface";
 
 /**
+ * TODO: REMOVE
+ *
  * A proxy between the Vue component and the form control.
  *
  * Required because the form control may not be available at all times and
@@ -301,22 +304,22 @@ export class FormControlProxy implements FormViewControlInterface {
     /**
      * @inheritDoc
      */
-    public onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void): UnsubscribeFunction {
-        return this.subscribeToControl('onBeforeValueChange', callback);
+    public onBeforeValueChange(callback: (event: BeforeValueChangeFormEvent) => void, priority?: number): UnsubscribeFunction {
+        return this.subscribeToControl('onBeforeValueChange', callback, priority);
     }
 
     /**
      * @inheritDoc
      */
-    public onStateChanged(callback: (event: StateChangedFormEvent) => void): UnsubscribeFunction {
-        return this.subscribeToControl('onStateChanged', callback);
+    public onStateChanged(callback: (event: StateChangedFormEvent) => void, priority?: number): UnsubscribeFunction {
+        return this.subscribeToControl('onStateChanged', callback, priority);
     }
 
     /**
      * @inheritDoc
      */
-    public onValueChanged(callback: (event: ValueChangedFormEvent) => void): UnsubscribeFunction {
-        return this.subscribeToControl('onValueChanged', callback);
+    public onValueChanged(callback: (event: ValueChangedFormEvent) => void, priority?: number): UnsubscribeFunction {
+        return this.subscribeToControl('onValueChanged', callback, priority);
     }
 
     /**
@@ -325,7 +328,7 @@ export class FormControlProxy implements FormViewControlInterface {
     public onReady(cb: (control: FormViewControlInterface) => void): VoidCallback {
         if (this.bridge) {
             // If the control is already defined, just execute the callback and let the rest be.
-            cb(this);
+            cb(this as any);
         }
         this.onReadySubscribers.push(cb);
         return () => {
@@ -386,8 +389,8 @@ export class FormControlProxy implements FormViewControlInterface {
     /**
      * Generic method to subscribe to an event on a possibly not existing control.
      */
-    private subscribeToControl(methodName: keyof FormViewControlInterface, callback: GenericCallback): UnsubscribeFunction {
-        const call = this.callControlMethod(methodName, true, callback);
+    private subscribeToControl(methodName: keyof FormViewControlInterface, callback: GenericCallback, priority?: number): UnsubscribeFunction {
+        const call = this.callControlMethod(methodName, true, callback, priority);
         return () => {
             if (call.done && isFunction(call.returnValue)) {
                 call.returnValue();
@@ -490,7 +493,7 @@ export class FormControlProxy implements FormViewControlInterface {
         this.bridge = control.setViewModel(this.viewModel);
         this.flushControlMethodsQueue(this.bridge, control);
         for (const subscriber of this.onReadySubscribers) {
-            subscriber(this);
+            subscriber(this as any);
         }
         if (this.controlAddedUnsubscribe) {
             this.controlAddedUnsubscribe();
@@ -506,5 +509,10 @@ export class FormControlProxy implements FormViewControlInterface {
         for (const subscriber of this.onDetachSubscribers) {
             subscriber();
         }
+    }
+
+    onErrorsChanged(callback: (event: ErrorsChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction {
+        // Don't care, the proxy is replaced by the new class.
+        return () => {};
     }
 }

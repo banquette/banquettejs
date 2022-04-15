@@ -1,0 +1,40 @@
+.bt-form-select-choice {
+    --form-select-choice-text-color: var(--bt-form-select-choice-text-color, var(--bt-color-primary));
+    --form-select-choice-icon-color: var(--bt-form-select-choice-icon-color, var(--bt-color-primary));
+    --form-select-choice-background-focus-color: var(--bt-form-select-choice-background-focus-color, var(--bt-color-gray-50));
+}
+
+.bt-form-select-choice {
+    position: relative;
+    padding-right: 2em;
+
+    :deep(.checked-icon) {
+        position: absolute;
+        right: 0.6em;
+        top: 50%;
+        transform: translateY(-50%);
+
+        &, path {
+            fill: var(--form-select-choice-icon-color);
+        }
+    }
+
+    .slot-wrapper {
+        display: flex;
+    }
+
+    &.selected {
+        color: var(--form-select-choice-text-color);
+        font-weight: bold;
+    }
+
+    &.focused {
+        background: var(--form-select-choice-background-focus-color);
+    }
+
+    &.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}

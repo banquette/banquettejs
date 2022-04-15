@@ -1,0 +1,27 @@
+<div>
+    <div ref="target" class="bt-form-control-state-overlay" @click.stop.prevent="toggle()" @mousedown.prevent="" v-bt-popover="{showDelay: 500, content: 'Show view data'}">
+        <icon-bug-report></icon-bug-report>
+    </div>
+    <Teleport to="body" v-if="visible">
+        <div class="overlay" @click.stop="" v-bt-stick-to="overlayOptions" @mousedown.prevent="">
+            <div v-for="group of groups">
+                <div class="type">{{ group.name }}</div>
+
+                <div class="item" v-for="value of group.values">
+                    <div class="resume" :class="{'true': value.isBoolean && value.rawValue, 'false': value.isBoolean && !value.rawValue}">
+                        <div class="bullet"></div>
+                        <div class="name">{{ value.name }}</div>
+                        <div class="value">{{ value.shortValue }}</div>
+                        <a href="" v-if="value.fullValue" @click.prevent="toggleValueDetail(value)">
+                            (<span v-if="value.fullValueVisible">Less</span><span v-else>More</span>)
+                        </a>
+                    </div>
+                    <div v-if="value.fullValue && value.fullValueVisible" class="full-value">
+                        {{ value.fullValue }}
+                    </div>
+                </div>
+            </div>
+            <a href="" class="close-link" @click.prevent="hide()">Close</a>
+        </div>
+    </Teleport>
+</div>

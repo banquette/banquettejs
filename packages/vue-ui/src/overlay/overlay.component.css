@@ -1,0 +1,27 @@
+.bt-overlay {
+    --overlay-background-color: var(--bt-overlay-background-color, rgba(0, 0, 0, 0.5));
+    --overlay-z-index: var(--bt-overlay, var(--bt-z-index-overlay));
+}
+
+.bt-overlay {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    overflow: auto;
+    z-index: var(--overlay-z-index);
+    background-color: var(--overlay-background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &[data-is-disabled] {
+        pointer-events: none;
+        background: none;
+
+        & > .inner {
+            pointer-events: initial;
+        }
+    }
+}

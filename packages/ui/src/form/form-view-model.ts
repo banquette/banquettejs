@@ -1,9 +1,10 @@
 import { FormError } from "@banquette/form/form-error";
 import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
-import { NoopTransformer } from "./value-transformer/noop-transformer.interface";
-import { ValueTransformerInterface } from "./value-transformer/value-transformer.interface";
 
+/**
+ * TODO: REMOVE
+ */
 export class FormViewModel implements FormViewModelInterface {
     /**
      * The current "view" value of the form control.
@@ -62,10 +63,13 @@ export class FormViewModel implements FormViewModelInterface {
     /**
      * The transformer used to transform the value between the view and the control.
      */
-    public readonly valueTransformer: ValueTransformerInterface;
+    // public readonly valueTransformer: any /*ValueTransformerInterface*/;
 
-    public constructor(public control: FormViewControlInterface, valueTransformer: ValueTransformerInterface = NoopTransformer) {
-        this.valueTransformer = valueTransformer;
+    public constructor(public control: FormViewControlInterface, public valueTransformer: any = null) {
+        this.valueTransformer = this.valueTransformer ? this.valueTransformer : {
+            controlToView: (value: any) => value,
+            viewToControl: (value: any) => value
+        };
     }
 
     /**

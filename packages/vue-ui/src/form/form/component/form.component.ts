@@ -16,7 +16,7 @@ import { HttpResponse } from "@banquette/http/http-response";
 import { FormModelBinder } from "@banquette/model-form/form-model-binder";
 import { TransformService } from "@banquette/model/transformer/transform.service";
 import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
-import { RemoteModule } from "@banquette/ui/misc/module/remote/remote.module";
+import { RemoteModule } from "@banquette/ui/misc/remote/remote.module";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { ensureString } from "@banquette/utils-type/ensure-string";
@@ -146,12 +146,10 @@ export default class FormComponent extends Vue {
      */
     private createdControlsMap: Record<string, FormControl> = {};
 
-    public constructor(@Inject(TransformService) private transformService: TransformService,
-                       @Inject(RemoteModule) loadRemote: RemoteModule,
-                       @Inject(RemoteModule) persistRemote: RemoteModule) {
+    public constructor(@Inject(TransformService) private transformService: TransformService) {
         super();
-        this.loadRemote = loadRemote;
-        this.persistRemote = persistRemote;
+        this.loadRemote = new RemoteModule();
+        this.persistRemote = new RemoteModule();
     }
 
     /**
@@ -268,7 +266,7 @@ export default class FormComponent extends Vue {
             if (this.persistRemote.isApplicable) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
-                this.persistRemote.payloadType = this.persistPayloadType;
+                this.persistRemote.updateConfiguration({payloadType: this.persistPayloadType});
                 const response: HttpResponse<any> = this.persistRemote.send(this.modelType ? this.model : this.form.value, {}, [FORM_GENERIC_PERSIST_REQUESTS_TAG]);
                 try {
                     await response.promise;
@@ -417,18 +415,22 @@ export default class FormComponent extends Vue {
 
     @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams'], {immediate: ImmediateStrategy.BeforeMount})
     private syncLoadConfigurationProps(): void {
-        this.loadRemote.model = this.modelType;
-        this.loadRemote.url = this.loadUrl;
-        this.loadRemote.endpoint = this.loadEndpoint;
-        this.loadRemote.urlParams = this.loadUrlParams;
+        this.loadRemote.updateConfiguration({
+            model: this.modelType,
+            url: this.loadUrl,
+            endpoint: this.loadEndpoint,
+            urlParams: this.loadUrlParams
+        });
     }
 
     @Watch(['modelType','persistUrl', 'persistEndpoint','persistUrlParams'], {immediate: ImmediateStrategy.BeforeMount})
     private syncPersistConfigurationProps(): void {
-        this.persistRemote.model = this.modelType;
-        this.persistRemote.url = this.persistUrl;
-        this.persistRemote.endpoint = this.persistEndpoint;
-        this.persistRemote.urlParams = this.persistUrlParams;
-        this.persistRemote.method = this.persistMethod;
+        this.persistRemote.updateConfiguration({
+            model: this.modelType,
+            url: this.persistUrl,
+            endpoint: this.persistEndpoint,
+            urlParams: this.persistUrlParams,
+            method: this.persistMethod
+        });
     }
 }

@@ -1,95 +1,128 @@
 .bt-form-checkbox {
-    --size: var(--z822d0ih, 1.4rem);
-    --icon-color: var(--vs97h5lp, #fff);
-    --error-color: var(--lnk7g3yd, #da4545);
-    --outline-width: var(--bzwg1huc, 0);
-    --outline-color: var(--tr8civxc, #444);
-    --hover-outline-width: var(--nczo48pe, 1px);
-    --hover-outline-color: var(--bclvwvrx, var(--outline-color));
-    --focused-outline-width: var(--z0fqdfci, var(--hover-outline-width));
-    --focused-outline-color: var(--mdxuey2e, var(--hover-outline-color));
-    --checked-outline-width: var(--my6rsp68, var(--outline-width));
-    --checked-outline-color: var(--d870x15c, var(--outline-color));
+    --form-checkbox-size: var(--bt-form-checkbox-size, 1em);
+    --form-checkbox-border-radius: var(--bt-form-checkbox-border-radius, var(--bt-border-radius-base));
 
+    --form-checkbox-background-color: var(--bt-form-checkbox-background-color, transparent);
+    --form-checkbox-background-checked-color: var(--bt-form-checkbox-background-checked-color, var(--bt-color-primary));
+
+    --form-checkbox-outline-color: var(--bt-form-checkbox-outline-color, var(--bt-color-gray-300));
+    --form-checkbox-outline-hover-color: var(--bt-form-checkbox-outline-hover-color, var(--bt-color-primary));
+    --form-checkbox-outline-focused-color: var(--bt-form-checkbox-outline-focused-color, var(--bt-color-primary));
+    --form-checkbox-outline-checked-color: var(--bt-form-checkbox-outline-checked-color, var(--bt-color-primary));
+
+    --form-checkbox-outline-width: var(--bt-form-checkbox-outline-width, 0);
+    --form-checkbox-outline-hover-width: var(--bt-form-checkbox-outline-hover-width, 1px);
+    --form-checkbox-outline-focused-width: var(--bt-form-checkbox-outline-focused-width, 1px);
+    --form-checkbox-outline-checked-width: var(--bt-form-checkbox-outline-checked-width, 1px);
+
+    --form-checkbox-icon-color: var(--bt-form-checkbox-icon-color, var(--bt-color-primary-contrast));
+    --form-checkbox-error-color: var(--bt-form-checkbox-error-color, var(--bt-color-red-500));
+}
+
+.bt-form-checkbox :deep(.bt-form-base-input) {
+    --bt-form-base-input-text-color: var(--bt-form-checkbox-text-color);
+    --bt-form-base-input-label-color: var(--bt-form-checkbox-label-color);
+    --bt-form-base-input-help-color: var(--bt-form-checkbox-help-color);
+    --bt-form-base-input-help-font-size: var(--bt-form-checkbox-help-font-size);
+    --bt-form-base-input-error-text-color: var(--bt-form-checkbox-error-text-color);
+    --bt-form-base-input-error-font-size: var(--bt-form-checkbox-error-font-size);
+    --bt-form-base-input-text-addon-color: var(--bt-form-checkbox-text-addon-color);
+
+    --bt-form-base-input-font-family: var(--bt-form-checkbox-font-family);
+    --bt-form-base-input-font-size: var(--bt-form-checkbox-font-size);
+    --bt-form-base-input-font-weight: var(--bt-form-checkbox-font-weight);
+
+    --bt-form-base-input-border-color: transparent;
+    --bt-form-base-input-border-focus-color: transparent;
+    --bt-form-base-input-border-error-color: transparent;
+    --bt-form-base-input-border-disabled-color: transparent;
+
+    --bt-form-base-input-background-color: transparent;
+    --bt-form-base-input-background-disabled-color: transparent;
+
+    --bt-form-base-input-border-width: 0;
+}
+
+.bt-form-checkbox {
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--kxzzofc0, 0.75rem);
-    transition: all 0.2s ease-in-out;
+    gap: 0.75em;
     outline: 1px solid transparent;
 
     &, * { cursor: pointer; }
 
     label {
-        color: var(--ji0j61ze, inherit);
+        color: inherit;
     }
 
     .checkbox {
         position: relative;
-        width: var(--size);
-        height: var(--size);
+        width: var(--form-checkbox-size);
+        height: var(--form-checkbox-size);
         flex-shrink: 0;
-        border-radius: var(--r2fwd2hx, 0.25em);
-        background: var(--p9p45didf, transparent);
-        border: var(--bzwg1huc, 1px) solid var(--outline-color);
-        outline: var(--outline-width) solid var(--outline-color);
+        border-radius: var(--form-checkbox-border-radius);
+        background: var(--form-checkbox-background-color);
+        border: 1px solid var(--form-checkbox-outline-color);
+        outline: var(--form-checkbox-outline-width) solid var(--form-checkbox-outline-color);
+        transition: background 0.2s var(--bt-ease-in-out-bezier);
 
         svg {
             display: none;
 
             .fill {
-                fill: var(--icon-color);
+                fill: var(--form-checkbox-icon-color);
             }
         }
     }
 
     &:hover .checkbox {
-        border-color: var(--hover-outline-color);
-        outline: var(--hover-outline-width) solid var(--hover-outline-color);
+        border-color: var(--form-checkbox-outline-hover-color);
+        outline: var(--form-checkbox-outline-hover-width) solid var(--form-checkbox-outline-hover-color);
     }
 
     &[data-has-focus] .checkbox {
-        border-color: var(--focused-outline-color);
-        outline: var(--focused-outline-width) solid var(--focused-outline-color);
+        border-color: var(--form-checkbox-outline-focused-color);
+        outline: var(--form-checkbox-outline-focused-width) solid var(--form-checkbox-outline-focused-color);
     }
 
     &[data-has-error] .checkbox {
-        border-color: var(--error-color);
-        outline: var(--outline-width) solid var(--error-color);
+        border-color: var(--form-checkbox-error-color);
+        outline: var(--form-checkbox-outline-width) solid var(--form-checkbox-error-color);
     }
 
     &[data-has-error][data-has-focus] .checkbox {
-        border-color: var(--error-color);
-        outline: var(--focused-outline-width) solid var(--error-color);
+        border-color: var(--form-checkbox-error-color);
+        outline: var(--form-checkbox-outline-focused-width) solid var(--form-checkbox-error-color);
     }
 
     &[data-has-error]:hover .checkbox {
-        border-color: var(--error-color);
-        outline: var(--hover-outline-width) solid var(--error-color);
+        border-color: var(--form-checkbox-error-color);
+        outline: var(--form-checkbox-outline-hover-width) solid var(--form-checkbox-error-color);
     }
 
-    &[data-is-checked] .checkbox {
-        background: var(--q48u8kzb, var(--checked-outline-color));
-        border: var(--checked-outline-width) solid var(--checked-outline-color);
+    &[data-is-checked] .checkbox, &[data-is-indeterminate] .checkbox {
+        background: var(--form-checkbox-background-checked-color);
+        border: var(--form-checkbox-outline-checked-width) solid var(--form-checkbox-outline-checked-color);
 
         svg {
             position: absolute;
             display: block;
             top: 50%;
             left: 50%;
-            width: calc(var(--size) * 0.675);
-            height: calc(var(--size) * 0.675);
+            width: calc(var(--form-checkbox-size) * 0.675);
+            height: calc(var(--form-checkbox-size) * 0.675);
             transform: translate(-50%, -50%);
 
             .fill {
-                fill: var(--f56nkjn1, var(--icon-color));
+                fill: var(--form-checkbox-icon-color);
             }
         }
     }
 
-    &[data-is-checked][data-has-error] .checkbox {
-        background: var(--error-color);
-        border: var(--checked-outline-width) solid var(--error-color);
+    &[data-is-checked][data-has-error] .checkbox, &[data-is-indeterminate][data-has-error] .checkbox {
+        background: var(--form-checkbox-error-color);
+        border: var(--form-checkbox-outline-checked-width) solid var(--form-checkbox-error-color);
     }
 
     &[data-has-group] .checkbox {
@@ -98,17 +131,22 @@
 
     &[data-is-disabled] {
         pointer-events: none;
+        opacity: 0.4;
+    }
 
-        .checkbox {
-            border-color: var(--z2svl9lw, #ccc);
-        }
+    &[data-is-indeterminate] .checkbox::before {
+        content: "";
+        position: absolute;
+        display: block;
+        background-color: var(--form-checkbox-icon-color);
+        height: 1px;
+        transform: translateY(-50%);
+        left: 20%;
+        right: 20%;
+        top: 50%;
+    }
 
-        &[data-is-checked] .checkbox {
-            background: var(--hgwz6ho2, #ccc);
-        }
-
-        label {
-            color: var(--ja3lwl3o, #ccc);
-        }
+    :deep(.bt-form-base-input) > .input-group > .input {
+        gap: 0.5em;
     }
 }

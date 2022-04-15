@@ -1,4 +1,4 @@
-<div
+<bt-dropdown-item
     v-if="choice"
     v-show="choice.visible"
     class="bt-form-select-choice"
@@ -6,4 +6,5 @@
     @click.stop="select()"
 >
     <slot></slot>
-</div>
+    <icon-check v-if="choice.selected" class="checked-icon"></icon-check>
+</bt-dropdown-item>

@@ -16,6 +16,9 @@ import { Vue } from "@banquette/vue-typescript/vue";
 import { ViewModelEvents, ViewModelSequence } from "./constant";
 import { FormControlProxy } from "./form-control.proxy";
 
+/**
+ * TODO: REMOVE
+ */
 export abstract class AbstractVueFormComponent<ViewModelType extends FormViewModel> extends Vue {
     private static MaxId: number = 0;
 

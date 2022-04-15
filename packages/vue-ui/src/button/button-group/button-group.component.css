@@ -1,7 +1,7 @@
 .bt-button-group {
     display: flex;
 
-    :deep(.bt-button) {
+    & > :deep(.bt-button) {
         &:not(:first-child) {
             border-left-width: 0;
             border-top-left-radius: 0;
@@ -9,6 +9,19 @@
         }
 
         &:not(:last-child) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+
+    & > :deep(.bt-button-wrapper) {
+        &:not(:first-child) .bt-button {
+            border-left-width: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        &:not(:last-child) .bt-button {
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
         }

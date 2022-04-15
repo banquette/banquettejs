@@ -1,0 +1,87 @@
+.bt-dialog {
+    --dialog-header-font-family: var(--bt-dialog-header-font-family, var(--bt-font-family-base));
+    --dialog-header-font-size: var(--bt-dialog-header-font-size, var(--bt-font-size-lg));
+    --dialog-header-font-weight: var(--bt-dialog-header-font-weight, var(--bt-font-weight-semibold));
+
+    --dialog-background: var(--bt-dialog-background, var(--bt-color-white));
+    --dialog-border-radius: var(--bt-dialog-border-radius, var(--bt-border-radius-base));
+    --dialog-shadow: var(--bt-dialog-shadow, var(--bt-shadow-dialog));
+
+    --dialog-border-color: var(--bt-dialog-border-color, var(--bt-color-gray-100));
+    --dialog-border-style: var(--bt-dialog-border-style, solid);
+    --dialog-border-width: var(--bt-dialog-border-width, 1px);
+
+    --dialog-min-width: var(--bt-dialog-min-width, 30%);
+    --dialog-min-height: var(--bt-dialog-min-height, none);
+    --dialog-max-width: var(--bt-dialog-max-width, 80%);
+    --dialog-max-height: var(--bt-dialog-max-height, 50vh);
+}
+
+.bt-dialog {
+    :deep(.bt-overlay) {
+        & > .inner {
+            min-width: var(--dialog-min-width);
+            min-height: var(--dialog-min-height);
+            max-width: var(--dialog-max-width);
+
+            & .bt-dialog-inner {
+                display: flex;
+                flex-direction: column;
+                background: var(--dialog-background);
+                border-radius: var(--dialog-border-radius);
+                max-height: var(--dialog-max-height);
+                box-shadow: var(--dialog-shadow);
+                border-width: var(--dialog-border-width);
+                border-style: var(--dialog-border-style);
+                border-color: var(--dialog-border-color);
+
+                & > .header, & > .footer {
+                    display: flex;
+                    align-items: center;
+                    padding: 1em;
+                    font-family: var(--dialog-header-font-family);
+                    font-size: var(--dialog-header-font-size);
+                    font-weight: var(--dialog-header-font-weight);
+                    flex-shrink: 0;
+                    flex-grow: 0;
+                }
+
+                & > .header {
+                    position: relative;
+                    justify-content: space-between;
+                    border-bottom: 1px solid var(--bt-color-gray-50);
+
+                    & > .close-icon {
+                        position: absolute;
+                        display: flex;
+                        align-items: center;
+                        right: 1em;
+                        top: 0;
+                        bottom: 0;
+                        width: 1em;
+
+                        svg {
+                            cursor: pointer;
+
+                            path {
+                                fill: var(--bt-color-gray-500);
+                            }
+                        }
+                    }
+                }
+
+                & > .footer {
+                    justify-content: flex-end;
+                    gap: 0.5em;
+                    border-top: 1px solid var(--bt-color-gray-50);
+                }
+
+                & > .body {
+                    padding: 20px;
+                    flex-grow: 1;
+                    overflow: auto;
+                }
+            }
+        }
+    }
+}

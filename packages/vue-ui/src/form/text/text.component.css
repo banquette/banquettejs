@@ -1,144 +1,54 @@
 .bt-form-text {
-    --background-color: var(--fafhipdb, #f2f2f2);
-    --disabled-background-color: var(--w0bfunmz, #f2f2f2);
-    --outline-width: var(--m4vweagr, 1px);
-    --outline-color: var(--aqqhi16f, transparent);
-    --box-shadow: var(--ejw144jm, none);
+    --form-text-padding-x: var(--bt-form-text-padding-x, 1em);
+    --form-text-padding-y: var(--bt-form-text-padding-y, 0.8em);
+}
 
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.bt-form-text :deep(.bt-form-base-input) {
+    --bt-form-base-input-text-color: var(--bt-form-text-text-color);
+    --bt-form-base-input-label-color: var(--bt-form-text-label-color);
+    --bt-form-base-input-help-color: var(--bt-form-text-help-color);
+    --bt-form-base-input-help-font-size: var(--bt-form-text-help-font-size);
+    --bt-form-base-input-error-text-color: var(--bt-form-text-error-text-color);
+    --bt-form-base-input-error-font-size: var(--bt-form-text-error-font-size);
+    --bt-form-base-input-text-addon-color: var(--bt-form-text-text-addon-color);
 
-    .control-wrapper {
-        position: relative;
-        display: flex;
-        flex-direction: column;
+    --bt-form-base-input-font-family: var(--bt-form-text-font-family);
+    --bt-form-base-input-font-size: var(--bt-form-text-font-size);
+    --bt-form-base-input-font-weight: var(--bt-form-text-font-weight);
 
-        label {
-            color: var(--hjoqe90v, inherit);
-            font-size: var(--xb4919f6, inherit);
-            font-weight: var(--cfvnkwve, 500);
-            margin: var(--r60agvhh, 0 0 0.675rem 0);
-        }
-    }
+    --bt-form-base-input-border-color: var(--bt-form-text-border-color);
+    --bt-form-base-input-border-focus-color: var(--bt-form-text-border-focus-color);
+    --bt-form-base-input-border-error-color: var(--bt-form-text-border-error-color);
+    --bt-form-base-input-border-disabled-color: var(--bt-form-text-border-disabled-color);
 
-    .input-wrapper {
-        position: relative;
-    }
+    --bt-form-base-input-background-color: var(--bt-form-text-background-color);
+    --bt-form-base-input-background-disabled-color: var(--bt-form-text-background-disabled-color);
+    --bt-form-base-input-addon-background-color: var(--bt-form-text-addon-background-color);
 
+    --bt-form-base-input-border-radius: var(--bt-form-text-border-radius);
+    --bt-form-base-input-border-width: var(--bt-form-text-border-width);
+    --bt-form-base-input-border-style: var(--bt-form-text-border-style);
+
+    --bt-form-base-input-placeholder-x: var(--bt-form-text-padding-x, var(--form-text-padding-x));
+    --bt-form-base-input-placeholder-y: var(--bt-form-text-padding-y, var(--form-text-padding-y));
+}
+
+.bt-form-text {
     [data-control] {
         width: 100%;
-        color: var(--slvxvxoa, inherit);
-        background: var(--background-color);
-        outline: var(--outline-width) solid var(--outline-color);
-        padding: var(--x73pwbop, 1rem);
-        border-radius: var(--b0whwn2z, 6px);
-        box-shadow: var(--box-shadow);
-        font-size: var(--yvwfinhn, inherit);
-
-        &::placeholder {
-            color: var(--qdw6a9fh, #f2f2f2);
-            font-size: var(--bec4uu9b, var(--yvwfinhn));
-        }
+        padding: var(--form-text-padding-y) var(--form-text-padding-x);
+        border: none;
+        background: none;
+        outline: none;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        color: inherit;
+        box-sizing: border-box;
+        cursor: inherit;
     }
 
-    &[data-has-focus] [data-control] {
-        outline: var(--e2xlw36v, var(--outline-width)) solid var(--b1hj6140, var(--outline-color));
-        background: var(--nfwwjp5t, var(--background-color));
-        box-shadow: var(--d6zvc2x5, var(--box-shadow));
-    }
-
-    &[data-has-error] [data-control] {
-        outline: var(--x63if0mt, var(--outline-width)) solid var(--q30w5vdm, var(--outline-color));
-        background: var(--fv3912g0, var(--background-color));
-        box-shadow: var(--cub29qik, var(--box-shadow));
-    }
-
-    &[data-has-error][data-has-focus] [data-control] {
-        outline-width: var(--i5th4lyv, 2px);
-    }
-
-    &[data-is-disabled] {
-        .label {
-            color: var(--b9gdkbqj, #ccc);
-            font-weight: var(--h9nc2z49, normal);
-        }
-
-        [data-control] {
-            cursor: not-allowed;
-            outline: var(--fa2n3mu4, none);
-            background: var(--disabled-background-color);
-            box-shadow: var(--nqf8p3jj, none);
-        }
-    }
-
-    /**
-     * Floating label
-     */
-    &[data-has-floating-label] {
-        label {
-            position: absolute;
-            top: 0;
-            left: 1rem;
-            padding: 0 0.4rem;
-            color: #787878;
-            font-size: 0.9rem;
-            transition: all 0.2s ease-in-out;
-            z-index: 1;
-
-            span {
-                display: block;
-                transform: translateY(-50%);
-            }
-        }
-
-        label::before {
-            content: '';
-            position: absolute;
-            background: var(--background-color);
-            height: var(--outline-width);
-            transform: translateY(calc(var(--outline-width) * -1));
-            top: 0;
-            left: 0;
-            right: 0;
-        }
-
-        &:not([data-has-placeholder]):not([data-has-focus]):not([data-has-value]):not([data-is-multiline]) label {
-            opacity: 0.6;
-            top: 50%;
-            padding: 0;
-            font-size: inherit;
-            pointer-events: none;
-        }
-
-        &:not([data-has-placeholder]):not([data-has-focus]):not([data-has-value]):not([data-is-multiline]) label::before {
-            opacity: 0;
-        }
-
-        &[data-is-disabled] label::before {
-            --outline-width: var(--x63if0mt, var(--outline-width));
-            height: var(--outline-width);
-            transform: translateY(calc(var(--outline-width) * -1));
-        }
-
-        &[data-has-focus] label::before {
-            --loc-outline-width: var(--e2xlw36v, var(--outline-width));;
-            height: var(--loc-outline-width);
-            transform: translateY(calc(var(--loc-outline-width) * -1));
-        }
-
-        &[data-has-error][data-has-focus] label::before {
-            --loc-outline-width: var(--i5th4lyv, 2px);
-            height: var(--loc-outline-width);
-            transform: translateY(calc(var(--loc-outline-width) * -1));
-        }
-    }
-
-    /**
-     * Help
-     */
-    .help {
-        color: var(--fpv8mky0, #aaa);
-        margin-top: 0.5em;
+    textarea {
+        resize: vertical;
     }
 }

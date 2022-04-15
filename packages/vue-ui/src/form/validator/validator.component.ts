@@ -14,7 +14,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { maybeResolveTsInst } from "@banquette/vue-typescript/utils/converters";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
+import { NewAbstractVueFormComponent } from "../new-abstract-vue-form.component";
 import { ContainerValidatorInterface } from "./container-validator.interface";
 
 /**
@@ -103,7 +103,7 @@ export abstract class ValidatorComponent extends Vue {
         let $parent: any = this.$parent;
         while ($parent) {
             $parent = maybeResolveTsInst($parent);
-            if ($parent instanceof AbstractVueFormComponent) {
+            if ($parent instanceof NewAbstractVueFormComponent) {
                 return this.assignToParentFormComponent($parent);
             }
             if (isType<ContainerValidatorInterface>($parent, () => isFunction($parent.registerChild))) {
@@ -116,7 +116,7 @@ export abstract class ValidatorComponent extends Vue {
         if (parent && parent.form instanceof AbstractFormGroup) {
             const form = parent.form as AbstractFormGroup;
             this.autoDetectedParentFormGroup = form;
-            form.onControlAdded(proxy(this.updateFromTargets, this), false);
+            form.onControlAdded(proxy(this.updateFromTargets, this), 0, false);
         }
         this.updateFromTargets();
     }
@@ -131,7 +131,7 @@ export abstract class ValidatorComponent extends Vue {
     /**
      * Assign the validator to a parent form component.
      */
-    private assignToParentFormComponent(parent: AbstractVueFormComponent<any>): void {
+    private assignToParentFormComponent(parent: NewAbstractVueFormComponent<any>): void {
         const proxy = parent.proxy;
         let assignedControl: AbstractFormComponent|null = null;
         const assignValidator = (control: AbstractFormComponent) => {

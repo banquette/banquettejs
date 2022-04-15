@@ -1,37 +1,73 @@
+
 .bt-button {
-    font-size: var(--rbqdeb2b, 1rem);
-    font-weight: var(--x7zq5fu1, 400);
-    border-radius: var(--n7vo0li2, 4px);
-    background: var(--hp8t4g7n, #ececec);
-    border-color: var(--bki79qph, transparent);
-    color: var(--w061g1oc, #ccc);
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    border-width: 1px;
-    user-select: none;
+    --button-text-color: var(--bt-button-text-color, var(--bt-color-primary-contrast));
+    --button-text-hover-color: var(--bt-button-text-hover-color, var(--button-text-color));
+    --button-text-focus-color: var(--bt-button-text-focus-color, var(--button-text-color));
+    --button-text-active-color: var(--bt-button-text-active-color, var(--button-text-color));
+    --button-text-disabled-color: var(--bt-button-text-disabled-color, var(--button-text-color));
+
+    --button-font-family: var(--bt-button-font-family, var(--bt-font-family-base));
+    --button-font-size: var(--bt-button-font-size, var(--bt-font-size-base));
+    --button-font-weight: var(--bt-button-font-weight, var(--bt-font-weight-medium));
+
+    --button-background-color: var(--bt-button-background-color, var(--bt-color-primary));
+    --button-background-hover-color: var(--bt-button-background-hover-color, var(--bt-color-primary-400));
+    --button-background-focus-color: var(--bt-button-background-focus-color, var(--bt-color-primary-400));
+    --button-background-active-color: var(--bt-button-background-active-color, var(--bt-color-primary-550));
+    --button-background-disabled-color: var(--bt-button-background-disabled-color, var(--bt-color-primary-300));
+
+    --button-border-color: var(--bt-button-border-color, var(--button-background-color));
+    --button-border-hover-color: var(--bt-button-border-hover-color, var(--button-background-hover-color));
+    --button-border-focus-color: var(--bt-button-border-focus-color, var(--button-background-focus-color));
+    --button-border-active-color: var(--bt-button-border-active-color, var(--button-background-active-color));
+    --button-border-disabled-color: var(--bt-button-border-disabled-color, var(--button-background-disabled-color));
+
+    --button-border-radius: var(--bt-button-border-radius, var(--bt-border-radius-base));
+    --button-border-width: var(--bt-button-border-width, var(--bt-border-width-base));
+    --button-border-style: var(--bt-button-border-style, var(--bt-border-style-base));
+
+    --button-appearance-animation-duration: var(--bt-button-appearance-animation-duration, 0.15s);
+    --button-click-animation-duration: var(--bt-button-animation-click-duration, 30ms);
+}
+
+.bt-button-wrapper {
     display: inline-flex;
+}
 
-    .inner {
-        display: inline-flex;
-        align-items: center;
-        padding: var(--duk5ypj7, 0.75em 1.25em);
-    }
+.bt-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
 
-    .inner > :deep(svg) {
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+
+    line-height: 1;
+    font-family: var(--button-font-family);
+    font-size: var(--button-font-size);
+    font-weight: var(--button-font-weight);
+    color: var(--button-text-color);
+
+    border: var(--button-border-width) var(--button-border-style) var(--button-border-color);
+    border-radius: var(--button-border-radius);
+    background-color: var(--button-background-color);
+    transition:
+        transform var(--button-click-animation-duration) ease-out,
+        background var(--button-appearance-animation-duration) ease-out,
+        color var(--button-appearance-animation-duration) ease-out;
+
+    position: relative;
+    padding: 0.6em 1em;
+    margin: 0;
+
+    :slotted(svg) {
         width: 1.3em;
         height: 1.3em;
 
-        &:last-child:not(:first-child) {
-            margin: -0.5em -0.4em -0.5em 0.4em;
-        }
-
-        &:first-child:not(:last-child) {
-            margin: -0.5em 0.4em -0.5em -0.4em;
-        }
-
-        & > path {
-            fill: var(--w061g1oc, #ccc);
+        path {
+            fill: var(--button-text-color);
         }
     }
 
@@ -40,50 +76,82 @@
     }
 
     &:hover {
-        background: var(--f32skrbh, #ececec);
-        color: var(--ao5pftk1, #ccc);
-        transition: background-color 100ms linear;
+        color: var(--button-text-hover-color);
+        border-color: var(--button-border-hover-color);
+        background-color: var(--button-background-hover-color);
 
-        :deep(svg) path {
-            fill: var(--ao5pftk1, #ccc);
-        }
-    }
-
-    &:active, &.active {
-        background: var(--a24mj78i, #ececec);
-        color: var(--b63ysblr, #ccc);
-        transition: transform 30ms ease-in-out, background-color 70ms linear;
-
-        &:not(.toggle-opened) {
-            transform: translateY(0.1em);
-        }
-
-        .inner > :deep(svg) > path {
-            fill: var(--b63ysblr, #ccc);
+        :slotted(svg) path {
+            fill: var(--button-text-hover-color);
         }
     }
 
     &:focus {
-        background: var(--hhzhcf6g, var(--f32skrbh));
-        color: var(--j2djeyiw, var(--ao5pftk1));
+        color: var(--button-text-focus-color);
+        border-color: var(--button-border-focus-color);
+        background-color: var(--button-background-focus-color);
 
-        & :deep(svg) > path {
-            fill: var(--j2djeyiw, var(--ao5pftk1));
+        :slotted(svg) path {
+            fill: var(--button-text-focus-color);
+        }
+    }
+
+    &:active, &[data-active] {
+        color: var(--button-text-active-color);
+        border-color: var(--button-border-active-color);
+        background-color: var(--button-background-active-color);
+        transform: translateY(0.1em);
+
+        :slotted(svg) path {
+            fill: var(--button-text-active-color);
         }
     }
 
     &[disabled] {
         pointer-events: none;
-        background: var(--qylxhsrv, var(--hp8t4g7n));
-        color: var(--jdc6v419, var(--w061g1oc));
-        border-color: var(--vysj1nxl, var(--bki79qph));
+        color: var(--button-text-disabled-color);
+        border-color: var(--button-border-disabled-color);
+        background-color: var(--button-background-disabled-color);
 
-        .inner > :deep(svg) > path {
-            fill: var(--dw6rtsj7, var(--w061g1oc));
+        :slotted(svg) path {
+            fill: var(--button-text-disabled-color);
+        }
+
+        :slotted(.bt-progress-circular) {
+            --bt-progress-circular-stroke-color: var(--button-text-disabled-color);
         }
     }
 
-    .working-text {
-        margin-left: 0.4em;
+    :slotted(.bt-progress-circular) {
+        --bt-progress-circular-size: var(--button-font-size);
+        --bt-progress-circular-stroke-color: var(--button-text-color);
     }
+}
+
+/**
+ * Special case for `bt-form-base-input` addons.
+ */
+:global(.bt-form-base-input .before > .bt-button),
+:global(.bt-form-base-input .before > .bt-button-wrapper > .bt-button) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+:global(.bt-form-base-input .before > .bt-button:not(:first-child)),
+:global(.bt-form-base-input .before > .bt-button-wrapper:not(:first-child) > .bt-button) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+:global(.bt-form-base-input .after > .bt-button),
+:global(.bt-form-base-input .after > .bt-button-wrapper > .bt-button) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+}
+
+:global(.bt-form-base-input .after > .bt-button:not(:last-child)),
+:global(.bt-form-base-input .after > .bt-button-wrapper:not(:last-child) > .bt-button) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }

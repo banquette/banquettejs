@@ -1,0 +1,264 @@
+/**
+ * Default theme base variables.
+ */
+:root {
+    /**
+     * Colors
+     */
+    --bt-color-white: #fff;
+    --bt-color-black: #000;
+
+    /* Base colors */
+    --bt-color-blue: #409eff;
+    --bt-color-green: #67c23a;
+    --bt-color-orange: #e6a23c;
+    --bt-color-red: #f56c6c;
+    --bt-color-gray: #909399;
+    --bt-color-primary: var(--bt-color-blue);
+    --bt-color-secondary: var(--bt-color-green);
+
+    /* Base colors rgb */
+    --bt-color-blue-rgb: 64, 158, 255;
+    --bt-color-green-rgb: 103, 194, 58;
+    --bt-color-orange-rgb: 230, 162, 60;
+    --bt-color-red-rgb: 245, 108, 108;
+    --bt-color-gray-rgb: 144, 147, 153;
+    --bt-color-primary-rgb: var(--bt-color-blue-rgb);
+    --bt-color-secondary-rgb: var(--bt-color-green-rbg);
+
+    /* Contrast colors */
+    --bt-color-blue-contrast: var(--bt-color-white);
+    --bt-color-green-contrast: var(--bt-color-white);
+    --bt-color-orange-contrast: var(--bt-color-white);
+    --bt-color-red-contrast: var(--bt-color-white);
+    --bt-color-gray-contrast: var(--bt-color-gray-800);
+    --bt-color-primary-contrast: var(--bt-color-white);
+    --bt-color-secondary-contrast: var(--bt-color-white);
+
+    /* Blue variants */
+    --bt-color-blue-50: #ecf5ff;
+    --bt-color-blue-100: #d9ecff;
+    --bt-color-blue-150: #c6e2ff;
+    --bt-color-blue-200: #b3d8ff;
+    --bt-color-blue-250: #a0cfff;
+    --bt-color-blue-300: #b3d8ff;
+    --bt-color-blue-350: #8cc5ff;
+    --bt-color-blue-400: #79bbff;
+    --bt-color-blue-450: #66b1ff;
+    --bt-color-blue-500: #409eff;
+    --bt-color-blue-550: #3a8ee6;
+    --bt-color-blue-600: #337ecc;
+    --bt-color-blue-650: #2d6fb3;
+    --bt-color-blue-700: #265f99;
+    --bt-color-blue-750: #204f80;
+    --bt-color-blue-800: #1a3f66;
+    --bt-color-blue-850: #132f4c;
+    --bt-color-blue-900: #0d2033;
+    --bt-color-blue-950: #061019;
+
+    /* Green variants */
+    --bt-color-green-50: #f0f9eb;
+    --bt-color-green-100: #e1f3d8;
+    --bt-color-green-150: #d1edc4;
+    --bt-color-green-200: #c2e7b0;
+    --bt-color-green-250: #b3e19d;
+    --bt-color-green-300: #a4da89;
+    --bt-color-green-350: #95d475;
+    --bt-color-green-400: #85ce61;
+    --bt-color-green-450: #76c84e;
+    --bt-color-green-500: #67c23a;
+    --bt-color-green-550: #5daf34;
+    --bt-color-green-600: #529b2e;
+    --bt-color-green-650: #488829;
+    --bt-color-green-700: #3e7423;
+    --bt-color-green-750: #34611d;
+    --bt-color-green-800: #294e17;
+    --bt-color-green-850: #1f3a11;
+    --bt-color-green-900: #15270c;
+    --bt-color-green-950: #0a1306;
+
+    /* Orange variants */
+    --bt-color-orange-50: #fdf6ec;
+    --bt-color-orange-100: #faecd8;
+    --bt-color-orange-150: #f8e3c5;
+    --bt-color-orange-200: #f5dab1;
+    --bt-color-orange-250: #f3d19e;
+    --bt-color-orange-300: #f0c78a;
+    --bt-color-orange-350: #eebe77;
+    --bt-color-orange-400: #ebb563;
+    --bt-color-orange-450: #e9ab50;
+    --bt-color-orange-500: #e6a23c;
+    --bt-color-orange-550: #cf9236;
+    --bt-color-orange-600: #b88230;
+    --bt-color-orange-650: #a1712a;
+    --bt-color-orange-700: #8a6124;
+    --bt-color-orange-750: #73511e;
+    --bt-color-orange-800: #5c4118;
+    --bt-color-orange-850: #453112;
+    --bt-color-orange-900: #2e200c;
+    --bt-color-orange-950: #171006;
+
+    /* Red variants */
+    --bt-color-red-50: #fef0f0;
+    --bt-color-red-100: #fde2e2;
+    --bt-color-red-150: #fcd3d3;
+    --bt-color-red-200: #fbc4c4;
+    --bt-color-red-250: #fab6b6;
+    --bt-color-red-300: #f9a7a7;
+    --bt-color-red-350: #f89898;
+    --bt-color-red-400: #f78989;
+    --bt-color-red-450: #f67b7b;
+    --bt-color-red-500: #f56c6c;
+    --bt-color-red-550: #dd6161;
+    --bt-color-red-600: #c45656;
+    --bt-color-red-650: #ac4c4c;
+    --bt-color-red-700: #934141;
+    --bt-color-red-750: #7b3636;
+    --bt-color-red-800: #622b2b;
+    --bt-color-red-850: #492020;
+    --bt-color-red-900: #311616;
+    --bt-color-red-950: #180b0b;
+
+    /* Gray variants */
+    --bt-color-gray-50: #f4f4f5;
+    --bt-color-gray-100: #e9e9eb;
+    --bt-color-gray-150: #dedfe0;
+    --bt-color-gray-200: #d3d4d6;
+    --bt-color-gray-250: #c8c9cc;
+    --bt-color-gray-300: #bcbec2;
+    --bt-color-gray-350: #b1b3b8;
+    --bt-color-gray-400: #a6a9ad;
+    --bt-color-gray-450: #9b9ea3;
+    --bt-color-gray-500: #909399;
+    --bt-color-gray-550: #82848a;
+    --bt-color-gray-600: #73767a;
+    --bt-color-gray-650: #65676b;
+    --bt-color-gray-700: #56585c;
+    --bt-color-gray-750: #484a4d;
+    --bt-color-gray-800: #3a3b3d;
+    --bt-color-gray-850: #2b2c2e;
+    --bt-color-gray-900: #1d1d1f;
+    --bt-color-gray-950: #0e0f0f;
+
+    /* Primary colors */
+    --bt-color-primary-50: var(--bt-color-blue-50);
+    --bt-color-primary-100: var(--bt-color-blue-100);
+    --bt-color-primary-150: var(--bt-color-blue-150);
+    --bt-color-primary-200: var(--bt-color-blue-200);
+    --bt-color-primary-250: var(--bt-color-blue-250);
+    --bt-color-primary-300: var(--bt-color-blue-300);
+    --bt-color-primary-350: var(--bt-color-blue-350);
+    --bt-color-primary-400: var(--bt-color-blue-400);
+    --bt-color-primary-450: var(--bt-color-blue-450);
+    --bt-color-primary-500: var(--bt-color-blue-500);
+    --bt-color-primary-550: var(--bt-color-blue-550);
+    --bt-color-primary-600: var(--bt-color-blue-600);
+    --bt-color-primary-650: var(--bt-color-blue-650);
+    --bt-color-primary-700: var(--bt-color-blue-700);
+    --bt-color-primary-750: var(--bt-color-blue-750);
+    --bt-color-primary-800: var(--bt-color-blue-800);
+    --bt-color-primary-850: var(--bt-color-blue-850);
+    --bt-color-primary-900: var(--bt-color-blue-900);
+    --bt-color-primary-950: var(--bt-color-blue-950);
+
+    /* Secondary variants */
+    --bt-color-secondary-50: var(--bt-color-green-50);
+    --bt-color-secondary-100: var(--bt-color-green-100);
+    --bt-color-secondary-150: var(--bt-color-green-150);
+    --bt-color-secondary-200: var(--bt-color-green-200);
+    --bt-color-secondary-250: var(--bt-color-green-250);
+    --bt-color-secondary-300: var(--bt-color-green-300);
+    --bt-color-secondary-350: var(--bt-color-green-350);
+    --bt-color-secondary-400: var(--bt-color-green-400);
+    --bt-color-secondary-450: var(--bt-color-green-450);
+    --bt-color-secondary-500: var(--bt-color-green-500);
+    --bt-color-secondary-550: var(--bt-color-green-550);
+    --bt-color-secondary-600: var(--bt-color-green-600);
+    --bt-color-secondary-650: var(--bt-color-green-650);
+    --bt-color-secondary-700: var(--bt-color-green-700);
+    --bt-color-secondary-750: var(--bt-color-green-750);
+    --bt-color-secondary-800: var(--bt-color-green-800);
+    --bt-color-secondary-850: var(--bt-color-green-850);
+    --bt-color-secondary-900: var(--bt-color-green-900);
+    --bt-color-secondary-950: var(--bt-color-green-950);
+
+    /**
+     * Borders
+     */
+    /* Colors */
+    --bt-border-color-lighter: var(--bt-color-gray-50);
+    --bt-border-color-light: var(--bt-color-gray-150);
+    --bt-border-color-base: var(--bt-color-gray-250);
+    --bt-border-color-dark: var(--bt-color-gray-350);
+    --bt-border-color-darker: var(--bt-color-gray-450);
+
+    /* Radius */
+    --bt-border-radius-none: 0;
+    --bt-border-radius-sm: 2px;
+    --bt-border-radius-base: 4px;
+    --bt-border-radius-md: 6px;
+    --bt-border-radius-lg: 8px;
+    --bt-border-radius-xl: 10px;
+    --bt-border-radius-2xl: 15px;
+    --bt-border-radius-3xl: 20px;
+    --bt-border-radius-full: 100%;
+
+    /* Misc */
+    --bt-border-width-base: 1px;
+    --bt-border-style-base: solid;
+    --bt-border-base: var(--bt-border-width-base) var(--bt-border-style-base) var(--bt-border-color-base);
+
+    /**
+     * Box shadow
+     */
+    /*--bt-shadow-popover: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);*/
+    --bt-box-shadow-base: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    --bt-shadow-popover: 0 2px 12px 0 rgba(0, 0, 0, .1);
+    --bt-shadow-dialog: 0 2px 12px 0 rgba(0, 0, 0, .1);
+
+    /**
+     * Typography
+     */
+    --bt-font-family-base: Inter, Roboto, Oxygen, Fira Sans, Helvetica Neue, sans-serif;
+
+    /* Colors */
+    --bt-text-color-extra-light: var(--bt-color-gray-150);
+    --bt-text-color-lighter: var(--bt-color-gray-350);
+    --bt-text-color-light: var(--bt-color-gray-500);
+    --bt-text-color-base: var(--bt-color-gray-850);
+    --bt-text-color-dark: var(--bt-color-gray-900);
+
+    /* Font size */
+    --bt-font-size-2xs: 0.5rem;
+    --bt-font-size-xs: 0.75rem;
+    --bt-font-size-sm: 0.875rem;
+    --bt-font-size-base: 1rem;
+    --bt-font-size-lg: 1.125rem;
+    --bt-font-size-xl: 1.875rem;
+    --bt-font-size-2xl: 2.25rem;
+    --bt-font-size-3xl: 3rem;
+
+    /* Font weight */
+    --bt-font-weight-thin: 100;
+    --bt-font-weight-extralight: 200;
+    --bt-font-weight-light: 300;
+    --bt-font-weight-normal: 400;
+    --bt-font-weight-medium: 500;
+    --bt-font-weight-semibold: 600;
+    --bt-font-weight-bold: 700;
+    --bt-font-weight-extrabold: 800;
+    --bt-font-weight-black: 900;
+
+    /**
+     * Z-Indexes
+     */
+    --bt-z-index-base: 0;
+    --bt-z-index-popover: 10;
+    --bt-z-index-overlay: 2000;
+
+    /**
+     * Transitions
+     */
+    --bt-ease-in-out-bezier: cubic-bezier(0.65, 0, 0.355, 1);
+    --bt-ease-fast-bezier: cubic-bezier(0.23, 1, 0.32, 1);
+}

@@ -4,16 +4,18 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { AbstractProgressComponent } from "../abstract-progress.component";
 
 @Themeable({
-    vars: {
-        height: 'xomrxf6z',
-        background: 'uqkcll89',
-        borderRadius: 'foxjm433',
-        value: {
-            background: 'xphbg2yf'
-        },
-        animation: {
-            determinateTransitionSpeed: 'flk3iwhc',
-            indeterminateTransitionSpeed: 'qk1nmbdw'
+    css: {
+        vars: {
+            height: 'xomrxf6z',
+            background: 'uqkcll89',
+            borderRadius: 'foxjm433',
+            value: {
+                background: 'xphbg2yf'
+            },
+            animation: {
+                determinateTransitionSpeed: 'flk3iwhc',
+                indeterminateTransitionSpeed: 'qk1nmbdw'
+            }
         }
     }
 })

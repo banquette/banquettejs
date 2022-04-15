@@ -7,10 +7,8 @@ import { TransferProgressEvent } from "@banquette/http/event/transfer-progress.e
 import { HttpRequest } from "@banquette/http/http-request";
 import { humanFileSize } from "@banquette/utils-string/format/human-file-size";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { RemoteModule } from "../../misc/module/remote/remote.module";
+import { RemoteModule } from "../../misc/remote/remote.module";
 import { FormViewModel } from "../form-view-model";
-import { NoopTransformer } from "../value-transformer/noop-transformer.interface";
-import { ValueTransformerInterface } from "../value-transformer/value-transformer.interface";
 import { UploadStatus, FileUploadTag } from "./constant";
 import { UploadFile } from "./upload-file";
 
@@ -64,11 +62,13 @@ export class FileViewModel extends FormViewModel {
      */
     private uploadRequestsMap = new WeakMap<UploadFile, HttpRequest>();
 
-    public constructor(public control: FormViewControlInterface, valueTransformer: ValueTransformerInterface = NoopTransformer) {
-        super(control, valueTransformer);
+    public constructor(public control: FormViewControlInterface) {
+        super(control);
         this.remote = Injector.Get(RemoteModule);
-        this.remote.payloadType = PayloadTypeFormData;
-        this.remote.allowMultiple = true;
+        this.remote.updateConfiguration({
+            payloadType: PayloadTypeFormData,
+            allowMultiple: true
+        });
     }
 
     /**

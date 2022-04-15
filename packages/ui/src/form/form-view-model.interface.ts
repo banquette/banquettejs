@@ -1,6 +1,8 @@
 import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { ValueTransformerInterface } from "./value-transformer/value-transformer.interface";
 
+/**
+ * TODO: REMOVE
+ */
 export interface FormViewModelInterface {
     /**
      * Current view value.
@@ -30,7 +32,7 @@ export interface FormViewModelInterface {
     /**
      * The value transformer in use.
      */
-    readonly valueTransformer: ValueTransformerInterface;
+    readonly valueTransformer: any /*ValueTransformerInterface*/;
 
     /**
      * Initialize the view model.

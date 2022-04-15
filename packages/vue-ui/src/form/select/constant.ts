@@ -4,5 +4,6 @@
 export const UndefinedValue = Symbol('undefined');
 
 // Used as origin for all choices created by the component.
-export const BeforeSlotOrigin = Symbol('slot-before');
-export const AfterSlotOrigin = Symbol('slot-after');
+export const PropOrigin = 'prop';
+export const BeforeSlotOrigin = 'slot-before';
+export const AfterSlotOrigin = 'slot-after';

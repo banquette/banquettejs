@@ -1,55 +1,35 @@
-<div
-    class="bt-form-text"
-    :data-is-multiline="vm.multiline ? '' : null"
-    :data-has-value="vm.value ? '' : null"
-    :data-has-placeholder="vm.placeholder ? '' : null"
-    :data-has-help="hasSlot('help') ? '' : null"
-    :data-has-focus="vm.focused ? '' : null"
-    :data-is-disabled="vm.disabled ? '' : null"
-    :data-has-error="vm.invalid && vm.validated ? '' : null"
-    :data-has-floating-label="vm.floatingLabel ? '' : null"
->
-    <div class="control-wrapper">
-        <label :for="vm.fullId" v-if="hasSlot('default')"><span><slot></slot></span></label>
-        <label :for="vm.fullId" v-else-if="vm.label"><span>{{ vm.label }}</span></label>
-
-        <div ref="inputWrapper" class="input-wrapper">
-            <slot name="before-control"></slot>
-            <input
-                v-if="!vm.multiline"
-                ref="input"
-                :id="vm.fullId"
-                :type="vm.type"
-                v-model="vm.value"
-                :disabled="vm.disabled || null"
-                :placeholder="vm.placeholder"
-                data-control
-                @focus="onFocus()"
-                @blur="onBlur()"
-            >
-            <textarea
-                v-else
-                ref="textarea"
-                :id="vm.fullId"
-                v-model="vm.value"
-                :disabled="vm.disabled || null"
-                :placeholder="vm.placeholder"
-                :rows="vm.rows"
-                data-control
-                @focus="onFocus()"
-                @blur="onBlur()"
-            ></textarea>
-            <slot name="after-control"></slot>
-            <bt-progress-circular v-if="vm.busy || vm.validating"></bt-progress-circular>
-
-            <slot name="errors">
-                <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
-                    <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
-                </bt-form-error>
-            </slot>
-        </div>
-    </div>
-    <div v-if="hasSlot('help')" class="help">
-        <slot name="help"></slot>
-    </div>
+<div class="bt-form-text">
+    <bt-form-base-input :v="v">
+        <input
+            v-if="!v.multiline"
+            ref="input"
+            :id="v.control.fullId"
+            :type="v.type"
+            :tabindex="v.control.tabIndex"
+            v-model="v.control.value"
+            :disabled="v.control.disabled ? '' : null"
+            :autocomplete="v.autoComplete"
+            data-control
+            @focus="v.control.onFocus()"
+            @blur="v.control.onBlur()"
+        >
+        <textarea
+            v-else
+            ref="textarea"
+            :id="v.control.fullId"
+            :tabindex="v.control.tabIndex"
+            v-model="v.control.value"
+            :disabled="v.control.disabled ? '' : null"
+            :rows="v.rows"
+            data-control
+            @focus="v.control.onFocus()"
+            @blur="v.control.onBlur()"
+        ></textarea>
+        <template #label><slot></slot></template>
+        <template #help><slot name="help"></slot></template>
+        <template #before-raw><slot name="before-raw"></slot></template>
+        <template #after-raw><slot name="after-raw"></slot></template>
+        <template #before><slot name="before"></slot></template>
+        <template #after><slot name="after"></slot></template>
+    </bt-form-base-input>
 </div>

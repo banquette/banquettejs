@@ -1,5 +1,4 @@
-import { ensureNumber } from "@banquette/utils-type/ensure-number";
-import { isString } from "@banquette/utils-type/is-string";
+import { parseCssDuration } from "@banquette/utils-dom/parse-css-duration";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -11,26 +10,28 @@ import { ButtonComponent } from "../../../button";
 import { ProgressHorizontalComponent } from "../../../progress/progress-horizontal";
 
 @Themeable({
-    vars: {
-        padding: 'nbhs2z7c',
-        borderRadius: 'wx0vo20z',
-        spacing: 'dmxsy58d',
-        background: 'ni39d4qg',
-        color: 'g1fn6ajn',
-        fontSize: 'hbg78pnf',
-        fontWeight: 'l0twpelz',
+    css: {
+        vars: {
+            padding: 'nbhs2z7c',
+            borderRadius: 'wx0vo20z',
+            spacing: 'dmxsy58d',
+            background: 'ni39d4qg',
+            color: 'g1fn6ajn',
+            fontSize: 'hbg78pnf',
+            fontWeight: 'l0twpelz',
 
-        title: {
-            fontWeight: 'x6oydw56',
-            fontSize: 'm2pih5zj'
-        },
+            title: {
+                fontWeight: 'x6oydw56',
+                fontSize: 'm2pih5zj'
+            },
 
-        animation: {
-            fadeDuration: 'ngrmdl3g'
-        },
+            animation: {
+                fadeDuration: 'ngrmdl3g'
+            },
 
-        progressOffset: {
-            translateY: 'Siw2gbbg'
+            progressOffset: {
+                translateY: 'Siw2gbbg'
+            }
         }
     }
 })
@@ -79,12 +80,12 @@ export default class AlertComponent extends Vue {
     @Expose() public fadingOut: boolean = false;
 
     /**
-     * Bridge to the `fadeDuration` css variables so timeouts can be timed properly.
+     * Bridge to the `fadeDuration` css variable so timeouts can be timed properly.
      */
     @ThemeVar({
         name: 'animation.fadeDuration',
         defaultValue: '0.5s',
-        validate: function(this: AlertComponent, v) { return this.parseStringDuration(v) }
+        validate: function(this: AlertComponent, v) { return parseCssDuration(v) }
     }) public fadeDuration!: number;
 
     /**
@@ -185,19 +186,5 @@ export default class AlertComponent extends Vue {
                 this.destroy();
             }
         });
-    }
-
-    /**
-     * Parse a css duration into a number of milliseconds.
-     */
-    private parseStringDuration(input: any): number {
-        if (isString(input)) {
-            let asNum = parseFloat(input);
-            if (input.match(/[^m]s\s*$/)) {
-                asNum *= 1000;
-            }
-            return asNum;
-        }
-        return ensureNumber(input);
     }
 }

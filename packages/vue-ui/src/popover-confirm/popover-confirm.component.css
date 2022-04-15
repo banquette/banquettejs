@@ -1,0 +1,54 @@
+
+.bt-popover-confirm {
+    --popover-confirm-confirm-button-font-size: var(--bt-popover-confirm-confirm-button-font-size, var(--bt-font-size-sm));
+    --popover-confirm-confirm-button-background-color: var(--bt-popover-confirm-confirm-button-background-color);
+    --popover-confirm-confirm-button-background-hover-color: var(--bt-popover-confirm-confirm-button-background-hover-color);
+    --popover-confirm-confirm-button-background-focus-color: var(--bt-popover-confirm-confirm-button-background-focus-color);
+    --popover-confirm-confirm-button-background-active-color: var(--bt-popover-confirm-confirm-button-background-active-color);
+
+    --popover-confirm-cancel-link-font-size: var(--bt-popover-confirm-cancel-link-font-size, var(--bt-font-size-sm));
+    --popover-confirm-cancel-link-color: var(--bt-popover-confirm-cancel-link-color, var(--bt-color-primary));
+
+    --popover-confirm-icon-color: var(--bt-popover-confirm-icon-color, var(--bt-color-red-500));
+    --popover-confirm-z-index: var(--bt-popover-confirm-z-index, var(--bt-z-index-popover));
+}
+
+.bt-popover-confirm {
+    z-index: var(--popover-confirm-z-index);
+
+    & > .slot-wrapper {
+        display: inline-block;
+    }
+}
+
+:global(.bt-popover.bt-dropdown.bt-popover-confirm-dropdown .inner-wrapper .message) {
+    padding: 0.3em 1em 0.5em 1em;
+    margin-bottom: 0.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+}
+
+:global(.bt-popover.bt-dropdown.bt-popover-confirm-dropdown .inner-wrapper .message svg path) {
+    fill: var(--popover-confirm-icon-color);
+}
+
+:global(.bt-popover.bt-dropdown.bt-popover-confirm-dropdown .inner-wrapper .actions) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.3em 1em;
+    gap: 0.75em;
+
+    --bt-button-font-size: var(--popover-confirm-confirm-button-font-size);
+    --bt-button-background-color: var(--popover-confirm-confirm-button-background-color);
+    --bt-button-background-hover-color: var(--popover-confirm-confirm-button-background-hover-color);
+    --bt-button-background-focus-color: var(--popover-confirm-confirm-button-background-focus-color);
+    --bt-button-background-active-color: var(--popover-confirm-confirm-button-background-active-color);
+}
+
+:global(.bt-popover.bt-dropdown.bt-popover-confirm-dropdown .inner-wrapper .actions a) {
+    text-decoration: none;
+    font-size: var(--popover-confirm-cancel-link-font-size);
+    color: var(--popover-confirm-cancel-link-color);
+}

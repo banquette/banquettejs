@@ -1,0 +1,15 @@
+<div class="bt-popover-confirm" v-bt-bind-theme v-bt-click-outside="cancel">
+    <div ref="test" class="slot-wrapper" @click.stop.prevent="showDropdown">
+        <slot></slot>
+    </div>
+    <bt-dropdown class="bt-popover-confirm-dropdown" target="test" :visible="dropdownVisible">
+        <div class="message">
+            <component :is="icon" v-if="icon"></component>
+            {{ message }}
+        </div>
+        <div class="actions">
+            <a href="" @click.prevent="cancel()" class="cancel-button">{{ cancelText }}</a>
+            <bt-button @click="confirm()" class="confirm-button">{{ confirmText }}</bt-button>
+        </div>
+    </bt-dropdown>
+</div>

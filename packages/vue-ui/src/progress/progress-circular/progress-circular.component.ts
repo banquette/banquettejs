@@ -3,15 +3,9 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { AbstractProgressComponent } from "../abstract-progress.component";
+import { ThemeConfiguration } from "./theme-configuration";
 
-@Themeable({
-    vars: {
-        fill: 'l28ys2ii',
-        stroke: 'g1n433fu',
-        size: 'qcpx3dwi',
-        fontSize: 'xwhylest'
-    }
-})
+@Themeable(ThemeConfiguration)
 @Component('bt-progress-circular')
 export default class ProgressCircularComponent extends AbstractProgressComponent {
     /**

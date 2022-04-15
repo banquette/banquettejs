@@ -1,4 +1,13 @@
+
 .bt-progress-circular {
+    --size: var(--bt-progress-circular-size, 40px);
+    --fill: var(--bt-progress-circular-fill, none);
+    --stroke-color: var(--bt-progress-circular-stroke-color, var(--bt-color-primary));
+}
+
+.bt-progress-circular {
+    line-height: 0;
+
     .inner {
         position: relative;
         display: inline-block;
@@ -25,12 +34,12 @@
     }
 
     svg {
-        width: var(--qcpx3dwi, 40px);
-        height: var(--qcpx3dwi, 40px);
+        width: var(--size);
+        height: var(--size);
 
         .path {
-            fill: var(--l28ys2ii, none);
-            stroke: var(--g1n433fu, #444);
+            fill: var(--fill, none);
+            stroke: var(--stroke-color);
         }
     }
 }

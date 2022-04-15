@@ -7,7 +7,6 @@ import { Module } from "@banquette/dependency-injection/decorator/module.decorat
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { Exception } from "@banquette/exception/exception";
-import { UsageException } from "@banquette/exception/usage.exception";
 import { HttpResponse } from "@banquette/http/http-response";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { uniqueId } from "@banquette/utils-random/unique-id";
@@ -18,7 +17,7 @@ import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Writeable } from "@banquette/utils-type/types";
 import { UiConfigurationSymbol } from "../config";
-import { RemoteModule } from "../misc/module/remote/remote.module";
+import { RemoteModule } from "../misc/remote/remote.module";
 import { UiConfigurationInterface } from "../ui-configuration.interface";
 import { ColumnInterface, ColumnOptions } from "./column.interface";
 import { TableApiEvents, TableEvents, Status } from "./constant";
@@ -123,7 +122,7 @@ export class TableViewModel {
     /**
      * Modules.
      */
-    public remote: RemoteModule;
+    public remote: RemoteModule = new RemoteModule();
     public pagination: PaginationModule;
     public filtering: FilteringModule;
     public ordering: OrderingModule;
@@ -140,10 +139,8 @@ export class TableViewModel {
 
     public constructor(@Inject(SharedConfiguration) private sharedConfiguration: SharedConfiguration,
                        @Inject(EventDispatcherService) private globalDispatcher: EventDispatcherService,
-                       @Inject(RemoteModule) remote: RemoteModule,
                        @Inject(PaginationModule) pagination: PaginationModule) {
         this.localDispatcher = new EventDispatcher();
-        this.remote = remote;
         this.pagination = pagination;
         this.filtering = new FilteringModule();
         this.ordering = new OrderingModule();

@@ -1,91 +1,98 @@
 <div
-    ref="select"
     class="bt-form-select"
-    :tabindex="vm.tabindex"
-    :data-has-value="vm.value ? '' : null"
-    :data-has-placeholder="vm.choices.selectionPlaceholder ? '' : null"
-    :data-has-help="hasSlot('help') ? '' : null"
-    :data-has-focus="vm.focused ? '' : null"
-    :data-is-disabled="vm.disabled ? '' : null"
-    :data-has-error="vm.invalid && vm.validated ? '' : null"
-    :data-has-floating-label="vm.floatingLabel ? '' : null"
-    @keydown="vm.onKeyDown"
-    @focus="vm.onFocus()"
-    @blur="vm.onBlur()"
+    :data-choices-visible="v.choicesVisible ? '' : null"
+    v-bt-bind-theme
+    v-bt-click-outside="hideSelectedPopover"
+    @focus="v.control.onFocus()"
+    @blur="v.control.onBlur()"
 >
-    <div class="control-wrapper">
-        <label :for="vm.fullId" v-if="hasSlot('default')"><span><slot></slot></span></label>
-        <label :for="vm.fullId" v-else-if="vm.label"><span>{{ vm.label }}</span></label>
-
-        <a
-            ref="inputWrapper"
-            :class="{placeholder: !vm.choices.selectedItems.length, focused: vm.focused}"
-            data-control
-            @mousedown="toggleChoices()"
-        >
-            <span v-if="vm.choices.visible && vm.search.virtualBuffer" class="virtual-buffer">
-                {{ vm.search.virtualBuffer }}
-            </span>
-            <span v-else-if="vm.choices.selectedItems.length"><slot name="resume" :resume="vm.choices.selectionResume" :selected="vm.choices.selectedItems">{{ vm.choices.selectionResume }}</slot></span>
-            <span v-else class="placeholder">{{ placeholder }}</span>
-
-            <bt-progress-circular v-if="busy || vm.validating"></bt-progress-circular>
-            <svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-        </a>
-
-        <bt-dropdown ref="dropdown" class="dropdown" v-show="vm.choices.visible" :popper="{modifiers: [{name: 'offset', options: {offset: [0, 3]}}]}">
-            <div class="dropdown-inner" v-if="vm.search.isControlVisible">
-                <bt-form-text
-                    :control="vm.search.control"
-                    placeholder="..."
-                    @mousedown.stop="vm.choices.freeze()"
-                    @focus="vm.choices.freeze()"
-                    @blur="vm.choices.unfreeze(); focus()"
-                ></bt-form-text>
-            </div>
-            <bt-dropdown-divider v-if="vm.search.isControlVisible"></bt-dropdown-divider>
-            <div ref="dropdownScrollable" class="dropdown-scrollable">
-                <choice-slot-wrapper position="before">
-                    <slot name="choices-before"></slot>
-                </choice-slot-wrapper>
-                <template v-for="choice in vm.choices.items">
-                    <bt-form-select-choice v-if="!choice.external" :composable-choice="choice">
-                        <slot name="choice" :choice="choice">{{ choice.label }}</slot>
-                    </bt-form-select-choice>
-                </template>
-
-                <div class="nothing" v-if="!vm.choices.visibleChoicesCount">
-                    <slot name="nothing">
-                        <p>Aucun résultat</p>
-                        <p>
-                            <span v-if="!vm.search.control.value">Entrez un texte à rechercher ci-dessus</span>
-                            <span v-else-if="vm.search.minCharsLeft > 0">Encore <b>{{ vm.search.minCharsLeft }}</b> caractère<span v-if="vm.search.minCharsLeft > 1">s</span> pour lancer la recherche</span>
-                            <span v-else>Essayez de modifier votre recherche</span>
-                        </p>
-                    </slot>
+    <bt-form-base-input :v="v">
+        <div ref="inputWrapper" class="input-wrapper" @click="onInputWrapperClick()">
+            <div class="control-wrapper">
+                <div>
+                    <input
+                        ref="input"
+                        :id="v.control.fullId"
+                        :tabindex="v.control.tabIndex"
+                        type="text"
+                        v-model="v.inputValue"
+                        :disabled="v.control.disabled ? '' : null"
+                        :placeholder="v.inputPlaceholder"
+                        autocomplete="off"
+                        :readonly="v.isInputReadonly || !v.choicesVisible ? '' : null"
+                        data-control
+                        @input="onInputChange"
+                        @keydown="onKeyDown"
+                        @focus="onInputFocus"
+                        @blur="onInputBlur"
+                    />
                 </div>
-                <choice-slot-wrapper position="after">
-                    <slot name="choices"></slot>
-                </choice-slot-wrapper>
-
-                <!-- Invisible selection -->
-                <template v-for="choice in vm.choices.selectedItems" v-if="vm.search.isRemote">
-                    <bt-form-select-choice v-if="choice.selectionFrozen && choice.ghost" :composable-choice="choice">
-                        <slot name="choice" :choice="choice">{{ choice.label }}</slot>
-                    </bt-form-select-choice>
-                </template>
             </div>
-        </bt-dropdown>
-    </div>
-    <div v-if="hasSlot('help')" class="help">
-        <slot name="help"></slot>
-    </div>
+            <div class="tag-selection-wrapper" v-if="v.multiple">
+                <div ref="tagSelectionWrapper">
+                    <bt-tag ref="additionalTagsAggregator" class="additionalTagsAggregator" v-if="v.selectedInPopover.length > 0" :class="{alone: v.selectedInPopover.length === v.control.value.length}" @click.stop="toggleSelectedPopover()">
+                        <span v-if="v.selectedInPopover.length === v.control.value.length">{{ v.selectedInPopover.length }} items</span>
+                        <span v-else>+ {{ v.selectedInPopover.length }}</span>
+                    </bt-tag>
+                    <bt-tag v-for="item in v.selected" :class="{hidden: !item.visible}" :data-id="item.choice.id" closable @close="deselectChoice(item.choice)" @click.stop>
+                        {{ item.choice.label }}
+                    </bt-tag>
+                </div>
+            </div>
+        </div>
+        <template #extras-after>
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="caret-icon">
+                <path fill="currentColor" d="m488.832 344.32-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872 319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"></path>
+            </svg>
+        </template>
+        <template #label><slot></slot></template>
+        <template #help><slot name="help"></slot></template>
+        <template #before-raw><slot name="before-raw"></slot></template>
+        <template #after-raw><slot name="after-raw"></slot></template>
+        <template #before><slot name="before"></slot></template>
+        <template #after><slot name="after"></slot></template>
+    </bt-form-base-input>
+    <bt-dropdown ref="dropdown" :target="dropdownTarget" :visible="v.choicesVisible" teleport="body" class="bt-form-select-choices" :style="{width: dropdownWidth + 'px'}" @mousedown.prevent>
+        <choice-slot-wrapper position="before">
+            <slot name="choices-before"></slot>
+        </choice-slot-wrapper>
 
-    <slot name="errors">
-        <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
-            <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
-        </bt-form-error>
-    </slot>
+        <template v-for="choices in v.choices">
+            <template v-for="(choices, group) in choices.grouped">
+                <bt-form-select-group :label="group">
+                    <template v-for="choice in choices">
+                        <bt-form-select-choice v-if="!choice.external" :internal-choice="choice">
+                            <slot name="choice" :choice="choice">{{ choice.label }}</slot>
+                        </bt-form-select-choice>
+                    </template>
+                </bt-form-select-group>
+            </template>
+
+            <template v-for="choice in choices.standalone">
+                <bt-form-select-choice v-if="!choice.external" :internal-choice="choice">
+                    <slot name="choice" :choice="choice">{{ choice.label }}</slot>
+                </bt-form-select-choice>
+            </template>
+        </template>
+
+        <choice-slot-wrapper position="after">
+            <slot name="choices"></slot>
+            <slot name="choices-after"></slot>
+        </choice-slot-wrapper>
+
+        <div class="no-results" v-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'waiting-search'">
+            The search must be at least {{ v.searchMinLength }} characters.
+        </div>
+        <div class="no-results loading" v-else-if="!v.visibleChoicesCount && v.control.busy">
+            <bt-progress-circular></bt-progress-circular>
+        </div>
+        <div class="no-results" v-else-if="!v.visibleChoicesCount">
+            No results
+        </div>
+    </bt-dropdown>
+    <bt-dropdown v-if="$refs.additionalTagsAggregator" :target="$refs.additionalTagsAggregator.$el" :visible="v.selectedPopoverVisible" class="bt-form-select-additional-tags">
+        <bt-tag v-for="choice in v.selectedInPopover" closable @close="deselectChoice(choice)" :key="choice.id">
+            {{ choice.label }}
+        </bt-tag>
+    </bt-dropdown>
 </div>

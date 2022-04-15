@@ -1,0 +1,21 @@
+<Teleport :to="config.teleport" :disabled="!config.teleport">
+    <div
+        ref="popover"
+        class="bt-popover"
+        v-if="isVisible"
+        v-bind="$attrs"
+        v-bt-bind-theme
+        v-bt-stick-to="config.stickToOptions"
+    >
+        <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave">
+            <div v-if="innerVisible" v-show="innerShown" class="inner-wrapper">
+                <div role="tooltip" class="content" v-if="!config.allowHtml || hasNonEmptySlot('default')">
+                    <slot v-if="hasNonEmptySlot('default')"></slot>
+                    <template v-else>{{ config.content }}</template>
+                </div>
+                <div role="tooltip" class="content" v-else v-html="config.content"></div>
+                <div class="arrow" v-if="config.showArrow" data-popper-arrow></div>
+            </div>
+        </Transition>
+    </div>
+</Teleport>

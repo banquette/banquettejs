@@ -1,64 +1,39 @@
-import { CheckboxViewModel } from "@banquette/ui/form/checkbox/checkbox-view.model";
 import { VoidCallback } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
+import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
+import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
+import { BaseInputComposable } from "../base-input/base-input.composable";
 import { ViewModelEvents } from "../constant";
+import { NewAbstractVueFormComponent } from "../new-abstract-vue-form.component";
+import { CheckboxViewDataInterface } from "./checkbox-view-data.interface";
+import { CheckboxViewModel } from "./checkbox.view-model";
+import { ThemeConfiguration } from "./theme-configuration";
 
-@Themeable({
-    vars: {
-        gap: 'kxzzofc0',
-
-        label: {
-            color: 'ji0j61ze',
-        },
-
-        checkbox: {
-            size: 'z822d0ih',
-            borderRadius: 'r2fwd2hx',
-            background: 'p9p45didf',
-            outlineColor: 'tr8civxc',
-            outlineWidth: 'bzwg1huc',
-            iconColor: 'vs97h5lp',
-            errorColor: 'lnk7g3yd',
-
-            hover: {
-                outlineWidth: 'nczo48pe',
-                outlineColor: 'bclvwvrx'
-            },
-
-            focused: {
-                outlineWidth: 'z0fqdfci',
-                outlineColor: 'mdxuey2e'
-            },
-
-            checked: {
-                background: 'q48u8kzb',
-                iconColor: 'f56nkjn1',
-                outlineWidth: 'my6rsp68',
-                outlineColor: 'd870x15c'
-            }
-        },
-
-        disabled: {
-            label: {
-                color: 'ja3lwl3o'
-            },
-            checkbox: {
-                outlineWidth: 'ag6wftgl',
-                outlineColor: 'z2svl9lw',
-                background: 'hgwz6ho2'
-            }
-        }
-    }
-})
+@Themeable(ThemeConfiguration)
 @Component('bt-form-checkbox')
-export default class CheckboxComponent extends AbstractVueFormComponent<CheckboxViewModel> {
+export default class CheckboxComponent extends NewAbstractVueFormComponent<CheckboxViewDataInterface, CheckboxViewModel> {
+    /**
+     * Holds the props exposed by the base input.
+     */
+    @Import(BaseInputComposable, {
+        // Prevent "label" from being exposed
+        placeholder     : 'placeholder',
+        help            : 'help',
+        floatingHelp    : 'floatingHelp',
+        floatingErrors  : 'floatingErrors',
+        debug           : 'debug'
+    }) public base!: BaseInputComposable;
+
     /**
      * The text to show next to the checkbox.
+     *
+     * The label of the composable is not used to voluntarily to keep it undefined
+     * so the label can be shown in the checkbox component's template instead.
      */
     @Prop({type: String, default: null}) public label!: string|null;
 
@@ -66,22 +41,30 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
      * If `true` or `false` the checkbox will be checked or unchecked respectively
      * upon initialization or when a change is detected on the prop.
      */
-    @Prop({type: Boolean, default: false}) public checked!: boolean;
+    @Prop({type: Boolean, default: false}) public checked!: boolean|null;
 
     /**
      * The value to set to the control when the checkbox is checked.
      */
-    @Prop({name: 'value', default: true}) public checkedValue!: any;
-
-    /**
-     * If `true` a radio group can be totally unchecked.
-     */
-    @Prop({type: Boolean, default: false}) public uncheckable!: any;
+    @Prop({default: true}) public checkedValue!: any;
 
     /**
      * The value to set to the control when the checkbox is unchecked.
      */
     @Prop() public uncheckedValue!: any;
+
+    /**
+     * If `true`, force the checkbox to be visually indeterminate.
+     *
+     * The indeterminate status will be lost each time the checkbox changes state,
+     * and will be restored if the prop changes to `true`.
+     */
+    @Prop({type: Boolean, default: false}) public indeterminate!: boolean;
+
+    /**
+     * If `true` a radio group can be totally unchecked.
+     */
+    @Prop({type: Boolean, default: false}) public uncheckable!: any;
 
     /**
      * If defined the component will behave like a radio button.
@@ -91,10 +74,13 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
      */
     @Prop({type: String, default: null}) public group!: string|null;
 
-    /**
-     * Where to show the errors tooltip relative to the input.
-     */
-    @Prop({type: String, default: 'bottom-start'}) public errorPlacement!: string;
+    @Computed() public get hasDefaultSlot(): boolean {
+        return this.hasNonEmptySlot('default');
+    }
+
+    @Computed() public get hasLabelSlot(): boolean {
+        return this.hasNonEmptySlot('label');
+    }
 
     @TemplateRef('inputWrapper') public inputWrapper!: HTMLElement;
 
@@ -114,6 +100,9 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
             if (this.checked) {
                 this.vm.check();
             }
+            if (this.indeterminate) {
+                this.vm.indeterminate = true;
+            }
         });
     }
 
@@ -127,29 +116,34 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
         }
     }
 
+    @Expose() public onKeyDown(event: KeyboardEvent): void {
+        this.vm.onKeyDown(event);
+    }
+
+    @Expose() public toggle(): void {
+        this.vm.toggle();
+    }
+
     /**
      * @inheritDoc
      */
     protected setupViewModel(): CheckboxViewModel {
-        return new CheckboxViewModel(this.proxy, {
-            controlToView: (value: any): any => value,
-            viewToControl: (value: any): any => value
-        });
+        return new CheckboxViewModel(this.proxy, this.base);
     }
 
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
-        this.vm.label = this.label;
+        this.v.label = this.label;
         this.vm.checkedValue = this.checkedValue;
         this.vm.uncheckedValue = this.uncheckedValue;
         this.vm.uncheckable = this.uncheckable;
     }
 
-    @Watch('checked')
-    private onCheckedChange(newValue: boolean): void {
+    @Watch('checked', {immediate: ImmediateStrategy.BeforeMount})
+    private onCheckedChange(newValue: boolean|null): void {
         if (newValue) {
             this.vm.check();
         } else {
@@ -157,12 +151,17 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
         }
     }
 
-    @Watch('group')
+    @Watch('group', {immediate: false})
     private onGroupChange(newValue: string|null): void {
         // Only set the group if a control has been assigned.
         // Otherwise we can ignore because a callback is already registered to the `onReady` event of the proxy.
         if (this.proxy.ready) {
             this.vm.group = newValue;
         }
+    }
+
+    @Watch('indeterminate', {immediate: false})
+    private onIndeterminateChange(newValue: boolean): void {
+        this.vm.indeterminate = newValue;
     }
 }

@@ -1,6 +1,9 @@
 import { UsageException } from "@banquette/exception/usage.exception";
-import { Choice } from "@banquette/ui/form/select/choices/choice";
+import { Choice } from "@banquette/ui/form/select/choice";
+import { setIntervalWithTimeout } from "@banquette/utils-misc/set-interval-with-timeout";
+import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { IconCheck } from "@banquette/vue-material-icons/icon-check";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { InjectProvided } from "@banquette/vue-typescript/decorator/inject-provided.decorator";
@@ -9,10 +12,11 @@ import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/wa
 import { Vue } from "@banquette/vue-typescript/vue";
 import { UndefinedValue, BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
 
-@Component('bt-form-select-choice')
+@Component({
+    name: 'bt-form-select-choice',
+    components: [IconCheck]
+})
 export default class ChoiceComponent extends Vue {
-    private static MaxId: number = 0;
-
     /**
      * These props are only used when the prop `choice` is not set
      * (meaning the `bt-form-select-choice` has been created outside of the `bt-form-select`).
@@ -25,19 +29,20 @@ export default class ChoiceComponent extends Vue {
     /**
      * Only used when the component is created from the `form-select` component directly.
      */
-    @Prop({type: Object, default: null}) public composableChoice!: Choice|null;
+    @Prop({type: Object, default: null}) public internalChoice!: Choice|null;
 
     /**
      * If created in a slot, contains the position of the slot relative to the internal list of choices.
      */
     @InjectProvided('position', null) public position!: string|null;
 
-    public parent!: any;
-
     /**
      * The actual `Choice` item this component is responsible of.
      */
     @Expose() public choice: Choice|null = null;
+
+    private parent!: any /* SelectComponent */;
+    private parentGroup!: any /* SelectGroupComponent */;
 
     /**
      * Vue lifecycle hook.
@@ -48,14 +53,15 @@ export default class ChoiceComponent extends Vue {
             throw new UsageException(`A "<bt-form-select-choice>" component must be placed inside a "<bt-form-select>".`);
         }
         this.parent = $parent;
+        this.parentGroup = this.getParent('bt-form-select-group');
     }
 
     /**
      * Vue lifecycle hook.
      */
     public unmounted(): void {
-        if (this.composableChoice === null && this.choice !== null) {
-            this.parent.vm.choices.remove(this.choice);
+        if (this.internalChoice === null && this.choice !== null) {
+            this.parent.vm.removeChoice(this.choice);
         }
     }
 
@@ -66,64 +72,94 @@ export default class ChoiceComponent extends Vue {
         if (!this.choice) {
             return;
         }
-        this.parent.select(this.choice);
+        this.parent.vm.selectChoice(this.choice);
     }
 
     @Expose() public deselect(): void {
         if (!this.choice) {
             return;
         }
-        this.parent.deselect(this.choice);
+        this.parent.vm.deselectChoice(this.choice.identifier);
     }
 
     /**
      * Try to get a label to use in the selection resume for the current item.
      */
-    private resolveChoiceLabel(): string {
+    private resolveLabel(choice: Choice): string {
         if (this.label !== null) {
             return this.label;
         }
         if (!isUndefined(this.$slots.default)) {
-            return this.getVNodesText(this.$slots.default());
+            const slotLabel = trim(this.getVNodesText(this.$slots.default()));
+            if (slotLabel.length > 0) {
+                return slotLabel;
+            }
+            if (choice.label) {
+                return choice.label;
+            }
+            console.warn('No text could be extracted from the slot content. Please define a label using the "label" prop for choice with value:', this.value);
+            return '(empty label)';
         }
+        if (choice.label) {
+            return choice.label;
+        }
+        console.warn('No label have been found for choice with value:', this.value, 'Please define one using the "label" prop.');
         return '(missing label)';
     }
 
-    @Watch('composableChoice', {immediate: ImmediateStrategy.NextTick})
-    private onComposableChoiceChange(newValue: any) {
+    @Watch('internalChoice', {immediate: ImmediateStrategy.NextTick})
+    private onInternalChoiceChange(newValue: any) {
         if (this.choice && newValue && this.choice.identifier === newValue.identifier) {
             return ;
         }
+        // If internalChoice is not defined, this means the choice comes from a slot.
         if (!newValue) {
-            this.choice = new Choice(
-                this.resolveChoiceLabel(),
-                this.value,
-                '__generated' + (++ChoiceComponent.MaxId),
-                this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin,
-                this.value
-            );
-            this.choice.disabled = !!this.disabled;
+            this.choice = this.parent.vm.normalizeChoice(this.value);
+            /**
+             * If the returned value is `null` the template will not show anything
+             * because of the `v-if` on the root node.
+             */
+            if (this.choice !== null) {
+                this.choice.external = true;
+                this.choice.label = this.resolveLabel(this.choice);
+                this.choice.origin = this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin;
+                this.choice.disabled = !!this.disabled;
+
+                // Force the group to `null` because the choice comes from a slot.
+                // To group a choice in a slot, the `bt-form-select-group` component must be used directly.
+                // "group" could be defined if the value is an object from which a group has been extracted by `normalizeChoice()`.
+                // But it cannot work because the render is delegated to the slot.
+                // By forcing it to null we ensure no group is created from this choice.
+                this.choice.group = null;
+
+                if (this.parent) {
+                    // Always append to the end because each origin have a separate collection of items in the view model.
+                    this.parent.vm.appendChoices([this.choice]);
+                }
+            }
         } else {
             this.choice = newValue;
         }
-        if (this.parent && !this.composableChoice && this.choice) {
-            // If the choice is in the "choices-before" slot.
-            if (this.position === 'before') {
-                let i;
-                for (i = 0; i < this.parent.vm.choices.items.length && this.parent.vm.choices.items[i].origin === this.choice.origin; ++i);
+    }
 
-                // Insert after the last item of the same origin.
-                this.parent.vm.choices.insert([this.choice], i);
-            } else {
-                // Append at the end of the collection
-                this.parent.vm.choices.append([this.choice]);
-            }
+    @Watch('choice.focused', {immediate: ImmediateStrategy.Mounted})
+    private onFocusChange(newValue: any) {
+        if (newValue) {
+            this.scrollIntoView();
         }
+    }
+
+    @Watch('choice.visible', {immediate: ImmediateStrategy.NextTick})
+    private onVisibilityChange() {
+        if (!this.parentGroup || !this.choice) {
+            return ;
+        }
+        this.parentGroup.updateChoice(this.choice);
     }
 
     @Watch(function(this: ChoiceComponent) {
         // Only watch the props if there is no choice given as prop.
-        return this.composableChoice === null ? ['value', 'disabled', 'selected'] : [];
+        return this.internalChoice === null ? ['value', 'label', 'disabled', 'selected'] : [];
     }, {immediate: ImmediateStrategy.NextTick}) private onChoicePropsChange(): void {
         if (!this.choice) {
             return ;
@@ -145,10 +181,38 @@ export default class ChoiceComponent extends Vue {
         if (!isUndefined(this.selected)) {
             // If the selection state changed.
             if (this.selected && !this.choice.selected) {
-                this.parent.select(this.choice, false);
+                this.parent.selectChoice(this.choice, false);
             } else if (!this.selected && this.choice.selected) {
-                this.parent.deselect(this.choice);
+                this.parent.deselectChoice(this.choice);
             }
+        }
+    }
+
+    /**
+     * Scroll the choice into the view.
+     */
+    private scrollIntoView(): void {
+        if (!this.choice) {
+            return ;
+        }
+        // this.$el may be a comment for a frame until the `v-if` on the root node resolves.
+        if (!isUndefined(this.$el.scrollIntoView)) {
+            this.$el.scrollIntoView({block: 'center'});
+        } else {
+            // If we are here if means the component has just been created.
+            //
+            // The delay is a workaround a bug with scrollIntoView that doesn't seem to work
+            // properly if the target element is in a transition.
+            //
+            // Because the dropdown appearance is animated, calling scrollIntoView immediately has not effect.
+            // So here we call if every 50ms for 500ms, to hopefully ensure it is done...
+            //
+            // TODO: investigate more and find a proper fix
+            setIntervalWithTimeout(() => {
+                if (!isUndefined(this.$el.scrollIntoView)) {
+                    this.$el.scrollIntoView({block: 'nearest', inline: 'nearest'});
+                }
+            }, 50, 500);
         }
     }
 }

@@ -7,14 +7,16 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { StickToDirective } from "../../misc";
 
 @Themeable({
-    vars: {
-        color: 'zy1ry083',
-        background: 'ij4ez5mn',
-        padding: 'cms3942z',
-        borderRadius: 'zcdug7rz',
-        fontSize: 'k8jjjii5',
-        fontWeight: 'f4hkdo42',
-        zIndex: 'w44fz79z'
+    css: {
+        vars: {
+            color: 'zy1ry083',
+            background: 'ij4ez5mn',
+            padding: 'cms3942z',
+            borderRadius: 'zcdug7rz',
+            fontSize: 'k8jjjii5',
+            fontWeight: 'f4hkdo42',
+            zIndex: 'w44fz79z'
+        }
     }
 })
 @Component({

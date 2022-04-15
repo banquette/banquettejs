@@ -1,7 +1,7 @@
 import { Injector } from "@banquette/dependency-injection/injector";
 import { HttpMethod, HttpResponseStatus } from "@banquette/http/constants";
 import { HttpResponse } from "@banquette/http/http-response";
-import { RemoteModule } from "@banquette/ui/misc/module/remote/remote.module";
+import { RemoteModule } from "@banquette/ui/misc/remote/remote.module";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
@@ -51,11 +51,13 @@ export default class RemoteComponent extends Vue {
 
     @Watch(['url', 'endpoint', 'method', 'model', 'urlParams'], {immediate: ImmediateStrategy.NextTick})
     private syncConfigurationProps(): void {
-        this.remote.url = this.url;
-        this.remote.endpoint = this.endpoint;
-        this.remote.method = ensureInEnum(this.method, HttpMethod, HttpMethod.GET);
-        this.remote.urlParams = this.urlParams;
-        this.remote.model = this.model;
+        this.remote.updateConfiguration({
+            url: this.url,
+            endpoint: this.endpoint,
+            method: ensureInEnum(this.method, HttpMethod, HttpMethod.GET),
+            urlParams: this.urlParams,
+            model: this.model
+        });
         this.update();
     }
 }

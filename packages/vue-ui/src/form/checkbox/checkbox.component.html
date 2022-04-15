@@ -1,31 +1,32 @@
 <div
     class="bt-form-checkbox"
-    :tabindex="vm.tabindex"
-    :data-is-disabled="vm.disabled ? '' : null"
-    :data-is-checked="vm.checked ? '' : null"
-    :data-has-focus="vm.focused ? '' : null"
-    :data-has-error="vm.invalid && vm.validated ? '' : null"
-    :data-has-group="vm.hasGroup ? '' : null"
-    @keydown="vm.onKeyDown"
-    @focus="vm.onFocus()"
-    @blur="vm.onBlur()"
-    @click="vm.toggle()"
+    :tabindex="v.control.tabIndex"
+    :data-is-disabled="v.control.disabled ? '' : null"
+    :data-is-checked="v.checked ? '' : null"
+    :data-is-indeterminate="v.indeterminate ? '' : null"
+    :data-has-focus="v.control.focused ? '' : null"
+    :data-has-error="v.control.invalid && v.control.validated ? '' : null"
+    :data-has-group="v.hasGroup ? '' : null"
+    v-bt-bind-theme
+    @keydown="onKeyDown"
+    @click="toggle()"
+    @focus="v.control.onFocus()"
+    @blur="v.control.onBlur()"
 >
-    <div ref="inputWrapper" class="checkbox">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-            <g fill="none" fill-rule="evenodd">
-                <path d="M0 0h20v20H0z" />
-                <path class="fill" d="M1 10.243L7.321 17 19 4.763 17.156 3 7.321 13.346l-4.477-4.76z" />
-            </g>
-        </svg>
-    </div>
-    <label :for="vm.fullId" v-if="hasSlot('default')"><slot></slot></label>
-    <label :for="vm.fullId" v-else-if="hasSlot('label')"><slot name="label"></slot></label>
-    <label :for="vm.fullId" v-else-if="vm.label">{{ vm.label }}</label>
+    <bt-form-base-input :v="v">
+        <div ref="inputWrapper" class="checkbox" :class="{indeterminate: v.indeterminate}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" v-if="!v.indeterminate && v.checked">
+                <g fill="none" fill-rule="evenodd">
+                    <path d="M0 0h20v20H0z" />
+                    <path class="fill" d="M1 10.243L7.321 17 19 4.763 17.156 3 7.321 13.346l-4.477-4.76z" />
+                </g>
+            </svg>
+        </div>
 
-    <slot name="errors">
-        <bt-form-error v-if="vm.invalid && vm.validated" :errors="vm.errors" :target="inputWrapper" :placement="errorPlacement">
-            <slot name="error" :errors="vm.errors" :errors-map="vm.errorsMap"></slot>
-        </bt-form-error>
-    </slot>
+        <label :for="v.control.fullId" v-if="hasDefaultSlot"><slot></slot></label>
+        <label :for="v.control.fullId" v-if="hasLabelSlot"><slot name="label"></slot></label>
+        <label :for="v.control.fullId" v-else-if="v.label">{{ v.label }}</label>
+
+        <template #help><slot name="help"></slot></template>
+    </bt-form-base-input>
 </div>

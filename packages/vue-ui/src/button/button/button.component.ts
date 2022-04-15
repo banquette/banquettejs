@@ -1,3 +1,4 @@
+import { parseCssDuration } from "@banquette/utils-dom/parse-css-duration";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { VoidCallback } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -6,49 +7,19 @@ import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
+import { ThemeVar } from "@banquette/vue-typescript/decorator/theme-var.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ClickOutsideDirective } from "../../misc";
 import { ProgressCircularComponent } from "../../progress/progress-circular";
+import { ThemeConfiguration } from "./theme-configuration";
 
-@Themeable({
-    vars: {
-        padding: 'duk5ypj7',
-        fontSize: 'rbqdeb2b',
-        fontWeight: 'x7zq5fu1',
-        borderRadius: 'n7vo0li2',
-        borderColor: 'bki79qph',
-        background: 'hp8t4g7n',
-        color: 'w061g1oc',
-        hover: {
-            background: 'f32skrbh',
-            color: 'ao5pftk1'
-        },
-        active: {
-            background: 'a24mj78i',
-            color: 'b63ysblr'
-        },
-        focus: {
-            background: 'hhzhcf6g',
-            color: 'j2djeyiw'
-        },
-        disabled: {
-            background: 'qylxhsrv',
-            color: 'jdc6v419',
-            borderColor: 'vysj1nxl',
-            svg: {
-                fill: 'dw6rtsj7'
-            }
-        },
-        svg: {
-            color: 'r8bjara5'
-        }
-    }
-})
+@Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-button',
     components: [ProgressCircularComponent],
-    directives: [ClickOutsideDirective]
+    directives: [ClickOutsideDirective, BindThemeDirective]
 })
 export default class ButtonComponent extends Vue {
     /**
@@ -89,15 +60,26 @@ export default class ButtonComponent extends Vue {
      */
     @Prop({name: 'toggled', type: Boolean, default: null}) public toggledProp!: boolean|null;
 
+    /**
+     * Name of the transition to apply when the toggle slot is show / hidden.
+     * If `false`, disable the transition.
+     */
+    @Prop({type: [String, Boolean], default: false}) public toggleTransition!: string|false|undefined;
+
+    @ThemeVar({
+        name: 'animation.clickDuration',
+        defaultValue: '30ms',
+        validate: function(v) { return parseCssDuration(v) }
+    }) protected clickDuration!: number;
+
     @Expose() public active: boolean = false;
 
-    @Computed() public get tag(): string {
+    @Computed() public get tagName(): string {
         return this.href !== null ? 'a' : 'button';
     }
 
-    @Computed() public get disabledAttr(): true|null {
-        // `null` instead of false so Vue will generate an empty `disabled` attribute instead of setting `disabled="false"`.
-        return this.disabled || this.working ? true : null;
+    @Computed() public get hasToggleSlot(): boolean {
+        return super.hasSlot('toggle');
     }
 
     @Computed() public get isToggleSlotVisible(): boolean {
@@ -124,7 +106,7 @@ export default class ButtonComponent extends Vue {
     /**
      * Show/hide the "toggle" slot (if defined).
      */
-    @Expose() public toggle(event: MouseEvent): void {
+    @Expose() public toggle(event: UIEvent): void {
         if (!this.$refs.root.contains(event.target) || this.disabled) {
             return ;
         }
@@ -153,17 +135,25 @@ export default class ButtonComponent extends Vue {
         }
     }
 
+    @Expose() public test(): void {
+        console.log('test !');
+    }
+
     @Lifecycle('beforeUnmount')
     public dispose(): void {
         this.onBlur();
     }
 
-    private onKeyDown(event: KeyboardEvent) {
-        if (event.key === 'Enter' && !this.active && !this.toggledAttr && !this.disabled) {
+    protected onKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter' && !this.active && !this.disabled) {
             this.active = true;
+            if (this.hasToggleSlot) {
+                this.toggle(event);
+            }
+            console.log(this.clickDuration);
             window.setTimeout(() => {
                 this.active = false;
-            }, 100);
+            }, this.clickDuration * 2);
         }
     }
 }

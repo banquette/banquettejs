@@ -3,7 +3,7 @@ import { UnsubscribeFunction } from "@banquette/event/type";
 import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
-import { flatten } from "@banquette/utils-object/flatten";
+import { flattenObject } from "@banquette/utils-object/flatten-object";
 import { slugify } from "@banquette/utils-string/format/slugify";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isType } from "@banquette/utils-type/is-type";
@@ -61,7 +61,7 @@ export class FilteringModule implements ModuleInterface {
      * Filter a list of items using the internal configuration.
      */
     public apply(items: ItemInterface[]): ItemInterface[] {
-        const activeFilters = flatten(this.getActiveFilters(), '.');
+        const activeFilters = flattenObject(this.getActiveFilters(), '.');
         for (const valuePath of Object.keys(activeFilters)) {
             items = items.filter((item: ItemInterface) => {
                 const parts = valuePath.split('.');
