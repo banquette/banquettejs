@@ -57,7 +57,10 @@ export class TransformResult<T = any> {
                 this.cleanupAsync();
                 return this;
             });
-            (this as Modify<TransformResult, {promise: Promise<TransformResult<T>>}>).promise.catch(proxy(this.fail, this));
+            (this as Modify<TransformResult, {promise: Promise<TransformResult<T>>}>).promise.catch((reason: any) => {
+                this.fail(reason);
+                return this;
+            });
         }
         const localPromise: Promise<any> = this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]);
         (this as Writeable<TransformResult<T>>).localPromise = localPromise;
@@ -73,6 +76,7 @@ export class TransformResult<T = any> {
                 (this.promiseResolve as Function)(this);
             }
             (this as Writeable<TransformResult<T>>).localPromise = null;
+            return this;
         }).catch(proxy(this.promiseReject as GenericCallback, this));
     }
 
