@@ -23,3 +23,5 @@ ObserverFactory.RegisterObserver(ObjectObserver);
 
 export { ObserverFactory };
 export { MutationType } from './constant';
+export * from './event/mutation.event';
+export * from './event/mutations-collection.event';
