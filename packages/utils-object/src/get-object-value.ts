@@ -52,9 +52,9 @@ export function getObjectValueAsObject(data: any, key: string, defaultValue: any
  * The "key" parameter can be an array for multi-dimensional search.
  * You can also write it as a string separated with "->".
  */
-export function getObjectValue(data: any, key: string|string[], defaultValue: any = null): any {
+export function getObjectValue(data: any, key: string|number|Array<string|number>, defaultValue: any = null): any {
     if (!isArray(key)) {
-        key = (key as string).split("->");
+        key = String(key).split("->");
     }
     let container = data;
     for (const item of key) {
