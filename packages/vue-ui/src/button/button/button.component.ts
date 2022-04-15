@@ -135,10 +135,6 @@ export default class ButtonComponent extends Vue {
         }
     }
 
-    @Expose() public test(): void {
-        console.log('test !');
-    }
-
     @Lifecycle('beforeUnmount')
     public dispose(): void {
         this.onBlur();
