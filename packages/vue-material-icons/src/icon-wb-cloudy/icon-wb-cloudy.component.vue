@@ -1,10 +1,13 @@
 <script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 
 @Component('icon-wb-cloudy')
 export default class IconWbCloudy {
+    @Prop({type: [String, Number], default: 24}) public size!: string|number;
+    @Prop({type: String, default: null}) public color!: string;
 }
 </script>
 <template>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19.36 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" :width="size" :height="size" :fill="color" viewBox="0 0 24 24"><path d="M19.36 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96z"/></svg>
 </template>

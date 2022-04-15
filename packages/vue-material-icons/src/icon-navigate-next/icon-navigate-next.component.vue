@@ -1,10 +1,13 @@
 <script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 
 @Component('icon-navigate-next')
 export default class IconNavigateNext {
+    @Prop({type: [String, Number], default: 24}) public size!: string|number;
+    @Prop({type: String, default: null}) public color!: string;
 }
 </script>
 <template>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" :width="size" :height="size" :fill="color" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
 </template>

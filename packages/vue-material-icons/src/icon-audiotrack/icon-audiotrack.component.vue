@@ -1,10 +1,13 @@
 <script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 
 @Component('icon-audiotrack')
 export default class IconAudiotrack {
+    @Prop({type: [String, Number], default: 24}) public size!: string|number;
+    @Prop({type: String, default: null}) public color!: string;
 }
 </script>
 <template>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" :width="size" :height="size" :fill="color" viewBox="0 0 24 24"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
 </template>
