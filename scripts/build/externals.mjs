@@ -8,5 +8,6 @@ export const Externals = [
     'qs',
     /style\-inject/,
     /^@popperjs/,
-    /^@tiptap/
+    /^@tiptap/,
+    /^@vueuse\/core/
 ];
