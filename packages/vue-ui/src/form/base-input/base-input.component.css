@@ -213,6 +213,10 @@
         display: flex;
         align-items: center;
         gap: 0.4em;
+
+        &:empty {
+            display: none;
+        }
     }
 
     /**
