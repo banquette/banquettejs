@@ -59,8 +59,7 @@ export function FormControl(transformer: TransformerInterface = Raw()): FormTran
          * @inheritDoc
          */
         transformInverse(context: TransformContext): TransformResult {
-            context.result.setResult((context.value as FormControlObject
-            ).value);
+            context.result.setResult((context.value as FormControlObject).value);
             return context.result;
         }
     };
