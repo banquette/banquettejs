@@ -1,8 +1,13 @@
 
 .bt-progress-circular {
-    --size: var(--bt-progress-circular-size, 40px);
-    --fill: var(--bt-progress-circular-fill, none);
-    --stroke-color: var(--bt-progress-circular-stroke-color, var(--bt-color-primary));
+    --progress-circular-font-family: var(--bt-progress-circular-font-size, var(--bt-font-family-base));
+    --progress-circular-font-size: var(--bt-progress-circular-font-size, 10px);
+    --progress-circular-font-weight: var(--bt-progress-circular-font-size, var(--bt-font-weight-normal));
+    --progress-circular-text-color: var(--bt-progress-circular-text-color, inherit);
+
+    --progress-circular-size: var(--bt-progress-circular-size, 40px);
+    --progress-circular-fill: var(--bt-progress-circular-fill, none);
+    --progress-circular-stroke-color: var(--bt-progress-circular-stroke-color, var(--bt-color-primary));
 }
 
 .bt-progress-circular {
@@ -17,7 +22,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: var(--xwhylest, 10px);
+            font-family: var(--progress-circular-font-family);
+            font-size: var(--progress-circular-font-size);
+            font-weight: var(--progress-circular-font-weight);
+            color: var(--progress-circular-text-color);
         }
     }
 
@@ -26,25 +34,25 @@
     }
 
     .indeterminate {
-        animation: 1.4s linear 0s infinite normal none running anim-welreaxr;
+        animation: 1.4s linear 0s infinite normal none running rotate;
 
         .path {
-            animation: anim-9xnqvj3f 1.4s ease-in-out infinite;
+            animation: dasharray 1.4s ease-in-out infinite;
         }
     }
 
     svg {
-        width: var(--size);
-        height: var(--size);
+        width: var(--progress-circular-size);
+        height: var(--progress-circular-size);
 
         .path {
-            fill: var(--fill, none);
-            stroke: var(--stroke-color);
+            fill: var(--progress-circular-fill, none);
+            stroke: var(--progress-circular-stroke-color);
         }
     }
 }
 
-@keyframes anim-welreaxr {
+@keyframes rotate {
     0% {
         transform:rotate(0deg);
     }
@@ -53,7 +61,7 @@
     }
 }
 
-@keyframes anim-9xnqvj3f {
+@keyframes dasharray {
     0% {
         stroke-dasharray: 1, 100;
         stroke-dashoffset: 0;

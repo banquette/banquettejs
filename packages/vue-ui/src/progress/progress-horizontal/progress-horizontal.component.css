@@ -1,31 +1,38 @@
 .bt-progress-horizontal {
-    --border-radius: var(--foxjm433, 2px);
+    --progress-horizontal-background-color: var(--bt-progress-horizontal-background-color, var(--bt-color-gray-50));
+    --progress-horizontal-value-background-color: var(--bt-progress-horizontal-value-background-color, var(--bt-color-primary));
+    --progress-horizontal-height: var(--bt-progress-horizontal-height, 6px);
+    --progress-horizontal-border-radius: var(--bt-progress-horizontal-border-radius, var(--bt-border-radius-sm));
 
-    height: var(--xomrxf6z, 6px);
-    background: var(--uqkcll89, #efefef);
-    border-radius: var(--border-radius);
+    --progress-horizontal-indeterminate-animation-duration: var(--bt-progress-horizontal-indeterminate-animation-duration, 0.8s);
+    --progress-horizontal-determinate-animation-duration: var(--bt-progress-horizontal-determinate-animation-duration, 0.3s);
+}
+
+.bt-progress-horizontal {
+    height: var(--progress-horizontal-height);
+    background: var(--progress-horizontal-background-color);
+    border-radius: var(--progress-horizontal-border-radius);
     width: 100%;
     overflow: hidden;
 
     .value {
         height: 100%;
-        background: var(--xphbg2yf, #666);
-        border-radius: var(--border-radius);
+        background: var(--progress-horizontal-value-background-color);
+        border-radius: var(--progress-horizontal-border-radius);
     }
 
     &[data-indeterminate] .value {
         width: 100%;
-        animation: anim-m0dz8ofr var(--qk1nmbdw, 0.8s) infinite linear;
+        animation: indeterminate var(--progress-horizontal-indeterminate-animation-duration) infinite linear;
         transform-origin: 0 50%;
     }
 
     &:not([data-indeterminate]) .value {
-        transition: width var(--flk3iwhc, 0.3s) ease-out;
+        transition: width var(--progress-horizontal-determinate-animation-duration) ease-out;
     }
 }
 
-
-@keyframes anim-m0dz8ofr {
+@keyframes indeterminate {
     0% {
         transform:  translateX(0) scaleX(0);
     }

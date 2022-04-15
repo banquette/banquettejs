@@ -1,25 +1,16 @@
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { PopoverDirective, PopoverComponent } from "../../popover";
 import { AbstractProgressComponent } from "../abstract-progress.component";
+import { ThemeConfiguration } from "./theme-configuration";
 
-@Themeable({
-    css: {
-        vars: {
-            height: 'xomrxf6z',
-            background: 'uqkcll89',
-            borderRadius: 'foxjm433',
-            value: {
-                background: 'xphbg2yf'
-            },
-            animation: {
-                determinateTransitionSpeed: 'flk3iwhc',
-                indeterminateTransitionSpeed: 'qk1nmbdw'
-            }
-        }
-    }
+@Themeable(ThemeConfiguration)
+@Component({
+    name: 'bt-progress-horizontal',
+    components: [PopoverComponent],
+    directives: [PopoverDirective]
 })
-@Component('bt-progress-horizontal')
 export default class ProgressHorizontalComponent extends AbstractProgressComponent {
     @Computed() public get width(): string {
         const p = this.progressPercent();
