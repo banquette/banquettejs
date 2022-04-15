@@ -8,7 +8,7 @@
                :icon="item.icon"
                :ttl="item.ttl"
                :closable="item.closable"
-               @destroy="remove(item.id)"
+               @close="remove(item.id)"
         >
             {{ item.message }}
         </bt-alert>
