@@ -7,8 +7,8 @@
     --popover-background-color: var(--bt-popover-background-color, var(--bt-color-gray-800));
 
     --popover-border-color: var(--bt-popover-border-color, var(--bt-color-gray-800));
-    --popover-border-style: var(--bt-popover-border-style, solid);
-    --popover-border-width: var(--bt-popover-border-width, 1px);
+    --popover-border-style: var(--bt-popover-border-style, var(--bt-border-style-base));
+    --popover-border-width: var(--bt-popover-border-width, var(--bt-border-width-base));
     --popover-border-radius: var(--bt-popover-border-radius, var(--bt-border-radius-base));
 
     --popover-shadow: var(--bt-popover-shadow, var(--bt-shadow-popover));

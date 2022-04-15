@@ -8,8 +8,8 @@
     --dialog-shadow: var(--bt-dialog-shadow, var(--bt-shadow-dialog));
 
     --dialog-border-color: var(--bt-dialog-border-color, var(--bt-color-gray-100));
-    --dialog-border-style: var(--bt-dialog-border-style, solid);
-    --dialog-border-width: var(--bt-dialog-border-width, 1px);
+    --dialog-border-style: var(--bt-dialog-border-style, var(--bt-border-style-base));
+    --dialog-border-width: var(--bt-dialog-border-width, var(--bt-border-width-base));
 
     --dialog-min-width: var(--bt-dialog-min-width, 30%);
     --dialog-min-height: var(--bt-dialog-min-height, none);
