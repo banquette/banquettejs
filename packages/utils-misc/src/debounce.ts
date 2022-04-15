@@ -5,7 +5,7 @@ import { GenericCallback } from "@banquette/utils-type/types";
  *
  * @param func      function function to call
  * @param wait      number   time with no call to wait before calling the function
- * @param immediate boolean  (optional, default: true) call the function immediatly after the first call or not?
+ * @param immediate boolean  (optional, default: true) call the function immediately after the first call or not?
  *
  * @returns function
  */
