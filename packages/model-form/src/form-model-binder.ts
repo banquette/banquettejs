@@ -98,9 +98,9 @@ export class FormModelBinder {
         this.form = form;
         this.model = model;
         this.syncFormObjectWithModel(form, this.model);
-        this.form.onControlAdded(proxy(this.throwOnUnauthorizedFormMutation, this), false);
-        this.form.onControlRemoved(proxy(this.throwOnUnauthorizedFormMutation, this), false);
-        this.form.onValueChanged(proxy(this.onFormValueChange, this), false);
+        this.form.onControlAdded(proxy(this.throwOnUnauthorizedFormMutation, this), 0, false);
+        this.form.onControlRemoved(proxy(this.throwOnUnauthorizedFormMutation, this), 0, false);
+        this.form.onValueChanged(proxy(this.onFormValueChange, this), 0, false);
         return this.modelWatcher.watchTransformableProperties<T>(model, FormTransformerSymbol, proxy(this.onModelChange, this));
     }
 
