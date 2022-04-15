@@ -75,3 +75,11 @@ export type SamePropertiesAndType<A, B> = Pick<
         : never;
     }[keyof A & keyof B]
     >;
+
+/**
+ * Represent any type of object, but excluding arrays.
+ */
+export interface AnyObject {
+    [key: string|number]: any;
+    length?: never;
+}
