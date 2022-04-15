@@ -7,9 +7,9 @@ import { extend } from "./extend";
  */
 export function cloneDeep(value: any): any {
     if (isArray(value)) {
-        return extend([], value, true);
+        return extend([], [value], true);
     } else if (isObject(value)) {
-        return extend({}, value, true);
+        return extend({}, [value], true);
     }
     return value;
 }
