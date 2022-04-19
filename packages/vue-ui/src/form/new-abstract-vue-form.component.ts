@@ -61,7 +61,7 @@ export abstract class NewAbstractVueFormComponent<
     /**
      * The view model the view will use.
      */
-    protected vm!: ViewModelType;
+    public vm!: ViewModelType;
 
     /**
      * To easily manage the asynchronous initialization steps specific to Vue.

@@ -7,7 +7,7 @@ import { debounce } from "@banquette/utils-misc/debounce";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { VoidCallback } from "@banquette/utils-type/types";
+import { VoidCallback, Primitive } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
@@ -147,7 +147,11 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
         this.updateInput();
     }
 
-    @Expose() public deselectChoice(choice: SelectedChoice): void {
+    @Expose() public selectChoice(choice: any): void {
+        this.vm.selectChoice(choice);
+    }
+
+    @Expose() public deselectChoice(choice: SelectedChoice|Primitive): void {
         this.vm.deselectChoice(choice);
     }
 

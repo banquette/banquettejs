@@ -11,6 +11,8 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { UndefinedValue, BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
+import type SelectGroupComponent from "../group/group.component";
+import type SelectComponent from "../select.component";
 
 @Component({
     name: 'bt-form-select-choice',
@@ -41,8 +43,8 @@ export default class ChoiceComponent extends Vue {
      */
     @Expose() public choice: Choice|null = null;
 
-    private parent!: any /* SelectComponent */;
-    private parentGroup!: any /* SelectGroupComponent */;
+    private parent!: SelectComponent;
+    private parentGroup!: SelectGroupComponent|null;
 
     /**
      * Vue lifecycle hook.
@@ -52,8 +54,8 @@ export default class ChoiceComponent extends Vue {
         if ($parent === null) {
             throw new UsageException(`A "<bt-form-select-choice>" component must be placed inside a "<bt-form-select>".`);
         }
-        this.parent = $parent;
-        this.parentGroup = this.getParent('bt-form-select-group');
+        this.parent = $parent as SelectComponent;
+        this.parentGroup = this.getParent('bt-form-select-group') as SelectGroupComponent|null;
     }
 
     /**
@@ -114,7 +116,7 @@ export default class ChoiceComponent extends Vue {
         }
         // If internalChoice is not defined, this means the choice comes from a slot.
         if (!newValue) {
-            this.choice = this.parent.vm.normalizeChoice(this.value);
+            this.choice = this.parent.vm.normalizeChoice(this.value, this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin);
             /**
              * If the returned value is `null` the template will not show anything
              * because of the `v-if` on the root node.
@@ -122,7 +124,6 @@ export default class ChoiceComponent extends Vue {
             if (this.choice !== null) {
                 this.choice.external = true;
                 this.choice.label = this.resolveLabel(this.choice);
-                this.choice.origin = this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin;
                 this.choice.disabled = !!this.disabled;
 
                 // Force the group to `null` because the choice comes from a slot.
@@ -181,9 +182,9 @@ export default class ChoiceComponent extends Vue {
         if (!isUndefined(this.selected)) {
             // If the selection state changed.
             if (this.selected && !this.choice.selected) {
-                this.parent.selectChoice(this.choice, false);
+                this.parent.selectChoice(this.choice);
             } else if (!this.selected && this.choice.selected) {
-                this.parent.deselectChoice(this.choice);
+                this.parent.deselectChoice(this.choice.identifier);
             }
         }
     }
