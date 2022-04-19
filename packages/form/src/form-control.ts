@@ -226,7 +226,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
         if (this.activeControl === this) {
             return ;
         }
-        if (this.activeControl !== null) {
+        if (this.activeControl !== null && this.activeControl.id !== this.id) {
             this.activeControl.blur();
         }
         this.activeControl = this;
