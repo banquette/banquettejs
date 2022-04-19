@@ -231,5 +231,6 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     if (!isUndefined(data.component.inheritAttrs)) {
         options.inheritAttrs = data.component.inheritAttrs;
     }
+    options.name = data.component.name;
     return options as VccOpts;
 }
