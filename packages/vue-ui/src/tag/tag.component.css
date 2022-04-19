@@ -1,3 +1,4 @@
+
 .bt-tag {
     --tag-text-color: var(--bt-tag-text-color, var(--bt-color-primary));
     --tag-text-hover-color: var(--bt-tag-text-hover-color, var(--tag-text-color));
@@ -7,18 +8,19 @@
     --tag-font-weight: var(--bt-tag-font-weight, var(--bt-font-weight-normal));
 
     --tag-background-color: var(--bt-tag-background-color, var(--bt-color-primary-50));
-    --tag-background-hover-color: var(--bt-tag-background-hover-color, var(--bt-color-primary-100));
-
     --tag-border-color: var(--bt-tag-border-color, var(--bt-color-primary-150));
-    --tag-border-hover-color: var(--bt-tag-border-hover-color, var(--tag-background-hover-color));
+
     --tag-border-radius: var(--bt-tag-border-radius, var(--bt-border-radius-base));
     --tag-border-width: var(--bt-tag-border-width, var(--bt-border-width-base));
     --tag-border-style: var(--bt-tag-border-style, var(--bt-border-style-base));
 
     --tag-close-fill-color: var(--bt-tag-close-fill-color, currentColor);
-    --tag-close-fill-hover-color: var(--bt-tag-close-fill-hover-color, var(--bt-color-primary-contrast));
-    --tag-close-background-hover-color: var(--bt-tag-close-background-hover-color, var(--bt-color-primary));
+    --tag-close-fill-hover-color: var(--bt-tag-close-fill-hover-color, currentColor);
+    --tag-close-background-hover-color: var(--bt-tag-close-background-hover-color, var(--bt-color-primary-100));
     --tag-max-width: var(--bt-tag-max-width, none);
+
+    --tag-background-hover-color: var(--bt-tag-background-hover-color, var(--tag-close-background-hover-color));
+    --tag-border-hover-color: var(--bt-tag-border-hover-color, var(--tag-background-hover-color));
 }
 
 .bt-tag {
@@ -36,7 +38,6 @@
     border-radius: var(--tag-border-radius);
     box-sizing: border-box;
     white-space: nowrap;
-    text-decoration: none;
     position: relative;
     max-width: var(--tag-max-width);
     overflow: hidden;
@@ -45,6 +46,7 @@
 
     &[data-interactive]:hover {
         cursor: pointer;
+        text-decoration: none;
         color: var(--tag-text-hover-color);
         background-color: var(--tag-background-hover-color);
         border-color: var(--tag-border-hover-color);
