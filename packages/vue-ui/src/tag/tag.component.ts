@@ -4,13 +4,15 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-tag',
-    components: [IconClose]
+    components: [IconClose],
+    directives: [BindThemeDirective]
 })
 export default class TagComponent extends Vue {
     /**

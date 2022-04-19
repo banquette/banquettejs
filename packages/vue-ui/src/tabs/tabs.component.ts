@@ -8,6 +8,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { useResizeObserver } from "@vueuse/core";
 import { TeleportDirective } from "../misc/teleport.directive";
@@ -22,7 +23,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-tabs',
     components: [TabComponent],
-    directives: [TeleportDirective],
+    directives: [TeleportDirective, BindThemeDirective],
     emits: ['tabCreated', 'tabRemoved', 'focusChanged']
 })
 export default class TabsComponent extends Vue {
@@ -154,7 +155,7 @@ export default class TabsComponent extends Vue {
     }
 
     @Watch('focused')
-    public onFocusedChange(newValue: string|null) {
+    public onFocusedChange(newValue: string|null): void {
         for (const candidate of this.tabs) {
             if (candidate.id === newValue) {
                 this.focus(candidate);
@@ -162,6 +163,13 @@ export default class TabsComponent extends Vue {
             }
         }
     }
+
+    @Watch('direction')
+    public onDirectionChange(): void {
+        this.indicatorEl.removeAttribute('style');
+        this.updateFocusIndicator();
+    }
+
 
     private setFocusedTab(tab: any): void {
         if (this.focusedTabResizeUnsubscribe) {
@@ -197,17 +205,16 @@ export default class TabsComponent extends Vue {
         const style = getComputedStyle(this.focusedTab.$refs.toggle);
 
         // In case the direction changed.
-        this.indicatorEl.removeAttribute('style');
         if (this.direction === TabsDirection.Top) {
             const paddingLeft = parseFloat(style.paddingLeft);
             const paddingRight = parseFloat(style.paddingRight);
-            this.indicatorEl.style.left = `${offset.left + paddingLeft}px`;
-            this.indicatorEl.style.width = `${this.focusedTab.$refs.toggle.offsetWidth - (paddingLeft + paddingRight)}px`;
+            this.indicatorEl.style.left = `${Math.round(offset.left + paddingLeft)}px`;
+            this.indicatorEl.style.width = `${Math.round(this.focusedTab.$refs.toggle.offsetWidth - (paddingLeft + paddingRight))}px`;
         } else if (this.direction === TabsDirection.Left || this.direction === TabsDirection.Right) {
             const paddingTop = parseFloat(style.paddingTop);
             const paddingBottom = parseFloat(style.paddingBottom);
-            this.indicatorEl.style.top = `${offset.top + paddingTop}px`;
-            this.indicatorEl.style.height = `${this.focusedTab.$refs.toggle.offsetHeight - (paddingTop + paddingBottom)}px`;
+            this.indicatorEl.style.top = `${Math.round(offset.top + paddingTop)}px`;
+            this.indicatorEl.style.height = `${Math.round(this.focusedTab.$refs.toggle.offsetHeight - (paddingTop + paddingBottom))}px`;
         }
     }
 
