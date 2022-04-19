@@ -116,6 +116,18 @@ export class VueBuilder {
      */
     public static CreateApp(group: string|string[] = VueBuilder.DEFAULT_GROUP, options: Partial<AppConfig> = {}): App<Element> {
         const app = createApp({});
+        VueBuilder.ApplyToExistingApp(app, group, options);
+        return app;
+    }
+
+    /**
+     * Create a new Vue instance.
+     */
+    public static CreateAppAndMount(element: Element|string, group: string|string[] = VueBuilder.DEFAULT_GROUP, options: Partial<AppConfig> = {}): ComponentPublicInstance {
+        return VueBuilder.CreateApp(group, options).mount(element);
+    }
+
+    public static ApplyToExistingApp(app: App, group: string|string[] = VueBuilder.DEFAULT_GROUP, options: Partial<AppConfig> = {}): void {
         const config = VueBuilder.MergeVueOptions({
             errorHandler: console.error,
             warnHandler: console.warn,
@@ -148,14 +160,6 @@ export class VueBuilder {
                 }
             }
         }
-        return app;
-    }
-
-    /**
-     * Create a new Vue instance.
-     */
-    public static CreateAppAndMount(element: Element|string, group: string|string[] = VueBuilder.DEFAULT_GROUP, options: Partial<AppConfig> = {}): ComponentPublicInstance {
-        return VueBuilder.CreateApp(group, options).mount(element);
     }
 
     /**
