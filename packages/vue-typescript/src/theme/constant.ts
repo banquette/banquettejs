@@ -7,7 +7,12 @@ export const ThemesEvents = {
     ThemeCreated: Symbol('theme-created'),
 
     /**
-     * Triggered when a
+     * Triggered when the current theme changes.
+     */
+    ThemeChanged: Symbol('theme-changed'),
+
+    /**
+     * Triggered when a component that uses the current theme has changed.
      */
     ThemeComponentChanged: Symbol('theme-component-changed'),
 

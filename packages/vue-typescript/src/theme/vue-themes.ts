@@ -47,12 +47,22 @@ export class VueThemes {
         VueThemes.CurrentThemeName = name;
         if (VueThemes.CurrentTheme !== null) {
             document.documentElement.classList.remove(VueThemes.CurrentTheme.id);
+            VueThemes.CurrentTheme.clearDOM();
             VueThemes.CurrentTheme = null;
         }
-        if (VueThemes.Has(name)) {
+        if (name && VueThemes.Has(name)) {
             const theme = VueThemes.Get(name);
             VueThemes.CurrentTheme = theme;
+            VueThemes.CurrentTheme.injectInDOM();
+            VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeChanged, new ThemeEvent(theme));
             document.documentElement.classList.add(theme.id);
+        } else if (name) {
+            console.warn(`No theme "${name}" has been defined. You can define one using:
+    VueThemes.Define('component-name', {
+        ${name}: [
+            ...
+        ]
+    });`);
         }
     }
 
@@ -75,7 +85,7 @@ export class VueThemes {
                 VueThemes.SetCurrent(name);
             }
             if (name === ThemeWildcard) {
-                document.documentElement.classList.add(VueThemes.Themes[ThemeWildcard].id);
+                VueThemes.SetCurrent(ThemeWildcard);
             }
             // Do not dispatch synchronously to give time to the caller to finish its setup.
             if (getActiveComponentsCount() > 0) {
@@ -103,6 +113,13 @@ export class VueThemes {
      */
     public static OnCreated(cb: (event: ThemeEvent) => void): UnsubscribeFunction {
         return VueThemes.EventDispatcher.subscribe(ThemesEvents.ThemeCreated, cb);
+    }
+
+    /**
+     * Subscribe to an event that will trigger each time the current theme changes.
+     */
+    public static OnChanged(cb: (event: ThemeEvent) => void): UnsubscribeFunction {
+        return VueThemes.EventDispatcher.subscribe(ThemesEvents.ThemeChanged, cb);
     }
 
     /**

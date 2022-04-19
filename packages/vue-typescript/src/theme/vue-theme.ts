@@ -27,7 +27,7 @@ export class VueTheme {
     /**
      * Unique identifier that will be used to inject styles.
      */
-    public readonly id: string = getUniqueRandomId();
+    public readonly id: string;
 
     /**
      * An object holding all the variants of a theme, indexed by component name.
@@ -35,7 +35,7 @@ export class VueTheme {
     private variants: Record<string, ComponentVariants> = {};
 
     public constructor(public readonly name: string, private eventDispatcher: EventDispatcher) {
-
+        this.id = getUniqueRandomId();
     }
 
     /**
@@ -165,7 +165,20 @@ export class VueTheme {
     }
 
     /**
-     * Notify the theme that component has changed, so it can dispatch the info to other components
+     * Remove the injected styles from the dom.
+     */
+    public clearDOM(): void {
+        for (const componentName of Object.keys(this.variants)) {
+            const component = this.variants[componentName];
+            if (component.styleElement !== null) {
+                component.styleElement.remove();
+                component.styleElement = null;
+            }
+        }
+    }
+
+    /**
+     * Notify the theme that a component has changed, so it can dispatch the info to other components
      * that may depend on it indirectly.
      */
     public notifyComponentChange(name: string): void {
