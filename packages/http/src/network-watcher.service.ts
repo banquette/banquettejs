@@ -5,7 +5,7 @@ import { EventDispatcherService } from "@banquette/event/event-dispatcher.servic
 import { proxy } from "@banquette/utils-misc/proxy";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
-import { HttpEvents } from "./constants";
+import { NetworkEvents } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 
 @Service()
@@ -81,7 +81,7 @@ export class NetworkWatcherService {
      * Dispatch the connectivity change events.
      */
     private dispatchEvents(): void {
-        this.eventDispatcher.dispatch(this.isOnlineAttr ? HttpEvents.NetworkOnline : HttpEvents.NetworkOffline);
-        this.eventDispatcher.dispatch(HttpEvents.NetworkAvailabilityChange, new NetworkAvailabilityChangeEvent(this.isOnlineAttr));
+        this.eventDispatcher.dispatch(this.isOnlineAttr ? NetworkEvents.Online : NetworkEvents.Offline);
+        this.eventDispatcher.dispatch(NetworkEvents.AvailabilityChange, new NetworkAvailabilityChangeEvent(this.isOnlineAttr));
     }
 }

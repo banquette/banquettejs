@@ -19,7 +19,7 @@ import { Constructor, Primitive } from "@banquette/utils-type/types";
 import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
 import { AdapterInterface } from "./adapter/adapter.interface";
-import { HttpEvents, HttpMethod, HttpResponseStatus } from "./constants";
+import { HttpEvents, HttpMethod, HttpResponseStatus, NetworkEvents } from "./constants";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 import { RequestProgressEvent } from "./event/request-progress.event";
 import { RequestEvent } from "./event/request.event";
@@ -377,7 +377,7 @@ export class HttpService {
         if (!Injector.Has(this.adapterIdentifier)) {
             throw new UsageException('You must register your adapter into the injector using the "@Module()" decorator.');
         }
-        this.eventDispatcher.subscribe(HttpEvents.NetworkAvailabilityChange, proxy(this.onNetworkAvailabilityChange, this));
+        this.eventDispatcher.subscribe(NetworkEvents.AvailabilityChange, proxy(this.onNetworkAvailabilityChange, this));
         this.initialized = true;
     }
 

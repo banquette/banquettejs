@@ -91,24 +91,29 @@ export const DecoderTag = Symbol('decoder');
 export const AdapterTag = Symbol('adapter');
 
 /**
- * Events emitted by the network module through the event dispatcher singleton.
+ * Events emitted by the network watcher service.
  */
-export const HttpEvents = {
+export const NetworkEvents = {
     /**
      * Emitted when the network connectivity is lost.
      */
-    NetworkOffline: Symbol('http:offline'),
+    Offline: Symbol('network:offline'),
 
     /**
      * Emitted when the network connectivity is back.
      */
-    NetworkOnline: Symbol('http:online'),
+    Online: Symbol('network:online'),
 
     /**
      * Emitted when the network availability changes, no matter in which way.
      */
-    NetworkAvailabilityChange: Symbol('http:network-availability-change'),
+    AvailabilityChange: Symbol('network:availability-change'),
+};
 
+/**
+ * Events emitted by the http service.
+ */
+export const HttpEvents = {
     /**
      * Emitted when a request has been added to the queue of the HTTP service.
      * A request can be queued multiple time if an error occurs.
