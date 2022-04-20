@@ -32,7 +32,7 @@ export class Choice {
     public identifier: Primitive;
 
     /**
-     * Define what part of the app is responsible of this choice.
+     * Define what part of the app is responsible for this choice.
      *
      * This is useful when the choices can come from multiple sources at the same time (remote and local for example).
      * By grouping all the remote choices together in a "remote" origin, they can be updated without touching to the other choices.
