@@ -180,7 +180,10 @@
         align-items: center;
         justify-content: center;
         padding: 1rem;
+    }
 
+    :global(.bt-dropdown.bt-form-select-choices .inner-wrapper .content > .error) {
+        color: var(--bt-color-red-500);
     }
 
     :deep(.bt-tag), :global(.bt-form-select-additional-tags .bt-tag) {

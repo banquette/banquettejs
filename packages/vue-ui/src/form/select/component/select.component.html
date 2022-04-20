@@ -80,7 +80,10 @@
             <slot name="choices-after"></slot>
         </choice-slot-wrapper>
 
-        <div class="no-results" v-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'waiting-search'">
+        <div class="no-results error" v-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'failed'">
+            {{ v.remoteFetchError }}
+        </div>
+        <div class="no-results" v-else-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'waiting-search'">
             The search must be at least {{ v.searchMinLength }} characters.
         </div>
         <div class="no-results loading" v-else-if="!v.visibleChoicesCount && v.control.busy">

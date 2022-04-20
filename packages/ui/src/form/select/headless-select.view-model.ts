@@ -12,17 +12,20 @@ import { replaceStringVariables } from "@banquette/utils-string/format/replace-s
 import { slugify } from "@banquette/utils-string/format/slugify";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
 import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isArray } from "@banquette/utils-type/is-array";
+import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
+import { isPrimitive } from "@banquette/utils-type/is-primitive";
 import { isScalar } from "@banquette/utils-type/is-scalar";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive, Writeable } from "@banquette/utils-type/types";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { Choice } from "./choice";
-import { SearchType, ChoiceOrigin, ChoicesRemoteFetchStatus } from "./constant";
+import { SearchType, ChoiceOrigin, ChoicesRemoteFetchStatus, ChoicesPropResolver } from "./constant";
 import { HeadlessSelectViewDataInterface } from "./headless-select-view-data.interface";
 import { SelectedChoice } from "./selected-choice";
 
@@ -37,42 +40,16 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     public set multiple(value: boolean) { this.viewData.multiple = value }
 
     /**
-     * The name of the property to use as label when the choices are objects.
+     * Defines how to resolve the choices' labels, identifiers, values, disabled status and groups.
+     * Can be:
+     *   - the name of the property to use when the input is an object.
+     *   - a function that takes the raw input and returns the value to use.
      */
-    public choicesLabelProperty: string|null = null;
-
-    /**
-     * Same as "choicesLabelProperty" but takes an expression instead of a property name.
-     * The expression can contain variables that will be replaced by values of the object.
-     *
-     * For example: `{firstName} {lastName} {email}`.
-     *
-     * By default, each variable must be surrounded by "{" and "}".
-     * You can access deep properties by adding a "." between each level, for example: {user.category.name}.
-     */
-    public choicesLabelPropertyExpr: string|null = null;
-
-    /**
-     * The name of the property to use as identifier when the choices are objects.
-     * The identifier is used to match selected choices with newly fetched choices (which may not contain the same object instance).
-     */
-    public choicesIdentifierProperty: string|null = null;
-
-    /**
-     * The name of the property to use as a value when the choices are objects.
-     * If `null`, the whole raw value is used.
-     */
-    public choicesValueProperty: string|null = null;
-
-    /**
-     * The name of the property to use to set the `disabled` flag when the choices are objects.
-     */
-    public choicesDisabledProperty: string|null = null;
-
-    /**
-     * The name of the property to use to set the `group` the choice should be assigned to.
-     */
-    public choicesGroupProperty: string|null = null;
+    public choicesLabel     : ChoicesPropResolver<string> = null;
+    public choicesIdentifier: ChoicesPropResolver<Primitive> = null;
+    public choicesValue     : ChoicesPropResolver<any> = null;
+    public choicesDisabled  : ChoicesPropResolver<boolean> = null;
+    public choicesGroup     : ChoicesPropResolver<string> = null;
 
     /**
      * Define the order in which choices should be sorted by origin.
@@ -210,11 +187,14 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         this.remote.send(null, params).promise.then((response) => {
             this.setChoices(ensureArray(response.result), ChoiceOrigin.Remote);
             this.viewData.remoteFetchStatus = ChoicesRemoteFetchStatus.Idle;
-        }).catch((response: HttpResponse<any>) => {
-            if (response.isCanceled) {
-                return ;
+        }).catch((reason: any) => {
+            if (reason instanceof HttpResponse) {
+                if (reason.isCanceled) {
+                    return;
+                }
+                reason = reason.error;
             }
-            this.viewData.remoteFetchError = ExceptionFactory.EnsureException(response.error, 'Unknown error.').message;
+            this.viewData.remoteFetchError = ExceptionFactory.EnsureException(reason, 'Unknown error.').message;
             this.viewData.remoteFetchStatus = ChoicesRemoteFetchStatus.Failed;
         }).finally(() => {
             this.viewData.control.busy = false;
@@ -607,6 +587,13 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      * Try to resolve the label of a choice.
      */
     private extractChoiceLabel(choice: any): string {
+        if (isFunction(this.choicesLabel)) {
+            const label = this.choicesLabel(choice);
+            if (!isScalar(label)) {
+                console.warn(`The "choices-label" function must return a scalar value, for:`, choice);
+            }
+            return String(label);
+        }
         if (isScalar(choice)) {
             return String(choice);
         }
@@ -614,22 +601,18 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         if (!isObject(choice)) {
             return defaultLabel;
         }
-        if (this.choicesLabelProperty !== null) {
-            if (!isUndefined(choice[this.choicesLabelProperty])) {
-                return ensureString(choice[this.choicesLabelProperty]);
+        if (this.choicesLabel !== null) {
+            if (!isUndefined(choice[this.choicesLabel])) {
+                return ensureString(choice[this.choicesLabel]);
             }
             // Check if the user didn't give both the property and the expression.
             // In such a case it could mean "use the property if available, otherwise the expression.".
-            if (this.choicesLabelPropertyExpr === null) {
-                console.warn(`Label property "${this.choicesLabelProperty}" not found, for:`, choice);
-                return defaultLabel;
+            if (this.choicesLabel.indexOf('{') > -1) {
+                // TODO: make the start and end chars configurable.
+                return replaceStringVariables(this.choicesLabel, choice, '{', '}');
             }
         }
-        if (this.choicesLabelPropertyExpr !== null) {
-            // TODO: make the start and end chars configurable.
-            return replaceStringVariables(this.choicesLabelPropertyExpr, choice, '{', '}');
-        }
-        console.warn('Please define what property to use as label using the "choices-label-property" attribute, for:', choice);
+        console.warn('Please define how to resolve the label using the "choices-label" attribute, for:', choice);
         return defaultLabel;
     }
 
@@ -637,36 +620,52 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      * Try to resolve the value of a choice.
      */
     private extractChoiceValue(choice: any): any {
-        if (!isObject(choice) || !this.choicesValueProperty) {
+        if (isFunction(this.choicesValue)) {
+            return this.choicesValue(choice);
+        }
+        if (!isObject(choice) || !this.choicesValue) {
             return choice;
         }
-        return choice[this.choicesValueProperty];
+        return choice[this.choicesValue];
     }
 
     /**
      * Try to resolve the disabled state of a choice.
      */
     private extractChoiceDisabledState(choice: any): boolean {
-        if (!isObject(choice) || !this.choicesDisabledProperty) {
+        if (isFunction(this.choicesDisabled)) {
+            return ensureBoolean(this.choicesDisabled(choice));
+        }
+        if (!isObject(choice) || !this.choicesDisabled) {
             return false;
         }
-        return !!choice[this.choicesDisabledProperty];
+        return !!choice[this.choicesDisabled];
     }
 
     /**
      * Try to resolve the group name of a choice.
      */
     private extractChoiceGroup(choice: any): string|null {
-        if (!isObject(choice) || !this.choicesGroupProperty) {
+        if (isFunction(this.choicesGroup)) {
+            const value = this.choicesGroup(choice);
+            return isScalar(value) ? String(value) : null;
+        }
+        if (!isObject(choice) || !this.choicesGroup) {
             return null;
         }
-        return choice[this.choicesGroupProperty] || null;
+        return choice[this.choicesGroup] || null;
     }
 
     /**
      * Try to resolve the identifier of a choice.
      */
     private extractChoiceIdentifier(choice: any): Primitive|undefined {
+        if (isFunction(this.choicesIdentifier)) {
+            const value = this.choicesIdentifier(choice);
+            if (isPrimitive(value)) {
+                return value;
+            }
+        }
         if (isScalar(choice)) {
             return choice;
         }
@@ -674,13 +673,13 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             console.warn(`Unsupported choice of type "${typeof(choice)}".`);
             return undefined;
         }
-        if (this.choicesIdentifierProperty !== null) {
-            if (!isUndefined(choice[this.choicesIdentifierProperty])) {
-                return choice[this.choicesIdentifierProperty];
+        if (this.choicesIdentifier !== null && !isFunction(this.choicesIdentifier)) {
+            if (!isUndefined(choice[this.choicesIdentifier])) {
+                return choice[this.choicesIdentifier];
             }
-            console.warn(`Identifier property "${this.choicesIdentifierProperty}" not found, for:`, choice);
+            console.warn(`Identifier property "${this.choicesIdentifier}" not found, for:`, choice);
         } else {
-            console.warn('Please define what property to use as identifier using the "choices-identifier-property" attribute, for:', choice);
+            console.warn('Please define what property to use as identifier using the "choices-identifier" attribute, for:', choice);
         }
         return undefined;
     }

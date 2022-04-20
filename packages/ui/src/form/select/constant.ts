@@ -70,3 +70,5 @@ export enum SearchType {
      */
     Remote = 'remote'
 }
+
+export type ChoicesPropResolver<T> = ((choice: any) => T)|string|null;

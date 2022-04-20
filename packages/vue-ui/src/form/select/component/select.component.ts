@@ -1,5 +1,5 @@
 import { HttpMethod } from "@banquette/http/constants";
-import { SearchType } from "@banquette/ui/form/select/constant";
+import { SearchType, ChoicesPropResolver } from "@banquette/ui/form/select/constant";
 import { ChoiceOrigin } from "@banquette/ui/form/select/constant";
 import { SelectedChoice } from "@banquette/ui/form/select/selected-choice";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
@@ -36,7 +36,8 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Component({
     name: 'bt-form-select',
     components: [ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ErrorComponent, ProgressCircularComponent],
-    directives: [ClickOutsideDirective]
+    directives: [ClickOutsideDirective],
+    emits: ['focus', 'blur', 'change']
 })
 export default class SelectComponent extends NewAbstractVueFormComponent<SelectViewDataInterface, SelectViewModel> {
     /**
@@ -46,30 +47,16 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
     @Prop({type: Array, default: null}) public choices!: any[]|null;
 
     /**
-     * Define how the string label is extracted from object choices.
+     * Defines how to resolve the choices' labels, identifiers, values, disabled status and groups.
+     * Can be:
+     *   - the name of the property to use when the input is an object.
+     *   - a function that takes the raw input and returns the value to use.
      */
-    @Prop({type: String, default: null}) public choicesLabelProperty!: string|null;
-    @Prop({type: String, default: null}) public choicesLabelPropertyExpr!: string|null;
-
-    /**
-     * Name of the property to use as identifier when a choice is an object.
-     */
-    @Prop({type: String, default: null}) public choicesIdentifierProperty!: string|null;
-
-    /**
-     * Name of the property to use as value when a choice is an object.
-     */
-    @Prop({type: String, default: null}) public choicesValueProperty!: string|null;
-
-    /**
-     * Name of the property to use as disabled flag when a choice is an object.
-     */
-    @Prop({type: String, default: null}) public choicesDisabledProperty!: string|null;
-
-    /**
-     * Name of the property to use as group when a choice is an object.
-     */
-    @Prop({type: String, default: null}) public choicesGroupProperty!: string|null;
+    @Prop({type: [String, Function], default: null}) public choicesLabel!: ChoicesPropResolver<string>;
+    @Prop({type: [String, Function], default: null}) public choicesIdentifier!: ChoicesPropResolver<Primitive>;
+    @Prop({type: [String, Function], default: null}) public choicesValue!: ChoicesPropResolver<any>;
+    @Prop({type: [String, Function], default: null}) public choicesDisabled!: ChoicesPropResolver<boolean>;
+    @Prop({type: [String, Function], default: null}) public choicesGroup!: ChoicesPropResolver<string>;
 
     /**
      * If `true` the select allow for multiple values.
@@ -145,6 +132,9 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
     @Expose() public onKeyDown(event: KeyboardEvent): void {
         this.vm.onKeyDown(event);
         this.updateInput();
+        if (this.vm.searchBuffer) {
+            this.v.base.placeholder = '';
+        }
     }
 
     @Expose() public selectChoice(choice: any): void {
@@ -229,20 +219,18 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
     }
 
     @Watch([
-        'choicesLabelProperty',
-        'choicesLabelPropertyExpr',
-        'choicesIdentifierProperty',
-        'choicesValueProperty',
-        'choicesDisabledProperty',
-        'choicesGroupProperty'
+        'choicesLabel',
+        'choicesIdentifier',
+        'choicesValue',
+        'choicesDisabled',
+        'choicesGroup'
     ], {immediate: ImmediateStrategy.BeforeMount})
     private onBasePropsChange(): void {
-        this.vm.choicesLabelProperty = this.choicesLabelProperty;
-        this.vm.choicesLabelPropertyExpr = this.choicesLabelPropertyExpr;
-        this.vm.choicesIdentifierProperty = this.choicesIdentifierProperty;
-        this.vm.choicesValueProperty = this.choicesValueProperty;
-        this.vm.choicesDisabledProperty = this.choicesDisabledProperty;
-        this.vm.choicesGroupProperty = this.choicesGroupProperty;
+        this.vm.choicesLabel = this.choicesLabel;
+        this.vm.choicesIdentifier = this.choicesIdentifier;
+        this.vm.choicesValue = this.choicesValue;
+        this.vm.choicesDisabled = this.choicesDisabled;
+        this.vm.choicesGroup = this.choicesGroup;
     }
 
     @Watch('choices', {immediate: ImmediateStrategy.BeforeMount})
@@ -250,6 +238,7 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
         this.vm.setChoices(this.choices || [], PropOrigin);
     }
 
+    private tmp = 0;
     @Watch('v.control.value')
     private onSelectionChange(): void {
         this.updateInput();
@@ -262,6 +251,7 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
         window.requestAnimationFrame(() => {
             this.updateTagsVisibility();
         });
+        this.$emit('change', this.v.control.value);
     }
 
     /**
