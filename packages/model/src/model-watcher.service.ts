@@ -5,7 +5,6 @@ import { ObserverFactory } from "@banquette/object-observer/index";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { Constructor } from "@banquette/utils-type/types";
-import { ModelChangeEvent } from "./event/model-change.event";
 import { ModelMetadataService } from "./model-metadata.service";
 import { ModelTransformMetadataService } from "./model-transform-metadata.service";
 
@@ -20,7 +19,7 @@ export class ModelWatcherService {
      * Watch a given list of paths to watch in a model.
      * If `null` or an empty array is given, the whole model and all its children will be watched.
      */
-    public watch<T extends object>(model: T, paths: string[]|null, cb: (event: ModelChangeEvent<T>) => void): T {
+    public watch<T extends object>(model: T, paths: string[]|null, cb: (event: MutationEvent) => void): T {
         let watchedPaths = paths !== null && paths.length > 0 ? paths : null;
         if (watchedPaths !== null) {
             watchedPaths = watchedPaths.map((item: string) => item[0] !== '/' ? ('/' + item) : item);
@@ -38,13 +37,7 @@ export class ModelWatcherService {
                 }
             }
             if (granted) {
-                cb(new ModelChangeEvent<any>(
-                    event.mutation.type,
-                    event.mutation.target,
-                    event.mutation.path,
-                    event.mutation.oldValue,
-                    event.mutation.newValue
-                ));
+                cb(event);
             }
         });
         return observer.proxy;
@@ -53,7 +46,7 @@ export class ModelWatcherService {
     /**
      * Watch a model for changes on the properties visible two one or multiple transformers.
      */
-    public watchTransformableProperties<T extends object>(model: T, transformersTypes: symbol|symbol[], cb: (event: ModelChangeEvent<T>) => void): T {
+    public watchTransformableProperties<T extends object>(model: T, transformersTypes: symbol|symbol[], cb: (event: MutationEvent) => void): T {
         const watchedPaths = this.createWatchPaths(model.constructor as Constructor, transformersTypes);
         return this.watch<T>(model, watchedPaths, cb);
     }

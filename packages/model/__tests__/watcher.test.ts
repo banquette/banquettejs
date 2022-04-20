@@ -1,7 +1,8 @@
-import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
+import { MutationEvent } from "@banquette/object-observer/event/mutation.event";
 import { isString } from "@banquette/utils-type/is-string";
-import { ModelWatcherService, ModelChangeEvent, Json, JsonTransformerSymbol, T, Relation } from "../src";
+import 'reflect-metadata';
+import { ModelWatcherService, Json, JsonTransformerSymbol, T, Relation } from "../src";
 
 
 const watcher = Injector.Get(ModelWatcherService);
@@ -12,8 +13,8 @@ const watcher = Injector.Get(ModelWatcherService);
  */
 function watchAndCheck(instance: any, pathsOrSymbols: string[]|symbol[]|null, doChanges: (proxy: any) => void, expected: Array<[string, any, any]>): void {
     const changes: Array<[string, any, any]> = [];
-    const onChange = (event: ModelChangeEvent<any>) => {
-        changes.push([event.path, event.oldValue, event.newValue]);
+    const onChange = (event: MutationEvent) => {
+        changes.push([event.mutation.path, event.mutation.oldValue, event.mutation.newValue]);
     };
     const proxy = pathsOrSymbols === null || !pathsOrSymbols.length || isString(pathsOrSymbols[0]) ?
         watcher.watch(instance, pathsOrSymbols as string[]|null, onChange) :

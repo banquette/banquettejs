@@ -9,9 +9,6 @@ export * from './model-watcher.service';
 export * from './transform-result';
 export * from './utils';
 
-// Event
-export * from './event/model-change.event';
-
 // Decorator
 export * from './decorator/alias';
 export * from './decorator/factory';

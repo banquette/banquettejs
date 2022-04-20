@@ -9,7 +9,6 @@ import { FormComponentInterface } from "@banquette/form/form-component.interface
 import { FormControl } from "@banquette/form/form-control";
 import { FormGroupInterface } from "@banquette/form/form-group.interface";
 import { FormObject } from "@banquette/form/form-object";
-import { ModelChangeEvent } from "@banquette/model/event/model-change.event";
 import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
 import { ModelWatcherService } from "@banquette/model/model-watcher.service";
@@ -19,7 +18,7 @@ import { TransformService } from "@banquette/model/transformer/transform.service
 import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
 import { ModelFactory } from "@banquette/model/type";
 import { ensureCompleteTransformer } from "@banquette/model/utils";
-import { MutationType } from "@banquette/object-observer/index";
+import { MutationType, MutationEvent } from "@banquette/object-observer/index";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isArray } from "@banquette/utils-type/is-array";
@@ -257,17 +256,17 @@ export class FormModelBinder {
     /**
      * Called when a change on the model is detected.
      */
-    private onModelChange(event: ModelChangeEvent<any>): void {
+    private onModelChange(event: MutationEvent): void {
         if (this.ignoreModelUpdate) {
             return ;
         }
-        if (event.type === MutationType.Delete) {
+        if (event.mutation.type === MutationType.Delete) {
             try {
-                this.form.get(event.path).detach();
+                this.form.get(event.mutation.path).detach();
             } catch (e) {}
             return ;
         }
-        const pathParts = event.path.split('/');
+        const pathParts = event.mutation.path.split('/');
         let formContainer: FormGroupInterface = this.form;
         let modelContainer = this.model;
         let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
@@ -277,7 +276,7 @@ export class FormModelBinder {
 
         for (i = 1; i < pathParts.length; ++i) {
             let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
-            if (treeChildName === '*' && event.type === MutationType.Insert && isArray(event.target)) {
+            if (treeChildName === '*' && event.mutation.type === MutationType.Insert && isArray(event.mutation.target)) {
                 pushContext(this.currentContextCtor, pathParts[i - 1]);
                 continue ;
             }
