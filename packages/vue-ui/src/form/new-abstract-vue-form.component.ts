@@ -69,6 +69,7 @@ export abstract class NewAbstractVueFormComponent<
     protected eventPipeline = new EventPipeline();
 
     private unsubscribeCallbacks: GenericCallback[] = [];
+    private controlUnsubscribeCallbacks: GenericCallback[] = [];
 
     public constructor() {
         super();
@@ -123,7 +124,11 @@ export abstract class NewAbstractVueFormComponent<
         for (const cb of this.unsubscribeCallbacks) {
             cb();
         }
+        for (const cb of this.controlUnsubscribeCallbacks) {
+            cb();
+        }
         this.unsubscribeCallbacks = [];
+        this.controlUnsubscribeCallbacks = [];
         this.proxy.unsetViewModel();
         (this as any).vm = undefined;
     }
@@ -258,34 +263,32 @@ export abstract class NewAbstractVueFormComponent<
         }
     }
 
-    private assignControl = (() => {
-        let unsubscribe: UnsubscribeFunction|null = null;
-        return (control: FormViewControlInterface): void => {
-            if (unsubscribe !== null) {
-                unsubscribe();
-            }
-            this.vm.setControl(control);
-
-            // Special case for the focus to handle the case where there are multiple view models
-            // associated with the control.
-            unsubscribe = control.onStateChanged((event: StateChangedFormEvent) => {
-                if (event.state === BasicState.Focused  && event.newValue) {
-                    // In case the focus is gained, wait for the next tick to give time to the proxy
-                    // to update, then override the `focused` attribute to the one of the proxy.
-                    // The one is the proxy will only return `true` if its view model is the one that is focused.
-                    this.$nextTick(() => {
-                        this.vm.control.mutateInternalViewData(() => {
-                            this.vm.control.viewData.focused = this.proxy.focused;
-                        });
-                    });
-                }
-            }, -1);
-
-            if (this.autofocus) {
-                this.forceFocus();
-            }
+    private assignControl(control: FormViewControlInterface): void {
+        for (const fn of this.controlUnsubscribeCallbacks) {
+            fn();
         }
-    })();
+        this.controlUnsubscribeCallbacks = [];
+        this.vm.setControl(control);
+
+        // Special case for the focus to handle the case where there are multiple view models
+        // associated with the control.
+        this.controlUnsubscribeCallbacks.push(control.onStateChanged((event: StateChangedFormEvent) => {
+            if (event.state === BasicState.Focused  && event.newValue) {
+                // In case the focus is gained, wait for the next tick to give time to the proxy
+                // to update, then override the `focused` attribute to the one of the proxy.
+                // The one is the proxy will only return `true` if its view model is the one that is focused.
+                this.$nextTick(() => {
+                    this.vm.control.mutateInternalViewData(() => {
+                        this.vm.control.viewData.focused = this.proxy.focused;
+                    });
+                });
+            }
+        }, -1));
+
+        if (this.autofocus) {
+            this.forceFocus();
+        }
+    }
 
     /**
      * Try to give focus to the field aggressively by calling focus
