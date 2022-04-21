@@ -40,7 +40,8 @@ export class EventDispatcher implements EventDispatcherInterface {
      *
      * @return A function to call to unsubscribe.
      */
-    public subscribe<T extends EventArg>(type: symbol, callback: (event: T) => void,
+    public subscribe<T extends EventArg>(type: symbol,
+                                         callback: (event: T) => void,
                                          priority: number = 0,
                                          filteringTags: symbol[]|null = null,
                                          propagationTags: symbol[] = []): UnsubscribeFunction {
