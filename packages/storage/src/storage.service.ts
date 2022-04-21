@@ -44,7 +44,7 @@ export class StorageService {
      *
      * @throws UsageException
      */
-    public use<T extends AdapterInterface>(adapter: AdapterIdentifier): T {
+    public use<T extends AdapterInterface>(adapter: AdapterIdentifier<T>): T {
         return this.resolveAdapter<T>(adapter);
     }
 
@@ -103,7 +103,7 @@ export class StorageService {
      * @throws UsageException
      * @throws NoAdapterAvailableException
      */
-    private resolveAdapter<T extends AdapterInterface>(adapter: AdapterIdentifier): T {
+    private resolveAdapter<T extends AdapterInterface>(adapter: AdapterIdentifier<T>): T {
         let adapterStr: string|null = null;
         if (isString(adapter) || isUndefined(adapter)) {
             if (!this.availableAdaptersOrdered.length) {
