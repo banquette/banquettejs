@@ -7,7 +7,7 @@ export interface ObserverInterface<T extends object> {
     readonly proxy: T;
 
     /**
-     * Subscribe to changes notifications in a synchronous way.
+     * Subscribe to change notifications in a synchronous way.
      * The callback will be called synchronously for each change.
      */
     subscribe(cb: (event: MutationEvent) => void, type?: MutationType|null, mask?: string|null): UnsubscribeFunction;

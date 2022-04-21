@@ -11,8 +11,7 @@ export class TransformContext {
     public readonly parent: TransformContext|null;
 
     /**
-     * The type of transformation currently in process.
-     * Available values should be defined in "T".
+     * The type of the root transformer currently running.
      */
     public readonly type: symbol;
 
