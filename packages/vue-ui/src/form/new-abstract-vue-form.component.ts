@@ -1,5 +1,4 @@
 import { EventPipeline } from "@banquette/event/pipeline/event-pipeline";
-import { UnsubscribeFunction } from "@banquette/event/type";
 import { AbstractFormComponent } from "@banquette/form/abstract-form-component";
 import { BasicState } from "@banquette/form/constant";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
