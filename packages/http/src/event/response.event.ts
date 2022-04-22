@@ -1,10 +1,9 @@
 import { EventArg } from "@banquette/event/event-arg";
-import { AdapterRequest } from "../adapter/adapter-request";
-import { AdapterResponse } from "../adapter/adapter-response";
+import { HttpRequest } from "../http-request";
+import { HttpResponse } from "../http-response";
 
 export class ResponseEvent extends EventArg {
-    public constructor(public response: AdapterResponse,
-                       public request: AdapterRequest) {
+    public constructor(public request: HttpRequest, public response: HttpResponse<any>) {
         super();
     }
 }

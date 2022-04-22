@@ -24,6 +24,7 @@ export * from './event/request.event';
 export * from './event/request-progress.event';
 export * from './event/status-change.event';
 export * from './event/transfer-progress.event';
+export * from './event/before-response.event';
 export * from './event/response.event';
 
 /**

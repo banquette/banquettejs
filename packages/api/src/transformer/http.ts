@@ -12,6 +12,7 @@ import { TransformContext } from "@banquette/model/transformer/transform-context
 import { TransformPipeline } from "@banquette/model/transformer/transform-pipeline";
 import { TransformService } from "@banquette/model/transformer/transform.service";
 import { PojoTransformer } from "@banquette/model/transformer/type/root/pojo";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { ApiEndpoint } from "../api-endpoint";
@@ -88,21 +89,9 @@ export class HttpTransformer extends PojoTransformer {
                 reject = _reject;
             }));
         }
-        const handleResult = (subResult: TransformResult) => {
-            if (subResult.error) {
-                context.result.fail(subResult.errorDetail);
-                if (reject !== null) {
-                    reject(subResult.errorDetail);
-                }
-            } else {
-                context.result.setResult(subResult.result);
-                if (resolve !== null) {
-                    resolve();
-                }
-            }
-        };
-        const transformResponse = () => {
-            const contextClone = new TransformContext(context, context.type, context.ctor, context.value.result, context.property, context.extra);
+        const transformResponseResult = (result: any, done: (result: TransformResult) => void) => {
+            const model = this.modelFactory.create(context.ctor, context);
+            const contextClone = new TransformContext(context, context.type, context.ctor, result, context.property, context.extra);
             const pipelineClone = new TransformPipeline(contextClone.result, this.getTransformableProperties(context));
             const subResult = super.doTransformInverse(contextClone, model, pipelineClone);
             if (subResult.promise !== null) {
@@ -110,11 +99,40 @@ export class HttpTransformer extends PojoTransformer {
                     delayResponse();
                 }
                 subResult.promise.then(() => {
-                    handleResult(subResult);
+                    done(subResult);
                 });
             } else {
-                handleResult(subResult);
+                done(subResult);
             }
+        }
+        const transformResponse = () => {
+            const hasMultipleResults = isArray(context.value.result);
+            const results = hasMultipleResults ? context.value.result : [context.value.result];
+            let subResults: any[] = [];
+            let index = 0;
+            const next = () => {
+                if (index >= results.length) {
+                    if (subResults.length > 0) {
+                        context.result.setResult(hasMultipleResults ? subResults : subResults[0]);
+                    }
+                    if (resolve !== null) {
+                        resolve();
+                    }
+                    return ;
+                }
+                transformResponseResult(results[index++], (subResult: TransformResult) => {
+                    if (subResult.error) {
+                        context.result.fail(subResult.errorDetail);
+                        if (reject !== null) {
+                            reject(subResult.errorDetail);
+                        }
+                        return ;
+                    }
+                    subResults.push(subResult.result);
+                    next();
+                });
+            };
+            next();
         };
         if (context.value.isPending && context.value.promise !== null) {
             delayResponse();

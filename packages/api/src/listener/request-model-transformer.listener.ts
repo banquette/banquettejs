@@ -11,10 +11,10 @@ import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { HttpMethod } from "@banquette/http/constants";
 import { TransformService } from "@banquette/model/transformer/transform.service";
-import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
 import { isObject } from "@banquette/utils-type/is-object";
 import { ApiProcessorTag, ApiEvents } from "../constant";
 import { ApiRequestEvent } from "../event/api-request.event";
+import { ApiTransformerSymbol } from "../transformer/api";
 
 const transformService = Injector.Get(TransformService);
 
@@ -28,7 +28,7 @@ function onBeforeRequest(event: ApiRequestEvent) {
     if (event.apiRequest.method === HttpMethod.GET || event.apiRequest.model === null || !isObject(payload)) {
         return ;
     }
-    const transformResult = transformService.transform(payload, PojoTransformerSymbol);
+    const transformResult = transformService.transform(payload, ApiTransformerSymbol);
     if (transformResult.promise !== null) {
         return transformResult.promise.then(() => {
             event.httpEvent.request.payload = transformResult.result;

@@ -1,4 +1,5 @@
 import { ApiEvents, ApiProcessorTag } from "@banquette/api/constant";
+import { ApiBeforeResponseEvent } from "@banquette/api/event/api-before-response.event";
 import { ApiRequestEvent } from "@banquette/api/event/api-request.event";
 import { ApiResponseEvent } from "@banquette/api/event/api-response.event";
 import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
@@ -302,7 +303,7 @@ export class TableViewModel {
         }, config.table.apiEventsPriorities.beforeRequest, [], [ApiProcessorTag]);
 
 
-        this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiResponseEvent) => {
+        this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiBeforeResponseEvent) => {
             const serverResult = this.getServerResult(event.httpEvent.request.response);
             if (serverResult === null) {
                 return ;

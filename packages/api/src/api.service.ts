@@ -6,6 +6,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { AdapterRequest } from "@banquette/http/adapter/adapter-request";
 import { HttpMethod, HttpEvents } from "@banquette/http/constants";
 import { RequestEvent } from "@banquette/http/event/request.event";
+import { BeforeResponseEvent } from "@banquette/http/event/before-response.event";
 import { ResponseEvent } from "@banquette/http/event/response.event";
 import { HttpRequest } from "@banquette/http/http-request";
 import { HttpResponse } from "@banquette/http/http-response";
@@ -16,6 +17,7 @@ import { proxy } from "@banquette/utils-misc/proxy";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
+import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive, Constructor } from "@banquette/utils-type/types";
 import { ApiConfigurationInterface } from "./api-configuration.interface";
@@ -25,6 +27,7 @@ import { ApiRequest } from "./api-request";
 import { ApiRequestBuilder } from "./api-request.builder";
 import { ApiConfigurationSymbol } from "./config";
 import { ApiTag, ApiEvents } from "./constant";
+import { ApiBeforeResponseEvent } from "./event/api-before-response.event";
 import { ApiRequestEvent } from "./event/api-request.event";
 import { ApiResponseEvent } from "./event/api-response.event";
 
@@ -138,10 +141,23 @@ export class ApiService {
 
     /**
      * Send an ApiRequest.
-     *
-     * @note Use `ApiService::build()` to create a request object easily.
      */
-    public send<T>(request: ApiRequest): HttpResponse<T> {
+    public send<T>(endpoint: string, model?: ModelExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T>;
+    public send<T>(request: ApiRequest): HttpResponse<T>;
+    public send<T>(requestOrEndpoint: string|ApiRequest, model?: ModelExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
+        let request: ApiRequest;
+        if (isString(requestOrEndpoint)) {
+            const builder = this.build();
+            builder.endpoint(requestOrEndpoint);
+            if (!isUndefined(model)) {
+                builder.model(model);
+            }
+            builder.payload(payload);
+            builder.params(params || {});
+            request = builder.getRequest();
+        } else {
+            request = requestOrEndpoint;
+        }
         let endpoint: ApiEndpoint|null = null;
         if (request.endpoint !== null) {
             const modelCtor = request.model !== null ? this.modelMetadata.resolveAlias(request.model) : null;
@@ -179,28 +195,28 @@ export class ApiService {
     /**
      * HttpService's `BeforeResponse` event handler.
      */
-    private onBeforeResponse(event: ResponseEvent): Promise<void>|undefined {
-        return this.dispatchEvent(ApiEvents.BeforeResponse, event, ApiResponseEvent);
+    private onBeforeResponse(event: BeforeResponseEvent): Promise<void>|undefined {
+        return this.dispatchEvent(ApiEvents.BeforeResponse, event, ApiBeforeResponseEvent);
     }
 
     /**
      * HttpService's `RequestSuccess` event handler.
      */
     private onRequestSuccess(event: RequestEvent): Promise<void>|undefined {
-        return this.dispatchEventAndDispose(ApiEvents.RequestSuccess, event, ApiRequestEvent);
+        return this.dispatchEventAndDispose(ApiEvents.RequestSuccess, event, ApiResponseEvent);
     }
 
     /**
      * HttpService's `RequestFailure` event handler.
      */
     private onRequestFailure(event: RequestEvent): Promise<void>|undefined {
-        return this.dispatchEventAndDispose(ApiEvents.RequestFailure, event, ApiRequestEvent);
+        return this.dispatchEventAndDispose(ApiEvents.RequestFailure, event, ApiResponseEvent);
     }
 
     /**
      * Dispatch an event and wait for its resolution if necessary.
      */
-    private dispatchEvent(eventType: symbol, event: RequestEvent|ResponseEvent, eventArg: Constructor<ApiRequestEvent|ApiResponseEvent>): Promise<void>|undefined {
+    private dispatchEvent(eventType: symbol, event: RequestEvent|BeforeResponseEvent|ResponseEvent, eventArg: Constructor<ApiRequestEvent|ApiResponseEvent|ApiBeforeResponseEvent>): Promise<void>|undefined {
         const apiRequest = this.httpToApiRequest(event.request);
         if (!apiRequest) {
             return ;
@@ -218,7 +234,7 @@ export class ApiService {
     /**
      * Call dispatchEvent and remove the ApiRequest from the known requests when done.
      */
-    private dispatchEventAndDispose(eventType: symbol, event: RequestEvent|ResponseEvent, eventArg: Constructor<ApiRequestEvent|ApiResponseEvent>): Promise<void>|undefined {
+    private dispatchEventAndDispose(eventType: symbol, event: RequestEvent|BeforeResponseEvent|ResponseEvent, eventArg: Constructor<ApiRequestEvent|ApiResponseEvent|ApiBeforeResponseEvent>): Promise<void>|undefined {
         const result = this.dispatchEvent(eventType, event, eventArg);
         const clean = () => {
             const apiRequest = this.httpToApiRequest(event.request);

@@ -11,10 +11,10 @@ import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { TransformService } from "@banquette/model/transformer/transform.service";
-import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
 import { isObject } from "@banquette/utils-type/is-object";
 import { ApiProcessorTag, ApiEvents } from "../constant";
 import { ApiResponseEvent } from "../event/api-response.event";
+import { ApiTransformerSymbol } from "../transformer/api";
 
 const transformService = Injector.Get(TransformService);
 const modelMetadata = Injector.Get(ModelMetadataService);
@@ -24,24 +24,29 @@ const modelMetadata = Injector.Get(ModelMetadataService);
  *
  * @throws ModelAliasNotFoundException
  */
-function onBeforeResponse(event: ApiResponseEvent) {
-    let responseBody: any = event.httpEvent.response.response;
+function onRequestSuccess(event: ApiResponseEvent) {
+    let responseBody: any = event.httpEvent.response.result;
     if (event.apiRequest.model === null || !isObject(responseBody) || !Object.keys(responseBody).length) {
         return ;
     }
+    const handleResult = () => {
+        if (transformResult.error) {
+            event.httpEvent.response.error = transformResult.errorDetail;
+        } else {
+            event.httpEvent.response.result = transformResult.result;
+        }
+    };
     const ctor = modelMetadata.resolveAlias(event.apiRequest.model);
-    const transformResult = transformService.transformInverse(responseBody, ctor, PojoTransformerSymbol);
+    const transformResult = transformService.transformInverse(responseBody, ctor, ApiTransformerSymbol);
     if (transformResult.promise !== null) {
-        return transformResult.promise.then(() => {
-            event.httpEvent.response.response = transformResult.result;
-        });
+        return transformResult.promise.then(handleResult);
     } else {
-        event.httpEvent.response.response = transformResult.result;
+        handleResult();
     }
 }
 Injector.Get(EventDispatcherService).subscribe<ApiResponseEvent>(
-    ApiEvents.BeforeResponse,
-    onBeforeResponse,
+    ApiEvents.RequestSuccess,
+    onRequestSuccess,
     0,
     null,
     [ApiProcessorTag]

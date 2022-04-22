@@ -20,6 +20,7 @@ import { AdapterRequest } from "./adapter/adapter-request";
 import { AdapterResponse } from "./adapter/adapter-response";
 import { AdapterInterface } from "./adapter/adapter.interface";
 import { HttpEvents, HttpMethod, HttpResponseStatus, NetworkEvents } from "./constants";
+import { BeforeResponseEvent } from "./event/before-response.event";
 import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
 import { RequestProgressEvent } from "./event/request-progress.event";
 import { RequestEvent } from "./event/request.event";
@@ -207,7 +208,7 @@ export class HttpService {
             // Before response.
             await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(
                 HttpEvents.BeforeResponse,
-                new ResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest),
+                new BeforeResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest),
                 true,
                 queuedRequest.request.tags
             ));
@@ -237,7 +238,7 @@ export class HttpService {
         }
         queuedRequest.response.setStatus(HttpResponseStatus.Success);
         queuedRequest.resolve(queuedRequest.response);
-        this.eventDispatcher.dispatch(HttpEvents.RequestSuccess, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
+        this.eventDispatcher.dispatch(HttpEvents.RequestSuccess, new ResponseEvent(queuedRequest.request, queuedRequest.response), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 
@@ -255,7 +256,7 @@ export class HttpService {
         queuedRequest.response.error = error;
         queuedRequest.response.setStatus(error instanceof RequestCanceledException ? HttpResponseStatus.Canceled : HttpResponseStatus.Error);
         queuedRequest.reject(queuedRequest.response);
-        this.eventDispatcher.dispatch(HttpEvents.RequestFailure, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
+        this.eventDispatcher.dispatch(HttpEvents.RequestFailure, new ResponseEvent(queuedRequest.request, queuedRequest.response), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 

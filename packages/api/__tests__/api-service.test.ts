@@ -2,17 +2,17 @@ import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
 import { HttpMethod } from "@banquette/http/constants";
 import { HttpRequest } from "@banquette/http/http-request";
-import { Pojo } from "@banquette/model/decorator/pojo";
 import { Relation } from "@banquette/model/decorator/relation";
 import { Model } from "@banquette/model/transformer/type/model";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
+import { Api } from "../src";
 import { Http } from "../src/decorator/http";
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
-import '../../http/__tests__/__mocks__/xml-http-request.mock';
-import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
 import { ApiService } from "../src/api.service";
 import { Endpoint } from "../src/decorator/endpoint";
+import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
+import '../../http/__tests__/__mocks__/xml-http-request.mock';
 
 const api = Injector.Get(ApiService);
 
@@ -20,7 +20,7 @@ describe('Basic use cases', () => {
     test('Build basic request', () => {
         @Endpoint('getOne', '/get-one')
         class Foo {
-            @Http()
+            @Api()
             public ref: string = 'abc';
         }
 
@@ -35,7 +35,7 @@ describe('Basic use cases', () => {
     test('Attributes not visible by the Api are ignored', () => {
         @Endpoint('create', '/foo', HttpMethod.POST)
         class Foo {
-            @Http()
+            @Api()
             public ref: string = 'abc';
 
             // Should be ignored because not marked as @Api()
@@ -130,7 +130,7 @@ describe('Built-in request listener', () => {
     test('Request with model having an asynchronous transformer', async () => {
         @Endpoint('getOne', '/test')
         class Foo {
-            @Pojo(GenericTransformerTest({delay: 100, transform: 'def'}))
+            @Api(GenericTransformerTest({delay: 100, transform: 'def'}))
             public ref: string = 'abc';
         }
         let response = api.send(api.build()
@@ -150,7 +150,7 @@ describe('Built-in request listener', () => {
     test('Request with array of models each having an asynchronous transformer', async () => {
         @Endpoint('getOne', '/test')
         class Foo {
-            @Pojo(GenericTransformerTest({delay: 100, transform: (value: string) => value + '_modified'}))
+            @Api(GenericTransformerTest({delay: 100, transform: (value: string) => value + '_modified'}))
             public ref: string = 'abc';
 
             public constructor(ref: string) {
@@ -174,7 +174,7 @@ describe('Built-in request listener', () => {
     test('Url parameters are resolve before the payload is transformed', async () => {
         @Endpoint('getOne', '/test/{ref}', HttpMethod.POST)
         class Foo {
-            @Pojo(GenericTransformerTest({transform: 'def'}))
+            @Api(GenericTransformerTest({transform: 'def'}))
             public ref: string = 'abc';
         }
         let response = api.send(api.build()
@@ -194,25 +194,25 @@ describe('Built-in request listener', () => {
 
     test('Build request with asynchronous transformer and deep relations', async () => {
         class Qux {
-            @Pojo(GenericTransformerTest({delay: 100, transform: 'new quux'}))
+            @Api(GenericTransformerTest({delay: 100, transform: 'new quux'}))
             public quux: string = 'quux';
         }
 
         class Bar {
-            @Pojo(GenericTransformerTest({transform: 'new baz'}))
+            @Api(GenericTransformerTest({transform: 'new baz'}))
             public baz: string = 'baz';
 
-            @Pojo(Model())
+            @Api(Model())
             @Relation(Qux)
             public qux: Qux = new Qux();
         }
 
         @Endpoint('test', '/test')
         class Foo {
-            @Pojo()
+            @Api()
             public ref: string = 'abc';
 
-            @Pojo(Model())
+            @Api(Model())
             @Relation(Bar)
             public bar: Bar = new Bar();
         }
@@ -236,7 +236,7 @@ describe('Built-in response listener', () => {
     test('Single model response', async () => {
         @Endpoint('getOne', buildTestUrl({url: '/test', serverResponse: JSON.stringify({ref: 'serverRef'})}))
         class Foo {
-            @Pojo()
+            @Api()
             public ref: string = 'abc';
         }
         let response = api.send(api.build()
@@ -253,7 +253,7 @@ describe('Built-in response listener', () => {
     test('Array of models response', async () => {
         @Endpoint('getMultiple', buildTestUrl({url: '/test', serverResponse: JSON.stringify([{ref: 'a'}, {ref: 'b'}])}))
         class Foo {
-            @Pojo()
+            @Api()
             public ref: string = 'abc';
         }
         let response = api.send(api.build()

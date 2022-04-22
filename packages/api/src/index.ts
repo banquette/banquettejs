@@ -16,6 +16,8 @@ export * from './api-request';
 /**
  * Decorators
  */
+export * from './decorator/api';
+export * from './decorator/http';
 export * from './decorator/endpoint';
 
 /**
@@ -36,4 +38,5 @@ export * from './exception/unsupported-parameters.exception';
 /**
  * Transformers
  */
+export * from './transformer/api';
 export * from './transformer/http';

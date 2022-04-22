@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
 import { Exception } from "@banquette/exception/exception";
-import { UsageException } from "@banquette/exception/usage.exception";
 import { HttpMethod } from "@banquette/http/constants";
 import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
@@ -9,7 +8,6 @@ import { isString } from "@banquette/utils-type/is-string";
 import { Constructor } from "@banquette/utils-type/types";
 import { Min } from "@banquette/validation/type/min";
 import { NotEmpty } from "@banquette/validation/type/not-empty";
-import { end } from "@popperjs/core";
 import {
     ApiEndpoint,
     ApiEndpointParameterOptions,

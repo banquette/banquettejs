@@ -5,7 +5,7 @@ import { trim } from "@banquette/utils-string/format/trim";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { DecoderTag, HttpEvents } from "../constants";
-import { ResponseEvent } from "../event/response.event";
+import { BeforeResponseEvent } from "../event/before-response.event";
 import { InvalidResponseTypeException } from "../exception/invalid-response-type.exception";
 import { ResponseTypeAutoDetect } from "./auto-detect.decoder";
 
@@ -22,7 +22,7 @@ function stripXSSIPrefix(input: string): string {
     return input;
 }
 
-function expectJson(event: ResponseEvent): boolean {
+function expectJson(event: BeforeResponseEvent): boolean {
     if (event.request.responseType === ResponseTypeJson) {
         return true;
     }
@@ -43,7 +43,7 @@ function expectJson(event: ResponseEvent): boolean {
 /**
  * Maybe decode the JSON response into an object.
  */
-function onAfterRequest(event: ResponseEvent) {
+function onBeforeResponse(event: BeforeResponseEvent) {
     if (!expectJson(event)) {
         return ;
     }
@@ -69,9 +69,9 @@ function onAfterRequest(event: ResponseEvent) {
     }
 }
 
-Injector.Get(EventDispatcherService).subscribe<ResponseEvent>(
+Injector.Get(EventDispatcherService).subscribe<BeforeResponseEvent>(
     HttpEvents.BeforeResponse,
-    onAfterRequest,
+    onBeforeResponse,
     0,
     null,
     [DecoderTag]
