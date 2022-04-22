@@ -1,5 +1,6 @@
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { HttpMethod } from "@banquette/http/constants";
+import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
@@ -29,15 +30,20 @@ export class ApiEndpointStorage {
      * Register an api endpoint.
      */
     public registerEndpoint(endpoint: ApiEndpointOptionsWithIdentifiers): void;
+    public registerEndpoint(name: string, endpoint: ApiEndpoint, ctor?: Constructor|null): void;
     public registerEndpoint(name: string, url: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>, ctor?: Constructor|null): void;
-    public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string, url?: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>, ctor?: Constructor|null): void {
-        ctor = this.resolveCtor(!isString(optionsOrName) ? optionsOrName.ctor : ctor);
+    public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string,
+                            urlOrEndpoint?: string|ApiEndpoint,
+                            methodOrCtor?: HttpMethod|Constructor|null,
+                            params?: Record<string, ApiEndpointParameterOptions>,
+                            ctor?: Constructor|null): void {
+        ctor = this.resolveCtor(!isString(optionsOrName) ? optionsOrName.ctor : (isFunction(methodOrCtor) ? methodOrCtor : ctor));
         let collection = this.collectionsMap.get(ctor);
         if (isUndefined(collection)) {
             collection = new ApiEndpointCollection();
             this.collectionsMap.set(ctor, collection);
         }
-        collection.registerEndpoint(optionsOrName as any, url as any, method, params);
+        collection.registerEndpoint(optionsOrName as any, urlOrEndpoint as any, methodOrCtor as any, params);
     }
 
     /**

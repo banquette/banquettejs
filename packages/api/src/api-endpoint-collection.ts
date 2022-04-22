@@ -16,21 +16,34 @@ export class ApiEndpointCollection {
      * Register a new endpoint.
      */
     public registerEndpoint(endpoint: ApiEndpointOptionsWithIdentifiers): void;
+    public registerEndpoint(name: string, endpoint: ApiEndpoint): void;
     public registerEndpoint(name: string, url: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>): void;
-    public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string, url?: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>): void {
+    public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string,
+                            urlOrEndpoint?: string|ApiEndpoint,
+                            method?: HttpMethod,
+                            params?: Record<string, ApiEndpointParameterOptions>): void {
+        let endpointName: string;
+        let endpoint: ApiEndpoint|null = null;
         if (isString(optionsOrName)) {
-            optionsOrName = {
-                name: optionsOrName,
-                url: String(url),
-                method: method || HttpMethod.GET,
-                params: params || {}
-            } as ApiEndpointOptionsWithIdentifiers;
+            endpointName = optionsOrName;
+            if (urlOrEndpoint instanceof ApiEndpoint) {
+                endpoint = urlOrEndpoint;
+            } else {
+                optionsOrName = {
+                    name: optionsOrName,
+                    url: String(urlOrEndpoint),
+                    method: method || HttpMethod.GET,
+                    params: params || {}
+                } as ApiEndpointOptionsWithIdentifiers;
+            }
+        } else {
+            endpointName = optionsOrName.name;
         }
-        const endpoint = new ApiEndpoint(optionsOrName);
-        if (!isUndefined(this.endpoints[optionsOrName.name])) {
-            throw new UsageException(`Another endpoint named "${optionsOrName.name}" has already been registered.`);
+        endpoint = endpoint ? endpoint : new ApiEndpoint(optionsOrName);
+        if (!isUndefined(this.endpoints[endpointName])) {
+            throw new UsageException(`Another endpoint named "${endpointName}" has already been registered.`);
         }
-        this.endpoints[optionsOrName.name] = endpoint;
+        this.endpoints[endpointName] = endpoint;
     }
 
     /**
