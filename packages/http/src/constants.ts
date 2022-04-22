@@ -55,7 +55,7 @@ export enum HttpRequestProgressStatus {
 export enum UrlParameterType {
     /**
      * Will be set as a url parameter if a replacement is found in the url.
-     * Otherwise the parameter will be added to the query.
+     * Otherwise, the parameter will be added to the query.
      */
     Auto,
 

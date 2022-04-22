@@ -121,7 +121,7 @@ export class ApiEndpoint {
     }
 
     /**
-     * Create an http request for the endpoint.
+     * Create a http request for the endpoint.
      *
      * @throws UsageException
      * @throws InvalidParameterException

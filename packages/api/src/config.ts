@@ -5,9 +5,9 @@ import { ApiConfigurationInterface } from "./api-configuration.interface";
 export const ApiConfigurationSymbol = Symbol('api');
 Injector.Get(SharedConfiguration).register<ApiConfigurationInterface>(ApiConfigurationSymbol, {
     eventsPriorities: {
-        // Higher priority that 0 (the default of encoders) to be called before them.
+        // Higher priority to be called before encoders.
         beforeRequest: 100,
-        // Lower priority that 0 (the default of decoders) to be called after them.
+        // Lower priority to be called after decoders.
         beforeResponse: -100,
         // Default priority for others.
         requestSuccess: 0,
