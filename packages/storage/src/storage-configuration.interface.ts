@@ -5,7 +5,7 @@ export interface StorageConfigurationInterface extends ConfigurationInterface {
     /**
      * Define the default adapter to use.
      */
-    defaultAdapter: AdapterIdentifier;
+    defaultAdapter: AdapterIdentifier<any>;
 
     /**
      * Configuration specific to the cookie adapter.
