@@ -71,11 +71,6 @@ describe('pattern matching', () => {
     };
     const matchAndCheck = (pattern: string, candidate: any) => {
         const result: MatchResult = match(pattern, candidate[0], candidatesIndex[candidate[0]]);
-        const exp = {
-            candidate: candidate[0],
-            pattern: candidate[1],
-            tags: !isUndefined(candidate[2]) ? candidate[2] : MatchType.Full
-        };
         expect(Object.assign(result, {candidate: candidate[0]})).toMatchObject({
             candidate: candidate[0],
             pattern: candidate[1],

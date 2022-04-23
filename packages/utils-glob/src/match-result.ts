@@ -14,8 +14,8 @@ export interface MatchResult {
      * Hold how the mask's tags match the subject.
      *
      * - MatchType.Full: all tags defined in the pattern have been found
-     * - MatchType.Partial: some of the tags defined in the pattern have been found
-     * - MatchType.None: non of the tags defined in the pattern have been found
+     * - MatchType.Partial: some tags defined in the pattern have been found
+     * - MatchType.None: none of the tags defined in the pattern have been found
      */
     tags: MatchType;
 }
