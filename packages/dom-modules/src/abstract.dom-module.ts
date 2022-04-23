@@ -1,8 +1,9 @@
 import { UsageException } from "@banquette/exception/usage.exception";
 import { areEqual } from "@banquette/utils-misc/are-equal";
 import { Pojo } from "@banquette/utils-type/types";
+import { DomModuleInterface } from "./dom-module.interface";
 
-export abstract class AbstractDomModule {
+export abstract class AbstractDomModule implements DomModuleInterface {
     /**
      * Module options.
      */
@@ -25,16 +26,14 @@ export abstract class AbstractDomModule {
     }
 
     /**
-     * Gets the jQuery element associated with the module.
-     *
-     * @returns jQuery
+     * Gets the HTML element associated with the module.
      */
     public getElement(): HTMLElement {
         return this.element;
     }
 
     /**
-     * Sets the jQuery element associated with the module.
+     * Sets the HTML element associated with the module.
      */
     public setElement(element: HTMLElement): void {
         this.element = element;

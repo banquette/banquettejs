@@ -9,9 +9,9 @@ import { kebabCase } from "@banquette/utils-string/case/kebab-case";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
-import { AbstractDomModule } from "./abstract.dom-module";
+import { Constructor, Pojo } from "@banquette/utils-type/types";
 import { DomModuleConstructor, ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from "./constant";
+import { DomModuleInterface } from "./dom-module.interface";
 
 /**
  * Manages modules created using [dom-*] attributes in the DOM.
@@ -28,7 +28,7 @@ export class DomModulesScanner {
     /**
      * Map DOM elements to their associated DomModule instances.
      */
-    private existingModules: WeakMap<HTMLElement, Record<string, AbstractDomModule>> = new WeakMap<HTMLElement, Record<string, AbstractDomModule>>();
+    private existingModules: WeakMap<HTMLElement, Record<string, DomModuleInterface>> = new WeakMap<HTMLElement, Record<string, DomModuleInterface>>();
 
     /**
      * Scan the DOM in the search of [dom-*] attributes and create the corresponding modules.
@@ -49,8 +49,8 @@ export class DomModulesScanner {
                         attrValue = trim(attrValue);
                     }
                     const dataName = camelCase(attrName);
-                    const moduleInstance: AbstractDomModule = Injector.Get(moduleCtor as Constructor<any>);
-                    let options: any = {};
+                    const moduleInstance: DomModuleInterface = Injector.Get(moduleCtor as Constructor<any>);
+                    let options: Pojo = {};
 
                     let existingModules = that.existingModules.get(element);
                     if (isNullOrUndefined(existingModules)) {
@@ -58,7 +58,7 @@ export class DomModulesScanner {
                         that.existingModules.set(element, existingModules);
                     }
                     if (!isUndefined(existingModules[attrName])) {
-                        throw new UsageException(`Multiple initialization of the jQuery module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}".`);
+                        throw new UsageException(`Multiple initialization of the DOM module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}".`);
                     }
                     if (attrValue) {
                         if (attrValue[0] === "{") {
@@ -69,7 +69,7 @@ export class DomModulesScanner {
                                 }
                             } catch (e) {
                                 throw new UsageException(
-                                    `Failed to decode options of the jQuery module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}". `+
+                                    `Failed to decode options of the DOM module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}". `+
                                     `Please provide a valid JSON object.`,
                                     ExceptionFactory.EnsureException(e)
                                 );
@@ -77,7 +77,7 @@ export class DomModulesScanner {
                         } else {
                             const defaultOptionName: string|null = moduleInstance.getDefaultOptionName();
                             if (defaultOptionName === null) {
-                                throw new UsageException(`No default option name has been defined for the jQuery module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}".`);
+                                throw new UsageException(`No default option name has been defined for the module "${moduleCtor[MODULE_NAME_CTOR_ATTR]}".`);
                             }
                             options[defaultOptionName] = attrValue;
                         }
