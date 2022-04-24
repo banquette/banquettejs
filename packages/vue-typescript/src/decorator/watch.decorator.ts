@@ -35,7 +35,7 @@ export interface WatchDecoratorOptions {
     options: WatchOptions;
 }
 
-export type PrivateWatchOptions = Omit<WatchOptions, 'immediate'> & {immediate: ImmediateStrategy};
+export type PrivateWatchOptions = Omit<WatchOptions, 'immediate'> & {immediate: ImmediateStrategy|false};
 export type WatchMetadata = Omit<WatchDecoratorOptions, 'options'> & {options: PrivateWatchOptions};
 
 /**
@@ -44,7 +44,7 @@ export type WatchMetadata = Omit<WatchDecoratorOptions, 'options'> & {options: P
 export function Watch(source: WatchSource, options: WatchOptions = {}): Function {
     return (prototype: any, propertyKey: string) => {
         const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
-        if (isUndefined(options.immediate) || options.immediate === false) {
+        if (isUndefined(options.immediate)) {
             options.immediate = ImmediateStrategy.Mounted;
         } else if (options.immediate === true) {
             options.immediate = ImmediateStrategy.Sync;
