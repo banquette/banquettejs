@@ -108,7 +108,7 @@ export default class FileComponent extends AbstractVueFormComponent<FileViewMode
      */
     @Prop({type: String, default: null}) public url!: string|null;
     @Prop({type: String, default: null}) public endpoint!: string|null;
-    @Prop({type: String, default: HttpMethod.POST, validate: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: string|null;
+    @Prop({type: String, default: HttpMethod.POST, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: string|null;
     @Prop({type: Object, default: {}}) public urlParams!: Record<string, string>;
 
     /**

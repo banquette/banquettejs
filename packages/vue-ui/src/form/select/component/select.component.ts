@@ -85,13 +85,13 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
     @Prop({name: 'remote:url', type: String, default: null}) public url!: string|null;
     @Prop({name: 'remote:endpoint', type: String, default: null}) public endpoint!: string|null;
     @Prop({name: 'remote:model', type: String, default: null}) public model!: string|null;
-    @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, validate: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: string|null;
+    @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: string|null;
     @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, string>;
 
     /**
      * Search related props.
      */
-    @Prop({name: 'search:type', type: String, validate: (value: any) => ensureInEnum(value, SearchType, SearchType.None) }) public searchType!: SearchType;
+    @Prop({name: 'search:type', type: String, transform: (value: any) => ensureInEnum(value, SearchType, SearchType.None) }) public searchType!: SearchType;
     @Prop({name: 'search:remoteParamName', type: [String, Array], default: 'search'}) public searchRemoteParamName!: string|string[];
     @Prop({name: 'search:minLength', type: Number, default: 0}) public searchMinLength!: number;
 

@@ -44,7 +44,7 @@ export class BaseInputComposable implements HeadlessInterface<BaseInputViewDataI
     /**
      * If `true`, show the debug overlay.
      */
-    @Prop({type: Boolean, default: false}) public debug!: boolean;
+    @Prop({type: Boolean, default: true}) public debug!: boolean;
 
     public readonly viewData: BaseInputViewDataInterface = {} as any;
 

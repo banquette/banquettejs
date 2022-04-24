@@ -30,7 +30,7 @@ export default class TabsComponent extends Vue {
     /**
      * Type of positioning.
      */
-    @Prop({type: String, default: TabsDirection.Top, validate: (value: any) => {
+    @Prop({type: String, default: TabsDirection.Top, transform: (value: any) => {
         return enumToArray(TabsDirection).indexOf(value) > -1 ? value : TabsDirection.Top;
     }}) public direction!: string;
 

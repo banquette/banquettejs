@@ -9,7 +9,7 @@ import { ValidatorComponent } from "./validator.component";
 
 @Component({name: 'bt-validate-is-type', template: false})
 export default class ValidateIsTypeComponent extends ValidatorComponent {
-    @Prop({type: String, required: true, validate: (value: any) => {
+    @Prop({type: String, required: true, transform: (value: any) => {
         if (enumToArray(Type).indexOf(value) < 0) {
             throw new UsageException(`Invalid type "${ensureString(value)}", should be one of: ${enumToArray(Type).join(',')}.`);
         }

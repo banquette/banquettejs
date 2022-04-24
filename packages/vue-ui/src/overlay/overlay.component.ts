@@ -11,7 +11,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 export default class OverlayComponent extends Vue {
     private static zIndexIncrement: number = 0;
 
-    @Prop({type: String, default: 'fixed', validate: (value: any) => value === 'absolute' ? value : 'fixed'})
+    @Prop({type: String, default: 'fixed', transform: (value: any) => value === 'absolute' ? value : 'fixed'})
     public position!: 'absolute' | 'fixed';
 
     /**

@@ -36,7 +36,7 @@ export default class AlertComponent extends Vue {
      * Time to live.
      * If > 0, defines the number of milliseconds the alert will stay alive.
      */
-    @Prop({type: Number, default: null, validate: (v: any) => parseInt(String(v), 10)}) public ttl!: number|null;
+    @Prop({type: Number, default: null, transform: (v: any) => parseInt(String(v), 10)}) public ttl!: number|null;
 
     /**
      * If `true` the end-user can close the alert by themselves.

@@ -7,8 +7,8 @@ import { ValidatorComponent } from "./validator.component";
 
 @Component({name: 'bt-validate-min', template: false})
 export default class ValidateMinComponent extends ValidatorComponent {
-    @Prop({type: [Number, String], required: true, validate: (input: string|number) => ensureNumber(input)}) public count!: number;
-    @Prop({type: String, default: 'auto', validate: (value) => {
+    @Prop({type: [Number, String], required: true, transform: (input: string|number) => ensureNumber(input)}) public count!: number;
+    @Prop({type: String, default: 'auto', transform: (value) => {
             if (['string', 'number', 'auto'].indexOf(value)) {
                 return 'auto';
             }

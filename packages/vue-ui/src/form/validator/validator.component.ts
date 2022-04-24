@@ -24,7 +24,7 @@ export abstract class ValidatorComponent extends Vue {
     /**
      * Form in which search for the controls defined by `targetsPaths`.
      */
-    @Prop({type: Object, default: null, validate: (input: any) => {
+    @Prop({type: Object, default: null, transform: (input: any) => {
         return input instanceof AbstractFormGroup ? input : null;
     }}) public form!: AbstractFormGroup|null;
 
@@ -33,7 +33,7 @@ export abstract class ValidatorComponent extends Vue {
      *
      * For this to work, either the `form` prop must be set or the validator component must be inside a `bt-form`.
      */
-    @Prop({name: 'target', type: [String, Array], default: [], validate: (value) => {
+    @Prop({name: 'target', type: [String, Array], default: [], transform: (value) => {
         return trimArray(isArray(value) ? value : ensureString(value).split(',')).filter((i) => !!i);
     }}) public targetsPaths!: string[];
 
@@ -50,7 +50,7 @@ export abstract class ValidatorComponent extends Vue {
     /**
      * Tags to give to the validator.
      */
-    @Prop({type: [String, Array], default: [], validate: (value) => ensureArray(value)}) public tags?: string[];
+    @Prop({type: [String, Array], default: [], transform: (value) => ensureArray(value)}) public tags?: string[];
 
     /**
      * The form automagically extracted from a parent "bt-form" component.

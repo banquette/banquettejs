@@ -10,7 +10,7 @@ import { ComponentMetadataInterface } from "./component-metadata.interface";
 export interface ThemeVarDecoratorOptions {
     name: string;
     defaultValue?: any;
-    validate?: (value: any) => any;
+    transform?: (value: any) => any;
 }
 
 /**

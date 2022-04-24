@@ -76,7 +76,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      *   - click: will toggle the popover and hide the popover when clicking outside of it
      *   - focus: will set `blur` event as well
      */
-    @Prop({type: [Array, String], default: 'hover', validate: (v: any) => {
+    @Prop({type: [Array, String], default: 'hover', transform: (v: any) => {
         if (isString(v)) {
             return v.split(',').map((i) => trim(i))
         }
@@ -94,7 +94,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      *   - mousedown-outside: hide the popover when a mousedown event is triggered outside of any of its targets
      *   - blur: hide the popover on the `blur` event of the focused target
      */
-    @Prop({type: [Array, String], default: null, validate: (v: any) => {
+    @Prop({type: [Array, String], default: null, transform: (v: any) => {
         if (v === null) {
             return null;
         }
@@ -141,7 +141,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      *   - [0, 20]: The popper is offset 20px away from the reference.
      *   - 20: translates to [0, 20].
      */
-    @Prop({type: [Array, Number], default: [0, 10], validate: (v: any) => {
+    @Prop({type: [Array, Number], default: [0, 10], transform: (v: any) => {
         if (v === null) {
             return null;
         }

@@ -5,6 +5,7 @@ import { proxy } from "@banquette/utils-misc/proxy";
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
+import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -12,6 +13,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, GenericCallback } from "@banquette/utils-type/types";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { WritableComputedOptions, WritableComputedRef } from "@vue/reactivity";
 import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
 import {
@@ -96,7 +98,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             for (const propName of Object.keys(props)) {
                 let propRef = toRef(props, propName);
                 if (!isUndefined(data.props[propName]) && (data.themeable === null || propName !== data.themeable.prop)) {
-                    propRef = ((proxified: Ref, propName: string, validate: GenericCallback|null) => {
+                    propRef = ((proxified: Ref, propName: string, validate: ValidatorInterface|null, transform: GenericCallback|null) => {
                         let lastOriginalValue: any = Symbol('unassigned');
                         let lastModifiedValue: any;
                         return new Proxy(proxified, {
@@ -111,22 +113,33 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                                             }
                                         }
                                     }
-                                    if (validate !== null) {
+                                    if (transform !== null) {
                                         if (lastOriginalValue !== value) {
                                             lastOriginalValue = value;
-                                            lastModifiedValue = validate.apply(inst, [value]);
+                                            lastModifiedValue = transform.apply(inst, [value]);
                                         }
                                         if (!isUndefined(lastModifiedValue)) {
-                                            return lastModifiedValue;
+                                            value = lastModifiedValue;
                                         }
-                                    } else {
-                                        return value;
+                                    }
+                                }
+                                if (validate !== null) {
+                                    const validationResult = validate.validate(value);
+                                    if (validationResult.waiting) {
+                                        throw new UsageException(`Async validators are not allowed to validate props.`);
+                                    }
+                                    if (!validationResult.valid) {
+                                        throw new UsageException(
+                                            `Validation failed for prop "${propName}". `+
+                                            `Reason: ${validationResult.getViolationsStringsArray().join(', ')}.` +
+                                            `Validated value was: "${ensureString(value)}".`
+                                        );
                                     }
                                 }
                                 return value;
                             },
                         });
-                    })(propRef, propName, data.props[propName].validate || null);
+                    })(propRef, propName, data.props[propName].validate || null, data.props[propName].transform || null);
                     propsRefs.push(propRef);
                 }
                 const propPublicName = data.props[propName].name || propName;
@@ -151,8 +164,8 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                                         }
                                     }
                                 }
-                                if (isFunction(_configuration.validate)) {
-                                    value = _configuration.validate.apply(inst, [value]);
+                                if (isFunction(_configuration.transform)) {
+                                    value = _configuration.transform.apply(inst, [value]);
                                 }
                                 return value;
                             },
@@ -439,8 +452,8 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         realSourcesParts.push(parts);
                     }
                     let haveTriggeredImmediately = false;
-                    let initialCallConsumed = true;
-                    let shouldDelayTrigger: boolean = _watchData.options.immediate !== ImmediateStrategy.Sync;
+                    let initialCallConsumed = _watchData.options.immediate !== false;
+                    let shouldDelayTrigger: boolean = _watchData.options.immediate !== ImmediateStrategy.Sync && _watchData.options.immediate !== false;
                     const deepWatcherPreviousValues: Record<string, any> = {};
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
@@ -491,6 +504,8 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             }
                         } else if (initialCallConsumed) {
                             process();
+                        } else {
+                            initialCallConsumed = true;
                         }
                         haveTriggeredImmediately = true;
                     };

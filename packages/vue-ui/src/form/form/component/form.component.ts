@@ -69,11 +69,11 @@ export default class FormComponent extends Vue {
      * Persisting.
      */
     @Prop({name: 'persist:url', type: String, default: null}) public persistUrl!: string|null;
-    @Prop({name: 'persist:method', type: String, validate: (value) => ensureInEnum(ensureString(value).toUpperCase(), HttpMethod, HttpMethod.POST)}) public persistMethod!: HttpMethod;
+    @Prop({name: 'persist:method', type: String, transform: (value) => ensureInEnum(ensureString(value).toUpperCase(), HttpMethod, HttpMethod.POST)}) public persistMethod!: HttpMethod;
     @Prop({name: 'persist:endpoint', type: String, default: null}) public persistEndpoint!: string|null;
     @Prop({name: 'persist:urlParams', type: Object, default: {}}) public persistUrlParams!: Record<string, string>;
     @Prop({name: 'persist:ajax', type: Boolean, default: true}) public persistAjax!: boolean;
-    @Prop({name: 'persist:payloadType', type: String, validate: (input: any) => {
+    @Prop({name: 'persist:payloadType', type: String, transform: (input: any) => {
         if (input === 'form-data') {
             return PayloadTypeFormData;
         } else if (input === 'raw') {

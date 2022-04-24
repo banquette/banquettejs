@@ -23,7 +23,7 @@ export default class RemoteComponent extends Vue {
     @Prop({type: String, default: null}) public url!: string|null;
     @Prop({type: String, default: null}) public endpoint!: string|null;
     @Prop({type: String, default: null}) public model!: string|null;
-    @Prop({type: String, default: HttpMethod.GET, validate: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: string|null;
+    @Prop({type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: string|null;
     @Prop({type: Object, default: {}}) public urlParams!: Record<string, string>;
 
     @Expose() public response: HttpResponse<any>|null = null;

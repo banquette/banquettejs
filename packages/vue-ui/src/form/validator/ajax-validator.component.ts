@@ -43,7 +43,7 @@ export default class ValidateAjaxComponent extends ValidatorComponent {
      * Http method to use.
      * Only used if no endpoint is defined.
      */
-    @Prop({type: String, validate: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: HttpMethod;
+    @Prop({type: String, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: HttpMethod;
 
     /**
      * Name of the property that contains the boolean response in the server's response.

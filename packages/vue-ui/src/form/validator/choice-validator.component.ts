@@ -7,7 +7,7 @@ import { ValidatorComponent } from "./validator.component";
 
 @Component({name: 'bt-validate-choice', template: false})
 export default class ValidateChoiceComponent extends ValidatorComponent {
-    @Prop({type: Array, required: true, validate: (value) => ensureArray(value)}) public choices!: any[];
+    @Prop({type: Array, required: true, transform: (value) => ensureArray(value)}) public choices!: any[];
 
     /**
      * @inheritDoc

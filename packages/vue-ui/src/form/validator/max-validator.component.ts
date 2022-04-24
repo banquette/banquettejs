@@ -7,7 +7,7 @@ import { ValidatorComponent } from "./validator.component";
 @Component({name: 'bt-validate-max', template: false})
 export default class ValidateMaxComponent extends ValidatorComponent {
     @Prop({type: Number, required: true}) public count!: number;
-    @Prop({type: String, default: 'auto', validate: (value) => {
+    @Prop({type: String, default: 'auto', transform: (value) => {
         if (['string', 'number', 'auto'].indexOf(value)) {
             return 'auto';
         }

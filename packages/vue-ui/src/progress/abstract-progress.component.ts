@@ -13,7 +13,7 @@ export class AbstractProgressComponent extends Vue {
     @Prop({
         type: Number,
         default: null,
-        validate: function(this: AbstractProgressComponent, v: any) {
+        transform: function(this: AbstractProgressComponent, v: any) {
             return v !== null ? Math.max(this.progressMin, Math.min(this.progressMax, v)) : null;
         }
     }) public progress!: number|null;

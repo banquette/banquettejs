@@ -69,7 +69,7 @@ export default class ButtonComponent extends Vue {
     @ThemeVar({
         name: 'animation.clickDuration',
         defaultValue: '30ms',
-        validate: function(v) { return parseCssDuration(v) }
+        transform: function(v) { return parseCssDuration(v) }
     }) protected clickDuration!: number;
 
     @Expose() public active: boolean = false;

@@ -36,7 +36,7 @@ export default class TableComponent extends Vue {
     /**
      * Manually provided set of items.
      */
-    @Prop({default: null, validate: (input: any) => ensureArray(input)}) public items!: any[]|null;
+    @Prop({default: null, transform: (input: any) => ensureArray(input)}) public items!: any[]|null;
 
     /**
      * @see ListViewModel

@@ -11,7 +11,7 @@ export default class ProgressCircularComponent extends AbstractProgressComponent
     /**
      * Width of the stroke.
      */
-    @Prop({type: Number, default: 3.5, validate: (v: any) => parseFloat(v)}) public strokeWidth!: number;
+    @Prop({type: Number, default: 3.5, transform: (v: any) => parseFloat(v)}) public strokeWidth!: number;
 
     @Computed() public get viewBox(): string {
         return `0 0 ${32 + this.strokeWidth} ${32 + this.strokeWidth}`;

@@ -29,7 +29,7 @@ export default class AlertsStackComponent extends Vue {
     @Prop({
         type: String,
         default: StackPosition.TopRight,
-        validate: (value) => ensureInEnum(value, StackPosition, StackPosition.TopRight)
+        transform: (value) => ensureInEnum(value, StackPosition, StackPosition.TopRight)
     }) public position!: StackPosition;
 
     /**

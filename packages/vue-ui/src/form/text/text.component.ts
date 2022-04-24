@@ -46,7 +46,7 @@ export default class TextComponent extends NewAbstractVueFormComponent<TextViewD
      * Define the number of rows of the textarea.
      * Only applicable if multiline.
      */
-    @Prop({type: Number, default: null, validate: (v: any) => v !== null ? parseInt(v, 10) : null}) public rows!: number|null;
+    @Prop({type: Number, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public rows!: number|null;
 
     // Template refs
     @TemplateRef('inputWrapper') public inputWrapper!: HTMLElement|null;
