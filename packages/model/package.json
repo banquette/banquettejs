@@ -13,7 +13,6 @@
     "dependencies": {
         "object-observer": "^4.6.0",
         "@banquette/dependency-injection": "^0.1.0",
-        "@banquette/event": "^0.1.0",
         "@banquette/exception": "^0.1.0",
         "@banquette/object-observer": "^0.1.0",
         "@banquette/utils-misc": "^0.1.0",

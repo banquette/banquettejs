@@ -18,6 +18,7 @@
         "@banquette/utils-object": "^0.1.0",
         "@banquette/utils-random": "^0.1.0",
         "@banquette/utils-string": "^0.1.0",
-        "@banquette/utils-type": "^0.1.0"
+        "@banquette/utils-type": "^0.1.0",
+        "@banquette/validation": "^0.1.0"
     }
 }
