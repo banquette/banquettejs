@@ -27,7 +27,7 @@ export interface DirectiveDefinition {
  * The VueBuilder is also used by the "VueApp" DOM module to create the app instance.
  */
 export class VueBuilder {
-    private static DEFAULT_GROUP = 'default';
+    public static DEFAULT_GROUP = 'default';
 
     /**
      * Components and directives to declare in a new Vue instance, indexed by group name.
