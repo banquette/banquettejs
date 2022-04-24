@@ -1,4 +1,5 @@
 import { UsageException } from "@banquette/exception/usage.exception";
+import { camelCase } from "@banquette/utils-string/case/camel-case";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
@@ -24,7 +25,7 @@ export function resolveImportPublicName(originalPrefix: string|undefined, origin
         return prefixOrAlias + ':' + originalName;
     }
     if (isType<AliasesMap>(prefixOrAlias, isObject)) {
-        return !isUndefined(prefixOrAlias[originalName]) ? String(prefixOrAlias[originalName]) : false;
+        return !isUndefined(prefixOrAlias[originalName]) ? camelCase(String(prefixOrAlias[originalName])) : false;
     }
     if (isFunction(prefixOrAlias)) {
         return (prefixOrAlias as AliasResolver)(originalName);
