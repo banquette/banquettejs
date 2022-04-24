@@ -1,6 +1,3 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { kebabCase } from "@banquette/utils-string/case/kebab-case";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
@@ -66,14 +63,16 @@ export type ComponentMetadata = Omit<ComponentDecoratorOptions, 'name'> & {name:
  * You must put this on every class you want to be used like a Vue component.
  * The component will automatically be registered into the VueBuilder in the specified groups.
  */
-export function Component(name: string): any;
+export function Component(name?: string): any;
 export function Component(options: ComponentDecoratorOptions): any;
-export function Component(options: ComponentDecoratorOptions|string = {}): any {
+export function Component(options?: ComponentDecoratorOptions|string): any {
     return (ctor: Constructor) => {
         let vccOpts: any = null;
         const data: ComponentMetadataInterface = getOrCreateComponentMetadata(ctor.prototype);
         if (isString(options)) {
             options = {name: options};
+        } else {
+            options = options || {};
         }
         data.component = options as ComponentMetadata;
         Object.defineProperty(ctor, VUE_CLASS_COMPONENT_OPTIONS, {
@@ -86,17 +85,8 @@ export function Component(options: ComponentDecoratorOptions|string = {}): any {
                 return vccOpts;
             }
         });
-        if (isUndefined(options.name)) {
-            if (!isNonEmptyString(ctor.name)) {
-                throw new UsageException(
-                    `Unable get the component name. Please set the "name" option in the "@Component" decorator ` +
-                    `or ensure that constructors names are kept when you build your project for production.`
-                );
-            }
-            options.name = kebabCase(ctor.name) as string;
-        }
-        if (options.group !== null) {
-            VueBuilder.RegisterComponent(options.name, ctor, options.group);
+        if (!isUndefined(options.name)) {
+            VueBuilder.RegisterComponent(options.name, ctor, options.group || VueBuilder.DEFAULT_GROUP);
         }
     };
 }
