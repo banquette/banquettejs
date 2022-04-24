@@ -84,6 +84,17 @@ export abstract class Vue implements ComponentPublicInstance {
     }
 
     /**
+     * Test if a slot exists, render it if so and extract is text content.
+     * Return `null` is the slot doesn't exist.
+     */
+    protected getSlotTextContent(name: string): string|null {
+        if (!this.hasSlot(name)) {
+            return null;
+        }
+        return this.getVNodesText((this.$slots as any)[name]());
+    }
+
+    /**
      * Try to get a reference on a specific parent component.
      */
     protected getParent<T extends AbstractConstructor<Vue>>(component: T|string): InstanceType<T>|null {
