@@ -10,17 +10,19 @@ import { GenericCallback } from "@banquette/utils-type/types";
  * @returns function
  */
 export function debounce(func: GenericCallback, wait: number, immediate: boolean = true): GenericCallback {
-    let timeout: number|undefined;
+    let timeout: number|null = null;
     return function() {
         // @ts-ignore
         const context = this;
         const args: any = arguments;
         const later = () => {
-            timeout = undefined;
+            timeout = null;
             func.apply(context, args);
         };
         const callNow = immediate && !timeout;
-        window.clearTimeout(timeout);
+        if (timeout) {
+            window.clearTimeout(timeout);
+        }
         timeout = window.setTimeout(later, wait);
         if (callNow) {
             func.apply(context, args);
