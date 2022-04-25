@@ -319,6 +319,10 @@ export class TableViewModel {
             // Very important to stop the propagation so the built-in processor from the api package is not executed.
             event.stopPropagation();
         }, config.table.apiEventsPriorities.beforeResponse, [], [ApiProcessorTag]);
+
+        this.globalDispatcher.subscribe(ApiEvents.RequestSuccess, (event: ApiBeforeResponseEvent) => {
+            event.stopPropagation();
+        }, 1, [], [ApiProcessorTag]);
     }
 
     /**
