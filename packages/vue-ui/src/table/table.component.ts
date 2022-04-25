@@ -17,7 +17,7 @@ import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
-import FormComponent from "../form/form/component/form.component.vue";
+import FormComponent from "../form/form/form.component.vue";
 import { RemoteComposable } from "../misc/remote/remote.composable";
 import { TeleportDirective } from "../misc/teleport.directive";
 import { ProgressCircularComponent } from "../progress/progress-circular";
