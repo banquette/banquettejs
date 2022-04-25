@@ -493,14 +493,17 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             }
                         };
                         if (shouldDelayTrigger) {
-                            shouldDelayTrigger = false;
+                            const initialProcess = () => {
+                                shouldDelayTrigger = false;
+                                process();
+                            };
                             initialCallConsumed = false;
                             if (_watchData.options.immediate === ImmediateStrategy.BeforeMount) {
-                                onBeforeMount(process);
+                                onBeforeMount(initialProcess);
                             } else if (_watchData.options.immediate === ImmediateStrategy.Mounted) {
-                                onMounted(process);
+                                onMounted(initialProcess);
                             } else {
-                                nextTick().then(process);
+                                nextTick().then(initialProcess);
                             }
                         } else if (initialCallConsumed) {
                             process();
