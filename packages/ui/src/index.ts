@@ -12,6 +12,10 @@ export * from './headless.interface';
 export * from './form/form-view-model.interface';
 export * from './form/form-view-model';
 
+// Form
+export * from './form/form/headless-form-view.model';
+export * from './form/form/headless-form-view-data.interface';
+
 // Checkbox
 export * from './form/checkbox/headless-checkbox-view.model';
 export * from './form/checkbox/headless-checkbox-view-data.interface';

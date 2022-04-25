@@ -1,12 +1,12 @@
-<form class="bt-form" action="" method="post" @submit.prevent="submitWithEnter && submit()">
-    <slot name="loading" v-if="loading"></slot>
-    <slot name="persisting" v-if="persisting"></slot>
-    <slot name="load-error" v-if="loadError" :vm="vm" :error="errorsMap.load"></slot>
-    <slot name="persist-error" v-if="persistError" :vm="vm" :error="errorsMap.persist"></slot>
-    <slot name="persist-success" v-if="persistSuccess" :vm="vm"></slot>
+<form class="bt-form" action="" @submit.prevent="submitWithEnter && submit()">
+    <slot name="loading" v-if="v.loading"></slot>
+    <slot name="persisting" v-if="v.persisting"></slot>
+    <slot name="load-error" v-if="v.loadError" :v="v" :error="v.errorsMap.load"></slot>
+    <slot name="persist-error" v-if="v.persistError" :v="v" :error="v.errorsMap.persist"></slot>
+    <slot name="persist-success" v-if="v.persistSuccess" :v="v"></slot>
 
     <!-- Main slot, that's where the form should be defined -->
-    <slot v-if="visible" :vm="vm" :form="form" :model="modelEntity" :control="getOrCreateControl" :submit="submit" :errors="errorsMap"></slot>
+    <slot v-if="visible" :v="v" :form="form" :model="modelInstance" :control="v.getControl" :submit="submit" :errors="v.errorsMap"></slot>
 
     <!-- This slot is only here to offer a way to organize the HTML markup. -->
     <!-- This way the end-user can regroup all validators in it so the HTML is easier to read. -->
