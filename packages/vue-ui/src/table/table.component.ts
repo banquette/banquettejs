@@ -16,6 +16,7 @@ import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { anyToTsInst } from "@banquette/vue-typescript/utils/converters";
 import { Vue } from "@banquette/vue-typescript/vue";
 import FormComponent from "../form/form/form.component.vue";
 import { RemoteComposable } from "../misc/remote/remote.composable";
@@ -148,10 +149,11 @@ export default class TableComponent extends Vue {
      * Watch changes on the filters form components.
      */
     private watchFilteringForm(): FormObject {
-        if (!this.$refs.form || !this.$refs.form.form) {
+        const formComponent = anyToTsInst(this.$refs.form);
+        if (!formComponent) {
             throw new UsageException('Failed to bind filtering form.');
         }
-        const form = this.$refs.form.form;
+        const form = formComponent.vm.form;
         form.setDefaultValue(this.vm.filtering.getActiveFilters());
         form.reset();
         form.onValueChanged(() => {
