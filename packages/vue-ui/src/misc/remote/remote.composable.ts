@@ -16,7 +16,7 @@ export class RemoteComposable {
     @Prop({type: String, default: null}) public url!: string|null;
     @Prop({type: String, default: null}) public endpoint!: string|null;
     @Prop({type: String, default: null}) public model!: string|null;
-    @Prop({type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: string|null;
+    @Prop({type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
     @Prop({type: Object, default: {}}) public urlParams!: Record<string, string>;
 
     /**
@@ -29,7 +29,7 @@ export class RemoteComposable {
         this.module.updateConfiguration({
             url: this.url,
             endpoint: this.endpoint,
-            method: ensureInEnum(this.method, HttpMethod, HttpMethod.GET),
+            method: this.method,
             urlParams: this.urlParams,
             model: this.model
         });

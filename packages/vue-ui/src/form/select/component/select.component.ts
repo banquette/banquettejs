@@ -85,7 +85,7 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
     @Prop({name: 'remote:url', type: String, default: null}) public url!: string|null;
     @Prop({name: 'remote:endpoint', type: String, default: null}) public endpoint!: string|null;
     @Prop({name: 'remote:model', type: String, default: null}) public model!: string|null;
-    @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: string|null;
+    @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
     @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, string>;
 
     /**
@@ -271,7 +271,7 @@ export default class SelectComponent extends NewAbstractVueFormComponent<SelectV
         this.vm.remote.updateConfiguration({
             url: this.url,
             endpoint: this.endpoint,
-            method: ensureInEnum(this.method, HttpMethod, HttpMethod.GET),
+            method: this.method,
             urlParams: this.urlParams,
             model: this.model
         });
