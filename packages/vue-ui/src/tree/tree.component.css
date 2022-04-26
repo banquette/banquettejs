@@ -1,0 +1,79 @@
+
+.bt-tree {
+    --tree-item-text-color: var(--bt-tree-item-text-color, var(--bt-text-color-base));
+    --tree-item-text-hover-color: var(--bt-tree-item-text-hover-color, var(--tag-text-color));
+
+    --tree-item-font-family: var(--bt-tree-item-font-family, var(--bt-font-family-base));
+    --tree-item-font-size: var(--bt-tree-item-font-size, var(--bt-font-size-sm));
+    --tree-item-font-weight: var(--bt-tree-item-font-weight, var(--bt-font-weight-normal));
+
+    --tree-item-background-color: var(--bt-tree-item-background-color, transparent);
+    --tree-item-background-hover-color: var(--bt-tree-item-background-hover-color, var(--bt-color-gray-50));
+
+    --tree-item-icon-color: var(--bt-tree-item-background-color, var(--bt-text-color-light));
+}
+
+.bt-tree {
+    width: 100%;
+
+    .items-wrapper {
+        display: none;
+    }
+
+    .bt-tree-item {
+        & > .title {
+            display: flex;
+            align-items: center;
+            color: var(--tree-item-text-color);
+            background: var(--tree-item-background-color);
+            gap: 0.4em;
+            padding: 0.1em;
+            border-radius: 4px;
+            cursor: pointer;
+
+            --bt-progress-circular-size: 1em;
+
+            &:hover {
+                background: var(--tree-item-background-hover-color);
+            }
+
+            & > .addon {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                :deep(svg) {
+                    fill: var(--tree-item-icon-color);
+                    transform: rotateZ(-90deg);
+                    transform-origin: center;
+                }
+            }
+        }
+
+        .unknown-text {
+            color: var(--tree-item-icon-color);
+        }
+
+        &[data-expanded] {
+            & > .title > .addon :deep(svg) {
+                transform: rotateZ(0);
+            }
+
+            & > .items-wrapper {
+                display: block;
+            }
+        }
+
+        &[data-empty] {
+            & > .title > .addon :deep(svg) {
+                opacity: 0;
+            }
+        }
+    }
+
+    & > .bt-tree-item {
+        margin: 0;
+    }
+}

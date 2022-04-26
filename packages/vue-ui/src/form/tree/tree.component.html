@@ -1,0 +1,15 @@
+<div class="bt-form-tree" v-bt-bind-theme>
+    <bt-form-base-input :v="v">
+        <bt-tree v-bind="$attrs">
+            <template #root="sp"><slot name="root" v-bind="sp"></slot></template>
+            <template #node="sp">
+                <div class="bt-tree-title-wrapper">
+                    <bt-form-checkbox :control="getCheckboxData(sp.node).control"
+                                      :indeterminate="getCheckboxData(sp.node).indeterminate"
+                                      @click.stop></bt-form-checkbox>
+                    <slot name="node" v-bind="sp">{{ sp.node.label }}</slot>
+                </div>
+            </template>
+        </bt-tree>
+    </bt-form-base-input>
+</div>
