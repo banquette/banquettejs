@@ -97,7 +97,6 @@ export const HeadlessFormViewModelEvents = {
     ValidateError: Symbol('validate-error')
 };
 
-
 export const ErrorTypeStatusMap: Record<ErrorType, Action> = {
     [ErrorType.Load]: Action.Load,
     [ErrorType.Persist]: Action.Persist,

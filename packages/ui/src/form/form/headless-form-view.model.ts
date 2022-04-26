@@ -6,6 +6,7 @@ import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { BasicState } from "@banquette/form/constant";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
+import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
 import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
 import { FormComponentInterface } from "@banquette/form/form-component.interface";
 import { FormControl } from "@banquette/form/form-control";
@@ -19,6 +20,7 @@ import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/po
 import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { debounce } from "@banquette/utils-misc/debounce";
 import { proxy } from "@banquette/utils-misc/proxy";
+import { extend } from "@banquette/utils-object/extend";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isObject, isObjectLiteral } from "@banquette/utils-type/is-object";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
@@ -34,7 +36,8 @@ import {
     ErrorType,
     ErrorTypeStatusMap,
     FormPersistTag,
-    HeadlessFormViewModelEvents, ErrorTypeEventMap
+    HeadlessFormViewModelEvents,
+    ErrorTypeEventMap
 } from "./constant";
 import { FormActionErrorEventArg } from "./event/form-action-error.event-arg";
 import { FormPersistEventArg } from "./event/form-persist.event-arg";
@@ -45,7 +48,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     /**
      * @inheritDoc
      */
-    public readonly viewData: ViewDataType;
+    public readonly viewData!: ViewDataType;
 
     /**
      * The actual form object being edited.
@@ -104,16 +107,18 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     private eventDispatcher = new EventDispatcher();
 
     public constructor() {
-        this.viewData = {
-            errorsMap: {},
-            getControl: proxy(this.getControl, this)
-        } as any;
+        this.setViewData({getControl: proxy(this.getControl, this)} as any);
         this.updateState(Action.Load, Status.Working);
         this.unsubscribeMethods.push(this.loadRemote.onConfigurationChange(proxy(this.load, this)));
         this.unsubscribeMethods.push(this.form.onStateChanged((event: StateChangedFormEvent) => {
             if (event.state === BasicState.Validating && !event.newValue && this.form.valid) {
                 this.removeError(ErrorType.Validate);
             }
+            (this.viewData.form as any)[event.state] = event.newValue;
+        }));
+
+        this.unsubscribeMethods.push(this.form.onValueChanged((event: ValueChangedFormEvent) => {
+            this.viewData.form.value = event.newValue;
         }));
     }
 
@@ -121,7 +126,30 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      * @inheritDoc
      */
     public setViewData(viewData: ViewDataType): void {
-        (this as Writeable<HeadlessFormViewModel>).viewData = viewData;
+        (this as Writeable<HeadlessFormViewModel>).viewData = extend(viewData, {
+            form: {
+                invalid         : false,
+                notValidated    : true,
+                validating      : false,
+                busy            : false,
+                disabled        : true,
+                dirty           : false,
+                touched         : false,
+                changed         : false,
+                value           : undefined,
+
+                // Inverse states, always read-only.
+                get valid(): boolean                { return !this.invalid },
+                get validated(): boolean            { return !this.notValidated },
+                get notValidating(): boolean        { return !this.validated },
+                get validatedAndValid(): boolean    { return this.validated && this.valid },
+                get pristine(): boolean             { return !this.dirty },
+                get untouched(): boolean            { return !this.touched },
+                get unchanged(): boolean            { return !this.changed },
+                get notBusy()                       { return !this.busy },
+                get enabled()                       { return !this.disabled }
+            }
+        });
     }
 
     /**

@@ -29,6 +29,30 @@ export interface HeadlessFormViewDataInterface {
     errorsMap: Record<string, string|null>;
 
     /**
+     * Form state and errors.
+     */
+    form: {
+        valid: boolean;
+        invalid: boolean;
+        validated: boolean;
+        notValidated: boolean;
+        validating: boolean;
+        notValidating: boolean;
+        validatedAndValid: boolean;
+        busy: boolean;
+        notBusy: boolean;
+        enabled: boolean;
+        disabled: boolean;
+        dirty: boolean;
+        pristine: boolean;
+        touched: boolean;
+        untouched: boolean;
+        changed: boolean;
+        unchanged: boolean;
+        value: any;
+    };
+
+    /**
      * Try to get a control, and create it if missing.
      */
     getControl(path: string, throwIfMissing?: boolean): FormComponentInterface|null;

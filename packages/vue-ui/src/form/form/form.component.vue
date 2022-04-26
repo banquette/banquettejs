@@ -77,7 +77,6 @@ export default class FormComponent extends Vue {
     }
 
     @Expose() public v!: HeadlessFormViewDataInterface;
-    @Expose(null,  false) public form!: FormObject;
     @Expose('modelInstance',  false) public model!: any;
 
     /**
@@ -85,17 +84,19 @@ export default class FormComponent extends Vue {
      */
     private vm!: HeadlessFormViewModel;
 
+    /**
+     * Vue lifecycle.
+     */
     public beforeMount(): void {
         this.vm = new HeadlessFormViewModel();
         this.v = this.vm.viewData;
 
         // So the proxy is used by the headless view model.
         this.vm.setViewData(this.v);
-        this.form = this.vm.form;
     }
 
     /**
-     * Vue lifecycle hook.
+     * Vue lifecycle.
      */
     public mounted(): void {
         this.vm.load();
