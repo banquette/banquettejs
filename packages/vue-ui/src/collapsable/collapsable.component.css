@@ -1,0 +1,19 @@
+.bt-collapsable {
+    --collapsable-transition-duration: var(--bt-collapsable-transition-duration, 0.2s);
+}
+
+.bt-collapsable {
+    .overflow-wrapper {
+        height: 0;
+        overflow: hidden;
+        transition: height var(--collapsable-transition-duration) ease-in-out;
+    }
+
+    .content-wrapper {
+        overflow: hidden;
+
+        .hidden {
+            display: none;
+        }
+    }
+}
