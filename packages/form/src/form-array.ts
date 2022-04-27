@@ -54,7 +54,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         });
         this.dispatch(FormEvents.ComponentAdded, () => {
             const index: number = this.children_.length - 1;
-            return new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index)
+            return new ComponentAddedFormEvent<number>(this, this.children_[index].decorated, index);
         });
     }
 
