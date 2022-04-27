@@ -6,7 +6,6 @@ import { HttpMethod } from "@banquette/http/constants";
 import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
-import { HeadlessFormViewDataInterface } from "@banquette/ui/form/form/headless-form-view-data.interface";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { proxy } from "@banquette/utils-misc/proxy";
@@ -18,12 +17,13 @@ import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { FormViewDataInterface } from "./form-view-data.interface";
 
 @Component({
     name: 'bt-form',
     emits: ['load', 'submit']
 })
-export default class FormComponent<ViewData extends HeadlessFormViewDataInterface = HeadlessFormViewDataInterface, ModelType extends object = any> extends Vue {
+export default class FormComponent<ViewData extends FormViewDataInterface = FormViewDataInterface, ModelType extends object = any> extends Vue {
     /**
      * Optional model to bind the form with.
      */
@@ -92,6 +92,7 @@ export default class FormComponent<ViewData extends HeadlessFormViewDataInterfac
      */
     public beforeMount(): void {
         (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel<ViewData, ModelType>();
+        this.vm.viewData.__version = 0;
         this.v = this.vm.viewData as ViewData;
 
         // So the proxy is used by the headless view model.
@@ -107,6 +108,15 @@ export default class FormComponent<ViewData extends HeadlessFormViewDataInterfac
         this.unsubscribeFunctions.push(this.vm.onBeforeValidate(proxy(this.onBeforeValidate, this)));
         this.unsubscribeFunctions.push(this.vm.onValidateSuccess(proxy(this.onValidateSuccess, this)));
         this.unsubscribeFunctions.push(this.vm.onValidateError(proxy(this.onValidateError, this)));
+
+        this.unsubscribeFunctions.push(this.vm.form.onControlAdded(() => {
+            // @see FormViewDataInterface
+            this.v.__version++;
+        }, 0, false));
+        this.unsubscribeFunctions.push(this.vm.form.onControlRemoved(() => {
+            // @see FormViewDataInterface
+            this.v.__version++;
+        }, 0, false));
     }
 
     /**

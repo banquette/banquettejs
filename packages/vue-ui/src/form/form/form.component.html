@@ -1,4 +1,4 @@
-<form class="bt-form" action="" @submit.prevent="submitWithEnter && submit()">
+<form class="bt-form" action="" @submit.prevent="submitWithEnter && submit()" :data-version="v.__version < 0 ? '' : null">
     <slot name="loading" v-if="v.loading"></slot>
     <slot name="persisting" v-if="v.persisting"></slot>
     <slot name="load-error" v-if="v.loadError" :v="v" :error="v.errorsMap.load"></slot>
