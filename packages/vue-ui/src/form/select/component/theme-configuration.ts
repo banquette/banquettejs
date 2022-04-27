@@ -13,7 +13,10 @@ export const ThemeConfiguration = {
             tagBackgroundColor: '@-tag-background-color',
             tagMaxWidth: '@-tag-max-width',
             tagCloseFillColor: '@-tag-close-fill-hover-color',
-            tagCloseBackgroundHoverColor: '@-tag-close-background-hover-color'
+            tagCloseBackgroundHoverColor: '@-tag-close-background-hover-color',
+
+            // Addons
+            clearIconColor: '@-clear-icon-color'
         }},
         selectors: {}
     }

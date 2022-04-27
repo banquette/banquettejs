@@ -1,3 +1,4 @@
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { HttpMethod } from "@banquette/http/constants";
 import { SearchType, ChoicesPropResolver } from "@banquette/ui/form/select/constant";
 import { ChoiceOrigin } from "@banquette/ui/form/select/constant";
@@ -8,6 +9,7 @@ import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback, Primitive } from "@banquette/utils-type/types";
+import { IconCancel } from "@banquette/vue-material-icons/icon-cancel";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
@@ -35,7 +37,7 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ErrorComponent, ProgressCircularComponent],
+    components: [ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ErrorComponent, ProgressCircularComponent, IconCancel],
     directives: [ClickOutsideDirective],
     emits: ['focus', 'blur', 'change']
 })
@@ -75,6 +77,11 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @Prop({type: Boolean, default: false}) public allowCreation!: boolean;
 
     /**
+     * If `true`, the user can clear the value of the select.
+     */
+    @Prop({type: Boolean, default: false}) public clearable!: boolean;
+
+    /**
      * Holds the props exposed by the base input.
      */
     @Import(BaseInputComposable, false) public baseComposable!: BaseInputComposable;
@@ -105,6 +112,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @TemplateRef('tagSelectionWrapper') private tagSelectionWrapperEl!: HTMLElement|null;
 
     private inputWrapperResizeUnsubscribe: VoidCallback|null = null;
+    private unsubscribeMethods: UnsubscribeFunction[] = [];
 
     public constructor() {
         super();
@@ -238,7 +246,6 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.vm.setChoices(this.choices || [], PropOrigin);
     }
 
-    private tmp = 0;
     @Watch('v.control.value')
     private onSelectionChange(): void {
         this.updateInput();

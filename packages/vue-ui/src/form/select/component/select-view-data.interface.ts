@@ -57,8 +57,6 @@ export interface SelectViewDataInterface extends HeadlessSelectViewDataInterface
      */
     inputPlaceholder: string;
 
-
-
     /**
      * A shortcut to `multiple && isHeightLocked`.
      */

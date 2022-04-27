@@ -9,6 +9,8 @@
     --form-select-tag-max-width: var(--bt-form-select-tag-max-width, 200px);
     --form-select-tag-close-fill-hover-color: var(--bt-form-select-close-fill-hover-color, var(--form-select-tag-text-color));
     --form-select-tag-close-background-hover-color: var(--bt-form-select-close-background-hover-color, var(--form-select-tag-border-color));
+
+    --form-select-clear-icon-color: var(--bt-form-select-clear-icon-color, var(--bt-text-color-light));
 }
 
 .bt-form-select :deep(.bt-form-base-input) {
@@ -120,6 +122,11 @@
                     }
                 }
             }
+        }
+
+        .floating-extras .clearable-icon svg {
+            width: 1.2em;
+            fill: var(--form-select-clear-icon-color);
         }
 
         .floating-extras .caret-icon {
