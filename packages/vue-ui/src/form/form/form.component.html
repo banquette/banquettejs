@@ -6,7 +6,7 @@
     <slot name="persist-success" v-if="v.persistSuccess" :v="v"></slot>
 
     <!-- Main slot, that's where the form should be defined -->
-    <slot v-if="visible" :v="v" :model="modelInstance" :control="v.getControl" :submit="submit" :errors="v.errorsMap"></slot>
+    <slot v-if="visible" :v="v" :control="v.getControl" :submit="submit" :errors="v.errorsMap"></slot>
 
     <!-- This slot is only here to offer a way to organize the HTML markup. -->
     <!-- This way the end-user can regroup all validators in it so the HTML is easier to read. -->

@@ -1,5 +1,6 @@
 import { RemoteException } from "@banquette/api/exception/remote.exception";
 import { Injector } from "@banquette/dependency-injection/injector";
+import { EventArg } from "@banquette/event/event-arg";
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { ExceptionFactory } from "@banquette/exception/exception.factory";
@@ -44,7 +45,7 @@ import { FormPersistEventArg } from "./event/form-persist.event-arg";
 import { RemoteValidationException } from "./exception/remote-validation.exception";
 import { HeadlessFormViewDataInterface } from "./headless-form-view-data.interface";
 
-export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInterface = HeadlessFormViewDataInterface> implements HeadlessInterface<ViewDataType> {
+export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInterface = HeadlessFormViewDataInterface, ModelType extends object = any> implements HeadlessInterface<ViewDataType> {
     /**
      * @inheritDoc
      */
@@ -63,7 +64,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     /**
      * Instance of the mode on edition, if there is one.
      */
-    public readonly modelInstance: object|null = null;
+    public readonly modelInstance: ModelType|null = null;
 
     /**
      * Optional type of the model to bind the form with.
@@ -107,7 +108,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     private eventDispatcher = new EventDispatcher();
 
     public constructor() {
-        this.setViewData({getControl: proxy(this.getControl, this)} as any);
+        this.setViewData({errorsMap: {}, getControl: proxy(this.getControl, this)} as any);
         this.updateState(Action.Load, Status.Working);
         this.unsubscribeMethods.push(this.loadRemote.onConfigurationChange(proxy(this.load, this)));
         this.unsubscribeMethods.push(this.form.onStateChanged((event: StateChangedFormEvent) => {
@@ -116,7 +117,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             }
             (this.viewData.form as any)[event.state] = event.newValue;
         }));
-
         this.unsubscribeMethods.push(this.form.onValueChanged((event: ValueChangedFormEvent) => {
             this.viewData.form.value = event.newValue;
         }));
@@ -214,7 +214,11 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     this.load();
                     return ;
                 }
-                this.onAfterLoad();
+                this.updateState(Action.Load, Status.Success);
+                this.form.enable();
+                this.form.reset();
+                this.bindModel();
+                this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.LoadSuccess);
                 return ;
             }
             try {
@@ -238,7 +242,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             firstLoad = false;
             this.form.disable();
             this.updateState(Action.Load, Status.Working);
-            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.LoadStart);
+            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BeforeLoad);
             loadNext();
         };
     })(), 0, false);
@@ -255,11 +259,10 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                 return;
             }
             const persistEvent = new FormPersistEventArg(this.modelInstance ? this.modelInstance : this.form.value);
-            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.Persist, persistEvent);
+            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BeforePersist, persistEvent);
             if (this.persistRemote.isApplicable) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
-                this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistStart, persistEvent);
                 const response: HttpResponse<any> = this.persistRemote.send(this.modelInstance ? this.modelInstance : this.form.value, {}, [FormTag, FormPersistTag]);
                 try {
                     await response.promise;
@@ -298,7 +301,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     public async validate(): Promise<boolean> {
         this.updateState(Action.Validate, Status.Working);
-        this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.ValidateStart);
+        this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BeforeValidate);
         if (!(await this.form.validate())) {
             this.updateState(Action.Validate, Status.Failure);
             this.setError(ErrorType.Validate, null);
@@ -360,6 +363,69 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     }
 
     /**
+     * By notified when the form starts loading.
+     */
+    public onBeforeLoad(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforeLoad, cb);
+    }
+
+    /**
+     * By notified when the form finishes its loading with success.
+     */
+    public onLoadSuccess(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.LoadSuccess, cb);
+    }
+
+    /**
+     * By notified when the form fails to load.
+     */
+    public onLoadError(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.LoadError, cb);
+    }
+
+    /**
+     * Emitted each time submit() is called (even if no remote target is defined).
+     */
+    public onBeforePersist(cb: (event: FormPersistEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforePersist, cb);
+    }
+
+    /**
+     * Triggered after a remote persist succeeded.
+     */
+    public onPersistSuccess(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.PersistSuccess, cb);
+    }
+
+    /**
+     * Triggered when a remote persist fails.
+     */
+    public onPersistError(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.PersistError, cb);
+    }
+
+    /**
+     * Emitted each time the form validates a control.
+     */
+    public onBeforeValidate(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforeValidate, cb);
+    }
+
+    /**
+     * Triggered after a validation succeeded.
+     */
+    public onValidateSuccess(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.ValidateSuccess, cb);
+    }
+
+    /**
+     * Triggered when a validation fails.
+     */
+    public onValidateError(cb: (event: EventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.ValidateError, cb);
+    }
+
+    /**
      * Make the form on error.
      */
     protected setError(errorType: ErrorType, reason: any): void {
@@ -391,17 +457,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     protected clearErrors(): void {
         this.viewData.errorsMap = {};
-    }
-
-    /**
-     * Called after the form has successfully loaded its source data.
-     */
-    protected onAfterLoad(): void {
-        this.updateState(Action.Load, Status.Success);
-        this.form.enable();
-        this.form.reset();
-        this.bindModel();
-        this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.LoadSuccess);
     }
 
     /**

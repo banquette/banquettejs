@@ -72,7 +72,7 @@ export const HeadlessFormViewModelEvents = {
     /**
      * Events emitted when the form is loading.
      */
-    LoadStart: Symbol('load-start'),
+    BeforeLoad: Symbol('before-load'),
     LoadSuccess: Symbol('load-success'),
     LoadError: Symbol('load-error'),
 
@@ -80,19 +80,14 @@ export const HeadlessFormViewModelEvents = {
      * Emitted each time submit() is called (event if a remote target is defined).
      * If contains the data being submitted.
      */
-    Persist: Symbol('persist'),
-
-    /**
-     * Persistence events emitted when submit() is configured to call a remote server.
-     */
-    PersistStart: Symbol('persist-start'),
+    BeforePersist: Symbol('before-persist'),
     PersistSuccess: Symbol('persist-success'),
     PersistError: Symbol('persist-error'),
 
     /**
      * Validation related events.
      */
-    ValidateStart: Symbol('validate-start'),
+    BeforeValidate: Symbol('before-validate'),
     ValidateSuccess: Symbol('validate-success'),
     ValidateError: Symbol('validate-error')
 };

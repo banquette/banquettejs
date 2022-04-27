@@ -1,7 +1,7 @@
 <style src="./form.component.css"></style>
 <template src="./form.component.html" ></template>
 <script lang="ts">
-import { FormObject } from "@banquette/form/form-object";
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { HttpMethod } from "@banquette/http/constants";
 import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
@@ -9,6 +9,7 @@ import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
 import { HeadlessFormViewDataInterface } from "@banquette/ui/form/form/headless-form-view-data.interface";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureString } from "@banquette/utils-type/ensure-string";
 import { Writeable } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -22,7 +23,7 @@ import { Vue } from "@banquette/vue-typescript/vue";
     name: 'bt-form',
     emits: ['load', 'submit']
 })
-export default class FormComponent extends Vue {
+export default class FormComponent<ViewData extends HeadlessFormViewDataInterface = HeadlessFormViewDataInterface, ModelType extends object = any> extends Vue {
     /**
      * Optional model to bind the form with.
      */
@@ -77,23 +78,35 @@ export default class FormComponent extends Vue {
             (!this.v.persistSuccess || !this.hasSlot('persist-success'));
     }
 
-    @Expose() public v!: HeadlessFormViewDataInterface;
-    @Expose('modelInstance',  false) public model!: any;
+    @Expose() public v!: ViewData;
 
     /**
      * Holds the logic unrelated to the VueJS implementation.
      */
-    public readonly vm!: HeadlessFormViewModel;
+    public readonly vm!: HeadlessFormViewModel<ViewData, ModelType>;
+
+    private unsubscribeFunctions: UnsubscribeFunction[] = [];
 
     /**
      * Vue lifecycle.
      */
     public beforeMount(): void {
-        (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel();
-        this.v = this.vm.viewData;
+        (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel<ViewData, ModelType>();
+        this.v = this.vm.viewData as ViewData;
 
         // So the proxy is used by the headless view model.
         this.vm.setViewData(this.v);
+
+        // Events
+        this.unsubscribeFunctions.push(this.vm.onBeforeLoad(proxy(this.onBeforeLoad, this)));
+        this.unsubscribeFunctions.push(this.vm.onLoadSuccess(proxy(this.onLoadSuccess, this)));
+        this.unsubscribeFunctions.push(this.vm.onLoadError(proxy(this.onLoadError, this)));
+        this.unsubscribeFunctions.push(this.vm.onBeforePersist(proxy(this.onBeforePersist, this)));
+        this.unsubscribeFunctions.push(this.vm.onPersistSuccess(proxy(this.onPersistSuccess, this)));
+        this.unsubscribeFunctions.push(this.vm.onPersistError(proxy(this.onPersistError, this)));
+        this.unsubscribeFunctions.push(this.vm.onBeforeValidate(proxy(this.onBeforeValidate, this)));
+        this.unsubscribeFunctions.push(this.vm.onValidateSuccess(proxy(this.onValidateSuccess, this)));
+        this.unsubscribeFunctions.push(this.vm.onValidateError(proxy(this.onValidateError, this)));
     }
 
     /**
@@ -103,9 +116,33 @@ export default class FormComponent extends Vue {
         this.vm.load();
     }
 
+    /**
+     * Vue lifecycle.
+     */
+    public beforeUnmount(): void {
+        for (const fn of this.unsubscribeFunctions) {
+            fn();
+        }
+        this.unsubscribeFunctions = [];
+    }
+
     @Expose() public submit(): void {
         this.vm.submit();
     }
+
+    /**
+     * Virtual functions that are bound to events of the form.
+     * These are meant to be overridden by subclasses.
+     */
+    /* virtual */ protected onBeforeLoad(): void {}
+    /* virtual */ protected onLoadSuccess(): void {}
+    /* virtual */ protected onLoadError(): void {}
+    /* virtual */ protected onBeforePersist(): void {}
+    /* virtual */ protected onPersistSuccess(): void {}
+    /* virtual */ protected onPersistError(): void {}
+    /* virtual */ protected onBeforeValidate(): void {}
+    /* virtual */ protected onValidateSuccess(): void {}
+    /* virtual */ protected onValidateError(): void {}
 
     @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})
     private syncLoadConfigurationProps(): void {
