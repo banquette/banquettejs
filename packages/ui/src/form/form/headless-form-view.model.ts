@@ -425,7 +425,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         }
         const response = this.loadRemote.send(null, {}, [FormTag, FormLoadTag]);
         return response.promise.then((response: HttpResponse<any>) => {
-            console.log('ajax response');
             const baseError = `The ajax request didn't result with the expected value. ` +
                 `You can intercept the response by listening to a "HttpEvents.BeforeResponse" event with the "FormLoadTag" tag ` +
                 `to do some custom processing.`;

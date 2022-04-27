@@ -22,7 +22,7 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { TreeComponent } from "../../tree";
 import { BaseInputComponent } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
-import { NewAbstractVueFormComponent } from "../new-abstract-vue-form.component";
+import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { CheckboxDataInterface } from "./checkbox-data.interface";
 import { ThemeConfiguration } from "./theme-configuration";
 import { TreeViewDataInterface } from "./tree-view-data.interface";
@@ -33,7 +33,7 @@ import { TreeViewModel } from "./tree.view-model";
     name: 'bt-form-tree',
     components: [BaseInputComponent, TreeComponent]
 })
-export default class FormTreeComponent extends NewAbstractVueFormComponent<TreeViewDataInterface, TreeViewModel> {
+export default class FormTreeComponent extends AbstractVueFormComponent<TreeViewDataInterface, TreeViewModel> {
     /**
      * Holds the props exposed by the base input.
      */

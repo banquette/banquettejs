@@ -15,8 +15,6 @@ export * from './tree/constant';
  * View model
  */
 export * from './headless.interface';
-export * from './form/form-view-model.interface';
-export * from './form/form-view-model';
 
 /**
  * Form
@@ -31,9 +29,6 @@ export * from './form/checkbox/headless-checkbox-view-data.interface';
 // Tree
 export * from './form/tree/headless-form-tree-view.model';
 export * from './form/tree/headless-form-tree-view-data.interface';
-
-// File
-export * from './form/file/file.view-model';
 
 // Select
 export * from './form/select/headless-select.view-model';

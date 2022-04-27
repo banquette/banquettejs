@@ -1,12 +1,10 @@
 
 export * from './checkbox';
 export * from './error';
-export * from './file';
 export * from './form';
 export * from './select';
 export * from './text';
 export * from './tree';
-export * from './tiptap';
 export * from './validator';
 
 export * from './constant';

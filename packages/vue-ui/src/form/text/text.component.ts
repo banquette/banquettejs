@@ -10,7 +10,7 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BaseInputComponent } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
-import { NewAbstractVueFormComponent } from "../new-abstract-vue-form.component";
+import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { TextViewDataInterface } from "./text-view-data.interface";
 import { TextViewModel } from "./text.view-model";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -20,7 +20,7 @@ import { ThemeConfiguration } from "./theme-configuration";
     name: 'bt-form-text',
     components: [BaseInputComponent]
 })
-export default class TextComponent extends NewAbstractVueFormComponent<TextViewDataInterface, TextViewModel> {
+export default class TextComponent extends AbstractVueFormComponent<TextViewDataInterface, TextViewModel> {
     /**
      * Holds the props exposed by the base input.
      */

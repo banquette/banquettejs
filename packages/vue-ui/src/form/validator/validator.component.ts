@@ -14,7 +14,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { maybeResolveTsInst } from "@banquette/vue-typescript/utils/converters";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { NewAbstractVueFormComponent } from "../new-abstract-vue-form.component";
+import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { ContainerValidatorInterface } from "./container-validator.interface";
 
 /**
@@ -103,7 +103,7 @@ export abstract class ValidatorComponent extends Vue {
         let $parent: any = this.$parent;
         while ($parent) {
             $parent = maybeResolveTsInst($parent);
-            if ($parent instanceof NewAbstractVueFormComponent) {
+            if ($parent instanceof AbstractVueFormComponent) {
                 return this.assignToParentFormComponent($parent);
             }
             if (isType<ContainerValidatorInterface>($parent, () => isFunction($parent.registerChild))) {
@@ -131,7 +131,7 @@ export abstract class ValidatorComponent extends Vue {
     /**
      * Assign the validator to a parent form component.
      */
-    private assignToParentFormComponent(parent: NewAbstractVueFormComponent<any>): void {
+    private assignToParentFormComponent(parent: AbstractVueFormComponent<any>): void {
         const proxy = parent.proxy;
         let assignedControl: AbstractFormComponent|null = null;
         const assignValidator = (control: AbstractFormComponent) => {

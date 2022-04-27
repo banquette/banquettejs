@@ -23,7 +23,7 @@ import { TagComponent } from "../../../tag";
 import { BaseInputComposable } from "../../base-input/base-input.composable";
 import { ViewModelEvents } from "../../constant";
 import { ErrorComponent } from "../../error";
-import { NewAbstractVueFormComponent } from "../../new-abstract-vue-form.component";
+import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
 import { BeforeSlotOrigin, AfterSlotOrigin, PropOrigin } from "../constant";
 import ChoiceSlotWrapperComponent from "./choice-slot-wrapper.component";
 import ChoiceComponent from "./choice/choice.component.vue";
@@ -39,7 +39,7 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
     directives: [ClickOutsideDirective],
     emits: ['focus', 'blur', 'change']
 })
-export default class SelectComponent extends NewAbstractVueFormComponent<SelectViewDataInterface, SelectViewModel> {
+export default class SelectComponent extends AbstractVueFormComponent<SelectViewDataInterface, SelectViewModel> {
     /**
      * Array of elements to use as choices.
      * They are cumulative with other sources (like the "choices" slot or an ajax request).

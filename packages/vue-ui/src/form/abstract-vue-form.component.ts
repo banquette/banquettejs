@@ -1,11 +1,10 @@
 import { EventPipeline } from "@banquette/event/pipeline/event-pipeline";
-import { AbstractFormComponent } from "@banquette/form/abstract-form-component";
-import { FormViewModelInterface } from "@banquette/form/form-view-model.interface";
-import { FormViewModel } from "@banquette/ui/form/form-view-model";
-import { noop } from "@banquette/utils-misc/noop";
+import { BasicState } from "@banquette/form/constant";
+import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
+import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
+import { HeadlessControlViewDataInterface } from "@banquette/ui/form/headless-control-view-data.interface";
+import { HeadlessControlViewModel } from "@banquette/ui/form/headless-control.view-model";
 import { proxy } from "@banquette/utils-misc/proxy";
-import { throttle } from "@banquette/utils-misc/throttle";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { GenericCallback } from "@banquette/utils-type/types";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -14,12 +13,13 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ViewModelEvents, ViewModelSequence } from "./constant";
-import { FormControlProxy } from "./form-control.proxy";
+import { FormComponent } from "./form";
+import { NewFormControlProxy } from "./new-form-control.proxy";
 
-/**
- * TODO: REMOVE
- */
-export abstract class AbstractVueFormComponent<ViewModelType extends FormViewModel> extends Vue {
+export abstract class AbstractVueFormComponent<
+    ViewDataType extends HeadlessControlViewDataInterface = HeadlessControlViewDataInterface,
+    ViewModelType extends HeadlessControlViewModel<ViewDataType> = HeadlessControlViewModel<ViewDataType>
+> extends Vue {
     private static MaxId: number = 0;
 
     /**
@@ -45,17 +45,22 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
     /**
      * If `true`, the control will try to gain focus when mounted.
      */
-    @Prop({default: false}) public autofocus!: boolean;
+    @Prop({type: Boolean, default: false}) public autofocus!: boolean;
 
     /**
      * A wrapper around the form control so we don't have to check if it is available or not.
      */
-    @Import(FormControlProxy, false) public proxy!: FormControlProxy;
+    @Import(NewFormControlProxy, false) public proxy!: NewFormControlProxy;
+
+    /**
+     * The object managed by headless view models that is exposed to the view.
+     */
+    @Expose() public v!: ViewDataType;
 
     /**
      * The view model the view will use.
      */
-    @Expose() public vm!: ViewModelType;
+    public vm!: ViewModelType;
 
     /**
      * To easily manage the asynchronous initialization steps specific to Vue.
@@ -63,6 +68,7 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
     protected eventPipeline = new EventPipeline();
 
     private unsubscribeCallbacks: GenericCallback[] = [];
+    private controlUnsubscribeCallbacks: GenericCallback[] = [];
 
     public constructor() {
         super();
@@ -73,13 +79,10 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
         ], ViewModelSequence.Initialize);
 
         // Configure step
+        this.eventPipeline.subscribe(ViewModelEvents.Configure, proxy(this.configureProxy, this));
         this.eventPipeline.subscribe(ViewModelEvents.Configure, proxy(this.configureViewModel, this));
-        this.eventPipeline.subscribe(ViewModelEvents.Configure, proxy(this.configureProxy, this), 1);
-        this.eventPipeline.subscribe(ViewModelEvents.Configure, () => this.$nextTick(noop), -Number.MAX_SAFE_INTEGER);
 
         // Initialize step
-        this.eventPipeline.subscribe(ViewModelEvents.Initialize, proxy(this.initializeViewModel, this));
-        this.eventPipeline.subscribe(ViewModelEvents.Initialize, proxy(this.initializeReactivity, this));
         this.eventPipeline.subscribe(ViewModelEvents.Initialize, proxy(this.initializeProxy, this));
     }
 
@@ -87,7 +90,14 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
      * Vue lifecycle hook.
      */
     public beforeMount() {
-        this.eventPipeline.start(ViewModelSequence.Initialize);
+        const result = this.eventPipeline.start(ViewModelSequence.Initialize);
+        if (result.promise) {
+            result.promise.catch(() => {
+                console.error(result.errorDetail);
+            });
+        } else if (result.error) {
+            console.error(result.errorDetail);
+        }
     }
 
     /**
@@ -99,8 +109,8 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
         }
         // Special shortcut if in bt-form-generic.
         const parentFormGeneric: any = this.getParent('bt-form');
-        if (parentFormGeneric !== null && parentFormGeneric.form instanceof AbstractFormComponent) {
-            this.proxy.setFallbackForm(parentFormGeneric.form);
+        if (parentFormGeneric !== null && parentFormGeneric instanceof FormComponent) {
+            this.proxy.setFallbackForm(parentFormGeneric.vm.form);
         }
     }
 
@@ -113,25 +123,13 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
         for (const cb of this.unsubscribeCallbacks) {
             cb();
         }
+        for (const cb of this.controlUnsubscribeCallbacks) {
+            cb();
+        }
         this.unsubscribeCallbacks = [];
+        this.controlUnsubscribeCallbacks = [];
         this.proxy.unsetViewModel();
         (this as any).vm = undefined;
-    }
-
-    /**
-     * Mark the control as `focused`.
-     */
-    @Expose() onFocus(): void {
-        this.vm.onFocus();
-        this.$emit('focus');
-    }
-
-    /**
-     * Inverse of `focus()`.
-     */
-    @Expose() onBlur(): void {
-        this.vm.onBlur();
-        this.$emit('blur');
     }
 
     /**
@@ -142,25 +140,25 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
     }
 
     /**
-     * Alias of `this.v.value = [..]`.
+     * Alias of `this.v.control.value = [..]`.
      * Set the current view value.
      */
     public setValue(value: any): void {
-        this.vm.value = value;
+        this.v.control.value = value;
     }
 
     /**
      * Actions to take place when the control ask for focus.
      */
     /* virtual */ public focus(): void {
-        // Override me
+        this.vm.control.onFocus();
     }
 
     /**
      * Actions to take place when the control ask to lose focus.
      */
     /* virtual */ public blur(): void {
-        // Override me
+        this.vm.control.onBlur();
     }
 
     /**
@@ -169,59 +167,61 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
      * In here you should compose your view model by instantiating every brick of logic your component needs
      * depending on the configuration/props given as input.
      */
-    protected abstract setupViewModel(): ViewModelType|Promise<ViewModelType>;
-
-    /**
-     * Force the view to update on the next loop cycle and control the call rate.
-     */
-    protected updateView = (() => {
-        let queued = false;
-        const throttledCall = throttle(() => {
-            this.$forceUpdate();
-        }, 50);
-        return () => {
-            if (!queued) {
-                queued = true;
-                setTimeout(() => {
-                    throttledCall();
-                    queued = false;
-                });
-            }
-        };
-    })();
+    protected abstract setupViewModel(): ViewModelType;
 
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['tabindex', 'disabled', 'busy'], {immediate: ImmediateStrategy.NextTick})
-    protected onTabIndexChanged(): void {
-        this.vm.tabindex = this.tabindex;
-        this.vm.disabled = this.disabled;
-        this.vm.busy = this.busy;
+    @Watch(['tabindex', 'disabled', 'busy'], {immediate: ImmediateStrategy.BeforeMount})
+    protected onControlPropsChange(): void {
+        this.v.control.tabIndex = this.tabindex;
+        this.v.control.disabled = this.disabled;
+        this.v.control.busy = this.busy;
     }
 
     /**
-     * Set the `vm` attribute.
+     * Track focus changes to emit the corresponding events.
      */
-    private configureViewModel(): Promise<void>|void {
-        const result = this.setupViewModel();
-        if (isPromiseLike(result)) {
-            const resultPromise = result as Promise<ViewModelType>;
-            return new Promise((resolve, reject) => {
-                resultPromise.then((vm: ViewModelType) => {
-                    this.vm = vm;
-                }).catch(reject);
-            });
-        } else {
-            this.vm = result as ViewModelType;
-        }
+    @Watch('v.control.focused', {immediate: ImmediateStrategy.BeforeMount})
+    protected onFocusChanged(newValue: boolean): void {
+        this.$emit(newValue ? 'focus' : 'blur');
+    }
+
+    /**
+     * Set the `vm` and `v` attributes.
+     */
+    private configureViewModel(): void {
+        this.vm = this.setupViewModel();
+
+        // Assign the view data object created by the view model to the `v` variable, exposed to Vue.
+        // Vue will return a proxy of this object, through which changes are tracked.
+        this.v = this.vm.viewData;
+
+        // This object is then reassigned to the view model, making its changes to `viewData` reactive.
+        this.vm.setViewData(this.v);
+
+        // Reassign the focus() and blur() so the concrete component can be called.
+        this.v.control.focus = proxy(this.focus, this);
+        this.v.control.blur = proxy(this.blur, this);
+
+        this.vm.initialize();
     }
 
     /**
      * Assign itself to the control proxy.
      */
     private configureProxy(): void {
-        this.proxy.setViewModel(this.buildViewModelDecorator());
+        this.proxy.setViewModel({
+            id: ++AbstractVueFormComponent.MaxId,
+            setValue: (controlValue: any): void => {
+                this.vm.control.updateValueFromControl(controlValue);
+            },
+            unsetControl: (): void => {
+                this.proxy.unsetViewModel();
+            },
+            focus: proxy(this.focus, this),
+            blur: proxy(this.blur, this),
+        });
     }
 
     /**
@@ -240,8 +240,8 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
                  * For example if the view model only outputs strings but the original value in the FormControl is "undefined",
                  * the line below will ensure the FormControl is updated with an empty string.
                  */
-                this.proxy.setDefaultValue(this.vm.valueTransformer.viewToControl(
-                    this.vm.valueTransformer.controlToView(
+                this.proxy.setDefaultValue(this.vm.viewValueToControlValue(
+                    this.vm.controlValueToViewValue(
                         isUndefined(this.originalDOMValue) || this.proxy.value ? this.proxy.value : this.originalDOMValue
                     )
                 ));
@@ -250,7 +250,7 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
                 // It also makes sense to reset the control as a whole because setting the view model is in itself a reset.
                 this.proxy.reset();
             }
-            this.updateView();
+            this.assignControl(this.proxy);
             if (promiseResolve !== null) {
                 promiseResolve();
             }
@@ -262,56 +262,42 @@ export abstract class AbstractVueFormComponent<ViewModelType extends FormViewMod
         }
     }
 
-    /**
-     * Initialize the view model.
-     */
-    private initializeViewModel(): Promise<void>|void {
-        return this.vm.initialize();
+    private assignControl(control: FormViewControlInterface): void {
+        for (const fn of this.controlUnsubscribeCallbacks) {
+            fn();
+        }
+        this.controlUnsubscribeCallbacks = [];
+        this.vm.setControl(control);
+
+        // Special case for the focus to handle the case where there are multiple view models
+        // associated with the control.
+        this.controlUnsubscribeCallbacks.push(control.onStateChanged((event: StateChangedFormEvent) => {
+            if (event.state === BasicState.Focused  && event.newValue) {
+                // In case the focus is gained, wait for the next tick to give time to the proxy
+                // to update, then override the `focused` attribute to the one of the proxy.
+                // The one is the proxy will only return `true` if its view model is the one that is focused.
+                this.$nextTick(() => {
+                    this.vm.control.mutateInternalViewData(() => {
+                        this.vm.control.viewData.focused = this.proxy.focused;
+                    });
+                });
+            }
+        }, -1));
+
+        if (this.autofocus) {
+            this.forceFocus();
+        }
     }
 
     /**
-     * Listen for untracked changes to force view updates.
-     */
-    private initializeReactivity(): void {
-        this.unsubscribeCallbacks.push(this.vm.control.onStateChanged(() => {
-            this.updateView();
-        }));
-        this.unsubscribeCallbacks.push(this.vm.control.onValueChanged(() => {
-            this.updateView();
-        }));
-    }
-
-    /**
-     * Build the object that will be used by the control to interact with the view.
-     */
-    private buildViewModelDecorator(): FormViewModelInterface {
-        return {
-            id: ++AbstractVueFormComponent.MaxId,
-            setValue: (controlValue: any): void => {
-                this.vm.updateValueFromControl(this.vm.valueTransformer.controlToView(controlValue));
-            },
-            unsetControl: (): void => {
-                this.proxy.unsetViewModel();
-            },
-            focus: proxy(this.focus, this),
-            blur: proxy(this.blur, this),
-        };
-    }
-
-    /**
-     * Try to give focus to the field aggressively but calling focus
-     * multiple time for a short amount of time.
-     *
-     * This is a workaround a bug where the focus is lost immediately when trying
-     * the field on initialization.
-     *
-     * This should only be called on initialization.
+     * Try to give focus to the field aggressively by calling focus
+     * multiple time in a short amount of time.
      */
     private forceFocus(): void {
         let startTime = (new Date()).getTime();
         let elapsedTime = 0;
         const tryToFocus = () => {
-            if (!this.vm.focused) {
+            if (!this.v.control.focused) {
                 this.focus();
             }
             window.setTimeout(() => {

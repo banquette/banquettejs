@@ -9,14 +9,14 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { ViewModelEvents } from "../constant";
-import { NewAbstractVueFormComponent } from "../new-abstract-vue-form.component";
+import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { CheckboxViewDataInterface } from "./checkbox-view-data.interface";
 import { CheckboxViewModel } from "./checkbox.view-model";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component('bt-form-checkbox')
-export default class CheckboxComponent extends NewAbstractVueFormComponent<CheckboxViewDataInterface, CheckboxViewModel> {
+export default class CheckboxComponent extends AbstractVueFormComponent<CheckboxViewDataInterface, CheckboxViewModel> {
     /**
      * Holds the props exposed by the base input.
      */

@@ -10,6 +10,7 @@ import { HeadlessFormViewDataInterface } from "@banquette/ui/form/form/headless-
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { ensureString } from "@banquette/utils-type/ensure-string";
+import { Writeable } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -82,13 +83,13 @@ export default class FormComponent extends Vue {
     /**
      * Holds the logic unrelated to the VueJS implementation.
      */
-    private vm!: HeadlessFormViewModel;
+    public readonly vm!: HeadlessFormViewModel;
 
     /**
      * Vue lifecycle.
      */
     public beforeMount(): void {
-        this.vm = new HeadlessFormViewModel();
+        (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel();
         this.v = this.vm.viewData;
 
         // So the proxy is used by the headless view model.
