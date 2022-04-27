@@ -33,7 +33,7 @@ export default class RemoteComponent extends Vue {
     @Computed() public get error(): boolean { return this.response !== null && this.response.status === HttpResponseStatus.Error }
     @Computed() public get ready(): boolean { return this.response !== null && this.response.status === HttpResponseStatus.Success }
 
-    private remote: RemoteModule = Injector.Get(RemoteModule);
+    private remote: RemoteModule = new RemoteModule();
 
     /**
      * Try to fetch remote data if available.
