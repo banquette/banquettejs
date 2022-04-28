@@ -612,7 +612,11 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                 return replaceStringVariables(this.choicesLabel, choice, '{', '}');
             }
         }
-        console.warn('Please define how to resolve the label using the "choices-label" attribute, for:', choice);
+        if (this.choicesLabel) {
+            console.warn(`No property "${this.choicesLabel}" to use as label has been found. You can control it using the "choicesLabel" attribute, for:`, choice);
+        } else {
+            console.warn('Please define what property to use as identifier using the "choicesLabel" attribute, for:', choice);
+        }
         return defaultLabel;
     }
 
@@ -677,9 +681,11 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             if (!isUndefined(choice[this.choicesIdentifier])) {
                 return choice[this.choicesIdentifier];
             }
-            console.warn(`Identifier property "${this.choicesIdentifier}" not found, for:`, choice);
+        }
+        if (this.choicesIdentifier) {
+            console.warn(`No property "${this.choicesIdentifier}" to use as identifier has been found. You can control it using the "choicesIdentifier" attribute, for:`, choice);
         } else {
-            console.warn('Please define what property to use as identifier using the "choices-identifier" attribute, for:', choice);
+            console.warn('Please define what property to use as identifier using the "choicesIdentifier" attribute, for:', choice);
         }
         return undefined;
     }
