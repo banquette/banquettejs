@@ -159,10 +159,17 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
     /* virtual */ protected onBindModel(event: BindModelEventArg): void {}
 
     /**
+     * Force the update of the view.
+     */
+    protected forceUpdate(): void {
+        this.$forceUpdate();
+    }
+
+    /**
      * Force the update of the view, once per cycle.
      */
     private forceUpdateOnce = oncePerCycleProxy(() => {
-        this.$forceUpdate();
+        this.forceUpdate();
     });
 
     @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})
