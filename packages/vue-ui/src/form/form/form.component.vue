@@ -1,13 +1,17 @@
 <style src="./form.component.css"></style>
 <template src="./form.component.html" ></template>
 <script lang="ts">
+import { EventArg } from "@banquette/event/event-arg";
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { HttpMethod } from "@banquette/http/constants";
 import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
+import { BindModelEventArg } from "@banquette/ui/form/form/event/bind-model.event-arg";
+import { FormPersistEventArg } from "@banquette/ui/form/form/event/form-persist.event-arg";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureString } from "@banquette/utils-type/ensure-string";
 import { Writeable } from "@banquette/utils-type/types";
@@ -92,7 +96,8 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
      */
     public beforeMount(): void {
         (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel<ViewData, ModelType>();
-        this.vm.viewData.__version = 0;
+        // this.vm.viewData.__version = 0;
+        this.vm.viewData.model = null;
         this.v = this.vm.viewData as ViewData;
 
         // So the proxy is used by the headless view model.
@@ -108,15 +113,13 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
         this.unsubscribeFunctions.push(this.vm.onBeforeValidate(proxy(this.onBeforeValidate, this)));
         this.unsubscribeFunctions.push(this.vm.onValidateSuccess(proxy(this.onValidateSuccess, this)));
         this.unsubscribeFunctions.push(this.vm.onValidateError(proxy(this.onValidateError, this)));
-
-        this.unsubscribeFunctions.push(this.vm.form.onControlAdded(() => {
-            // @see FormViewDataInterface
-            this.v.__version++;
-        }, 0, false));
-        this.unsubscribeFunctions.push(this.vm.form.onControlRemoved(() => {
-            // @see FormViewDataInterface
-            this.v.__version++;
-        }, 0, false));
+        this.unsubscribeFunctions.push(this.vm.onBindModel((event: BindModelEventArg) => {
+            this.v.model = event.model;
+            this.onBindModel(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.form.onValueChanged(this.forceUpdateOnce));
+        this.unsubscribeFunctions.push(this.vm.form.onControlAdded(this.forceUpdateOnce, 0, false));
+        this.unsubscribeFunctions.push(this.vm.form.onControlRemoved(this.forceUpdateOnce, 0, false));
     }
 
     /**
@@ -144,15 +147,23 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
      * Virtual functions that are bound to events of the form.
      * These are meant to be overridden by subclasses.
      */
-    /* virtual */ protected onBeforeLoad(): void {}
-    /* virtual */ protected onLoadSuccess(): void {}
-    /* virtual */ protected onLoadError(): void {}
-    /* virtual */ protected onBeforePersist(): void {}
-    /* virtual */ protected onPersistSuccess(): void {}
-    /* virtual */ protected onPersistError(): void {}
-    /* virtual */ protected onBeforeValidate(): void {}
-    /* virtual */ protected onValidateSuccess(): void {}
-    /* virtual */ protected onValidateError(): void {}
+    /* virtual */ protected onBeforeLoad(event: EventArg): void {}
+    /* virtual */ protected onLoadSuccess(event: EventArg): void {}
+    /* virtual */ protected onLoadError(event: EventArg): void {}
+    /* virtual */ protected onBeforePersist(event: FormPersistEventArg): void {}
+    /* virtual */ protected onPersistSuccess(event: EventArg): void {}
+    /* virtual */ protected onPersistError(event: EventArg): void {}
+    /* virtual */ protected onBeforeValidate(event: EventArg): void {}
+    /* virtual */ protected onValidateSuccess(event: EventArg): void {}
+    /* virtual */ protected onValidateError(event: EventArg): void {}
+    /* virtual */ protected onBindModel(event: BindModelEventArg): void {}
+
+    /**
+     * Force the update of the view, once per cycle.
+     */
+    private forceUpdateOnce = oncePerCycleProxy(() => {
+        this.$forceUpdate();
+    });
 
     @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})
     private syncLoadConfigurationProps(): void {

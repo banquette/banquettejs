@@ -89,7 +89,13 @@ export const HeadlessFormViewModelEvents = {
      */
     BeforeValidate: Symbol('before-validate'),
     ValidateSuccess: Symbol('validate-success'),
-    ValidateError: Symbol('validate-error')
+    ValidateError: Symbol('validate-error'),
+
+    /**
+     * Emitted when the form is about to bind a model instance to the form.
+     * It contains the model and form instances.
+     */
+    BindModel: Symbol('bind-model')
 };
 
 export const ErrorTypeStatusMap: Record<ErrorType, Action> = {

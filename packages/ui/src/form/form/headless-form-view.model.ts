@@ -40,6 +40,7 @@ import {
     HeadlessFormViewModelEvents,
     ErrorTypeEventMap
 } from "./constant";
+import { BindModelEventArg } from "./event/bind-model.event-arg";
 import { FormActionErrorEventArg } from "./event/form-action-error.event-arg";
 import { FormPersistEventArg } from "./event/form-persist.event-arg";
 import { RemoteValidationException } from "./exception/remote-validation.exception";
@@ -426,6 +427,13 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     }
 
     /**
+     * Triggered when the model has been bound to the form.
+     */
+    public onBindModel(cb: (event: BindModelEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BindModel, cb);
+    }
+
+    /**
      * Make the form on error.
      */
     protected setError(errorType: ErrorType, reason: any): void {
@@ -439,7 +447,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
 
         const eventType = ErrorTypeEventMap[errorType];
         if (eventType !== null) {
-            this.eventDispatcher.dispatch(eventType, new FormActionErrorEventArg(reason))
+            this.eventDispatcher.dispatch(eventType, new FormActionErrorEventArg(reason));
         }
     }
 
@@ -467,6 +475,8 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             const binder = Injector.Get(FormModelBinder);
             (this as Writeable<HeadlessFormViewModel>).modelInstance = binder.bind(this.modelInstance, this.form);
             (this as Writeable<HeadlessFormViewModel>).binder = binder;
+
+            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BindModel, new BindModelEventArg(this.modelInstance, binder));
         }
     }
 
