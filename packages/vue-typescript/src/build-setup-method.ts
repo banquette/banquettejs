@@ -52,6 +52,8 @@ import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-me
 import { getPropertyDescriptor } from "./utils/get-property-descriptor";
 import { isDecoratedComponentConstructor } from "./utils/guards";
 import { instantiate } from "./utils/instantiate";
+import { isFunctionGetterSafe } from "./utils/is-function-getter-safe";
+import { isGetter } from "./utils/is-getter";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
 
 /**
@@ -230,6 +232,10 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             if (exposedName === false) {
                 continue ;
             }
+            // Special case for computed getters to avoid calling them.
+            if (!isUndefined(data.computed[exposedInstanceName]) && isGetter(ctor, exposedInstanceName)) {
+                continue ;
+            }
             // For methods
             if (isFunction(inst[exposedInstanceName])) {
                 output[exposedName] = proxy(inst[exposedInstanceName], inst);
@@ -246,15 +252,14 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         }
 
         // Computed
-        const instKeys = Object.keys(inst);
-        const createUpdatableComputed = <T>(options: any, debugOptions: any, name: string): WritableComputedRef<T> => {
+        const createUpdatableComputed = <T>(options: any, debugOptions: any, getter: boolean): WritableComputedRef<T> => {
             return computed({
                 get: () => {
                     // Trick to be able to force Vue to update the computed by changing the version.
                     // The version is initialized at "1" and incremented from there, so the condition is always true.
                     // Having a condition prevent the compiler to remove the instruction thinking it is dead code.
                     if (computedVersion.value > 0) {
-                        return options.get();
+                        return getter ? options.get() : options();
                     }
                 },
                 set: options.set
@@ -273,12 +278,11 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     computedOptions[k] = proxy(inst[cb], inst);
                 }
             }
-
-            if (isFunction(inst[computedName])) {
-                c = createUpdatableComputed(proxy(inst[computedName], inst), computedOptions, computedName);
-            } else if (instKeys.indexOf(computedName) > -1) {
-                const descriptor = getPropertyDescriptor(ctor, computedName);
-                if (isUndefined(descriptor) || !isFunction(descriptor.get)) {
+            const descriptor = getPropertyDescriptor(ctor, computedName);
+            if (isFunctionGetterSafe(ctor, computedName)) {
+                c = createUpdatableComputed(proxy(inst[computedName], inst), computedOptions, false);
+            } else if (!isUndefined(descriptor)) {
+                if (!isFunction(descriptor.get)) {
                     console.warn(`Unable to create a computed for "${computedName}", no getter found.`);
                     continue ;
                 }
@@ -293,7 +297,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 if (isFunction(descriptor.set)) {
                     proxyGetterSetter.set = ((_cn) => (val: any) => (descriptor.set as Function).apply(inst, [val]))(computedName);
                 }
-                c = createUpdatableComputed(proxyGetterSetter, computedOptions, computedName);
+                c = createUpdatableComputed(proxyGetterSetter, computedOptions, true);
                 Object.defineProperty(inst, computedName, {
                     enumerable: true,
                     configurable: true,
