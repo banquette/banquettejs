@@ -54,11 +54,11 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
      *   - the name of the property to use when the input is an object.
      *   - a function that takes the raw input and returns the value to use.
      */
-    @Prop({type: [String, Function], default: null}) public choicesLabel!: ChoicesPropResolver<string>;
-    @Prop({type: [String, Function], default: null}) public choicesIdentifier!: ChoicesPropResolver<Primitive>;
+    @Prop({type: [String, Function], default: 'label'}) public choicesLabel!: ChoicesPropResolver<string>;
+    @Prop({type: [String, Function], default: 'id'}) public choicesIdentifier!: ChoicesPropResolver<Primitive>;
     @Prop({type: [String, Function], default: null}) public choicesValue!: ChoicesPropResolver<any>;
-    @Prop({type: [String, Function], default: null}) public choicesDisabled!: ChoicesPropResolver<boolean>;
-    @Prop({type: [String, Function], default: null}) public choicesGroup!: ChoicesPropResolver<string>;
+    @Prop({type: [String, Function], default: 'disabled'}) public choicesDisabled!: ChoicesPropResolver<boolean>;
+    @Prop({type: [String, Function], default: 'group'}) public choicesGroup!: ChoicesPropResolver<string>;
 
     /**
      * If `true` the select allow for multiple values.
@@ -102,6 +102,12 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @Prop({name: 'search:remoteParamName', type: [String, Array], default: 'search'}) public searchRemoteParamName!: string|string[];
     @Prop({name: 'search:minLength', type: Number, default: 0}) public searchMinLength!: number;
 
+    /**
+     * Dropdown related props.
+     */
+    @Prop({name: 'dropdown:teleport', type: [Object, String], default: 'body'}) public dropdownTeleport!: HTMLElement|string|null;
+    @Prop({name: 'dropdown:zIndex', type: Number, default: undefined}) public dropdownZIndex!: number|undefined;
+
     // Override the type to get autocompletion in the view.
     @Expose() public v!: SelectViewDataInterface;
     @Expose() public dropdownWidth: number = 0;
@@ -112,7 +118,8 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @TemplateRef('tagSelectionWrapper') private tagSelectionWrapperEl!: HTMLElement|null;
 
     private inputWrapperResizeUnsubscribe: VoidCallback|null = null;
-    private unsubscribeMethods: UnsubscribeFunction[] = [];
+    private lastBlurTime: number = 0;
+    private lastKeyStrokeTime: number = 0;
 
     public constructor() {
         super();
@@ -138,6 +145,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     }
 
     @Expose() public onKeyDown(event: KeyboardEvent): void {
+        this.lastKeyStrokeTime = (new Date()).getTime();
         this.vm.onKeyDown(event);
         this.updateInput();
         if (this.vm.searchBuffer) {
@@ -174,12 +182,22 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     }
 
     @Expose() public onInputWrapperClick(): void {
+        // TODO: Remove the timer
+        // Find a way to prevent the focus to be lost on the input when a click is made on the mask / input-wrapper.
+        if ((new Date()).getTime() - this.lastBlurTime < 150) {
+            return ;
+        }
         this.inputEl.focus();
         this.vm.showChoices();
         this.updateInput();
     }
 
     @Expose() public onInputFocus(): void {
+        // TODO: Remove the timer
+        // Find a way to prevent the focus to be lost on the input when a click is made on the mask / input-wrapper.
+        if ((new Date()).getTime() - this.lastBlurTime < 150) {
+            return ;
+        }
         if (!this.v.isInputReadonly) {
             this.v.inputValue = '';
         }
@@ -193,6 +211,8 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         }
         this.v.control.onBlur();
         this.v.isInputFocused = false;
+        this.vm.hideChoices();
+        this.lastBlurTime = (new Date()).getTime();
     }
 
     @Expose() public onInputChange = debounce(() => {
@@ -231,7 +251,9 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         'choicesIdentifier',
         'choicesValue',
         'choicesDisabled',
-        'choicesGroup'
+        'choicesGroup',
+        'dropdownTeleport',
+        'dropdownZIndex'
     ], {immediate: ImmediateStrategy.BeforeMount})
     private onBasePropsChange(): void {
         this.vm.choicesLabel = this.choicesLabel;
@@ -239,6 +261,8 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.vm.choicesValue = this.choicesValue;
         this.vm.choicesDisabled = this.choicesDisabled;
         this.vm.choicesGroup = this.choicesGroup;
+        this.v.dropdownTeleport = this.dropdownTeleport;
+        this.v.dropdownZIndex = this.dropdownZIndex;
     }
 
     @Watch('choices', {immediate: ImmediateStrategy.BeforeMount})
@@ -248,6 +272,13 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
 
     @Watch('v.control.value')
     private onSelectionChange(): void {
+        /**
+         * Ugly tricky to only blur the input when the value has been selected using the mouse.
+         * Keep the field focus for keyboard input.
+         */
+        if ((new Date()).getTime() - this.lastKeyStrokeTime > 50) {
+            this.inputEl.blur();
+        }
         this.updateInput();
         this.updateSelected();
         this.vm.setSearchString('');
@@ -255,7 +286,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
             this.v.inputValue = '';
             this.v.inputPlaceholder = '';
         }
-        window.requestAnimationFrame(() => {
+        window.setTimeout(() => {
             this.updateTagsVisibility();
         });
         this.$emit('change', this.v.control.value);

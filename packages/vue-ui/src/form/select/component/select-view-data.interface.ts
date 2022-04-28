@@ -57,6 +57,9 @@ export interface SelectViewDataInterface extends HeadlessSelectViewDataInterface
      */
     inputPlaceholder: string;
 
+    dropdownTeleport: HTMLElement|string|null;
+    dropdownZIndex?: number;
+
     /**
      * A shortcut to `multiple && isHeightLocked`.
      */
