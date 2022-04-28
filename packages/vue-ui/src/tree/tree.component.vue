@@ -8,6 +8,7 @@ import { HeadlessTreeViewDataInterface } from "@banquette/ui/tree/headless-tree-
 import { HeadlessTreeViewModel } from "@banquette/ui/tree/headless-tree.view-model";
 import { Node } from '@banquette/ui/tree/node';
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { noop } from "@banquette/utils-misc/noop";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { Primitive, AnyObject } from "@banquette/utils-type/types";
@@ -22,6 +23,7 @@ import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/wa
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { h, resolveDirective, withDirectives, renderSlot, VNode, SetupContext, toRaw, resolveComponent } from "vue";
+import { CollapsableComponent } from "../collapsable";
 import { ProgressCircularComponent } from "../progress/progress-circular";
 import { ThemeConfiguration } from "./theme-configuration";
 
@@ -170,43 +172,56 @@ export default class TreeComponent extends Vue {
     }
 
     private renderNode(context: SetupContext, node: Node, slotName: string = 'node', level = 0): VNode {
-        const titleNodes = [
-            renderSlot(context.slots, slotName, {
-                node: node,
-                toggle: () => this.vm.toggleNode(node),
-                expand: () => this.vm.expandNode(node),
-                collapse: () => this.vm.collapseNode(node),
-                remove: () => this.vm.removeNode(node)
-            }, () => {
-                return [h('div', node.label || '(missing label)')];
-            })
-        ];
-        let leftAddon: any;
-        if (node.remotePending) {
-            leftAddon = h(resolveComponent("bt-progress-circular"));
-        } else if (node.fetched) {
-            leftAddon = h(resolveComponent('icon-arrow-drop-down'));
-        } else {
-            leftAddon = h('div', {class: 'unknown-text'}, '?');
-        }
-        titleNodes.unshift(h('div', {class: 'addon'}, leftAddon));
-        const childNodes: VNode[] = [];
-        for (const child of node.children) {
-            childNodes.push(this.renderNode(context, child, 'node', level + 1));
-        }
+        const that = this;
+        const collapsable = h(CollapsableComponent, {
+            modelValue: !node.expanded,
+            'onUpdate:modelValue': (value: any) => {
+                node.expanded = !value;
+            }
+        }, {
+            title: () => {
+                const titleNodes = [
+                    renderSlot(context.slots, slotName, {
+                        node: node,
+                        toggle: () => this.vm.toggleNode(node),
+                        expand: () => this.vm.expandNode(node),
+                        collapse: () => this.vm.collapseNode(node),
+                        remove: () => this.vm.removeNode(node)
+                    }, () => {
+                        return [node.label || '(missing label)'];
+                    })
+                ];
+                let leftAddon: any;
+                if (node.remotePending) {
+                    leftAddon = h(resolveComponent("bt-progress-circular"));
+                } else if (node.fetched) {
+                    leftAddon = h(resolveComponent('icon-arrow-drop-down'));
+                } else {
+                    leftAddon = h('div', {class: 'unknown-text'}, '?');
+                }
+                titleNodes.unshift(h('div', {class: 'addon'}, leftAddon));
+                return h('div', {
+                    class: 'title',
+                    style: {paddingLeft: (that.indent * level) + 'px'},
+                    onClick: () => {
+                        this.vm.toggleNode(node)
+                    }
+                }, titleNodes);
+            },
+            default: () => {
+                const childNodes: VNode[] = [];
+                for (const child of node.children) {
+                    childNodes.push(this.renderNode(context, child, 'node', level + 1));
+                }
+                return h('div', {class: 'items-wrapper'}, childNodes);
+            }
+        });
         return h('div', {
             class: 'bt-tree-item',
             'data-expanded': node.expanded ? '' : null,
             'data-empty': node.fetched && !node.childrenVisibleCount ? '' : null
         }, [
-            h('div', {
-                class: 'title',
-                style: {paddingLeft: (this.indent * level) + 'px'},
-                onClick: () => {
-                    this.vm.toggleNode(node)
-                }
-            }, titleNodes),
-            h('div', {class: 'items-wrapper'}, childNodes)
+            collapsable
         ]);
     }
 }

@@ -16,12 +16,8 @@
 .bt-tree {
     width: 100%;
 
-    .items-wrapper {
-        display: none;
-    }
-
     .bt-tree-item {
-        & > .title {
+        & > :deep(.bt-collapsable) > .title {
             display: flex;
             align-items: center;
             color: var(--tree-item-text-color);
@@ -44,7 +40,7 @@
                 align-items: center;
                 justify-content: center;
 
-                :deep(svg) {
+                svg {
                     fill: var(--tree-item-icon-color);
                     transform: rotateZ(-90deg);
                     transform-origin: center;
@@ -57,7 +53,7 @@
         }
 
         &[data-expanded] {
-            & > .title > .addon :deep(svg) {
+            & > :deep(.bt-collapsable) > .title > .addon svg {
                 transform: rotateZ(0);
             }
 
@@ -67,7 +63,7 @@
         }
 
         &[data-empty] {
-            & > .title > .addon :deep(svg) {
+            & > :deep(.bt-collapsable) > .title > .addon svg {
                 opacity: 0;
             }
         }
