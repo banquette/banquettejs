@@ -54,16 +54,16 @@ export default class CollapsableComponent extends Vue {
 
     @Expose() public toggle(): void {
         if (this.collapsed || this.transitioning === 'up') {
-            this.show();
+            this.open();
         } else {
-            this.hide();
+            this.close();
         }
     }
 
     /**
      * Expand the wrapper to make the content visible.
      */
-    @Expose() public show(): void {
+    @Expose() public open(): void {
         if (this.transitioning === 'down') {
             return ;
         }
@@ -99,7 +99,7 @@ export default class CollapsableComponent extends Vue {
     /**
      * Collapse the wrapper to hide the content.
      */
-    @Expose() public hide(): void {
+    @Expose() public close(): void {
         if (this.transitioning === 'up') {
             return ;
         }
@@ -132,9 +132,9 @@ export default class CollapsableComponent extends Vue {
     @Watch('modelValue', {immediate: ImmediateStrategy.Mounted})
     private onCollapsableChange(newValue: boolean): void {
         if (newValue) {
-            this.hide();
+            this.close();
         } else {
-            this.show();
+            this.open();
         }
     }
 

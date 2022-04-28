@@ -1,5 +1,5 @@
 <div class="bt-collapsable" v-bt-bind-theme>
-    <div class="title" @click="toggle()"><slot name="title"></slot></div>
+    <slot name="title" :toggle="toggle" :open="open" :close="close"></slot>
     <div ref="overflowWrapper" class="overflow-wrapper">
         <div ref="contentWrapper" class="content-wrapper" v-if="!destroyWhenCollapsed || !collapsed" v-show="!collapsed">
             <slot></slot>
