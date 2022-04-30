@@ -1,7 +1,6 @@
 
 export * from './checkbox';
 export * from './file';
-export * from './error';
 export * from './form';
 export * from './select';
 export * from './text';
