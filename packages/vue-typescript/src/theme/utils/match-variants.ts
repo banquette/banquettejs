@@ -2,6 +2,7 @@ import { arrayIntersect } from "@banquette/utils-array/array-intersect";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { Primitive } from "@banquette/utils-type/types";
 import { ComponentMetadataInterface } from "../../decorator/component-metadata.interface";
+import { maybeResolveTsInst } from "../../utils/converters";
 import { getOrCreateComponentMetadata } from "../../utils/get-or-create-component-metadata";
 import { isDecoratedComponentConstructor } from "../../utils/guards";
 import { VariantWildcard, PropCallback, AttrCallback } from "../constant";
@@ -54,34 +55,31 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
     // Parent
     if (selector.parents.length > 0) {
         for (const parentSelectorCandidate of selector.parents) {
-            let $parentInst = componentInst.$resolvedParent;
-            while ($parentInst && $parentInst.constructor && $parentInst.constructor.prototype) {
-                if (isDecoratedComponentConstructor($parentInst.constructor)) {
+            let $parent = componentInst.$resolvedParent;
+            while ($parent) {
+                const $parentInst: any = maybeResolveTsInst($parent);
+                if ($parentInst.constructor && $parentInst.constructor.prototype && isDecoratedComponentConstructor($parentInst.constructor)) {
                     const decoratorsData: ComponentMetadataInterface = getOrCreateComponentMetadata($parentInst.constructor.prototype);
 
                     // Check parent name
-                    if (parentSelectorCandidate.name !== decoratorsData.component.name) {
-                        $parentInst = $parentInst.$resolvedParent;
-                        continue ;
+                    if (parentSelectorCandidate.name === decoratorsData.component.name) {
+                        const parentCandidateVariants = parentSelectorCandidate.variants.filter((i) => i !== VariantWildcard);
+                        const parentExpectedVariants = decoratorsData.themeable !== null ?
+                            splitVariantString($parentInst[decoratorsData.themeable.prop] || '') :
+                            [];
+                        if (matchVariantSelector(
+                            parentSelectorCandidate,
+                            parentCandidateVariants,
+                            parentExpectedVariants,
+                            parentSelectorCandidate.props,
+                            parentSelectorCandidate.attrs,
+                            $parentInst
+                        )) {
+                            return true;
+                        }
                     }
-
-                    const parentCandidateVariants = parentSelectorCandidate.variants.filter((i) => i !== VariantWildcard);
-                    const parentExpectedVariants = decoratorsData.themeable !== null ?
-                        splitVariantString($parentInst[decoratorsData.themeable.prop] || '') :
-                        [];
-                    if (!matchVariantSelector(
-                        parentSelectorCandidate,
-                        parentCandidateVariants,
-                        parentExpectedVariants,
-                        parentSelectorCandidate.props,
-                        parentSelectorCandidate.attrs,
-                        $parentInst
-                    )) {
-                        $parentInst = $parentInst.$resolvedParent;
-                        continue ;
-                    }
-                    return true;
                 }
+                $parent = $parent.$parent;
             }
         }
         return false;
