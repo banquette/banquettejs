@@ -1,5 +1,5 @@
 
-.bt-popover-confirm {
+.bt-popover-confirm, :global(.bt-popover.bt-dropdown.bt-popover-confirm-dropdown) {
     --popover-confirm-confirm-button-font-size: var(--bt-popover-confirm-confirm-button-font-size, var(--bt-font-size-sm));
     --popover-confirm-confirm-button-background-color: var(--bt-popover-confirm-confirm-button-background-color);
     --popover-confirm-confirm-button-background-hover-color: var(--bt-popover-confirm-confirm-button-background-hover-color);
@@ -14,6 +14,7 @@
 }
 
 .bt-popover-confirm {
+    position: relative;
     z-index: var(--popover-confirm-z-index);
 
     & > .slot-wrapper {

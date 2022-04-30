@@ -1,15 +1,17 @@
-<div class="bt-popover-confirm" v-bt-bind-theme v-bt-click-outside="cancel">
-    <div ref="test" class="slot-wrapper" @click.stop.prevent="showDropdown">
+<div class="bt-popover-confirm" v-bt-bind-theme>
+    <div class="slot-wrapper" @click.stop.prevent="showDropdown">
         <slot></slot>
     </div>
-    <bt-dropdown class="bt-popover-confirm-dropdown" target="test" :visible="dropdownVisible">
-        <div class="message">
-            <component :is="icon" v-if="icon"></component>
-            {{ message }}
-        </div>
-        <div class="actions">
-            <a href="" @click.prevent="cancel()" class="cancel-button">{{ cancelText }}</a>
-            <bt-button @click="confirm()" class="confirm-button">{{ confirmText }}</bt-button>
+    <bt-dropdown class="bt-popover-confirm-dropdown" :visible="dropdownVisible" v-bind="$attrs">
+        <div v-bt-click-outside="cancel" @click.stop>
+            <div class="message">
+                <component :is="icon" v-if="icon"></component>
+                {{ message }}
+            </div>
+            <div class="actions">
+                <a href="" @click.stop.prevent="cancel()" class="cancel-button">{{ cancelText }}</a>
+                <bt-button @click.stop="confirm()" class="confirm-button">{{ confirmText }}</bt-button>
+            </div>
         </div>
     </bt-dropdown>
 </div>
