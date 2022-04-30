@@ -14,7 +14,7 @@ import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/wa
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ViewModelEvents, ViewModelSequence } from "./constant";
 import { FormComponent } from "./form";
-import { NewFormControlProxy } from "./new-form-control.proxy";
+import { FormControlProxy } from "./form-control.proxy";
 
 export abstract class AbstractVueFormComponent<
     ViewDataType extends HeadlessControlViewDataInterface = HeadlessControlViewDataInterface,
@@ -50,7 +50,7 @@ export abstract class AbstractVueFormComponent<
     /**
      * A wrapper around the form control so we don't have to check if it is available or not.
      */
-    @Import(NewFormControlProxy, false) public proxy!: NewFormControlProxy;
+    @Import(FormControlProxy, false) public proxy!: FormControlProxy;
 
     /**
      * The object managed by headless view models that is exposed to the view.

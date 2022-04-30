@@ -25,14 +25,11 @@ import { Composable } from "@banquette/vue-typescript/decorator/composable.decor
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { FormStorage } from "./form-storage";
 import { ProxifiedCallInterface } from "./proxified-call.interface";
 
 /**
- * TODO: REMOVE
- *
  * A proxy between the Vue component and the form control.
  *
  * Required because the form control may not be available at all times and
@@ -82,9 +79,9 @@ export class FormControlProxy implements FormViewControlInterface {
 
     /**
      * Not a computed because Vue doesn't need to see it, that's for internal use only.
-     * And exposing it to vue will conflict with the `value` prop of `GenericVueComponent` anyway.
+     * And exposing it to vue will conflict with the `value` prop of `AbstractVueFormComponent` anyway.
      */
-    get value(): any { return this.getFromControl('value', null) }
+    public get value(): any { return this.getFromControl('value', null) }
 
     /**
      * Get the original value of the control.
@@ -104,7 +101,7 @@ export class FormControlProxy implements FormViewControlInterface {
     /**
      * A weak reference on the root of the form, in case it has been resolved from a string.
      */
-    private _formRef!: WeakObjectRef<FormGroupInterface>|null;
+    private _formRef!: {name: string, ref: WeakObjectRef<FormGroupInterface>}|null;
 
     /**
      * A form to fallback to if none is defined through the prop.
@@ -117,7 +114,7 @@ export class FormControlProxy implements FormViewControlInterface {
      * This can be null at any time because the control can be destroyed or not yet created
      * while the Vue component is still trying to access it.
      */
-    @Ref() private _control!: FormControl|null;
+    private _control!: FormControl|null;
 
     /**
      * The object exposed by the FormControl when the view model is assigned.
@@ -159,7 +156,7 @@ export class FormControlProxy implements FormViewControlInterface {
     @Lifecycle('unmounted')
     public onComponentUnmounted(): void {
         if (this._formRef) {
-            this._formRef.release();
+            this._formRef.ref.release();
             this._formRef = null;
         }
         if (this.controlAddedUnsubscribe) {
@@ -169,6 +166,8 @@ export class FormControlProxy implements FormViewControlInterface {
         if (this.bridge && this.viewModel) {
             this.bridge.unsetViewModel(this.viewModel);
         }
+        this.onReadySubscribers = [];
+        this.onDetachSubscribers = [];
     }
 
     /**
@@ -323,12 +322,19 @@ export class FormControlProxy implements FormViewControlInterface {
     }
 
     /**
+     * @inheritDoc
+     */
+    public onErrorsChanged(callback: (event: ErrorsChangedFormEvent) => void, priority?: number): UnsubscribeFunction {
+        return this.subscribeToControl('onErrorsChanged', callback, priority);
+    }
+
+    /**
      * Called when the control is real and ready to be used.
      */
     public onReady(cb: (control: FormViewControlInterface) => void): VoidCallback {
         if (this.bridge) {
             // If the control is already defined, just execute the callback and let the rest be.
-            cb(this as any);
+            cb(this);
         }
         this.onReadySubscribers.push(cb);
         return () => {
@@ -352,15 +358,19 @@ export class FormControlProxy implements FormViewControlInterface {
     @Watch(['form', 'control'], {immediate: ImmediateStrategy.NextTick})
     private updateFormAndControl(): void {
         this._form = this.resolveForm();
-        const newControl: any = this.resolveControl(this._form || null);
+        const newControl = this.resolveControl(this._form);
         if (newControl !== this._control) {
+            const isNewAssignment = newControl && (!this._control || newControl.id !== this._control.id);
             this._control = newControl;
-            if (this._control) {
-                this.onControlAssigned(this._control);
+            if (isNewAssignment) {
+                this.onControlAssigned(newControl);
             }
         }
         if (!this._control && this._form && !this.controlAddedUnsubscribe) {
             this.controlAddedUnsubscribe = this._form.onControlAdded(proxy(this.updateFormAndControl, this));
+        } else if (this._control && this.controlAddedUnsubscribe) {
+            this.controlAddedUnsubscribe();
+            this.controlAddedUnsubscribe = null;
         }
     }
 
@@ -438,9 +448,6 @@ export class FormControlProxy implements FormViewControlInterface {
         }
         try {
             const resolvedControl: FormComponentInterface | null = form.getByPath(controlPath);
-            if (resolvedControl === null) {
-                return null;
-            }
             if (!(resolvedControl instanceof FormControl)) {
                 throw new UsageException(`The control path "${controlPath}" doesn't resolve to a FormControl.`);
             }
@@ -464,11 +471,12 @@ export class FormControlProxy implements FormViewControlInterface {
         if (formName === null && isString(this.control) && (this.control.indexOf(':') > -1)) {
             formName = this.control.substring(0, this.control.indexOf(':'));
         }
-        if (!this._formRef && formName !== null) {
-            this._formRef = this.formStorage.getRef(formName);
+        if (formName !== null && (!this._formRef || this._formRef.name !== formName)) {
+            const resolvedRef = this.formStorage.getRef(formName);
+            this._formRef = resolvedRef !== null ? {name: formName, ref: resolvedRef} : resolvedRef;
         }
         if (this._formRef) {
-            return this._formRef.obj;
+            return this._formRef.ref.obj;
         }
         return this.form === null ? this.fallbackForm : null;
     }
@@ -493,11 +501,7 @@ export class FormControlProxy implements FormViewControlInterface {
         this.bridge = control.setViewModel(this.viewModel);
         this.flushControlMethodsQueue(this.bridge, control);
         for (const subscriber of this.onReadySubscribers) {
-            subscriber(this as any);
-        }
-        if (this.controlAddedUnsubscribe) {
-            this.controlAddedUnsubscribe();
-            this.controlAddedUnsubscribe = null;
+            subscriber(this);
         }
     }
 
@@ -509,10 +513,5 @@ export class FormControlProxy implements FormViewControlInterface {
         for (const subscriber of this.onDetachSubscribers) {
             subscriber();
         }
-    }
-
-    onErrorsChanged(callback: (event: ErrorsChangedFormEvent) => void, priority?: number, selfOnly?: boolean): UnsubscribeFunction {
-        // Don't care, the proxy is replaced by the new class.
-        return () => {};
     }
 }
