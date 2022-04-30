@@ -30,21 +30,11 @@
                     <div ref="error-icon" class="error-icon">
                         <icon-warning size="18" @click="v.control.focus()"></icon-warning>
                     </div>
-                    <bt-popover target="error-icon" :visible="v.control.focused && (!$refs.helpPopover || !$refs.helpPopover.isVisible)" class="bt-form-base-input-errors-popover">
-                        <div>
-                            <div class="error" v-for="error in v.control.errors">
-                                {{ error.message }}
-                            </div>
-                        </div>
-                    </bt-popover>
                 </template>
                 <template v-if="hasFloatingHelp && hasHelpSlot">
                     <div ref="help-icon" class="help-icon">
                         <icon-help size="18"></icon-help>
                     </div>
-                    <bt-popover ref="helpPopover" target="help-icon" class="bt-form-base-input-help-popover">
-                        <slot name="help"></slot>
-                    </bt-popover>
                 </template>
                 <bt-form-control-state-overlay :v="v" v-if="v.base.showDebug"></bt-form-control-state-overlay>
                 <slot name="extras-after"></slot>
@@ -64,4 +54,18 @@
             <slot name="help"></slot>
         </div>
     </div>
+    <template v-if="hasFloatingErrors && v.control.invalid && v.control.validated">
+        <bt-popover target="error-icon" :visible="v.control.focused && (!$refs.helpPopover || !$refs.helpPopover.isVisible)" class="bt-form-base-input-errors-popover">
+            <div>
+                <div class="error" v-for="error in v.control.errors">
+                    {{ error.message }}
+                </div>
+            </div>
+        </bt-popover>
+    </template>
+    <template v-if="hasFloatingHelp && hasHelpSlot">
+        <bt-popover ref="helpPopover" target="help-icon" class="bt-form-base-input-help-popover">
+            <slot name="help"></slot>
+        </bt-popover>
+    </template>
 </div>
