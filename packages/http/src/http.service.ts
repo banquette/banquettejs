@@ -28,7 +28,6 @@ import { ResponseEvent } from "./event/response.event";
 import { AuthenticationException } from "./exception/authentication.exception";
 import { NetworkException } from "./exception/network.exception";
 import { RequestCanceledException } from "./exception/request-canceled.exception";
-import { RequestTimeoutException } from "./exception/request-timeout.exception";
 import { RequestException } from "./exception/request.exception";
 import { HttpRequest } from "./http-request";
 import { HttpRequestBuilder } from "./http-request.builder";
@@ -246,11 +245,13 @@ export class HttpService {
      * Do what needs to be done after a request failed on the network level.
      */
     private handleRequestFailure(queuedRequest: QueuedRequestInterface<any>, error: Exception): void {
-        if (error instanceof NetworkException && !(error instanceof RequestTimeoutException) && !(error instanceof RequestCanceledException) && queuedRequest.triesLeft > 0) {
+        if (error instanceof NetworkException && error.retryable && queuedRequest.triesLeft > 0) {
             queuedRequest.executeAt = HttpService.CalculateNextTryTime(queuedRequest);
             queuedRequest.isExecuting = false;
             this.eventDispatcher.dispatch(HttpEvents.RequestQueued, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
-            this.processQueue();
+            if (this.networkWatcher.isOnline()) {
+                this.processQueue();
+            }
             return ;
         }
         queuedRequest.response.error = error;
@@ -297,9 +298,7 @@ export class HttpService {
                             reject: (response: HttpResponse<T>) => void,
                             progress: (value: RequestProgressEvent) => void): void {
         let i = 0;
-        this.networkWatcher.watch();
-        for (; i < this.requestsQueue.length && this.requestsQueue[i].request.priority >= request.priority; ++i);
-        this.requestsQueue.splice(i, 0, {
+        const queueRequest: QueuedRequestInterface<any> = {
             request,
             timeout: this.config.get('http.requestTimeout'),
             tryCount: 0,
@@ -312,6 +311,12 @@ export class HttpService {
             isExecuting: false,
             isError: false,
             response
+        };
+        this.networkWatcher.watch();
+        for (; i < this.requestsQueue.length && this.requestsQueue[i].request.priority >= request.priority; ++i);
+        this.requestsQueue.splice(i, 0, queueRequest);
+        request.setCancelCallback(() => {
+            this.handleRequestFailure(queueRequest, new RequestCanceledException());
         });
         this.scheduleQueueForProcess();
         this.eventDispatcher.dispatch(HttpEvents.RequestQueued, new RequestEvent(request), true, request.tags);

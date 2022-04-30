@@ -1,3 +1,4 @@
+import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { ObservablePromise } from "@banquette/promise/observable-promise";
@@ -10,6 +11,7 @@ import { NetworkException } from "../exception/network.exception";
 import { RequestCanceledException } from "../exception/request-canceled.exception";
 import { RequestTimeoutException } from "../exception/request-timeout.exception";
 import { HttpRequest } from "../http-request";
+import { NetworkWatcherService } from "../network-watcher.service";
 import { AdapterRequest } from "./adapter-request";
 import { AdapterResponse } from "./adapter-response";
 import { AdapterInterface } from "./adapter.interface";
@@ -23,6 +25,9 @@ export class XhrAdapter implements AdapterInterface {
     private promiseProgress!: (value?: any) => void;
     private requestProgressStatus!: HttpRequestProgressStatus;
     private canceled: boolean = false;
+
+    public constructor(@Inject(NetworkWatcherService) private networkWatcher: NetworkWatcherService) {
+    }
 
     /**
      * @inheritDoc
@@ -109,7 +114,7 @@ export class XhrAdapter implements AdapterInterface {
      */
     private onError(): void {
         this.updateProgressStatus(HttpRequestProgressStatus.Closed);
-        this.promiseReject(new NetworkException());
+        this.promiseReject(new NetworkException(!this.networkWatcher.isOnline()));
     }
 
     /**

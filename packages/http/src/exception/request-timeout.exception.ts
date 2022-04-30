@@ -9,6 +9,6 @@ export class RequestTimeoutException extends NetworkException {
                        message: string = `Timeout reached (${timeout})`,
                        previous?: Exception|null,
                        extra?: any) {
-        super(message, previous, extra);
+        super(false, message, previous, extra);
     }
 }

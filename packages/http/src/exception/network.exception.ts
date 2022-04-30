@@ -10,7 +10,8 @@ import { SystemException } from "@banquette/exception/system.exception";
 export class NetworkException extends SystemException {
     public slug: string = 'network';
 
-    public constructor(message: string = 'An error occurred during the transaction.',
+    public constructor(public readonly retryable: boolean,
+                       message: string = 'An error occurred during the transaction.',
                        previous?: Exception|null,
                        extra?: any) {
         super(message, previous, extra);

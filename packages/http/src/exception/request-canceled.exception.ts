@@ -6,6 +6,6 @@ import { NetworkException } from "./network.exception";
  */
 export class RequestCanceledException extends NetworkException {
     public constructor(message: string = 'Canceled.', previous?: Exception|null, extra?: any) {
-        super(message, previous, extra);
+        super(false, message, previous, extra);
     }
 }

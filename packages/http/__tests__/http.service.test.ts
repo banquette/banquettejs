@@ -31,6 +31,7 @@ import {
 import { TestResponses } from "./__mocks__/test-responses";
 import { buildTestUrl } from "./__mocks__/utils";
 import './__mocks__/xml-http-request.mock';
+import './__mocks__/network-watcher.mock';
 
 const eventDispatcher: EventDispatcherService = Injector.Get(EventDispatcherService);
 const http: HttpService = Injector.Get(HttpService);
@@ -532,7 +533,7 @@ describe('events dispatching', () => {
             url: buildTestUrl({networkError: 2, responseKey: 'ValidJson'})
         }));
         await response.promise;
-        expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(8); // RequestQueued x3 + RequestSuccess + BeforeRequest x3 + BeforeResponse
+        expect(eventDispatcher.dispatch).toHaveBeenCalledTimes(12); // RequestQueued x3 + RequestSuccess + BeforeRequest x3 + BeforeResponse + x4 NetworkAvailabilityChange (from mock)
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.RequestQueued, expect.any(Object), true, []);
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeRequest, expect.any(Object), true, []);
         expect(eventDispatcher.dispatch).toHaveBeenCalledWith(HttpEvents.BeforeResponse, expect.any(Object), true, []);

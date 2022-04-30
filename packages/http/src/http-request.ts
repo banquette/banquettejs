@@ -4,7 +4,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { Writeable, Primitive } from "@banquette/utils-type/types";
+import { Writeable, Primitive, VoidCallback } from "@banquette/utils-type/types";
 import { AdapterInterface } from "./adapter/adapter.interface";
 import { HttpConfigurationSymbol } from "./config";
 import { HttpMethod, UrlParameterType } from "./constants";
@@ -83,6 +83,7 @@ export class HttpRequest {
      * Track if the request has been canceled BEFORE the adapter is set.
      */
     private canceled: boolean = false;
+    private cancelCallback: VoidCallback|null = null;
 
     /**
      * Create a Request object.
@@ -157,9 +158,19 @@ export class HttpRequest {
     }
 
     /**
+     * A callback that is called when the request is canceled.
+     */
+    public setCancelCallback(callback: VoidCallback): void {
+        this.cancelCallback = callback;
+    }
+
+    /**
      * Cancel the request.
      */
     public cancel(): void {
+        if (this.cancelCallback) {
+            this.cancelCallback();
+        }
         if (!this.adapter) {
             this.canceled = true;
             return ;
