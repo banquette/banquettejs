@@ -67,8 +67,6 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
     public constructor() {
         this.remote = new RemoteModule();
         this.remote.updateConfiguration({allowMultiple: true});
-
-        // this.remote.onConfigurationChange(proxy(this.fetchRemoteNodes, this));
         this.viewData = {
             // The root is set to `null` until `setViewData` to give time to the component to configure the view model.
             root: null as any
