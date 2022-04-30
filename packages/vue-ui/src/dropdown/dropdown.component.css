@@ -23,6 +23,8 @@
     z-index: var(--dropdown-z-index);
 
     .bt-popover, &.bt-popover {
+        min-width: var(--dropdown-min-width);
+
         --bt-popover-text-color: var(--dropdown-text-color);
         --bt-popover-font-family: var(--dropdown-font-family);
         --bt-popover-font-size: var(--dropdown-font-size);
@@ -35,7 +37,6 @@
             line-height: 1.5;
             padding: 0.5rem 0;
             overflow: auto;
-            min-width: var(--dropdown-min-width);
             max-height: var(--dropdown-max-height);
         }
     }
