@@ -1,0 +1,62 @@
+<div
+    class="bt-form-file"
+    :tabindex="v.control.tabIndex"
+    v-bt-bind-theme
+    :data-is-multiple="v.multiple ? '' : null"
+    :data-has-value="v.control.value.length > 0 ? '' : null"
+    :data-has-focus="v.control.focused ? '' : null"
+    :data-is-disabled="v.control.disabled ? '' : null"
+    @keydown="onKeyDown"
+    @focus="v.control.onFocus()"
+    @blur="v.control.onBlur()"
+>
+    <bt-form-base-input :v="v">
+        <input
+            ref="input"
+            type="file"
+            :multiple="v.multiple ? '' : null"
+            :accept="v.accept"
+            data-file-input
+            @change="onFileSelectionChange"
+        />
+        <div class="inner-wrapper">
+            <slot name="browse" :browse="browse">
+                <div class="browse" @click="browse()">
+                    <slot name="browse-text">Choose file</slot>
+                </div>
+            </slot>
+            <div class="files-queue">
+                <div v-for="formFile in v.control.value" class="file-item" :class="{error: formFile.failed}">
+                    <div class="file-details">
+                        <bt-progress-circular v-if="formFile.uploading"></bt-progress-circular>
+                        <div class="error-icon" v-else-if="formFile.failed"><icon-error></icon-error></div>
+                        <icon-description v-else></icon-description>
+                        <div class="file-details-inner">
+                            <div class="file-name">
+                                {{ formFile.filename }}
+                            </div>
+                            <bt-progress-horizontal :progress="formFile.progress" v-if="formFile.uploading || formFile.paused"></bt-progress-horizontal>
+                            <div class="file-size" v-if="formFile.file">{{ formFile.uploadedSizeText }} / {{ formFile.totalSizeText }} ({{ formFile.progress }}%)</div>
+                            <div class="file-size" v-else-if="formFile.totalSize">{{ formFile.totalSizeText }}</div>
+                            <div class="error-message" v-if="formFile.failed">{{ formFile.error }}</div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <div class="done-icon" v-if="formFile.succeeded"><icon-done></icon-done></div>
+                        <bt-button @click="start(formFile)" v-if="formFile.paused || formFile.failed">
+                            <icon-file-upload></icon-file-upload>
+                        </bt-button>
+                        <bt-button @click="pause(formFile)" v-if="formFile.uploading">
+                            <icon-stop></icon-stop>
+                        </bt-button>
+                        <bt-button @click="cancel(formFile)">
+                            <icon-close></icon-close>
+                        </bt-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <template #label><slot></slot></template>
+        <template #help><slot name="help"></slot></template>
+    </bt-form-base-input>
+</div>

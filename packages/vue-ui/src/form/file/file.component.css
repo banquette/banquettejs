@@ -1,0 +1,139 @@
+.bt-form-file {
+    --form-file-browse-border-color: var(--bt-form-file-browse-border-color, var(--bt-color-gray-150));
+
+    --form-file-item-border-width: var(--bt-form-file-item-border-width, 1px);
+    --form-file-item-border-style: var(--bt-form-file-item-border-style, dashed);
+    --form-file-item-border-color: var(--bt-form-file-item-border-color, var(--bt-color-gray-150));
+
+    --form-file-item-size-text-color: var(--bt-form-file-item-size-text-color, var(--bt-text-color-light));
+    --form-file-item-size-font-size: var(--bt-form-file-item-size-font-size, var(--bt-font-size-sm));
+
+    --form-file-item-action-button-text-color: var(--bt-form-file-item-action-text-color, var(--bt-color-primary));
+    --form-file-item-action-button-background: var(--bt-form-file-item-action-button-background, none);
+    --form-file-item-action-button-hover-background: var(--bt-form-file-item-action-button-hover-background, var(--bt-color-primary-50));
+    --form-file-item-action-button-focus-background: var(--bt-form-file-item-action-button-focus-background, var(--bt-color-primary-50));
+    --form-file-item-action-button-active-background: var(--bt-form-file-item-action-button-active-background, var(--bt-color-primary-100));
+
+    --form-file-done-icon-color: var(--bt-form-file-done-icon-color, var(--bt-color-green-500));
+
+    --form-file-padding-x: var(--bt-form-file-padding-x, 1em);
+    --form-file-padding-y: var(--bt-form-file-padding-y, 0.8em);
+}
+
+.bt-form-file :deep(.bt-form-base-input) {
+    --bt-form-base-input-text-color: var(--bt-form-file-text-color);
+    --bt-form-base-input-label-color: var(--bt-form-file-label-color);
+    --bt-form-base-input-help-color: var(--bt-form-file-help-color);
+    --bt-form-base-input-help-font-size: var(--bt-form-file-help-font-size);
+    --bt-form-base-input-error-text-color: var(--bt-form-file-error-text-color);
+    --bt-form-base-input-error-font-size: var(--bt-form-file-error-font-size);
+    --bt-form-base-input-text-addon-color: var(--bt-form-file-text-addon-color);
+
+    --bt-form-base-input-font-family: var(--bt-form-file-font-family);
+    --bt-form-base-input-font-size: var(--bt-form-file-font-size);
+    --bt-form-base-input-font-weight: var(--bt-form-file-font-weight);
+
+    --bt-form-base-input-border-color: var(--bt-form-file-border-color);
+    --bt-form-base-input-border-focus-color: var(--bt-form-file-border-focus-color);
+    --bt-form-base-input-border-error-color: var(--bt-form-file-border-error-color);
+    --bt-form-base-input-border-disabled-color: var(--bt-form-file-border-disabled-color);
+
+    --bt-form-base-input-background-color: var(--bt-form-file-background-color);
+    --bt-form-base-input-background-disabled-color: var(--bt-form-file-background-disabled-color);
+    --bt-form-base-input-addon-background-color: var(--bt-form-file-addon-background-color);
+
+    --bt-form-base-input-border-radius: var(--bt-form-file-border-radius);
+    --bt-form-base-input-border-width: var(--bt-form-file-border-width);
+    --bt-form-base-input-border-style: var(--bt-form-file-border-style);
+}
+
+.bt-form-file {
+    outline: none;
+
+    [data-file-input] {
+        display: none;
+    }
+
+    .inner-wrapper {
+        width: 100%;
+    }
+
+    .browse {
+        padding: var(--form-file-padding-y) var(--form-file-padding-x);
+    }
+
+    .file-item {
+        --bt-button-background-color: var(--form-file-item-action-button-background);
+        --bt-button-background-hover-color: var(--form-file-item-action-button-hover-background);
+        --bt-button-background-focus-color: var(--form-file-item-action-button-focus-background);
+        --bt-button-background-active-color: var(--form-file-item-action-button-active-background);
+        --bt-button-text-color: var(--form-file-item-action-button-text-color);
+
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.5rem 0.8rem;
+        align-items: center;
+
+        &:not(:last-child) {
+            border-bottom: var(--form-file-item-border-width) var(--form-file-item-border-style) var(--form-file-item-border-color);
+        }
+
+        .file-details {
+            display: flex;
+            align-items: start;
+            flex-grow: 1;
+            gap: 0.4rem;
+        }
+
+        .file-details-inner {
+            flex-grow: 1;
+        }
+
+        .file-name {
+            padding-bottom: 0.2em;
+            color: var(--form-base-input-text-color);
+        }
+
+        .file-size {
+            color: var(--form-file-item-size-text-color);
+            font-size: var(--form-file-item-size-font-size);
+        }
+
+        :deep(svg) path {
+            color: var(--form-base-input-text-color);
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+
+            :deep(.bt-button) {
+                padding: 0.3em 0.5em;
+            }
+
+            .done-icon :deep(svg) {
+                width: 1.3rem;
+                fill: var(--form-file-done-icon-color);
+            }
+        }
+
+        &.error {
+            color: var(--form-base-input-error-text-color);
+
+            .error-icon :deep(svg) {
+                width: 1.5rem;
+                fill: var(--form-base-input-error-text-color);
+            }
+        }
+
+        :deep(.bt-progress-circular) {
+            margin-top: 2px;
+        }
+    }
+
+    &[data-has-value] .browse {
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--form-file-browse-border-color);
+    }
+}

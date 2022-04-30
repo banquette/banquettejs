@@ -29,6 +29,13 @@ export * from './form/form/event/form-action-error.event-arg';
 export * from './form/checkbox/headless-checkbox-view.model';
 export * from './form/checkbox/headless-checkbox-view-data.interface';
 
+// File
+export * from './form/file/constant';
+export * from './form/file/form-file';
+export * from './form/file/form-file.interface';
+export * from './form/file/headless-form-file-view-data.interface';
+export * from './form/file/headless-form-file.view-model';
+
 // Tree
 export * from './form/tree/headless-form-tree-view.model';
 export * from './form/tree/headless-form-tree-view-data.interface';
