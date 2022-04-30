@@ -3,7 +3,7 @@ import { FormError } from "@banquette/form/form-error";
 /**
  * View data of the `ControlModule`.
  */
-export interface ControlViewDataInterface {
+export interface ControlViewDataInterface<ValueType = any> {
     readonly id: number;
     readonly formId: string;
     readonly fullId: string | null;
@@ -29,7 +29,7 @@ export interface ControlViewDataInterface {
     errors: FormError[];
     errorsMap: Record<string, string | null>;
     tabIndex: number;
-    value: any;
+    value: ValueType;
 
     onFocus(): void;
     onBlur(): void;

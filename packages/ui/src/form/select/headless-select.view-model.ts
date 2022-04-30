@@ -104,7 +104,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         super(control);
         this.remote = new RemoteModule();
 
-        // Set the default view data this class is responsible of.
+        // Set the default view data this class is responsible for.
         Object.assign(this.viewData, {
             choices: [],
             groupedChoices: {},
@@ -723,7 +723,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             for (const item of this.choices[origin]) {
                 if (identifiers.indexOf(item.identifier) > -1) {
                     console.warn(`Duplicate identifier "${String(item.identifier)}". Ignoring choice with label "${item.label}".`);
-                    return ;
+                    continue ;
                 }
                 if (item.group) {
                     if (isUndefined(originChoices.grouped[item.group])) {
