@@ -131,7 +131,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * An HTML element or selector to teleport the popover into.
      */
-    @Prop({type: [Object, String], default: 'body'}) public teleport!: HTMLElement|string|null;
+    @Prop({type: [Object, String], default: null}) public teleport!: HTMLElement|string|null;
 
     /**
      * To translate the popover from its original position.
