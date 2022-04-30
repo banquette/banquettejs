@@ -22,7 +22,7 @@
     font-size: var(--bt-font-size-base);
     border-radius: var(--bt-border-radius-base);
     box-shadow: var(--bt-shadow-popover);
-    z-index: var(--bt-z-index-popover);
+    z-index: 100000;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
