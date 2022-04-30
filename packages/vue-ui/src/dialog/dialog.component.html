@@ -1,5 +1,5 @@
 <Teleport :to="teleport" :disabled="!teleport">
-    <div class="bt-dialog" v-bt-bind-theme>
+    <div class="bt-dialog" v-bt-bind-theme v-bind="$attrs">
         <bt-overlay v-if="rendered" v-show="visible" :disabled="!modal" @mousedown="onOverlayMouseDown">
             <div class="bt-dialog-inner" @mousedown.stop>
                 <div class="header" v-if="hasHeader">

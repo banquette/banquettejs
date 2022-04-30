@@ -13,6 +13,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { OverlayComponent } from "../overlay";
 import { DialogEvents } from "./constant";
@@ -25,6 +26,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-dialog',
     components: [OverlayComponent],
+    directives: [BindThemeDirective],
     emits: ['update:modelValue', 'close'],
     factory: () => Injector.Get(DialogComponent)
 })

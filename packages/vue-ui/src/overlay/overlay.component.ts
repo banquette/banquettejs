@@ -3,11 +3,15 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { ThemeVar } from "@banquette/vue-typescript/decorator/theme-var.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
-@Component('bt-overlay')
+@Component({
+    name: 'bt-overlay',
+    directives: [BindThemeDirective]
+})
 export default class OverlayComponent extends Vue {
     private static zIndexIncrement: number = 0;
 

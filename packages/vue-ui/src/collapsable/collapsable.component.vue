@@ -9,12 +9,14 @@ import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.de
 import { ThemeVar } from "@banquette/vue-typescript/decorator/theme-var.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-collapsable',
+    directives: [BindThemeDirective],
     emits: ['update:modelValue']
 })
 export default class CollapsableComponent extends Vue {

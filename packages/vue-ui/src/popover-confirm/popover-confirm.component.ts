@@ -3,6 +3,7 @@ import { Component } from "@banquette/vue-typescript/decorator/component.decorat
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { DropdownComponent } from "../dropdown";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -11,6 +12,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-popover-confirm',
     components: [DropdownComponent, IconHelp],
+    directives: [BindThemeDirective],
     emits: ['confirm', 'cancel']
 })
 export default class PopoverConfirmComponent extends Vue {
