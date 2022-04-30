@@ -54,6 +54,12 @@
             width: 100%;
             cursor: pointer;
 
+            &::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+            }
+
             .control-wrapper {
                 border: none;
                 background: none;
@@ -134,6 +140,7 @@
             transform: rotate(180deg);
             transform-origin: center;
             transition: transform 0.3s ease-in-out;
+            pointer-events: none;
 
             path {
                 fill: currentColor;

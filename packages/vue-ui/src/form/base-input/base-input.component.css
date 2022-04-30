@@ -213,6 +213,11 @@
         display: flex;
         align-items: center;
         gap: 0.4em;
+        pointer-events: none;
+
+        & > * {
+            pointer-events: auto;
+        }
 
         &:empty {
             display: none;
