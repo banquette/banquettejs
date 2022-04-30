@@ -1,4 +1,3 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
 import { HttpMethod } from "@banquette/http/constants";
 import { SearchType, ChoicesPropResolver } from "@banquette/ui/form/select/constant";
 import { ChoiceOrigin } from "@banquette/ui/form/select/constant";
@@ -17,6 +16,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { useResizeObserver, ResizeObserverEntry } from "@vueuse/core";
 import { DropdownComponent } from "../../../dropdown";
 import { ClickOutsideDirective } from "../../../misc";
@@ -24,7 +24,6 @@ import { ProgressCircularComponent } from "../../../progress/progress-circular";
 import { TagComponent } from "../../../tag";
 import { BaseInputComposable } from "../../base-input/base-input.composable";
 import { ViewModelEvents } from "../../constant";
-import { ErrorComponent } from "../../error";
 import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
 import { BeforeSlotOrigin, AfterSlotOrigin, PropOrigin } from "../constant";
 import ChoiceSlotWrapperComponent from "./choice-slot-wrapper.component";
@@ -37,8 +36,8 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ErrorComponent, ProgressCircularComponent, IconCancel],
-    directives: [ClickOutsideDirective],
+    components: [ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconCancel],
+    directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['focus', 'blur', 'change']
 })
 export default class SelectComponent extends AbstractVueFormComponent<SelectViewDataInterface, SelectViewModel> {
@@ -93,7 +92,8 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @Prop({name: 'remote:endpoint', type: String, default: null}) public endpoint!: string|null;
     @Prop({name: 'remote:model', type: String, default: null}) public model!: string|null;
     @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
-    @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, string>;
+    @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({name: 'remote:headers', type: Object, default: {}}) public headers!: Record<string, Primitive>;
 
     /**
      * Search related props.
@@ -105,7 +105,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     /**
      * Dropdown related props.
      */
-    @Prop({name: 'dropdown:teleport', type: [Object, String], default: 'body'}) public dropdownTeleport!: HTMLElement|string|null;
+    @Prop({name: 'dropdown:teleport', type: [Object, String], default: null}) public dropdownTeleport!: HTMLElement|string|null;
     @Prop({name: 'dropdown:zIndex', type: Number, default: undefined}) public dropdownZIndex!: number|undefined;
 
     // Override the type to get autocompletion in the view.
@@ -304,13 +304,14 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.v.isInputReadonly = this.vm.searchType === SearchType.None && !this.allowCreation;
     }
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.BeforeMount})
     private syncRemoteProps(): void {
         this.vm.remote.updateConfiguration({
             url: this.url,
             endpoint: this.endpoint,
             method: this.method,
             urlParams: this.urlParams,
+            headers: this.headers,
             model: this.model
         });
     }
