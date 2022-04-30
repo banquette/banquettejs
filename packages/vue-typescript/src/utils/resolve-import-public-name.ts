@@ -15,16 +15,16 @@ export function resolveImportPublicName(originalPrefix: string|undefined, origin
         return originalName;
     }
     if (prefixOrAlias === null) {
-        return originalPrefix + ':' + originalName;
+        return originalPrefix + originalName;
     }
     if (prefixOrAlias === false) {
         return originalName;
     }
     if (isString(prefixOrAlias)) {
-        return prefixOrAlias + ':' + originalName;
+        return prefixOrAlias + originalName;
     }
     if (isType<AliasesMap>(prefixOrAlias, isObject)) {
-        return !isUndefined(prefixOrAlias[originalName]) ? String(prefixOrAlias[originalName]) : false;
+        return !isUndefined(prefixOrAlias[originalName]) ? prefixOrAlias[originalName] : originalName;
     }
     if (isFunction(prefixOrAlias)) {
         return (prefixOrAlias as AliasResolver)(originalName);

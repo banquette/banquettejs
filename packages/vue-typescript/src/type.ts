@@ -11,7 +11,7 @@ export type Prefix = string|false|null;
 /**
  * A map between original names and aliases.
  */
-export type AliasesMap = Record<string, string>;
+export type AliasesMap = Record<string, string|false>;
 
 /**
  * A function converting an original name into an alias.

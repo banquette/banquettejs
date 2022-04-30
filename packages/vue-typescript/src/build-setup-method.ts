@@ -99,7 +99,10 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             rootProps = {};
             for (const propName of Object.keys(props)) {
                 let propRef = toRef(props, propName);
-                if (!isUndefined(data.props[propName]) && (data.themeable === null || propName !== data.themeable.prop)) {
+                if (isUndefined(data.props[propName])) {
+                    continue ;
+                }
+                if (data.themeable === null || propName !== data.themeable.prop) {
                     propRef = ((proxified: Ref, propName: string, validate: ValidatorInterface|null, transform: GenericCallback|null) => {
                         let lastOriginalValue: any = Symbol('unassigned');
                         let lastModifiedValue: any;
@@ -378,15 +381,17 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     }
                     composableInst[subProp] = inst[realPropName];
                     const descriptor = Object.getOwnPropertyDescriptor(inst, realPropName)!;
-                    ((getter: any, setter: any) => {
-                        Object.defineProperty(composableInst, subProp, {
-                            get: getter,
-                            set: setter,
-                            enumerable: true,
-                            configurable: true,
-                        });
-                    })(descriptor.get, descriptor.set);
-                    delete inst[realPropName];
+                    if (!isUndefined(descriptor)) {
+                        ((getter: any, setter: any) => {
+                            Object.defineProperty(composableInst, subProp, {
+                                get: getter,
+                                set: setter,
+                                enumerable: true,
+                                configurable: true,
+                            });
+                        })(descriptor.get, descriptor.set);
+                        delete inst[realPropName];
+                    }
                 }
                 // Assign the composable instance to the hosting component.
                 Object.defineProperty(inst, targetProperty, {
