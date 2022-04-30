@@ -1,10 +1,9 @@
 import { HeadlessFormViewDataInterface } from "@banquette/ui/form/form/headless-form-view-data.interface";
-import { AnyObject } from "@banquette/utils-type/types";
 
-export interface FormViewDataInterface extends HeadlessFormViewDataInterface {
+export interface FormViewDataInterface<ModelType> extends HeadlessFormViewDataInterface {
     /**
      * The model instance.
      * Can be `null` if no model is bound to the form or not yet created.
      */
-    model: AnyObject|null;
+    model: ModelType|null;
 }

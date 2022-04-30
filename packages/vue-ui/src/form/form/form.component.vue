@@ -14,7 +14,7 @@ import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureString } from "@banquette/utils-type/ensure-string";
-import { Writeable } from "@banquette/utils-type/types";
+import { Writeable, Primitive } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -27,7 +27,7 @@ import { FormViewDataInterface } from "./form-view-data.interface";
     name: 'bt-form',
     emits: ['load', 'submit']
 })
-export default class FormComponent<ViewData extends FormViewDataInterface = FormViewDataInterface, ModelType extends object = any> extends Vue {
+export default class FormComponent<ModelType extends object = any, ViewData extends FormViewDataInterface<ModelType> = FormViewDataInterface<ModelType>> extends Vue {
     /**
      * Optional model to bind the form with.
      */
@@ -38,7 +38,9 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
      */
     @Prop({name: 'load:url', type: String, default: null}) public loadUrl!: string|null;
     @Prop({name: 'load:endpoint', type: String, default: null}) public loadEndpoint!: string|null;
-    @Prop({name: 'load:urlParams', type: Object, default: {}}) public loadUrlParams!: Record<string, string>;
+    @Prop({name: 'load:urlParams', type: Object, default: {}}) public loadUrlParams!: Record<string, Primitive>;
+    @Prop({name: 'load:headers', type: Object, default: {}}) public loadHeaders!: Record<string, Primitive>;
+
     /**
      * An object holding the default values of the form.
      * Can be a POJO or a model.
@@ -53,7 +55,8 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
     @Prop({name: 'persist:url', type: String, default: null}) public persistUrl!: string|null;
     @Prop({name: 'persist:method', type: String, transform: (value) => ensureInEnum(ensureString(value).toUpperCase(), HttpMethod, HttpMethod.POST)}) public persistMethod!: HttpMethod;
     @Prop({name: 'persist:endpoint', type: String, default: null}) public persistEndpoint!: string|null;
-    @Prop({name: 'persist:urlParams', type: Object, default: {}}) public persistUrlParams!: Record<string, string>;
+    @Prop({name: 'persist:urlParams', type: Object, default: {}}) public persistUrlParams!: Record<string, Primitive>;
+    @Prop({name: 'persist:headers', type: Object, default: {}}) public persistHeaders!: Record<string, Primitive>;
     @Prop({name: 'persist:payloadType', type: String, transform: (input: any) => {
         if (input === 'form-data') {
             return PayloadTypeFormData;
@@ -114,7 +117,7 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
         this.unsubscribeFunctions.push(this.vm.onValidateSuccess(proxy(this.onValidateSuccess, this)));
         this.unsubscribeFunctions.push(this.vm.onValidateError(proxy(this.onValidateError, this)));
         this.unsubscribeFunctions.push(this.vm.onBindModel((event: BindModelEventArg) => {
-            this.v.model = event.model;
+            this.v.model = event.model as ModelType;
             this.onBindModel(event);
         }));
         this.unsubscribeFunctions.push(this.vm.form.onValueChanged(this.forceUpdateOnce));
@@ -172,7 +175,7 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
         this.forceUpdate();
     });
 
-    @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadHeaders', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})
     private syncLoadConfigurationProps(): void {
         this.vm.modelType = this.modelType;
         this.vm.loadData = this.loadData;
@@ -180,11 +183,12 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
             model: this.modelType,
             url: this.loadUrl,
             endpoint: this.loadEndpoint,
-            urlParams: this.loadUrlParams
+            urlParams: this.loadUrlParams,
+            headers: this.loadHeaders
         });
     }
 
-    @Watch(['modelType','persistUrl', 'persistEndpoint','persistUrlParams', 'persistPayloadType'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['modelType', 'persistUrl', 'persistEndpoint','persistUrlParams', 'persistHeaders', 'persistPayloadType'], {immediate: ImmediateStrategy.BeforeMount})
     private syncPersistConfigurationProps(): void {
         this.vm.modelType = this.modelType;
         this.vm.persistRemote.updateConfiguration({
@@ -193,6 +197,7 @@ export default class FormComponent<ViewData extends FormViewDataInterface = Form
             method: this.persistMethod,
             endpoint: this.persistEndpoint,
             urlParams: this.persistUrlParams,
+            headers: this.persistHeaders,
             payloadType: this.persistPayloadType
         });
     }

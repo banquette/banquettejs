@@ -264,7 +264,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             if (this.persistRemote.isApplicable) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
-                const response: HttpResponse<any> = this.persistRemote.send(this.modelInstance ? this.modelInstance : this.form.value, {}, [FormTag, FormPersistTag]);
+                const response: HttpResponse<any> = this.persistRemote.send(this.modelInstance ? this.modelInstance : this.form.value, {}, {}, [FormTag, FormPersistTag]);
                 try {
                     await response.promise;
                     this.updateState(Action.Persist, Status.Success);
@@ -488,7 +488,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         if (!this.loadRemote.isApplicable) {
             return ;
         }
-        const response = this.loadRemote.send(null, {}, [FormTag, FormLoadTag]);
+        const response = this.loadRemote.send(null, {}, {}, [FormTag, FormLoadTag]);
         return response.promise.then((response: HttpResponse<any>) => {
             const baseError = `The ajax request didn't result with the expected value. ` +
                 `You can intercept the response by listening to a "HttpEvents.BeforeResponse" event with the "FormLoadTag" tag ` +
