@@ -38,7 +38,16 @@ export class MetadataContainer {
      * Get the metadata of an injectable from the container.
      */
     public static Get(identifier: InjectableIdentifier): InjectableMetadataInterface|null {
-        return MetadataContainer.IdentifierMap.get(identifier) || null;
+        const metadata = MetadataContainer.IdentifierMap.get(identifier);
+        if (metadata) {
+            return metadata;
+        }
+        for (const candidate of MetadataContainer.KnownMetadata) {
+            if (candidate.ctor === identifier) {
+                return MetadataContainer.IdentifierMap.get(candidate.identifier) || null;
+            }
+        }
+        return null;
     }
 
     /**
