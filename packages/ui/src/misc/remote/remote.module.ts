@@ -53,6 +53,11 @@ export class RemoteModule {
     public readonly urlParams!: Record<string, Primitive>;
 
     /**
+     * Headers to add the every request done by the module.
+     */
+    public readonly headers!: Record<string, Primitive>;
+
+    /**
      * Set the expected format of the payload.
      */
     public readonly payloadType?: symbol;
@@ -93,7 +98,7 @@ export class RemoteModule {
      * Update the configuration and notify of the change.
      */
     public updateConfiguration(configuration: Partial<RemoteConfigurationInterface>): void {
-        for (const prop of ['url', 'endpoint', 'method', 'model', 'urlParams', 'payloadType', 'responseType', 'allowMultiple']) {
+        for (const prop of ['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'payloadType', 'responseType', 'allowMultiple']) {
             (this as any)[prop] = !isUndefined((configuration as any)[prop]) ? (configuration as any)[prop] : (this as any)[prop];
         }
         this.eventDispatcher.dispatch(RemoteModuleEvents.ConfigurationChange);
@@ -102,7 +107,7 @@ export class RemoteModule {
     /**
      * Call the server using the current configuration and process the results.
      */
-    public send<T = any>(payload?: any, urlParams: Record<string, Primitive> = {}, tags: symbol[] = []): HttpResponse<T> {
+    public send<T = any>(payload?: any, urlParams: Record<string, Primitive> = {}, headers: Record<string, Primitive> = {}, tags: symbol[] = []): HttpResponse<T> {
         if (this.response !== null && this.response.isPending && !this.allowMultiple) {
             this.response.request.cancel();
         }
@@ -112,6 +117,7 @@ export class RemoteModule {
             .model(this.model)
             .method(this.method)
             .params(extend({}, [this.urlParams, urlParams]))
+            .headers(extend({}, [this.headers, headers]))
             .payload(payload, this.payloadType)
             .responseType(this.responseType)
             .tags(tags)

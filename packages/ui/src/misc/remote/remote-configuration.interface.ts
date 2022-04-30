@@ -33,6 +33,11 @@ export interface RemoteConfigurationInterface {
     urlParams: Record<string, Primitive>;
 
     /**
+     * Headers to add to every request of the module.
+     */
+    headers: Record<string, Primitive>;
+
+    /**
      * Set the expected format of the payload.
      */
     payloadType?: symbol;

@@ -1,8 +1,8 @@
-import { Injector } from "@banquette/dependency-injection/injector";
 import { HttpMethod, HttpResponseStatus } from "@banquette/http/constants";
 import { HttpResponse } from "@banquette/http/http-response";
 import { RemoteModule } from "@banquette/ui/misc/remote/remote.module";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { Primitive } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -24,7 +24,8 @@ export default class RemoteComponent extends Vue {
     @Prop({type: String, default: null}) public endpoint!: string|null;
     @Prop({type: String, default: null}) public model!: string|null;
     @Prop({type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
-    @Prop({type: Object, default: {}}) public urlParams!: Record<string, string>;
+    @Prop({type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({type: Object, default: {}}) public headers!: Record<string, Primitive>;
 
     @Expose() public response: HttpResponse<any>|null = null;
 
@@ -49,13 +50,14 @@ export default class RemoteComponent extends Vue {
         }
     }
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.NextTick})
     private syncConfigurationProps(): void {
         this.remote.updateConfiguration({
             url: this.url,
             endpoint: this.endpoint,
             method: this.method,
             urlParams: this.urlParams,
+            headers: this.headers,
             model: this.model
         });
         this.update();

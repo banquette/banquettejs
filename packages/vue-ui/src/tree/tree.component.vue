@@ -56,7 +56,8 @@ export default class TreeComponent extends Vue {
     @Prop({name: 'remote:url', type: String, default: null}) public url!: string|null;
     @Prop({name: 'remote:endpoint', type: String, default: null}) public endpoint!: string|null;
     @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
-    @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, string>;
+    @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({name: 'remote:headers', type: Object, default: {}}) public headers!: Record<string, Primitive>;
 
     /**
      * If defined, make the ajax request contextualized per node.
@@ -143,14 +144,15 @@ export default class TreeComponent extends Vue {
         }
     }
 
-    @Watch(['model','url', 'endpoint','method', 'urlParams'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['model','url', 'endpoint','method', 'urlParams', 'headers'], {immediate: ImmediateStrategy.BeforeMount})
     private syncRemoteConfigurationProps(): void {
         this.vm.remote.updateConfiguration({
             model: this.model,
             url: this.url,
             method: this.method,
             endpoint: this.endpoint,
-            urlParams: this.urlParams
+            urlParams: this.urlParams,
+            headers: this.headers
         });
     }
 
