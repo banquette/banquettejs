@@ -5,49 +5,45 @@ VueThemes.Define('bt-tag', {
         {
             match: 'success',
             cssVars: {
-                textColor: 'var(--bt-color-green-500)',
-                backgroundColor: 'var(--bt-color-green-700)',
-                borderColor: 'var(--bt-color-green-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-green-contrast)',
-                    backgroundColor: 'var(--bt-color-green-500)'
-                }
+                textColor: 'var(--bt-color-green-400)',
+                backgroundColor: 'var(--bt-color-green-750)',
+                borderColor: 'var(--bt-color-green-700)',
+                closeFillColor: 'var(--bt-color-green-400)',
+                closeFillHoverColor: 'var(--bt-color-green-400)',
+                closeBackgroundHoverColor: 'var(--bt-color-green-800)'
             }
         },
         {
             match: 'warning',
             cssVars: {
-                textColor: 'var(--bt-color-orange-500)',
-                backgroundColor: 'var(--bt-color-orange-50)',
-                borderColor: 'var(--bt-color-orange-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-orange-contrast)',
-                    backgroundColor: 'var(--bt-color-orange-500)'
-                }
+                textColor: 'var(--bt-color-orange-400)',
+                backgroundColor: 'var(--bt-color-orange-750)',
+                borderColor: 'var(--bt-color-orange-700)',
+                closeFillColor: 'var(--bt-color-orange-400)',
+                closeFillHoverColor: 'var(--bt-color-orange-400)',
+                closeBackgroundHoverColor: 'var(--bt-color-orange-800)'
             }
         },
         {
             match: 'danger',
             cssVars: {
-                textColor: 'var(--bt-color-red-500)',
-                backgroundColor: 'var(--bt-color-red-50)',
-                borderColor: 'var(--bt-color-red-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-red-contrast)',
-                    backgroundColor: 'var(--bt-color-red-500)'
-                }
+                textColor: 'var(--bt-color-red-400)',
+                backgroundColor: 'var(--bt-color-red-750)',
+                borderColor: 'var(--bt-color-red-700)',
+                closeFillColor: 'var(--bt-color-red-400)',
+                closeFillHoverColor: 'var(--bt-color-red-400)',
+                closeBackgroundHoverColor: 'var(--bt-color-red-800)'
             }
         },
         {
             match: 'dark',
             cssVars: {
-                textColor: 'var(--bt-color-white)',
-                backgroundColor: 'var(--bt-color-gray-800)',
-                borderColor: 'var(--bt-color-gray-850)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-gray-850)',
-                    backgroundColor: 'var(--bt-color-white)'
-                }
+                textColor: 'var(--bt-color-gray-400)',
+                backgroundColor: 'var(--bt-color-gray-750)',
+                borderColor: 'var(--bt-color-gray-700)',
+                closeFillColor: 'var(--bt-color-gray-400)',
+                closeFillHoverColor: 'var(--bt-color-gray-400)',
+                closeBackgroundHoverColor: 'var(--bt-color-gray-800)'
             }
         },
         {
@@ -56,10 +52,9 @@ VueThemes.Define('bt-tag', {
                 textColor: 'var(--bt-color-gray-550)',
                 backgroundColor: 'var(--bt-color-gray-50)',
                 borderColor: 'var(--bt-color-gray-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-white)',
-                    backgroundColor: 'var(--bt-color-gray-500)'
-                }
+                closeFillColor: 'var(--bt-color-gray-500)',
+                closeFillHoverColor: 'var(--bt-color-gray-500)',
+                closeBackgroundHoverColor: 'var(--bt-color-gray-200)'
             }
         },
 
