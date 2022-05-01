@@ -49,10 +49,10 @@ export default class TableComponent extends Vue {
     /**
      * Composables.
      */
-    @Import(PaginationComposable, 'pagination') public paginationComposable!: PaginationComposable;
-    @Import(FilteringComposable, {remote: 'filtering:remote', filters: 'filters'}) public filteringComposable!: FilteringComposable;
-    @Import(OrderingComposable, 'ordering') public orderingComposable!: OrderingComposable;
-    @Import(RemoteComposable, false) public remoteComposable!: RemoteComposable;
+    @Import(PaginationComposable) public pagination!: PaginationComposable;
+    @Import(FilteringComposable, {remote: 'filteringRemote', filters: 'filters'}) public filtering!: FilteringComposable;
+    @Import(OrderingComposable, 'order-') public ordering!: OrderingComposable;
+    @Import(RemoteComposable, false) public remote!: RemoteComposable;
 
     /**
      * A map between columns ids and FilterComponent instances.
@@ -92,10 +92,10 @@ export default class TableComponent extends Vue {
      */
     public beforeMount(): void {
         this.vm = Injector.Get(TableViewModel);
-        this.paginationComposable.module = this.vm.pagination;
-        this.filteringComposable.module = this.vm.filtering;
-        this.orderingComposable.module = this.vm.ordering;
-        this.remoteComposable.module = this.vm.remote;
+        this.pagination.module = this.vm.pagination;
+        this.filtering.module = this.vm.filtering;
+        this.ordering.module = this.vm.ordering;
+        this.remote.module = this.vm.remote;
     }
 
     /**

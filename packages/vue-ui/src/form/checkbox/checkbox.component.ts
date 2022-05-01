@@ -24,14 +24,7 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
     /**
      * Holds the props exposed by the base input.
      */
-    @Import(BaseInputComposable, {
-        // Prevent "label" from being exposed
-        placeholder     : 'placeholder',
-        help            : 'help',
-        floatingHelp    : 'floatingHelp',
-        floatingErrors  : 'floatingErrors',
-        debug           : 'debug'
-    }) public base!: BaseInputComposable;
+    @Import(BaseInputComposable, {label: false}) public base!: BaseInputComposable;
 
     /**
      * The text to show next to the checkbox.

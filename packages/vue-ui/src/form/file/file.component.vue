@@ -36,14 +36,7 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
     /**
      * Holds the props exposed by the base input.
      */
-    @Import(BaseInputComposable, {
-        label: 'label',
-        placeholder: 'placeholder',
-        help: 'help',
-        floatingErrors: 'floatingErrors',
-        floatingHelp: 'floatingHelp',
-        debug: 'debug'
-    }) public base!: BaseInputComposable;
+    @Import(BaseInputComposable, false) public base!: BaseInputComposable;
 
     /**
      * `true` to accept multiple files.

@@ -52,18 +52,18 @@ export default class TreeComponent extends Vue {
     /**
      * Remote related props.
      */
-    @Prop({name: 'remote:model', type: String, default: null}) public model!: string|null;
-    @Prop({name: 'remote:url', type: String, default: null}) public url!: string|null;
-    @Prop({name: 'remote:endpoint', type: String, default: null}) public endpoint!: string|null;
-    @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
-    @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
-    @Prop({name: 'remote:headers', type: Object, default: {}}) public headers!: Record<string, Primitive>;
+    @Prop({name: 'remoteModel', type: String, default: null}) public model!: string|null;
+    @Prop({name: 'remoteUrl', type: String, default: null}) public url!: string|null;
+    @Prop({name: 'remoteEndpoint', type: String, default: null}) public endpoint!: string|null;
+    @Prop({name: 'remoteMethod', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
+    @Prop({name: 'remoteUrlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({name: 'remoteHeaders', type: Object, default: {}}) public headers!: Record<string, Primitive>;
 
     /**
      * If defined, make the ajax request contextualized per node.
      * A new request will be done for each opened node.
      */
-    @Prop({name: 'remote:nodeUrlParam', type: String, default: null}) public nodeUrlParam!: string|null;
+    @Prop({name: 'remoteNodeUrlParam', type: String, default: null}) public nodeUrlParam!: string|null;
 
     /**
      * Show the root node if `true`.

@@ -88,25 +88,25 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     /**
      * Remote related props.
      */
-    @Prop({name: 'remote:url', type: String, default: null}) public url!: string|null;
-    @Prop({name: 'remote:endpoint', type: String, default: null}) public endpoint!: string|null;
-    @Prop({name: 'remote:model', type: String, default: null}) public model!: string|null;
-    @Prop({name: 'remote:method', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
-    @Prop({name: 'remote:urlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
-    @Prop({name: 'remote:headers', type: Object, default: {}}) public headers!: Record<string, Primitive>;
+    @Prop({name: 'remoteUrl', type: String, default: null}) public url!: string|null;
+    @Prop({name: 'remoteEndpoint', type: String, default: null}) public endpoint!: string|null;
+    @Prop({name: 'remoteModel', type: String, default: null}) public model!: string|null;
+    @Prop({name: 'remoteMethod', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
+    @Prop({name: 'remoteUrlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({name: 'remoteHeaders', type: Object, default: {}}) public headers!: Record<string, Primitive>;
 
     /**
      * Search related props.
      */
-    @Prop({name: 'search:type', type: String, transform: (value: any) => ensureInEnum(value, SearchType, SearchType.None) }) public searchType!: SearchType;
-    @Prop({name: 'search:remoteParamName', type: [String, Array], default: 'search'}) public searchRemoteParamName!: string|string[];
-    @Prop({name: 'search:minLength', type: Number, default: 0}) public searchMinLength!: number;
+    @Prop({name: 'searchType', type: String, transform: (value: any) => ensureInEnum(value, SearchType, SearchType.None) }) public searchType!: SearchType;
+    @Prop({name: 'searchRemoteParamName', type: [String, Array], default: 'search'}) public searchRemoteParamName!: string|string[];
+    @Prop({name: 'searchMinLength', type: Number, default: 0}) public searchMinLength!: number;
 
     /**
      * Dropdown related props.
      */
-    @Prop({name: 'dropdown:teleport', type: [Object, String], default: null}) public dropdownTeleport!: HTMLElement|string|null;
-    @Prop({name: 'dropdown:zIndex', type: Number, default: undefined}) public dropdownZIndex!: number|undefined;
+    @Prop({name: 'dropdownTeleport', type: [Object, String], default: null}) public dropdownTeleport!: HTMLElement|string|null;
+    @Prop({name: 'dropdownZIndex', type: Number, default: undefined}) public dropdownZIndex!: number|undefined;
 
     // Override the type to get autocompletion in the view.
     @Expose() public v!: SelectViewDataInterface;
