@@ -3,6 +3,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Provide } from "@banquette/vue-typescript/decorator/provide.decorator";
 import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { ComponentPublicInstance, SetupContext, renderSlot } from "vue";
 
 @Component({
     name: 'choice-slot-wrapper',
@@ -20,7 +21,7 @@ export default class ChoiceSlotWrapperComponent extends Vue {
      * Renderless component, we forward the rendering to the default slot.
      */
     @Render()
-    public render(props: any, context: any): any {
-        return context.slots.default();
+    public render(component: ComponentPublicInstance, context: SetupContext): any {
+        return renderSlot(context.slots, 'default');
     }
 }

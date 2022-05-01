@@ -22,7 +22,17 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { h, resolveDirective, withDirectives, renderSlot, VNode, SetupContext, toRaw, resolveComponent } from "vue";
+import {
+    h,
+    resolveDirective,
+    withDirectives,
+    renderSlot,
+    VNode,
+    SetupContext,
+    toRaw,
+    resolveComponent,
+    ComponentPublicInstance
+} from "vue";
 import { CollapsableComponent } from "../collapsable";
 import { ProgressCircularComponent } from "../progress/progress-circular";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -157,7 +167,7 @@ export default class TreeComponent extends Vue {
     }
 
     @Render()
-    public render(exposed: any, context: SetupContext) {
+    public render(component: ComponentPublicInstance, context: SetupContext) {
         const theme = resolveDirective("bt-bind-theme") as any;
         const childNodes: VNode[] = [];
         if (this.showRoot) {
