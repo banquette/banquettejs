@@ -209,7 +209,7 @@ describe('@Import()', () => {
     }
 
     test('basic import with auto prefix',  () => {
-        @Component({name: 'test', template: `<div id="url">{{ remote.url }}</div>`})
+        @Component({name: 'test', template: `<div id="url">{{ remoteUrl }}</div>`})
         class Test {
             @Expose() @Import(Remote) private remote!: Remote;
         }
@@ -217,7 +217,7 @@ describe('@Import()', () => {
         @Component({
             name: 'app',
             components: [Test],
-            template: `<test remote:url="/test"></test>`
+            template: `<test remote-url="/test"></test>`
         })
         class App { }
         const wrapper = mount(getMountOptions(App), {})
@@ -227,7 +227,7 @@ describe('@Import()', () => {
     test('import with prefix override',  () => {
         @Component({name: 'test', template: `<div id="url">{{ remote.url }}</div>`})
         class Test {
-            @Expose() @Import(Remote, 'override') private remote!: Remote;
+            @Expose() @Import(Remote, 'override:') private remote!: Remote;
         }
 
         @Component({
