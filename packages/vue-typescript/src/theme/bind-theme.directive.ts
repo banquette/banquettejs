@@ -124,6 +124,7 @@ export class BindThemeDirective extends Vue {
                             return false;
                         }));
                     }
+                    variantCandidate.use(this.instance, this.configuration);
                 }
 
                 // Find if the variant depends on parent components.
@@ -135,10 +136,6 @@ export class BindThemeDirective extends Vue {
                         }
                     }
                 }
-
-                // Use the variant even if it doesn't match so there is no flickering
-                // due to the DOM injection when it is finally required.
-                variantCandidate.use(this.instance, this.configuration);
             }
             if (themeParentsTracker.trackedParentComponents.length > 0) {
                 themesParentsTrackers.push(themeParentsTracker);

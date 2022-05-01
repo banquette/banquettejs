@@ -7,7 +7,6 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { getActiveComponentsCount } from "../utils/components-count";
 import { ThemeWildcard, ThemesEvents } from "./constant";
 import { ThemeEvent } from "./event/theme.event";
 import { ThemeDefinitionInterface } from "./theme-definition.interface";
@@ -43,27 +42,25 @@ export class VueThemes {
     /**
      * Set the name of the current theme.
      */
-    public static SetCurrent(name: string): void {
-        VueThemes.CurrentThemeName = name;
+    public static SetCurrent(name: string|null): void {
+        if (name === ThemeWildcard) {
+            name = null;
+        }
+        if (name === VueThemes.CurrentThemeName) {
+            return ;
+        }
         if (VueThemes.CurrentTheme !== null) {
-            document.documentElement.classList.remove(VueThemes.CurrentTheme.id);
-            VueThemes.CurrentTheme.clearDOM();
+            const theme = VueThemes.CurrentTheme;
+            // Put the static variable to null before the call to free()
+            // because it emits an events that rely on the static variable.
             VueThemes.CurrentTheme = null;
+            theme.free();
         }
-        if (name && VueThemes.Has(name)) {
-            const theme = VueThemes.Get(name);
-            VueThemes.CurrentTheme = theme;
-            VueThemes.CurrentTheme.injectInDOM();
-            VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeChanged, new ThemeEvent(theme));
-            document.documentElement.classList.add(theme.id);
-        } else if (name) {
-            console.warn(`No theme "${name}" has been defined. You can define one using:
-    VueThemes.Define('component-name', {
-        ${name}: [
-            ...
-        ]
-    });`);
+        if (name) {
+            VueThemes.CurrentTheme = VueThemes.Get(name);
+            VueThemes.CurrentTheme.use();
         }
+        VueThemes.CurrentThemeName = name;
     }
 
     /**
@@ -77,23 +74,13 @@ export class VueThemes {
      * Get or create a theme.
      */
     public static Get(name: string): VueTheme {
+        // If it's the first call ever, create the wildcard theme and mark it as used.
+        if (isUndefined(VueThemes.Themes[ThemeWildcard])) {
+            VueThemes.Themes[ThemeWildcard] = new VueTheme(ThemeWildcard, VueThemes.EventDispatcher);
+            VueThemes.Themes[ThemeWildcard].use();
+        }
         if (isUndefined(VueThemes.Themes[name])) {
-            const theme = new VueTheme(name, VueThemes.EventDispatcher);
-            VueThemes.Themes[name] = theme;
-
-            if (VueThemes.CurrentThemeName === name) {
-                VueThemes.SetCurrent(name);
-            }
-            if (name === ThemeWildcard) {
-                VueThemes.SetCurrent(ThemeWildcard);
-            }
-            // Do not dispatch synchronously to give time to the caller to finish its setup.
-            if (getActiveComponentsCount() > 0) {
-                window.setTimeout(() => {
-                    VueThemes.EventDispatcher.dispatch(ThemesEvents.ThemeCreated, new ThemeEvent(theme));
-                    theme.injectInDOM();
-                });
-            }
+            VueThemes.Themes[name] = new VueTheme(name, VueThemes.EventDispatcher);
         }
         return VueThemes.Themes[name];
     }

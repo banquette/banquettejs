@@ -8,6 +8,7 @@ import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { ThemesEvents, VariantSelector } from "./constant";
 import { ThemeComponentChangedEvent } from "./event/theme-component-changed.event";
 import { ThemeVariantEvent } from "./event/theme-variant.event";
+import { ThemeEvent } from "./event/theme.event";
 import { injectContextInCssSource } from "./utils/inject-context-in-css-source";
 import { normalizeVariantSelector } from "./utils/normalize-variant-selector";
 import { VueThemeVariant } from "./vue-theme-variant";
@@ -33,6 +34,14 @@ export class VueTheme {
      * An object holding all the variants of a theme, indexed by component name.
      */
     private variants: Record<string, ComponentVariants> = {};
+
+    /**
+     * Incremented each time injectInDOM() is called.
+     * Decremented each time clearDOM() is called.
+     *
+     * The clear only really happen when the usage count reaches 0.
+     */
+    private usageCount: number = 0;
 
     public constructor(public readonly name: string, private eventDispatcher: EventDispatcher) {
         this.id = getUniqueRandomId();
@@ -64,7 +73,11 @@ export class VueTheme {
                         this.injectInDOM();
                     }
                 }),
-                onChangeUnsubscribeFn: variant.onChange(() => this.injectInDOM()),
+                onChangeUnsubscribeFn: variant.onChange((event: ThemeVariantEvent) => {
+                    if (event.variant === variant) {
+                        this.injectInDOM();
+                    }
+                }),
             };
         }
         return this.variants[componentName].variants[variantId].variant;
@@ -104,16 +117,35 @@ export class VueTheme {
     }
 
     /**
+     * Mark the theme as used, injecting its styles into the DOM.
+     */
+    public use(): void {
+        ++this.usageCount;
+        this.injectInDOM();
+        this.eventDispatcher.dispatch(ThemesEvents.ThemeChanged, new ThemeEvent(this));
+    }
+
+    /**
+     * Mark the theme as unused.
+     */
+    public free(): void {
+        if (--this.usageCount <= 0) {
+            this.clearDOM();
+        }
+        this.eventDispatcher.dispatch(ThemesEvents.ThemeChanged, new ThemeEvent(null));
+    }
+
+    /**
      * Inject the <style> element containing all the active styles of the theme.
      */
-    public injectInDOM(): void {
+    private injectInDOM(): void {
         for (const componentName of Object.keys(this.variants)) {
             let componentStyles = '';
             const component = this.variants[componentName];
             for (const variantName of Object.keys(component.variants)) {
                 const variant = component.variants[variantName].variant;
                 if (!variant.used) {
-                    continue ;
+                    continue;
                 }
                 let variantStyles = trim(variant.rawCss);
                 for (const selectorKey of Object.keys(variant.cssSelectorsMap)) {
@@ -162,12 +194,13 @@ export class VueTheme {
                 component.styleElement = null;
             }
         }
+        document.documentElement.classList.add(this.id);
     }
 
     /**
      * Remove the injected styles from the dom.
      */
-    public clearDOM(): void {
+    private clearDOM(): void {
         for (const componentName of Object.keys(this.variants)) {
             const component = this.variants[componentName];
             if (component.styleElement !== null) {
@@ -175,6 +208,7 @@ export class VueTheme {
                 component.styleElement = null;
             }
         }
+        document.documentElement.classList.remove(this.id);
     }
 
     /**

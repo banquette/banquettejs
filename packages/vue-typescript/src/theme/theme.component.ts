@@ -1,5 +1,5 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
-import { h } from "vue";
+import { h, SetupContext, renderSlot, ComponentPublicInstance } from "vue";
 import { Component } from "../decorator/component.decorator";
 import { Prop } from "../decorator/prop.decorator";
 import { Render } from "../decorator/render.decorator";
@@ -16,27 +16,34 @@ export class ThemeComponent extends Vue {
      */
     @Prop({type: String, required: true}) public name!: string;
 
+    private themeInUse: string|null = null;
     private unsubscribe: UnsubscribeFunction|null = null;
 
     @Render()
-    public render(props: any, context: any): any {
+    public render(component: ComponentPublicInstance, context: SetupContext): any {
         const attrs = {class: 'bt-theme'};
 
+        if (this.themeInUse !== this.name && this.themeInUse !== null && VueThemes.Has(this.themeInUse)) {
+            VueThemes.Get(this.themeInUse).free();
+        }
         if (VueThemes.Has(this.name)) {
-            attrs.class += ' ' + VueThemes.Get(this.name).id;
+            const theme = VueThemes.Get(this.name);
+            attrs.class += ' ' + theme.id;
             if (this.unsubscribe !== null) {
                 this.unsubscribe();
                 this.unsubscribe = null;
             }
+            theme.use();
+            this.themeInUse = this.name;
         } else if (this.unsubscribe === null) {
             this.unsubscribe = VueThemes.OnCreated((event: ThemeEvent) => {
-                if (event.theme.name === this.name) {
+                if (event.theme && event.theme.name === this.name) {
                     // Force re-render
                     this.$forceUpdate();
                 }
             });
         }
-        return h('div', attrs, context.slots.default());
+        return h('div', attrs, renderSlot(context.slots, 'default'));
     }
 
     @Watch('name')
