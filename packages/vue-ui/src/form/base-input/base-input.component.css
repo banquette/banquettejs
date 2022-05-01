@@ -40,6 +40,7 @@
 
 .bt-form-base-input {
     position: relative;
+    flex-grow: 1;
 
     & > .input-group {
         display: flex;
