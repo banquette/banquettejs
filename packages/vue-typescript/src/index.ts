@@ -15,7 +15,6 @@ export * from './decorator/inject-provided.decorator';
 export * from './decorator/lifecycle.decorator';
 export * from './decorator/prop.decorator';
 export * from './decorator/provide.decorator';
-export * from './decorator/reactive.decorator';
 export * from './decorator/ref.decorator';
 export * from './decorator/render.decorator';
 export * from './decorator/template-ref.decorator';
