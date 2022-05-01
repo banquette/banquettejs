@@ -42,7 +42,7 @@ export default class TabsComponent extends Vue {
 
     /**
      * Id of the tab to focus.
-     * If not defined, the first tab is selected at first, then the one the use selects using the toggles.
+     * If not defined, the first tab is selected at first, then the one the user selects using the toggles.
      */
     @Prop({type: String, default: null}) public focused!: string;
 

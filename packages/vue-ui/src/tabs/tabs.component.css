@@ -63,7 +63,7 @@
                 transition: all var(--tabs-text-focus-transition-duration) var(--bt-ease-in-out-bezier);
                 box-sizing: border-box;
 
-                & > svg {
+                svg {
                     width: 1.3em;
                     height: 1.3em;
 
@@ -80,7 +80,7 @@
                 &:hover {
                     color: var(--tabs-text-hover-color);
 
-                    & > svg path {
+                    svg path {
                         fill: var(--tabs-text-hover-color);
                     }
                 }
@@ -88,7 +88,7 @@
                 &.focused {
                     color: var(--tabs-text-focus-color);
 
-                    & > svg path {
+                    svg path {
                         fill: var(--tabs-text-focus-color);
                     }
                 }
