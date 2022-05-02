@@ -21,7 +21,7 @@ import { UiConfigurationSymbol } from "../config";
 import { RemoteModule } from "../misc/remote/remote.module";
 import { UiConfigurationInterface } from "../ui-configuration.interface";
 import { ColumnInterface, ColumnOptions } from "./column.interface";
-import { TableApiEvents, TableEvents, Status } from "./constant";
+import { TableApiEvents, TableEvents, Status, TableTag } from "./constant";
 import { TableEventStateInterface } from "./event/table-event-state.interface";
 import { TableRequestEvent } from "./event/table-request.event";
 import { TableResponseEvent } from "./event/table-response.event";
@@ -240,7 +240,7 @@ export class TableViewModel {
         if (!this.remote.isApplicable) {
             return ;
         }
-        const response = this.remote.send();
+        const response = this.remote.send(null, {}, {}, [TableTag]);
         this.createServerResult(response);
         response.promise.finally(() => {
             const serverResult = this.getServerResult(response);
@@ -300,7 +300,7 @@ export class TableViewModel {
             }
             // Stopping the propagation is cleaner but the Api would have ignored the query anyway as it's a GET request.
             event.stopPropagation();
-        }, config.table.apiEventsPriorities.beforeRequest, [], [ApiProcessorTag]);
+        }, config.table.apiEventsPriorities.beforeRequest, [TableTag], [ApiProcessorTag]);
 
 
         this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiBeforeResponseEvent) => {
@@ -318,11 +318,11 @@ export class TableViewModel {
             }
             // Very important to stop the propagation so the built-in processor from the api package is not executed.
             event.stopPropagation();
-        }, config.table.apiEventsPriorities.beforeResponse, [], [ApiProcessorTag]);
+        }, config.table.apiEventsPriorities.beforeResponse, [TableTag], [ApiProcessorTag]);
 
         this.globalDispatcher.subscribe(ApiEvents.RequestSuccess, (event: ApiBeforeResponseEvent) => {
             event.stopPropagation();
-        }, 1, [], [ApiProcessorTag]);
+        }, 1, [TableTag], [ApiProcessorTag]);
     }
 
     /**
