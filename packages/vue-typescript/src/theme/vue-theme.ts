@@ -5,7 +5,7 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback } from "@banquette/utils-type/types";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
-import { ThemesEvents, VariantSelector } from "./constant";
+import { ThemesEvents, VariantSelector, ThemeWildcard } from "./constant";
 import { ThemeComponentChangedEvent } from "./event/theme-component-changed.event";
 import { ThemeVariantEvent } from "./event/theme-variant.event";
 import { ThemeEvent } from "./event/theme.event";
@@ -25,6 +25,8 @@ interface ComponentVariants {
 }
 
 export class VueTheme {
+    private static ActiveStyleElements: HTMLStyleElement[] = [];
+
     /**
      * Unique identifier that will be used to inject styles.
      */
@@ -185,11 +187,24 @@ export class VueTheme {
                 if (component.styleElement === null) {
                     const style = document.createElement('style');
                     style.setAttribute('type', 'text/css');
-                    document.head.appendChild(style);
                     component.styleElement = style;
+                    if (this.name !== ThemeWildcard) {
+                        VueTheme.ActiveStyleElements.push(style);
+                    }
+                    if (this.name === ThemeWildcard && VueTheme.ActiveStyleElements.length && VueTheme.ActiveStyleElements[0].parentNode) {
+                        VueTheme.ActiveStyleElements[0].parentNode.insertBefore(style, VueTheme.ActiveStyleElements[0]);
+                    } else {
+                        document.head.appendChild(style);
+                    }
                 }
                 component.styleElement.innerHTML = componentStyles;
             } else if (component.styleElement !== null) {
+                for (let i = 0; this.name !== ThemeWildcard && i < VueTheme.ActiveStyleElements.length; ++i) {
+                    if (VueTheme.ActiveStyleElements[i] === component.styleElement) {
+                        VueTheme.ActiveStyleElements.splice(i, 1);
+                        break ;
+                    }
+                }
                 component.styleElement.remove();
                 component.styleElement = null;
             }
