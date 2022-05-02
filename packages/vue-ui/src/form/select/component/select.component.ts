@@ -106,7 +106,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
      * Dropdown related props.
      */
     @Prop({name: 'dropdownTeleport', type: [Object, String], default: null}) public dropdownTeleport!: HTMLElement|string|null;
-    @Prop({name: 'dropdownZIndex', type: Number, default: undefined}) public dropdownZIndex!: number|undefined;
+    @Prop({name: 'dropdownZIndex', type: [Number, String], default: undefined, transform: (v) => !isUndefined(v) ? parseInt(v, 10) : undefined}) public dropdownZIndex!: number|undefined;
 
     // Override the type to get autocompletion in the view.
     @Expose() public v!: SelectViewDataInterface;
