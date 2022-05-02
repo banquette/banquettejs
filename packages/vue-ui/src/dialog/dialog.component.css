@@ -21,7 +21,6 @@
     :deep(.bt-overlay) {
         & > .inner {
             min-width: var(--dialog-min-width);
-            min-height: var(--dialog-min-height);
             max-width: var(--dialog-max-width);
 
             & .bt-dialog-inner {
@@ -29,6 +28,7 @@
                 flex-direction: column;
                 background: var(--dialog-background);
                 border-radius: var(--dialog-border-radius);
+                min-height: var(--dialog-min-height);
                 max-height: var(--dialog-max-height);
                 box-shadow: var(--dialog-shadow);
                 border-width: var(--dialog-border-width);
