@@ -5,6 +5,7 @@ import { EventArg } from "@banquette/event/event-arg";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { addEventListener } from "@banquette/utils-dom/add-event-listener";
 import { proxy } from "@banquette/utils-misc/proxy";
+import { extend } from "@banquette/utils-object/extend";
 import { VoidCallback } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
@@ -232,6 +233,7 @@ export default class DialogComponent extends Vue {
     private onShowByEvent(event: ShowDialogEventArg): void {
         if (event.id === this.id) {
             this.internalVisible = true;
+            extend(this.slotBag || {}, event.args || {});
         }
     }
 
