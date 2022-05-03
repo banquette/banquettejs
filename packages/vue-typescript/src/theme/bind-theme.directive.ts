@@ -1,6 +1,7 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { proxy } from "@banquette/utils-misc/proxy";
+import { throttle } from "@banquette/utils-misc/throttle";
 import { DirectiveBinding } from "vue";
 import { ACTIVE_VARIANTS } from "../constants";
 import { ComponentMetadataInterface } from "../decorator/component-metadata.interface";
@@ -99,7 +100,7 @@ export class BindThemeDirective extends Vue {
     /**
      * Rematch all themes and variants for the component.
      */
-    private computeChanges(el: Element): void {
+    private computeChanges = throttle((el: Element): void => {
         const themes = getThemesForComponent(this.instance);
         const themesParentsTrackers: ThemeParentsTracker[] = [];
         const activeVariantsAttributes: string[] = [];
@@ -176,7 +177,7 @@ export class BindThemeDirective extends Vue {
 
             this.activeVariantsAttributesStr = activeVariantsAttributesStr;
         }
-    }
+    }, 100);
 
     /**
      * Force the update of everything in the current instance.
