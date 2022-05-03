@@ -43,6 +43,9 @@ import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
 import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
 import { WatchFunction, ImmediateStrategy, PrivateWatchOptions } from "./decorator/watch.decorator";
+import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
+import { matchVariant } from "./theme/utils/match-variants";
+import { splitVariantString } from "./theme/utils/split-variant-string";
 import { PrefixOrAlias } from "./type";
 import { incrementActiveComponentsCount, decrementActiveComponentsCount } from "./utils/components-count";
 import { anyToTsInst } from "./utils/converters";
@@ -86,13 +89,14 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     enumerable: false,
                     configurable: false,
                     writable: true,
-                    value: []
+                    value: null
                 });
             }
             defineGetter(inst, '$forceUpdateComputed', () => () => {
                 computedVersion.value++;
             });
         }
+
         // Props
         if (props !== null) {
             const propsRefs = [];
@@ -110,6 +114,42 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             get(target: any, name: string): any {
                                 let value: any = target[name];
                                 if (name === 'value') {
+
+                                    //
+                                    // This is a hot fix for an issue with the theming on props.
+                                    // Because the variants matching is now normally done in the bt-bind-theme directive,
+                                    // when Vue first ask for the value of the prop, it is invalid if the theme overrides it
+                                    // because variants have not been matched yet.
+                                    //
+                                    // If the prop changes later on or Vue ask for its value for any reason, the bug doesn't show.
+                                    // But if the value is only accessed once by Vue, on initialization, it doesn't work as it should.
+                                    //
+                                    // So the hot fix here is to set ACTIVE_VARIANTS === null at first, and to match the variants
+                                    // here again if still null when the getter is called.
+                                    //
+                                    // TODO: Fix this properly.
+                                    //
+                                    if (data.themeable !== null && inst[ACTIVE_VARIANTS] === null) {
+                                        const themes = getThemesForComponent(inst);
+                                        let expectedVariants: string[] = splitVariantString(inst[data.themeable.prop] || '');
+
+                                        inst[ACTIVE_VARIANTS] = [];
+
+                                        // Find relevant variants for the state of the component.
+                                        for (const theme of themes) {
+                                            const variantsCandidates = theme.getVariants(data.component.name);
+                                            for (const variantCandidate of variantsCandidates) {
+                                                if (matchVariant(variantCandidate, expectedVariants, inst)) {
+                                                    inst[ACTIVE_VARIANTS].push(variantCandidate);
+                                                    if (variantCandidate.applyIds.length > 0) {
+                                                        inst[ACTIVE_VARIANTS] = inst[ACTIVE_VARIANTS].concat(variantsCandidates.filter((v) => {
+                                                            return v.publicId !== null && variantCandidate.applyIds.indexOf(v.publicId) > -1 && inst[ACTIVE_VARIANTS].indexOf(v) < 0;
+                                                        }));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                     if (data.props[propName].default === value && inst[ACTIVE_VARIANTS]) {
                                         for (const variant of inst[ACTIVE_VARIANTS]) {
                                             if (Object.keys(variant.propsMap).indexOf(propName) > -1) {
@@ -127,22 +167,23 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                                             value = lastModifiedValue;
                                         }
                                     }
-                                }
-                                if (validate !== null) {
-                                    const validationResult = validate.validate(value);
-                                    if (validationResult.waiting) {
-                                        throw new UsageException(`Async validators are not allowed to validate props.`);
-                                    }
-                                    if (!validationResult.valid) {
-                                        throw new UsageException(
-                                            `Validation failed for prop "${propName}". `+
-                                            `Reason: ${validationResult.getViolationsStringsArray().join(', ')}.` +
-                                            `Validated value was: "${ensureString(value)}".`
-                                        );
+
+                                    if (validate !== null) {
+                                        const validationResult = validate.validate(value);
+                                        if (validationResult.waiting) {
+                                            throw new UsageException(`Async validators are not allowed to validate props.`);
+                                        }
+                                        if (!validationResult.valid) {
+                                            throw new UsageException(
+                                                `Validation failed for prop "${propName}". ` +
+                                                `Reason: ${validationResult.getViolationsStringsArray().join(', ')}.` +
+                                                `Validated value was: "${ensureString(value)}".`
+                                            );
+                                        }
                                     }
                                 }
                                 return value;
-                            },
+                            }
                         });
                     })(propRef, propName, data.props[propName].validate || null, data.props[propName].transform || null);
                     propsRefs.push(propRef);
