@@ -221,7 +221,7 @@ export class ApiService {
         if (!apiRequest) {
             return ;
         }
-        const result = this.eventDispatcher.dispatch(eventType, new eventArg(apiRequest, event));
+        const result = this.eventDispatcher.dispatch(eventType, new eventArg(apiRequest, event), true, event.request.tags);
         const promise = result.promise;
         if (promise !== null) {
             return new Promise<void>((resolve) => {
