@@ -51,7 +51,7 @@ export default class TableComponent extends Vue {
      */
     @Import(PaginationComposable) public pagination!: PaginationComposable;
     @Import(FilteringComposable, {remote: 'filteringRemote', filters: 'filters'}) public filtering!: FilteringComposable;
-    @Import(OrderingComposable, 'order-') public ordering!: OrderingComposable;
+    @Import(OrderingComposable) public order!: OrderingComposable;
     @Import(RemoteComposable, false) public remote!: RemoteComposable;
 
     /**
@@ -94,7 +94,7 @@ export default class TableComponent extends Vue {
         this.vm = Injector.Get(TableViewModel);
         this.pagination.module = this.vm.pagination;
         this.filtering.module = this.vm.filtering;
-        this.ordering.module = this.vm.ordering;
+        this.order.module = this.vm.ordering;
         this.remote.module = this.vm.remote;
     }
 
