@@ -11,7 +11,7 @@
                 <slot :close="close"></slot>
                 <span v-if="closable" class="close-icon" @click.stop.prevent="close()"><icon-close></icon-close></span>
             </span>
-            <bt-progress-horizontal v-if="ttl" :progress="timeLeft" :progress-max="ttl"></bt-progress-horizontal>
+            <bt-progress-horizontal v-if="ttl !== null" :progress="timeLeft" :progress-max="ttl"></bt-progress-horizontal>
         </div>
     </div>
 </Transition>
