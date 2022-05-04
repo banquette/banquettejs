@@ -3,8 +3,9 @@ import { BaseVars } from "../base-input/theme-configuration";
 export const ThemeConfiguration = {
     css: {
         vars: {...BaseVars, ...{
-            paddingX: '@-padding-x',
-            paddingY: '@-padding-y'
+            paddingX    : '@-padding-x',
+            paddingY    : '@-padding-y',
+            height      : '@-height'
         }},
         selectors: {
             root: {

@@ -1,6 +1,7 @@
 .bt-form-text {
     --form-text-padding-x: var(--bt-form-text-padding-x, 1em);
     --form-text-padding-y: var(--bt-form-text-padding-y, 0.8em);
+    --form-text-height: var(--bt-form-text-height, auto);
 }
 
 .bt-form-text :deep(.bt-form-base-input) {
@@ -50,5 +51,6 @@
 
     textarea {
         resize: vertical;
+        height: var(--form-text-height);
     }
 }
