@@ -175,7 +175,6 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
         if (file.status !== UploadStatus.Uploading) {
             return ;
         }
-        debugger;
         const request = this.uploadRequestsMap.get(file);
         if (!isNullOrUndefined(request)) {
             request.cancel();
@@ -220,15 +219,12 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
                 file.uploadedSize = event.loaded;
             }
         }).then(() => {
-            console.log('%cUpload succeeded', 'color: lime', response);
             file.serverResponse = this.isAcceptableAsServerResponse(response.result) ? response.result : undefined;
             file.status = UploadStatus.Succeeded;
         }).catch(() => {
-            console.log('%cUpload failed', 'color: red', response);
             file.error = response.error ? response.error.message : 'Unknown error';
             file.status = UploadStatus.Failed;
         }).finally(() => {
-            console.log('Upload finally');
             this.uploadRequestsMap.delete(file);
             this.updateControlValue();
         });
