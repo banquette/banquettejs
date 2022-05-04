@@ -20,7 +20,7 @@ export function compareObjects(a: any, b: any, keepBothValues: boolean = false):
         return output;
     }
     for (const key in a) {
-        if (!a.hasOwnProperty(key)) {
+        if (a.hasOwnProperty && !a.hasOwnProperty(key)) {
             continue;
         }
         const value = a[key];
@@ -58,7 +58,7 @@ export function compareObjects(a: any, b: any, keepBothValues: boolean = false):
         }
     }
     for (const key in b) {
-        if (!b.hasOwnProperty(key) || !isUndefined(a[key]) || isUndefined(b[key])) {
+        if (b.hasOwnProperty && !b.hasOwnProperty(key) || !isUndefined(a[key]) || isUndefined(b[key])) {
             continue;
         }
         if (keepBothValues) {
