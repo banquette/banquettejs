@@ -43,6 +43,10 @@ export class TransformPipeline {
                 const subResult: TransformResult = onPrepare(property, transformer);
                 const respond = ((_p: string, _sr: TransformResult) => {
                     return () => {
+                        if (_sr.error) {
+                            this.fail(_sr.errorDetail);
+                            return ;
+                        }
                         onFinish(_p, _sr);
                         if (!(--pending)) {
                             this.settle();
@@ -54,6 +58,9 @@ export class TransformPipeline {
                     this.waitForResult(subResult as AsyncTransformResult).then(respond);
                 } else {
                     respond();
+                }
+                if (this.settled) {
+                    break ;
                 }
             }
             if (!properties.length) {
