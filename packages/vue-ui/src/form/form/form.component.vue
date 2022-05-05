@@ -3,6 +3,8 @@
 <script lang="ts">
 import { EventArg } from "@banquette/event/event-arg";
 import { UnsubscribeFunction } from "@banquette/event/type";
+import { ContextualizedState } from "@banquette/form/constant";
+import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
 import { HttpMethod } from "@banquette/http/constants";
 import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
@@ -25,13 +27,18 @@ import { FormViewDataInterface } from "./form-view-data.interface";
 
 @Component({
     name: 'bt-form',
-    emits: ['load', 'submit']
+    emits: ['load', 'submit', 'update:disabled']
 })
 export default class FormComponent<ModelType extends object = any, ViewData extends FormViewDataInterface<ModelType> = FormViewDataInterface<ModelType>> extends Vue {
     /**
      * Optional model to bind the form with.
      */
     @Prop({name: 'model', type: String, default: null}) public modelType!: string|null;
+
+    /**
+     * Disable the whole form.
+     */
+    @Prop({type: Boolean, default: false}) public disabled!: boolean;
 
     /**
      * Loading.
@@ -85,6 +92,14 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             (!this.v.persistSuccess || !this.hasSlot('persist-success'));
     }
 
+    @Computed()
+    public get isDisabled(): boolean {
+        return this.disabled;
+    }
+    public set isDisabled(value: boolean) {
+        this.$emit('update:disabled', value);
+    }
+
     @Expose() public v!: ViewData;
 
     /**
@@ -106,7 +121,17 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         // So the proxy is used by the headless view model.
         this.vm.setViewData(this.v);
 
-        // Events
+        // Form events
+        this.unsubscribeFunctions.push(this.vm.form.onValueChanged(this.forceUpdateOnce));
+        this.unsubscribeFunctions.push(this.vm.form.onControlAdded(this.forceUpdateOnce, 0, false));
+        this.unsubscribeFunctions.push(this.vm.form.onControlRemoved(this.forceUpdateOnce, 0, false));
+        this.unsubscribeFunctions.push(this.vm.form.onStateChanged((event: StateChangedFormEvent) => {
+            if (event.state === ContextualizedState.Disabled) {
+                this.$emit('update:disabled', event.newValue);
+            }
+        }));
+
+        // Subclasses events
         this.unsubscribeFunctions.push(this.vm.onBeforeLoad(proxy(this.onBeforeLoad, this)));
         this.unsubscribeFunctions.push(this.vm.onLoadSuccess(proxy(this.onLoadSuccess, this)));
         this.unsubscribeFunctions.push(this.vm.onLoadError(proxy(this.onLoadError, this)));
@@ -120,9 +145,6 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.v.model = event.model as ModelType;
             this.onBindModel(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.form.onValueChanged(this.forceUpdateOnce));
-        this.unsubscribeFunctions.push(this.vm.form.onControlAdded(this.forceUpdateOnce, 0, false));
-        this.unsubscribeFunctions.push(this.vm.form.onControlRemoved(this.forceUpdateOnce, 0, false));
     }
 
     /**
@@ -174,6 +196,15 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
     private forceUpdateOnce = oncePerCycleProxy(() => {
         this.forceUpdate();
     });
+
+    @Watch('disabled', {immediate: false})
+    private onDisableChange(newValue: boolean): void {
+        if (newValue === true) {
+            this.vm.form.disable();
+        } else {
+            this.vm.form.enable();
+        }
+    }
 
     @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadHeaders', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})
     private syncLoadConfigurationProps(): void {
