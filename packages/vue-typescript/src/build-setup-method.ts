@@ -67,6 +67,7 @@ const vueInstancesMap: WeakMap<any, any> = new WeakMap<any, any>();
 export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
+        let unmounted: boolean = false;
         let computedVersion: Ref = ref(1);
         const output: Record<any, any> = {};
         if (inst === null) {
@@ -507,7 +508,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                     const deepWatcherPreviousValues: Record<string, any> = {};
                     const onWatchTrigger = (...args: any[]) => {
                         const process = () => {
-                            if (!isUndefined(inst.$) && inst.$.isUnmounted) {
+                            if (unmounted) {
                                 return ;
                             }
                             const newValues: any[] = [];
@@ -609,7 +610,10 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 value: inst
             });
             onBeforeMount(incrementActiveComponentsCount);
-            onBeforeUnmount(decrementActiveComponentsCount);
+            onBeforeUnmount(() => {
+                unmounted = true;
+                decrementActiveComponentsCount();
+            });
 
             if (data.renderMethod !== null) {
                 const render = inst[data.renderMethod];
