@@ -89,7 +89,9 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
      * Open the file explorer.
      */
     @Expose() public browse(): void {
-        this.$refs.input.click();
+        if (!this.v.control.disabled) {
+            this.$refs.input.click();
+        }
     }
 
     /**
