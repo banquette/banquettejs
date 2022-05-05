@@ -1,5 +1,5 @@
 import { HttpMethod } from "@banquette/http/constants";
-import { SearchType, ChoicesPropResolver } from "@banquette/ui/form/select/constant";
+import { SearchType, ChoicesPropResolver, SearchParamName } from "@banquette/ui/form/select/constant";
 import { ChoiceOrigin } from "@banquette/ui/form/select/constant";
 import { SelectedChoice } from "@banquette/ui/form/select/selected-choice";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
@@ -99,7 +99,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
      * Search related props.
      */
     @Prop({name: 'searchType', type: String, transform: (value: any) => ensureInEnum(value, SearchType, SearchType.None) }) public searchType!: SearchType;
-    @Prop({name: 'searchRemoteParamName', type: [String, Array], default: 'search'}) public searchRemoteParamName!: string|string[];
+    @Prop({name: 'searchRemoteParamName', type: [String, Array], default: 'search'}) public searchRemoteParamName!: SearchParamName;
     @Prop({name: 'searchMinLength', type: Number, default: 0}) public searchMinLength!: number;
 
     /**

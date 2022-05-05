@@ -72,3 +72,4 @@ export enum SearchType {
 }
 
 export type ChoicesPropResolver<T> = ((choice: any) => T)|string|null;
+export type SearchParamName = ((params: Record<string, string>) => void) | string | string[];

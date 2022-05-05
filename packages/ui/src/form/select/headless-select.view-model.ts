@@ -25,7 +25,7 @@ import { Primitive, Writeable } from "@banquette/utils-type/types";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { Choice } from "./choice";
-import { SearchType, ChoiceOrigin, ChoicesRemoteFetchStatus, ChoicesPropResolver } from "./constant";
+import { SearchType, ChoiceOrigin, ChoicesRemoteFetchStatus, ChoicesPropResolver, SearchParamName } from "./constant";
 import { HeadlessSelectViewDataInterface } from "./headless-select-view-data.interface";
 import { SelectedChoice } from "./selected-choice";
 
@@ -65,7 +65,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      * Name of the parameter to add the the ajax request when fetching for choices.
      * Only applicable if `searchType` is `SearchType.Remote`.
      */
-    public searchRemoteParamName: string|string[] = 'search';
+    public searchRemoteParamName: SearchParamName = 'search';
 
     /**
      * Minimum length of the search buffer to trigger a remote search.
@@ -175,9 +175,14 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                 return;
             }
             if (this.searchBuffer.length > 0) {
-                const paramsNames = ensureArray(this.searchRemoteParamName);
-                for (const paramName of paramsNames) {
-                    params[paramName] = this.searchBuffer;
+
+                if (isFunction(this.searchRemoteParamName)) {
+                    this.searchRemoteParamName(params);
+                } else {
+                    let paramsNames: string[] = ensureArray(this.searchRemoteParamName)
+                    for (const paramName of paramsNames) {
+                        params[paramName] = this.searchBuffer;
+                    }
                 }
             }
         }
