@@ -10,6 +10,7 @@ import { Complete } from "@banquette/utils-type/types";
 import { FormControlTransformerSymbol } from "../contants";
 import { FormComponentFactory } from "../form-component.factory";
 import { FormTransformerInterface } from "./form-transformer.interface";
+import { FormTransformerSymbol } from "./root/form";
 import { isFormTransformer } from "./utils";
 
 const factory = Injector.Get(FormComponentFactory);
@@ -59,7 +60,28 @@ export function FormControl(transformer: TransformerInterface = Raw()): FormTran
          * @inheritDoc
          */
         transformInverse(context: TransformContext): TransformResult {
-            context.result.setResult((context.value as FormControlObject).value);
+            const value: any = (context.value as FormControlObject).value;
+            if (!isUndefined(transformer.transformInverse)) {
+                const result = transformer.transformInverse(new TransformContext(
+                    context,
+                    FormTransformerSymbol,
+                    context.ctor,
+                    value,
+                    context.property
+                ));
+                if (result.localPromise !== null) {
+                    result.delayResponse((new Promise((resolve, reject) => {
+                        (result.localPromise as Promise<any>).then(resolve).catch(reject);
+                    })).then(() => {
+                        result.setResult(result.result);
+                    }));
+                } else {
+                    result.setResult(result.result);
+                }
+                return result;
+            } else {
+                context.result.setResult(value);
+            }
             return context.result;
         }
     };

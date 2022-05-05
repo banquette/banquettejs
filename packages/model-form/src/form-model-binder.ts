@@ -338,7 +338,19 @@ export class FormModelBinder {
                 modelContainer = modelContainer[pathParts[i]];
             }
             if (isObject(modelContainer)) {
-                modelContainer[pathParts[pathParts.length - 1]] = event.newValue;
+                const propName = pathParts[pathParts.length - 1];
+                const tree = this.getModelTransformersTree(modelContainer.constructor);
+                if (!isUndefined(tree.children[propName])) {
+                    modelContainer[propName] = this.handleTransformResult<any>(tree.children[propName].transformer.transformInverse(new TransformContext(
+                        null,
+                        FormTransformerSymbol,
+                        modelContainer.constructor,
+                        event.source,
+                        propName
+                    )));
+                } else {
+                    modelContainer[propName] = event.newValue;
+                }
             }
         } finally {
             this.ignoreModelUpdate = false;
