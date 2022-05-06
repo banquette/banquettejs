@@ -146,6 +146,8 @@
                 fill: currentColor;
             }
         }
+
+        .floating-extras > * { pointer-events: auto; }
     }
 
     &[data-choices-visible] > :deep(.bt-form-base-input) .floating-extras .caret-icon {
