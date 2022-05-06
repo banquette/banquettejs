@@ -438,10 +438,10 @@ export class FormControlProxy implements FormViewControlInterface {
         if (this.control instanceof FormControl) {
             return this.control;
         }
-        if (form === null) {
+        if (!isString(this.control) || form === null) {
             return null;
         }
-        let controlPath = this.control as string;
+        let controlPath = this.control;
         let pathStartIdx = controlPath.indexOf(':');
         if (pathStartIdx > -1) {
             controlPath = controlPath.substring(pathStartIdx + 1);
