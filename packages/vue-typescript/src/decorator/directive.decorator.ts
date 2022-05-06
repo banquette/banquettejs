@@ -105,20 +105,7 @@ export function Directive(optionsOrName: Partial<DirectiveDecoratorOptions>|stri
         options.group = options.group || undefined;
         options.factory = isFunction(options.factory) ? options.factory : () => new ctor();
         VueBuilder.RegisterDirective(options.name, {
-            created: (() => {
-                const userCallback = defineProxy(ctor, options, 'created');
-                return (...args: [Element, DirectiveBinding, VNode, VNode | null]) => {
-                    const inst = getOrCreateInstance(ctor, options.factory, args[0]);
-                    userCallback.apply(null, args);
-
-                    // If the used defined a "bindingUpdated" method, watch the bindings for changes.
-                    if (inst && isFunction(inst.bindingUpdated) && isObject(args[1].value)) {
-                        inst.__watchStopHandle = watch(ref(args[1].value), () => {
-                            inst.bindingUpdated.apply(inst, args);
-                        }, {deep: true});
-                    }
-                };
-            })(),
+            created: defineProxy(ctor, options, 'created'),
             beforeMount: defineProxy(ctor, options, 'beforeMount'),
             mounted: defineProxy(ctor, options, 'mounted'),
             beforeUpdate: defineProxy(ctor, options, 'beforeUpdate'),
