@@ -168,10 +168,10 @@ export class HttpRequest {
      * Cancel the request.
      */
     public cancel(): void {
-        if (this.cancelCallback) {
-            this.cancelCallback();
-        }
         if (!this.adapter) {
+            if (this.cancelCallback) {
+                this.cancelCallback();
+            }
             this.canceled = true;
             return ;
         }
