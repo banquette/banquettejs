@@ -2,13 +2,12 @@
     <div
         ref="popover"
         class="bt-popover"
-        v-if="isVisible"
         v-bind="$attrs"
         v-bt-bind-theme
         v-bt-stick-to="config.stickToOptions"
     >
         <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave">
-            <div v-if="innerVisible" v-show="innerShown" class="inner-wrapper">
+            <div v-show="isVisible" class="inner-wrapper">
                 <div role="tooltip" class="content" v-if="!config.allowHtml || hasNonEmptySlot('default')">
                     <slot v-if="hasNonEmptySlot('default')"></slot>
                     <template v-else>{{ config.content }}</template>

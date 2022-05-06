@@ -30,8 +30,10 @@ export default class PopoverComponent extends Vue {
     @Prop({type: [String, Boolean], default: undefined}) public transition!: string|false|undefined;
 
     @Expose() public isVisible: boolean = false;
-    @Expose() public innerVisible: boolean = false;
-    @Expose() public innerShown: boolean = false;
+
+    public beforeMount() {
+        this.popoverComposable.config.stickToOptions.enabled = false;
+    }
 
     /**
      * @inheritDoc
@@ -41,34 +43,29 @@ export default class PopoverComponent extends Vue {
     }
 
     @Expose() public onAfterLeave(): void {
-        if (this.isLeaving) {
-            this.isVisible = false;
+        // In rare cases, the popover can be made visible just as Vue calls `onAfterLeave`,
+        // in which case we must not disabled `stick-to` or the popover will be out of position.
+        if (this.popoverComposable.config.visible) {
+            return ;
         }
+        this.popoverComposable.config.stickToOptions.enabled = false;
+        this.$forceUpdate();
     }
-
-    private isLeaving: boolean = false;
 
     @Watch('config.visible')
     public onVisibilityChange(newValue: any): void {
-        if (this.transition === false) {
-            this.isVisible = newValue;
-            this.innerVisible = true;
-            this.innerShown = true;
-            return ;
-        }
-        if (newValue && !this.isVisible) {
-            this.isLeaving = false;
-            this.isVisible = true;
-            this.popoverComposable.config.stickToOptions.enabled = false;
-            this.innerVisible = newValue;
-            this.innerShown = false;
+        if (newValue) {
+            this.popoverComposable.config.stickToOptions.enabled = newValue;
+            // Force update is required so the `v-bt-stick-to` directive updates.
+            this.$forceUpdate();
+
+            // Then wait a frame for the stick-to to update, so the popover is never out of position.
             window.requestAnimationFrame(() => {
-                this.innerShown = true;
-                this.popoverComposable.config.stickToOptions.enabled = true;
+                this.isVisible = true;
             });
-        } else if (!newValue && this.isVisible) {
-            this.isLeaving = true;
-            this.innerVisible = false;
+        } else {
+            // Just set the flag to `false` and let Vue call `onAfterLeave`.
+            this.isVisible = false;
         }
     }
 }
