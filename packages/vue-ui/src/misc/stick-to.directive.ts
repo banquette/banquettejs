@@ -1,4 +1,3 @@
-import { areEqual } from "@banquette/utils-misc/are-equal";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
 import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
@@ -14,7 +13,7 @@ import { GenericCallback, VoidCallback } from "@banquette/utils-type/types";
 import { Directive } from "@banquette/vue-typescript/decorator/directive.decorator";
 import { createPopper, PositioningStrategy, Instance, OptionsGeneric } from "@popperjs/core";
 import { useResizeObserver } from "@vueuse/core";
-import { DirectiveBinding, toRaw } from "vue";
+import { DirectiveBinding } from "vue";
 
 interface OptionsInterface {
     enabled: boolean;
@@ -56,21 +55,12 @@ export class StickToDirective {
         }
     }
 
-    public bindingUpdated(el: HTMLElement, bindings: DirectiveBinding): void {
-        const newOptions = this.resolveOptions(bindings);
-        if (!areObjectsEqual(newOptions, this.options)) {
-            this.options = newOptions;
-            this.doUpdate();
-        }
-    }
-
     /**
      * Vue lifecycle.
      */
     public updated(el: HTMLElement, bindings: DirectiveBinding) {
-        // Attaching a Popper is kind of heavy duty, so only do it if something changed.
-        const bindingsClone = cloneDeepPrimitive(toRaw(bindings.value));
-        if (el === this.el && areEqual(bindingsClone, this.bindings.value)) {
+        const newOptions = this.resolveOptions(bindings);
+        if (el === this.el && areObjectsEqual(newOptions, this.options)) {
             return ;
         }
         this.el = el;
@@ -144,6 +134,11 @@ export class StickToDirective {
         } else {
             this.popper.setOptions(popperOptions).catch(console.error);
         }
+        window.setTimeout(() => {
+            if (this.popper) {
+                this.popper.forceUpdate();
+            }
+        });
     }
 
     /**
@@ -216,14 +211,15 @@ export class StickToDirective {
     private resolveOptions(bindings: DirectiveBinding): OptionsInterface {
         let options = isFunction(bindings.value) ? bindings.value() : bindings.value;
         if (options instanceof HTMLElement || !isObject(options)) {
-            return {target: options, enabled: true};
+            return {target: options, enabled: this.options ? this.options.enabled : true};
         }
         options = cloneDeepPrimitive(options);
-        options.popper = extend({
+        options.popper = extend(cloneDeepPrimitive(this.options || {}), [{
+            enabled: options.enabled || true,
             placement: options.placement || 'bottom'
-        }, options.popper || {});
+        }, options.popper || {}]);
         if (isUndefined(options.enabled)) {
-            options.enabled = true;
+            options.enabled = this.options ? this.options.enabled : true;
         }
         return options;
     }
