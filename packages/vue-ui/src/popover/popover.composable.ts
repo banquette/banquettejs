@@ -207,7 +207,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['content', 'visible', 'allowHtml', 'showArrow', 'teleport'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['content', 'visible', 'allowHtml', 'showArrow', 'teleport'], {immediate: ImmediateStrategy.BeforeMount})
     protected updateBaseConfig(): void {
         this.config.content = this.content;
         this.config.showArrow = this.showArrow;
@@ -223,7 +223,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Create a new options object that will be given to the `bt-stick-to` directive.
      */
-    @Watch(['target', 'placement', 'offset'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['target', 'placement', 'offset'], {immediate: ImmediateStrategy.Mounted})
     protected updateStickToOptions(): void {
         const targetsCandidates = (isString(this.target) ? this.target.split(',') : ensureArray(this.target)).map((i) => trim(i));
         if (!targetsCandidates.length && this.component.$el && this.component.$el.parentElement instanceof HTMLElement) {
@@ -276,7 +276,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Update the events listeners that will control the popover visibility.
      */
-    @Watch(['target', 'visible'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['target', 'visible'], {immediate: ImmediateStrategy.Mounted})
     protected updateEvents(): void {
         this.clearEventsListeners();
         if (this.visible === null) {
