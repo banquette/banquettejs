@@ -1,6 +1,5 @@
 import { UsageException } from "@banquette/exception/usage.exception";
 import { Choice } from "@banquette/ui/form/select/choice";
-import { setIntervalWithTimeout } from "@banquette/utils-misc/set-interval-with-timeout";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { IconCheck } from "@banquette/vue-material-icons/icon-check";
@@ -10,6 +9,7 @@ import { InjectProvided } from "@banquette/vue-typescript/decorator/inject-provi
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { toRaw } from "vue";
 import { UndefinedValue, BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
 import type SelectGroupComponent from "../group/group.component";
 import type SelectComponent from "../select.component";
@@ -111,7 +111,7 @@ export default class ChoiceComponent extends Vue {
 
     @Watch('internalChoice', {immediate: ImmediateStrategy.NextTick})
     private onInternalChoiceChange(newValue: any) {
-        if (this.choice && newValue && this.choice.identifier === newValue.identifier) {
+        if (this.choice && newValue && toRaw(this.choice) === toRaw(newValue)) {
             return ;
         }
         // If internalChoice is not defined, this means the choice comes from a slot.
@@ -199,21 +199,6 @@ export default class ChoiceComponent extends Vue {
         // this.$el may be a comment for a frame until the `v-if` on the root node resolves.
         if (!isUndefined(this.$el.scrollIntoView)) {
             this.$el.scrollIntoView({block: 'center'});
-        } else {
-            // If we are here if means the component has just been created.
-            //
-            // The delay is a workaround a bug with scrollIntoView that doesn't seem to work
-            // properly if the target element is in a transition.
-            //
-            // Because the dropdown appearance is animated, calling scrollIntoView immediately has not effect.
-            // So here we call if every 50ms for 500ms, to hopefully ensure it is done...
-            //
-            // TODO: investigate more and find a proper fix
-            setIntervalWithTimeout(() => {
-                if (!isUndefined(this.$el.scrollIntoView)) {
-                    this.$el.scrollIntoView({block: 'nearest', inline: 'nearest'});
-                }
-            }, 50, 500);
         }
     }
 }
