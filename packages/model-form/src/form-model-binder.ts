@@ -65,6 +65,7 @@ export class FormModelBinder {
 
     private contextStack: Array<{ctor: Constructor, property: string}>;
     private canMutateForm: boolean = false;
+    private ignoreFormUpdate: boolean = false;
     private ignoreModelUpdate: boolean = false;
 
     private get currentContextCtor(): Constructor {
@@ -204,24 +205,29 @@ export class FormModelBinder {
                                               formContainer: FormGroupInterface,
                                               modelContainer: any,
                                               property: string|number): void {
-        const componentResult = this.getOrCreateFormComponent<FormControl>(formContainer, modelContainer, treeItem, property);
-        if (componentResult) {
-            let newValue: any = isObject(modelContainer) ? modelContainer[property] : undefined;
-            if (!isUndefined(treeItem.valueTransformer)) {
-                newValue = this.handleTransformResult<any>(treeItem.valueTransformer.transform(new TransformContext(
-                    null,
-                    FormTransformerSymbol,
-                    this.currentContextCtor,
-                    newValue,
-                    this.currentContextProperty
-                )));
+        try {
+            this.ignoreFormUpdate = true;
+            const componentResult = this.getOrCreateFormComponent<FormControl>(formContainer, modelContainer, treeItem, property);
+            if (componentResult) {
+                let newValue: any = isObject(modelContainer) ? modelContainer[property] : undefined;
+                if (!isUndefined(treeItem.valueTransformer)) {
+                    newValue = this.handleTransformResult<any>(treeItem.valueTransformer.transform(new TransformContext(
+                        null,
+                        FormTransformerSymbol,
+                        this.currentContextCtor,
+                        newValue,
+                        this.currentContextProperty
+                    )));
+                }
+                if (componentResult.isNew) {
+                    componentResult.component.setDefaultValue(newValue);
+                    componentResult.component.reset();
+                } else {
+                    componentResult.component.setValue(newValue);
+                }
             }
-            if (componentResult.isNew) {
-                componentResult.component.setDefaultValue(newValue);
-                componentResult.component.reset();
-            } else {
-                componentResult.component.setValue(newValue);
-            }
+        } finally {
+            this.ignoreFormUpdate = false;
         }
     }
 
@@ -317,6 +323,9 @@ export class FormModelBinder {
      * Called when a value change in the form, at any level.
      */
     private onFormValueChange(event: ValueChangedFormEvent): void {
+        if (this.ignoreFormUpdate) {
+            return ;
+        }
         try {
             this.ignoreModelUpdate = true;
             //
