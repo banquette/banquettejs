@@ -710,6 +710,12 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         if (isNullOrUndefined(identifier)) {
             return null;
         }
+        // Check if a known choice matches the identifier, so we can use its label and original value.
+        for (const candidate of this.inlinedChoices) {
+            if (candidate.identifier === identifier) {
+                return this.createSelectedChoice(candidate);
+            }
+        }
         return new SelectedChoice(this.extractChoiceLabel(value), identifier, value);
     }
 
