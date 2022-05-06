@@ -74,6 +74,10 @@ export class PopoverDirective {
         // mount() clears its container before adding the component to it.
         // So a wrapper is required to preserve the content of the element the tooltip has been setup on.
         const container = document.createElement('div');
+
+        // Make the wrapper absolute, so it doesn't disturb the document's flow
+        container.style.position = 'absolute';
+
         const app = createApp({
             /**
              * Wrap the component into a root component so props can be reactive.
