@@ -5,6 +5,7 @@ import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { flattenObject } from "@banquette/utils-object/flatten-object";
 import { slugify } from "@banquette/utils-string/format/slugify";
+import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isType } from "@banquette/utils-type/is-type";
 import { Primitive } from "@banquette/utils-type/types";
@@ -94,7 +95,7 @@ export class FilteringModule implements ModuleInterface {
                     if (sub !== null && Object.keys(sub).length > 0) {
                         output[key] = sub;
                     }
-                } else if (value) {
+                } else if (!isNullOrUndefined(value) && value !== '') {
                     output[key] = value;
                 }
             }
