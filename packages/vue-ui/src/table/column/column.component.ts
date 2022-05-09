@@ -1,4 +1,5 @@
 import { UsageException } from "@banquette/exception/usage.exception";
+import { isNumber } from "@banquette/utils-type/is-number";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -36,6 +37,11 @@ export default class ColumnComponent extends Vue {
     @Prop({type: Boolean, default: true}) public hideable!: boolean;
 
     /**
+     * Width of the column.
+     */
+    @Prop({type: [String, Number], default: null, transform: (v) => isNumber(v) ? (v + 'px') : v}) public width!: string;
+
+    /**
      * If `false`, the slot is not rendered.
      * This is used in the initialization phase of the list, when columns are being registered.
      */
@@ -61,7 +67,8 @@ export default class ColumnComponent extends Vue {
                 title: this.title,
                 orderingName: this.orderingName,
                 visible: this.visible,
-                hideable: this.hideable
+                hideable: this.hideable,
+                width: this.width
             });
         }
     }

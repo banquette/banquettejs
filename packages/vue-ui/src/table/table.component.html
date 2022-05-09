@@ -38,7 +38,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th v-for="column in vm.visibleColumns">
+                    <th v-for="column in vm.visibleColumns" :style="column.width ? {width: column.width} : {}">
                         <!-- No ordering -->
                         <template v-if="!column.orderingName">{{ column.title }}</template>
 

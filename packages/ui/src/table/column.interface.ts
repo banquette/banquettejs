@@ -34,6 +34,11 @@ export interface ColumnInterface {
      * Define if the column can be hidden by the user.
      */
     readonly hideable: boolean;
+
+    /**
+     * Width constraint for the column.
+     */
+    readonly width: string|null;
 }
 
 /**

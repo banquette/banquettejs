@@ -167,6 +167,7 @@ export class TableViewModel {
             orderingName: !isUndefined(column.orderingName) ? column.orderingName : null,
             visible: !isNullOrUndefined(column.visible) ? column.visible : true,
             hideable: !isNullOrUndefined(column.hideable) ? column.hideable : true,
+            width: !isNullOrUndefined(column.width) ? column.width : null,
             orderingStatus: null
         });
         this.updateColumns(() => {
