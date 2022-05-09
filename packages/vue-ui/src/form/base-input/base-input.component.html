@@ -1,6 +1,8 @@
+<!-- v.control.value == false to test for empty arrays -->
+<!-- !v.control.value would resolve to `false` for `[]`, but v.control.value == false resolves to `true`. -->
 <div
     class="bt-form-base-input"
-    :data-has-value="v.control.value ? '' : null"
+    :data-has-value="(v.control.value && v.control.value != false) ? '' : null"
     :data-has-help="hasLabelSlot ? '' : null"
     :data-has-focus="v.control.focused ? '' : null"
     :data-has-placeholder="v.base.placeholder ? '' : null"
@@ -21,7 +23,7 @@
             <div class="addon" v-if="hasBeforeSlot"><slot name="before"></slot></div>
         </div>
         <div class="input">
-            <div v-if="v.base.placeholder && !v.control.value" class="placeholder">{{ v.base.placeholder }}</div>
+            <div v-if="v.base.placeholder && (!v.control.value || v.control.value == false)" class="placeholder">{{ v.base.placeholder }}</div>
             <slot></slot>
             <div class="floating-extras">
                 <slot name="extras-before"></slot>
