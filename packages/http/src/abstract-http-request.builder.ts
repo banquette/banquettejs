@@ -41,7 +41,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
      * Set the method to PUT.
      */
     public put(): this {
-        this._method = HttpMethod.POST;
+        this._method = HttpMethod.PUT;
         return this;
     }
 
