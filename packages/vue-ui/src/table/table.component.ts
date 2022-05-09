@@ -113,9 +113,8 @@ export default class TableComponent extends Vue {
         // And we let a tick pass to let time for the watchers to trigger.
         this.$nextTick(() => {
             window.setTimeout(() => {
-                if (Object.keys(this.filters).length) {
-                    this.filteringForm = this.watchFilteringForm();
-                } else {
+                this.filteringForm = this.watchFilteringForm();
+                if (!Object.keys(this.filters).length) {
                     this.vm.fetch();
                 }
             });
