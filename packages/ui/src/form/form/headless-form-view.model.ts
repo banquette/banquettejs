@@ -42,7 +42,8 @@ import {
 } from "./constant";
 import { BindModelEventArg } from "./event/bind-model.event-arg";
 import { FormActionErrorEventArg } from "./event/form-action-error.event-arg";
-import { FormPersistEventArg } from "./event/form-persist.event-arg";
+import { FormAfterPersistEventArg } from "./event/form-after-persist.event-arg";
+import { FormBeforePersistEventArg } from "./event/form-before-persist.event-arg";
 import { RemoteValidationException } from "./exception/remote-validation.exception";
 import { HeadlessFormViewDataInterface } from "./headless-form-view-data.interface";
 
@@ -259,16 +260,17 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             if (!(await this.validate())) {
                 return;
             }
-            const persistEvent = new FormPersistEventArg(this.modelInstance ? this.modelInstance : this.form.value);
+            const payload: any = this.modelInstance ? this.modelInstance : this.form.value;
+            const persistEvent = new FormBeforePersistEventArg(payload);
             this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BeforePersist, persistEvent);
-            if (this.persistRemote.isApplicable) {
+            if (this.persistRemote.isApplicable && !persistEvent.defaultPrevented) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
                 const response: HttpResponse<any> = this.persistRemote.send(this.modelInstance ? this.modelInstance : this.form.value, {}, {}, [FormTag, FormPersistTag]);
                 try {
                     await response.promise;
                     this.updateState(Action.Persist, Status.Success);
-                    this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess);
+                    this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new FormAfterPersistEventArg(response, payload));
                 } catch (e) {
                     if (response.isError) {
                         const maybeValidationException = RemoteValidationException.CreateFromUnknownInput(response.result);
@@ -380,28 +382,28 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     /**
      * By notified when the form fails to load.
      */
-    public onLoadError(cb: (event: EventArg) => void): UnsubscribeFunction {
+    public onLoadError(cb: (event: FormActionErrorEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.LoadError, cb);
     }
 
     /**
      * Emitted each time submit() is called (even if no remote target is defined).
      */
-    public onBeforePersist(cb: (event: FormPersistEventArg) => void): UnsubscribeFunction {
+    public onBeforePersist(cb: (event: FormBeforePersistEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforePersist, cb);
     }
 
     /**
      * Triggered after a remote persist succeeded.
      */
-    public onPersistSuccess(cb: (event: EventArg) => void): UnsubscribeFunction {
+    public onPersistSuccess(cb: (event: FormAfterPersistEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.PersistSuccess, cb);
     }
 
     /**
      * Triggered when a remote persist fails.
      */
-    public onPersistError(cb: (event: EventArg) => void): UnsubscribeFunction {
+    public onPersistError(cb: (event: FormActionErrorEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.PersistError, cb);
     }
 
@@ -422,7 +424,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     /**
      * Triggered when a validation fails.
      */
-    public onValidateError(cb: (event: EventArg) => void): UnsubscribeFunction {
+    public onValidateError(cb: (event: FormActionErrorEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.ValidateError, cb);
     }
 

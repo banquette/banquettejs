@@ -10,11 +10,12 @@ import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
 import { BindModelEventArg } from "@banquette/ui/form/form/event/bind-model.event-arg";
-import { FormPersistEventArg } from "@banquette/ui/form/form/event/form-persist.event-arg";
+import { FormActionErrorEventArg } from "@banquette/ui/form/form/event/form-action-error.event-arg";
+import { FormAfterPersistEventArg } from "@banquette/ui/form/form/event/form-after-persist.event-arg";
+import { FormBeforePersistEventArg } from "@banquette/ui/form/form/event/form-before-persist.event-arg";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
-import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureString } from "@banquette/utils-type/ensure-string";
 import { Writeable, Primitive } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -27,7 +28,19 @@ import { FormViewDataInterface } from "./form-view-data.interface";
 
 @Component({
     name: 'bt-form',
-    emits: ['load', 'submit', 'update:disabled']
+    emits: [
+        'before-load',
+        'load-success',
+        'load-error',
+        'before-persist',
+        'persist-success',
+        'persist-error',
+        'before-validate',
+        'validate-success',
+        'validate-error',
+        'bind-model',
+        'update:disabled'
+    ]
 })
 export default class FormComponent<ModelType extends object = any, ViewData extends FormViewDataInterface<ModelType> = FormViewDataInterface<ModelType>> extends Vue {
     /**
@@ -132,16 +145,44 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         }));
 
         // Subclasses events
-        this.unsubscribeFunctions.push(this.vm.onBeforeLoad(proxy(this.onBeforeLoad, this)));
-        this.unsubscribeFunctions.push(this.vm.onLoadSuccess(proxy(this.onLoadSuccess, this)));
-        this.unsubscribeFunctions.push(this.vm.onLoadError(proxy(this.onLoadError, this)));
-        this.unsubscribeFunctions.push(this.vm.onBeforePersist(proxy(this.onBeforePersist, this)));
-        this.unsubscribeFunctions.push(this.vm.onPersistSuccess(proxy(this.onPersistSuccess, this)));
-        this.unsubscribeFunctions.push(this.vm.onPersistError(proxy(this.onPersistError, this)));
-        this.unsubscribeFunctions.push(this.vm.onBeforeValidate(proxy(this.onBeforeValidate, this)));
-        this.unsubscribeFunctions.push(this.vm.onValidateSuccess(proxy(this.onValidateSuccess, this)));
-        this.unsubscribeFunctions.push(this.vm.onValidateError(proxy(this.onValidateError, this)));
+        this.unsubscribeFunctions.push(this.vm.onBeforeLoad((event: EventArg) => {
+            this.$emit('before-load', event);
+            this.onBeforeLoad(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onLoadSuccess((event: EventArg) => {
+            this.$emit('load-success', event);
+            this.onLoadSuccess(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onLoadError((event: FormActionErrorEventArg) => {
+            this.$emit('load-error', event);
+            this.onLoadError(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onBeforePersist((event: FormBeforePersistEventArg) => {
+            this.$emit('before-persist', event);
+            this.onBeforePersist(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onPersistSuccess((event: FormAfterPersistEventArg) => {
+            this.$emit('persist-success', event);
+            this.onPersistSuccess(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onPersistError((event: FormActionErrorEventArg) => {
+            this.$emit('persist-error', event);
+            this.onPersistError(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onBeforeValidate((event: EventArg) => {
+            this.$emit('before-validate', event);
+            this.onBeforeValidate(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onValidateSuccess((event: EventArg) => {
+            this.$emit('validate-success', event);
+            this.onValidateSuccess(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onValidateError((event: FormActionErrorEventArg) => {
+            this.$emit('validate-error', event);
+            this.onValidateError(event);
+        }));
         this.unsubscribeFunctions.push(this.vm.onBindModel((event: BindModelEventArg) => {
+            this.$emit('bind-model', event);
             this.v.model = event.model as ModelType;
             this.onBindModel(event);
         }));
@@ -174,13 +215,13 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
      */
     /* virtual */ protected onBeforeLoad(event: EventArg): void {}
     /* virtual */ protected onLoadSuccess(event: EventArg): void {}
-    /* virtual */ protected onLoadError(event: EventArg): void {}
-    /* virtual */ protected onBeforePersist(event: FormPersistEventArg): void {}
-    /* virtual */ protected onPersistSuccess(event: EventArg): void {}
-    /* virtual */ protected onPersistError(event: EventArg): void {}
+    /* virtual */ protected onLoadError(event: FormActionErrorEventArg): void {}
+    /* virtual */ protected onBeforePersist(event: FormBeforePersistEventArg): void {}
+    /* virtual */ protected onPersistSuccess(event: FormAfterPersistEventArg): void {}
+    /* virtual */ protected onPersistError(event: FormActionErrorEventArg): void {}
     /* virtual */ protected onBeforeValidate(event: EventArg): void {}
     /* virtual */ protected onValidateSuccess(event: EventArg): void {}
-    /* virtual */ protected onValidateError(event: EventArg): void {}
+    /* virtual */ protected onValidateError(event: FormActionErrorEventArg): void {}
     /* virtual */ protected onBindModel(event: BindModelEventArg): void {}
 
     /**
@@ -199,7 +240,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
 
     @Watch('disabled', {immediate: false})
     private onDisableChange(newValue: boolean): void {
-        if (newValue === true) {
+        if (newValue) {
             this.vm.form.disable();
         } else {
             this.vm.form.enable();
