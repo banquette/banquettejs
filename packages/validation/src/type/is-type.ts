@@ -30,19 +30,19 @@ export enum Type {
  * A validator checking the value matches a type.
  */
 export const IsType = (target: Type, message: string = 'Invalid type of value. Expecting one of: %types%', type: string = 'is-type', tags: string[] = []): ValidatorInterface => {
+    const tests: Record<Type, [string, (value: any) => boolean]> = {
+        [Type.String]: ['String', isString],
+        [Type.Number]: ['Number', isValidNumber],
+        [Type.Numeric]: ['Numeric', isNumeric],
+        [Type.Boolean]: ['Boolean', isBoolean],
+        [Type.Object]: ['Object', isObject],
+        [Type.Array]: ['Array', isArray],
+        [Type.Symbol]: ['Symbol', isSymbol],
+        [Type.Undefined]: ['Undefined', isUndefined],
+        [Type.Null]: ['Null', (value) => value === null]
+    };
     return createValidator({
         validate(context: ValidationContext): ValidationResult {
-            let tests: Record<Type, [string, (value: any) => boolean]> = {
-                [Type.String]: ['String', isString],
-                [Type.Number]: ['Number', isValidNumber],
-                [Type.Numeric]: ['Numeric', isNumeric],
-                [Type.Boolean]: ['Boolean', isBoolean],
-                [Type.Object]: ['Object', isObject],
-                [Type.Array]: ['Array', isArray],
-                [Type.Symbol]: ['Symbol', isSymbol],
-                [Type.Undefined]: ['Undefined', isUndefined],
-                [Type.Null]: ['Null', (value) => value === null]
-            };
             let testsCount = 0;
             const invalidTypes: string[] = [];
             for (let key of getObjectKeys(tests)) {
