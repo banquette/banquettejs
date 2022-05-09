@@ -37,7 +37,7 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
     }
 
     // Attrs
-    if (Object.keys(expectedAttrs).length > 0) {
+    if (Object.keys(expectedAttrs).length > 0 && componentInst.$el) {
         const $el = componentInst.$el;
         for (const key of Object.keys(expectedAttrs)) {
             const candidate = expectedAttrs[key];
