@@ -5,7 +5,8 @@ export const ThemeConfiguration = {
         vars: {...BaseVars, ...{
             paddingX    : '@-padding-x',
             paddingY    : '@-padding-y',
-            height      : '@-height'
+            height      : '@-height',
+            lineHeight  : '@-line-height',
         }},
         selectors: {
             root: {
