@@ -1,6 +1,5 @@
 import { HttpMethod } from "@banquette/http/constants";
-import { SearchType, ChoicesPropResolver, SearchParamName } from "@banquette/ui/form/select/constant";
-import { ChoiceOrigin } from "@banquette/ui/form/select/constant";
+import { SearchType, ChoicesPropResolver, SearchParamName, ChoiceOrigin } from "@banquette/ui/form/select/constant";
 import { SelectedChoice } from "@banquette/ui/form/select/selected-choice";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { debounce } from "@banquette/utils-misc/debounce";
@@ -22,12 +21,14 @@ import { DropdownComponent } from "../../../dropdown";
 import { ClickOutsideDirective } from "../../../misc";
 import { ProgressCircularComponent } from "../../../progress/progress-circular";
 import { TagComponent } from "../../../tag";
+import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
 import { BaseInputComposable } from "../../base-input/base-input.composable";
 import { ViewModelEvents } from "../../constant";
-import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
 import { BeforeSlotOrigin, AfterSlotOrigin, PropOrigin } from "../constant";
 import ChoiceSlotWrapperComponent from "./choice-slot-wrapper.component";
 import ChoiceComponent from "./choice/choice.component.vue";
+import { I18nDefaults } from "./i18n-defaults";
+import { I18nInterface } from "./i18n.interface";
 import { SelectViewDataInterface } from "./select-view-data.interface";
 import { SelectViewModel } from "./select.view-model";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -108,6 +109,11 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @Prop({name: 'dropdownTeleport', type: [Object, String], default: null}) public dropdownTeleport!: HTMLElement|string|null;
     @Prop({name: 'dropdownZIndex', type: [Number, String], default: undefined, transform: (v) => !isUndefined(v) ? parseInt(v, 10) : undefined}) public dropdownZIndex!: number|undefined;
 
+    /**
+     * i18n configuration.
+     */
+    @Prop({type: Object, default: I18nDefaults}) public i18n!: I18nInterface;
+
     // Override the type to get autocompletion in the view.
     @Expose() public v!: SelectViewDataInterface;
     @Expose() public dropdownWidth: number = 0;
@@ -126,6 +132,9 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.eventPipeline.subscribe(ViewModelEvents.Ready, () => {});
     }
 
+    /**
+     * Vue lifecycle.
+     */
     public mounted() {
         super.mounted();
         this.observerInputWrapperSize((entries: readonly ResizeObserverEntry[]) => {
@@ -148,9 +157,6 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.lastKeyStrokeTime = (new Date()).getTime();
         this.vm.onKeyDown(event);
         this.updateInput();
-        if (this.vm.searchBuffer) {
-            this.v.base.placeholder = '';
-        }
     }
 
     @Expose() public selectChoice(choice: any): void {
@@ -163,6 +169,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
 
     @Expose() public deselectAll(): void {
         this.vm.deselectAll();
+        this.v.base.placeholder = this.baseComposable.placeholder;
     }
 
     @Expose() public removeItem(item: SelectedChoice): void {
@@ -198,9 +205,6 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         if ((new Date()).getTime() - this.lastBlurTime < 150) {
             return ;
         }
-        if (!this.v.isInputReadonly) {
-            this.v.inputValue = '';
-        }
         this.v.control.onFocus();
         this.v.isInputFocused = true;
     }
@@ -218,6 +222,11 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @Expose() public onInputChange = debounce(() => {
         if (!this.v.isInputReadonly) {
             this.vm.setSearchString(this.v.inputValue);
+        }
+        if (this.v.inputValue) {
+            this.v.base.placeholder = '';
+        } else {
+            this.v.base.placeholder = this.baseComposable.placeholder;
         }
     }, 100);
 
@@ -276,27 +285,36 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
          * Ugly tricky to only blur the input when the value has been selected using the mouse.
          * Keep the field focus for keyboard input.
          */
-        if ((new Date()).getTime() - this.lastKeyStrokeTime > 50) {
+        if ((new Date()).getTime() - this.lastKeyStrokeTime > 50 && !this.v.multiple) {
             this.inputEl.blur();
         }
         this.updateInput();
         this.updateSelected();
-        this.vm.setSearchString('');
-        if (this.v.multiple) {
-            this.v.inputValue = '';
-            this.v.inputPlaceholder = '';
-        }
         window.setTimeout(() => {
             this.updateTagsVisibility();
         });
         this.$emit('change', this.v.control.value);
     }
 
+    @Watch('v.choicesVisible', {immediate: false})
+    private onChoiceVisibilityChange(newValue: boolean): void {
+        if (newValue && !this.v.isInputReadonly) {
+            this.v.inputValue = this.v.searchBuffer;
+            this.v.base.placeholder = '';
+        } else if (!newValue) {
+            if (this.v.inputValue === this.v.searchBuffer) {
+                this.v.inputValue = '';
+            }
+            this.v.base.placeholder = this.baseComposable.placeholder;
+        }
+    }
+
     /**
      * Reconfigure the view model to match the new search configuration.
      */
-    @Watch(['searchType', 'searchRemoteParamName', 'searchMinLength', 'allowCreation'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['searchType', 'searchRemoteParamName', 'searchMinLength', 'allowCreation', 'multiple'], {immediate: ImmediateStrategy.BeforeMount})
     public updateSearchConfiguration(): void {
+        this.v.multiple = this.multiple;
         this.vm.searchType = this.searchType;
         this.vm.searchRemoteParamName = this.searchRemoteParamName;
         this.vm.searchMinLength = this.searchMinLength;
@@ -351,7 +369,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         if (!this.multiple) {
             const viewValue = this.v.control.value instanceof SelectedChoice ? this.v.control.value.label : '';
             this.v.inputPlaceholder = viewValue;
-            if (!this.v.isInputReadonly && this.v.isInputFocused && this.v.choicesVisible && viewValue === this.v.inputValue && this.vm.searchBuffer !== viewValue) {
+            if (!this.v.isInputReadonly && this.v.isInputFocused && this.v.choicesVisible && viewValue === this.v.inputValue && this.v.searchBuffer !== viewValue) {
                 this.v.inputValue = '';
             } else if (!this.v.choicesVisible) {
                 this.v.inputValue = viewValue;

@@ -38,22 +38,18 @@ export interface SelectViewDataInterface extends HeadlessSelectViewDataInterface
     isHeightLocked: boolean;
 
     /**
-     *
+     * States flags.
      */
     isInputReadonly: boolean;
-
-    /**
-     *
-     */
     isInputFocused: boolean;
 
     /**
-     *
+     * The current value of the text input.
      */
     inputValue: string;
 
     /**
-     *
+     * The current value of the placeholder of the input text.
      */
     inputPlaceholder: string;
 

@@ -73,11 +73,6 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     public searchMinLength: number = 0;
 
     /**
-     * The current value of the filter string.
-     */
-    public readonly searchBuffer: string = '';
-
-    /**
      * Define if the user can select custom values that are not proposed in the list of choices,
      * using the search input.
      */
@@ -169,19 +164,19 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         }
         const params: Record<string, string> = {};
         if (this.searchType === SearchType.Remote) {
-            if (this.searchMinLength > 0 && this.searchBuffer.length < this.searchMinLength) {
+            if (this.searchMinLength > 0 && this.viewData.searchBuffer.length < this.searchMinLength) {
                 this.viewData.searchMinLength = this.searchMinLength;
                 this.viewData.remoteFetchStatus = ChoicesRemoteFetchStatus.WaitingSearch;
+                this.setChoices([], ChoiceOrigin.Remote);
                 return;
             }
-            if (this.searchBuffer.length > 0) {
-
+            if (this.viewData.searchBuffer.length > 0) {
                 if (isFunction(this.searchRemoteParamName)) {
                     this.searchRemoteParamName(params);
                 } else {
                     let paramsNames: string[] = ensureArray(this.searchRemoteParamName)
                     for (const paramName of paramsNames) {
-                        params[paramName] = this.searchBuffer;
+                        params[paramName] = this.viewData.searchBuffer;
                     }
                 }
             }
@@ -412,7 +407,6 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      * Hide the dropdown of available choices.
      */
     public hideChoices(): void {
-        (this as Writeable<HeadlessSelectViewModel>).searchBuffer = '';
         this.viewData.choicesVisible = false;
         this.unFocusAll();
     }
@@ -462,11 +456,11 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      * Only applicable if the search type has been set to another value that `SearchType.None`.
      */
     public setSearchString(search: string): void {
-        if (this.searchType === SearchType.None || this.searchBuffer === search) {
+        if (this.searchType === SearchType.None || this.viewData.searchBuffer === search) {
             return ;
         }
-        (this as Writeable<HeadlessSelectViewModel>).searchBuffer = trim(search);
-        this.searchBufferSlug = slugify(this.searchBuffer);
+        this.viewData.searchBuffer = trim(search);
+        this.searchBufferSlug = slugify(this.viewData.searchBuffer);
         if (this.searchType === SearchType.Local) {
             this.updateChoices();
         } else if (this.searchType === SearchType.Remote) {
@@ -519,8 +513,8 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                     break;
                 }
             }
-            if (!found && this.allowCreation && this.searchBuffer.length > 0) {
-                this.selectChoice(this.searchBuffer);
+            if (!found && this.allowCreation && this.viewData.searchBuffer.length > 0) {
+                this.selectChoice(this.viewData.searchBuffer);
                 this.setSearchString('');
             }
         } else if (event.key === 'Escape') {

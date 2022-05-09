@@ -37,6 +37,11 @@ export interface HeadlessSelectViewDataInterface extends HeadlessControlViewData
     searchMinLength: number;
 
     /**
+     * The current value of the filter string.
+     */
+    searchBuffer: string;
+
+    /**
      * Status of the remote fetching.
      */
     remoteFetchStatus: ChoicesRemoteFetchStatus;
