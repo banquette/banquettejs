@@ -112,7 +112,11 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
     private addNodeValueToSelection(node: Node): void {
         const index = this.getNodeValueIndexInFormControlValue(node);
         if (index < 0) {
-            this.v.control.value.push(this.extractNodeValue(node));
+            const extractedValue = this.extractNodeValue(node);
+            if (!isUndefined(extractedValue)) {
+                this.v.control.value.push(extractedValue);
+                this.v.control.value = this.v.control.value.slice(0);
+            }
         }
     }
 
@@ -123,6 +127,7 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
         const index = this.getNodeValueIndexInFormControlValue(node);
         if (index > -1) {
             this.v.control.value.splice(index, 1);
+            this.v.control.value = this.v.control.value.slice(0);
         }
     }
 
