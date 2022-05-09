@@ -1,4 +1,3 @@
-import { Primitive } from "@banquette/utils-type/types";
 import { VarsMapInterface } from "../decorator/themeable.decorator";
 import { VariantSelector, PropCallback } from "./constant";
 
@@ -22,7 +21,7 @@ export interface VariantDefinitionInterface {
     /**
      * Props overrides.
      */
-    props?: Record<string, Primitive|PropCallback>;
+    props?: Record<string, any|PropCallback>;
 
     /**
      * Css vars overrides.
