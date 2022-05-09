@@ -10,6 +10,11 @@ export class EventArg {
     public readonly propagationStopped: boolean = false;
 
     /**
+     * If `true`, ask the caller of the event not to execute the scheduled action.
+     */
+    public readonly defaultPrevented: boolean = false;
+
+    /**
      * Stop the event propagation so no other listener with the same tags is called.
      */
     public stopPropagation(): void {
@@ -21,5 +26,12 @@ export class EventArg {
      */
     public restorePropagation(): void {
         (this as Writeable<EventArg>).propagationStopped = false;
+    }
+
+    /**
+     * Ask the caller of the event not to execute the scheduled action.
+     */
+    public preventDefault(): void {
+        (this as Writeable<EventArg>).defaultPrevented = true;
     }
 }
