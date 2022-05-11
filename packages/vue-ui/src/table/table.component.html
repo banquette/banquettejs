@@ -14,7 +14,9 @@
 -->
 
 <!-- The default slot is rendered without any item while initializing to allow columns (visible or not) to register -->
-<slot v-if="vm.initializing"></slot>
+<!-- It's important to wrap the slot with a div to avoid the "Extraneous non-props attributes ..." -->
+<!-- warning if for example a "class" attribute is added to the `bt-table` because the slot is the root node. -->
+<div v-if="vm.initializing"><slot></slot></div>
 <div class="bt-table" v-else>
     <!-- A bt-form is required so component validators can be used -->
     <bt-form ref="form" v-show="false">
