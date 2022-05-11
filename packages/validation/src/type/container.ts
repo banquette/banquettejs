@@ -3,6 +3,7 @@ import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { isValidatorContainer, splitPath } from "../utils";
+import { ValidateOptionsInterface } from "../validate-options.interface";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorContainerInterface } from "../validator-container.interface";
@@ -14,6 +15,9 @@ export type ValidatorsCollection = Record<string, ValidatorInterface>|ValidatorI
  * Validate an object or an array.
  */
 export class ContainerValidator implements ValidatorContainerInterface {
+    public readonly tags: string[] = [];
+    public readonly groups: string[] = [];
+
     public constructor(protected validators: ValidatorsCollection) {
     }
 
@@ -70,14 +74,14 @@ export class ContainerValidator implements ValidatorContainerInterface {
     /**
      * Validate a value.
      */
-    public validate(value: any, maskOrContext: ValidationContext|string|string[]): ValidationResult {
-        const context: ValidationContext = ValidationContext.EnsureValidationContext(value, maskOrContext);
+    public validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContext): ValidationResult {
+        const context: ValidationContext = ValidationContext.EnsureValidationContext(value, maskOrOptions);
         if (!isObject(value) || !context.shouldValidate(this)) {
             return context.result;
         }
         for (const key of Object.keys(this.validators)) {
             const subValidator: ValidatorInterface = this.getValidator(key);
-            const subContext = new ValidationContext(context, key, value[key]);
+            const subContext = new ValidationContext(context, key, value[key], undefined, context.groups);
             if (subContext.shouldValidate(subValidator)) {
                 subValidator.validate(value[key], subContext);
             }

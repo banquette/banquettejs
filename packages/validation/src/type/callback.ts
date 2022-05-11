@@ -9,7 +9,7 @@ type ValidationCallback = ((context: ValidationContext) => Promise<void>|void);
 /**
  * Delegate the validation to a custom callback given as parameter of the factory.
  */
-export const Callback = (callback: ValidationCallback, tags?: string[]): ValidatorInterface => {
+export const Callback = (callback: ValidationCallback, tags?: string|string[], groups?: string|string[]): ValidatorInterface => {
     return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
             try {
@@ -22,5 +22,5 @@ export const Callback = (callback: ValidationCallback, tags?: string[]): Validat
             }
             return context.result;
         }
-    }, tags);
+    }, tags, groups);
 };

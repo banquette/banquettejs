@@ -6,8 +6,10 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
+import { assignOptionsDefaults } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
+import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
 
 /**
@@ -19,11 +21,10 @@ import { ValidatorInterface } from "../validator.interface";
  * To distinguish between a string containing only a number (e.g. '12')
  * and a number (e.g. 12) you can use the "treatAs" argument to force a cast.
  */
-export const Max = (count: number,
+export function Max(count: number,
                     treatAs: 'string'|'number'|'auto' = 'auto',
-                    message: string|'auto' = 'auto',
-                    type: string = 'max',
-                    tags: string[] = []): ValidatorInterface => {
+                    options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
+    const finalOptions = assignOptionsDefaults(options, 'auto', 'max');
     return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
             let valid: boolean = true;
@@ -38,9 +39,9 @@ export const Max = (count: number,
                 defaultMessage = `Must contain at most %count% item${(count > 1 ? 's' : '')}.`;
             }
             if (!valid) {
-                context.result.addViolation(type, message === 'auto' ? defaultMessage : message, {count});
+                context.result.addViolation(finalOptions.type, finalOptions.message === 'auto' ? defaultMessage : finalOptions.message, {count});
             }
             return context.result;
         }
-    }, [SYNC_TAG].concat(tags));
-};
+    }, [SYNC_TAG].concat(finalOptions.tags), finalOptions.groups);
+}

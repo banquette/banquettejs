@@ -31,6 +31,7 @@ export * from './v';
 export * from './simplified-validator.interface';
 export * from './create-validator';
 export * from './utils';
+export * from './validate-options.interface';
 export * from './validation-context';
 export * from './validation-result';
 export * from './validator.factory';

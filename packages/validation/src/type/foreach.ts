@@ -2,6 +2,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { isIterable } from "@banquette/utils-type/is-iterable";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isValidatorContainer } from "../utils";
+import { ValidateOptionsInterface } from "../validate-options.interface";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
 import { ValidatorContainerInterface } from "../validator-container.interface";
@@ -10,7 +11,7 @@ import { ValidatorInterface } from "../validator.interface";
 /**
  * Execute a validator for each item in the validated value.
  */
-export const Foreach = (validator: ValidatorInterface): ValidatorContainerInterface => {
+export function Foreach(validator: ValidatorInterface): ValidatorContainerInterface {
     const ensureContainer = (path: string): ValidatorContainerInterface => {
         if (!isValidatorContainer(validator)) {
             throw new UsageException(`A ValidatorContainerInterface is expected for "${path}".`);
@@ -42,11 +43,11 @@ export const Foreach = (validator: ValidatorInterface): ValidatorContainerInterf
         /**
          * Validate a value.
          */
-        validate(value: any, maskOrContext: ValidationContext|string|string[]): ValidationResult {
-            const context: ValidationContext = ValidationContext.EnsureValidationContext(value, maskOrContext);
+        validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContext): ValidationResult {
+            const context: ValidationContext = ValidationContext.EnsureValidationContext(value, maskOrOptions);
             if (isIterable(value) || (value !== null && isObject(value))) {
                 for (const [k, v] of Object.entries(value)) {
-                    const subContext = new ValidationContext(context, k, v);
+                    const subContext = new ValidationContext(context, k, v, undefined, context.groups);
                     if (subContext.shouldValidate(validator)) {
                         validator.validate(v, subContext);
                     }
@@ -55,4 +56,4 @@ export const Foreach = (validator: ValidatorInterface): ValidatorContainerInterf
             return context.result;
         }
     };
-};
+}

@@ -1,20 +1,23 @@
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
+import { assignOptionsDefaults } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
+import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
 
 /**
  * Check that the value is the same as the value of another part of the validation tree.
  */
-export const SameAs = (path: string, message: string = 'The value must be the same as "%path%".', type: string = 'same-as', tags: string[] = []): ValidatorInterface => {
+export function SameAs(path: string, options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
+    const finalOptions = assignOptionsDefaults(options, 'The value must be the same as "%path%".', 'same-as');
     return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
             const otherValue: any = context.getOtherValue(path);
             if (context.value !== otherValue) {
-                context.result.addViolation(type, message, {path});
+                context.result.addViolation(finalOptions.type, finalOptions.message, {path});
             }
             return context.result;
         }
-    }, [SYNC_TAG].concat(tags));
-};
+    }, [SYNC_TAG].concat(finalOptions.tags), finalOptions.groups);
+}

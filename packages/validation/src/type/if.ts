@@ -28,6 +28,6 @@ export class IfValidator extends AbstractVirtualContainer {
     }
 }
 
-export const If = (condition: ConditionCallback, ...validators: ValidatorInterface[]): ValidatorInterface => {
+export function If(condition: ConditionCallback, ...validators: ValidatorInterface[]): ValidatorInterface {
     return new IfValidator(condition, validators);
-};
+}

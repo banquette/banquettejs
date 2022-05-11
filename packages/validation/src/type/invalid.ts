@@ -1,17 +1,20 @@
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
+import { assignOptionsDefaults } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
+import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
 
 /**
  * A validator that always fails.
  */
-export const Invalid = (message?: string, type: string = 'invalid', tags: string[] = []): ValidatorInterface => {
+export function Invalid(options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
+    const finalOptions = assignOptionsDefaults(options, 'The value is invalid', 'invalid');
     return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
-            context.result.addViolation(type, message);
+            context.result.addViolation(finalOptions.type, finalOptions.message);
             return context.result;
         }
-    }, [SYNC_TAG].concat(tags));
-};
+    }, [SYNC_TAG].concat(finalOptions.tags), finalOptions.groups);
+}

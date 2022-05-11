@@ -227,20 +227,20 @@ describe('masks', () => {
     let validator: ValidatorInterface = V.Container({});
     beforeAll(() => {
         validator = V.Container({
-            name: V.Invalid('', 'name'),
+            name: V.Invalid({type: 'name'}),
             email: V.Or(V.And(
-                V.Invalid('', 'email-1'),
-                V.Invalid('', 'email-2')
+                V.Invalid({type: 'email-1'}),
+                V.Invalid({type: 'email-2'})
             ), V.Callback(async (context: ValidationContext) => {
                 await waitForDelay(20);
                 context.result.addViolation('email-callback');
             }, [ASYNC_TAG])),
             tags: V.Compose(
-                V.Invalid('', 'tags-max'),
+                V.Invalid({type: 'tags-max'}),
                 V.Foreach(
                     V.Container({
-                        name: V.Invalid('', 'tag-name'),
-                        color: V.Invalid('', 'tag-color')
+                        name: V.Invalid({type: 'tag-name'}),
+                        color: V.Invalid({type: 'tag-color'})
                     })
                 )
             )
@@ -250,7 +250,7 @@ describe('masks', () => {
     describe('validation', () => {
         for (let mask of Object.keys(tests)) {
             test(mask, async () => {
-                const result = await validator.validate({tags: [{}, {}]}, tests[mask][0]).onReady();
+                const result = await validator.validate({tags: [{}, {}]}, {mask: tests[mask][0]}).onReady();
                 expectViolations(result.getViolationsArray(), tests[mask][1]);
             });
         }
@@ -292,7 +292,7 @@ describe('validators', () => {
             [6, null, () => expectResult(V.Or(V.Empty(), V.Min(5)).validate('Test'), {valid: false, violations: [{type: 'min'}]})],
             [5, null, () => expectResult(V.Or(V.Empty(), V.Min(5)).validate(''), {valid: true})],
             [8, null, () => expectResultAsync(20, V.Or(ValidateAfterDelay(), V.Min(5)).validate(''), {valid: true})],
-            [8, null, () => expectResultAsync(40, V.Or(ValidateAfterDelay(20, V.Invalid('test')), ValidateAfterDelay(20, V.Invalid('test')), V.NotEmpty(), ValidateAfterDelay(20, V.Invalid('test'))).validate('value'), {valid: true})],
+            [8, null, () => expectResultAsync(40, V.Or(ValidateAfterDelay(20, V.Invalid({message: 'test'})), ValidateAfterDelay(20, V.Invalid({message: 'test'})), V.NotEmpty(), ValidateAfterDelay(20, V.Invalid({message: 'test'}))).validate('value'), {valid: true})],
         ]);
     });
 
@@ -301,7 +301,7 @@ describe('validators', () => {
             [6, null, () => expectResult(V.Compose(V.Empty(), V.Min(5)).validate('Test'), {valid: false, violations: [{type: 'empty'}, {type: 'min'}]})],
             [6, null, () => expectResult(V.Compose(V.NotEmpty(), V.Min(5)).validate(''), {valid: false, violations: [{type: 'not-empty'}, {type: 'min'}]})],
             [9, 'Async behavior', () => expectResultAsync(20, V.Compose(ValidateAfterDelay(), V.Min(5)).validate(''), {valid: false, violations: [{type: 'min'}]})],
-            [9, 'Parallel execution', () => expectResultAsync(20, V.Compose(ValidateAfterDelay(20, V.Invalid('', 'test1')), V.Min(5), ValidateAfterDelay(20, V.Invalid('', 'test2'))).validate('abc'), {valid: false, violations: [{type: 'test1'}, {type: 'test2'}, {type: 'min'}]})]
+            [9, 'Parallel execution', () => expectResultAsync(20, V.Compose(ValidateAfterDelay(20, V.Invalid({type: 'test1'})), V.Min(5), ValidateAfterDelay(20, V.Invalid({type: 'test2'}))).validate('abc'), {valid: false, violations: [{type: 'test1'}, {type: 'test2'}, {type: 'min'}]})]
         ]);
     });
 
@@ -646,11 +646,11 @@ describe('validators', () => {
 
     describe('Invalid', () => {
         runTests([
-            [6, null, () => expectResult(V.Invalid().validate('a random string'), {valid: false, violations: [{type: 'invalid'}]})],
+            [6, null, () => expectResult(V.Invalid().validate('a random string'), {valid: false, violations: [{type: 'invalid', message: 'The value is invalid'}]})],
             [6, null, () => expectResult(V.Invalid().validate(12), {valid: false, violations: [{type: 'invalid'}]})],
             [6, null, () => expectResult(V.Invalid('Custom message').validate(''), {valid: false, violations: [{type: 'invalid', message: 'Custom message'}]})],
-            [6, null, () => expectResult(V.Invalid('', 'custom-type').validate(0), {valid: false, violations: [{type: 'custom-type', message: ''}]})],
-            [6, null, () => expectResult(V.Invalid(undefined, 'custom-type').validate(null), {valid: false, violations: [{type: 'custom-type', message: undefined}]})],
+            [6, null, () => expectResult(V.Invalid({message: '', type: 'custom-type'}).validate(0), {valid: false, violations: [{type: 'custom-type', message: ''}]})],
+            [6, null, () => expectResult(V.Invalid({message: 'Custom message', type: 'custom-type'}).validate(null), {valid: false, violations: [{type: 'custom-type', message: 'Custom message'}]})],
             [6, null, () => expectResult(V.Invalid().validate(undefined), {valid: false, violations: [{type: 'invalid'}]})]
         ]);
     });

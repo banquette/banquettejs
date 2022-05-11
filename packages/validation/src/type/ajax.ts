@@ -9,6 +9,7 @@ import { HttpRequestFactoryConfig, HttpRequestFactory } from "@banquette/http/ht
 import { HttpResponse } from "@banquette/http/http-response";
 import { HttpService } from "@banquette/http/http.service";
 import { extend } from "@banquette/utils-object/extend";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
@@ -19,6 +20,7 @@ import { createValidator } from "../create-validator";
 import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
+import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from '../validator.interface';
 
 type RequestFactory = (value: any) => HttpRequest;
@@ -91,11 +93,9 @@ export class AjaxValidator implements SimplifiedValidatorInterface {
     }
 }
 
-export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFactoryConfig|string,
+export function Ajax(requestFactory: RequestFactory|HttpRequest|HttpRequestFactoryConfig|string,
                      responseHandler?: ResponseHandler,
-                     message?: string,
-                     type?: string,
-                     tags: string[] = []): ValidatorInterface => {
+                     options: ValidatorOptionsInterface = {}): ValidatorInterface {
     const isFactoryConfig = (value: RequestFactory|HttpRequestFactoryConfig): value is HttpRequestFactoryConfig => isObject(value);
     const instance: AjaxValidator = Injector.Get(AjaxValidator);
     if (requestFactory instanceof HttpRequest) {
@@ -117,11 +117,11 @@ export const Ajax = (requestFactory: RequestFactory|HttpRequest|HttpRequestFacto
     if (!isUndefined(responseHandler)) {
         instance.responseHandler = responseHandler;
     }
-    if (!isUndefined(message)) {
-        instance.message = message;
+    if (!isUndefined(options.message)) {
+        instance.message = options.message;
     }
-    if (!isUndefined(type)) {
-        instance.type = type;
+    if (!isUndefined(options.type)) {
+        instance.type = options.type;
     }
-    return createValidator(instance, [ASYNC_TAG].concat(tags));
-};
+    return createValidator(instance, [ASYNC_TAG].concat(ensureArray(options.tags)), ensureArray(options.groups));
+}

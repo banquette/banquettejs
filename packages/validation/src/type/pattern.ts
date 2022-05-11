@@ -1,21 +1,23 @@
 import { isString } from "@banquette/utils-type/is-string";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
-import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
+import { assignOptionsDefaults } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
-import { ValidatorFactory } from "../validator.factory";
+import { ValidatorOptionsInterface } from "../validator-options.interface";
+import { ValidatorInterface } from "../validator.interface";
 
 /**
  * Check that the value matches a pattern.
  */
-export const Pattern: ValidatorFactory = (pattern: RegExp, message: string = 'Invalid value.', type: string = 'pattern', tags: string[] = []): SimplifiedValidatorInterface => {
+export function Pattern(pattern: RegExp, options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
+    const finalOptions = assignOptionsDefaults(options, 'Invalid value.', 'pattern');
     return createValidator({
         validate: (context: ValidationContext): ValidationResult => {
             if (context.value && (!isString(context.value) || !pattern.test(context.value))) {
-                context.result.addViolation(type, message);
+                context.result.addViolation(finalOptions.type, finalOptions.message);
             }
             return context.result;
         }
-    }, [SYNC_TAG].concat(tags));
-};
+    }, [SYNC_TAG].concat(finalOptions.tags), finalOptions.groups);
+}

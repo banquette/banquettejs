@@ -1,4 +1,5 @@
 import { UsageException } from "@banquette/exception/usage.exception";
+import { arrayIntersect } from "@banquette/utils-array/array-intersect";
 import { MatchType } from "@banquette/utils-glob/constant";
 import { matchBest } from "@banquette/utils-glob/match-best";
 import { MatchResult } from "@banquette/utils-glob/match-result";
@@ -6,6 +7,7 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { isValidatorContainer } from "./utils";
+import { ValidateOptionsInterface } from "./validate-options.interface";
 import { ValidationResult } from "./validation-result";
 import { ValidatorInterface } from "./validator.interface";
 
@@ -20,17 +22,17 @@ export class ValidationContext {
     /**
      * Create a ValidationContext object.
      *
-     * @param parent ValidationContext|null The parent context (if applicable)
+     * @param parent ValidationContext|null The parent context (if applicable).
      * @param name   string                 The name of the attribute being validated.
-     * @param value  any                    The value being validated
-     * @param masks  string[]               (optional, default: []) One or multiple patterns limiting the validators that will be executed
-     * @param tags   string[]               (optional, default: undefined) Any number of tags that will further limit the validators that will be executed
+     * @param value  any                    The value being validated.
+     * @param masks  string[]               (optional, default: []) One or multiple patterns limiting the validators that will be executed.
+     * @param groups string[]               (optional, default: []]) The validation groups the validators will have to match.
      */
     public constructor(public readonly parent: ValidationContext|null,
                        public readonly name: string|null,
                        public readonly value: any,
                        masks: string[] = [],
-                       private tags?: string[]) {
+                       public readonly groups: string[] = []) {
         if (name !== null && name.match(/\/|\*/)) {
             throw new UsageException('Invalid context name. Must not contain "/" or "*".');
         }
@@ -161,10 +163,13 @@ export class ValidationContext {
      */
     public shouldValidate(validator: ValidatorInterface): boolean {
         const result: MatchResult = this.matchMask(validator);
+        const groups = ensureArray(validator.groups);
+
         return (
             result.pattern === MatchType.Full ||
             (result.pattern === MatchType.Partial && isValidatorContainer(validator))
-        ) && result.tags >= MatchType.Partial;
+        ) && (result.tags >= MatchType.Partial || isValidatorContainer(validator)) &&
+            (this.groups.length && arrayIntersect(this.groups, groups).length > 0 || (!this.groups.length && !groups.length));
     }
 
     /**
@@ -198,14 +203,15 @@ export class ValidationContext {
     /**
      * Ensure a ValidationContext object is returned from a ValidatorInterface signature.
      */
-    public static EnsureValidationContext(value: any, maskOrContext?: ValidationContext|string|string[], tags?: string[]): ValidationContext {
+    public static EnsureValidationContext(value: any, maskOrContext?: ValidateOptionsInterface|ValidationContext): ValidationContext {
         if (!(maskOrContext instanceof ValidationContext)) {
+            const options = maskOrContext || {};
             return new ValidationContext(
                 null,
                 null,
                 value,
-                ensureArray(maskOrContext) as string[],
-                tags
+                !isUndefined(options.mask) ? ensureArray(options.mask) : undefined,
+                !isUndefined(options.group) ? ensureArray(options.group) : undefined
             );
         }
         return maskOrContext as ValidationContext;

@@ -10,8 +10,10 @@ import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { isValidNumber } from "@banquette/utils-type/is-valid-number";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
+import { assignOptionsDefaults } from "../utils";
 import { ValidationContext } from "../validation-context";
 import { ValidationResult } from "../validation-result";
+import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
 
 export enum Type {
@@ -29,7 +31,8 @@ export enum Type {
 /**
  * A validator checking the value matches a type.
  */
-export const IsType = (target: Type, message: string = 'Invalid type of value. Expecting one of: %types%', type: string = 'is-type', tags: string[] = []): ValidatorInterface => {
+export function IsType(target: Type, options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
+    const finalOptions = assignOptionsDefaults(options, 'Invalid type of value. Expecting one of: %types%', 'is-type');
     const tests: Record<Type, [string, (value: any) => boolean]> = {
         [Type.String]: ['String', isString],
         [Type.Number]: ['Number', isValidNumber],
@@ -55,9 +58,9 @@ export const IsType = (target: Type, message: string = 'Invalid type of value. E
                 }
             }
             if (invalidTypes.length > 0 && invalidTypes.length === testsCount) {
-                context.result.addViolation(type, message, {types: invalidTypes.join(',')})
+                context.result.addViolation(finalOptions.type, finalOptions.message, {types: invalidTypes.join(',')})
             }
             return context.result;
         }
-    }, [SYNC_TAG].concat(tags));
-};
+    }, [SYNC_TAG].concat(finalOptions.tags), finalOptions.groups);
+}

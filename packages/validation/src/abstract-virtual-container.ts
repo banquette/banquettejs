@@ -6,6 +6,7 @@ import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Writeable } from "@banquette/utils-type/types";
 import { Valid } from "./type/valid";
 import { isValidatorContainer, splitPath } from "./utils";
+import { ValidateOptionsInterface } from "./validate-options.interface";
 import { ValidationContext } from "./validation-context";
 import { ValidationResult } from "./validation-result";
 import { ValidatorContainerInterface } from "./validator-container.interface";
@@ -96,7 +97,7 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
     /**
      * @inheritDoc
      */
-    public validate(value: any, maskOrContext?: ValidationContext|string|string[]): ValidationResult {
+    public validate(value: any, maskOrContext?: ValidateOptionsInterface|ValidationContext): ValidationResult {
         let index = -1;
         let wrappingPromise: Promise<any>|null = null;
         let wrappingPromiseResolve: any = null;

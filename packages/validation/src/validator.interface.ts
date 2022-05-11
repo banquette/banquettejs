@@ -1,5 +1,6 @@
 import { ValidationContext } from "./validation-context";
 import { ValidationResult } from "./validation-result";
+import { ValidateOptionsInterface } from "./validate-options.interface";
 
 export interface ValidatorInterface {
     /**
@@ -15,10 +16,13 @@ export interface ValidatorInterface {
      * `validator.validate('a value', '/name:sync')`
      * or
      * `validator.validate('a value', '/name:sync:custom-tag')`
-     *
-     * If `undefined`, the tag matching result is always "full".
      */
     readonly tags?: string[];
+
+    /**
+     * A list of groups to filter the validation with.
+     */
+    readonly groups?: string[];
 
     /**
      * Validate a value.
@@ -26,5 +30,5 @@ export interface ValidatorInterface {
      * The ValidationResult object is return synchronously BUT can contain an ObservablePromise
      * if asynchronous validators have been triggered in the validation process.
      */
-    validate(value: any, maskOrContext?: ValidationContext|string|string[]): ValidationResult;
+    validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContext): ValidationResult;
 }

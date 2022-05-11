@@ -47,6 +47,6 @@ export class OrValidator extends AbstractVirtualContainer {
     }
 }
 
-export const Or = (...validators: ValidatorInterface[]): ValidatorInterface => {
+export function Or(...validators: ValidatorInterface[]): ValidatorInterface {
     return new OrValidator(validators);
-};
+}
