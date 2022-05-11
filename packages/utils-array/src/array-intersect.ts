@@ -1,5 +1,5 @@
 /**
- * Create a a new array only containing values common to `array1` and `array2`.
+ * Create a new array only containing values common to `array1` and `array2`.
  */
 export function arrayIntersect(array1: any[], array2: any[]): any[] {
     if (array2.length > array1.length) {
