@@ -36,6 +36,8 @@
 }
 
 .bt-form-text {
+    width: 100%;
+
     [data-control] {
         width: 100%;
         padding: var(--form-text-padding-y) var(--form-text-padding-x);
