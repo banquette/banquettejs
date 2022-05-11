@@ -27,7 +27,7 @@
             <slot></slot>
             <div class="floating-extras">
                 <slot name="extras-before"></slot>
-                <bt-progress-circular v-if="v.control.busy"></bt-progress-circular>
+                <bt-progress-circular v-if="v.control.busy || v.control.validating"></bt-progress-circular>
                 <template v-if="hasFloatingErrors && v.control.invalid && v.control.validated">
                     <div ref="error-icon" class="error-icon">
                         <icon-warning size="18" @click="v.control.focus()"></icon-warning>
