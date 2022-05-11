@@ -146,7 +146,6 @@ export default class ButtonComponent extends Vue {
             if (this.hasToggleSlot) {
                 this.toggle(event);
             }
-            console.log(this.clickDuration);
             window.setTimeout(() => {
                 this.active = false;
             }, this.clickDuration * 2);

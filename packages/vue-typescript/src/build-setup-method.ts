@@ -233,12 +233,9 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 Object.defineProperty(inst, _templateRefName, {
                     get: () => {
                         if (!inst.$refs) {
-                        //    console.log('get', _templateRefName, 'NO $refs');
                             return null;
                         }
-                        //console.log(inst.$refs);
                         const v = inst.$refs[data.templateRefs[_templateRefName]];
-                       // console.log('get', _templateRefName, v);
                         if (isNullOrUndefined(v)) {
                             return null;
                         }
