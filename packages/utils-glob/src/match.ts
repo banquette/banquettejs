@@ -1,21 +1,20 @@
 import { trimArray } from "@banquette/utils-array/trim-array";
 import { escapeRegex } from "@banquette/utils-string/format/escape-regex";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { MatchType } from "./constant";
 import { MatchResult } from "./match-result";
 
 /**
  * Match a mask against a path.
  */
-export function match(mask: string, path: string, tags?: string[]): MatchResult {
+export function match(mask: string, path: string, tags: string[] = []): MatchResult {
     const result: MatchResult = {pattern: MatchType.Full, tags: MatchType.Full};
     if (mask === path) {
         return result;
     }
     const sections = trimArray(mask.split(':'));
 
-    // If "tags" is undefined, totally ignore the tags part of the pattern, consider its a full match.
-    if (!isUndefined(tags)) {
+    // If no tags are defined, totally ignore the tags part of the pattern, consider its a full match.
+    if (sections.length > 1) {
         const maskTags = sections.slice(1);
         const matchingTags = maskTags.filter((tag: string) => tags.indexOf(tag) > -1);
         result.tags = maskTags.length === matchingTags.length ? MatchType.Full : (matchingTags.length > 0 ? MatchType.Partial : MatchType.None);
