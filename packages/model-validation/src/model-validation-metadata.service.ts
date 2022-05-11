@@ -64,8 +64,12 @@ export class ModelValidationMetadataService {
     public get(identifier: ModelExtendedIdentifier, property: string): ValidatorInterface|null {
         const ctor: Constructor = this.aliasResolver.resolveAlias(identifier);
         const properties = this.validatorsMap.get(ctor);
-        if (!isNullOrUndefined(properties)) {
-            return properties[property] || null;
+        if (!isNullOrUndefined(properties) && !isUndefined(properties[property])) {
+            return properties[property];
+        }
+        const parent = Object.getPrototypeOf(ctor);
+        if (parent) {
+            return this.get(parent, property);
         }
         return null;
     }
