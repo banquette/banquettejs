@@ -53,6 +53,11 @@ export abstract class ValidatorComponent extends Vue {
     @Prop({type: [String, Array], default: [], transform: (value) => ensureArray(value)}) public tags?: string[];
 
     /**
+     * Groups to give to the validator.
+     */
+    @Prop({type: [String, Array], default: [], transform: (value) => ensureArray(value)}) public groups?: string[];
+
+    /**
      * The form automagically extracted from a parent "bt-form" component.
      */
     public autoDetectedParentFormGroup: AbstractFormGroup|null = null;

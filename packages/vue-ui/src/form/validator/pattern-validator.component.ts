@@ -13,6 +13,6 @@ export default class ValidatePatternComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Pattern(new RegExp(this.pattern, this.flags), this.message, this.type);
+        return Pattern(new RegExp(this.pattern, this.flags), {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

@@ -8,6 +8,7 @@ export * from './form.factory';
 export * from './form.factory';
 export * from './form-error';
 export * from './form-components-collection';
+export * from './form-validation-context';
 export * from './constant';
 export * from './config';
 

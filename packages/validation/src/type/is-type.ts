@@ -11,7 +11,7 @@ import { isValidNumber } from "@banquette/utils-type/is-valid-number";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { assignOptionsDefaults } from "../utils";
-import { ValidationContext } from "../validation-context";
+import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";
 import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
@@ -45,7 +45,7 @@ export function IsType(target: Type, options: ValidatorOptionsInterface|string =
         [Type.Null]: ['Null', (value) => value === null]
     };
     return createValidator({
-        validate(context: ValidationContext): ValidationResult {
+        validate(context: ValidationContextInterface): ValidationResult {
             let testsCount = 0;
             const invalidTypes: string[] = [];
             for (let key of getObjectKeys(tests)) {

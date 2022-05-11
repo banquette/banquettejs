@@ -9,6 +9,6 @@ export default class ValidateEmptyComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Empty(this.message, this.type, this.tags);
+        return Empty({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

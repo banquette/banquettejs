@@ -192,7 +192,7 @@ describe('Create with factory', () => {
             });
             expect(form.get('name').validator).toBeNull();  // No validator
             expect(form.get('email').validator).not.toBeNull(); // Validator
-            expect(form.get('tags').validator).toBeNull(); // No validator
+            expect(form.get('tags').validator).not.toBeNull(); // Validator because a child has one
             expect(form.get('tags/0/name').validator).not.toBeNull(); // Validator
             expect(form.get('tags/0/color').validator).toBeNull(); // No validator
             expect(form.get('tags/1/name').validator).toBeNull(); // No validator

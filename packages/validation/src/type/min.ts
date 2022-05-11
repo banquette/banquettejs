@@ -7,7 +7,7 @@ import { isString } from "@banquette/utils-type/is-string";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { assignOptionsDefaults } from "../utils";
-import { ValidationContext } from "../validation-context";
+import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";
 import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
@@ -26,7 +26,7 @@ export function Min(count: number,
                     options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
     const finalOptions = assignOptionsDefaults(options, 'auto', 'min');
     return createValidator({
-        validate: (context: ValidationContext): ValidationResult => {
+        validate: (context: ValidationContextInterface): ValidationResult => {
             let valid: boolean = true;
             let defaultMessage: string = 'Must be greater or equal to %count%.';
             if ((isString(context.value) && treatAs === 'auto') || treatAs === 'string') {

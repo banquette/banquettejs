@@ -2,6 +2,8 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ValidationContextInterface } from "./validation-context.interface";
+import { ValidationResult } from "./validation-result";
 import { ValidatorContainerInterface } from "./validator-container.interface";
 import { ValidatorOptionsInterface } from "./validator-options.interface";
 
@@ -10,6 +12,13 @@ import { ValidatorOptionsInterface } from "./validator-options.interface";
  */
 export function isValidatorContainer(input: any): input is ValidatorContainerInterface {
     return isObject(input) && 'validate' in input && 'set' in input && 'remove' in input && 'has' in input;
+}
+
+/**
+ * Test if a validator is a container.
+ */
+export function isValidationContext(input: any): input is ValidationContextInterface {
+    return isObject(input) && input.result instanceof ValidationResult;
 }
 
 /**

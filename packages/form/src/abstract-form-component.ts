@@ -12,6 +12,8 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Writeable, GenericCallback } from "@banquette/utils-type/types";
+import { createValidator } from "@banquette/validation/create-validator";
+import { ValidationContextInterface } from "@banquette/validation/validation-context.interface";
 import { ValidationResult } from "@banquette/validation/validation-result";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import {
@@ -25,9 +27,9 @@ import {
     StatesInverseMap,
     ValidationStatus,
     ValidationStrategy,
-    VirtualViolationType,
     EventsInheritanceMap,
-    DefaultValidationStrategy
+    DefaultValidationStrategy,
+    InheritValidationGroup
 } from "./constant";
 import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { FormEvent } from "./event/form-event";
@@ -40,6 +42,7 @@ import { FormControlInterface } from "./form-control.interface";
 import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
+import { FormValidationContext } from "./form-validation-context";
 import { ConcreteValidationStrategy, ContextStackItem, State } from "./type";
 
 export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
@@ -227,6 +230,11 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     public readonly validationStrategy: ValidationStrategy = ValidationStrategy.Inherit;
 
     /**
+     * The validation groups to use for this component.
+     */
+    public readonly validationGroups: symbol|string[]|null = InheritValidationGroup;
+
+    /**
      * The name of the component (if not the root node).
      *
      * The name of a component is given by its parent, so the root node cannot be named.
@@ -335,25 +343,10 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     private validationStatus: ValidationStatus = ValidationStatus.Unknown;
 
     /**
-     * The global validation promise of the component.
-     *
-     * This promise will only be created if there an asynchronous validation running,
-     * and it will always be at most one instance at a time.
-     *
-     * If multiple validation occurs, they are stacked in the `validationPromisesStack` array,
-     * this promise will only resolve when the stack is empty.
+     * If the component's validator is running, this holds its validation result
+     * so it can easily be canceled if needed.
      */
-    private validationPromise: Promise<boolean>|null = null;
-
-    /**
-     * The "resolve" function of the `validationPromise`.
-     */
-    private validationPromiseResolve: ((result: boolean) => void)|null = null;
-
-    /**
-     * The stack of ValidationResult's promises currently running.
-     */
-    private validationResultsStack: ValidationResult[] = [];
+    private currentValidationResult: ValidationResult|null = null;
 
     /**
      * An object containing the ids of all components that have marked each state.
@@ -471,7 +464,44 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      * If child components need validation, give them their own validators.
      */
     public setValidator(validator: ValidatorInterface|null): void {
-        (this as Writeable<AbstractFormComponent>).validator = validator;
+        const that = this;
+
+        if (this.currentValidationResult !== null) {
+            this.currentValidationResult.cancel();
+            this.unmarkBasicState(BasicState.Validating, this.id);
+        }
+        if (validator !== null) {
+            const onFinish = (): void => {
+                if (this.currentValidationResult && !this.currentValidationResult.canceled) {
+                    this.unmarkBasicState(BasicState.Validating, this.id);
+                    this.unmarkBasicState(BasicState.NotValidated, this.id);
+                }
+                this.currentValidationResult = null;
+            };
+            (this as Writeable<AbstractFormComponent>).validator = createValidator({
+                validate(context: ValidationContextInterface): ValidationResult {
+                    if (that.virtual) {
+                        return context.result;
+                    }
+                    try {
+                        that.markBasicState(BasicState.Validating, that.id);
+                        const result = validator.validate(context.value, context);
+                        that.currentValidationResult = result;
+                        if (result.waiting) {
+                            result.onReady().then(onFinish).catch(onFinish);
+                        } else {
+                            onFinish();
+                        }
+                        return result;
+                    } catch (e) {
+                        onFinish();
+                        throw e;
+                    }
+                }
+            }, validator.tags, validator.groups);
+        } else {
+            (this as Writeable<AbstractFormComponent>).validator = null;
+        }
         if (this.validator !== null && this.concrete) {
             this.markBasicState(BasicState.NotValidated, this.id);
         } else {
@@ -489,6 +519,14 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
      */
     public setValidationStrategy(strategy: ValidationStrategy): void {
         (this as Writeable<AbstractFormComponent>).validationStrategy = strategy;
+    }
+
+    /**
+     * Sets the validations groups to use when validating the component.
+     * Custom groups can replace those if passed to the `validate()` method directly.
+     */
+    public setValidationGroups(groups: string|string[]|null): void {
+        (this as Writeable<AbstractFormComponent>).validationGroups = groups !== null ? ensureArray(groups) : null;
     }
 
     /**
@@ -522,7 +560,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     }
 
     /**
-     * Force validate the component and all its children.
+     * Force the validation of the component and all its children.
      * By calling this method the validation will always run immediately, no matter the validation strategy.
      */
     public validate(): boolean|Promise<boolean> {
@@ -560,17 +598,19 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     /**
      * Remove all errors from the component.
      */
-    public clearErrors(): void {
+    public clearErrors(silent: boolean = false): void {
         (this as Writeable<AbstractFormComponent>).errors = [];
-        this.unmarkBasicState(BasicState.Invalid, this.id);
-        this.dispatch(FormEvents.ErrorsChanged, () => new ErrorsChangedFormEvent(this, []));
+        if (!silent) {
+            this.unmarkBasicState(BasicState.Invalid, this.id);
+            this.dispatch(FormEvents.ErrorsChanged, () => new ErrorsChangedFormEvent(this, []));
+        }
     }
 
     /**
      * Remove all errors from the component and its children.
      */
-    public clearErrorsDeep(): void {
-        this.clearErrors();
+    public clearErrorsDeep(silent: boolean = false): void {
+        this.clearErrors(silent);
     }
 
     /**
@@ -701,6 +741,15 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     }
 
     /**
+     * Refresh the internal validator of the component.
+     */
+    protected updateValidator(): void {
+        if (this.parent !== null) {
+            this.parent.updateValidator();
+        }
+    }
+
+    /**
      * The actual implementation of reset(), contextualized.
      */
     protected doReset(): void {
@@ -721,7 +770,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     protected validateIfStrategyMatches(strategy: ConcreteValidationStrategy): void {
         const candidate = this.getConcreteValidationStrategy();
         if ((candidate & strategy) === strategy) {
-            this.doValidate(this.validator);
+            this.validate();
         }
     }
 
@@ -733,6 +782,16 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
             return this.parent !== null ? this.parent.getConcreteValidationStrategy() : DefaultValidationStrategy;
         }
         return this.validationStrategy;
+    }
+
+    /**
+     * Get the real validation groups, considering the parents.
+     */
+    protected getConcreteValidationGroups(): string[] {
+        if (this.validationGroups === InheritValidationGroup) {
+            return this.parent !== null ? this.parent.getConcreteValidationGroups() : [];
+        }
+        return ensureArray(this.validationGroups) as string[];
     }
 
     /**
@@ -754,120 +813,55 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
     }
 
     /**
-     * Do the actual validation.
-     * The validation type determine if children will be validated too or not.
-     *
-     * "type" is only used by sub classes that have children.
-     * Here we simply validate the current validator if we have one.
+     * Do the actual validation, for the validator in parameter.
      */
-    protected doValidate(validator: ValidatorInterface|null): Promise<boolean>|boolean {
+    protected doValidate(validator: ValidatorInterface|null, isDeep: boolean = true): boolean|Promise<boolean> {
         this.dispatch(FormEvents.ValidationStart, () => new FormEvent(this));
-        this.markBasicState(BasicState.Validating, this.id);
-        // If no validator, we can consider the value as valid.
         if (validator === null) {
             // An empty validation result is always sync and valid.
             const result = new ValidationResult('/');
-            this.clearResultFromValidationResultsStack(result, true);
-            this.handleValidationResult(result);
+            this.handleValidationResult(result, isDeep);
+            return true;
+        }
+        const groups = this.getConcreteValidationGroups();
+        const context = new FormValidationContext(this.root, this.path, null, null, this.value, undefined, groups);
+        if (!context.shouldValidate(validator)) {
+            return true;
+        }
+        const result = validator.validate(this.value, context);
+        if (!result.waiting) {
+            this.handleValidationResult(result, isDeep);
             return result.valid;
         }
-        const result: ValidationResult = validator.validate(this.value);
-        if (result.promise === null) {
-            this.clearResultFromValidationResultsStack(result, true);
-            this.handleValidationResult(result);
-            return result.valid;
-        }
-        this.queueAsyncValidationResult(result);
-        if (this.validationPromise !== null) {
-            return this.validationPromise;
-        }
-        return result.valid;
-
-    }
-
-    /**
-     * Add a waiting ValidationResult to the stack of results behind a single promise.
-     */
-    protected queueAsyncValidationResult(result: ValidationResult): void {
-        if (result.promise === null) {
-            throw new UsageException('The ValidationResult is not asynchronous.');
-        }
-        if (this.validationPromise === null) {
-            this.validationPromise = new Promise<boolean>((resolve) => {
-                this.validationPromiseResolve = resolve;
-            });
-        }
-        const resultPromise = result.promise as Promise<ValidationResult>;
-        if (this.validationResultsStack.length > 0) {
-            this.validationResultsStack[this.validationResultsStack.length - 1].cancel();
-        }
-        this.validationResultsStack.push(result);
-        resultPromise
-            .then(proxy(this.handleValidationResult, this))
-            .catch(() => {
-                this.handleValidationResult(result);
-            });
+        return new Promise<boolean>((resolve, reject) => {
+            result.onReady().then((result: ValidationResult) => {
+                this.handleValidationResult(result, isDeep);
+                resolve(result.valid);
+            }).catch(reject);
+        });
     }
 
     /**
      * Do what needs to be done with a ValidationResult that just got settled.
      */
-    protected handleValidationResult(result: ValidationResult): void {
+    protected handleValidationResult(result: ValidationResult, isDeep: boolean): void {
         if (result.canceled) {
             return ;
         }
         if (result.waiting) {
             throw new UsageException('The ValidationResult is still waiting.');
         }
-        (this as Writeable<AbstractFormComponent>).errors = [];
+        this.clearErrors(true);
         if (result.valid) {
             this.unmarkBasicState(BasicState.Invalid, this.id);
         } else {
             for (const violation of result.violations) {
-                if (violation.type !== VirtualViolationType) {
-                    this.addError(violation.type, violation.message);
-                }
+                this.addError(violation.type, violation.message);
             }
             this.markBasicState(BasicState.Invalid, this.id);
         }
         this.unmarkBasicState(BasicState.NotValidated, this.id);
-        this.unmarkBasicState(BasicState.Validating, this.id);
-        this.clearResultFromValidationResultsStack(result);
         this.dispatch(FormEvents.ValidationEnd, () => new ValidationEndFormEvent(this, result));
-        if (!this.errors.length) {
-            this.clearErrors(); // So the "ErrorsChanged" event is triggered.
-        }
-    }
-
-    /**
-     * Check if a ValidationResult is part of the queue, and removes it if so.
-     *
-     * Only async validators are part of the queue, but this method will not trigger an error if
-     * the result given as input is not part of the stack.
-     */
-    private clearResultFromValidationResultsStack(result: ValidationResult, forceClear: boolean = false): void {
-        if (!forceClear) {
-            const pos = this.validationResultsStack.indexOf(result);
-            if (pos < 0) {
-                return;
-            }
-            this.validationResultsStack.splice(pos, 1);
-            // Here we check if the result we just received is the last on the stack.
-            // If so, we don't need to wait for the others, we can skip the return and
-            // go straight to using the result and end the validation process.
-            if (pos < this.validationResultsStack.length && this.validationResultsStack.length > 0) {
-                return;
-            }
-        }
-        // Because we may still have pending results in the stack, clear them, because we will ignore their result anyway.
-        // When they are done, they will not be found in the array and
-        // thus will return in the first condition above.
-        this.validationResultsStack = [];
-        if (this.validationPromiseResolve !== null) {
-            this.validationPromiseResolve(result.valid);
-            this.validationPromiseResolve = null;
-            this.validationPromise = null;
-        }
     }
 
     /**
@@ -1135,7 +1129,7 @@ export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = 
                 disable: this.disable,
                 propagateStatesToParent: this.propagateStatesToParent,
                 removeStatesFromParent: this.removeStatesFromParent,
-                validate: this.doValidate,
+                validate: this.validate,
                 handleValidationResult: this.handleValidationResult
             }, CallContext.Parent)
         ) as FormChildComponentInterface;

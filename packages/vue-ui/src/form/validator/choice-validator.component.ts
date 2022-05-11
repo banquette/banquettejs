@@ -13,6 +13,6 @@ export default class ValidateChoiceComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Choice(this.choices, this.message, this.type, this.tags);
+        return Choice(this.choices, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

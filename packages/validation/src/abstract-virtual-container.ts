@@ -8,6 +8,7 @@ import { Valid } from "./type/valid";
 import { isValidatorContainer, splitPath } from "./utils";
 import { ValidateOptionsInterface } from "./validate-options.interface";
 import { ValidationContext } from "./validation-context";
+import { ValidationContextInterface } from "./validation-context.interface";
 import { ValidationResult } from "./validation-result";
 import { ValidatorContainerInterface } from "./validator-container.interface";
 import { ValidatorInterface } from "./validator.interface";
@@ -25,7 +26,16 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
      */
     public readonly skipped: boolean = false;
 
-    public constructor(public validators: ValidatorInterface[], public readonly sequential: boolean = true) {
+    /**
+     * Return the number of child validators.
+     */
+    public get length(): number {
+        return this.validators.length;
+    }
+
+    public constructor(public validators: ValidatorInterface[],
+                       public readonly sequential: boolean = true,
+                       public groups?: string[]) {
     }
 
     /**
@@ -97,7 +107,7 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
     /**
      * @inheritDoc
      */
-    public validate(value: any, maskOrContext?: ValidateOptionsInterface|ValidationContext): ValidationResult {
+    public validate(value: any, maskOrContext?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
         let index = -1;
         let wrappingPromise: Promise<any>|null = null;
         let wrappingPromiseResolve: any = null;
@@ -178,14 +188,14 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
      *
      * @returns boolean false to prevent the validator from executing.
      */
-    protected onStart(context: ValidationContext): boolean|Promise<boolean> {
+    protected onStart(context: ValidationContextInterface): boolean|Promise<boolean> {
         return true;
     }
 
     /**
      * Called after the last validator has been executed.
      */
-    protected onEnd(context: ValidationContext, index: number): void {
+    protected onEnd(context: ValidationContextInterface, index: number): void {
         // Override me.
     }
 

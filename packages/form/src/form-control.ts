@@ -210,6 +210,16 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
     }
 
     /**
+     * @inheritDoc
+     */
+    public setValidator(validator: ValidatorInterface|null): void {
+        super.setValidator(validator);
+
+        // Rebuild the parent validator, if there is one.
+        this.updateValidator();
+    }
+
+    /**
      * Register a callback that will be called before the value of the control changes.
      *
      * @return A method to call to unsubscribe.

@@ -1,10 +1,10 @@
 import { UsageException } from "@banquette/exception/usage.exception";
-import { areEqual } from "@banquette/utils-misc/are-equal";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { ensureInteger } from "@banquette/utils-type/ensure-integer";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ValidatorContainerInterface } from "@banquette/validation/validator-container.interface";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormGroup } from "./abstract-form-group";
 import { CallContext, FilterGroup, FormEvents, ValidationStrategy } from "./constant";
@@ -51,6 +51,13 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         this.updateCollection(() => {
             this.children_.push(component.setParent(this.buildParentComponentDecorator()));
             this.children_[this.children_.length - 1].propagateStatesToParent();
+
+            const childValidator = this.children_[this.children_.length - 1].decorated.validator;
+            if (childValidator !== null) {
+                this.updateContainerValidator((container: ValidatorContainerInterface) => {
+                    container.set(String(this.children_.length - 1), childValidator);
+                });
+            }
         });
         this.dispatch(FormEvents.ComponentAdded, () => {
             const index: number = this.children_.length - 1;
@@ -68,6 +75,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         this.updateCollection(() => {
             this.children_.unshift(component.setParent(this.buildParentComponentDecorator()));
             this.children_[0].propagateStatesToParent();
+            this.updateValidator();
         });
         this.dispatch(FormEvents.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
     }
@@ -94,6 +102,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
                 this.children_.push(child);
             }
             child.propagateStatesToParent();
+            this.updateValidator();
         });
         this.dispatch(FormEvents.ComponentAdded, () => new ComponentAddedFormEvent<number>(this, this.children_[0].decorated, 0));
     }
@@ -141,8 +150,15 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             const child: FormChildComponentInterface = component.setParent(this.buildParentComponentDecorator());
             if (index < this.children_.length) {
                 this.children_[index] = child;
+                this.updateValidator();
             } else if (index === this.children_.length) {
                 this.children_.push(child);
+                const childValidator = this.children_[this.children_.length - 1].decorated.validator;
+                if (childValidator !== null) {
+                    this.updateContainerValidator((container: ValidatorContainerInterface) => {
+                        container.set(String(this.children_.length - 1), childValidator);
+                    });
+                }
             } else {
                 throw new UsageException(`There is no component at index "${index}" and index "${index}" is not the next contiguous identifier.`);
             }
@@ -172,6 +188,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
             removed.removeStatesFromParent();
             this.children_.splice(index, 1);
             removed.unsetParent();
+            this.updateValidator();
         });
         this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, removed.decorated, index));
         return removed.decorated;
@@ -184,6 +201,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         const children = ([] as FormChildComponentInterface[]).concat(this.children_);
         this.updateCollection(() => {
             this.children_ = [];
+            this.updateValidator();
         });
         for (let i = 0; i < children.length; ++i) {
             this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<number>(this, children[i].decorated, i));
@@ -299,9 +317,7 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }
-        if (!areEqual(oldValue, this.value) && !this.hasContext(CallContext.Reset)) {
-            this.validateIfStrategyMatches(ValidationStrategy.OnChange);
-        }
+        this.validateSelfIfStrategyMatches(ValidationStrategy.OnChange);
     }
 
     /**

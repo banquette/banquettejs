@@ -76,7 +76,7 @@ export default class ValidateAjaxComponent extends ValidatorComponent {
             method: endpoint.method,
             params: this.urlParams,
             payload: AutoPayloadSymbol
-        }), proxy(this.handleResponse, this), this.message, this.type, this.tags);
+        }), proxy(this.handleResponse, this), {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 
     /**

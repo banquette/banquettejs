@@ -9,6 +9,6 @@ export default class ValidatePhoneComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Phone(this.message, this.type, this.tags);
+        return Phone({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

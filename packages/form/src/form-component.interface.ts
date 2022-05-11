@@ -298,7 +298,7 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     setDefaultValue(value: ValueType): void;
 
     /**
-     * Force validate the component and all its children.
+     * Force the validation of the component and all its children.
      * By calling this method the validation will always run immediately, no matter the validation strategy.
      */
     validate(): boolean|Promise<boolean>;
@@ -321,12 +321,12 @@ export interface FormComponentInterface<ValueType = unknown, ChildrenType = unkn
     /**
      * Remove all errors from the component.
      */
-    clearErrors(): void;
+    clearErrors(silent?: boolean): void;
 
     /**
      * Remove all errors from the component and its children.
      */
-    clearErrorsDeep(): void;
+    clearErrorsDeep(silent?: boolean): void;
 
     /**
      * Reset the control. It has the following effects:

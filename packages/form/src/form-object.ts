@@ -1,9 +1,9 @@
 import { UsageException } from "@banquette/exception/usage.exception";
-import { areEqual } from "@banquette/utils-misc/are-equal";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { ltrim } from "@banquette/utils-string/format/ltrim";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ValidatorContainerInterface } from "@banquette/validation/validator-container.interface";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormGroup } from "./abstract-form-group";
 import { CallContext, FilterGroup, FormEvents, ValidationStrategy } from "./constant";
@@ -88,6 +88,14 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         this.updateCollection(() => {
             this.children_[identifier] = component.setParent(this.buildParentComponentDecorator());
             this.children_[identifier].propagateStatesToParent();
+            const childValidator = this.children_[identifier].decorated.validator;
+            this.updateContainerValidator((container: ValidatorContainerInterface) => {
+                if (childValidator !== null) {
+                    container.set(identifier, childValidator);
+                } else if (container.has(identifier)) {
+                    container.remove(identifier);
+                }
+            });
         });
         this.dispatch(FormEvents.ComponentAdded, () => new ComponentAddedFormEvent<string>(this, this.children_[identifier].decorated, identifier));
     }
@@ -138,6 +146,11 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             removed.removeStatesFromParent();
             delete this.children_[identifier];
             removed.unsetParent();
+            this.updateContainerValidator((container: ValidatorContainerInterface) => {
+                if (container.has(identifier)) {
+                    container.remove(identifier);
+                }
+            });
         });
         this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, removed.decorated, identifier));
         return removed.decorated;
@@ -150,6 +163,7 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         const components = Object.assign({}, this.children_);
         this.updateCollection(() => {
             this.children_ = {};
+            this.updateValidator();
         });
         for (const name of Object.keys(components)) {
             this.dispatch(FormEvents.ComponentRemoved, () => new ComponentRemovedFormEvent<string>(this, components[name].decorated, name));
@@ -276,13 +290,11 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }
-        if (!areEqual(oldValue, this.value) && !this.hasContext(CallContext.Reset)) {
-            this.validateIfStrategyMatches(ValidationStrategy.OnChange);
-        }
+        this.validateSelfIfStrategyMatches(ValidationStrategy.OnChange);
     }
 
     /**
-     * Wrap the modifications to the components collection to ensure
+     * Wrap the modifications to the collection to ensure
      * the value is correctly updated and events are triggered.
      */
     private updateCollection(updateCallback: () => void): void {

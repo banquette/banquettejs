@@ -1,4 +1,4 @@
-import { ValidationContext } from "./validation-context";
+import { ValidationContextInterface } from "./validation-context.interface";
 import { ValidationResult } from "./validation-result";
 
 /**
@@ -19,5 +19,5 @@ export interface SimplifiedValidatorInterface {
      * The ValidationResult object is return synchronously BUT can contain an ObservablePromise
      * if asynchronous validators have been triggered in the validation process.
      */
-    validate(context: ValidationContext): ValidationResult;
+    validate(context: ValidationContextInterface): ValidationResult;
 }

@@ -2,6 +2,11 @@ import { ValidatorInterface } from "./validator.interface";
 
 export interface ValidatorContainerInterface extends ValidatorInterface {
     /**
+     * Number of validators contained in the container.
+     */
+    readonly length: number;
+
+    /**
      * Register a new validator into the container or one of its children.
      */
     set(path: string, validator: ValidatorInterface): void;

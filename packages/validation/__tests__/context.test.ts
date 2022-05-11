@@ -3,13 +3,14 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { ValidationContext } from "../src";
+import { ValidationContextInterface } from "../src/validation-context.interface";
 
-function getForPath(root: ValidationContext, path: string): ValidationContext {
+function getForPath(root: ValidationContext, path: string): ValidationContextInterface {
     if (path === '/') {
         return root;
     }
     const parts = path.split('/').splice(1);
-    let cur: ValidationContext|null = root;
+    let cur: ValidationContextInterface|null = root;
     for (const part of parts) {
         cur = cur.getChild(part);
         if (cur === null) {
@@ -19,7 +20,7 @@ function getForPath(root: ValidationContext, path: string): ValidationContext {
     return cur;
 }
 
-function buildContext(obj: any, selection: string|null = null): ValidationContext {
+function buildContext(obj: any, selection: string|null = null): ValidationContextInterface {
     const doBuild = (parent: ValidationContext, obj: any): void => {
         for (const key of Object.keys(obj)) {
             if (isObject(obj[key])) {

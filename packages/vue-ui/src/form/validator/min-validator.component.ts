@@ -19,6 +19,6 @@ export default class ValidateMinComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Min(this.count, this.treatAs, this.message, this.type, this.tags);
+        return Min(this.count, this.treatAs, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

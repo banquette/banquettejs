@@ -13,10 +13,10 @@ import { extend } from "@banquette/utils-object/extend";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
 import {
     ASYNC_TAG,
     V,
-    ValidationContext,
     ValidationResult,
     ValidationResultStatus,
     ValidatorContainerInterface,
@@ -24,9 +24,9 @@ import {
     ViolationInterface,
     Type
 } from "../src";
-import { ValidateAfterDelay } from "./__mocks__/type/validate-after-delay.test-validator";
-import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
+import { ValidationContextInterface } from "../src/validation-context.interface";
 import '../../http/__tests__/__mocks__/xml-http-request.mock';
+import { ValidateAfterDelay } from "./__mocks__/type/validate-after-delay.test-validator";
 
 const config: SharedConfiguration = Injector.Get(SharedConfiguration);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {requestRetryCount: 2});
@@ -231,7 +231,7 @@ describe('masks', () => {
             email: V.Or(V.And(
                 V.Invalid({type: 'email-1'}),
                 V.Invalid({type: 'email-2'})
-            ), V.Callback(async (context: ValidationContext) => {
+            ), V.Callback(async (context: ValidationContextInterface) => {
                 await waitForDelay(20);
                 context.result.addViolation('email-callback');
             }, [ASYNC_TAG])),
@@ -488,7 +488,7 @@ describe('validators', () => {
 
     describe('Callback', () => {
         runTests([
-            [6, null, () => expectResult(V.Callback((context: ValidationContext) => void context.result.addViolation('test')).validate('Test'), {
+            [6, null, () => expectResult(V.Callback((context: ValidationContextInterface) => void context.result.addViolation('test')).validate('Test'), {
                 valid: false,
                 violations: {type: 'test'}
             })],

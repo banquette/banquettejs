@@ -532,7 +532,7 @@ describe('virtual', () => {
 
     test('validate() removes custom errors', () => {
         const control = new FormControl();
-
+        control.markAsConcrete();
         control.addError('misc', 'Test');
         control.validate();
         expect(control.invalid).toEqual(false);

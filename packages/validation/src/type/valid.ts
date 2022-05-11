@@ -1,6 +1,6 @@
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
-import { ValidationContext } from "../validation-context";
+import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from "../validator.interface";
 
@@ -10,6 +10,6 @@ import { ValidatorInterface } from "../validator.interface";
  */
 export const Valid = (tags: string[] = []): ValidatorInterface => {
     return createValidator({
-        validate: (context: ValidationContext): ValidationResult => context.result
+        validate: (context: ValidationContextInterface): ValidationResult => context.result
     }, [SYNC_TAG].concat(tags));
 };

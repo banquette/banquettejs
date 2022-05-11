@@ -108,6 +108,11 @@ export enum ValidationStrategy {
 export const DefaultValidationStrategy = ValidationStrategy.OnChange;
 
 /**
+ * Special validation group that makes the component use its parent's.
+ */
+export const InheritValidationGroup = Symbol('inherit');
+
+/**
  * The possible states of validation for a component.
  */
 export enum ValidationStatus {

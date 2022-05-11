@@ -1,9 +1,9 @@
+import { BasicState, CallContext } from "./constant";
+import { FormEvent } from "./event/form-event";
 import { FormComponentInterface } from "./form-component.interface";
 import { FormControlInterface } from "./form-control.interface";
 import { FormGroupInterface } from "./form-group.interface";
 import { ConcreteValidationStrategy } from "./type";
-import { BasicState, CallContext } from "./constant";
-import { FormEvent } from "./event/form-event";
 
 /**
  * Bridge between a two form component in the direction "Child -> Parent".
@@ -40,9 +40,19 @@ export interface FormParentComponentInterface {
     getConcreteValidationStrategy(): ConcreteValidationStrategy;
 
     /**
+     * Get the "usable" validation groups by resolving the inherit if set.
+     */
+    getConcreteValidationGroups(): string[];
+
+    /**
      * Ask the parent component to update its value using the value of its children.
      */
     updateValue(): void;
+
+    /**
+     * Ask the parent component to refresh its internal validator.
+     */
+    updateValidator(): void;
 
     /**
      * Add a component id to the basic states object of all the parents until the root node.

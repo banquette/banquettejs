@@ -12,6 +12,6 @@ export default class ValidateSameAsComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return SameAs(this.path, this.message, this.type, this.tags);
+        return SameAs(this.path, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

@@ -19,6 +19,6 @@ export default class ValidateIsTypeComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return IsType(this.target, this.message, this.type, this.tags);
+        return IsType(this.target, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

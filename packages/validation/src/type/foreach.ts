@@ -4,6 +4,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isValidatorContainer } from "../utils";
 import { ValidateOptionsInterface } from "../validate-options.interface";
 import { ValidationContext } from "../validation-context";
+import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";
 import { ValidatorContainerInterface } from "../validator-container.interface";
 import { ValidatorInterface } from "../validator.interface";
@@ -19,6 +20,8 @@ export function Foreach(validator: ValidatorInterface): ValidatorContainerInterf
         return validator;
     };
     return {
+        length: 0,
+
         /**
          * Register a new validator into the container or one of its children.
          */
@@ -43,11 +46,11 @@ export function Foreach(validator: ValidatorInterface): ValidatorContainerInterf
         /**
          * Validate a value.
          */
-        validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContext): ValidationResult {
-            const context: ValidationContext = ValidationContext.EnsureValidationContext(value, maskOrOptions);
+        validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
+            const context: ValidationContextInterface = ValidationContext.EnsureValidationContext(value, maskOrOptions);
             if (isIterable(value) || (value !== null && isObject(value))) {
                 for (const [k, v] of Object.entries(value)) {
-                    const subContext = new ValidationContext(context, k, v, undefined, context.groups);
+                    const subContext = context.createSubContext(k, v, [], context.groups);
                     if (subContext.shouldValidate(validator)) {
                         validator.validate(v, subContext);
                     }

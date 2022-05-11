@@ -9,6 +9,6 @@ export default class ValidateInvalidComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Invalid(this.message, this.type, this.tags);
+        return Invalid({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

@@ -1,5 +1,5 @@
 import { AbstractVirtualContainer } from "../abstract-virtual-container";
-import { ValidationContext } from "../validation-context";
+import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";
 import { ValidatorInterface } from '../validator.interface';
 
@@ -14,7 +14,7 @@ export class OrValidator extends AbstractVirtualContainer {
     /**
      * @inheritDoc
      */
-    protected onStart(context: ValidationContext): boolean {
+    protected onStart(context: ValidationContextInterface): boolean {
         this.lastViolationsCount = 0;
         this.failedCount = 0;
         return true;
@@ -40,7 +40,7 @@ export class OrValidator extends AbstractVirtualContainer {
     /**
      * @inheritDoc
      */
-    protected onEnd(context: ValidationContext, index: number): void {
+    protected onEnd(context: ValidationContextInterface, index: number): void {
         if (this.failedCount < this.validators.length - this.skippedCount) {
             context.result.clearViolations(false);
         }

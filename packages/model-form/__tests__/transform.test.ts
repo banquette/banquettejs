@@ -91,8 +91,7 @@ describe('General mechanics', () => {
             public foo: string = '';
         }
         const form = Injector.Get(TransformService).transform(new Foo(), FormTransformerSymbol).result as FormObjectObject;
-        form.setGroupFilters(FilterGroup.Errors, {});
-        form.setGroupFilters(FilterGroup.Validate, {});
+        form.getByPattern('**').markAsConcrete();
         expect(form.validate() || form.valid).toEqual(false);
         expect(form.errorsDeepMap).toMatchObject({
             '/': expect.arrayContaining([]),
@@ -107,8 +106,7 @@ describe('General mechanics', () => {
             public foo: string[] = ['a', 'b'];
         }
         const form = Injector.Get(TransformService).transform(new Foo(), FormTransformerSymbol).result as FormObjectObject;
-        form.setGroupFilters(FilterGroup.Errors, {});
-        form.setGroupFilters(FilterGroup.Validate, {});
+        form.getByPattern('**').markAsConcrete();
         expect(form.validate() || form.valid).toEqual(false);
         expect(form.errorsDeepMap).toMatchObject({
             '/': expect.arrayContaining([]),
@@ -126,8 +124,7 @@ describe('General mechanics', () => {
             public bar!: Bar;
         }
         const form = Injector.Get(TransformService).transform(new Foo(), FormTransformerSymbol).result as FormObjectObject;
-        form.setGroupFilters(FilterGroup.Errors, {});
-        form.setGroupFilters(FilterGroup.Validate, {});
+        form.getByPattern('**').markAsConcrete();
         expect(form.validate() || form.valid).toEqual(false);
         expect(form.errorsDeepMap).toMatchObject({
             '/': expect.arrayContaining([]),

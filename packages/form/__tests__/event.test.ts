@@ -261,7 +261,8 @@ describe('StateChanged', () => {
                 control.validate();
             },
             expected: [
-                [BasicState.NotValidated, true],
+                [BasicState.NotValidated, true], // One for /username
+                [BasicState.NotValidated, true], // One for / (when doing updateValidator())
                 [BasicState.Validating, true],
                 [BasicState.Validating, false],
                 [BasicState.NotValidated, false]
@@ -271,6 +272,7 @@ describe('StateChanged', () => {
             title: 'BasicState.Invalid',
             action: () => {
                 const control = form.get('username');
+                control.markAsConcrete();
                 control.setValidator(NotEmpty());
                 control.setValue('');
                 control.validate();
@@ -351,28 +353,25 @@ describe('Validation', () => {
             sources.push(event.source);
         }, 0, false);
         form.get('syncAttr').setValue('new');
-        expect(sources.length).toEqual(2);
+        expect(sources.length).toEqual(1);
         expect(sources).toMatchObject([
-            expect.objectContaining({path: '/syncAttr'}),
-            expect.objectContaining({path: '/'})
+            expect.objectContaining({path: '/syncAttr'})
         ]);
     });
 
-    test('ValidationStart only works on the component the event has been set on by default', () => {
+    test('ValidationStart doesn\'t trigger parent listeners by default (selfOnly is true)', () => {
         let sources: any = [];
         form.onValidationStart((event) => {
             sources.push(event.source);
         });
         form.get('syncAttr').setValue('new');
-        expect(sources.length).toEqual(1);
-        expect(sources).toMatchObject([
-            expect.objectContaining({path: '/'})
-        ]);
+        expect(sources.length).toEqual(0);
+        expect(sources).toMatchObject([]);
     });
 
     test('ValidationStart is called each time the validation starts, even if already running', async () => {
         const fn: any = jest.fn();
-        form.onValidationStart(fn);
+        form.onValidationStart(fn, 0, false);
         form.get('asyncAttr').setValue('new');
         form.get('asyncAttr').setValue('invalid');
         await form.validate();

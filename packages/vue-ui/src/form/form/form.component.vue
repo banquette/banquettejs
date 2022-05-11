@@ -92,6 +92,11 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
     @Prop({type: Boolean, default: false}) public submitWithEnter!: boolean;
 
     /**
+     * The group of validation to apply to the root of the form.
+     */
+    @Prop({type: [String, Array], default: null}) public validationGroup!: string|string[]|null;
+
+    /**
      * Test if the default slot should be rendered (the slot containing the form).
      */
     @Computed() public get visible(): boolean {
@@ -245,6 +250,10 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         } else {
             this.vm.form.enable();
         }
+    }
+    @Watch('validationGroup', {immediate: ImmediateStrategy.BeforeMount})
+    private onValidationGroupChange(newValue: string|string[]|null): void {
+        this.vm.form.setValidationGroups(newValue);
     }
 
     @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadHeaders', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})

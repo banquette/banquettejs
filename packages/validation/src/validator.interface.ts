@@ -1,6 +1,6 @@
-import { ValidationContext } from "./validation-context";
-import { ValidationResult } from "./validation-result";
 import { ValidateOptionsInterface } from "./validate-options.interface";
+import { ValidationContextInterface } from "./validation-context.interface";
+import { ValidationResult } from "./validation-result";
 
 export interface ValidatorInterface {
     /**
@@ -30,5 +30,5 @@ export interface ValidatorInterface {
      * The ValidationResult object is return synchronously BUT can contain an ObservablePromise
      * if asynchronous validators have been triggered in the validation process.
      */
-    validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContext): ValidationResult;
+    validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult;
 }

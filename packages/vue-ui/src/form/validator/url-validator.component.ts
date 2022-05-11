@@ -9,6 +9,6 @@ export default class ValidateUrlComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Url(this.message, this.type, this.tags);
+        return Url({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

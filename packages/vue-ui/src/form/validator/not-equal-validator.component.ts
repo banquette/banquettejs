@@ -12,6 +12,6 @@ export default class ValidateNotEqualComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return NotEqual(this.value, this.strict, this.message, this.type);
+        return NotEqual(this.value, this.strict, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

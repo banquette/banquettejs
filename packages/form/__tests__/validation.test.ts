@@ -146,13 +146,15 @@ describe('Explicit validation', () => {
 
     test('validate a FormObject (self sync)', () => {
         const formObject = new FormObject({}, Min(1, 'number'));
-        expect(formObject.valid).toEqual(true);
+        formObject.markAsConcrete();
+        expect(formObject.notValidated).toEqual(true);
         formObject.validate();
         expect(formObject.valid).toEqual(false);
     });
 
     test('validate a FormObject (self async)', async () => {
         const formObject = new FormObject({}, ValidateAfterDelay(50, Min(1, 'number')));
+        formObject.markAsConcrete();
         expect(formObject.valid).toEqual(true);
         await formObject.validate();
         expect(formObject.valid).toEqual(false);

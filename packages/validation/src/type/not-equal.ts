@@ -4,7 +4,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { assignOptionsDefaults } from "../utils";
-import { ValidationContext } from "../validation-context";
+import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";
 import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
@@ -17,7 +17,7 @@ export function NotEqual(value: any,
                          options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
     const finalOptions = assignOptionsDefaults(options, 'The value is not what is expected.', 'not-equal')
     return createValidator({
-        validate: (context: ValidationContext): ValidationResult => {
+        validate: (context: ValidationContextInterface): ValidationResult => {
             if (isObject(value)) {
                 if (context.value !== null && isObject(context.value) && areObjectsEqual(value, context.value)) {
                     context.result.addViolation(finalOptions.type, finalOptions.message);

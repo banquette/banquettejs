@@ -18,7 +18,7 @@ import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ASYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { SimplifiedValidatorInterface } from "../simplified-validator.interface";
-import { ValidationContext } from "../validation-context";
+import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";
 import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from '../validator.interface';
@@ -55,7 +55,7 @@ export class AjaxValidator implements SimplifiedValidatorInterface {
     /**
      * @inheritDoc
      */
-    public validate(context: ValidationContext): ValidationResult {
+    public validate(context: ValidationContextInterface): ValidationResult {
         if (!isType<RequestFactory>(this.requestFactory, isFunction)) {
             throw new UsageException('You must define a request factory.');
         }

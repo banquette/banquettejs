@@ -1,14 +1,16 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { MatchType } from "@banquette/utils-glob/constant";
 import { MatchResult } from "@banquette/utils-glob/match-result";
+import { noop } from "@banquette/utils-misc/noop";
 import { ltrim } from "@banquette/utils-string/format/ltrim";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isBoolean } from "@banquette/utils-type/is-boolean";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { createValidator } from "@banquette/validation/create-validator";
-import { ValidationContext } from "@banquette/validation/validation-context";
+import { Compose } from "@banquette/validation/type/compose";
+import { Container, ContainerValidator } from "@banquette/validation/type/container";
 import { ValidationResult } from "@banquette/validation/validation-result";
+import { ValidatorContainerInterface } from "@banquette/validation/validator-container.interface";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormComponent } from "./abstract-form-component";
 import {
@@ -17,11 +19,11 @@ import {
     FilterGroup,
     ContextualizedState,
     FormEvents,
-    VirtualViolationType,
     EventsInheritanceMap
 } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
+import { ValidationEndFormEvent } from "./event/validation-end.form-event";
 import { ComponentNotFoundException } from "./exception/component-not-found.exception";
 import { FormChildComponentInterface } from "./form-child-component.interface";
 import { FormComponentInterface } from "./form-component.interface";
@@ -30,7 +32,7 @@ import { FormControlInterface } from "./form-control.interface";
 import { FormError } from "./form-error";
 import { FormGroupInterface } from "./form-group.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
-import { ForEachFilters, UnassignedFormError } from "./type";
+import { ForEachFilters, UnassignedFormError, ConcreteValidationStrategy } from "./type";
 
 export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = unknown, ChildrenType = unknown> extends AbstractFormComponent<ValueType, ChildrenType> implements FormGroupInterface<IdentifierType> {
     /**
@@ -47,6 +49,17 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
         [FilterGroup.Size]: {[BasicState.Concrete]: true},
         [FilterGroup.Errors]: {[BasicState.Concrete]: true, [BasicState.Invalid]: true}
     };
+
+    /**
+     * A reference on the "Container" part of the validator, so we can mutate it with the group.
+     */
+    private containerValidator: ValidatorContainerInterface;
+
+    /**
+     * The validator of the group component itself.
+     * The public `validator` is in fact a Container (or Compose) validator that contains child validators.
+     */
+    private selfValidator: ValidatorInterface|null = null;
 
     /**
      * Get a component by name.
@@ -101,23 +114,13 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
      */
     protected abstract forEachDecorated(cb: (decorator: FormChildComponentInterface, identifier: IdentifierType) => void|false): void;
 
-    /**
-     * The group validator is generated dynamically
-     */
-    private groupValidator: ValidatorInterface|null = null;
-
     protected constructor() {
         super();
+        this.containerValidator = Container({});
         this.additionalPatternTags.push('group');
         this.onStateChanged((event: StateChangedFormEvent) => {
             if (event.state === BasicState.Concrete && event.newValue) {
-                try {
-                    // Trick to prevent validation from occurring.
-                    this.pushContext(CallContext.Reset);
-                    this.updateValue();
-                } finally {
-                    this.popContext();
-                }
+                this.updateValue();
             }
         });
     }
@@ -198,10 +201,10 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
     /**
      * Remove all errors from the component and its children.
      */
-    public clearErrorsDeep(): void {
-        super.clearErrorsDeep();
+    public clearErrorsDeep(silent: boolean = false): void {
+        super.clearErrorsDeep(silent);
         this.forEach((component: FormComponentInterface) => {
-            component.clearErrorsDeep();
+            component.clearErrorsDeep(silent);
         }, this.foreachFilters[FilterGroup.Errors]);
     }
 
@@ -283,6 +286,19 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
     }
 
     /**
+     * @inheritDoc
+     */
+    public setValidator(validator: ValidatorInterface|null): void {
+        // The validator set from the outside is in reality the "self validator", that validates the values of the FormObject itself.
+        this.selfValidator = validator;
+
+        // Then we rebuild the "real" validator, which is a Container (wrapped in a "Compose" if we have a self validator).
+        this.updateValidator();
+
+        // Then nothing. We don't need to call the parent `setValidator` because `updateValidator` did it for us.
+    }
+
+    /**
      * Register a callback that will be called when a component is added/set to the collection.
      */
     public onControlAdded(cb: (event: FormEvent) => void, priority?: number, selfOnly: boolean = true): UnsubscribeFunction {
@@ -294,6 +310,99 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
      */
     public onControlRemoved(cb: (event: FormEvent) => void, priority?: number, selfOnly: boolean = true): UnsubscribeFunction {
         return this.subscribe(FormEvents.ComponentRemoved, cb, priority, selfOnly);
+    }
+
+    /**
+     * Run the "self" validator of the group, alone, if there is one.
+     */
+    protected validateSelf(): void {
+        if (!this.selfValidator) {
+            return ;
+        }
+        this.doValidate(this.selfValidator, false);
+    }
+
+    /**
+     * Only validate if the active validation strategy matches the one in parameter.
+     */
+    protected validateSelfIfStrategyMatches(strategy: ConcreteValidationStrategy): void {
+        const candidate = this.getConcreteValidationStrategy();
+        if ((candidate & strategy) === strategy) {
+            this.validateSelf();
+        }
+    }
+
+    /**
+     * Rebuild the internal validator.
+     */
+    protected updateValidator(): void {
+        let childValidatorsCount: number = 0;
+        this.containerValidator = Container({});
+        this.forEachDecorated((child: FormChildComponentInterface, identifier: IdentifierType) => {
+            if (child.decorated.validator !== null) {
+                this.containerValidator.set(String(identifier), child.decorated.validator);
+                ++childValidatorsCount;
+            }
+        });
+        if (childValidatorsCount || this.selfValidator !== null) {
+            // Beware of calling the super here, or you'll get an infinite recursion.
+            super.setValidator(this.selfValidator !== null ? Compose(this.selfValidator, this.containerValidator) : this.containerValidator);
+        } else {
+            super.setValidator(null);
+        }
+        if (this.validator !== null) {
+            // Trick so the wrapping validator is considered a group and can validate its children
+            // event if the groups don't match.
+            (this.validator as ContainerValidator).set = noop;
+            (this.validator as ContainerValidator).remove = noop;
+            (this.validator as ContainerValidator).has = () => false;
+        }
+        super.updateValidator();
+    }
+
+    /**
+     * Wrapper to call to update the container validator,
+     * to ensure the required operations are performed afterward.
+     */
+    protected updateContainerValidator(cb: (validator: ValidatorContainerInterface) => void): void {
+        cb(this.containerValidator);
+        if (this.containerValidator.length && !this.validator) {
+            this.updateValidator();
+        } else if (!this.containerValidator.length && this.validator && !this.selfValidator) {
+            super.setValidator(null);
+        }
+    }
+
+    /**
+     * Do what needs to be done with a ValidationResult that just got settled.
+     */
+    protected handleValidationResult(result: ValidationResult, isDeep: boolean): void {
+        if (result.canceled) {
+            return ;
+        }
+        if (result.waiting) {
+            throw new UsageException('The ValidationResult is still waiting.');
+        }
+        if (isDeep) {
+            this.clearErrorsDeep(true);
+        } else {
+            this.clearErrors(true);
+        }
+        if (result.valid) {
+            this.unmarkBasicState(BasicState.Invalid, this.id);
+        } else {
+            const map = result.getViolationsMap();
+            for (const path of Object.keys(map)) {
+                const violations = map[path];
+                const component = this.getByPath(path);
+                for (const violation of violations) {
+                    component.addError(violation.type, violation.message);
+                }
+            }
+            this.markBasicState(BasicState.Invalid, this.id);
+        }
+        this.unmarkBasicState(BasicState.NotValidated, this.id);
+        this.dispatch(FormEvents.ValidationEnd, () => new ValidationEndFormEvent(this, result));
     }
 
     /**
@@ -314,59 +423,6 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
         this.forEachDecorated((child: FormChildComponentInterface) => {
             child.enable();
         });
-    }
-
-    /**
-     * Force validate the component and all its children.
-     * By calling this method the validation will always run immediately, no matter the validation strategy.
-     */
-    public validate(): boolean|Promise<boolean> {
-        // Only create the group validator if there is an explicit validation on the group.
-        if (this.groupValidator === null) {
-            this.groupValidator = createValidator({
-                validate: (context: ValidationContext): ValidationResult => {
-                    let subSyncResult: boolean = true;
-                    let promisesStack: Array<Promise<boolean>> = [];
-                    const localResult: ValidationResult = this.validator !== null ? this.validator.validate(context.value) : new ValidationResult('/');
-                    if (localResult.localPromise !== null) {
-                        promisesStack.push(localResult.localPromise);
-                    }
-                    this.forEach((child: FormComponentInterface) => {
-                        const subResult: Promise<boolean>|boolean = child.validate();
-                        if (isBoolean(subResult)) {
-                            subSyncResult = subSyncResult && subResult;
-                            return ;
-                        }
-                        promisesStack.push(subResult);
-                    }, this.foreachFilters[FilterGroup.Validate]);
-                    if (!subSyncResult) {
-                        localResult.addViolation(VirtualViolationType);
-                    }
-                    if (promisesStack.length === 0) {
-                        return localResult;
-                    }
-                    localResult.delayResponse(new Promise((resolve, reject) => {
-                        Promise.all(promisesStack).then((results: boolean[]) => {
-                            if (results.indexOf(false) > -1) {
-                                localResult.addViolation(VirtualViolationType);
-                            }
-                            resolve(results);
-                        }).catch(reject);
-                    }));
-                    return localResult;
-                }
-            });
-        }
-        /**
-         * If validate() has been called it means this is an explicit validation.
-         * In such a case we don't only want to validator our own validator, but those
-         * of our children too.
-         *
-         * To this while using the parent validation logic, we create an inline
-         * validator that will validate everything as one unit.
-         * This way the parent class can still deal with a single validator which is far easier.
-         */
-        return this.doValidate(this.groupValidator);
     }
 
     /**
@@ -447,7 +503,9 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
             }
         }, this.buildContextualizedApi<Omit<FormParentComponentInterface, 'decorated' | 'path' | 'root' | 'activeControl' | 'pushContext' | 'popContext'>>({
                 updateValue: this.updateValue,
+                updateValidator: this.updateValidator,
                 getConcreteValidationStrategy: this.getConcreteValidationStrategy,
+                getConcreteValidationGroups: this.getConcreteValidationGroups,
                 markBasicState: this.markBasicState,
                 unmarkBasicState: this.unmarkBasicState,
                 markAsVirtual: this.markAsVirtual,

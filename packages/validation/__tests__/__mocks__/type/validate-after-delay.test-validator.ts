@@ -1,14 +1,8 @@
 import { waitForDelay } from "@banquette/utils-misc/timeout";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isType } from "@banquette/utils-type/is-type";
-import {
-    ASYNC_TAG,
-    createValidator,
-    Valid,
-    ValidationContext,
-    ValidationResult,
-    ValidatorInterface
-} from "../../../src";
+import { ASYNC_TAG, createValidator, Valid, ValidationResult, ValidatorInterface } from "../../../src";
+import { ValidationContextInterface } from "../../../src/validation-context.interface";
 
 /**
  * Make a normally sync validator execute after a delay, meant for testing only.
@@ -19,7 +13,7 @@ import {
  */
 export const ValidateAfterDelay = (duration: number|{duration: number} = 20, validator: ValidatorInterface = Valid()): ValidatorInterface => {
     return createValidator({
-        validate: (context: ValidationContext): ValidationResult => {
+        validate: (context: ValidationContextInterface): ValidationResult => {
             try {
                 context.result.delayResponse(waitForDelay(isType<{duration: number}>(duration, isObject) ? duration.duration : duration).then(() => {
                     validator.validate(context.value, context);

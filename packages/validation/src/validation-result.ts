@@ -214,9 +214,10 @@ export class ValidationResult {
                 this.promiseResolve = resolve;
                 this.promiseReject = reject;
             }).then(() => {
-                this.setStatus(this.violations.length > 0 ? ValidationResultStatus.Invalid : ValidationResultStatus.Valid);
-                this.update();
-                this.promiseResolve = this.promiseReject = null;
+                if (!this.canceled) {
+                    this.setStatus(this.violations.length > 0 ? ValidationResultStatus.Invalid : ValidationResultStatus.Valid);
+                    this.update();
+                }
                 this.cleanupAsync();
                 return this;
             }).catch((reason: any) => {

@@ -9,6 +9,6 @@ export default class ValidateEmailComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Email(this.message, this.type, this.tags);
+        return Email({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }

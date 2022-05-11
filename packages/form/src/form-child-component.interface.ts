@@ -53,5 +53,5 @@ export interface FormChildComponentInterface {
     /**
      * Do what needs to be done with a ValidationResult that just got settled.
      */
-    handleValidationResult(result: ValidationResult): void;
+    handleValidationResult(result: ValidationResult, isDeep: boolean): void;
 }
