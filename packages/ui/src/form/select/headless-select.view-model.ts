@@ -79,6 +79,13 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     public allowCreation: boolean = false;
 
     /**
+     * If `true`: the dropdown is always closed when a selection is made.
+     * If `false`: the dropdown is never closed when a selection is made.
+     * If `auto`: the dropdown is only closed when the select is not multiple.
+     */
+    public closeOnSelection: 'auto'|boolean = 'auto';
+
+    /**
      * Modules.
      */
     public remote: RemoteModule;
@@ -224,6 +231,8 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             if (!selectedChoice || !this.viewData.control.value || this.viewData.control.value.rawValue !== selectedChoice.rawValue) {
                 this.viewData.control.value = selectedChoice || undefined;
             }
+        }
+        if (this.closeOnSelection === true || (this.closeOnSelection === 'auto' && !this.multiple)) {
             this.hideChoices();
         }
         this.lastSelectedIdentifier = choice.identifier;

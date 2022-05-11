@@ -82,6 +82,13 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     @Prop({type: Boolean, default: false}) public clearable!: boolean;
 
     /**
+     * If `true`: the dropdown is always closed when a selection is made.
+     * If `false`: the dropdown is never closed when a selection is made.
+     * If `auto`: the dropdown is only closed when the select is not multiple.
+     */
+    @Prop({type: [String, Boolean], default: 'auto'}) public closeOnSelection!: 'auto'|boolean;
+
+    /**
      * Holds the props exposed by the base input.
      */
     @Import(BaseInputComposable, false) public baseComposable!: BaseInputComposable;
@@ -261,6 +268,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         'choicesValue',
         'choicesDisabled',
         'choicesGroup',
+        'closeOnSelection',
         'dropdownTeleport',
         'dropdownZIndex'
     ], {immediate: ImmediateStrategy.BeforeMount})
@@ -270,6 +278,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.vm.choicesValue = this.choicesValue;
         this.vm.choicesDisabled = this.choicesDisabled;
         this.vm.choicesGroup = this.choicesGroup;
+        this.vm.closeOnSelection = this.closeOnSelection;
         this.v.dropdownTeleport = this.dropdownTeleport;
         this.v.dropdownZIndex = this.dropdownZIndex;
     }

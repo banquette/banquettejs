@@ -46,6 +46,7 @@
 .bt-form-select {
     position: relative;
     outline: none;
+    min-width: 0;
 
     & > :deep(.bt-form-base-input) {
         .input-wrapper {
