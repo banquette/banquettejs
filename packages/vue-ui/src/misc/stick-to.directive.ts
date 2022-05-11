@@ -1,6 +1,5 @@
 import { proxy } from "@banquette/utils-misc/proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
-import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { extend } from "@banquette/utils-object/extend";
 import { trim } from "@banquette/utils-string/format/trim";
@@ -59,10 +58,6 @@ export class StickToDirective {
      * Vue lifecycle.
      */
     public updated(el: HTMLElement, bindings: DirectiveBinding) {
-        const newOptions = this.resolveOptions(bindings);
-        if (el === this.el && areObjectsEqual(newOptions, this.options)) {
-            return ;
-        }
         this.el = el;
         this.bindings = bindings;
         this.options = this.resolveOptions(bindings);
