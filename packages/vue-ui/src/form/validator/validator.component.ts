@@ -1,4 +1,3 @@
-import { AbstractFormComponent } from "@banquette/form/abstract-form-component";
 import { AbstractFormGroup } from "@banquette/form/abstract-form-group";
 import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
 import { FormComponentInterface } from "@banquette/form/form-component.interface";
@@ -109,7 +108,7 @@ export abstract class ValidatorComponent extends Vue {
         while ($parent) {
             $parent = maybeResolveTsInst($parent);
             if ($parent instanceof AbstractVueFormComponent) {
-                return this.assignToParentFormComponent($parent);
+                return $parent.proxy.setValidator(this.buildValidator());
             }
             if (isType<ContainerValidatorInterface>($parent, () => isFunction($parent.registerChild))) {
                 this.parentValidator = $parent;
@@ -131,30 +130,6 @@ export abstract class ValidatorComponent extends Vue {
      */
     private assignToParentValidator(parent: ContainerValidatorInterface): void {
         parent.registerChild(this.buildValidator());
-    }
-
-    /**
-     * Assign the validator to a parent form component.
-     */
-    private assignToParentFormComponent(parent: AbstractVueFormComponent<any>): void {
-        const proxy = parent.proxy;
-        let assignedControl: AbstractFormComponent|null = null;
-        const assignValidator = (control: AbstractFormComponent) => {
-            assignedControl = control;
-            assignedControl.setValidator(this.buildValidator());
-        };
-        proxy.onReady(() => {
-            if (proxy.control instanceof AbstractFormComponent) {
-                assignValidator(proxy.control);
-            }
-        });
-        parent.$watch('control', (newValue: any) => {
-            if (newValue instanceof AbstractFormComponent) {
-                assignValidator(newValue);
-            } else if (assignedControl !== null) {
-                assignedControl.setValidator(null);
-            }
-        }, {});
     }
 
     @Watch('target', {immediate: ImmediateStrategy.NextTick})
