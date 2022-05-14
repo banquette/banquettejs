@@ -239,6 +239,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         }
         // So values not defined anymore will be dropped.
         this.config.stickToOptions = {
+            forceUpdate: noop,
             placement: this.placement,
             target: this.activeTarget || this.targets[0] || null,
             popper: {

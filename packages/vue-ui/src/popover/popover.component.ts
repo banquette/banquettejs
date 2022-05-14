@@ -31,8 +31,22 @@ export default class PopoverComponent extends Vue {
 
     @Expose() public isVisible: boolean = false;
 
+    /**
+     * Vue lifecycle.
+     */
     public beforeMount() {
         this.popoverComposable.config.stickToOptions.enabled = false;
+    }
+
+    /**
+     * Vue lifecycle.
+     */
+    @Expose() public updated(): void {
+        this.popoverComposable.config.stickToOptions.forceUpdate();
+    }
+
+    @Expose() public onEnter(): void {
+        this.popoverComposable.config.stickToOptions.forceUpdate();
     }
 
     /**
@@ -60,7 +74,7 @@ export default class PopoverComponent extends Vue {
             this.$forceUpdate();
 
             // Then wait a frame for the stick-to to update, so the popover is never out of position.
-            window.requestAnimationFrame(() => {
+            window.setTimeout(() => {
                 this.isVisible = true;
             });
         } else {

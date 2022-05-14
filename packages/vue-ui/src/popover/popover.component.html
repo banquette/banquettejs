@@ -6,7 +6,7 @@
         v-bt-bind-theme
         v-bt-stick-to="config.stickToOptions"
     >
-        <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave">
+        <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave" @enter="onEnter()" @after-enter="updated()">
             <div v-show="isVisible" class="inner-wrapper">
                 <div role="tooltip" class="content" v-if="!config.allowHtml || hasNonEmptySlot('default')">
                     <slot v-if="hasNonEmptySlot('default')"></slot>

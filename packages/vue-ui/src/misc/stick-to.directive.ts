@@ -38,7 +38,7 @@ export class StickToDirective {
 
     private target: HTMLElement|null = null;
     private mutationObserverUnsubscribeFn: VoidCallback|null = null;
-    private sizeObserverUnsubscribeFn: VoidCallback|null = null;
+    private sizeObserverUnsubscribeFns: VoidCallback[] = [];
     private popper: Instance|null = null;
 
     /**
@@ -126,6 +126,7 @@ export class StickToDirective {
             // and the floating element transform is animated.
             this.popper.forceUpdate();
             this.observeTargetSize(targetEl);
+            this.observeTargetSize(floatingEl);
         } else {
             this.popper.setOptions(popperOptions).catch(console.error);
         }
@@ -193,11 +194,11 @@ export class StickToDirective {
      * Observe the target resize to force Popper to update if a change is detected.
      */
     private observeTargetSize(target: HTMLElement): void {
-        this.sizeObserverUnsubscribeFn = useResizeObserver(target, () => {
+        this.sizeObserverUnsubscribeFns.push(useResizeObserver(target, () => {
             if (this.popper) {
                 this.popper.forceUpdate();
             }
-        }).stop;
+        }).stop);
     }
 
     /**
@@ -216,6 +217,7 @@ export class StickToDirective {
         if (isUndefined(options.enabled)) {
             options.enabled = this.options ? this.options.enabled : true;
         }
+        options.forceUpdate = () => this.forceUpdate();
         return options;
     }
 
@@ -223,9 +225,10 @@ export class StickToDirective {
      * Destroy the Popper instance if it exists.
      */
     private destroyPopper(): void {
-        if (this.sizeObserverUnsubscribeFn !== null) {
-            this.sizeObserverUnsubscribeFn();
+        for (const fn of this.sizeObserverUnsubscribeFns) {
+            fn();
         }
+        this.sizeObserverUnsubscribeFns = [];
         if (this.popper !== null) {
             this.popper.destroy();
             this.popper = null;
