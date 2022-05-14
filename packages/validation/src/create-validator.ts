@@ -14,8 +14,8 @@ export function createValidator(validator: SimplifiedValidatorInterface, tags?: 
     return {
         tags: ensureArray(tags),
         groups: ensureArray(groups),
-        validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
-            return validator.validate(ValidationContext.EnsureValidationContext(value, maskOrOptions));
+        validate(value: any, contextOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
+            return validator.validate(ValidationContext.EnsureValidationContext(value, contextOrOptions));
         }
     };
 }

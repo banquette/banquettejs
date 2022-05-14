@@ -82,8 +82,8 @@ export class ContainerValidator implements ValidatorContainerInterface {
     /**
      * Validate a value.
      */
-    public validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
-        const context: ValidationContextInterface = ValidationContext.EnsureValidationContext(value, maskOrOptions);
+    public validate(value: any, contextOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
+        const context: ValidationContextInterface = ValidationContext.EnsureValidationContext(value, contextOrOptions);
         if (!isObject(value) || !context.shouldValidate(this)) {
             return context.result;
         }

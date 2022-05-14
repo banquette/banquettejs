@@ -46,8 +46,8 @@ export function Foreach(validator: ValidatorInterface): ValidatorContainerInterf
         /**
          * Validate a value.
          */
-        validate(value: any, maskOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
-            const context: ValidationContextInterface = ValidationContext.EnsureValidationContext(value, maskOrOptions);
+        validate(value: any, contextOrOptions?: ValidateOptionsInterface|ValidationContextInterface): ValidationResult {
+            const context: ValidationContextInterface = ValidationContext.EnsureValidationContext(value, contextOrOptions);
             if (isIterable(value) || (value !== null && isObject(value))) {
                 for (const [k, v] of Object.entries(value)) {
                     const subContext = context.createSubContext(k, v, [], context.groups);
