@@ -21,6 +21,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { GenericCallback, VoidCallback } from "@banquette/utils-type/types";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
@@ -115,6 +116,14 @@ export class FormControlProxy implements FormViewControlInterface {
      * while the Vue component is still trying to access it.
      */
     private _control!: FormControl|null;
+
+    /**
+     * This control is only set if a `forceValue` has been called.
+     * This means the end-user wants to use the `v-model` notation instead of a `FormControl`.
+     *
+     * This is stored separately so both ways can coexist, so the user can have BOTH a `v-model` and a control.
+     */
+    private vModelControl: FormControl|null = null;
 
     /**
      * The object exposed by the FormControl when the view model is assigned.
@@ -291,12 +300,36 @@ export class FormControlProxy implements FormViewControlInterface {
     }
 
     /**
+     * Set the validator to use to the validate the value of the component.
+     */
+    public setValidator(validator: ValidatorInterface|null): void {
+        this.callControlMethod('setValidator', true, validator);
+    }
+
+    /**
      * The a fallback form to use to resolve controls paths if none is defined by the prop.
      */
     public setFallbackForm(form: FormGroupInterface|null): void {
         this.fallbackForm = form;
         if (!this._control) {
             this.updateFormAndControl();
+        }
+    }
+
+    /**
+     * Force the proxy to ensure a control exists (thus creating it if necessary) and to assign a value to it.
+     * This is used to bypass the requirement of having a `FormControl` set from the outside.
+     */
+    public forceValue(value: any): void {
+        if (this._control) {
+            this._control.setValue(value);
+            return ;
+        }
+        if (!this.vModelControl) {
+            this.vModelControl = new FormControl(value);
+            this.onControlAssigned(this.vModelControl);
+        } else {
+            this.vModelControl.setValue(value);
         }
     }
 

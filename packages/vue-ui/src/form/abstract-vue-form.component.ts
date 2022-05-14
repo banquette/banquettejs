@@ -1,6 +1,7 @@
 import { EventPipeline } from "@banquette/event/pipeline/event-pipeline";
 import { BasicState } from "@banquette/form/constant";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
+import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
 import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
 import { HeadlessControlViewDataInterface } from "@banquette/ui/form/headless-control-view-data.interface";
 import { HeadlessControlViewModel } from "@banquette/ui/form/headless-control.view-model";
@@ -21,6 +22,9 @@ export abstract class AbstractVueFormComponent<
     ViewModelType extends HeadlessControlViewModel<ViewDataType> = HeadlessControlViewModel<ViewDataType>
 > extends Vue {
     private static MaxId: number = 0;
+
+    // "v-model" recipient
+    @Prop({default: undefined}) public modelValue!: any;
 
     /**
      * The original value given by the end-user through the html element.
@@ -188,6 +192,16 @@ export abstract class AbstractVueFormComponent<
     }
 
     /**
+     * Watch the `v-model` value.
+     */
+    @Watch('modelValue', {immediate: ImmediateStrategy.BeforeMount})
+    protected onModelValueChange(newValue: any): void {
+        if (!isUndefined(newValue)) {
+            this.proxy.forceValue(newValue);
+        }
+    }
+
+    /**
      * Set the `vm` and `v` attributes.
      */
     private configureViewModel(): void {
@@ -283,6 +297,10 @@ export abstract class AbstractVueFormComponent<
                 });
             }
         }, -1));
+
+        this.controlUnsubscribeCallbacks.push(control.onValueChanged((event: ValueChangedFormEvent) => {
+            this.$emit('update:modelValue', event.newValue);
+        }));
 
         if (this.autofocus) {
             this.forceFocus();

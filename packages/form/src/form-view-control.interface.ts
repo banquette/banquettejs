@@ -1,4 +1,5 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
+import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
@@ -229,6 +230,11 @@ export interface FormViewControlInterface {
      * Set a single extra value.
      */
     setExtra(name: string, value: any): void;
+
+    /**
+     * Set the validator to use to validate the value of the component.
+     */
+    setValidator(validator: ValidatorInterface|null): void;
 
     /**
      * Register a callback that will be called before the value of the control changes.
