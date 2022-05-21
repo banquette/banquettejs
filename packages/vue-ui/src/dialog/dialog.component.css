@@ -84,4 +84,12 @@
             }
         }
     }
+
+    &[data-is-draggable] :deep(.bt-overlay .inner .bt-dialog-inner .header) {
+        cursor: move;
+    }
+
+    &[data-is-dragging] {
+        user-select: none;
+    }
 }

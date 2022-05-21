@@ -15,6 +15,8 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { useDraggable, Position } from "@vueuse/core";
+import { watch } from "vue";
 import { OverlayComponent } from "../overlay";
 import { DialogEvents } from "./constant";
 import { HideDialogEventArg } from "./event/hide-dialog.event-arg";
@@ -81,6 +83,11 @@ export default class DialogComponent extends Vue {
     @Prop({type: Boolean, default: true}) public showClose!: boolean;
 
     /**
+     * If `true`, the dialog can be dragged from its header.
+     */
+    @Prop({type: Boolean, default: false}) public draggable!: boolean;
+
+    /**
      * Bi-directional binding for the visibility so the dialog can be closed
      * both from the inside and outside of the component.
      */
@@ -125,8 +132,22 @@ export default class DialogComponent extends Vue {
 
     @Expose() public slotBag: Record<string, any> = {};
 
+    /**
+     * The amount of movement induced by the user by dragging the dialog.
+     */
+    @Expose() public dragTranslation: Position = {x: 0, y: 0};
+    @Expose() public dragging: boolean = false;
+
+    @Computed() public get dragTranslationStyle(): object {
+        if (!this.draggable) {
+            return {};
+        }
+        return {transform: `translate(${this.dragTranslation.x}px, ${this.dragTranslation.y}px)`};
+    }
+
     @Ref() private internalVisible: boolean = false;
     private unsubscribeFunctions: VoidCallback[] = [];
+    private draggableUnsubscribeFunctions: VoidCallback[] = [];
     private oldBodyOverflow: string|null = null;
     private shown: boolean = false;
 
@@ -156,6 +177,7 @@ export default class DialogComponent extends Vue {
             this.updateScrollLock(false);
         }
         this.onIdChange(null, this.id);
+        this.freeDraggable();
     }
 
     @Watch('id', {immediate: ImmediateStrategy.BeforeMount})
@@ -182,6 +204,13 @@ export default class DialogComponent extends Vue {
                 this.updateScrollLock(true);
             }
             this.shown = true;
+            if (this.draggable) {
+                window.setTimeout(() => {
+                    this.makeDraggable();
+                });
+            }
+        } else {
+            this.freeDraggable();
         }
     }
 
@@ -261,5 +290,47 @@ export default class DialogComponent extends Vue {
                 this.oldBodyOverflow = null;
             }
         }
+    }
+
+    /**
+     * Make the dialog draggable.
+     */
+    private makeDraggable(): void {
+        if (!this.$refs.header) {
+            return ;
+        }
+        // The value of `dragTranslation` when the last drag started.
+        const lastTranslationOffset: Position = {x: 0, y: 0};
+
+        // The value of `x` and `y` when the last drag started.
+        let lastDragOffset: Position|null = null;
+        const data = useDraggable(this.$refs.header);
+        this.draggableUnsubscribeFunctions.push(watch(data.isDragging, (newValue: boolean) => {
+            if (newValue) {
+                lastTranslationOffset.x = this.dragTranslation.x;
+                lastTranslationOffset.y = this.dragTranslation.y;
+                lastDragOffset = null;
+            }
+            this.dragging = newValue;
+        }));
+        this.draggableUnsubscribeFunctions.push(watch([data.x,  data.y], (newValues: number[]) => {
+            if (lastDragOffset === null) {
+                lastDragOffset = {x: newValues[0], y: newValues[1]};
+            }
+            this.dragTranslation.x = lastTranslationOffset.x + (newValues[0] - lastDragOffset.x);
+            this.dragTranslation.y = lastTranslationOffset.y + (newValues[1] - lastDragOffset.y);
+        }));
+    }
+
+    /**
+     * Stop the dialog from being draggable.
+     */
+    private freeDraggable(): void {
+        for (const fn of this.draggableUnsubscribeFunctions) {
+            fn();
+        }
+        this.draggableUnsubscribeFunctions = [];
+        this.dragTranslation.x = 0;
+        this.dragTranslation.y = 0;
     }
 }
