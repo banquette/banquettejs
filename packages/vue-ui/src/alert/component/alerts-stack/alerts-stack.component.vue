@@ -6,8 +6,9 @@ import { Module } from "@banquette/dependency-injection/decorator/module.decorat
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { enumToArray } from "@banquette/utils-array/enum-to-array";
 import { proxy } from "@banquette/utils-misc/proxy";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -29,31 +30,27 @@ export default class AlertsStackComponent extends Vue {
      */
     private static MaxId: number = 0;
 
-    @Prop({
-        type: String,
-        default: StackPosition.TopRight,
-        transform: (value) => ensureInEnum(value, StackPosition, StackPosition.TopRight)
-    }) public position!: StackPosition;
+    /**
+     * Optional identifier of the stack.
+     * Only alerts matching the id will be added to the stack.
+     */
+    @Prop({type: String, default: null}) public id!: string|null;
 
     /**
      * Css position of the stack.
      * If `true` the stack will be fixed in the window.
      * If `false` it will be relative to its first relative parent.
      */
-    @Prop({type: Boolean, default: true }) public fixed!: boolean;
-
-    /**
-     * Maximum number of alerts the stack can hold at one time.
-     */
-    @Prop({type: Number, default: 0}) public maxCount!: number;
+    @Prop({type: Boolean, default: true}) public fixed!: boolean;
 
     /**
      * Array of alerts added using the EventDispatcher.
      */
-    @Expose() public stack: Array<AlertOptionsInterface & {id: number, visible: boolean}> = [];
+    @Expose() public stack: Record<StackPosition, Array<AlertOptionsInterface & {id: number, visible: boolean}>>;
 
     public constructor(@Inject(EventDispatcherService) private eventDispatcher: EventDispatcherService) {
         super();
+        this.stack = Object.fromEntries(enumToArray(StackPosition).map((k) => [k, []])) as any;
         this.eventDispatcher.subscribe(AlertEvents.Show, proxy(this.onShow, this));
         this.eventDispatcher.subscribe(AlertEvents.HideAll, proxy(this.onHideAll, this));
     }
@@ -62,16 +59,18 @@ export default class AlertsStackComponent extends Vue {
      * Remove an alert by id.
      */
     @Expose() public remove(id: number): void {
-        let visibleCount = 0;
-        for (let i = 0; i < this.stack.length; ++i) {
-            if (this.stack[i].id === id) {
-                this.stack[i].visible = false;
-            } else {
-                ++visibleCount;
+        for (const position of getObjectKeys(this.stack)) {
+            let visibleCount = 0;
+            for (let i = 0; i < this.stack[position].length; ++i) {
+                if (this.stack[position][i].id === id) {
+                    this.stack[position][i].visible = false;
+                } else if (this.stack[position][i].visible) {
+                    ++visibleCount;
+                }
             }
-        }
-        if (!visibleCount) {
-            this.stack = [];
+            if (!visibleCount) {
+                this.stack[position] = [];
+            }
         }
     }
 
@@ -79,8 +78,12 @@ export default class AlertsStackComponent extends Vue {
      * Add an alert to the alerts stack.
      */
     private onShow(event: ShowAlertEvent): boolean {
-        this.stack.push(Object.assign(event.options, {id: ++AlertsStackComponent.MaxId, visible: true}));
-        return true;
+        if ((!this.id && !event.options.stack) || this.id === event.options.stack) {
+            const position = ensureInEnum(event.options.position, StackPosition, StackPosition.TopRight);
+            this.stack[position].push(Object.assign(event.options, {id: ++AlertsStackComponent.MaxId, visible: true}));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -92,14 +95,14 @@ export default class AlertsStackComponent extends Vue {
          * from the child, which modifies the stack.
          */
         const hideNext = () => {
-            const removed = this.stack.pop();
-            if (!isUndefined(removed)) {
-                const target = this.$refs[`a${removed.id}`];
-                if (target) {
-                    target.destroy();
-                    hideNext();
-                }
-            }
+            // const removed = this.stack.pop();
+            // if (!isUndefined(removed)) {
+            //     const target = this.$refs[`a${removed.id}`];
+            //     if (target) {
+            //         target.destroy();
+            //         hideNext();
+            //     }
+            // }
         };
         hideNext();
     }

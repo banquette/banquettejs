@@ -1,3 +1,5 @@
+import { StackPosition } from "./constant";
+
 export interface AlertOptionsInterface {
     /**
      * Variant to apply to the alert.
@@ -38,4 +40,15 @@ export interface AlertOptionsInterface {
      * If `true` the alert will be closable by the user.
      */
     closable: boolean;
+
+    /**
+     * Identifier of the stack to add the alert into.
+     */
+    stack?: string;
+
+    /**
+     * Position of the alert in the stack's space.
+     * Only applicable if the alert is in a stack.
+     */
+    position?: StackPosition;
 }

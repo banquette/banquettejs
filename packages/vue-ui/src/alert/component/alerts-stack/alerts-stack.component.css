@@ -5,53 +5,47 @@
     gap: 1rem;
     position: fixed;
     inset: 0;
-    padding: 1.5rem;
+    margin: 1.5rem;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     z-index: 9999;
-    
+
     &[data-fixed="false"],
     &:not([data-fixed]) {
         position: absolute;
         padding: 0;
     }
 
-    &[data-position="top"],
-    &[data-position="bottom"] {
-        left: 50%;
-        transform: translateX(-50%);
-        right: auto;
+    .stack {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        &.top,
+        &.bottom {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        &.top-right {
+            right: 0;
+        }
+
+        &.bottom,
+        &.bottom-left,
+        &.bottom-right {
+            bottom: 0;
+        }
+
+        &.bottom-right {
+            right: 0;
+        }
     }
 
-    &[data-position="top-left"] {
-        right: auto;
-    }
-
-    &[data-position="top-right"] {
-        left: auto;
-    }
-
-    &[data-position="bottom"],
-    &[data-position="bottom-left"],
-    &[data-position="bottom-right"] {
-        top: auto;
-    }
-
-    &[data-position="bottom-left"] {
-        right: auto;
-    }
-
-    &[data-position="bottom-right"] {
-        left: auto;
-    }
-
-    &[data-position="left"],
-    &[data-position="right"] {
-        top: 50%;
-        transform: translateY(-50%);
-        right: auto;
-    }
-
-    &[data-position="right"] {
-        right: 0;
-        left: auto;
+    :deep(.bt-alert) {
+        pointer-events: initial;
     }
 }

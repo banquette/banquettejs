@@ -51,10 +51,10 @@
         & > .message {
             & > .close-icon {
                 position: absolute;
-                top: 50%;
-                right: 0.7em;
-                transform: translateY(-50%);
+                top: 0.8em;
+                right: 1em;
                 cursor: pointer;
+                pointer-events: initial;
                 padding: 0.1em;
                 width: 1em;
                 height: 1em;
@@ -75,5 +75,13 @@
                 }
             }
         }
+    }
+
+    &[data-is-closable] {
+        padding-right: 2.2rem;
+    }
+
+    :deep(.bt-progress-horizontal) {
+        margin-top: 0.3em;
     }
 }

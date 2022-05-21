@@ -1,16 +1,18 @@
-<div class="bt-alerts-stack" :data-fixed="fixed" :data-position="position">
-    <slot></slot>
-    <template v-for="item in stack">
-        <bt-alert v-if="item.visible"
-               :ref="'a' + item.id"
-               :variant="item.variant"
-               :title="item.title"
-               :icon="item.icon"
-               :ttl="item.ttl"
-               :closable="item.closable"
-               @close="remove(item.id)"
-        >
-            {{ item.message }}
-        </bt-alert>
-    </template>
+<div class="bt-alerts-stack" :data-fixed="fixed">
+    <div v-for="(alerts, position) in stack" :class="'stack ' + position" v-if="true || alerts.length > 0">
+        <slot :name="position"></slot>
+        <template v-for="item in alerts">
+            <bt-alert
+                   :ref="'a' + item.id"
+                   :variant="item.variant"
+                   :title="item.title"
+                   :icon="item.icon"
+                   :ttl="item.ttl"
+                   :closable="item.closable"
+                   @close="remove(item.id)"
+            >
+                {{ item.message }}
+            </bt-alert>
+        </template>
+    </div>
 </div>
