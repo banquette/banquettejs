@@ -68,11 +68,6 @@
         &:hover {
             --bg: var(--bg-hover);
         }
-
-        svg {
-            padding: var(--form-spacing);
-            width: 100%;
-        }
     }
 
     .first-last {
