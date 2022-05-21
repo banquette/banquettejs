@@ -38,7 +38,7 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
      * If `true` or `false` the checkbox will be checked or unchecked respectively
      * upon initialization or when a change is detected on the prop.
      */
-    @Prop({type: Boolean, default: false}) public checked!: boolean|null;
+    @Prop({type: Boolean, default: null}) public checked!: boolean|null;
 
     /**
      * The value to set to the control when the checkbox is checked.
@@ -143,7 +143,7 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
     private onCheckedChange(newValue: boolean|null): void {
         if (newValue) {
             this.vm.check();
-        } else {
+        } else if (newValue === false) {
             this.vm.uncheck();
         }
     }

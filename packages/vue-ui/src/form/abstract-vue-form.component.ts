@@ -8,6 +8,7 @@ import { HeadlessControlViewModel } from "@banquette/ui/form/headless-control.vi
 import { proxy } from "@banquette/utils-misc/proxy";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { GenericCallback } from "@banquette/utils-type/types";
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -17,6 +18,9 @@ import { ViewModelEvents, ViewModelSequence } from "./constant";
 import { FormComponent } from "./form";
 import { FormControlProxy } from "./form-control.proxy";
 
+@Component({
+    emits: ['focus', 'blur', 'update:modelValue']
+})
 export abstract class AbstractVueFormComponent<
     ViewDataType extends HeadlessControlViewDataInterface = HeadlessControlViewDataInterface,
     ViewModelType extends HeadlessControlViewModel<ViewDataType> = HeadlessControlViewModel<ViewDataType>
