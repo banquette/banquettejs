@@ -14,7 +14,7 @@ import { FormGroupInterface } from "./form-group.interface";
 import { FormParentComponentInterface } from "./form-parent-component.interface";
 import { State } from "./type";
 
-export interface FormComponentInterface<ValueType = unknown, ChildrenType = unknown> {
+export interface FormComponentInterface<ValueType = any, ChildrenType = unknown> {
     /**
      * Unique id of the component.
      */

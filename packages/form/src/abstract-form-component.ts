@@ -45,7 +45,7 @@ import { FormParentComponentInterface } from "./form-parent-component.interface"
 import { FormValidationContext } from "./form-validation-context";
 import { ConcreteValidationStrategy, ContextStackItem, State } from "./type";
 
-export abstract class AbstractFormComponent<ValueType = unknown, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
+export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
     /**
      * Used to give a unique id to every new form component.
      */
