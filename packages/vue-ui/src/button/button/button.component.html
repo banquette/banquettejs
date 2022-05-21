@@ -1,7 +1,7 @@
 <div
-    class="bt-button-wrapper"
-    v-if="hasToggleSlot"
+    class="bt-button"
     v-bt-click-outside="{eventType: 'mousedown', callback: hideToggle, enabled: isToggleSlotVisible}"
+    v-bt-bind-theme
 >
     <component
         :is="tagName"
@@ -9,14 +9,14 @@
         :href="href"
         :target="target"
         tabindex="0"
-        class="bt-button"
+        class="inner"
         :disabled="disabled ? '' : null"
         :data-active="active ? '' : null"
         :data-toggle-visible="isToggleSlotVisible ? '' : null"
+        @click="onClick($event)"
         @mousedown="toggle($event)"
         @focus="onFocus()"
         @blur="onBlur()"
-        v-bt-bind-theme
     >
         <slot name="working" v-if="working">
             <bt-progress-circular :progress="workingProgress"></bt-progress-circular>
@@ -35,28 +35,3 @@
         </template>
     </Transition>
 </div>
-
-<component
-    :is="tagName"
-    ref="root"
-    :href="href"
-    :target="target"
-    tabindex="0"
-    class="bt-button"
-    :disabled="disabled ? '' : null"
-    :data-active="active ? '' : null"
-    :data-toggle-visible="isToggleSlotVisible ? '' : null"
-    @mousedown="toggle($event)"
-    @focus="onFocus()"
-    @blur="onBlur()"
-    v-bt-bind-theme
-    v-else
->
-    <slot name="working" v-if="working">
-        <bt-progress-circular :progress="workingProgress"></bt-progress-circular>
-        <span class="working-text" v-if="isWorkingTextSlotVisible">
-            <slot name="working-text">{{ workingText }}</slot>
-        </span>
-    </slot>
-    <slot v-else></slot>
-</component>

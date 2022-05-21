@@ -61,7 +61,7 @@ export default class ButtonComponent extends Vue {
     @Prop({name: 'toggled', type: Boolean, default: null}) public toggledProp!: boolean|null;
 
     /**
-     * Name of the transition to apply when the toggle slot is show / hidden.
+     * Name of the transition to apply when the toggle slot is shown / hidden.
      * If `false`, disable the transition.
      */
     @Prop({type: [String, Boolean], default: false}) public toggleTransition!: string|false|undefined;
@@ -102,6 +102,16 @@ export default class ButtonComponent extends Vue {
      * A reference to the callback that will be called when keyboard events are listened to.
      */
     @Ref() private keydownListener: VoidCallback|null = null;
+
+    /**
+     * Show/hide the "toggle" slot (if defined).
+     */
+    @Expose() public onClick(event: UIEvent): void {
+        if (this.disabled) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
 
     /**
      * Show/hide the "toggle" slot (if defined).

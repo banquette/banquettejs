@@ -14,13 +14,14 @@
     --button-background-hover-color: var(--bt-button-background-hover-color, var(--bt-color-primary-400));
     --button-background-focus-color: var(--bt-button-background-focus-color, var(--bt-color-primary-400));
     --button-background-active-color: var(--bt-button-background-active-color, var(--bt-color-primary-550));
-    --button-background-disabled-color: var(--bt-button-background-disabled-color, var(--bt-color-primary-300));
+    --button-background-disabled-color: var(--bt-button-background-disabled-color, var(--button-background-color));
 
     --button-border-color: var(--bt-button-border-color, var(--button-background-color));
     --button-border-hover-color: var(--bt-button-border-hover-color, var(--button-background-hover-color));
     --button-border-focus-color: var(--bt-button-border-focus-color, var(--button-background-focus-color));
     --button-border-active-color: var(--bt-button-border-active-color, var(--button-background-active-color));
-    --button-border-disabled-color: var(--bt-button-border-disabled-color, var(--button-background-disabled-color));
+    --button-border-disabled-color: var(--bt-button-border-disabled-color, var(--button-border-color));
+    --button-disabled-opacity: var(--bt-button-disabled-opacity, 0.5);
 
     --button-border-radius: var(--bt-button-border-radius, var(--bt-border-radius-base));
     --button-border-width: var(--bt-button-border-width, var(--bt-border-width-base));
@@ -30,100 +31,76 @@
     --button-click-animation-duration: var(--bt-button-animation-click-duration, 30ms);
 }
 
-.bt-button-wrapper {
-    display: inline-flex;
-}
-
 .bt-button {
     display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5em;
 
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
+    .inner {
+        width: 100%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5em;
 
-    line-height: 1;
-    font-family: var(--button-font-family);
-    font-size: var(--button-font-size);
-    font-weight: var(--button-font-weight);
-    color: var(--button-text-color);
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
 
-    border: var(--button-border-width) var(--button-border-style) var(--button-border-color);
-    border-radius: var(--button-border-radius);
-    background-color: var(--button-background-color);
-    transition:
-        transform var(--button-click-animation-duration) ease-out,
+        line-height: 1;
+        font-family: var(--button-font-family);
+        font-size: var(--button-font-size);
+        font-weight: var(--button-font-weight);
+        color: var(--button-text-color);
+
+        border: var(--button-border-width) var(--button-border-style) var(--button-border-color);
+        border-radius: var(--button-border-radius);
+        background-color: var(--button-background-color);
+        transition: transform var(--button-click-animation-duration) ease-out,
         background var(--button-appearance-animation-duration) ease-out,
         color var(--button-appearance-animation-duration) ease-out;
 
-    position: relative;
-    padding: 0.6em 1em;
-    margin: 0;
+        position: relative;
+        padding: 0.6em 1em;
+        margin: 0;
 
-    :slotted(svg) {
-        width: 1.3em;
-        height: 1.3em;
-
-        path {
-            fill: var(--button-text-color);
+        &:hover, &:active, &:focus {
+            outline: none;
         }
-    }
 
-    &:hover, &:active, &:focus {
-        outline: none;
-    }
-
-    &:hover {
-        color: var(--button-text-hover-color);
-        border-color: var(--button-border-hover-color);
-        background-color: var(--button-background-hover-color);
-
-        :slotted(svg) path {
-            fill: var(--button-text-hover-color);
+        &:hover {
+            color: var(--button-text-hover-color);
+            border-color: var(--button-border-hover-color);
+            background-color: var(--button-background-hover-color);
         }
-    }
 
-    &:focus {
-        color: var(--button-text-focus-color);
-        border-color: var(--button-border-focus-color);
-        background-color: var(--button-background-focus-color);
-
-        :slotted(svg) path {
-            fill: var(--button-text-focus-color);
+        &:focus {
+            color: var(--button-text-focus-color);
+            border-color: var(--button-border-focus-color);
+            background-color: var(--button-background-focus-color);
         }
-    }
 
-    &:active, &[data-active] {
-        color: var(--button-text-active-color);
-        border-color: var(--button-border-active-color);
-        background-color: var(--button-background-active-color);
-        transform: translateY(0.1em);
-
-        :slotted(svg) path {
-            fill: var(--button-text-active-color);
+        &:active, &[data-active] {
+            color: var(--button-text-active-color);
+            border-color: var(--button-border-active-color);
+            background-color: var(--button-background-active-color);
+            transform: translateY(0.1em);
         }
-    }
 
-    &[disabled] {
-        pointer-events: none;
-        color: var(--button-text-disabled-color);
-        border-color: var(--button-border-disabled-color);
-        background-color: var(--button-background-disabled-color);
+        &[disabled] {
+            cursor: not-allowed;
+            color: var(--button-text-disabled-color);
+            border-color: var(--button-border-disabled-color);
+            background-color: var(--button-background-disabled-color);
+            opacity: var(--button-disabled-opacity);
 
-        :slotted(svg) path {
-            fill: var(--button-text-disabled-color);
+            :slotted(.bt-progress-circular) {
+                --bt-progress-circular-stroke-color: var(--button-text-disabled-color);
+            }
         }
 
         :slotted(.bt-progress-circular) {
-            --bt-progress-circular-stroke-color: var(--button-text-disabled-color);
+            --bt-progress-circular-size: var(--button-font-size);
+            --bt-progress-circular-stroke-color: var(--button-text-color);
         }
-    }
-
-    :slotted(.bt-progress-circular) {
-        --bt-progress-circular-size: var(--button-font-size);
-        --bt-progress-circular-stroke-color: var(--button-text-color);
     }
 }
 

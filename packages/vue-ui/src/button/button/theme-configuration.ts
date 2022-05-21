@@ -26,6 +26,7 @@ export const ThemeConfiguration = {
             borderFocusColor        : '@-border-focus-color',
             borderActiveColor       : '@-border-active-color',
             borderDisabledColor     : '@-border-disabled-color',
+            disabledOpacity         : '@-disabled-opacity',
 
             animation: {
                 appearanceDuration  : '@-animation-appearance-duration',
@@ -34,10 +35,10 @@ export const ThemeConfiguration = {
         },
         selectors: {
             root: {
-                base: '&',
-                hover: '&:hover',
-                active: '&:active',
-                focus: '&:focus',
+                base: '.inner',
+                hover: '&:hover .inner',
+                active: '&:active .inner',
+                focus: '&:focus .inner',
             },
             svg: ':deep(svg)'
         }
