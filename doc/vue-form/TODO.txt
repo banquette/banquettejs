@@ -1,7 +1,5 @@
 
 SelectComponent:
 
- - bug: the select doesn't get the value of the control when the search type is "remote" because there are no choices yet. We must force the creation of a the given choices on initialization.
  - chore: make the view scroll to the first select choice when the dropdown becomes visible.
  - chore: make the view scroll as the selection change (using the keyboard with multiple = "false").
- - bug: the initialization makes the control dirty, it should not
