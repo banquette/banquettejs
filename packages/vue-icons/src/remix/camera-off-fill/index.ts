@@ -1,0 +1,1 @@
+export { default as IconRemixCameraOffFill } from './camera-off-fill.component.vue';

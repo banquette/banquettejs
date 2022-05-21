@@ -1,0 +1,1 @@
+export { default as IconMaterialPriorityHigh } from './priority-high.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconLocalBar } from './icon-local-bar.component.vue';

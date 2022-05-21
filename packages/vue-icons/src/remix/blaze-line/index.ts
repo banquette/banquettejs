@@ -1,0 +1,1 @@
+export { default as IconRemixBlazeLine } from './blaze-line.component.vue';

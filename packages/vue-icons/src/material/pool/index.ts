@@ -1,0 +1,1 @@
+export { default as IconMaterialPool } from './pool.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialEventNote } from './event-note.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAppleLine } from './apple-line.component.vue';

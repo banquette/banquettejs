@@ -1,0 +1,1 @@
+export { default as IconRemixFilePaperFill } from './file-paper-fill.component.vue';

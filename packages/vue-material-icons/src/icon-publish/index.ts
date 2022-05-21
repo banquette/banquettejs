@@ -1,1 +1,0 @@
-export { default as IconPublish } from './icon-publish.component.vue';

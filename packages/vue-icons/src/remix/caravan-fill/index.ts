@@ -1,0 +1,1 @@
+export { default as IconRemixCaravanFill } from './caravan-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialVideoLabel } from './video-label.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixGitCommitFill } from './git-commit-fill.component.vue';

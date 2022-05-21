@@ -1,0 +1,1 @@
+export { default as IconRemixAlignVertically } from './align-vertically.component.vue';

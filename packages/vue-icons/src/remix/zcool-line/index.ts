@@ -1,0 +1,1 @@
+export { default as IconRemixZcoolLine } from './zcool-line.component.vue';

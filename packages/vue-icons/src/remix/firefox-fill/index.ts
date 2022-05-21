@@ -1,0 +1,1 @@
+export { default as IconRemixFirefoxFill } from './firefox-fill.component.vue';

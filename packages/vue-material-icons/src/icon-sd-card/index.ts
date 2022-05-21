@@ -1,1 +1,0 @@
-export { default as IconSdCard } from './icon-sd-card.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFiberDvr } from './fiber-dvr.component.vue';

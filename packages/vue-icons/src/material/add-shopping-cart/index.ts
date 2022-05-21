@@ -1,0 +1,1 @@
+export { default as IconMaterialAddShoppingCart } from './add-shopping-cart.component.vue';

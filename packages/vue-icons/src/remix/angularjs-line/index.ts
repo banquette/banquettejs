@@ -1,0 +1,1 @@
+export { default as IconRemixAngularjsLine } from './angularjs-line.component.vue';

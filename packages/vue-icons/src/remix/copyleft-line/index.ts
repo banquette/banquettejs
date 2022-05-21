@@ -1,0 +1,1 @@
+export { default as IconRemixCopyleftLine } from './copyleft-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialClosedCaption } from './closed-caption.component.vue';

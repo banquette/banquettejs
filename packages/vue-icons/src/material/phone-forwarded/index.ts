@@ -1,0 +1,1 @@
+export { default as IconMaterialPhoneForwarded } from './phone-forwarded.component.vue';

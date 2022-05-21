@@ -38,7 +38,7 @@ module.exports = {
         "@banquette/utils-type/(.*)$": "<rootDir>/packages/utils-type/src/$1",
         "@banquette/validation/(.*)$": "<rootDir>/packages/validation/src/$1",
         "@banquette/vue-dom-module/(.*)$": "<rootDir>/packages/vue-dom-module/src/$1",
-        "@banquette/vue-material-icons/(.*)$": "<rootDir>/packages/vue-material-icons/src/$1",
+        "@banquette/vue-icons/(.*)$": "<rootDir>/packages/vue-icons/src/$1",
         "@banquette/vue-typescript/(.*)$": "<rootDir>/packages/vue-typescript/src/$1",
         "@banquette/vue-ui/(.*)$": "<rootDir>/packages/vue-ui/src/$1"
     },

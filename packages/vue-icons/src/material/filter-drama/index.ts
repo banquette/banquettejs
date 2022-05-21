@@ -1,0 +1,1 @@
+export { default as IconMaterialFilterDrama } from './filter-drama.component.vue';

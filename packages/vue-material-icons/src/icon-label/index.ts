@@ -1,1 +1,0 @@
-export { default as IconLabel } from './icon-label.component.vue';

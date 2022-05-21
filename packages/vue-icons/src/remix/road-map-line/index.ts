@@ -1,0 +1,1 @@
+export { default as IconRemixRoadMapLine } from './road-map-line.component.vue';

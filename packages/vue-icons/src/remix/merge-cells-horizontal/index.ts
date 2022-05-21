@@ -1,0 +1,1 @@
+export { default as IconRemixMergeCellsHorizontal } from './merge-cells-horizontal.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixMovieFill } from './movie-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialVolumeUp } from './volume-up.component.vue';

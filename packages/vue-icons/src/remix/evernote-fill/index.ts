@@ -1,0 +1,1 @@
+export { default as IconRemixEvernoteFill } from './evernote-fill.component.vue';

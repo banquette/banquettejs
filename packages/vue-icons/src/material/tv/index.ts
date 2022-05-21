@@ -1,0 +1,1 @@
+export { default as IconMaterialTv } from './tv.component.vue';

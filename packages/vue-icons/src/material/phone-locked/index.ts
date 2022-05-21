@@ -1,0 +1,1 @@
+export { default as IconMaterialPhoneLocked } from './phone-locked.component.vue';

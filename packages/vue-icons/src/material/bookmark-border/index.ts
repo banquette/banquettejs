@@ -1,0 +1,1 @@
+export { default as IconMaterialBookmarkBorder } from './bookmark-border.component.vue';

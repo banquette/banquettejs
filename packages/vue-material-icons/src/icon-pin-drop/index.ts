@@ -1,1 +1,0 @@
-export { default as IconPinDrop } from './icon-pin-drop.component.vue';

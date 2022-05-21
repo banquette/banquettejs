@@ -1,0 +1,1 @@
+export { default as IconRemixCollageLine } from './collage-line.component.vue';

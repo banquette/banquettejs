@@ -1,0 +1,1 @@
+export { default as IconRemixFocus3Line } from './focus-3-line.component.vue';

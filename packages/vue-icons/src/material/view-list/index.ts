@@ -1,0 +1,1 @@
+export { default as IconMaterialViewList } from './view-list.component.vue';

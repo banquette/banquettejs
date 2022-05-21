@@ -1,0 +1,1 @@
+export { default as IconRemixTaobaoLine } from './taobao-line.component.vue';

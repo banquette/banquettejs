@@ -1,0 +1,1 @@
+export { default as IconRemixSendBackward } from './send-backward.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialNavigateNext } from './navigate-next.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialVpnLock } from './vpn-lock.component.vue';

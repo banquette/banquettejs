@@ -1,1 +1,0 @@
-export { default as IconPanorama } from './icon-panorama.component.vue';

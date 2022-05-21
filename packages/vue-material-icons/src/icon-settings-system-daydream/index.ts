@@ -1,1 +1,0 @@
-export { default as IconSettingsSystemDaydream } from './icon-settings-system-daydream.component.vue';

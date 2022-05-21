@@ -1,0 +1,1 @@
+export { default as IconRemixOpenArmFill } from './open-arm-fill.component.vue';

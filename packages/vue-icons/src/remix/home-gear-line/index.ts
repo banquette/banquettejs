@@ -1,0 +1,1 @@
+export { default as IconRemixHomeGearLine } from './home-gear-line.component.vue';

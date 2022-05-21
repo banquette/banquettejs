@@ -1,0 +1,1 @@
+export { default as IconRemixFileCopyFill } from './file-copy-fill.component.vue';

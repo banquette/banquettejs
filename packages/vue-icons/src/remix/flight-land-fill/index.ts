@@ -1,0 +1,1 @@
+export { default as IconRemixFlightLandFill } from './flight-land-fill.component.vue';

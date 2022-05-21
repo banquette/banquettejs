@@ -1,0 +1,1 @@
+export { default as IconRemixAlarmLine } from './alarm-line.component.vue';

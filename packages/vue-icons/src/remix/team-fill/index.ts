@@ -1,0 +1,1 @@
+export { default as IconRemixTeamFill } from './team-fill.component.vue';

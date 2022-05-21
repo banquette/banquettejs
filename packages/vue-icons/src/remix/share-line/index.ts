@@ -1,0 +1,1 @@
+export { default as IconRemixShareLine } from './share-line.component.vue';

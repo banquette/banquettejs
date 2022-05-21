@@ -1,0 +1,1 @@
+export { default as IconRemixParentFill } from './parent-fill.component.vue';

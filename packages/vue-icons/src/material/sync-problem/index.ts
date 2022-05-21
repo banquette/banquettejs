@@ -1,0 +1,1 @@
+export { default as IconMaterialSyncProblem } from './sync-problem.component.vue';

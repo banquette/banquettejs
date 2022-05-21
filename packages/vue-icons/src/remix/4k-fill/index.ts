@@ -1,0 +1,1 @@
+export { default as IconRemix4kFill } from './4k-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialBurstMode } from './burst-mode.component.vue';

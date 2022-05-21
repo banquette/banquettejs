@@ -1,0 +1,1 @@
+export { default as IconMaterialTagFaces } from './tag-faces.component.vue';

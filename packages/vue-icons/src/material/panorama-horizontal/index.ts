@@ -1,0 +1,1 @@
+export { default as IconMaterialPanoramaHorizontal } from './panorama-horizontal.component.vue';

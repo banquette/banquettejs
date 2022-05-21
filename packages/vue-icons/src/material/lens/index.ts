@@ -1,0 +1,1 @@
+export { default as IconMaterialLens } from './lens.component.vue';

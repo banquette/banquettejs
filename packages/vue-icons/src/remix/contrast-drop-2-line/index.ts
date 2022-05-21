@@ -1,0 +1,1 @@
+export { default as IconRemixContrastDrop2Line } from './contrast-drop-2-line.component.vue';

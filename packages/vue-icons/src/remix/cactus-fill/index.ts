@@ -1,0 +1,1 @@
+export { default as IconRemixCactusFill } from './cactus-fill.component.vue';

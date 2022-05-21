@@ -1,0 +1,1 @@
+export { default as IconRemixDivideLine } from './divide-line.component.vue';

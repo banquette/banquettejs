@@ -1,1 +1,0 @@
-export { default as IconPhoneAndroid } from './icon-phone-android.component.vue';

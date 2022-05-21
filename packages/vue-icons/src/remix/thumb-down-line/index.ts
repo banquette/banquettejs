@@ -1,0 +1,1 @@
+export { default as IconRemixThumbDownLine } from './thumb-down-line.component.vue';

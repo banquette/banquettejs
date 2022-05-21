@@ -1,0 +1,1 @@
+export { default as IconMaterialTranslate } from './translate.component.vue';

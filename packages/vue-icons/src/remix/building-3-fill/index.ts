@@ -1,0 +1,1 @@
+export { default as IconRemixBuilding3Fill } from './building-3-fill.component.vue';

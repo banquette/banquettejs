@@ -1,0 +1,1 @@
+export { default as IconMaterialDiscFull } from './disc-full.component.vue';

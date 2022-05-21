@@ -1,0 +1,1 @@
+export { default as IconMaterialAnnouncement } from './announcement.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconBackspace } from './icon-backspace.component.vue';

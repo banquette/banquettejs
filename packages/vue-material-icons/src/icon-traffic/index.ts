@@ -1,1 +1,0 @@
-export { default as IconTraffic } from './icon-traffic.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixStackshareFill } from './stackshare-fill.component.vue';

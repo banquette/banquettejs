@@ -1,0 +1,1 @@
+export { default as IconRemixCommunityLine } from './community-line.component.vue';

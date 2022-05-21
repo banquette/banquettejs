@@ -1,0 +1,1 @@
+export { default as IconRemixFoldersLine } from './folders-line.component.vue';

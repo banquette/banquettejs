@@ -1,0 +1,1 @@
+export { default as IconRemixCentosFill } from './centos-fill.component.vue';

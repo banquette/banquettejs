@@ -1,1 +1,0 @@
-export { default as IconLinearScale } from './icon-linear-scale.component.vue';

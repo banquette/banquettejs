@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatBold } from './format-bold.component.vue';

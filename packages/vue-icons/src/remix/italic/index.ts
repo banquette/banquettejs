@@ -1,0 +1,1 @@
+export { default as IconRemixItalic } from './italic.component.vue';

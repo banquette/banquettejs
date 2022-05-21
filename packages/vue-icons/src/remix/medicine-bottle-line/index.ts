@@ -1,0 +1,1 @@
+export { default as IconRemixMedicineBottleLine } from './medicine-bottle-line.component.vue';

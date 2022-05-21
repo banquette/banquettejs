@@ -1,0 +1,1 @@
+export { default as IconMaterialLocalActivity } from './local-activity.component.vue';

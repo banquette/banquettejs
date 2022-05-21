@@ -1,1 +1,0 @@
-export { default as IconFace } from './icon-face.component.vue';

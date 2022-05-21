@@ -1,0 +1,1 @@
+export { default as IconRemixInformationFill } from './information-fill.component.vue';

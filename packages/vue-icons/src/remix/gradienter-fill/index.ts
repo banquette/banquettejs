@@ -1,0 +1,1 @@
+export { default as IconRemixGradienterFill } from './gradienter-fill.component.vue';

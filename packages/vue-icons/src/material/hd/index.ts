@@ -1,0 +1,1 @@
+export { default as IconMaterialHd } from './hd.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconSwitchVideo } from './icon-switch-video.component.vue';

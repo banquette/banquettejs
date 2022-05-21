@@ -1,0 +1,1 @@
+export { default as IconRemixRainbowFill } from './rainbow-fill.component.vue';

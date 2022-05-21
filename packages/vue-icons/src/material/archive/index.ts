@@ -1,0 +1,1 @@
+export { default as IconMaterialArchive } from './archive.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixMouseLine } from './mouse-line.component.vue';

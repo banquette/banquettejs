@@ -1,1 +1,0 @@
-export { default as IconDirectionsTransit } from './icon-directions-transit.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFlaskLine } from './flask-line.component.vue';

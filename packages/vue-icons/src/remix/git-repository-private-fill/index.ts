@@ -1,0 +1,1 @@
+export { default as IconRemixGitRepositoryPrivateFill } from './git-repository-private-fill.component.vue';

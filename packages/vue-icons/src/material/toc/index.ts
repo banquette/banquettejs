@@ -1,0 +1,1 @@
+export { default as IconMaterialToc } from './toc.component.vue';

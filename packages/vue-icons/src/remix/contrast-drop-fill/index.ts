@@ -1,0 +1,1 @@
+export { default as IconRemixContrastDropFill } from './contrast-drop-fill.component.vue';

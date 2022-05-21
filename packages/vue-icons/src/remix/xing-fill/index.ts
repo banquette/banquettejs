@@ -1,0 +1,1 @@
+export { default as IconRemixXingFill } from './xing-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconShoppingBasket } from './icon-shopping-basket.component.vue';

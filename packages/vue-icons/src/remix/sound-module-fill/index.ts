@@ -1,0 +1,1 @@
+export { default as IconRemixSoundModuleFill } from './sound-module-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialOpacity } from './opacity.component.vue';

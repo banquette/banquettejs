@@ -1,0 +1,1 @@
+export { default as IconRemixAccountBoxFill } from './account-box-fill.component.vue';

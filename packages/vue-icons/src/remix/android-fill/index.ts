@@ -1,0 +1,1 @@
+export { default as IconRemixAndroidFill } from './android-fill.component.vue';

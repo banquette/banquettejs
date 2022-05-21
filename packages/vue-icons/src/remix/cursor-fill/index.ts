@@ -1,0 +1,1 @@
+export { default as IconRemixCursorFill } from './cursor-fill.component.vue';

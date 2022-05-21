@@ -1,0 +1,1 @@
+export { default as IconMaterialKeyboardCapslock } from './keyboard-capslock.component.vue';

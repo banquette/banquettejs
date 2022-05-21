@@ -1,0 +1,1 @@
+export { default as IconMaterialOndemandVideo } from './ondemand-video.component.vue';

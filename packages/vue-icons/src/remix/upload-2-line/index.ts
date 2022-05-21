@@ -1,0 +1,1 @@
+export { default as IconRemixUpload2Line } from './upload-2-line.component.vue';

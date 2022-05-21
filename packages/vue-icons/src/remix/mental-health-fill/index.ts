@@ -1,0 +1,1 @@
+export { default as IconRemixMentalHealthFill } from './mental-health-fill.component.vue';

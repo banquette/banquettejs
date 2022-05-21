@@ -1,0 +1,1 @@
+export { default as IconRemixGridLine } from './grid-line.component.vue';

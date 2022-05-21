@@ -1,0 +1,1 @@
+export { default as IconRemixSkipBackMiniLine } from './skip-back-mini-line.component.vue';

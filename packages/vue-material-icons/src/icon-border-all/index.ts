@@ -1,1 +1,0 @@
-export { default as IconBorderAll } from './icon-border-all.component.vue';

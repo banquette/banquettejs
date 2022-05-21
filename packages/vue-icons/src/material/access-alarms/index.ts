@@ -1,0 +1,1 @@
+export { default as IconMaterialAccessAlarms } from './access-alarms.component.vue';

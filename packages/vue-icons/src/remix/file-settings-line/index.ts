@@ -1,0 +1,1 @@
+export { default as IconRemixFileSettingsLine } from './file-settings-line.component.vue';

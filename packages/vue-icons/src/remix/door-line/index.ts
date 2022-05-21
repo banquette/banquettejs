@@ -1,0 +1,1 @@
+export { default as IconRemixDoorLine } from './door-line.component.vue';

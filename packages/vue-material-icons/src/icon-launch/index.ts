@@ -1,1 +1,0 @@
-export { default as IconLaunch } from './icon-launch.component.vue';

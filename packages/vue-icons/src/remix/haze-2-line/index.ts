@@ -1,0 +1,1 @@
+export { default as IconRemixHaze2Line } from './haze-2-line.component.vue';

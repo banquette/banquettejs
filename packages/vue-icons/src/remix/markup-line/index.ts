@@ -1,0 +1,1 @@
+export { default as IconRemixMarkupLine } from './markup-line.component.vue';

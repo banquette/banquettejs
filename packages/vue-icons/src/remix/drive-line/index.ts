@@ -1,0 +1,1 @@
+export { default as IconRemixDriveLine } from './drive-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialStayPrimaryLandscape } from './stay-primary-landscape.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixStopCircleFill } from './stop-circle-fill.component.vue';

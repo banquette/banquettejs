@@ -1,0 +1,1 @@
+export { default as IconRemixLuggageDepositLine } from './luggage-deposit-line.component.vue';

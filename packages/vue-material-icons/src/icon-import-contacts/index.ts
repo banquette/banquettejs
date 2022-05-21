@@ -1,1 +1,0 @@
-export { default as IconImportContacts } from './icon-import-contacts.component.vue';

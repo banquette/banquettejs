@@ -1,0 +1,1 @@
+export { default as IconRemixBillFill } from './bill-fill.component.vue';

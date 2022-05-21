@@ -1,0 +1,1 @@
+export { default as IconMaterialLocalGroceryStore } from './local-grocery-store.component.vue';

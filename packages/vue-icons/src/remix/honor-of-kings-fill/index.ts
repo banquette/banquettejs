@@ -1,0 +1,1 @@
+export { default as IconRemixHonorOfKingsFill } from './honor-of-kings-fill.component.vue';

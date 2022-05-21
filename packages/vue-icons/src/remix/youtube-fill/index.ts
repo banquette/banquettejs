@@ -1,0 +1,1 @@
+export { default as IconRemixYoutubeFill } from './youtube-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconSpeakerNotes } from './icon-speaker-notes.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixEmotionUnhappyLine } from './emotion-unhappy-line.component.vue';

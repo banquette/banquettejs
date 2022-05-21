@@ -1,0 +1,1 @@
+export { default as IconRemixAppleFill } from './apple-fill.component.vue';

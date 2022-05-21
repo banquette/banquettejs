@@ -1,0 +1,1 @@
+export { default as IconRemixComputerFill } from './computer-fill.component.vue';

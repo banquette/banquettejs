@@ -1,0 +1,1 @@
+export { default as IconMaterialCloudDownload } from './cloud-download.component.vue';

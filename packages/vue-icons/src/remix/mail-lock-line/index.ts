@@ -1,0 +1,1 @@
+export { default as IconRemixMailLockLine } from './mail-lock-line.component.vue';

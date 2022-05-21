@@ -1,0 +1,1 @@
+export { default as IconRemixTwitchLine } from './twitch-line.component.vue';

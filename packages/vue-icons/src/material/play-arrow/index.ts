@@ -1,0 +1,1 @@
+export { default as IconMaterialPlayArrow } from './play-arrow.component.vue';

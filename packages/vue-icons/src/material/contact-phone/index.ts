@@ -1,0 +1,1 @@
+export { default as IconMaterialContactPhone } from './contact-phone.component.vue';

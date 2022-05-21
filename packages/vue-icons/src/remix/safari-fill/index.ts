@@ -1,0 +1,1 @@
+export { default as IconRemixSafariFill } from './safari-fill.component.vue';

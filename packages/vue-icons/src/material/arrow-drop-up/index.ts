@@ -1,0 +1,1 @@
+export { default as IconMaterialArrowDropUp } from './arrow-drop-up.component.vue';

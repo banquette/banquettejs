@@ -1,0 +1,1 @@
+export { default as IconRemixFundsFill } from './funds-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixRunLine } from './run-line.component.vue';

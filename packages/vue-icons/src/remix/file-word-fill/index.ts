@@ -1,0 +1,1 @@
+export { default as IconRemixFileWordFill } from './file-word-fill.component.vue';

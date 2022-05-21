@@ -1,1 +1,0 @@
-export { default as IconUndo } from './icon-undo.component.vue';

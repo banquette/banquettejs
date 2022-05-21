@@ -1,0 +1,1 @@
+export { default as IconRemixChatOffFill } from './chat-off-fill.component.vue';

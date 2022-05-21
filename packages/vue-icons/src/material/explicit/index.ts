@@ -1,0 +1,1 @@
+export { default as IconMaterialExplicit } from './explicit.component.vue';

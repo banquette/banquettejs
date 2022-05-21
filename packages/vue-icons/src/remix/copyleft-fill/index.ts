@@ -1,0 +1,1 @@
+export { default as IconRemixCopyleftFill } from './copyleft-fill.component.vue';

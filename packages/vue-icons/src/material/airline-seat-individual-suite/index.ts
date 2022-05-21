@@ -1,0 +1,1 @@
+export { default as IconMaterialAirlineSeatIndividualSuite } from './airline-seat-individual-suite.component.vue';

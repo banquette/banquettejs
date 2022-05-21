@@ -1,0 +1,1 @@
+export { default as IconMaterialAlarm } from './alarm.component.vue';

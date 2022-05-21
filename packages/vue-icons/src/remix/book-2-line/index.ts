@@ -1,0 +1,1 @@
+export { default as IconRemixBook2Line } from './book-2-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialNavigation } from './navigation.component.vue';

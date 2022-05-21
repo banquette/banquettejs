@@ -1,0 +1,1 @@
+export { default as IconMaterialInsertEmoticon } from './insert-emoticon.component.vue';

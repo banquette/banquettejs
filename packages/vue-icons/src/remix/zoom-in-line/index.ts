@@ -1,0 +1,1 @@
+export { default as IconRemixZoomInLine } from './zoom-in-line.component.vue';

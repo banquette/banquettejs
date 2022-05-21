@@ -1,0 +1,1 @@
+export { default as IconRemixMicrosoftLine } from './microsoft-line.component.vue';

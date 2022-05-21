@@ -1,1 +1,0 @@
-export { default as IconAdjust } from './icon-adjust.component.vue';

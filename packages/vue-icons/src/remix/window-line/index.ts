@@ -1,0 +1,1 @@
+export { default as IconRemixWindowLine } from './window-line.component.vue';

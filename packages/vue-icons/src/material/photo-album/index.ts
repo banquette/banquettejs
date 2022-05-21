@@ -1,0 +1,1 @@
+export { default as IconMaterialPhotoAlbum } from './photo-album.component.vue';

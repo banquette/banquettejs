@@ -1,0 +1,1 @@
+export { default as IconRemixVolumeUpLine } from './volume-up-line.component.vue';

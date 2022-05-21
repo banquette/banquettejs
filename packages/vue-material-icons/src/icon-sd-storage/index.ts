@@ -1,1 +1,0 @@
-export { default as IconSdStorage } from './icon-sd-storage.component.vue';

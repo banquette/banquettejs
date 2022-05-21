@@ -1,1 +1,0 @@
-export { default as IconAttachment } from './icon-attachment.component.vue';

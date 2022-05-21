@@ -1,0 +1,1 @@
+export { default as IconRemixH2 } from './h-2.component.vue';

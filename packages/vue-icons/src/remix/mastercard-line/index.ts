@@ -1,0 +1,1 @@
+export { default as IconRemixMastercardLine } from './mastercard-line.component.vue';

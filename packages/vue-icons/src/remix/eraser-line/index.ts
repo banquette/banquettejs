@@ -1,0 +1,1 @@
+export { default as IconRemixEraserLine } from './eraser-line.component.vue';

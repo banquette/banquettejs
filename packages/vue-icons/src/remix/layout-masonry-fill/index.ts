@@ -1,0 +1,1 @@
+export { default as IconRemixLayoutMasonryFill } from './layout-masonry-fill.component.vue';

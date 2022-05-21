@@ -1,0 +1,1 @@
+export { default as IconMaterialNoEncryption } from './no-encryption.component.vue';

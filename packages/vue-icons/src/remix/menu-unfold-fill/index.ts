@@ -1,0 +1,1 @@
+export { default as IconRemixMenuUnfoldFill } from './menu-unfold-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAppsFill } from './apps-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixWalkLine } from './walk-line.component.vue';

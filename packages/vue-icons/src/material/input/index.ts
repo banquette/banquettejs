@@ -1,0 +1,1 @@
+export { default as IconMaterialInput } from './input.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixSensorFill } from './sensor-fill.component.vue';

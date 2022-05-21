@@ -1,1 +1,0 @@
-export { default as IconGamepad } from './icon-gamepad.component.vue';

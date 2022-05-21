@@ -1,0 +1,1 @@
+export { default as IconMaterialPersonPin } from './person-pin.component.vue';

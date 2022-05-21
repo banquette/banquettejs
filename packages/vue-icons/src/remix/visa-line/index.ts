@@ -1,0 +1,1 @@
+export { default as IconRemixVisaLine } from './visa-line.component.vue';

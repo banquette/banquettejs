@@ -1,1 +1,0 @@
-export { default as IconFormatShapes } from './icon-format-shapes.component.vue';

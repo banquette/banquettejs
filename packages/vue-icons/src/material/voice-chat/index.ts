@@ -1,0 +1,1 @@
+export { default as IconMaterialVoiceChat } from './voice-chat.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconStreetview } from './icon-streetview.component.vue';

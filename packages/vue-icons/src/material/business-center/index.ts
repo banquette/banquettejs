@@ -1,0 +1,1 @@
+export { default as IconMaterialBusinessCenter } from './business-center.component.vue';

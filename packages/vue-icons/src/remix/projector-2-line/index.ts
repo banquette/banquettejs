@@ -1,0 +1,1 @@
+export { default as IconRemixProjector2Line } from './projector-2-line.component.vue';

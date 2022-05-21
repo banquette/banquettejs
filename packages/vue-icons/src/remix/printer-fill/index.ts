@@ -1,0 +1,1 @@
+export { default as IconRemixPrinterFill } from './printer-fill.component.vue';

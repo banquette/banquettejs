@@ -1,0 +1,1 @@
+export { default as IconRemixFolderOpenLine } from './folder-open-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixClipboardFill } from './clipboard-fill.component.vue';

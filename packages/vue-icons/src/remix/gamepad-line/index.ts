@@ -1,0 +1,1 @@
+export { default as IconRemixGamepadLine } from './gamepad-line.component.vue';

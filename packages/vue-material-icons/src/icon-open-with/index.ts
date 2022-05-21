@@ -1,1 +1,0 @@
-export { default as IconOpenWith } from './icon-open-with.component.vue';

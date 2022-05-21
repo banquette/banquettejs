@@ -1,0 +1,1 @@
+export { default as IconRemixFolderLockFill } from './folder-lock-fill.component.vue';

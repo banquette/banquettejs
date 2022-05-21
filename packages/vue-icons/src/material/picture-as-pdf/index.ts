@@ -1,0 +1,1 @@
+export { default as IconMaterialPictureAsPdf } from './picture-as-pdf.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAccountPinCircleFill } from './account-pin-circle-fill.component.vue';

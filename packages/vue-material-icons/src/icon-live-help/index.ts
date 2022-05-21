@@ -1,1 +1,0 @@
-export { default as IconLiveHelp } from './icon-live-help.component.vue';

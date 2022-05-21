@@ -1,0 +1,1 @@
+export { default as IconRemixBilibiliLine } from './bilibili-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixBookletLine } from './booklet-line.component.vue';

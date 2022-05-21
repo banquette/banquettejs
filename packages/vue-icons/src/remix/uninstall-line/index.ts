@@ -1,0 +1,1 @@
+export { default as IconRemixUninstallLine } from './uninstall-line.component.vue';

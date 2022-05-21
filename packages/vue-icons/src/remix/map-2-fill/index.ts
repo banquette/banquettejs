@@ -1,0 +1,1 @@
+export { default as IconRemixMap2Fill } from './map-2-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialBorderBottom } from './border-bottom.component.vue';

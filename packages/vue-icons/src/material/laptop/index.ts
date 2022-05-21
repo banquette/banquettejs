@@ -1,0 +1,1 @@
+export { default as IconMaterialLaptop } from './laptop.component.vue';

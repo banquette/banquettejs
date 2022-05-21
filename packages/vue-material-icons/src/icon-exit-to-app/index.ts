@@ -1,1 +1,0 @@
-export { default as IconExitToApp } from './icon-exit-to-app.component.vue';

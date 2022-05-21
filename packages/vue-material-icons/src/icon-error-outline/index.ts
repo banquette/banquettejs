@@ -1,1 +1,0 @@
-export { default as IconErrorOutline } from './icon-error-outline.component.vue';

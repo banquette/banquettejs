@@ -1,0 +1,1 @@
+export { default as IconRemixCloseFill } from './close-fill.component.vue';

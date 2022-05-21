@@ -1,0 +1,1 @@
+export { default as IconRemixSailboatLine } from './sailboat-line.component.vue';

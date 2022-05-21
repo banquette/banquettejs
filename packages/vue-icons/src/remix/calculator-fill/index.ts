@@ -1,0 +1,1 @@
+export { default as IconRemixCalculatorFill } from './calculator-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixShipLine } from './ship-line.component.vue';

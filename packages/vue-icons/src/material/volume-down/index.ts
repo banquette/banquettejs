@@ -1,0 +1,1 @@
+export { default as IconMaterialVolumeDown } from './volume-down.component.vue';

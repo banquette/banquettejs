@@ -1,1 +1,0 @@
-export { default as IconTextFields } from './icon-text-fields.component.vue';

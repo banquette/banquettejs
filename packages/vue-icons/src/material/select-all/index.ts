@@ -1,0 +1,1 @@
+export { default as IconMaterialSelectAll } from './select-all.component.vue';

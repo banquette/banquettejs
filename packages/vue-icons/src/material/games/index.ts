@@ -1,0 +1,1 @@
+export { default as IconMaterialGames } from './games.component.vue';

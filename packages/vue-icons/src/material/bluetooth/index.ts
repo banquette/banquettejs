@@ -1,0 +1,1 @@
+export { default as IconMaterialBluetooth } from './bluetooth.component.vue';

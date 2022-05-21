@@ -1,0 +1,1 @@
+export { default as IconMaterialExtension } from './extension.component.vue';

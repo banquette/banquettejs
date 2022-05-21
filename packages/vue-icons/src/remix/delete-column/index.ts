@@ -1,0 +1,1 @@
+export { default as IconRemixDeleteColumn } from './delete-column.component.vue';

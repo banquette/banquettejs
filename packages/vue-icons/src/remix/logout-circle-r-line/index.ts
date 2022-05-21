@@ -1,0 +1,1 @@
+export { default as IconRemixLogoutCircleRLine } from './logout-circle-r-line.component.vue';

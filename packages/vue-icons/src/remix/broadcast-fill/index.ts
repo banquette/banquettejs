@@ -1,0 +1,1 @@
+export { default as IconRemixBroadcastFill } from './broadcast-fill.component.vue';

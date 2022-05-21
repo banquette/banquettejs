@@ -1,0 +1,1 @@
+export { default as IconRemixHtml5Fill } from './html5-fill.component.vue';

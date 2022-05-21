@@ -1,0 +1,1 @@
+export { default as IconRemixHeadphoneFill } from './headphone-fill.component.vue';

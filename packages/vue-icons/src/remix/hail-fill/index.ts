@@ -1,0 +1,1 @@
+export { default as IconRemixHailFill } from './hail-fill.component.vue';

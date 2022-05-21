@@ -1,0 +1,1 @@
+export { default as IconRemixDisqusFill } from './disqus-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixEditLine } from './edit-line.component.vue';

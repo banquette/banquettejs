@@ -1,0 +1,1 @@
+export { default as IconRemixBringForward } from './bring-forward.component.vue';

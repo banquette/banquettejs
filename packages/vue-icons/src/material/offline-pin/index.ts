@@ -1,0 +1,1 @@
+export { default as IconMaterialOfflinePin } from './offline-pin.component.vue';

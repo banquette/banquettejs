@@ -1,0 +1,1 @@
+export { default as IconRemixToggleFill } from './toggle-fill.component.vue';

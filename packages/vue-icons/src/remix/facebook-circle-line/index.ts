@@ -1,0 +1,1 @@
+export { default as IconRemixFacebookCircleLine } from './facebook-circle-line.component.vue';

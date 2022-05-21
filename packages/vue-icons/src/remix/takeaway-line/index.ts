@@ -1,0 +1,1 @@
+export { default as IconRemixTakeawayLine } from './takeaway-line.component.vue';

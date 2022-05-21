@@ -1,1 +1,0 @@
-export { default as IconPieChart } from './icon-pie-chart.component.vue';

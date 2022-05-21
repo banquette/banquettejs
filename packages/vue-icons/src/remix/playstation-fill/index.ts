@@ -1,0 +1,1 @@
+export { default as IconRemixPlaystationFill } from './playstation-fill.component.vue';

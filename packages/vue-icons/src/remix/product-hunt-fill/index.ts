@@ -1,0 +1,1 @@
+export { default as IconRemixProductHuntFill } from './product-hunt-fill.component.vue';

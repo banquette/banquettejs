@@ -1,1 +1,0 @@
-export { default as IconAddCircleOutline } from './icon-add-circle-outline.component.vue';

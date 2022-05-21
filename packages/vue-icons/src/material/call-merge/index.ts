@@ -1,0 +1,1 @@
+export { default as IconMaterialCallMerge } from './call-merge.component.vue';

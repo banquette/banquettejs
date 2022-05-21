@@ -1,0 +1,1 @@
+export { default as IconMaterialRoomService } from './room-service.component.vue';

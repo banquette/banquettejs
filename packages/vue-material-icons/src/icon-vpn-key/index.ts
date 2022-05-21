@@ -1,1 +1,0 @@
-export { default as IconVpnKey } from './icon-vpn-key.component.vue';

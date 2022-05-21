@@ -1,0 +1,1 @@
+export { default as IconRemixSubtractLine } from './subtract-line.component.vue';

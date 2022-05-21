@@ -1,1 +1,0 @@
-export { default as IconRoundedCorner } from './icon-rounded-corner.component.vue';

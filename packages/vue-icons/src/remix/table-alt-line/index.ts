@@ -1,0 +1,1 @@
+export { default as IconRemixTableAltLine } from './table-alt-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialTraffic } from './traffic.component.vue';

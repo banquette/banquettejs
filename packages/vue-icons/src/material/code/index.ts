@@ -1,0 +1,1 @@
+export { default as IconMaterialCode } from './code.component.vue';

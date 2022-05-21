@@ -1,0 +1,1 @@
+export { default as IconRemixSecurePaymentFill } from './secure-payment-fill.component.vue';

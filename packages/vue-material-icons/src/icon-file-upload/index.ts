@@ -1,1 +1,0 @@
-export { default as IconFileUpload } from './icon-file-upload.component.vue';

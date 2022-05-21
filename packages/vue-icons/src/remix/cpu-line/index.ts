@@ -1,0 +1,1 @@
+export { default as IconRemixCpuLine } from './cpu-line.component.vue';

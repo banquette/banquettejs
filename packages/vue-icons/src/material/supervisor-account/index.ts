@@ -1,0 +1,1 @@
+export { default as IconMaterialSupervisorAccount } from './supervisor-account.component.vue';

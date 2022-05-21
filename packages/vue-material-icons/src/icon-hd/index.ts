@@ -1,1 +1,0 @@
-export { default as IconHd } from './icon-hd.component.vue';

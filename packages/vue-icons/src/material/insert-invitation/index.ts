@@ -1,0 +1,1 @@
+export { default as IconMaterialInsertInvitation } from './insert-invitation.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixPantoneLine } from './pantone-line.component.vue';

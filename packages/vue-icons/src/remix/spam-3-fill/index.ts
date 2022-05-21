@@ -1,0 +1,1 @@
+export { default as IconRemixSpam3Fill } from './spam-3-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialPhotoLibrary } from './photo-library.component.vue';

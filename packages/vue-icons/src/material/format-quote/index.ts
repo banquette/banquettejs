@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatQuote } from './format-quote.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialDialerSip } from './dialer-sip.component.vue';

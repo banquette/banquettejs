@@ -1,0 +1,1 @@
+export { default as IconRemixEdgeLine } from './edge-line.component.vue';

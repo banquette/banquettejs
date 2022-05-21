@@ -1,0 +1,1 @@
+export { default as IconRemixShowersFill } from './showers-fill.component.vue';

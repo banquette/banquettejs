@@ -1,0 +1,1 @@
+export { default as IconRemixCaravanLine } from './caravan-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialShowChart } from './show-chart.component.vue';

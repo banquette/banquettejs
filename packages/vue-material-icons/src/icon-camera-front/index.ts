@@ -1,1 +1,0 @@
-export { default as IconCameraFront } from './icon-camera-front.component.vue';

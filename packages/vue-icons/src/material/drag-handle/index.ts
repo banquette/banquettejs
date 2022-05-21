@@ -1,0 +1,1 @@
+export { default as IconMaterialDragHandle } from './drag-handle.component.vue';

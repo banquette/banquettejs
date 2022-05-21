@@ -1,0 +1,1 @@
+export { default as IconMaterialInvertColors } from './invert-colors.component.vue';

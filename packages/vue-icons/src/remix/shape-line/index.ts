@@ -1,0 +1,1 @@
+export { default as IconRemixShapeLine } from './shape-line.component.vue';

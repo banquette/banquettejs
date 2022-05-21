@@ -1,0 +1,1 @@
+export { default as IconRemixCustomerServiceLine } from './customer-service-line.component.vue';

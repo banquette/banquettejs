@@ -1,0 +1,1 @@
+export { default as IconRemixBankCardFill } from './bank-card-fill.component.vue';

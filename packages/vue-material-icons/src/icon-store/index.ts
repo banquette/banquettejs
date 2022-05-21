@@ -1,1 +1,0 @@
-export { default as IconStore } from './icon-store.component.vue';

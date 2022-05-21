@@ -1,0 +1,1 @@
+export { default as IconRemixShieldStarLine } from './shield-star-line.component.vue';

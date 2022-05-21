@@ -1,0 +1,1 @@
+export { default as IconRemixIndentDecrease } from './indent-decrease.component.vue';

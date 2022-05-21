@@ -1,0 +1,1 @@
+export { default as IconRemixEdgeFill } from './edge-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialMicNone } from './mic-none.component.vue';

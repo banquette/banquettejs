@@ -1,0 +1,1 @@
+export { default as IconRemixSyringeLine } from './syringe-line.component.vue';

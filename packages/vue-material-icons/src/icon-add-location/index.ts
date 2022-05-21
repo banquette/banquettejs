@@ -1,1 +1,0 @@
-export { default as IconAddLocation } from './icon-add-location.component.vue';

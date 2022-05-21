@@ -1,0 +1,1 @@
+export { default as IconRemixWalkFill } from './walk-fill.component.vue';

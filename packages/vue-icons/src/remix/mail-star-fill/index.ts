@@ -1,0 +1,1 @@
+export { default as IconRemixMailStarFill } from './mail-star-fill.component.vue';

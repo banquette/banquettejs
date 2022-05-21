@@ -1,0 +1,1 @@
+export { default as IconMaterialRingVolume } from './ring-volume.component.vue';

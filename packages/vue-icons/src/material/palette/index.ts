@@ -1,0 +1,1 @@
+export { default as IconMaterialPalette } from './palette.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixKeyboardBoxLine } from './keyboard-box-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAlbumLine } from './album-line.component.vue';

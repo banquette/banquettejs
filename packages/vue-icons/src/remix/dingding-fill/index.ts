@@ -1,0 +1,1 @@
+export { default as IconRemixDingdingFill } from './dingding-fill.component.vue';

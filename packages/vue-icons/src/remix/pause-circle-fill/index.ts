@@ -1,0 +1,1 @@
+export { default as IconRemixPauseCircleFill } from './pause-circle-fill.component.vue';

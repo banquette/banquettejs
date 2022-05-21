@@ -1,0 +1,1 @@
+export { default as IconRemixGobletFill } from './goblet-fill.component.vue';

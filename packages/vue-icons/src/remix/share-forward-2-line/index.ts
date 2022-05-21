@@ -1,0 +1,1 @@
+export { default as IconRemixShareForward2Line } from './share-forward-2-line.component.vue';

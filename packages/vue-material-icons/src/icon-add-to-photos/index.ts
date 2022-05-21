@@ -1,1 +1,0 @@
-export { default as IconAddToPhotos } from './icon-add-to-photos.component.vue';

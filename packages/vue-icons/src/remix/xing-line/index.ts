@@ -1,0 +1,1 @@
+export { default as IconRemixXingLine } from './xing-line.component.vue';

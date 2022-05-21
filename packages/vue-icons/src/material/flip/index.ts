@@ -1,0 +1,1 @@
+export { default as IconMaterialFlip } from './flip.component.vue';

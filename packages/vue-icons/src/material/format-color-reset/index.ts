@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatColorReset } from './format-color-reset.component.vue';

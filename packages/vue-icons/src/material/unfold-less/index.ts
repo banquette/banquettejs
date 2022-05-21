@@ -1,0 +1,1 @@
+export { default as IconMaterialUnfoldLess } from './unfold-less.component.vue';

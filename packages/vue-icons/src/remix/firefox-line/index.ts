@@ -1,0 +1,1 @@
+export { default as IconRemixFirefoxLine } from './firefox-line.component.vue';

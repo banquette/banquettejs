@@ -1,0 +1,1 @@
+export { default as IconRemixAddBoxLine } from './add-box-line.component.vue';

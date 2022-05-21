@@ -1,0 +1,1 @@
+export { default as IconRemixReservedFill } from './reserved-fill.component.vue';

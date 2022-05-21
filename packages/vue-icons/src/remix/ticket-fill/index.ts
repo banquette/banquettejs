@@ -1,0 +1,1 @@
+export { default as IconRemixTicketFill } from './ticket-fill.component.vue';

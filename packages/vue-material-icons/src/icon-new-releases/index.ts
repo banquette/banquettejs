@@ -1,1 +1,0 @@
-export { default as IconNewReleases } from './icon-new-releases.component.vue';

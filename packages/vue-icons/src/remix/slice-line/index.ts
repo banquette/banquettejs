@@ -1,0 +1,1 @@
+export { default as IconRemixSliceLine } from './slice-line.component.vue';

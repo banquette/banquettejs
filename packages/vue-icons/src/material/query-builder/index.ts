@@ -1,0 +1,1 @@
+export { default as IconMaterialQueryBuilder } from './query-builder.component.vue';

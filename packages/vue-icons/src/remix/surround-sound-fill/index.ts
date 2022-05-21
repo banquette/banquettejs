@@ -1,0 +1,1 @@
+export { default as IconRemixSurroundSoundFill } from './surround-sound-fill.component.vue';

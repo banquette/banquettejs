@@ -1,1 +1,0 @@
-export { default as IconViewModule } from './icon-view-module.component.vue';

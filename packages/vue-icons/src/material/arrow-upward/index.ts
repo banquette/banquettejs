@@ -1,0 +1,1 @@
+export { default as IconMaterialArrowUpward } from './arrow-upward.component.vue';

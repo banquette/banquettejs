@@ -1,0 +1,1 @@
+export { default as IconRemixSpectrumFill } from './spectrum-fill.component.vue';

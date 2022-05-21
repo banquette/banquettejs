@@ -1,0 +1,1 @@
+export { default as IconRemixPlaneLine } from './plane-line.component.vue';

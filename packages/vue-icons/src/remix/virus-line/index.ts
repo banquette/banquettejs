@@ -1,0 +1,1 @@
+export { default as IconRemixVirusLine } from './virus-line.component.vue';

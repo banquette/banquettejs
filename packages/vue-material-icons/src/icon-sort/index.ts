@@ -1,1 +1,0 @@
-export { default as IconSort } from './icon-sort.component.vue';

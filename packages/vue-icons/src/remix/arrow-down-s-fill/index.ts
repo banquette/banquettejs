@@ -1,0 +1,1 @@
+export { default as IconRemixArrowDownSFill } from './arrow-down-s-fill.component.vue';

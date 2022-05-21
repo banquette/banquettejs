@@ -1,1 +1,0 @@
-export { default as IconPoll } from './icon-poll.component.vue';

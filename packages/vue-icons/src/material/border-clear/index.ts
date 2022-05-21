@@ -1,0 +1,1 @@
+export { default as IconMaterialBorderClear } from './border-clear.component.vue';

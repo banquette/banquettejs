@@ -1,0 +1,1 @@
+export { default as IconRemixFileCopy2Line } from './file-copy-2-line.component.vue';

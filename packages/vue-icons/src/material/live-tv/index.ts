@@ -1,0 +1,1 @@
+export { default as IconMaterialLiveTv } from './live-tv.component.vue';

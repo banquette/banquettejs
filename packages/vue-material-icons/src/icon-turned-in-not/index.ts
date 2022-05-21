@@ -1,1 +1,0 @@
-export { default as IconTurnedInNot } from './icon-turned-in-not.component.vue';

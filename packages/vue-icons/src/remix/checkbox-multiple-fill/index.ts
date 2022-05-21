@@ -1,0 +1,1 @@
+export { default as IconRemixCheckboxMultipleFill } from './checkbox-multiple-fill.component.vue';

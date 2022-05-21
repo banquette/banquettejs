@@ -1,0 +1,1 @@
+export { default as IconRemixAdvertisementLine } from './advertisement-line.component.vue';

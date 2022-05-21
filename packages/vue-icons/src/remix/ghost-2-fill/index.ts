@@ -1,0 +1,1 @@
+export { default as IconRemixGhost2Fill } from './ghost-2-fill.component.vue';

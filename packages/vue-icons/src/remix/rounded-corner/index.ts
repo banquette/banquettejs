@@ -1,0 +1,1 @@
+export { default as IconRemixRoundedCorner } from './rounded-corner.component.vue';

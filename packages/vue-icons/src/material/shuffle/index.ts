@@ -1,0 +1,1 @@
+export { default as IconMaterialShuffle } from './shuffle.component.vue';

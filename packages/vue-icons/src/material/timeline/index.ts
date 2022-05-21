@@ -1,0 +1,1 @@
+export { default as IconMaterialTimeline } from './timeline.component.vue';

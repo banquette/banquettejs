@@ -1,1 +1,0 @@
-export { default as IconNoSim } from './icon-no-sim.component.vue';

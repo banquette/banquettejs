@@ -1,0 +1,1 @@
+export { default as IconMaterialLastPage } from './last-page.component.vue';

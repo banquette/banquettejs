@@ -1,0 +1,1 @@
+export { default as IconMaterialCompareArrows } from './compare-arrows.component.vue';

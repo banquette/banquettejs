@@ -1,0 +1,1 @@
+export { default as IconRemixCopyrightLine } from './copyright-line.component.vue';

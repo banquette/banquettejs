@@ -1,0 +1,1 @@
+export { default as IconMaterialLocationOff } from './location-off.component.vue';

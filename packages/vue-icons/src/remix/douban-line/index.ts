@@ -1,0 +1,1 @@
+export { default as IconRemixDoubanLine } from './douban-line.component.vue';

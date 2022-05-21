@@ -1,0 +1,1 @@
+export { default as IconRemixLungsFill } from './lungs-fill.component.vue';

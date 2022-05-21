@@ -1,0 +1,1 @@
+export { default as IconRemixUnsplashFill } from './unsplash-fill.component.vue';

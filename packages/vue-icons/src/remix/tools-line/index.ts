@@ -1,0 +1,1 @@
+export { default as IconRemixToolsLine } from './tools-line.component.vue';

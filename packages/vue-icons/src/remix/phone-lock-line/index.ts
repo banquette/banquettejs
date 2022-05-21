@@ -1,0 +1,1 @@
+export { default as IconRemixPhoneLockLine } from './phone-lock-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixStickyNote2Fill } from './sticky-note-2-fill.component.vue';

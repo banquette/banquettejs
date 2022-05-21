@@ -1,0 +1,1 @@
+export { default as IconRemixTornadoFill } from './tornado-fill.component.vue';

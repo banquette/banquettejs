@@ -1,1 +1,0 @@
-export { default as IconMoveToInbox } from './icon-move-to-inbox.component.vue';

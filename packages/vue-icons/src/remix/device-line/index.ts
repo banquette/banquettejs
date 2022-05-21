@@ -1,0 +1,1 @@
+export { default as IconRemixDeviceLine } from './device-line.component.vue';

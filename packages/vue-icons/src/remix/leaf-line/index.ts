@@ -1,0 +1,1 @@
+export { default as IconRemixLeafLine } from './leaf-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixSlideshowLine } from './slideshow-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialEnhancedEncryption } from './enhanced-encryption.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFileWord2Line } from './file-word-2-line.component.vue';

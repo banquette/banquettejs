@@ -1,1 +1,0 @@
-export { default as IconTransferWithinAStation } from './icon-transfer-within-a-station.component.vue';

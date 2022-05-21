@@ -1,0 +1,1 @@
+export { default as IconRemixDatabase2Fill } from './database-2-fill.component.vue';

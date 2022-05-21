@@ -1,0 +1,1 @@
+export { default as IconRemixSingleQuotesR } from './single-quotes-r.component.vue';

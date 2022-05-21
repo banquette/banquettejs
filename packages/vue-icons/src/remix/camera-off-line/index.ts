@@ -1,0 +1,1 @@
+export { default as IconRemixCameraOffLine } from './camera-off-line.component.vue';

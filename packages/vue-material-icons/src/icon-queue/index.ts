@@ -1,1 +1,0 @@
-export { default as IconQueue } from './icon-queue.component.vue';

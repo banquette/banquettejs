@@ -1,1 +1,0 @@
-export { default as IconChat } from './icon-chat.component.vue';

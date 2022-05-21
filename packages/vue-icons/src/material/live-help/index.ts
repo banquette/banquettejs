@@ -1,0 +1,1 @@
+export { default as IconMaterialLiveHelp } from './live-help.component.vue';

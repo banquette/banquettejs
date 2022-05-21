@@ -1,0 +1,1 @@
+export { default as IconRemixStopCircleLine } from './stop-circle-line.component.vue';

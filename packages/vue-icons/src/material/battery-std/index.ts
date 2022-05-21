@@ -1,0 +1,1 @@
+export { default as IconMaterialBatteryStd } from './battery-std.component.vue';

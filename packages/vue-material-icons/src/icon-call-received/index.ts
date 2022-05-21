@@ -1,1 +1,0 @@
-export { default as IconCallReceived } from './icon-call-received.component.vue';

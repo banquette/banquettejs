@@ -1,0 +1,1 @@
+export { default as IconRemixRestartFill } from './restart-fill.component.vue';

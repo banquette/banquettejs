@@ -1,0 +1,1 @@
+export { default as IconRemixArchiveDrawerLine } from './archive-drawer-line.component.vue';

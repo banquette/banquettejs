@@ -1,0 +1,1 @@
+export { default as IconRemixPauseMiniLine } from './pause-mini-line.component.vue';

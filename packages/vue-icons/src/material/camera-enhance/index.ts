@@ -1,0 +1,1 @@
+export { default as IconMaterialCameraEnhance } from './camera-enhance.component.vue';

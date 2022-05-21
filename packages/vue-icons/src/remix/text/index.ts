@@ -1,0 +1,1 @@
+export { default as IconRemixText } from './text.component.vue';

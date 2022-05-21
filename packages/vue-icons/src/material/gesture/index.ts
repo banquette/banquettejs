@@ -1,0 +1,1 @@
+export { default as IconMaterialGesture } from './gesture.component.vue';

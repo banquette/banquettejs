@@ -1,0 +1,1 @@
+export { default as IconRemixRefund2Fill } from './refund-2-fill.component.vue';

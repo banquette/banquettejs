@@ -1,0 +1,1 @@
+export { default as IconRemixPaintBrushLine } from './paint-brush-line.component.vue';

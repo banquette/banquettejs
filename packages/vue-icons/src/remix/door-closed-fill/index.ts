@@ -1,0 +1,1 @@
+export { default as IconRemixDoorClosedFill } from './door-closed-fill.component.vue';

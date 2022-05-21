@@ -1,0 +1,1 @@
+export { default as IconRemixGift2Line } from './gift-2-line.component.vue';

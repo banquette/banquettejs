@@ -1,1 +1,0 @@
-export { default as IconLaptopWindows } from './icon-laptop-windows.component.vue';

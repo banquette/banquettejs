@@ -1,0 +1,1 @@
+export { default as IconMaterialImportExport } from './import-export.component.vue';

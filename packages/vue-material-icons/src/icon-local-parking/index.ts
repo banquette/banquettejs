@@ -1,1 +1,0 @@
-export { default as IconLocalParking } from './icon-local-parking.component.vue';

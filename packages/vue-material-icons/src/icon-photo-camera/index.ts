@@ -1,1 +1,0 @@
-export { default as IconPhotoCamera } from './icon-photo-camera.component.vue';

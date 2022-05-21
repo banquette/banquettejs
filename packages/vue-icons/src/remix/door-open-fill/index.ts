@@ -1,0 +1,1 @@
+export { default as IconRemixDoorOpenFill } from './door-open-fill.component.vue';

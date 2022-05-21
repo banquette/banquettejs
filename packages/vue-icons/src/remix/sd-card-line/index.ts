@@ -1,0 +1,1 @@
+export { default as IconRemixSdCardLine } from './sd-card-line.component.vue';

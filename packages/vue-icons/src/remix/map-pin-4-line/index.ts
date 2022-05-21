@@ -1,0 +1,1 @@
+export { default as IconRemixMapPin4Line } from './map-pin-4-line.component.vue';

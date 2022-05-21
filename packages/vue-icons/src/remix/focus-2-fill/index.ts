@@ -1,0 +1,1 @@
+export { default as IconRemixFocus2Fill } from './focus-2-fill.component.vue';

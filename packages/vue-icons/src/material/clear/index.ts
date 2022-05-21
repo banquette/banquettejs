@@ -1,0 +1,1 @@
+export { default as IconMaterialClear } from './clear.component.vue';

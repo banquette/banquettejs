@@ -1,0 +1,1 @@
+export { default as IconRemixMic2Fill } from './mic-2-fill.component.vue';

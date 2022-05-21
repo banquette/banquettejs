@@ -1,0 +1,1 @@
+export { default as IconRemixTrainLine } from './train-line.component.vue';

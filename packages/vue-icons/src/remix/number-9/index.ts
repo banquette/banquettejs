@@ -1,0 +1,1 @@
+export { default as IconRemixNumber9 } from './number-9.component.vue';

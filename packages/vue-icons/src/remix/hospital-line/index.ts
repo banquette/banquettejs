@@ -1,0 +1,1 @@
+export { default as IconRemixHospitalLine } from './hospital-line.component.vue';

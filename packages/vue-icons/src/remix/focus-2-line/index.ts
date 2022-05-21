@@ -1,0 +1,1 @@
+export { default as IconRemixFocus2Line } from './focus-2-line.component.vue';

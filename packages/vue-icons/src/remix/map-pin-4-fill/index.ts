@@ -1,0 +1,1 @@
+export { default as IconRemixMapPin4Fill } from './map-pin-4-fill.component.vue';

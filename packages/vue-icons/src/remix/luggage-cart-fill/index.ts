@@ -1,0 +1,1 @@
+export { default as IconRemixLuggageCartFill } from './luggage-cart-fill.component.vue';

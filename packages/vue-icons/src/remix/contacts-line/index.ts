@@ -1,0 +1,1 @@
+export { default as IconRemixContactsLine } from './contacts-line.component.vue';

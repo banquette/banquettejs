@@ -1,0 +1,1 @@
+export { default as IconRemixFootprintLine } from './footprint-line.component.vue';

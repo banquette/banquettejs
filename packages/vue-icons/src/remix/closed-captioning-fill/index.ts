@@ -1,0 +1,1 @@
+export { default as IconRemixClosedCaptioningFill } from './closed-captioning-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixBankCard2Line } from './bank-card-2-line.component.vue';

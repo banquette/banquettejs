@@ -1,0 +1,1 @@
+export { default as IconRemixTerminalBoxLine } from './terminal-box-line.component.vue';

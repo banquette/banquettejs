@@ -1,0 +1,1 @@
+export { default as IconRemixDiscFill } from './disc-fill.component.vue';

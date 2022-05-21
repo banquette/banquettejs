@@ -1,0 +1,1 @@
+export { default as IconMaterialCake } from './cake.component.vue';

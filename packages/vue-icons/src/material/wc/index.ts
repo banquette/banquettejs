@@ -1,0 +1,1 @@
+export { default as IconMaterialWc } from './wc.component.vue';

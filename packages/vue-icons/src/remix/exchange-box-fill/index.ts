@@ -1,0 +1,1 @@
+export { default as IconRemixExchangeBoxFill } from './exchange-box-fill.component.vue';

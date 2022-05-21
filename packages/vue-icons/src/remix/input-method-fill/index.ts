@@ -1,0 +1,1 @@
+export { default as IconRemixInputMethodFill } from './input-method-fill.component.vue';

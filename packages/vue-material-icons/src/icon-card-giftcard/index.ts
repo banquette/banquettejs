@@ -1,1 +1,0 @@
-export { default as IconCardGiftcard } from './icon-card-giftcard.component.vue';

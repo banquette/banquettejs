@@ -1,0 +1,1 @@
+export { default as IconRemixTwitchFill } from './twitch-fill.component.vue';

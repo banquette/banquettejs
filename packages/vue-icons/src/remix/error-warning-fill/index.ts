@@ -1,0 +1,1 @@
+export { default as IconRemixErrorWarningFill } from './error-warning-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialLabelOutline } from './label-outline.component.vue';

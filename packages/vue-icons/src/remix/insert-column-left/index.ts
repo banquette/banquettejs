@@ -1,0 +1,1 @@
+export { default as IconRemixInsertColumnLeft } from './insert-column-left.component.vue';

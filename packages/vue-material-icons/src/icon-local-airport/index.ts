@@ -1,1 +1,0 @@
-export { default as IconLocalAirport } from './icon-local-airport.component.vue';

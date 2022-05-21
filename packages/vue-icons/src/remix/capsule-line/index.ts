@@ -1,0 +1,1 @@
+export { default as IconRemixCapsuleLine } from './capsule-line.component.vue';

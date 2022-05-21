@@ -1,0 +1,1 @@
+export { default as IconRemixAddBoxFill } from './add-box-fill.component.vue';

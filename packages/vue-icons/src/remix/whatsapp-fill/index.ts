@@ -1,0 +1,1 @@
+export { default as IconRemixWhatsappFill } from './whatsapp-fill.component.vue';

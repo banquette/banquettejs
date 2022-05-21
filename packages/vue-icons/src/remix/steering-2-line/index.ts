@@ -1,0 +1,1 @@
+export { default as IconRemixSteering2Line } from './steering-2-line.component.vue';

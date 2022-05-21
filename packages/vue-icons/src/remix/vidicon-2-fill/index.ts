@@ -1,0 +1,1 @@
+export { default as IconRemixVidicon2Fill } from './vidicon-2-fill.component.vue';

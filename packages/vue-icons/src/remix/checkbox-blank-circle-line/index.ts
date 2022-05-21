@@ -1,0 +1,1 @@
+export { default as IconRemixCheckboxBlankCircleLine } from './checkbox-blank-circle-line.component.vue';

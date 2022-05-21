@@ -1,0 +1,1 @@
+export { default as IconMaterialDevices } from './devices.component.vue';

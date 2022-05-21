@@ -1,1 +1,0 @@
-export { default as IconHttps } from './icon-https.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconBrush } from './icon-brush.component.vue';

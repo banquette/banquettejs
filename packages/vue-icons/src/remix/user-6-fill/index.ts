@@ -1,0 +1,1 @@
+export { default as IconRemixUser6Fill } from './user-6-fill.component.vue';

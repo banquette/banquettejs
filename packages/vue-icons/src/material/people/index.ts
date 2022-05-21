@@ -1,0 +1,1 @@
+export { default as IconMaterialPeople } from './people.component.vue';

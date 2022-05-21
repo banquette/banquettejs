@@ -1,1 +1,0 @@
-export { default as IconLocalPharmacy } from './icon-local-pharmacy.component.vue';

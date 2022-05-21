@@ -1,0 +1,1 @@
+export { default as IconRemixTelegramLine } from './telegram-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconAvTimer } from './icon-av-timer.component.vue';

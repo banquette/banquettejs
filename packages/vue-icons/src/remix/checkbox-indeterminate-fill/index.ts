@@ -1,0 +1,1 @@
+export { default as IconRemixCheckboxIndeterminateFill } from './checkbox-indeterminate-fill.component.vue';

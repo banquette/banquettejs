@@ -1,0 +1,1 @@
+export { default as IconMaterialBorderRight } from './border-right.component.vue';

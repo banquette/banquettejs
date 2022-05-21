@@ -1,0 +1,1 @@
+export { default as IconMaterialDrafts } from './drafts.component.vue';

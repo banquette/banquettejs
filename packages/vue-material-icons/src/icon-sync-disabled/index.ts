@@ -1,1 +1,0 @@
-export { default as IconSyncDisabled } from './icon-sync-disabled.component.vue';

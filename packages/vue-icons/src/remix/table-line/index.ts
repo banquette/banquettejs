@@ -1,0 +1,1 @@
+export { default as IconRemixTableLine } from './table-line.component.vue';

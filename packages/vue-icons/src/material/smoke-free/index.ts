@@ -1,0 +1,1 @@
+export { default as IconMaterialSmokeFree } from './smoke-free.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixSteeringFill } from './steering-fill.component.vue';

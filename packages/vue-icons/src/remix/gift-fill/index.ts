@@ -1,0 +1,1 @@
+export { default as IconRemixGiftFill } from './gift-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSwapCalls } from './swap-calls.component.vue';

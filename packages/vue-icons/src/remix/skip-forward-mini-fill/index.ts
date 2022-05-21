@@ -1,0 +1,1 @@
+export { default as IconRemixSkipForwardMiniFill } from './skip-forward-mini-fill.component.vue';

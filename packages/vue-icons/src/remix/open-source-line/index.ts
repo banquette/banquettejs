@@ -1,0 +1,1 @@
+export { default as IconRemixOpenSourceLine } from './open-source-line.component.vue';

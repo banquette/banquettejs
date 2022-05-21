@@ -1,0 +1,1 @@
+export { default as IconMaterialStar } from './star.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialPortrait } from './portrait.component.vue';

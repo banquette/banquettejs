@@ -1,0 +1,1 @@
+export { default as IconRemixCodeView } from './code-view.component.vue';

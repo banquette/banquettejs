@@ -1,0 +1,1 @@
+export { default as IconMaterialReorder } from './reorder.component.vue';

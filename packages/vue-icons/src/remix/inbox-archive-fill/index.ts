@@ -1,0 +1,1 @@
+export { default as IconRemixInboxArchiveFill } from './inbox-archive-fill.component.vue';

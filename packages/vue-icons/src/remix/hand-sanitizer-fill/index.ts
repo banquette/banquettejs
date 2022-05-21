@@ -1,0 +1,1 @@
+export { default as IconRemixHandSanitizerFill } from './hand-sanitizer-fill.component.vue';

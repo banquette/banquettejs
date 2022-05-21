@@ -1,0 +1,1 @@
+export { default as IconRemixSubwayFill } from './subway-fill.component.vue';

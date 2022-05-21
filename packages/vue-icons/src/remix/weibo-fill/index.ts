@@ -1,0 +1,1 @@
+export { default as IconRemixWeiboFill } from './weibo-fill.component.vue';

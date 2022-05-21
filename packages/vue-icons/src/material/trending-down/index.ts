@@ -1,0 +1,1 @@
+export { default as IconMaterialTrendingDown } from './trending-down.component.vue';

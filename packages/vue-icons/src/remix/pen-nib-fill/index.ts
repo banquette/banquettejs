@@ -1,0 +1,1 @@
+export { default as IconRemixPenNibFill } from './pen-nib-fill.component.vue';

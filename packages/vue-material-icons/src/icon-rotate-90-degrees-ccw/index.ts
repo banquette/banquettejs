@@ -1,1 +1,0 @@
-export { default as IconRotate90DegreesCcw } from './icon-rotate-90-degrees-ccw.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixBracesLine } from './braces-line.component.vue';

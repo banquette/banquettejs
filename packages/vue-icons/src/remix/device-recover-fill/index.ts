@@ -1,0 +1,1 @@
+export { default as IconRemixDeviceRecoverFill } from './device-recover-fill.component.vue';

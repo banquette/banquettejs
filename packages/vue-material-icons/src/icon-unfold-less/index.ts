@@ -1,1 +1,0 @@
-export { default as IconUnfoldLess } from './icon-unfold-less.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconViewDay } from './icon-view-day.component.vue';

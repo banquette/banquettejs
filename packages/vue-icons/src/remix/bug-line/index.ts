@@ -1,0 +1,1 @@
+export { default as IconRemixBugLine } from './bug-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixPushpinFill } from './pushpin-fill.component.vue';

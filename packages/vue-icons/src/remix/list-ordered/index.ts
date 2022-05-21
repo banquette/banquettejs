@@ -1,0 +1,1 @@
+export { default as IconRemixListOrdered } from './list-ordered.component.vue';

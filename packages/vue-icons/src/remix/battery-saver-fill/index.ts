@@ -1,0 +1,1 @@
+export { default as IconRemixBatterySaverFill } from './battery-saver-fill.component.vue';

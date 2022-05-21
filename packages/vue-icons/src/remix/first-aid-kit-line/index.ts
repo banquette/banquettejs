@@ -1,0 +1,1 @@
+export { default as IconRemixFirstAidKitLine } from './first-aid-kit-line.component.vue';

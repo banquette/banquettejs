@@ -1,1 +1,0 @@
-export { default as IconPermCameraMic } from './icon-perm-camera-mic.component.vue';

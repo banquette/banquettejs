@@ -1,1 +1,0 @@
-export { default as IconCardMembership } from './icon-card-membership.component.vue';

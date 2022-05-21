@@ -1,0 +1,1 @@
+export { default as IconRemixTranslate } from './translate.component.vue';

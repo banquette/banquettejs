@@ -1,0 +1,1 @@
+export { default as IconRemixAncientGateLine } from './ancient-gate-line.component.vue';

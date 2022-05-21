@@ -1,0 +1,1 @@
+export { default as IconRemixShieldFlashFill } from './shield-flash-fill.component.vue';

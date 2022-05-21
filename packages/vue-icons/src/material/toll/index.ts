@@ -1,0 +1,1 @@
+export { default as IconMaterialToll } from './toll.component.vue';

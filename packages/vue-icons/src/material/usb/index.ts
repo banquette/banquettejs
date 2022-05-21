@@ -1,0 +1,1 @@
+export { default as IconMaterialUsb } from './usb.component.vue';

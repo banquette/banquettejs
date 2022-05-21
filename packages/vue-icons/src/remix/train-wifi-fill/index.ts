@@ -1,0 +1,1 @@
+export { default as IconRemixTrainWifiFill } from './train-wifi-fill.component.vue';

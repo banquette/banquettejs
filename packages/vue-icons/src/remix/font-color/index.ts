@@ -1,0 +1,1 @@
+export { default as IconRemixFontColor } from './font-color.component.vue';

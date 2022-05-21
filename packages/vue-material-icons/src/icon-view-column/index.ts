@@ -1,1 +1,0 @@
-export { default as IconViewColumn } from './icon-view-column.component.vue';

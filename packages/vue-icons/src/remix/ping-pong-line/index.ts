@@ -1,0 +1,1 @@
+export { default as IconRemixPingPongLine } from './ping-pong-line.component.vue';

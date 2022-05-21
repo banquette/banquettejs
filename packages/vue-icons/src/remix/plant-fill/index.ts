@@ -1,0 +1,1 @@
+export { default as IconRemixPlantFill } from './plant-fill.component.vue';

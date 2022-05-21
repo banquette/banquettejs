@@ -1,0 +1,1 @@
+export { default as IconRemixLockFill } from './lock-fill.component.vue';

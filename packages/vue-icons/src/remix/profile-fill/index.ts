@@ -1,0 +1,1 @@
+export { default as IconRemixProfileFill } from './profile-fill.component.vue';

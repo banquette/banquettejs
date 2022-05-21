@@ -1,0 +1,1 @@
+export { default as IconRemixSignalWifiLine } from './signal-wifi-line.component.vue';

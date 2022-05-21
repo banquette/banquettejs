@@ -1,0 +1,1 @@
+export { default as IconRemixCakeFill } from './cake-fill.component.vue';

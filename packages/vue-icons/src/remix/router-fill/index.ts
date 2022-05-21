@@ -1,0 +1,1 @@
+export { default as IconRemixRouterFill } from './router-fill.component.vue';

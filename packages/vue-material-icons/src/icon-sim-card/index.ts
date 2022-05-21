@@ -1,1 +1,0 @@
-export { default as IconSimCard } from './icon-sim-card.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialAssignmentTurnedIn } from './assignment-turned-in.component.vue';

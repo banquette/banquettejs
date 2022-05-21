@@ -1,0 +1,1 @@
+export { default as IconRemixSkull2Line } from './skull-2-line.component.vue';

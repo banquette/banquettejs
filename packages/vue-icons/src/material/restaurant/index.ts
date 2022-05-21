@@ -1,0 +1,1 @@
+export { default as IconMaterialRestaurant } from './restaurant.component.vue';

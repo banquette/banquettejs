@@ -1,1 +1,0 @@
-export { default as IconVolumeMute } from './icon-volume-mute.component.vue';

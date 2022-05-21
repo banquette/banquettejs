@@ -1,0 +1,1 @@
+export { default as IconRemixAspectRatioLine } from './aspect-ratio-line.component.vue';

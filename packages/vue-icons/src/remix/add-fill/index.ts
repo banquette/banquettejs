@@ -1,0 +1,1 @@
+export { default as IconRemixAddFill } from './add-fill.component.vue';

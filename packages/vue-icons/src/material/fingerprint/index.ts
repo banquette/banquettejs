@@ -1,0 +1,1 @@
+export { default as IconMaterialFingerprint } from './fingerprint.component.vue';

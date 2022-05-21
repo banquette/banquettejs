@@ -1,1 +1,0 @@
-export { default as IconSignalWifiStatusbarConnectedNoInternet4 } from './icon-signal-wifi-statusbar-connected-no-internet-4.component.vue';

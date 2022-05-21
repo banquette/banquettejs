@@ -1,1 +1,0 @@
-export { default as IconNetworkCheck } from './icon-network-check.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconSatellite } from './icon-satellite.component.vue';

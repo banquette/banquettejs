@@ -1,1 +1,0 @@
-export { default as IconCallMissedOutgoing } from './icon-call-missed-outgoing.component.vue';

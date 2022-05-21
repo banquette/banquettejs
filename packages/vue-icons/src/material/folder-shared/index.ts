@@ -1,0 +1,1 @@
+export { default as IconMaterialFolderShared } from './folder-shared.component.vue';

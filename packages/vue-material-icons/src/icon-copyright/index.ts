@@ -1,1 +1,0 @@
-export { default as IconCopyright } from './icon-copyright.component.vue';

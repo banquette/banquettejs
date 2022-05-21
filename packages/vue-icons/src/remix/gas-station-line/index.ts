@@ -1,0 +1,1 @@
+export { default as IconRemixGasStationLine } from './gas-station-line.component.vue';

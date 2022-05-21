@@ -1,1 +1,0 @@
-export { default as IconSlideshow } from './icon-slideshow.component.vue';

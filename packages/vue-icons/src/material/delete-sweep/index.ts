@@ -1,0 +1,1 @@
+export { default as IconMaterialDeleteSweep } from './delete-sweep.component.vue';

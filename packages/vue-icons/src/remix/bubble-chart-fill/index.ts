@@ -1,0 +1,1 @@
+export { default as IconRemixBubbleChartFill } from './bubble-chart-fill.component.vue';

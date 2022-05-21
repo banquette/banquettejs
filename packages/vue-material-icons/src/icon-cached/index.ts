@@ -1,1 +1,0 @@
-export { default as IconCached } from './icon-cached.component.vue';

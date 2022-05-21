@@ -1,0 +1,1 @@
+export { default as IconMaterialRotateRight } from './rotate-right.component.vue';

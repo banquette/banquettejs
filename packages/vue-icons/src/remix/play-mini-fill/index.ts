@@ -1,0 +1,1 @@
+export { default as IconRemixPlayMiniFill } from './play-mini-fill.component.vue';

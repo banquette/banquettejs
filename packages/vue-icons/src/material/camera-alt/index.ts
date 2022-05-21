@@ -1,0 +1,1 @@
+export { default as IconMaterialCameraAlt } from './camera-alt.component.vue';

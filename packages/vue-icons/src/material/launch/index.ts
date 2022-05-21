@@ -1,0 +1,1 @@
+export { default as IconMaterialLaunch } from './launch.component.vue';

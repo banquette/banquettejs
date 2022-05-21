@@ -1,0 +1,1 @@
+export { default as IconRemixFoggyFill } from './foggy-fill.component.vue';

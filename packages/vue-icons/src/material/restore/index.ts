@@ -1,0 +1,1 @@
+export { default as IconMaterialRestore } from './restore.component.vue';

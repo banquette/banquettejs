@@ -1,0 +1,1 @@
+export { default as IconRemixWechat2Fill } from './wechat-2-fill.component.vue';

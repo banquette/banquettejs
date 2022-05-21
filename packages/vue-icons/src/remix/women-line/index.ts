@@ -1,0 +1,1 @@
+export { default as IconRemixWomenLine } from './women-line.component.vue';

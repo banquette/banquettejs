@@ -1,1 +1,0 @@
-export { default as IconRingVolume } from './icon-ring-volume.component.vue';

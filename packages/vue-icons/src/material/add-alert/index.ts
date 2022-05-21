@@ -1,0 +1,1 @@
+export { default as IconMaterialAddAlert } from './add-alert.component.vue';

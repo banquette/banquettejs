@@ -1,0 +1,1 @@
+export { default as IconRemixLiveFill } from './live-fill.component.vue';

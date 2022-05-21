@@ -1,1 +1,0 @@
-export { default as IconLocalMall } from './icon-local-mall.component.vue';

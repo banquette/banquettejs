@@ -1,0 +1,1 @@
+export { default as IconRemixPaintLine } from './paint-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFunctions } from './functions.component.vue';

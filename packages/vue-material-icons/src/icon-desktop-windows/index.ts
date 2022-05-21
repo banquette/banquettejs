@@ -1,1 +1,0 @@
-export { default as IconDesktopWindows } from './icon-desktop-windows.component.vue';

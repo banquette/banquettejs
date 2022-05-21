@@ -1,0 +1,1 @@
+export { default as IconRemixSuitcase3Line } from './suitcase-3-line.component.vue';

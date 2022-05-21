@@ -1,1 +1,0 @@
-export { default as IconWidgets } from './icon-widgets.component.vue';

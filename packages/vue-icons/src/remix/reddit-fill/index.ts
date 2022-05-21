@@ -1,0 +1,1 @@
+export { default as IconRemixRedditFill } from './reddit-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialGradient } from './gradient.component.vue';

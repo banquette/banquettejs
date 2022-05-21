@@ -1,0 +1,1 @@
+export { default as IconMaterialBlock } from './block.component.vue';

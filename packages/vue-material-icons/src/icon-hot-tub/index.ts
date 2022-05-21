@@ -1,1 +1,0 @@
-export { default as IconHotTub } from './icon-hot-tub.component.vue';

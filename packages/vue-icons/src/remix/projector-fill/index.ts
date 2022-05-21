@@ -1,0 +1,1 @@
+export { default as IconRemixProjectorFill } from './projector-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialZoomIn } from './zoom-in.component.vue';

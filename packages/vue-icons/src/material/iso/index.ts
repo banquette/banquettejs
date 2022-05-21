@@ -1,0 +1,1 @@
+export { default as IconMaterialIso } from './iso.component.vue';

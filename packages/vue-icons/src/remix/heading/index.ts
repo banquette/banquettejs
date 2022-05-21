@@ -1,0 +1,1 @@
+export { default as IconRemixHeading } from './heading.component.vue';

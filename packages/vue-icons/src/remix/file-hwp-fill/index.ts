@@ -1,0 +1,1 @@
+export { default as IconRemixFileHwpFill } from './file-hwp-fill.component.vue';

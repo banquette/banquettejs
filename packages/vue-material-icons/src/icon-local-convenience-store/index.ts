@@ -1,1 +1,0 @@
-export { default as IconLocalConvenienceStore } from './icon-local-convenience-store.component.vue';

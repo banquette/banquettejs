@@ -1,1 +1,0 @@
-export { default as IconWallpaper } from './icon-wallpaper.component.vue';

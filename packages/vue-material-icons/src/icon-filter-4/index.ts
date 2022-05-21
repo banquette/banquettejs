@@ -1,1 +1,0 @@
-export { default as IconFilter4 } from './icon-filter-4.component.vue';

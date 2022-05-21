@@ -1,0 +1,1 @@
+export { default as IconRemixFolderTransferLine } from './folder-transfer-line.component.vue';

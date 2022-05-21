@@ -1,0 +1,1 @@
+export { default as IconRemixSimCard2Fill } from './sim-card-2-fill.component.vue';

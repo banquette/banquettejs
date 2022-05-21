@@ -1,0 +1,1 @@
+export { default as IconRemixUserLocationFill } from './user-location-fill.component.vue';

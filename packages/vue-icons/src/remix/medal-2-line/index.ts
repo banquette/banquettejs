@@ -1,0 +1,1 @@
+export { default as IconRemixMedal2Line } from './medal-2-line.component.vue';

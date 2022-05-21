@@ -1,0 +1,1 @@
+export { default as IconMaterialTheaters } from './theaters.component.vue';

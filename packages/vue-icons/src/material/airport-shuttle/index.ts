@@ -1,0 +1,1 @@
+export { default as IconMaterialAirportShuttle } from './airport-shuttle.component.vue';

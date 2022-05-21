@@ -1,0 +1,1 @@
+export { default as IconRemixGooglePlayFill } from './google-play-fill.component.vue';

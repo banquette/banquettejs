@@ -1,0 +1,1 @@
+export { default as IconRemixUserSearchFill } from './user-search-fill.component.vue';

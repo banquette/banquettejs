@@ -1,0 +1,1 @@
+export { default as IconRemixQuestionMark } from './question-mark.component.vue';

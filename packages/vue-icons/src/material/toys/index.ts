@@ -1,0 +1,1 @@
+export { default as IconMaterialToys } from './toys.component.vue';

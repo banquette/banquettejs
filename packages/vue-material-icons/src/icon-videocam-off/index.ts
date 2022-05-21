@@ -1,1 +1,0 @@
-export { default as IconVideocamOff } from './icon-videocam-off.component.vue';

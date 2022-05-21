@@ -1,1 +1,0 @@
-export { default as IconSchedule } from './icon-schedule.component.vue';

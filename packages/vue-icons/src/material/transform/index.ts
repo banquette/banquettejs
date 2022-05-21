@@ -1,0 +1,1 @@
+export { default as IconMaterialTransform } from './transform.component.vue';

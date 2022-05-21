@@ -1,1 +1,0 @@
-export { default as IconCall } from './icon-call.component.vue';

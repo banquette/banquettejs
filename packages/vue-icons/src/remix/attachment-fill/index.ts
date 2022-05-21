@@ -1,0 +1,1 @@
+export { default as IconRemixAttachmentFill } from './attachment-fill.component.vue';

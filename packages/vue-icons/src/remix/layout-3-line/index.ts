@@ -1,0 +1,1 @@
+export { default as IconRemixLayout3Line } from './layout-3-line.component.vue';

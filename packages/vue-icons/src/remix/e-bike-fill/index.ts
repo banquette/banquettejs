@@ -1,0 +1,1 @@
+export { default as IconRemixEBikeFill } from './e-bike-fill.component.vue';

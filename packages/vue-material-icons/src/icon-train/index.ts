@@ -1,1 +1,0 @@
-export { default as IconTrain } from './icon-train.component.vue';

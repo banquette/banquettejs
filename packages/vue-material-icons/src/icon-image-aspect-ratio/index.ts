@@ -1,1 +1,0 @@
-export { default as IconImageAspectRatio } from './icon-image-aspect-ratio.component.vue';

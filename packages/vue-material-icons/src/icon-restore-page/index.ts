@@ -1,1 +1,0 @@
-export { default as IconRestorePage } from './icon-restore-page.component.vue';

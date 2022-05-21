@@ -1,0 +1,1 @@
+export { default as IconRemixRemoteControl2Fill } from './remote-control-2-fill.component.vue';

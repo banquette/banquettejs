@@ -1,0 +1,1 @@
+export { default as IconRemixSettings2Fill } from './settings-2-fill.component.vue';

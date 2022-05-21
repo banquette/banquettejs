@@ -1,1 +1,0 @@
-export { default as IconAlbum } from './icon-album.component.vue';

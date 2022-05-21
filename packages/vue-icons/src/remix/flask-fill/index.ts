@@ -1,0 +1,1 @@
+export { default as IconRemixFlaskFill } from './flask-fill.component.vue';

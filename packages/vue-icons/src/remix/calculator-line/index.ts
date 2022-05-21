@@ -1,0 +1,1 @@
+export { default as IconRemixCalculatorLine } from './calculator-line.component.vue';

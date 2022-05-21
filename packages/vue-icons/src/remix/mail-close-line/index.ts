@@ -1,0 +1,1 @@
+export { default as IconRemixMailCloseLine } from './mail-close-line.component.vue';

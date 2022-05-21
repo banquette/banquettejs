@@ -1,0 +1,1 @@
+export { default as IconRemixDislikeLine } from './dislike-line.component.vue';

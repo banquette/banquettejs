@@ -1,0 +1,1 @@
+export { default as IconRemixSkipForwardLine } from './skip-forward-line.component.vue';

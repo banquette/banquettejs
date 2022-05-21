@@ -1,0 +1,1 @@
+export { default as IconMaterialAddLocation } from './add-location.component.vue';

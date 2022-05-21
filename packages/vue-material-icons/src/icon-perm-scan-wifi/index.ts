@@ -1,1 +1,0 @@
-export { default as IconPermScanWifi } from './icon-perm-scan-wifi.component.vue';

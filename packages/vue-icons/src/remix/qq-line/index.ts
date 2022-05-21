@@ -1,0 +1,1 @@
+export { default as IconRemixQqLine } from './qq-line.component.vue';

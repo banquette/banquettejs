@@ -1,1 +1,0 @@
-export { default as IconBuild } from './icon-build.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconLooksTwo } from './icon-looks-two.component.vue';

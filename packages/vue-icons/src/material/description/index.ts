@@ -1,0 +1,1 @@
+export { default as IconMaterialDescription } from './description.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialLoyalty } from './loyalty.component.vue';

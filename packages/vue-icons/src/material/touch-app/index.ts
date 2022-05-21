@@ -1,0 +1,1 @@
+export { default as IconMaterialTouchApp } from './touch-app.component.vue';

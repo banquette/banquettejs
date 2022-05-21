@@ -1,1 +1,0 @@
-export { default as IconGrain } from './icon-grain.component.vue';

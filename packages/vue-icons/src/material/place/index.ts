@@ -1,0 +1,1 @@
+export { default as IconMaterialPlace } from './place.component.vue';

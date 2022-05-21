@@ -1,0 +1,1 @@
+export { default as IconRemixMicroscopeFill } from './microscope-fill.component.vue';

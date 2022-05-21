@@ -1,0 +1,1 @@
+export { default as IconRemixSuitcase3Fill } from './suitcase-3-fill.component.vue';

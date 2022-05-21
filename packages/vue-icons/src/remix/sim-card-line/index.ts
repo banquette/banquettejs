@@ -1,0 +1,1 @@
+export { default as IconRemixSimCardLine } from './sim-card-line.component.vue';

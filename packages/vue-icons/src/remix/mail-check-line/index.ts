@@ -1,0 +1,1 @@
+export { default as IconRemixMailCheckLine } from './mail-check-line.component.vue';

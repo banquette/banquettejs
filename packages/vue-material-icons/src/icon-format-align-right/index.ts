@@ -1,1 +1,0 @@
-export { default as IconFormatAlignRight } from './icon-format-align-right.component.vue';

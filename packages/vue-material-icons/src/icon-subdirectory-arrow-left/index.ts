@@ -1,1 +1,0 @@
-export { default as IconSubdirectoryArrowLeft } from './icon-subdirectory-arrow-left.component.vue';

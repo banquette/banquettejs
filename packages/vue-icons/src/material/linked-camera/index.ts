@@ -1,0 +1,1 @@
+export { default as IconMaterialLinkedCamera } from './linked-camera.component.vue';

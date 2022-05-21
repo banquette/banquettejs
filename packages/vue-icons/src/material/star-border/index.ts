@@ -1,0 +1,1 @@
+export { default as IconMaterialStarBorder } from './star-border.component.vue';

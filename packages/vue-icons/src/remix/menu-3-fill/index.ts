@@ -1,0 +1,1 @@
+export { default as IconRemixMenu3Fill } from './menu-3-fill.component.vue';

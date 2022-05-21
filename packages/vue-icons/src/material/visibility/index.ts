@@ -1,0 +1,1 @@
+export { default as IconMaterialVisibility } from './visibility.component.vue';

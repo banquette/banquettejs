@@ -1,0 +1,1 @@
+export { default as IconRemixCpuFill } from './cpu-fill.component.vue';

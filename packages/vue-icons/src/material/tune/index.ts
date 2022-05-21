@@ -1,0 +1,1 @@
+export { default as IconMaterialTune } from './tune.component.vue';

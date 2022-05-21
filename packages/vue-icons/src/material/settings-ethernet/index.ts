@@ -1,0 +1,1 @@
+export { default as IconMaterialSettingsEthernet } from './settings-ethernet.component.vue';

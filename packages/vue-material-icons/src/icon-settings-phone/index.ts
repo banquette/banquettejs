@@ -1,1 +1,0 @@
-export { default as IconSettingsPhone } from './icon-settings-phone.component.vue';

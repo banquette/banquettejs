@@ -1,0 +1,1 @@
+export { default as IconRemixSeparator } from './separator.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSettingsOverscan } from './settings-overscan.component.vue';

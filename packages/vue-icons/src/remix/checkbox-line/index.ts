@@ -1,0 +1,1 @@
+export { default as IconRemixCheckboxLine } from './checkbox-line.component.vue';

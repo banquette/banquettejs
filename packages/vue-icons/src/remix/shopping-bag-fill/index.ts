@@ -1,0 +1,1 @@
+export { default as IconRemixShoppingBagFill } from './shopping-bag-fill.component.vue';

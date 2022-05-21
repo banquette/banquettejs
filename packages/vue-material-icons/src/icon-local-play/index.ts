@@ -1,1 +1,0 @@
-export { default as IconLocalPlay } from './icon-local-play.component.vue';

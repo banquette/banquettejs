@@ -1,0 +1,1 @@
+export { default as IconRemixRestaurantLine } from './restaurant-line.component.vue';

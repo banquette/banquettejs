@@ -1,0 +1,1 @@
+export { default as IconRemix24HoursLine } from './24-hours-line.component.vue';

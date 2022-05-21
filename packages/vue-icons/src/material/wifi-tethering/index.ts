@@ -1,0 +1,1 @@
+export { default as IconMaterialWifiTethering } from './wifi-tethering.component.vue';

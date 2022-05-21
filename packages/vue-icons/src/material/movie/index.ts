@@ -1,0 +1,1 @@
+export { default as IconMaterialMovie } from './movie.component.vue';

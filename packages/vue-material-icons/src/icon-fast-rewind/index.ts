@@ -1,1 +1,0 @@
-export { default as IconFastRewind } from './icon-fast-rewind.component.vue';

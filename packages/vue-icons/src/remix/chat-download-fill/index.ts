@@ -1,0 +1,1 @@
+export { default as IconRemixChatDownloadFill } from './chat-download-fill.component.vue';

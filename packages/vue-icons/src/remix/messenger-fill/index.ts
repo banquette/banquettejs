@@ -1,0 +1,1 @@
+export { default as IconRemixMessengerFill } from './messenger-fill.component.vue';

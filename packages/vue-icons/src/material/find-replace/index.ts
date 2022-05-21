@@ -1,0 +1,1 @@
+export { default as IconMaterialFindReplace } from './find-replace.component.vue';

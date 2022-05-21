@@ -1,1 +1,0 @@
-export { default as IconNoteAdd } from './icon-note-add.component.vue';

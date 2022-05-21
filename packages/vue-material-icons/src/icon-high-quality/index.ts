@@ -1,1 +1,0 @@
-export { default as IconHighQuality } from './icon-high-quality.component.vue';

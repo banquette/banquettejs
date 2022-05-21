@@ -1,0 +1,1 @@
+export { default as IconRemixEye2Fill } from './eye-2-fill.component.vue';

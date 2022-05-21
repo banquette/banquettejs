@@ -1,0 +1,1 @@
+export { default as IconRemixDatabaseLine } from './database-line.component.vue';

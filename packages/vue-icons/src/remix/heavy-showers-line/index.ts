@@ -1,0 +1,1 @@
+export { default as IconRemixHeavyShowersLine } from './heavy-showers-line.component.vue';

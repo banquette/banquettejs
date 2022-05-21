@@ -1,0 +1,1 @@
+export { default as IconMaterialReply } from './reply.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixMoreFill } from './more-fill.component.vue';

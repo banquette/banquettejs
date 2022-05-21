@@ -1,0 +1,1 @@
+export { default as IconRemixFolderChartLine } from './folder-chart-line.component.vue';

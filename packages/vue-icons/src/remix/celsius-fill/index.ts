@@ -1,0 +1,1 @@
+export { default as IconRemixCelsiusFill } from './celsius-fill.component.vue';

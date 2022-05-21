@@ -1,0 +1,1 @@
+export { default as IconMaterialTurnedInNot } from './turned-in-not.component.vue';

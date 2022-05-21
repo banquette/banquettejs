@@ -1,1 +1,0 @@
-export { default as IconRestore } from './icon-restore.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconMusicNote } from './icon-music-note.component.vue';

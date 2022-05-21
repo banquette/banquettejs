@@ -1,0 +1,1 @@
+export { default as IconRemixBoxingLine } from './boxing-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAwardLine } from './award-line.component.vue';

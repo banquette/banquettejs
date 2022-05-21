@@ -1,0 +1,1 @@
+export { default as IconRemixPinyinInput } from './pinyin-input.component.vue';

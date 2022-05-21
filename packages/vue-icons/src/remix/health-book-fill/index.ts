@@ -1,0 +1,1 @@
+export { default as IconRemixHealthBookFill } from './health-book-fill.component.vue';

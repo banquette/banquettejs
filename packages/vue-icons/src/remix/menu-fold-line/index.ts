@@ -1,0 +1,1 @@
+export { default as IconRemixMenuFoldLine } from './menu-fold-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconStyle } from './icon-style.component.vue';

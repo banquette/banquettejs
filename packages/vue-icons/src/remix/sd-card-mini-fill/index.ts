@@ -1,0 +1,1 @@
+export { default as IconRemixSdCardMiniFill } from './sd-card-mini-fill.component.vue';

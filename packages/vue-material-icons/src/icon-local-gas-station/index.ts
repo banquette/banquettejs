@@ -1,1 +1,0 @@
-export { default as IconLocalGasStation } from './icon-local-gas-station.component.vue';

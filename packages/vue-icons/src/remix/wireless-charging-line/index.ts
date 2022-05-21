@@ -1,0 +1,1 @@
+export { default as IconRemixWirelessChargingLine } from './wireless-charging-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialRecentActors } from './recent-actors.component.vue';

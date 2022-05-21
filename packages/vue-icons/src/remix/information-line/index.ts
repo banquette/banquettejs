@@ -1,0 +1,1 @@
+export { default as IconRemixInformationLine } from './information-line.component.vue';

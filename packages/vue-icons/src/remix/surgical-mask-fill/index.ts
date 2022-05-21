@@ -1,0 +1,1 @@
+export { default as IconRemixSurgicalMaskFill } from './surgical-mask-fill.component.vue';

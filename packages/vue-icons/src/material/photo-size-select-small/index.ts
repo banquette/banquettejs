@@ -1,0 +1,1 @@
+export { default as IconMaterialPhotoSizeSelectSmall } from './photo-size-select-small.component.vue';

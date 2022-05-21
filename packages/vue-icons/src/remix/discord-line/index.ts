@@ -1,0 +1,1 @@
+export { default as IconRemixDiscordLine } from './discord-line.component.vue';

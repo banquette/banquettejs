@@ -1,1 +1,0 @@
-export { default as IconViewCompact } from './icon-view-compact.component.vue';

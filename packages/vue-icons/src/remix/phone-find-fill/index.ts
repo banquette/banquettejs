@@ -1,0 +1,1 @@
+export { default as IconRemixPhoneFindFill } from './phone-find-fill.component.vue';

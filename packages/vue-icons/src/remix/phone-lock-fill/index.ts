@@ -1,0 +1,1 @@
+export { default as IconRemixPhoneLockFill } from './phone-lock-fill.component.vue';

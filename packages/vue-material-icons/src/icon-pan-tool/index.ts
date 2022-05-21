@@ -1,1 +1,0 @@
-export { default as IconPanTool } from './icon-pan-tool.component.vue';

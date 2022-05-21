@@ -1,0 +1,1 @@
+export { default as IconRemixStackshareLine } from './stackshare-line.component.vue';

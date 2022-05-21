@@ -1,1 +1,0 @@
-export { default as IconStrikethroughS } from './icon-strikethrough-s.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconWebAsset } from './icon-web-asset.component.vue';

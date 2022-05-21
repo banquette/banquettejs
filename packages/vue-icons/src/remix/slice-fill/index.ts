@@ -1,0 +1,1 @@
+export { default as IconRemixSliceFill } from './slice-fill.component.vue';

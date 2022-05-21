@@ -1,1 +1,0 @@
-export { default as IconWbAuto } from './icon-wb-auto.component.vue';

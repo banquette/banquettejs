@@ -1,0 +1,1 @@
+export { default as IconRemixPencilFill } from './pencil-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixChat2Line } from './chat-2-line.component.vue';

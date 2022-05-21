@@ -1,1 +1,0 @@
-export { default as IconLocalDining } from './icon-local-dining.component.vue';

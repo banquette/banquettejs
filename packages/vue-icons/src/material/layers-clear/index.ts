@@ -1,0 +1,1 @@
+export { default as IconMaterialLayersClear } from './layers-clear.component.vue';

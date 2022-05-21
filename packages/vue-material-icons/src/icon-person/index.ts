@@ -1,1 +1,0 @@
-export { default as IconPerson } from './icon-person.component.vue';

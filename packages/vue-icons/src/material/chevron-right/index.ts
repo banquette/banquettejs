@@ -1,0 +1,1 @@
+export { default as IconMaterialChevronRight } from './chevron-right.component.vue';

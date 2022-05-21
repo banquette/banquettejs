@@ -1,0 +1,1 @@
+export { default as IconRemixAlertLine } from './alert-line.component.vue';

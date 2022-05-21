@@ -1,0 +1,1 @@
+export { default as IconRemixAliensLine } from './aliens-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixMeteorFill } from './meteor-fill.component.vue';

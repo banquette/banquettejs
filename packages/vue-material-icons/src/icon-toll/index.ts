@@ -1,1 +1,0 @@
-export { default as IconToll } from './icon-toll.component.vue';

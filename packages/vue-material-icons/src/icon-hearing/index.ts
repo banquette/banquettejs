@@ -1,1 +1,0 @@
-export { default as IconHearing } from './icon-hearing.component.vue';

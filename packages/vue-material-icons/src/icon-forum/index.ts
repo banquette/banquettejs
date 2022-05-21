@@ -1,1 +1,0 @@
-export { default as IconForum } from './icon-forum.component.vue';

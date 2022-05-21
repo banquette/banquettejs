@@ -1,0 +1,1 @@
+export { default as IconMaterialGetApp } from './get-app.component.vue';

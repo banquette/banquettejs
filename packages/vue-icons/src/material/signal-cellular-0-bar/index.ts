@@ -1,0 +1,1 @@
+export { default as IconMaterialSignalCellular0Bar } from './signal-cellular-0-bar.component.vue';

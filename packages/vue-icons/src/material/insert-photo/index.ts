@@ -1,0 +1,1 @@
+export { default as IconMaterialInsertPhoto } from './insert-photo.component.vue';

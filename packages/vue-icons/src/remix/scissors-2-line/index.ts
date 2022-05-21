@@ -1,0 +1,1 @@
+export { default as IconRemixScissors2Line } from './scissors-2-line.component.vue';

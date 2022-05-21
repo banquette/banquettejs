@@ -1,1 +1,0 @@
-export { default as IconEventBusy } from './icon-event-busy.component.vue';

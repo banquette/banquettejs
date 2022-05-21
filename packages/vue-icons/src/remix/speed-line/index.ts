@@ -1,0 +1,1 @@
+export { default as IconRemixSpeedLine } from './speed-line.component.vue';

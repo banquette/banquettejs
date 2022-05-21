@@ -1,0 +1,1 @@
+export { default as IconRemixBasketballFill } from './basketball-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialLabel } from './label.component.vue';

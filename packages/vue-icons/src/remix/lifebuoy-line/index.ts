@@ -1,0 +1,1 @@
+export { default as IconRemixLifebuoyLine } from './lifebuoy-line.component.vue';

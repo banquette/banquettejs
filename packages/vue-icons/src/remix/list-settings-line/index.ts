@@ -1,0 +1,1 @@
+export { default as IconRemixListSettingsLine } from './list-settings-line.component.vue';

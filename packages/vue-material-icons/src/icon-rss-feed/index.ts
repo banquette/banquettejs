@@ -1,1 +1,0 @@
-export { default as IconRssFeed } from './icon-rss-feed.component.vue';

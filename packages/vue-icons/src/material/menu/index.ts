@@ -1,0 +1,1 @@
+export { default as IconMaterialMenu } from './menu.component.vue';

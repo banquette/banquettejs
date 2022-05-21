@@ -1,0 +1,1 @@
+export { default as IconMaterialHdrOn } from './hdr-on.component.vue';

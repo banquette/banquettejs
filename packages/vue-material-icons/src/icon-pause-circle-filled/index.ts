@@ -1,1 +1,0 @@
-export { default as IconPauseCircleFilled } from './icon-pause-circle-filled.component.vue';

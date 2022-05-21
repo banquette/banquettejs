@@ -1,1 +1,0 @@
-export { default as IconRecordVoiceOver } from './icon-record-voice-over.component.vue';

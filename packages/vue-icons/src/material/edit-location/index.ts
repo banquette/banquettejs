@@ -1,0 +1,1 @@
+export { default as IconMaterialEditLocation } from './edit-location.component.vue';

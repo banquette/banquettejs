@@ -1,0 +1,1 @@
+export { default as IconRemixWindowsFill } from './windows-fill.component.vue';

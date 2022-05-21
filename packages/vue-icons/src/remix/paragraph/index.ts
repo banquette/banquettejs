@@ -1,0 +1,1 @@
+export { default as IconRemixParagraph } from './paragraph.component.vue';

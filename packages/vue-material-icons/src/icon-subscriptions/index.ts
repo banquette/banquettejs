@@ -1,1 +1,0 @@
-export { default as IconSubscriptions } from './icon-subscriptions.component.vue';

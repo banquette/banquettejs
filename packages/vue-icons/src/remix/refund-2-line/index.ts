@@ -1,0 +1,1 @@
+export { default as IconRemixRefund2Line } from './refund-2-line.component.vue';

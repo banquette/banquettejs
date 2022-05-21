@@ -1,0 +1,1 @@
+export { default as IconRemixFileDamageLine } from './file-damage-line.component.vue';

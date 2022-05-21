@@ -1,0 +1,1 @@
+export { default as IconRemixMailAddLine } from './mail-add-line.component.vue';

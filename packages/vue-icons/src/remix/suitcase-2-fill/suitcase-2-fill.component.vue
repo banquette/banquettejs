@@ -1,0 +1,14 @@
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+
+@Component('i-remix-suitcase-2-fill')
+export default class IconRemixSuitcase2Fill {
+    @Prop({type: [String, Number], default: '1em'}) public size!: string|number|null;
+    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
+    @Prop({type: Boolean, default: false}) public crop!: boolean;
+}
+</script>
+<template>
+    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 2 18 21' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M18 23h-2v-1H8v1H6v-1H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h3a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-1v1zM10 9H8v9h2V9zm6 0h-2v9h2V9zm-2-5h-4v1h4V4z"/></svg></span>
+</template>

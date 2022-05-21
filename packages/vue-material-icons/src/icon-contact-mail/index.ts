@@ -1,1 +1,0 @@
-export { default as IconContactMail } from './icon-contact-mail.component.vue';

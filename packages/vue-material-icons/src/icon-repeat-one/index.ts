@@ -1,1 +1,0 @@
-export { default as IconRepeatOne } from './icon-repeat-one.component.vue';

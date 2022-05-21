@@ -1,0 +1,1 @@
+export { default as IconRemixCalendar2Line } from './calendar-2-line.component.vue';

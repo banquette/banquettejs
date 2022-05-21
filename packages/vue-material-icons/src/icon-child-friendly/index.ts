@@ -1,1 +1,0 @@
-export { default as IconChildFriendly } from './icon-child-friendly.component.vue';

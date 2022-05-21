@@ -1,1 +1,0 @@
-export { default as IconLowPriority } from './icon-low-priority.component.vue';

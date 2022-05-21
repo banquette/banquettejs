@@ -1,1 +1,0 @@
-export { default as IconFormatAlignCenter } from './icon-format-align-center.component.vue';

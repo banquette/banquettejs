@@ -1,0 +1,1 @@
+export { default as IconRemixHdLine } from './hd-line.component.vue';

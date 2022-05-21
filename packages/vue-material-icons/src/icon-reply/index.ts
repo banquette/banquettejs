@@ -1,1 +1,0 @@
-export { default as IconReply } from './icon-reply.component.vue';

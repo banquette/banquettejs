@@ -1,0 +1,1 @@
+export { default as IconRemixOperaLine } from './opera-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialAudiotrack } from './audiotrack.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixArrowGoBackFill } from './arrow-go-back-fill.component.vue';

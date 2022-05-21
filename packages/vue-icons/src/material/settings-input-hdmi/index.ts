@@ -1,0 +1,1 @@
+export { default as IconMaterialSettingsInputHdmi } from './settings-input-hdmi.component.vue';

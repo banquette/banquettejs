@@ -1,0 +1,1 @@
+export { default as IconRemixCommandLine } from './command-line.component.vue';

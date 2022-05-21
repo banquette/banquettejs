@@ -1,0 +1,1 @@
+export { default as IconRemixOmega } from './omega.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialCached } from './cached.component.vue';

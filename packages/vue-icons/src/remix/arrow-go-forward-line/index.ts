@@ -1,0 +1,1 @@
+export { default as IconRemixArrowGoForwardLine } from './arrow-go-forward-line.component.vue';

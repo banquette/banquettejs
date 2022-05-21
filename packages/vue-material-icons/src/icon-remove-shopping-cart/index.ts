@@ -1,1 +1,0 @@
-export { default as IconRemoveShoppingCart } from './icon-remove-shopping-cart.component.vue';

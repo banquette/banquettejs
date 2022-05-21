@@ -1,0 +1,1 @@
+export { default as IconRemixFilePpt2Line } from './file-ppt-2-line.component.vue';

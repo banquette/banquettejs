@@ -1,0 +1,1 @@
+export { default as IconMaterialCropLandscape } from './crop-landscape.component.vue';

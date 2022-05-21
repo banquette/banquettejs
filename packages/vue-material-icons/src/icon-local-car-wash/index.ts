@@ -1,1 +1,0 @@
-export { default as IconLocalCarWash } from './icon-local-car-wash.component.vue';

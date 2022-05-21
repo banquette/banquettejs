@@ -1,0 +1,1 @@
+export { default as IconRemixRecordCircleFill } from './record-circle-fill.component.vue';

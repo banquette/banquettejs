@@ -1,1 +1,0 @@
-export { default as IconSettingsBackupRestore } from './icon-settings-backup-restore.component.vue';

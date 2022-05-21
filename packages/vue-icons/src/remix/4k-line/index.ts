@@ -1,0 +1,1 @@
+export { default as IconRemix4kLine } from './4k-line.component.vue';

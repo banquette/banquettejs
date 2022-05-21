@@ -1,0 +1,1 @@
+export { default as IconMaterialHelp } from './help.component.vue';

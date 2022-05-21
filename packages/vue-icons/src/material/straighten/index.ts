@@ -1,0 +1,1 @@
+export { default as IconMaterialStraighten } from './straighten.component.vue';

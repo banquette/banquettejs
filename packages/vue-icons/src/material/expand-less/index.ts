@@ -1,0 +1,1 @@
+export { default as IconMaterialExpandLess } from './expand-less.component.vue';

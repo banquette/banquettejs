@@ -1,1 +1,0 @@
-export { default as IconLocalMovies } from './icon-local-movies.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialDirectionsRun } from './directions-run.component.vue';

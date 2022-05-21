@@ -1,0 +1,1 @@
+export { default as IconMaterialViewCompact } from './view-compact.component.vue';

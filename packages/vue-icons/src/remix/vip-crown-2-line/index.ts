@@ -1,0 +1,1 @@
+export { default as IconRemixVipCrown2Line } from './vip-crown-2-line.component.vue';

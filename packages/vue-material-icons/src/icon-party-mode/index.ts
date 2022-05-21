@@ -1,1 +1,0 @@
-export { default as IconPartyMode } from './icon-party-mode.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconFeedback } from './icon-feedback.component.vue';

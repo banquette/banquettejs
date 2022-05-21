@@ -1,0 +1,1 @@
+export { default as IconMaterialFilterList } from './filter-list.component.vue';

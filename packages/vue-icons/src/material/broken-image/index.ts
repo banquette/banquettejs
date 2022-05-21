@@ -1,0 +1,1 @@
+export { default as IconMaterialBrokenImage } from './broken-image.component.vue';

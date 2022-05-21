@@ -1,1 +1,0 @@
-export { default as IconEventSeat } from './icon-event-seat.component.vue';

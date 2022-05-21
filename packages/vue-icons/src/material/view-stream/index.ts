@@ -1,0 +1,1 @@
+export { default as IconMaterialViewStream } from './view-stream.component.vue';

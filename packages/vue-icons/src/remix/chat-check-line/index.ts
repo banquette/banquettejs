@@ -1,0 +1,1 @@
+export { default as IconRemixChatCheckLine } from './chat-check-line.component.vue';

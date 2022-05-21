@@ -1,0 +1,1 @@
+export { default as IconMaterialSend } from './send.component.vue';

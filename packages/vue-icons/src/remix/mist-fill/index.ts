@@ -1,0 +1,1 @@
+export { default as IconRemixMistFill } from './mist-fill.component.vue';

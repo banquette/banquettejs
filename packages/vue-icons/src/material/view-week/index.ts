@@ -1,0 +1,1 @@
+export { default as IconMaterialViewWeek } from './view-week.component.vue';

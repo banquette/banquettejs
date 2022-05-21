@@ -1,0 +1,1 @@
+export { default as IconRemixZzzFill } from './zzz-fill.component.vue';

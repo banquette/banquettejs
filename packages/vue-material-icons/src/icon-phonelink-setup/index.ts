@@ -1,1 +1,0 @@
-export { default as IconPhonelinkSetup } from './icon-phonelink-setup.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconFindInPage } from './icon-find-in-page.component.vue';

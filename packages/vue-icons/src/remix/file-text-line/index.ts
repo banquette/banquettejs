@@ -1,0 +1,1 @@
+export { default as IconRemixFileTextLine } from './file-text-line.component.vue';

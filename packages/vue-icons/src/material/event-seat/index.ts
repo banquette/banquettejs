@@ -1,0 +1,1 @@
+export { default as IconMaterialEventSeat } from './event-seat.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixUserVoiceFill } from './user-voice-fill.component.vue';

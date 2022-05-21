@@ -1,0 +1,1 @@
+export { default as IconMaterialLeakRemove } from './leak-remove.component.vue';

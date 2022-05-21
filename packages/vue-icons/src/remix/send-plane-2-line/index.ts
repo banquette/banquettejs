@@ -1,0 +1,1 @@
+export { default as IconRemixSendPlane2Line } from './send-plane-2-line.component.vue';

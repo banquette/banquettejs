@@ -1,0 +1,1 @@
+export { default as IconRemixSkypeLine } from './skype-line.component.vue';

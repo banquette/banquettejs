@@ -1,0 +1,27 @@
+
+.bt-icon {
+    --icon-color: var(--bt-icon-color, currentColor);
+    --icon-size: var(--bt-icon-size, 1em);
+
+    display: inline-block;
+    line-height: 0;
+}
+
+.bt-icon :deep(svg:not([fill])) {
+    fill: var(--icon-color);
+}
+
+.bt-icon :deep(svg:not([width])) {
+    width: var(--icon-size);
+}
+
+.bt-icon :deep(svg:not([height])) {
+    height: var(--icon-size);
+}
+
+span.missing {
+    display: inline-block;
+    padding: 5px;
+    background: #ff00ff;
+    line-height: 0;
+}

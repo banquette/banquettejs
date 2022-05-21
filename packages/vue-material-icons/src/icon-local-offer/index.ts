@@ -1,1 +1,0 @@
-export { default as IconLocalOffer } from './icon-local-offer.component.vue';

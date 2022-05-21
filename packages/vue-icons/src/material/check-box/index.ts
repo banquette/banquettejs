@@ -1,0 +1,1 @@
+export { default as IconMaterialCheckBox } from './check-box.component.vue';

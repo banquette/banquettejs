@@ -1,0 +1,1 @@
+export { default as IconRemixShieldFlashLine } from './shield-flash-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixSignalTowerFill } from './signal-tower-fill.component.vue';

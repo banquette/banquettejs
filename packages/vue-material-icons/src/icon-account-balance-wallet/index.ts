@@ -1,1 +1,0 @@
-export { default as IconAccountBalanceWallet } from './icon-account-balance-wallet.component.vue';

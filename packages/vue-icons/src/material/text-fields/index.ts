@@ -1,0 +1,1 @@
+export { default as IconMaterialTextFields } from './text-fields.component.vue';

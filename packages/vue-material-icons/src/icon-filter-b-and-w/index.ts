@@ -1,1 +1,0 @@
-export { default as IconFilterBAndW } from './icon-filter-b-and-w.component.vue';

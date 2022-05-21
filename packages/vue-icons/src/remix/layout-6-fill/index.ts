@@ -1,0 +1,1 @@
+export { default as IconRemixLayout6Fill } from './layout-6-fill.component.vue';

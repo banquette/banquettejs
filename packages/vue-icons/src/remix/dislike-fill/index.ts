@@ -1,0 +1,1 @@
+export { default as IconRemixDislikeFill } from './dislike-fill.component.vue';

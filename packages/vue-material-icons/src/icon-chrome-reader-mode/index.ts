@@ -1,1 +1,0 @@
-export { default as IconChromeReaderMode } from './icon-chrome-reader-mode.component.vue';

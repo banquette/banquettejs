@@ -1,0 +1,1 @@
+export { default as IconRemixInkBottleLine } from './ink-bottle-line.component.vue';

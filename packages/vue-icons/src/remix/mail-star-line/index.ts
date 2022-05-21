@@ -1,0 +1,1 @@
+export { default as IconRemixMailStarLine } from './mail-star-line.component.vue';

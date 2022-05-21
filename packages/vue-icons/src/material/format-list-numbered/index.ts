@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatListNumbered } from './format-list-numbered.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconScreenRotation } from './icon-screen-rotation.component.vue';

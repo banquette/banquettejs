@@ -1,1 +1,0 @@
-export { default as IconHdrWeak } from './icon-hdr-weak.component.vue';

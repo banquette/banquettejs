@@ -1,0 +1,1 @@
+export { default as IconMaterialCollectionsBookmark } from './collections-bookmark.component.vue';

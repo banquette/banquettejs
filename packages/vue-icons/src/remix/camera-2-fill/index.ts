@@ -1,0 +1,1 @@
+export { default as IconRemixCamera2Fill } from './camera-2-fill.component.vue';

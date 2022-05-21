@@ -1,0 +1,1 @@
+export { default as IconRemixSubscript2 } from './subscript-2.component.vue';

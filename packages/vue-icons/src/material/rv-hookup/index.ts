@@ -1,0 +1,1 @@
+export { default as IconMaterialRvHookup } from './rv-hookup.component.vue';

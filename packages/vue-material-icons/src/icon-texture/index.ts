@@ -1,1 +1,0 @@
-export { default as IconTexture } from './icon-texture.component.vue';

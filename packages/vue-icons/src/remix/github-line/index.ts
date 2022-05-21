@@ -1,0 +1,1 @@
+export { default as IconRemixGithubLine } from './github-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialAdjust } from './adjust.component.vue';

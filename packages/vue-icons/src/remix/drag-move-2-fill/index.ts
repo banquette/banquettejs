@@ -1,0 +1,1 @@
+export { default as IconRemixDragMove2Fill } from './drag-move-2-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFacebookCircleFill } from './facebook-circle-fill.component.vue';

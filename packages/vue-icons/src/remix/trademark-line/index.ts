@@ -1,0 +1,1 @@
+export { default as IconRemixTrademarkLine } from './trademark-line.component.vue';

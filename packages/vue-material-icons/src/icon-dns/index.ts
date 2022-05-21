@@ -1,1 +1,0 @@
-export { default as IconDns } from './icon-dns.component.vue';

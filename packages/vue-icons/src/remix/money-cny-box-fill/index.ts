@@ -1,0 +1,1 @@
+export { default as IconRemixMoneyCnyBoxFill } from './money-cny-box-fill.component.vue';

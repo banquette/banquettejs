@@ -1,0 +1,1 @@
+export { default as IconRemixHonourFill } from './honour-fill.component.vue';

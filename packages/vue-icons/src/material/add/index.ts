@@ -1,0 +1,1 @@
+export { default as IconMaterialAdd } from './add.component.vue';

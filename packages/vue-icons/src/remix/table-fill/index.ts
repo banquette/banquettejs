@@ -1,0 +1,1 @@
+export { default as IconRemixTableFill } from './table-fill.component.vue';

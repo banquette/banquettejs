@@ -1,0 +1,1 @@
+export { default as IconRemixGlobeFill } from './globe-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFlowChart } from './flow-chart.component.vue';

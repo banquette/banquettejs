@@ -1,0 +1,1 @@
+export { default as IconMaterialForum } from './forum.component.vue';

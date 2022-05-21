@@ -1,0 +1,1 @@
+export { default as IconRemixGpsFill } from './gps-fill.component.vue';

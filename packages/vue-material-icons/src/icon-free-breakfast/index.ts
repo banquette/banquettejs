@@ -1,1 +1,0 @@
-export { default as IconFreeBreakfast } from './icon-free-breakfast.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixCodeSFill } from './code-s-fill.component.vue';

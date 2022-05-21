@@ -1,0 +1,14 @@
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+
+@Component('i-remix-creative-commons-zero-fill')
+export default class IconRemixCreativeCommonsZeroFill {
+    @Prop({type: [String, Number], default: '1em'}) public size!: string|number|null;
+    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
+    @Prop({type: Boolean, default: false}) public crop!: boolean;
+}
+</script>
+<template>
+    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 2 20 20' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 4c-2.761 0-5 2.686-5 6s2.239 6 5 6 5-2.686 5-6-2.239-6-5-6zm2.325 3.472c.422.69.675 1.57.675 2.528 0 2.21-1.343 4-3 4-.378 0-.74-.093-1.073-.263l-.164-.092 3.562-6.173zM12 8c.378 0 .74.093 1.073.263l.164.092-3.562 6.173C9.253 13.838 9 12.958 9 12c0-2.21 1.343-4 3-4z"/></svg></span>
+</template>

@@ -1,0 +1,1 @@
+export { default as IconRemixGoogleFill } from './google-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixStoreLine } from './store-line.component.vue';

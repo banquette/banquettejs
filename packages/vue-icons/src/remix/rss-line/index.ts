@@ -1,0 +1,1 @@
+export { default as IconRemixRssLine } from './rss-line.component.vue';

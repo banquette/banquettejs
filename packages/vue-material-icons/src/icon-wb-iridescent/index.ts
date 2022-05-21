@@ -1,1 +1,0 @@
-export { default as IconWbIridescent } from './icon-wb-iridescent.component.vue';

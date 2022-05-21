@@ -1,1 +1,0 @@
-export { default as IconDehaze } from './icon-dehaze.component.vue';

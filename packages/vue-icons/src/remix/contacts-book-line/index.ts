@@ -1,0 +1,1 @@
+export { default as IconRemixContactsBookLine } from './contacts-book-line.component.vue';

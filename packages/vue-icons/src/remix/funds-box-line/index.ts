@@ -1,0 +1,1 @@
+export { default as IconRemixFundsBoxLine } from './funds-box-line.component.vue';

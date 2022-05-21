@@ -1,1 +1,0 @@
-export { default as IconEject } from './icon-eject.component.vue';

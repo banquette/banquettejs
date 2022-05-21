@@ -1,1 +1,0 @@
-export { default as IconSettingsApplications } from './icon-settings-applications.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFilterFill } from './filter-fill.component.vue';

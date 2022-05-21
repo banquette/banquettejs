@@ -1,0 +1,1 @@
+export { default as IconRemixFolderShield2Line } from './folder-shield-2-line.component.vue';

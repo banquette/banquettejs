@@ -1,0 +1,1 @@
+export { default as IconMaterialSort } from './sort.component.vue';

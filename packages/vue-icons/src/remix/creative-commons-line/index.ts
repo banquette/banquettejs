@@ -1,0 +1,1 @@
+export { default as IconRemixCreativeCommonsLine } from './creative-commons-line.component.vue';

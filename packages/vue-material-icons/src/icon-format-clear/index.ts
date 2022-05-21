@@ -1,1 +1,0 @@
-export { default as IconFormatClear } from './icon-format-clear.component.vue';

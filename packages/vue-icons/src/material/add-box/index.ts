@@ -1,0 +1,1 @@
+export { default as IconMaterialAddBox } from './add-box.component.vue';

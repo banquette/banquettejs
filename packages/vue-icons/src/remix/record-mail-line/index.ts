@@ -1,0 +1,1 @@
+export { default as IconRemixRecordMailLine } from './record-mail-line.component.vue';

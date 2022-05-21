@@ -1,0 +1,1 @@
+export { default as IconRemixChinaRailwayFill } from './china-railway-fill.component.vue';

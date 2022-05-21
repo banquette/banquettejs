@@ -1,1 +1,0 @@
-export { default as IconFeaturedPlayList } from './icon-featured-play-list.component.vue';

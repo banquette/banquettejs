@@ -1,1 +1,0 @@
-export { default as IconHome } from './icon-home.component.vue';

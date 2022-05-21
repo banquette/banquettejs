@@ -1,0 +1,1 @@
+export { default as IconRemixShutDownLine } from './shut-down-line.component.vue';

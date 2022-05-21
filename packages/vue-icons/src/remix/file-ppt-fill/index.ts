@@ -1,0 +1,1 @@
+export { default as IconRemixFilePptFill } from './file-ppt-fill.component.vue';

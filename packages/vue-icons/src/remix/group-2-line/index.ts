@@ -1,0 +1,1 @@
+export { default as IconRemixGroup2Line } from './group-2-line.component.vue';

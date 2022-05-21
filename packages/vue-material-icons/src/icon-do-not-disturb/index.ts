@@ -1,1 +1,0 @@
-export { default as IconDoNotDisturb } from './icon-do-not-disturb.component.vue';

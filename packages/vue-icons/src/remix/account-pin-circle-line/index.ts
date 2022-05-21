@@ -1,0 +1,1 @@
+export { default as IconRemixAccountPinCircleLine } from './account-pin-circle-line.component.vue';

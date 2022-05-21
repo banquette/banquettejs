@@ -1,0 +1,1 @@
+export { default as IconRemixPinterestLine } from './pinterest-line.component.vue';

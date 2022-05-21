@@ -1,0 +1,1 @@
+export { default as IconRemixNotificationBadgeLine } from './notification-badge-line.component.vue';

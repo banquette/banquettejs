@@ -1,1 +1,0 @@
-export { default as IconCenterFocusStrong } from './icon-center-focus-strong.component.vue';

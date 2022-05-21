@@ -1,1 +1,0 @@
-export { default as IconStayCurrentLandscape } from './icon-stay-current-landscape.component.vue';

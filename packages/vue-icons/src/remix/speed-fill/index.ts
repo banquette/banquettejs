@@ -1,0 +1,1 @@
+export { default as IconRemixSpeedFill } from './speed-fill.component.vue';

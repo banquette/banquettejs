@@ -1,0 +1,1 @@
+export { default as IconMaterialContentCopy } from './content-copy.component.vue';

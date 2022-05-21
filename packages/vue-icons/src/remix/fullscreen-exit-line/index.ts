@@ -1,0 +1,1 @@
+export { default as IconRemixFullscreenExitLine } from './fullscreen-exit-line.component.vue';

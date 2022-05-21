@@ -1,1 +1,0 @@
-export { default as IconControlPoint } from './icon-control-point.component.vue';

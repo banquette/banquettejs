@@ -1,0 +1,1 @@
+export { default as IconRemixGoogleLine } from './google-line.component.vue';

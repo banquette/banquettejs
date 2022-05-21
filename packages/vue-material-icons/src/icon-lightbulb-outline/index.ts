@@ -1,1 +1,0 @@
-export { default as IconLightbulbOutline } from './icon-lightbulb-outline.component.vue';

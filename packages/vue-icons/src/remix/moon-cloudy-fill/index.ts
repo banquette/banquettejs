@@ -1,0 +1,1 @@
+export { default as IconRemixMoonCloudyFill } from './moon-cloudy-fill.component.vue';

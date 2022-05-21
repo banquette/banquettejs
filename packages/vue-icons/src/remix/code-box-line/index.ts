@@ -1,0 +1,1 @@
+export { default as IconRemixCodeBoxLine } from './code-box-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAlertFill } from './alert-fill.component.vue';

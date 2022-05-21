@@ -1,0 +1,1 @@
+export { default as IconMaterialDoNotDisturbAlt } from './do-not-disturb-alt.component.vue';

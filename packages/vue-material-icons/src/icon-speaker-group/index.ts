@@ -1,1 +1,0 @@
-export { default as IconSpeakerGroup } from './icon-speaker-group.component.vue';

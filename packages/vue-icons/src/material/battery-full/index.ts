@@ -1,0 +1,1 @@
+export { default as IconMaterialBatteryFull } from './battery-full.component.vue';

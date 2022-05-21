@@ -1,0 +1,1 @@
+export { default as IconRemixBodyScanFill } from './body-scan-fill.component.vue';

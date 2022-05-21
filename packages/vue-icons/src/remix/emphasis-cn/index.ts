@@ -1,0 +1,1 @@
+export { default as IconRemixEmphasisCn } from './emphasis-cn.component.vue';

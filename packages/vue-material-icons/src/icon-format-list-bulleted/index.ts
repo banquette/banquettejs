@@ -1,1 +1,0 @@
-export { default as IconFormatListBulleted } from './icon-format-list-bulleted.component.vue';

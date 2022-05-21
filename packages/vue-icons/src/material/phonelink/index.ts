@@ -1,0 +1,1 @@
+export { default as IconMaterialPhonelink } from './phonelink.component.vue';

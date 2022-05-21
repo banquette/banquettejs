@@ -1,0 +1,1 @@
+export { default as IconRemixBugFill } from './bug-fill.component.vue';

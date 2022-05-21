@@ -1,0 +1,1 @@
+export { default as IconRemixLandscapeLine } from './landscape-line.component.vue';

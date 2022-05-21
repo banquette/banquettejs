@@ -1,0 +1,1 @@
+export { default as IconRemixCoinLine } from './coin-line.component.vue';

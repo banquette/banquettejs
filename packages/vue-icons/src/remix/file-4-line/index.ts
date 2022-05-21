@@ -1,0 +1,1 @@
+export { default as IconRemixFile4Line } from './file-4-line.component.vue';

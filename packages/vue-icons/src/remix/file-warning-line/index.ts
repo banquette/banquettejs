@@ -1,0 +1,1 @@
+export { default as IconRemixFileWarningLine } from './file-warning-line.component.vue';

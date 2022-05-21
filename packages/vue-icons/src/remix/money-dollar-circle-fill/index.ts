@@ -1,0 +1,1 @@
+export { default as IconRemixMoneyDollarCircleFill } from './money-dollar-circle-fill.component.vue';

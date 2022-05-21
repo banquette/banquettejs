@@ -1,1 +1,0 @@
-export { default as IconCrop54 } from './icon-crop-5-4.component.vue';

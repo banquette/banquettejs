@@ -1,1 +1,0 @@
-export { default as IconKeyboardTab } from './icon-keyboard-tab.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixMoneyCnyCircleLine } from './money-cny-circle-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixGitRepositoryLine } from './git-repository-line.component.vue';

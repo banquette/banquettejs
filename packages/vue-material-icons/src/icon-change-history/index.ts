@@ -1,1 +1,0 @@
-export { default as IconChangeHistory } from './icon-change-history.component.vue';

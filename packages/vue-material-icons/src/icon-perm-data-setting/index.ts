@@ -1,1 +1,0 @@
-export { default as IconPermDataSetting } from './icon-perm-data-setting.component.vue';

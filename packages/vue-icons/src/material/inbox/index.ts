@@ -1,0 +1,1 @@
+export { default as IconMaterialInbox } from './inbox.component.vue';

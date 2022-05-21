@@ -1,1 +1,0 @@
-export { default as IconLocalLibrary } from './icon-local-library.component.vue';

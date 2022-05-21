@@ -1,0 +1,1 @@
+export { default as IconMaterialAirlineSeatFlatAngled } from './airline-seat-flat-angled.component.vue';

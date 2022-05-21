@@ -1,0 +1,1 @@
+export { default as IconRemixCreativeCommonsNcFill } from './creative-commons-nc-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixPoliceCarLine } from './police-car-line.component.vue';

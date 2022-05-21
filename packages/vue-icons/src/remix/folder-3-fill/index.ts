@@ -1,0 +1,1 @@
+export { default as IconRemixFolder3Fill } from './folder-3-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconAssignmentReturned } from './icon-assignment-returned.component.vue';

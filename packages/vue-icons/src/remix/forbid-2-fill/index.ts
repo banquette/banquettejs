@@ -1,0 +1,1 @@
+export { default as IconRemixForbid2Fill } from './forbid-2-fill.component.vue';

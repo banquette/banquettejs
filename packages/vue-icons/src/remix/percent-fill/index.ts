@@ -1,0 +1,1 @@
+export { default as IconRemixPercentFill } from './percent-fill.component.vue';

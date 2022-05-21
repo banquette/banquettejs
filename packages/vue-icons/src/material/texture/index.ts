@@ -1,0 +1,1 @@
+export { default as IconMaterialTexture } from './texture.component.vue';

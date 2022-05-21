@@ -1,1 +1,0 @@
-export { default as IconBluetoothConnected } from './icon-bluetooth-connected.component.vue';

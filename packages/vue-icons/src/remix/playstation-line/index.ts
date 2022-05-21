@@ -1,0 +1,1 @@
+export { default as IconRemixPlaystationLine } from './playstation-line.component.vue';

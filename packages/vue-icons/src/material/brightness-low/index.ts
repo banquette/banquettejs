@@ -1,0 +1,1 @@
+export { default as IconMaterialBrightnessLow } from './brightness-low.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixBringToFront } from './bring-to-front.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAlignTop } from './align-top.component.vue';

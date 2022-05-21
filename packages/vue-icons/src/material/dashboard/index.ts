@@ -1,0 +1,1 @@
+export { default as IconMaterialDashboard } from './dashboard.component.vue';

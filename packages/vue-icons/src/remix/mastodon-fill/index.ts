@@ -1,0 +1,1 @@
+export { default as IconRemixMastodonFill } from './mastodon-fill.component.vue';

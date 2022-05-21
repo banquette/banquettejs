@@ -1,1 +1,0 @@
-export { default as IconSystemUpdateAlt } from './icon-system-update-alt.component.vue';

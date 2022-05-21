@@ -1,0 +1,1 @@
+export { default as IconRemixCoinFill } from './coin-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixGitBranchLine } from './git-branch-line.component.vue';

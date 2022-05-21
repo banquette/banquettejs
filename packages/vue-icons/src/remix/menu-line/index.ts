@@ -1,0 +1,1 @@
+export { default as IconRemixMenuLine } from './menu-line.component.vue';

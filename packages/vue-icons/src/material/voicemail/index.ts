@@ -1,0 +1,1 @@
+export { default as IconMaterialVoicemail } from './voicemail.component.vue';

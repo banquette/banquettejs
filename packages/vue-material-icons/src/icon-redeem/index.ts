@@ -1,1 +1,0 @@
-export { default as IconRedeem } from './icon-redeem.component.vue';

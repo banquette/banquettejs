@@ -1,1 +1,0 @@
-export { default as IconSettingsOverscan } from './icon-settings-overscan.component.vue';

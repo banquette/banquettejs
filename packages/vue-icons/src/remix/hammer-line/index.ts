@@ -1,0 +1,1 @@
+export { default as IconRemixHammerLine } from './hammer-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialPhonelinkLock } from './phonelink-lock.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixStopLine } from './stop-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialMailOutline } from './mail-outline.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixPlayCircleLine } from './play-circle-line.component.vue';

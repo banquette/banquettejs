@@ -1,0 +1,1 @@
+export { default as IconMaterialVolumeMute } from './volume-mute.component.vue';

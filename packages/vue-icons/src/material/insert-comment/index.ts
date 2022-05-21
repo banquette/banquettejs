@@ -1,0 +1,1 @@
+export { default as IconMaterialInsertComment } from './insert-comment.component.vue';

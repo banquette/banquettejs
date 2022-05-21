@@ -1,0 +1,1 @@
+export { default as IconRemixSplitCellsHorizontal } from './split-cells-horizontal.component.vue';

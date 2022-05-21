@@ -1,0 +1,1 @@
+export { default as IconRemixSwapBoxLine } from './swap-box-line.component.vue';

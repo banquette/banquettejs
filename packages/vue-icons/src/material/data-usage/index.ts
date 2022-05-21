@@ -1,0 +1,1 @@
+export { default as IconMaterialDataUsage } from './data-usage.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixPatreonFill } from './patreon-fill.component.vue';

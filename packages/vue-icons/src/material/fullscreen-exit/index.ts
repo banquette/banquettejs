@@ -1,0 +1,1 @@
+export { default as IconMaterialFullscreenExit } from './fullscreen-exit.component.vue';

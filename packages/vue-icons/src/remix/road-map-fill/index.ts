@@ -1,0 +1,1 @@
+export { default as IconRemixRoadMapFill } from './road-map-fill.component.vue';

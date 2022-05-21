@@ -1,0 +1,1 @@
+export { default as IconMaterialNfc } from './nfc.component.vue';

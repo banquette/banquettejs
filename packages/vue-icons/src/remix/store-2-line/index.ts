@@ -1,0 +1,1 @@
+export { default as IconRemixStore2Line } from './store-2-line.component.vue';

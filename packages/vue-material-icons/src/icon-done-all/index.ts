@@ -1,1 +1,0 @@
-export { default as IconDoneAll } from './icon-done-all.component.vue';

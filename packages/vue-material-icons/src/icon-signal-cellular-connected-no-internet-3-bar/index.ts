@@ -1,1 +1,0 @@
-export { default as IconSignalCellularConnectedNoInternet3Bar } from './icon-signal-cellular-connected-no-internet-3-bar.component.vue';

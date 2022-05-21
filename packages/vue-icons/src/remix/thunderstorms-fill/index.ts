@@ -1,0 +1,1 @@
+export { default as IconRemixThunderstormsFill } from './thunderstorms-fill.component.vue';

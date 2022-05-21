@@ -1,0 +1,1 @@
+export { default as IconMaterialSystemUpdateAlt } from './system-update-alt.component.vue';

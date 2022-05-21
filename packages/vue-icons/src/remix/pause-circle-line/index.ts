@@ -1,0 +1,1 @@
+export { default as IconRemixPauseCircleLine } from './pause-circle-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixHeartPulseLine } from './heart-pulse-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatColorText } from './format-color-text.component.vue';

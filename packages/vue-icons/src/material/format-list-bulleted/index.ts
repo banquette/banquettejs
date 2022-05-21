@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatListBulleted } from './format-list-bulleted.component.vue';

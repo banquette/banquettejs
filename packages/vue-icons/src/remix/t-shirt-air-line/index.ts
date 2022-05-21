@@ -1,0 +1,1 @@
+export { default as IconRemixTShirtAirLine } from './t-shirt-air-line.component.vue';

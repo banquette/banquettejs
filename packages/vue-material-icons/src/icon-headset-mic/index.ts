@@ -1,1 +1,0 @@
-export { default as IconHeadsetMic } from './icon-headset-mic.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconSystemUpdate } from './icon-system-update.component.vue';

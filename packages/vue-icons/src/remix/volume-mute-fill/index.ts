@@ -1,0 +1,1 @@
+export { default as IconRemixVolumeMuteFill } from './volume-mute-fill.component.vue';

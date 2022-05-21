@@ -1,1 +1,0 @@
-export { default as IconTrackChanges } from './icon-track-changes.component.vue';

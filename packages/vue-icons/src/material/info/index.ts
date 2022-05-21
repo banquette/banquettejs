@@ -1,0 +1,1 @@
+export { default as IconMaterialInfo } from './info.component.vue';

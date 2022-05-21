@@ -1,0 +1,1 @@
+export { default as IconMaterialWifiLock } from './wifi-lock.component.vue';

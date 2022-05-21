@@ -1,0 +1,1 @@
+export { default as IconRemixGooglePlayLine } from './google-play-line.component.vue';

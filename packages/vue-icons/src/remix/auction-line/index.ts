@@ -1,0 +1,1 @@
+export { default as IconRemixAuctionLine } from './auction-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialMonetizationOn } from './monetization-on.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialHome } from './home.component.vue';

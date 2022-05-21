@@ -1,0 +1,1 @@
+export { default as IconRemixKeyLine } from './key-line.component.vue';

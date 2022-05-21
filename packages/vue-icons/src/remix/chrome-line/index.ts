@@ -1,0 +1,1 @@
+export { default as IconRemixChromeLine } from './chrome-line.component.vue';

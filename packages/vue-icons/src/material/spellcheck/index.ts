@@ -1,0 +1,1 @@
+export { default as IconMaterialSpellcheck } from './spellcheck.component.vue';

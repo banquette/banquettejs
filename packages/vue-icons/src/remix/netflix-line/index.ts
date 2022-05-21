@@ -1,0 +1,1 @@
+export { default as IconRemixNetflixLine } from './netflix-line.component.vue';

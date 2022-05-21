@@ -1,1 +1,0 @@
-export { default as IconAssistant } from './icon-assistant.component.vue';

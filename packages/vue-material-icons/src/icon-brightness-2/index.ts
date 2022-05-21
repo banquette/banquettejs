@@ -1,1 +1,0 @@
-export { default as IconBrightness2 } from './icon-brightness-2.component.vue';

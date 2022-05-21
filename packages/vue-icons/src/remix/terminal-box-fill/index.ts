@@ -1,0 +1,1 @@
+export { default as IconRemixTerminalBoxFill } from './terminal-box-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconFilterFrames } from './icon-filter-frames.component.vue';

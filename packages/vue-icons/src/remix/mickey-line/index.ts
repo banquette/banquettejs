@@ -1,0 +1,1 @@
+export { default as IconRemixMickeyLine } from './mickey-line.component.vue';

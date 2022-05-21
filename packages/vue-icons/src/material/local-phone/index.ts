@@ -1,0 +1,1 @@
+export { default as IconMaterialLocalPhone } from './local-phone.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixRemixiconFill } from './remixicon-fill.component.vue';

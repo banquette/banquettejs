@@ -1,0 +1,1 @@
+export { default as IconRemixKey2Fill } from './key-2-fill.component.vue';

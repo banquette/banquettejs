@@ -1,1 +1,0 @@
-export { default as IconRedo } from './icon-redo.component.vue';

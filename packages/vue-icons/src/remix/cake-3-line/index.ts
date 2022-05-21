@@ -1,0 +1,1 @@
+export { default as IconRemixCake3Line } from './cake-3-line.component.vue';

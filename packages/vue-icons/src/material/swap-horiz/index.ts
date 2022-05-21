@@ -1,0 +1,1 @@
+export { default as IconMaterialSwapHoriz } from './swap-horiz.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixNumbersLine } from './numbers-line.component.vue';

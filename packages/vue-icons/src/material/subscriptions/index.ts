@@ -1,0 +1,1 @@
+export { default as IconMaterialSubscriptions } from './subscriptions.component.vue';

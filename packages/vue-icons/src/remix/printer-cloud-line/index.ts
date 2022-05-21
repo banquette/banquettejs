@@ -1,0 +1,1 @@
+export { default as IconRemixPrinterCloudLine } from './printer-cloud-line.component.vue';

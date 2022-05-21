@@ -1,0 +1,1 @@
+export { default as IconMaterialRowing } from './rowing.component.vue';

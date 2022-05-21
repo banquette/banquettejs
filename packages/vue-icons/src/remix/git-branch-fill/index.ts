@@ -1,0 +1,1 @@
+export { default as IconRemixGitBranchFill } from './git-branch-fill.component.vue';

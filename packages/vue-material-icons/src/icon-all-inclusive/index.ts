@@ -1,1 +1,0 @@
-export { default as IconAllInclusive } from './icon-all-inclusive.component.vue';

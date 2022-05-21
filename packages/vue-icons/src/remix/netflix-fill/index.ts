@@ -1,0 +1,1 @@
+export { default as IconRemixNetflixFill } from './netflix-fill.component.vue';

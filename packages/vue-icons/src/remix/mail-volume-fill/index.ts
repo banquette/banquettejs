@@ -1,0 +1,1 @@
+export { default as IconRemixMailVolumeFill } from './mail-volume-fill.component.vue';

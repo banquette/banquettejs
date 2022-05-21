@@ -1,0 +1,1 @@
+export { default as IconRemixDownloadCloud2Fill } from './download-cloud-2-fill.component.vue';

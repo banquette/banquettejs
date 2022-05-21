@@ -1,0 +1,1 @@
+export { default as IconMaterialCameraRear } from './camera-rear.component.vue';

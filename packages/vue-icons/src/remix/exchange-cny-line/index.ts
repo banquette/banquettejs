@@ -1,0 +1,1 @@
+export { default as IconRemixExchangeCnyLine } from './exchange-cny-line.component.vue';

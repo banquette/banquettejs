@@ -1,0 +1,1 @@
+export { default as IconRemixRainyFill } from './rainy-fill.component.vue';

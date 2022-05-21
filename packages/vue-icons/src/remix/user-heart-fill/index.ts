@@ -1,0 +1,1 @@
+export { default as IconRemixUserHeartFill } from './user-heart-fill.component.vue';

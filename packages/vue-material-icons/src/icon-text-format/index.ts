@@ -1,1 +1,0 @@
-export { default as IconTextFormat } from './icon-text-format.component.vue';

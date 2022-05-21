@@ -1,0 +1,1 @@
+export { default as IconMaterialCallReceived } from './call-received.component.vue';

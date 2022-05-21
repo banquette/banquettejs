@@ -1,0 +1,1 @@
+export { default as IconMaterialDns } from './dns.component.vue';

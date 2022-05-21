@@ -1,0 +1,1 @@
+export { default as IconRemixCharacterRecognitionFill } from './character-recognition-fill.component.vue';

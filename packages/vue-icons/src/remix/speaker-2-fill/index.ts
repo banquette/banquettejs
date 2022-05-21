@@ -1,0 +1,1 @@
+export { default as IconRemixSpeaker2Fill } from './speaker-2-fill.component.vue';

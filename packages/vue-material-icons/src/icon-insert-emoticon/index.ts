@@ -1,1 +1,0 @@
-export { default as IconInsertEmoticon } from './icon-insert-emoticon.component.vue';

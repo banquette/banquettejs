@@ -1,1 +1,0 @@
-export { default as IconCloudDownload } from './icon-cloud-download.component.vue';

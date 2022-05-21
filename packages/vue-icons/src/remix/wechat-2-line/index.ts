@@ -1,0 +1,1 @@
+export { default as IconRemixWechat2Line } from './wechat-2-line.component.vue';

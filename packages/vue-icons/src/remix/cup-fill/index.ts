@@ -1,0 +1,1 @@
+export { default as IconRemixCupFill } from './cup-fill.component.vue';

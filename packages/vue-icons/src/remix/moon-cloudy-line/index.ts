@@ -1,0 +1,1 @@
+export { default as IconRemixMoonCloudyLine } from './moon-cloudy-line.component.vue';

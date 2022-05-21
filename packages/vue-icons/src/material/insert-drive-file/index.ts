@@ -1,0 +1,1 @@
+export { default as IconMaterialInsertDriveFile } from './insert-drive-file.component.vue';

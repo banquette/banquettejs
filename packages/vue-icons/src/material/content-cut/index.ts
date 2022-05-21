@@ -1,0 +1,1 @@
+export { default as IconMaterialContentCut } from './content-cut.component.vue';

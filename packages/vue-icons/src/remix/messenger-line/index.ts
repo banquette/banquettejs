@@ -1,0 +1,1 @@
+export { default as IconRemixMessengerLine } from './messenger-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixDashboardLine } from './dashboard-line.component.vue';

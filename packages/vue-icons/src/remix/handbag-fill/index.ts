@@ -1,0 +1,1 @@
+export { default as IconRemixHandbagFill } from './handbag-fill.component.vue';

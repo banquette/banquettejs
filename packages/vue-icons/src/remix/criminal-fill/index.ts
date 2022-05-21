@@ -1,0 +1,1 @@
+export { default as IconRemixCriminalFill } from './criminal-fill.component.vue';

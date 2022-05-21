@@ -1,0 +1,1 @@
+export { default as IconMaterialTab } from './tab.component.vue';

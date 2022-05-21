@@ -1,0 +1,1 @@
+export { default as IconRemixClapperboardLine } from './clapperboard-line.component.vue';

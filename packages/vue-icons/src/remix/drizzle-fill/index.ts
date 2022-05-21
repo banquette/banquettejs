@@ -1,0 +1,1 @@
+export { default as IconRemixDrizzleFill } from './drizzle-fill.component.vue';

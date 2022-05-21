@@ -1,0 +1,1 @@
+export { default as IconMaterialScreenLockRotation } from './screen-lock-rotation.component.vue';

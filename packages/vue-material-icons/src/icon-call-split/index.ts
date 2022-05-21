@@ -1,1 +1,0 @@
-export { default as IconCallSplit } from './icon-call-split.component.vue';

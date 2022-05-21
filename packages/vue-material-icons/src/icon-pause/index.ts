@@ -1,1 +1,0 @@
-export { default as IconPause } from './icon-pause.component.vue';

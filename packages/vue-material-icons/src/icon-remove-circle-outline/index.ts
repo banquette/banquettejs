@@ -1,1 +1,0 @@
-export { default as IconRemoveCircleOutline } from './icon-remove-circle-outline.component.vue';

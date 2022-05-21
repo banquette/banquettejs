@@ -1,1 +1,0 @@
-export { default as IconPhotoSizeSelectLarge } from './icon-photo-size-select-large.component.vue';

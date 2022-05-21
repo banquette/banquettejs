@@ -1,0 +1,1 @@
+export { default as IconRemixFolderSharedFill } from './folder-shared-fill.component.vue';

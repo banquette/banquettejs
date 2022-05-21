@@ -1,0 +1,1 @@
+export { default as IconRemixBilliardsLine } from './billiards-line.component.vue';

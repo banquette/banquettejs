@@ -1,1 +1,0 @@
-export { default as IconBusiness } from './icon-business.component.vue';

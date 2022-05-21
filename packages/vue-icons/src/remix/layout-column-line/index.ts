@@ -1,0 +1,1 @@
+export { default as IconRemixLayoutColumnLine } from './layout-column-line.component.vue';

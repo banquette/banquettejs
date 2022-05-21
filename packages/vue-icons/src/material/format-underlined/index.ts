@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatUnderlined } from './format-underlined.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixHammerFill } from './hammer-fill.component.vue';

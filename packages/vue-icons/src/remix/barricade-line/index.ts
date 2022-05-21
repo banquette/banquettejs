@@ -1,0 +1,1 @@
+export { default as IconRemixBarricadeLine } from './barricade-line.component.vue';

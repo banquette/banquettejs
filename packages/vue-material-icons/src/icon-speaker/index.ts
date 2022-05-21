@@ -1,1 +1,0 @@
-export { default as IconSpeaker } from './icon-speaker.component.vue';

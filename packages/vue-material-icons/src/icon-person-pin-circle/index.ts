@@ -1,1 +1,0 @@
-export { default as IconPersonPinCircle } from './icon-person-pin-circle.component.vue';

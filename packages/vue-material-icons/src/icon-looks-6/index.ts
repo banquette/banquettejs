@@ -1,1 +1,0 @@
-export { default as IconLooks6 } from './icon-looks-6.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialLocalPizza } from './local-pizza.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialCameraRoll } from './camera-roll.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialZoomOut } from './zoom-out.component.vue';

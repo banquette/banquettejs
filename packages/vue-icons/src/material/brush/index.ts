@@ -1,0 +1,1 @@
+export { default as IconMaterialBrush } from './brush.component.vue';

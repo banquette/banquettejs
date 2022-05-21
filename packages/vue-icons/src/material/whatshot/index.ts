@@ -1,0 +1,1 @@
+export { default as IconMaterialWhatshot } from './whatshot.component.vue';

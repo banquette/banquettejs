@@ -1,0 +1,1 @@
+export { default as IconRemixNurseLine } from './nurse-line.component.vue';

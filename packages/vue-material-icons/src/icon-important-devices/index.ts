@@ -1,1 +1,0 @@
-export { default as IconImportantDevices } from './icon-important-devices.component.vue';

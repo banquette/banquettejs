@@ -1,0 +1,1 @@
+export { default as IconRemixMusic2Fill } from './music-2-fill.component.vue';

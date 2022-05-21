@@ -1,0 +1,1 @@
+export { default as IconMaterialHighlight } from './highlight.component.vue';

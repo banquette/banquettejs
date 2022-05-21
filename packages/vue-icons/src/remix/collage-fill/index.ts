@@ -1,0 +1,1 @@
+export { default as IconRemixCollageFill } from './collage-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixListCheck } from './list-check.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconCallToAction } from './icon-call-to-action.component.vue';

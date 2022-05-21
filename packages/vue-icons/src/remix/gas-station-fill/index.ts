@@ -1,0 +1,1 @@
+export { default as IconRemixGasStationFill } from './gas-station-fill.component.vue';

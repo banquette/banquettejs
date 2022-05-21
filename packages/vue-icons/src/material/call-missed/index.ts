@@ -1,0 +1,1 @@
+export { default as IconMaterialCallMissed } from './call-missed.component.vue';

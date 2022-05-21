@@ -1,0 +1,1 @@
+export { default as IconRemixCastFill } from './cast-fill.component.vue';

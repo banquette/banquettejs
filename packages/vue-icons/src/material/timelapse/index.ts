@@ -1,0 +1,1 @@
+export { default as IconMaterialTimelapse } from './timelapse.component.vue';

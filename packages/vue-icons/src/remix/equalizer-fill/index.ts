@@ -1,0 +1,1 @@
+export { default as IconRemixEqualizerFill } from './equalizer-fill.component.vue';

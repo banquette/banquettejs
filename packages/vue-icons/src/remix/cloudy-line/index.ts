@@ -1,0 +1,1 @@
+export { default as IconRemixCloudyLine } from './cloudy-line.component.vue';

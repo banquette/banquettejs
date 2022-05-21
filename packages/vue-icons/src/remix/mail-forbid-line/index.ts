@@ -1,0 +1,1 @@
+export { default as IconRemixMailForbidLine } from './mail-forbid-line.component.vue';

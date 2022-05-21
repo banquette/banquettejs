@@ -1,0 +1,1 @@
+export { default as IconMaterialShopTwo } from './shop-two.component.vue';

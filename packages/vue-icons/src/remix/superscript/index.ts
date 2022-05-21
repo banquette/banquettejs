@@ -1,0 +1,1 @@
+export { default as IconRemixSuperscript } from './superscript.component.vue';

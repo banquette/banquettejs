@@ -1,0 +1,1 @@
+export { default as IconRemixIncreaseDecreaseLine } from './increase-decrease-line.component.vue';

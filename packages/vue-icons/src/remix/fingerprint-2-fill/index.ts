@@ -1,0 +1,1 @@
+export { default as IconRemixFingerprint2Fill } from './fingerprint-2-fill.component.vue';

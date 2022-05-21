@@ -1,0 +1,1 @@
+export { default as IconMaterialLibraryBooks } from './library-books.component.vue';

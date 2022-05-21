@@ -1,1 +1,0 @@
-export { default as IconSettingsEthernet } from './icon-settings-ethernet.component.vue';

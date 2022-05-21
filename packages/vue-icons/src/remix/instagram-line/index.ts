@@ -1,0 +1,1 @@
+export { default as IconRemixInstagramLine } from './instagram-line.component.vue';

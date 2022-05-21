@@ -1,0 +1,1 @@
+export { default as IconRemixDivideFill } from './divide-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialReplay } from './replay.component.vue';

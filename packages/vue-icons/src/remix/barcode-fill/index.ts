@@ -1,0 +1,1 @@
+export { default as IconRemixBarcodeFill } from './barcode-fill.component.vue';

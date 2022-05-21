@@ -1,0 +1,1 @@
+export { default as IconRemixFileChartFill } from './file-chart-fill.component.vue';

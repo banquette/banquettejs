@@ -1,1 +1,0 @@
-export { default as IconSpaceBar } from './icon-space-bar.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixLightbulbFill } from './lightbulb-fill.component.vue';

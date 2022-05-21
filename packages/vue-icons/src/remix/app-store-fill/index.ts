@@ -1,0 +1,1 @@
+export { default as IconRemixAppStoreFill } from './app-store-fill.component.vue';

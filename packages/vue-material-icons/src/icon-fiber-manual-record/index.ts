@@ -1,1 +1,0 @@
-export { default as IconFiberManualRecord } from './icon-fiber-manual-record.component.vue';

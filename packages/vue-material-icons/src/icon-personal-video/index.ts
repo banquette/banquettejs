@@ -1,1 +1,0 @@
-export { default as IconPersonalVideo } from './icon-personal-video.component.vue';

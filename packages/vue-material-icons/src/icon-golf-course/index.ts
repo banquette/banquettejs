@@ -1,1 +1,0 @@
-export { default as IconGolfCourse } from './icon-golf-course.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixCompassDiscoverLine } from './compass-discover-line.component.vue';

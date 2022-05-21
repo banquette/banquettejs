@@ -1,1 +1,0 @@
-export { default as IconBlurLinear } from './icon-blur-linear.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFlightTakeoff } from './flight-takeoff.component.vue';

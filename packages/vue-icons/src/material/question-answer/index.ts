@@ -1,0 +1,1 @@
+export { default as IconMaterialQuestionAnswer } from './question-answer.component.vue';

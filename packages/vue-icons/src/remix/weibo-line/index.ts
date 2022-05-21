@@ -1,0 +1,1 @@
+export { default as IconRemixWeiboLine } from './weibo-line.component.vue';

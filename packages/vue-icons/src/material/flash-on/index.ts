@@ -1,0 +1,1 @@
+export { default as IconMaterialFlashOn } from './flash-on.component.vue';

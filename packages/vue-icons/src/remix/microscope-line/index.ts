@@ -1,0 +1,1 @@
+export { default as IconRemixMicroscopeLine } from './microscope-line.component.vue';

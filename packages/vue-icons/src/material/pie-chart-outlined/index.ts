@@ -1,0 +1,1 @@
+export { default as IconMaterialPieChartOutlined } from './pie-chart-outlined.component.vue';

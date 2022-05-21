@@ -1,0 +1,1 @@
+export { default as IconRemixBaseStationFill } from './base-station-fill.component.vue';

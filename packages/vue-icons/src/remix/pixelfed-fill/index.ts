@@ -1,0 +1,1 @@
+export { default as IconRemixPixelfedFill } from './pixelfed-fill.component.vue';

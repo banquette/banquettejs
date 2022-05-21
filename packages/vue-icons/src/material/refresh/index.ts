@@ -1,0 +1,1 @@
+export { default as IconMaterialRefresh } from './refresh.component.vue';

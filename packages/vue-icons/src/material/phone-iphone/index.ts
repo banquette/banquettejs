@@ -1,0 +1,1 @@
+export { default as IconMaterialPhoneIphone } from './phone-iphone.component.vue';

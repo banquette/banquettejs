@@ -1,0 +1,1 @@
+export { default as IconRemixSignalWifiErrorFill } from './signal-wifi-error-fill.component.vue';

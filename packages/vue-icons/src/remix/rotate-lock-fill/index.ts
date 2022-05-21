@@ -1,0 +1,1 @@
+export { default as IconRemixRotateLockFill } from './rotate-lock-fill.component.vue';

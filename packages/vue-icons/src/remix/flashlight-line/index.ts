@@ -1,0 +1,1 @@
+export { default as IconRemixFlashlightLine } from './flashlight-line.component.vue';

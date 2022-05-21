@@ -1,0 +1,1 @@
+export { default as IconMaterialDirectionsBike } from './directions-bike.component.vue';

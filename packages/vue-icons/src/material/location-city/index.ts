@@ -1,0 +1,1 @@
+export { default as IconMaterialLocationCity } from './location-city.component.vue';

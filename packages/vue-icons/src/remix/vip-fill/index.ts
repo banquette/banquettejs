@@ -1,0 +1,1 @@
+export { default as IconRemixVipFill } from './vip-fill.component.vue';

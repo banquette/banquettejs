@@ -1,0 +1,1 @@
+export { default as IconMaterialLock } from './lock.component.vue';

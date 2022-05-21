@@ -1,0 +1,1 @@
+export { default as IconMaterialNaturePeople } from './nature-people.component.vue';

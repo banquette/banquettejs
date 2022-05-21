@@ -1,1 +1,0 @@
-export { default as IconFilterCenterFocus } from './icon-filter-center-focus.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixEdit2Fill } from './edit-2-fill.component.vue';

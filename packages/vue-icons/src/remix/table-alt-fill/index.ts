@@ -1,0 +1,1 @@
+export { default as IconRemixTableAltFill } from './table-alt-fill.component.vue';

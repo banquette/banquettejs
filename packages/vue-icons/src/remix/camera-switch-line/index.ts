@@ -1,0 +1,1 @@
+export { default as IconRemixCameraSwitchLine } from './camera-switch-line.component.vue';

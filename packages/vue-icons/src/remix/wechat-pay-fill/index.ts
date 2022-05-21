@@ -1,0 +1,1 @@
+export { default as IconRemixWechatPayFill } from './wechat-pay-fill.component.vue';

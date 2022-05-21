@@ -1,0 +1,1 @@
+export { default as IconRemixSurveyFill } from './survey-fill.component.vue';

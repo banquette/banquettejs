@@ -1,1 +1,0 @@
-export { default as IconArrowDropDown } from './icon-arrow-drop-down.component.vue';

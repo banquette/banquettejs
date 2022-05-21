@@ -1,0 +1,1 @@
+export { default as IconRemixGenderlessLine } from './genderless-line.component.vue';

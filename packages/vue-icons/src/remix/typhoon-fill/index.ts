@@ -1,0 +1,1 @@
+export { default as IconRemixTyphoonFill } from './typhoon-fill.component.vue';

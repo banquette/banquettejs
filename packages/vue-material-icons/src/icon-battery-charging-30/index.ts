@@ -1,1 +1,0 @@
-export { default as IconBatteryCharging30 } from './icon-battery-charging-30.component.vue';

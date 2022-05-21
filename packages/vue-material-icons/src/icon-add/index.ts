@@ -1,1 +1,0 @@
-export { default as IconAdd } from './icon-add.component.vue';

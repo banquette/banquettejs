@@ -1,0 +1,1 @@
+export { default as IconMaterialCompare } from './compare.component.vue';

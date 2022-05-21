@@ -1,0 +1,1 @@
+export { default as IconRemixGlobalFill } from './global-fill.component.vue';

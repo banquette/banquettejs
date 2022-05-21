@@ -1,0 +1,1 @@
+export { default as IconRemixTwitterLine } from './twitter-line.component.vue';

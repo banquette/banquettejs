@@ -1,1 +1,0 @@
-export { default as IconPlayCircleOutline } from './icon-play-circle-outline.component.vue';

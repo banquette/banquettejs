@@ -1,0 +1,1 @@
+export { default as IconMaterialModeComment } from './mode-comment.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatSize } from './format-size.component.vue';

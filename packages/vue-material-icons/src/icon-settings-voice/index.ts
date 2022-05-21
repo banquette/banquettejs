@@ -1,1 +1,0 @@
-export { default as IconSettingsVoice } from './icon-settings-voice.component.vue';

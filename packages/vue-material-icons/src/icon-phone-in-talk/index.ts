@@ -1,1 +1,0 @@
-export { default as IconPhoneInTalk } from './icon-phone-in-talk.component.vue';

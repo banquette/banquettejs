@@ -1,0 +1,1 @@
+export { default as IconRemixBatteryLowLine } from './battery-low-line.component.vue';

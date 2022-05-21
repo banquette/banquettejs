@@ -1,1 +1,0 @@
-export { default as IconShortText } from './icon-short-text.component.vue';

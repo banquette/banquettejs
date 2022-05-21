@@ -1,0 +1,1 @@
+export { default as IconRemixFileShield2Fill } from './file-shield-2-fill.component.vue';

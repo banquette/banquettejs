@@ -1,0 +1,1 @@
+export { default as IconRemixHome6Fill } from './home-6-fill.component.vue';

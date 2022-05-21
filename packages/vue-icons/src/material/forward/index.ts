@@ -1,0 +1,1 @@
+export { default as IconMaterialForward } from './forward.component.vue';

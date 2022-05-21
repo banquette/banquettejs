@@ -1,0 +1,1 @@
+export { default as IconRemixArrowUpSLine } from './arrow-up-s-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixDribbbleLine } from './dribbble-line.component.vue';

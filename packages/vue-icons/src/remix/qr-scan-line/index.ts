@@ -1,0 +1,1 @@
+export { default as IconRemixQrScanLine } from './qr-scan-line.component.vue';

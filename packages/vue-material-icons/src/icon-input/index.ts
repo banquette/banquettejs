@@ -1,1 +1,0 @@
-export { default as IconInput } from './icon-input.component.vue';

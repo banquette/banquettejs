@@ -1,0 +1,1 @@
+export { default as IconMaterialZoomOutMap } from './zoom-out-map.component.vue';

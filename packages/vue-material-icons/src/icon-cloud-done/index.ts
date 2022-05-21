@@ -1,1 +1,0 @@
-export { default as IconCloudDone } from './icon-cloud-done.component.vue';

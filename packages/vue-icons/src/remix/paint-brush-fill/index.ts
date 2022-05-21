@@ -1,0 +1,1 @@
+export { default as IconRemixPaintBrushFill } from './paint-brush-fill.component.vue';

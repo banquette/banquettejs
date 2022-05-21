@@ -1,1 +1,0 @@
-export { default as IconScreenShare } from './icon-screen-share.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixMailDownloadLine } from './mail-download-line.component.vue';

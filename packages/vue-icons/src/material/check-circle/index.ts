@@ -1,0 +1,1 @@
+export { default as IconMaterialCheckCircle } from './check-circle.component.vue';

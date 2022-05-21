@@ -1,0 +1,1 @@
+export { default as IconRemixAlignJustify } from './align-justify.component.vue';

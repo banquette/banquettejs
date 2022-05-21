@@ -1,1 +1,0 @@
-export { default as IconTapAndPlay } from './icon-tap-and-play.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixPlayList2Line } from './play-list-2-line.component.vue';

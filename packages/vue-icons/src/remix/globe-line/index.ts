@@ -1,0 +1,1 @@
+export { default as IconRemixGlobeLine } from './globe-line.component.vue';

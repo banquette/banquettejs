@@ -1,0 +1,1 @@
+export { default as IconRemixLineLine } from './line-line.component.vue';

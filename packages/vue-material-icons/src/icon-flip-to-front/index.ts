@@ -1,1 +1,0 @@
-export { default as IconFlipToFront } from './icon-flip-to-front.component.vue';

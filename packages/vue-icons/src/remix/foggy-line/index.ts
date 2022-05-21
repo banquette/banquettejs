@@ -1,0 +1,1 @@
+export { default as IconRemixFoggyLine } from './foggy-line.component.vue';

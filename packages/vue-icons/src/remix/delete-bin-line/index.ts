@@ -1,0 +1,1 @@
+export { default as IconRemixDeleteBinLine } from './delete-bin-line.component.vue';

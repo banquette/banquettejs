@@ -1,0 +1,1 @@
+export { default as IconMaterialGTranslate } from './g-translate.component.vue';

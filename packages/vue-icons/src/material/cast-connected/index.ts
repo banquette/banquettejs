@@ -1,0 +1,1 @@
+export { default as IconMaterialCastConnected } from './cast-connected.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconToc } from './icon-toc.component.vue';

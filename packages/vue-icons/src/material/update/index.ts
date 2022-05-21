@@ -1,0 +1,1 @@
+export { default as IconMaterialUpdate } from './update.component.vue';

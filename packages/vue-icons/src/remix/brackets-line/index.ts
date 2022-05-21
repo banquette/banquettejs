@@ -1,0 +1,1 @@
+export { default as IconRemixBracketsLine } from './brackets-line.component.vue';

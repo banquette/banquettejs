@@ -1,0 +1,1 @@
+export { default as IconRemixRemoteControl2Line } from './remote-control-2-line.component.vue';

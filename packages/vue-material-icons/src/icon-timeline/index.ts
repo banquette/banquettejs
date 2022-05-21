@@ -1,1 +1,0 @@
-export { default as IconTimeline } from './icon-timeline.component.vue';

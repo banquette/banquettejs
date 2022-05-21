@@ -1,0 +1,1 @@
+export { default as IconRemixInsertRowBottom } from './insert-row-bottom.component.vue';

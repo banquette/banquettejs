@@ -1,1 +1,0 @@
-export { default as IconHelpOutline } from './icon-help-outline.component.vue';

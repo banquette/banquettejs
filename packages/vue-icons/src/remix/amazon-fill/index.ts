@@ -1,0 +1,1 @@
+export { default as IconRemixAmazonFill } from './amazon-fill.component.vue';

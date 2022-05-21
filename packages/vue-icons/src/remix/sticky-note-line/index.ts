@@ -1,0 +1,1 @@
+export { default as IconRemixStickyNoteLine } from './sticky-note-line.component.vue';

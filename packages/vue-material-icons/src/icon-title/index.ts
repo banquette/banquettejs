@@ -1,1 +1,0 @@
-export { default as IconTitle } from './icon-title.component.vue';

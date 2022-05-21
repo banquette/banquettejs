@@ -1,0 +1,1 @@
+export { default as IconRemixSpeakerLine } from './speaker-line.component.vue';

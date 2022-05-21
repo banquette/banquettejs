@@ -1,0 +1,1 @@
+export { default as IconRemixSpotifyFill } from './spotify-fill.component.vue';

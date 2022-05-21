@@ -1,0 +1,1 @@
+export { default as IconRemixBookmarkFill } from './bookmark-fill.component.vue';

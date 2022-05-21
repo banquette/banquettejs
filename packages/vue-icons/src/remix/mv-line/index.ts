@@ -1,0 +1,1 @@
+export { default as IconRemixMvLine } from './mv-line.component.vue';

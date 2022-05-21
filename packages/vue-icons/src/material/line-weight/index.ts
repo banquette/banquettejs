@@ -1,0 +1,1 @@
+export { default as IconMaterialLineWeight } from './line-weight.component.vue';

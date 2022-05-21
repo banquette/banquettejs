@@ -1,0 +1,1 @@
+export { default as IconMaterialLoop } from './loop.component.vue';

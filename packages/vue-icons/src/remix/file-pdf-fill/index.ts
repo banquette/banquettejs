@@ -1,0 +1,1 @@
+export { default as IconRemixFilePdfFill } from './file-pdf-fill.component.vue';

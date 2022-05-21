@@ -1,0 +1,1 @@
+export { default as IconRemixChatHistoryFill } from './chat-history-fill.component.vue';

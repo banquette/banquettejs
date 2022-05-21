@@ -1,0 +1,1 @@
+export { default as IconRemixOrganizationChart } from './organization-chart.component.vue';

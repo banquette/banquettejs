@@ -1,1 +1,0 @@
-export { default as IconLocalShipping } from './icon-local-shipping.component.vue';

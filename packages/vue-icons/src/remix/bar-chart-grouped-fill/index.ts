@@ -1,0 +1,1 @@
+export { default as IconRemixBarChartGroupedFill } from './bar-chart-grouped-fill.component.vue';

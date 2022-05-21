@@ -1,0 +1,1 @@
+export { default as IconRemixQuestionLine } from './question-line.component.vue';

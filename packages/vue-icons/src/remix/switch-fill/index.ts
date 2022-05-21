@@ -1,0 +1,1 @@
+export { default as IconRemixSwitchFill } from './switch-fill.component.vue';

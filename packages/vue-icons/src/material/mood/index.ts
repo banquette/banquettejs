@@ -1,0 +1,1 @@
+export { default as IconMaterialMood } from './mood.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFileHwpLine } from './file-hwp-line.component.vue';

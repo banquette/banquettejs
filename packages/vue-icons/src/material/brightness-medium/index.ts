@@ -1,0 +1,1 @@
+export { default as IconMaterialBrightnessMedium } from './brightness-medium.component.vue';

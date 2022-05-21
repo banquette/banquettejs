@@ -1,0 +1,1 @@
+export { default as IconRemixCrop2Line } from './crop-2-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialAttachFile } from './attach-file.component.vue';

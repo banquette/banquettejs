@@ -1,1 +1,0 @@
-export { default as IconNearMe } from './icon-near-me.component.vue';

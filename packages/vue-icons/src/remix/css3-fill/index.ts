@@ -1,0 +1,1 @@
+export { default as IconRemixCss3Fill } from './css3-fill.component.vue';

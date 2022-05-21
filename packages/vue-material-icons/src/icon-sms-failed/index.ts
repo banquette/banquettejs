@@ -1,1 +1,0 @@
-export { default as IconSmsFailed } from './icon-sms-failed.component.vue';

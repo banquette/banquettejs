@@ -1,0 +1,1 @@
+export { default as IconRemixDeviceFill } from './device-fill.component.vue';

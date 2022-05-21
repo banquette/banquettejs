@@ -1,0 +1,1 @@
+export { default as IconMaterialPregnantWoman } from './pregnant-woman.component.vue';

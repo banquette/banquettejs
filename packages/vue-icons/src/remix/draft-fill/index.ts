@@ -1,0 +1,1 @@
+export { default as IconRemixDraftFill } from './draft-fill.component.vue';

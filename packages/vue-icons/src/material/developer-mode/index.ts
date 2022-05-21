@@ -1,0 +1,1 @@
+export { default as IconMaterialDeveloperMode } from './developer-mode.component.vue';

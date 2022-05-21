@@ -1,0 +1,1 @@
+export { default as IconMaterialTextsms } from './textsms.component.vue';

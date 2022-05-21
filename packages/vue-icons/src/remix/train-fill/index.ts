@@ -1,0 +1,1 @@
+export { default as IconRemixTrainFill } from './train-fill.component.vue';

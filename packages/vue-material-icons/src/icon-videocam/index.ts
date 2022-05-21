@@ -1,1 +1,0 @@
-export { default as IconVideocam } from './icon-videocam.component.vue';

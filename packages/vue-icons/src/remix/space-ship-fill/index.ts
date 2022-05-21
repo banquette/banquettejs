@@ -1,0 +1,1 @@
+export { default as IconRemixSpaceShipFill } from './space-ship-fill.component.vue';

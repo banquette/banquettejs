@@ -148,10 +148,12 @@ function writeOutput(config, output) {
     if (config.output.format === 'es') {
         const baseDir = output.dir || path.dirname(output.file);
         const typesDir = path.join(baseDir, 'src');
+        const testsDir = path.join(baseDir, '__tests__');
         fs.copySync(typesDir, baseDir);
         fs.rmdirSync(typesDir, {recursive: true});
-        fs.rmdirSync(path.join(baseDir, '__tests__'), {recursive: true});
-
+        if (fs.pathExistsSync(testsDir)) {
+            fs.rmdirSync(testsDir, {recursive: true});
+        }
         const files = getAllFiles(path.resolve(__dirname, '../../', output.dir));
         for (let i = 0; i < files.length; ++i) {
             let fcontent = fs.readFileSync(files[i]).toString();

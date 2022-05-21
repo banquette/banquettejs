@@ -1,0 +1,1 @@
+export { default as IconMaterialWbIncandescent } from './wb-incandescent.component.vue';

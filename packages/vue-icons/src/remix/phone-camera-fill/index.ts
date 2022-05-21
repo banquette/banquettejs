@@ -1,0 +1,1 @@
+export { default as IconRemixPhoneCameraFill } from './phone-camera-fill.component.vue';

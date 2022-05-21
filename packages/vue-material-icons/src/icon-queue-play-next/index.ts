@@ -1,1 +1,0 @@
-export { default as IconQueuePlayNext } from './icon-queue-play-next.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixSmartphoneFill } from './smartphone-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialWeb } from './web.component.vue';

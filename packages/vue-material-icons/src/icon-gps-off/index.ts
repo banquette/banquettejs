@@ -1,1 +1,0 @@
-export { default as IconGpsOff } from './icon-gps-off.component.vue';

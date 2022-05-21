@@ -1,0 +1,1 @@
+export { default as IconMaterialVignette } from './vignette.component.vue';

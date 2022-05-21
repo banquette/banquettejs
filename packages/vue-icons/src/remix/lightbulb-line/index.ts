@@ -1,0 +1,1 @@
+export { default as IconRemixLightbulbLine } from './lightbulb-line.component.vue';

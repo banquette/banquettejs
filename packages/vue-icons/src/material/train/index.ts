@@ -1,0 +1,1 @@
+export { default as IconMaterialTrain } from './train.component.vue';

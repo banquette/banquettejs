@@ -1,0 +1,1 @@
+export { default as IconRemixShapeFill } from './shape-fill.component.vue';

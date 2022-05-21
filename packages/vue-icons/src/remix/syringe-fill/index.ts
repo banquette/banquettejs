@@ -1,0 +1,1 @@
+export { default as IconRemixSyringeFill } from './syringe-fill.component.vue';

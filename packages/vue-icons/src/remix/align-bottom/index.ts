@@ -1,0 +1,1 @@
+export { default as IconRemixAlignBottom } from './align-bottom.component.vue';

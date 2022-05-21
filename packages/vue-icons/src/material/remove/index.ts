@@ -1,0 +1,1 @@
+export { default as IconMaterialRemove } from './remove.component.vue';

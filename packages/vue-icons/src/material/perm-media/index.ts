@@ -1,0 +1,1 @@
+export { default as IconMaterialPermMedia } from './perm-media.component.vue';

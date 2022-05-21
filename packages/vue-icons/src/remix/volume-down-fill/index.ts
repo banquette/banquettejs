@@ -1,0 +1,1 @@
+export { default as IconRemixVolumeDownFill } from './volume-down-fill.component.vue';

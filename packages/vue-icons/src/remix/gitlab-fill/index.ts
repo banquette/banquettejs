@@ -1,0 +1,1 @@
+export { default as IconRemixGitlabFill } from './gitlab-fill.component.vue';

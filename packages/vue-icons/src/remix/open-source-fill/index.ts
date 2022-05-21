@@ -1,0 +1,1 @@
+export { default as IconRemixOpenSourceFill } from './open-source-fill.component.vue';

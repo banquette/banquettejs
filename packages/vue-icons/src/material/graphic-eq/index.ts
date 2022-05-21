@@ -1,0 +1,1 @@
+export { default as IconMaterialGraphicEq } from './graphic-eq.component.vue';

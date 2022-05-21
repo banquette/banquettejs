@@ -1,0 +1,1 @@
+export { default as IconMaterialGroupWork } from './group-work.component.vue';

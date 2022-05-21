@@ -1,0 +1,1 @@
+export { default as IconMaterialSdStorage } from './sd-storage.component.vue';

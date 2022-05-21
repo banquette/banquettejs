@@ -1,0 +1,1 @@
+export { default as IconMaterialViewColumn } from './view-column.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixShoppingBasketLine } from './shopping-basket-line.component.vue';

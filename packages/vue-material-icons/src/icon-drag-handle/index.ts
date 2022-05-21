@@ -1,1 +1,0 @@
-export { default as IconDragHandle } from './icon-drag-handle.component.vue';

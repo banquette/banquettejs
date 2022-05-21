@@ -1,0 +1,1 @@
+export { default as IconMaterialStarHalf } from './star-half.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixBracketsFill } from './brackets-fill.component.vue';

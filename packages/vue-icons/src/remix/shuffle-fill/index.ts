@@ -1,0 +1,1 @@
+export { default as IconRemixShuffleFill } from './shuffle-fill.component.vue';

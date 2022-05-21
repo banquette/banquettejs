@@ -1,1 +1,0 @@
-export { default as IconBeachAccess } from './icon-beach-access.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconInsertLink } from './icon-insert-link.component.vue';

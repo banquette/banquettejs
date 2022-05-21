@@ -1,1 +1,0 @@
-export { default as IconUnfoldMore } from './icon-unfold-more.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixAsterisk } from './asterisk.component.vue';

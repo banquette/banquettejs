@@ -1,1 +1,0 @@
-export { default as IconGesture } from './icon-gesture.component.vue';

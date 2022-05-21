@@ -1,0 +1,1 @@
+export { default as IconRemixDeleteBackFill } from './delete-back-fill.component.vue';

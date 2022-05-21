@@ -1,0 +1,1 @@
+export { default as IconMaterialComputer } from './computer.component.vue';

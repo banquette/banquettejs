@@ -1,0 +1,1 @@
+export { default as IconRemixTrophyFill } from './trophy-fill.component.vue';

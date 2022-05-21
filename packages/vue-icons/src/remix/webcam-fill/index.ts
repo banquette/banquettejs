@@ -1,0 +1,1 @@
+export { default as IconRemixWebcamFill } from './webcam-fill.component.vue';

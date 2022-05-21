@@ -1,0 +1,1 @@
+export { default as IconRemixEnglishInput } from './english-input.component.vue';

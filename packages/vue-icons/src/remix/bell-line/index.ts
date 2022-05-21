@@ -1,0 +1,1 @@
+export { default as IconRemixBellLine } from './bell-line.component.vue';

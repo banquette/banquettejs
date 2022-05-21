@@ -1,0 +1,1 @@
+export { default as IconRemixTextDirectionL } from './text-direction-l.component.vue';

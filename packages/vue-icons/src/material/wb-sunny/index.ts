@@ -1,0 +1,1 @@
+export { default as IconMaterialWbSunny } from './wb-sunny.component.vue';

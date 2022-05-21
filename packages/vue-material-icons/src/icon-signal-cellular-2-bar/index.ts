@@ -1,1 +1,0 @@
-export { default as IconSignalCellular2Bar } from './icon-signal-cellular-2-bar.component.vue';

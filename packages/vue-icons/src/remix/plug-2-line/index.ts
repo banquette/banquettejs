@@ -1,0 +1,1 @@
+export { default as IconRemixPlug2Line } from './plug-2-line.component.vue';

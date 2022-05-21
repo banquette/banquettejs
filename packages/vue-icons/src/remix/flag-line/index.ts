@@ -1,0 +1,1 @@
+export { default as IconRemixFlagLine } from './flag-line.component.vue';

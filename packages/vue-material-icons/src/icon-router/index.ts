@@ -1,1 +1,0 @@
-export { default as IconRouter } from './icon-router.component.vue';

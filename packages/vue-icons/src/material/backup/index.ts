@@ -1,0 +1,1 @@
+export { default as IconMaterialBackup } from './backup.component.vue';

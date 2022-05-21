@@ -1,0 +1,1 @@
+export { default as IconRemixPauseFill } from './pause-fill.component.vue';

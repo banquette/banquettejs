@@ -1,0 +1,1 @@
+export { default as IconRemixLockPasswordFill } from './lock-password-fill.component.vue';

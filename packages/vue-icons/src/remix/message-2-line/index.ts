@@ -1,0 +1,1 @@
+export { default as IconRemixMessage2Line } from './message-2-line.component.vue';

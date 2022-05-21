@@ -1,0 +1,1 @@
+export { default as IconRemixArtboard2Fill } from './artboard-2-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatLineSpacing } from './format-line-spacing.component.vue';

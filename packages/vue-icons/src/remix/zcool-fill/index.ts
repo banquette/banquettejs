@@ -1,0 +1,1 @@
+export { default as IconRemixZcoolFill } from './zcool-fill.component.vue';

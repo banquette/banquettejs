@@ -1,0 +1,1 @@
+export { default as IconRemixTimerLine } from './timer-line.component.vue';

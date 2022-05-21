@@ -1,0 +1,1 @@
+export { default as IconRemixStrikethrough } from './strikethrough.component.vue';

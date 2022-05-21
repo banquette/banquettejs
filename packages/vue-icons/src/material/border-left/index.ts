@@ -1,0 +1,1 @@
+export { default as IconMaterialBorderLeft } from './border-left.component.vue';

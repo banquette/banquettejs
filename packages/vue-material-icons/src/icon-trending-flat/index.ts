@@ -1,1 +1,0 @@
-export { default as IconTrendingFlat } from './icon-trending-flat.component.vue';

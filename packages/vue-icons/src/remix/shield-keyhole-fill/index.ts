@@ -1,0 +1,1 @@
+export { default as IconRemixShieldKeyholeFill } from './shield-keyhole-fill.component.vue';

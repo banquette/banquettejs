@@ -1,0 +1,1 @@
+export { default as IconRemixCalendarEventLine } from './calendar-event-line.component.vue';

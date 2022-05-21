@@ -1,0 +1,1 @@
+export { default as IconMaterialKeyboardVoice } from './keyboard-voice.component.vue';

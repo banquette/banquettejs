@@ -1,0 +1,1 @@
+export { default as IconRemixEmotionSadLine } from './emotion-sad-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconQueueMusic } from './icon-queue-music.component.vue';

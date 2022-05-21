@@ -1,1 +1,0 @@
-export { default as IconDashboard } from './icon-dashboard.component.vue';

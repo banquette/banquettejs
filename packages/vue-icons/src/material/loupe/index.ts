@@ -1,0 +1,1 @@
+export { default as IconMaterialLoupe } from './loupe.component.vue';

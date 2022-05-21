@@ -1,0 +1,1 @@
+export { default as IconRemixNumber8 } from './number-8.component.vue';

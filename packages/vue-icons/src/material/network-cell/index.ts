@@ -1,0 +1,1 @@
+export { default as IconMaterialNetworkCell } from './network-cell.component.vue';

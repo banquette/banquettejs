@@ -1,0 +1,1 @@
+export { default as IconRemixMicOffFill } from './mic-off-fill.component.vue';

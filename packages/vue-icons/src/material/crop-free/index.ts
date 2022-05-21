@@ -1,0 +1,1 @@
+export { default as IconMaterialCropFree } from './crop-free.component.vue';

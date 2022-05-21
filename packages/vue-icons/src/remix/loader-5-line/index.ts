@@ -1,0 +1,1 @@
+export { default as IconRemixLoader5Line } from './loader-5-line.component.vue';

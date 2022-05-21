@@ -1,0 +1,1 @@
+export { default as IconRemixHotelBedFill } from './hotel-bed-fill.component.vue';

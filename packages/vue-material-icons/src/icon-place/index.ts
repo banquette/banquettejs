@@ -1,1 +1,0 @@
-export { default as IconPlace } from './icon-place.component.vue';

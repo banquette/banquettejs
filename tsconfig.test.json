@@ -49,9 +49,7 @@
             "@banquette/utils-type/*": ["packages/utils-type/src/*"],
             "@banquette/validation/*": ["packages/validation/src/*"],
             "@banquette/vue-dom-module/*": ["packages/vue-dom-module/src/*"],
-            "@banquette/vue-material-icons/*": [
-                "packages/vue-material-icons/src/*"
-            ],
+            "@banquette/vue-icons/*": ["packages/vue-icons/src/*"],
             "@banquette/vue-typescript/*": ["packages/vue-typescript/src/*"],
             "@banquette/vue-ui/*": ["packages/vue-ui/src/*"]
         },

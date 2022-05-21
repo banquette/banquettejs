@@ -1,0 +1,1 @@
+export { default as IconMaterialBorderColor } from './border-color.component.vue';

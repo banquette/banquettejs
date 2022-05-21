@@ -1,0 +1,1 @@
+export { default as IconRemixFootballLine } from './football-line.component.vue';

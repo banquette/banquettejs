@@ -1,0 +1,1 @@
+export { default as IconRemixGradienterLine } from './gradienter-line.component.vue';

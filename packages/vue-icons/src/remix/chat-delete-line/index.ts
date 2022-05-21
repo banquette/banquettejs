@@ -1,0 +1,1 @@
+export { default as IconRemixChatDeleteLine } from './chat-delete-line.component.vue';

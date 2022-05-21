@@ -1,1 +1,0 @@
-export { default as IconTouchApp } from './icon-touch-app.component.vue';

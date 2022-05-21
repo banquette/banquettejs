@@ -1,0 +1,1 @@
+export { default as IconRemixRobotLine } from './robot-line.component.vue';

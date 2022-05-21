@@ -1,0 +1,1 @@
+export { default as IconRemixSearch2Fill } from './search-2-fill.component.vue';

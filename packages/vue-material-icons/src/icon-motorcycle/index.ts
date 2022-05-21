@@ -1,1 +1,0 @@
-export { default as IconMotorcycle } from './icon-motorcycle.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialLooks } from './looks.component.vue';

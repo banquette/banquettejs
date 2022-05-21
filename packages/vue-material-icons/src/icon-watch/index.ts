@@ -1,1 +1,0 @@
-export { default as IconWatch } from './icon-watch.component.vue';

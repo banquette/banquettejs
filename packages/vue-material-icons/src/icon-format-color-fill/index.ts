@@ -1,1 +1,0 @@
-export { default as IconFormatColorFill } from './icon-format-color-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixChatSmile2Fill } from './chat-smile-2-fill.component.vue';

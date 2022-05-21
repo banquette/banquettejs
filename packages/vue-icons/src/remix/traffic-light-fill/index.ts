@@ -1,0 +1,1 @@
+export { default as IconRemixTrafficLightFill } from './traffic-light-fill.component.vue';

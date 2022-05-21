@@ -1,0 +1,1 @@
+export { default as IconRemixDonutChartLine } from './donut-chart-line.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixFolderChartFill } from './folder-chart-fill.component.vue';

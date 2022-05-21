@@ -1,0 +1,1 @@
+export { default as IconRemixCalendarCheckLine } from './calendar-check-line.component.vue';

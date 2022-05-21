@@ -1,0 +1,1 @@
+export { default as IconMaterialReceipt } from './receipt.component.vue';

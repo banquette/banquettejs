@@ -1,1 +1,0 @@
-export { default as IconBorderInner } from './icon-border-inner.component.vue';

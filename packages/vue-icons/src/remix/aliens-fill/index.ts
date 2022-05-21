@@ -1,0 +1,1 @@
+export { default as IconRemixAliensFill } from './aliens-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixShoppingCart2Line } from './shopping-cart-2-line.component.vue';

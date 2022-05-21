@@ -1,1 +1,0 @@
-export { default as IconExposure } from './icon-exposure.component.vue';

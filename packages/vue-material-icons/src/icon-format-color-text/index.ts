@@ -1,1 +1,0 @@
-export { default as IconFormatColorText } from './icon-format-color-text.component.vue';

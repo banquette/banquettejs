@@ -1,0 +1,1 @@
+export { default as IconRemixMedalFill } from './medal-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixPriceTag3Line } from './price-tag-3-line.component.vue';

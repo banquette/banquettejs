@@ -1,0 +1,1 @@
+export { default as IconMaterialSkipNext } from './skip-next.component.vue';

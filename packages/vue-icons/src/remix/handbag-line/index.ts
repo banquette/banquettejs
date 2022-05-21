@@ -1,0 +1,1 @@
+export { default as IconRemixHandbagLine } from './handbag-line.component.vue';

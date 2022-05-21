@@ -1,1 +1,0 @@
-export { default as IconRoomService } from './icon-room-service.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixEarthquakeLine } from './earthquake-line.component.vue';

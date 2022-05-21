@@ -1,0 +1,1 @@
+export { default as IconRemixCalendar2Fill } from './calendar-2-fill.component.vue';

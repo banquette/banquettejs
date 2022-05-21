@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatItalic } from './format-italic.component.vue';

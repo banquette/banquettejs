@@ -1,0 +1,1 @@
+export { default as IconRemixPencilLine } from './pencil-line.component.vue';

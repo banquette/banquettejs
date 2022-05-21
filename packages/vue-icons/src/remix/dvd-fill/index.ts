@@ -1,0 +1,1 @@
+export { default as IconRemixDvdFill } from './dvd-fill.component.vue';

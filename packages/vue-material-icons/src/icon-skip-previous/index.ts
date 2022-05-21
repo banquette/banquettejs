@@ -1,1 +1,0 @@
-export { default as IconSkipPrevious } from './icon-skip-previous.component.vue';

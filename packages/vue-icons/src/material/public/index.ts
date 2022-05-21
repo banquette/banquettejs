@@ -1,0 +1,1 @@
+export { default as IconMaterialPublic } from './public.component.vue';

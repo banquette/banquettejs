@@ -1,0 +1,1 @@
+export { default as IconRemixCamera3Line } from './camera-3-line.component.vue';

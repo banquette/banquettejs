@@ -1,0 +1,1 @@
+export { default as IconRemixRestTimeLine } from './rest-time-line.component.vue';

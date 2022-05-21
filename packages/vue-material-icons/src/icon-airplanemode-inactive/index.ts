@@ -1,1 +1,0 @@
-export { default as IconAirplanemodeInactive } from './icon-airplanemode-inactive.component.vue';

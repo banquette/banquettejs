@@ -1,1 +1,0 @@
-export { default as IconLocalHospital } from './icon-local-hospital.component.vue';

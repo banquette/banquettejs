@@ -1,0 +1,1 @@
+export { default as IconRemixPulseLine } from './pulse-line.component.vue';

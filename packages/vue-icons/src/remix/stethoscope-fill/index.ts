@@ -1,0 +1,1 @@
+export { default as IconRemixStethoscopeFill } from './stethoscope-fill.component.vue';

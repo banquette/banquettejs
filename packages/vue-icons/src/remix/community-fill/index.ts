@@ -1,0 +1,1 @@
+export { default as IconRemixCommunityFill } from './community-fill.component.vue';

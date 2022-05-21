@@ -1,0 +1,1 @@
+export { default as IconMaterialPowerSettingsNew } from './power-settings-new.component.vue';

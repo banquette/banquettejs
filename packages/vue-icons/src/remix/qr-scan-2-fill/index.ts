@@ -1,0 +1,1 @@
+export { default as IconRemixQrScan2Fill } from './qr-scan-2-fill.component.vue';

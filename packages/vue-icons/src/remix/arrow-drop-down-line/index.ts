@@ -1,0 +1,1 @@
+export { default as IconRemixArrowDropDownLine } from './arrow-drop-down-line.component.vue';

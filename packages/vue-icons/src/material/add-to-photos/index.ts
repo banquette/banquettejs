@@ -1,0 +1,1 @@
+export { default as IconMaterialAddToPhotos } from './add-to-photos.component.vue';

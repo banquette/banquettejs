@@ -1,0 +1,1 @@
+export { default as IconRemixChatQuoteFill } from './chat-quote-fill.component.vue';

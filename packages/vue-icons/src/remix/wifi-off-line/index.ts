@@ -1,0 +1,1 @@
+export { default as IconRemixWifiOffLine } from './wifi-off-line.component.vue';

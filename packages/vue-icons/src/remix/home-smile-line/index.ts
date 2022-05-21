@@ -1,0 +1,1 @@
+export { default as IconRemixHomeSmileLine } from './home-smile-line.component.vue';

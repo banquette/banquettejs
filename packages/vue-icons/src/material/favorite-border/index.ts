@@ -1,0 +1,1 @@
+export { default as IconMaterialFavoriteBorder } from './favorite-border.component.vue';

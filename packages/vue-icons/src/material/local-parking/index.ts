@@ -1,0 +1,1 @@
+export { default as IconMaterialLocalParking } from './local-parking.component.vue';

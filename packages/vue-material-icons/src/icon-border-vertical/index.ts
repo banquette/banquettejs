@@ -1,1 +1,0 @@
-export { default as IconBorderVertical } from './icon-border-vertical.component.vue';

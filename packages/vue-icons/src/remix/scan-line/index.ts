@@ -1,0 +1,1 @@
+export { default as IconRemixScanLine } from './scan-line.component.vue';

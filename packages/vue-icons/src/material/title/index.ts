@@ -1,0 +1,1 @@
+export { default as IconMaterialTitle } from './title.component.vue';

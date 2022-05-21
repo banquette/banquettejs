@@ -1,0 +1,1 @@
+export { default as IconMaterialGroup } from './group.component.vue';

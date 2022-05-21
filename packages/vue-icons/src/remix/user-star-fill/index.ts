@@ -1,0 +1,1 @@
+export { default as IconRemixUserStarFill } from './user-star-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconBlurCircular } from './icon-blur-circular.component.vue';

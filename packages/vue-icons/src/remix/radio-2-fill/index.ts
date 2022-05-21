@@ -1,0 +1,1 @@
+export { default as IconRemixRadio2Fill } from './radio-2-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixLinkedinLine } from './linkedin-line.component.vue';

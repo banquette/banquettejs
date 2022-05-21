@@ -1,0 +1,1 @@
+export { default as IconMaterialAssignmentLate } from './assignment-late.component.vue';

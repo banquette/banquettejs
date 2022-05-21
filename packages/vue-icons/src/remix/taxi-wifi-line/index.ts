@@ -1,0 +1,1 @@
+export { default as IconRemixTaxiWifiLine } from './taxi-wifi-line.component.vue';

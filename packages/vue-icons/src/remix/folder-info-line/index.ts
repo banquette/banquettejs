@@ -1,0 +1,1 @@
+export { default as IconRemixFolderInfoLine } from './folder-info-line.component.vue';

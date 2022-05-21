@@ -1,1 +1,0 @@
-export { default as IconPool } from './icon-pool.component.vue';

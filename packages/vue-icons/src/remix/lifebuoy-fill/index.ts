@@ -1,0 +1,1 @@
+export { default as IconRemixLifebuoyFill } from './lifebuoy-fill.component.vue';

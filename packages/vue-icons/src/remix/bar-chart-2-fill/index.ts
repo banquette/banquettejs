@@ -1,0 +1,1 @@
+export { default as IconRemixBarChart2Fill } from './bar-chart-2-fill.component.vue';

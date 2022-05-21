@@ -1,0 +1,1 @@
+export { default as IconMaterialControlPointDuplicate } from './control-point-duplicate.component.vue';

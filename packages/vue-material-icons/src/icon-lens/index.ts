@@ -1,1 +1,0 @@
-export { default as IconLens } from './icon-lens.component.vue';

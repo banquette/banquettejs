@@ -1,0 +1,1 @@
+export { default as IconMaterialPermDeviceInformation } from './perm-device-information.component.vue';

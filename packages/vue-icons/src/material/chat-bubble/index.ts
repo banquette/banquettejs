@@ -1,0 +1,1 @@
+export { default as IconMaterialChatBubble } from './chat-bubble.component.vue';

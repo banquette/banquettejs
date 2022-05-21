@@ -1,0 +1,1 @@
+export { default as IconRemixChatDeleteFill } from './chat-delete-fill.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconRemixSwapBoxFill } from './swap-box-fill.component.vue';

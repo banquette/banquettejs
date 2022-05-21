@@ -1,0 +1,1 @@
+export { default as IconRemixYoutubeLine } from './youtube-line.component.vue';

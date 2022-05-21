@@ -1,0 +1,1 @@
+export { default as IconRemixCss3Line } from './css3-line.component.vue';

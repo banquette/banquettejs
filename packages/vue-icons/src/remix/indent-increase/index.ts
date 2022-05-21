@@ -1,0 +1,1 @@
+export { default as IconRemixIndentIncrease } from './indent-increase.component.vue';

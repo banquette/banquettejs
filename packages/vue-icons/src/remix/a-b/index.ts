@@ -1,0 +1,1 @@
+export { default as IconRemixAB } from './a-b.component.vue';

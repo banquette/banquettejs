@@ -1,0 +1,1 @@
+export { default as IconMaterialPlusOne } from './plus-one.component.vue';

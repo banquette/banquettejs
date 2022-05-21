@@ -1,0 +1,1 @@
+export { default as IconRemixFolderKeyholeFill } from './folder-keyhole-fill.component.vue';

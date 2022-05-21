@@ -1,0 +1,1 @@
+export { default as IconRemixMindMap } from './mind-map.component.vue';

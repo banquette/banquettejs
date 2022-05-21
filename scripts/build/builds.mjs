@@ -25,11 +25,14 @@ function generateBanner(name, format) {
         " */";
 }
 
-function createBuildVariants(config) {
+function createBuildVariants(config, type = null) {
     const externals = [new RegExp(`^@banquette/((?!${config.package}).)+`)];
-    return {
-        // CommonJS (for nodejs or bundlers)
-        [`${config.package}-cjs-dev`]: {
+    const types = type === null ? ['cjs', 'esm', 'umd'] : (typeof(type) === 'string' ? [type] : type);
+    const variants = [];
+
+    // CommonJS (for nodejs or bundlers)
+    if (types.indexOf('cjs') > -1) {
+        variants[`${config.package}-cjs-dev`] = {
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
             entry: resolve(`packages/${config.package}/src/index.ts`),
@@ -39,8 +42,8 @@ function createBuildVariants(config) {
             moduleName: config.module,
             externals,
             banner: generateBanner(config.package, 'CommonJS')
-        },
-        [`${config.package}-cjs-prod`]: {
+        };
+        variants[`${config.package}-cjs-prod`] = {
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
             entry: resolve(`packages/${config.package}/src/index.ts`),
@@ -50,9 +53,12 @@ function createBuildVariants(config) {
             moduleName: config.module,
             externals,
             banner: generateBanner(config.package, 'CommonJS')
-        },
-        // ES (for bundlers)
-        [`${config.package}-esm`]: {
+        };
+    }
+
+    // ES (for bundlers)
+    if (types.indexOf('esm') > -1) {
+        variants[`${config.package}-esm`] = {
             preserveModules: false,
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
@@ -62,31 +68,35 @@ function createBuildVariants(config) {
             moduleName: config.module,
             externals,
             banner: generateBanner(config.package, 'ES2015')
-        },
-        // UMD (for browser)
-        // [`${config.package}-umd-dev`]: {
-        //     package: config.package,
-        //     rootDir: resolve(`packages/${config.package}`),
-        //     entry: resolve(`packages/${config.package}/src/index.ts`),
-        //     outputFile: resolve(`packages/${config.package}/dist/index.umd.dev.js`),
-        //     format: 'umd',
-        //     env: 'development',
-        //     moduleName: config.module,
-        //     externals,
-        //     banner: generateBanner(config.package, 'UMD')
-        // },
-        // [`${config.package}-umd-prod`]: {
-        //     package: config.package,
-        //     rootDir: resolve(`packages/${config.package}`),
-        //     entry: resolve(`packages/${config.package}/src/index.ts`),
-        //     outputFile: resolve(`packages/${config.package}/dist/index.umd.prod.js`),
-        //     format: 'umd',
-        //     env: 'production',
-        //     moduleName: config.module,
-        //     externals,
-        //     banner: generateBanner(config.package, 'UMD')
-        // }
-    };
+        };
+    }
+
+    // UMD (for browser)
+    // if (types.indexOf('umd') > -1) {
+    //     variants[`${config.package}-umd-dev`] = {
+    //         package: config.package,
+    //         rootDir: resolve(`packages/${config.package}`),
+    //         entry: resolve(`packages/${config.package}/src/index.ts`),
+    //         outputFile: resolve(`packages/${config.package}/dist/index.umd.dev.js`),
+    //         format: 'umd',
+    //         env: 'development',
+    //         moduleName: config.module,
+    //         externals,
+    //         banner: generateBanner(config.package, 'UMD')
+    //     };
+    //     variants[`${config.package}-umd-prod`] = {
+    //         package: config.package,
+    //         rootDir: resolve(`packages/${config.package}`),
+    //         entry: resolve(`packages/${config.package}/src/index.ts`),
+    //         outputFile: resolve(`packages/${config.package}/dist/index.umd.prod.js`),
+    //         format: 'umd',
+    //         env: 'production',
+    //         moduleName: config.module,
+    //         externals,
+    //         banner: generateBanner(config.package, 'UMD')
+    //     };
+    // }
+    return variants;
 }
 
 export const Builds = Object.assign({},
@@ -219,9 +229,9 @@ export const Builds = Object.assign({},
         module: 'Banquette.Vue.Ui'
     }),
     createBuildVariants({
-        package: 'vue-material-icons',
-        module: 'Banquette.Vue.MaterialIcons'
-    }),
+        package: 'vue-icons',
+        module: 'Banquette.Vue.Icons'
+    }, 'esm'),
     createBuildVariants({
         package: 'vue-typescript',
         module: 'Banquette.Vue.Typescript'

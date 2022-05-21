@@ -1,0 +1,1 @@
+export { default as IconMaterialSettingsBackupRestore } from './settings-backup-restore.component.vue';

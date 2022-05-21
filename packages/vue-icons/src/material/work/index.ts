@@ -1,0 +1,1 @@
+export { default as IconMaterialWork } from './work.component.vue';

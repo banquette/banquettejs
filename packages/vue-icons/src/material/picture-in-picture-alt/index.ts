@@ -1,0 +1,1 @@
+export { default as IconMaterialPictureInPictureAlt } from './picture-in-picture-alt.component.vue';

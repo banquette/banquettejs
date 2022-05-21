@@ -1,0 +1,1 @@
+export { default as IconRemixCoreosLine } from './coreos-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconLocalActivity } from './icon-local-activity.component.vue';

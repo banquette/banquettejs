@@ -1,0 +1,1 @@
+export { default as IconRemixDownload2Line } from './download-2-line.component.vue';

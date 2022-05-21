@@ -1,0 +1,1 @@
+export { default as IconRemixUserVoiceLine } from './user-voice-line.component.vue';

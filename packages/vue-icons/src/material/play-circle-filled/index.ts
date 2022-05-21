@@ -1,0 +1,1 @@
+export { default as IconMaterialPlayCircleFilled } from './play-circle-filled.component.vue';

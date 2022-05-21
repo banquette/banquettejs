@@ -1,0 +1,1 @@
+export { default as IconRemixMailSettingsFill } from './mail-settings-fill.component.vue';
