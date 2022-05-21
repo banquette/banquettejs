@@ -18,8 +18,6 @@
         "@banquette/exception": "^0.1.0",
         "@banquette/form": "^0.1.0",
         "@banquette/http": "^0.1.0",
-        "@banquette/model": "^0.1.0",
-        "@banquette/model-form": "^0.1.0",
         "@banquette/ui": "^0.1.0",
         "@banquette/utils-array": "^0.1.0",
         "@banquette/utils-dom": "^0.1.0",
@@ -28,7 +26,7 @@
         "@banquette/utils-string": "^0.1.0",
         "@banquette/utils-type": "^0.1.0",
         "@banquette/validation": "^0.1.0",
-        "@banquette/vue-material-icons": "^0.1.0",
+        "@banquette/vue-icons": "^0.1.0",
         "@banquette/vue-typescript": "^0.1.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"

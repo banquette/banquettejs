@@ -20,11 +20,13 @@
         "@banquette/form": "^0.1.0",
         "@banquette/http": "^0.1.0",
         "@banquette/model": "^0.1.0",
+        "@banquette/model-form": "^0.1.0",
         "@banquette/utils-misc": "^0.1.0",
         "@banquette/utils-object": "^0.1.0",
         "@banquette/utils-random": "^0.1.0",
         "@banquette/utils-string": "^0.1.0",
-        "@banquette/utils-type": "^0.1.0"
+        "@banquette/utils-type": "^0.1.0",
+        "@banquette/validation": "^0.1.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
