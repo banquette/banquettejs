@@ -97,6 +97,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      */
     private readonly choices: Record<string, Choice[]> = {};
     private inlinedChoices: Choice[] = [];
+    private unsureSelectedChoicesIdentifiers: Primitive[] = [];
     private focusedIdentifier: any;
     private lastSelectedIdentifier: Primitive|undefined = undefined;
     private noChoiceAvailable: boolean = true;
@@ -719,6 +720,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                 return this.createSelectedChoice(candidate);
             }
         }
+        this.unsureSelectedChoicesIdentifiers.push(identifier);
         return new SelectedChoice(this.extractChoiceLabel(value), identifier, value);
     }
 
@@ -750,6 +752,21 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                 identifiers.push(item.identifier);
                 if (!item.disabled && item.visible) {
                     this.noChoiceAvailable = false;
+                }
+                const unsureIdx = this.unsureSelectedChoicesIdentifiers.indexOf(item.identifier);
+                if (unsureIdx > -1) {
+                    if (this.viewData.multiple) {
+                        for (let i = 0; this.viewData.control.value.length; ++i) {
+                            if (this.viewData.control.value[i].identifier === item.identifier) {
+                                this.viewData.control.value[i] = this.createSelectedChoice(item);
+                                break ;
+                            }
+                        }
+                    } else {
+                        this.viewData.control.value = this.createSelectedChoice(item);
+                    }
+                    this.unsureSelectedChoicesIdentifiers.splice(unsureIdx, 1);
+                    this.selectChoice(item);
                 }
             }
             for (const group of Object.keys(originChoices.grouped)) {
