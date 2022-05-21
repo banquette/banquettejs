@@ -23,8 +23,9 @@
     .inner-wrapper {
         .arrow, .arrow::before {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
+            box-sizing: border-box;
         }
 
         .arrow::before {
@@ -34,6 +35,8 @@
             border-style: var(--popover-border-style);
             border-color: transparent;
             background: var(--popover-background-color);
+            top: 0;
+            left: 0;
             z-index: 1;
         }
 
@@ -58,6 +61,7 @@
             line-height: 1;
             min-width: 10px;
             word-wrap: break-word;
+            white-space: nowrap;
             z-index: 0;
 
             :slotted(svg) {
@@ -72,10 +76,8 @@
     }
 
     &[data-popper-placement^='top'] > .inner-wrapper {
-        transform-origin: bottom center;
-
         & > .arrow {
-            bottom: -3px;
+            bottom: -4px;
 
             &::before {
                 border-bottom-color: var(--popover-border-color);
@@ -85,10 +87,8 @@
     }
 
     &[data-popper-placement^='bottom'] > .inner-wrapper {
-        transform-origin: top center;
-
         & > .arrow {
-            top: -5px;
+            top: -4px;
 
             &::before {
                 border-top-color: var(--popover-border-color);
@@ -98,10 +98,8 @@
     }
 
     &[data-popper-placement^='left'] > .inner-wrapper {
-        transform-origin: right center;
-
         & > .arrow {
-            right: -3px;
+            right: -4px;
 
             &::before {
                 border-right-color: var(--popover-border-color);
@@ -111,10 +109,8 @@
     }
 
     &[data-popper-placement^='right'] > .inner-wrapper {
-        transform-origin: left center;
-
         & > .arrow {
-            left: -5px;
+            left: -4px;
 
             &::before {
                 border-bottom-color: var(--popover-border-color);

@@ -396,15 +396,16 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * Add an event listener to an element and handle its de-registration.
      */
     private addEventListener(target: HTMLElement, eventType: string, callback: VoidCallback, group: string = 'default'): void {
-        target.addEventListener(eventType, (event: Event) => {
+        const eventCallback = (event: Event) => {
             event.stopPropagation();
             callback();
-        });
+        };
+        target.addEventListener(eventType, eventCallback);
         if (isUndefined(this.unsubscribeFunctions[group])) {
             this.unsubscribeFunctions[group] = [];
         }
         this.unsubscribeFunctions[group].push(() => {
-            target.removeEventListener(eventType, callback);
+            target.removeEventListener(eventType, eventCallback);
         });
     }
 
