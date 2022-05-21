@@ -5,8 +5,8 @@ import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { AnyObject } from "@banquette/utils-type/types";
-import { IconBugReport } from "@banquette/vue-material-icons/icon-bug-report";
-import { IconClose } from "@banquette/vue-material-icons/icon-close";
+import { IconMaterialBugReport } from "@banquette/vue-icons/material/bug-report";
+import { IconMaterialClose } from "@banquette/vue-icons/material/close";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -17,7 +17,7 @@ import { StickToDirective } from "../../misc";
 
 @Component({
     name: 'bt-form-control-state-overlay',
-    components: [IconBugReport, IconClose],
+    components: [IconMaterialBugReport, IconMaterialClose],
     directives: [StickToDirective]
 })
 export default class FormControlStateOverlayComponent extends Vue {

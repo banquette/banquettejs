@@ -67,7 +67,7 @@
                 <tr v-if="vm.fetching || vm.error">
                     <td :colspan="vm.visibleColumns.length">
                         <slot name="error" v-if="vm.error" :error="vm.errorDetail">
-                            <icon-report></icon-report>
+                            <i-material-report></i-material-report>
                             <ul>
                                 <li v-for="message in vm.errorDetail.messagesStack">{{ message }}</li>
                             </ul>

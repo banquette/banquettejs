@@ -7,7 +7,7 @@ import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback, Primitive } from "@banquette/utils-type/types";
-import { IconCancel } from "@banquette/vue-material-icons/icon-cancel";
+import { IconMaterialCancel } from "@banquette/vue-icons/material/cancel";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
@@ -22,6 +22,7 @@ import { ClickOutsideDirective } from "../../../misc";
 import { ProgressCircularComponent } from "../../../progress/progress-circular";
 import { TagComponent } from "../../../tag";
 import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
+import { BaseInputComponent } from "../../base-input";
 import { BaseInputComposable } from "../../base-input/base-input.composable";
 import { ViewModelEvents } from "../../constant";
 import { BeforeSlotOrigin, AfterSlotOrigin, PropOrigin } from "../constant";
@@ -37,7 +38,7 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconCancel],
+    components: [BaseInputComponent, ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconMaterialCancel],
     directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['focus', 'blur', 'change']
 })

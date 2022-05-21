@@ -2,7 +2,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { Choice } from "@banquette/ui/form/select/choice";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { IconCheck } from "@banquette/vue-material-icons/icon-check";
+import { IconMaterialCheck } from "@banquette/vue-icons/material/check";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { InjectProvided } from "@banquette/vue-typescript/decorator/inject-provided.decorator";
@@ -16,7 +16,7 @@ import type SelectComponent from "../select.component";
 
 @Component({
     name: 'bt-form-select-choice',
-    components: [IconCheck]
+    components: [IconMaterialCheck]
 })
 export default class ChoiceComponent extends Vue {
     /**

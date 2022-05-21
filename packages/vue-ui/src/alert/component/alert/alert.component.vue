@@ -1,7 +1,8 @@
 <style src="./alert.component.css" scoped></style>
 <template src="./alert.component.html" ></template>
 <script lang="ts">
-import { IconClose } from "@banquette/vue-material-icons/icon-close";
+import { IconComponent } from "@banquette/vue-icons/icon";
+import { IconMaterialClose } from "@banquette/vue-icons/material/close";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -18,7 +19,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-alert',
-    components: [ButtonComponent, ProgressHorizontalComponent, IconClose],
+    components: [IconComponent, ButtonComponent, ProgressHorizontalComponent, IconMaterialClose],
     directives: [BindThemeDirective],
     emits: ['update:modelValue', 'close'],
 })
@@ -33,9 +34,14 @@ export default class AlertComponent extends Vue {
     @Prop({type: String, default: null}) public title!: string|null;
 
     /**
-     * The name of the icon component to show.
+     * The name of the icon to show, or `null` to show none.
      */
     @Prop({type: String, default: null}) public icon!: string|null;
+
+    /**
+     * The name of set of icon to get the icon from.
+     */
+    @Prop({type: String, default: 'material'}) public iconSet!: string;
 
     /**
      * Time to live.
@@ -47,6 +53,12 @@ export default class AlertComponent extends Vue {
      * If `true` the end-user can close the alert by themselves.
      */
     @Prop({type: Boolean, default: false}) public closable!: boolean;
+
+    /**
+     * Name of the transition to apply when an alert is shown / hidden.
+     * If `false`, disable the transition.
+     */
+    @Prop({type: [String, Boolean], default: undefined}) public transition!: string|false|undefined;
 
     /**
      * Bi-directional binding for the visibility so the dialog can be closed
@@ -69,7 +81,7 @@ export default class AlertComponent extends Vue {
     /**
      * Internals.
      */
-    @Ref() private internalVisible: boolean = true;
+    @Ref() private internalVisible: boolean = false;
     private ttlStartTime: number|null = null;
     private ttlTimeoutId: number|null = null;
 
@@ -78,11 +90,23 @@ export default class AlertComponent extends Vue {
     }
 
     /**
+     * Vue lifecycle.
+     */
+    public mounted(): void {
+        // `internalVisible` to true only after the first render
+        // so the opening transition works.
+        this.internalVisible = true;
+    }
+
+    /**
      * Remove the alert.
      */
     @Expose() public close(): void {
         this.visible = false;
         this.internalVisible = false;
+    }
+
+    @Expose() public onAfterLeave(): void {
         this.$emit('close');
     }
 

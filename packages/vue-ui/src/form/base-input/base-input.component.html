@@ -2,7 +2,7 @@
 <!-- !v.control.value would resolve to `false` for `[]`, but v.control.value == false resolves to `true`. -->
 <div
     class="bt-form-base-input"
-    :data-has-value="(v.control.value && v.control.value != false) ? '' : null"
+    :data-has-value="(v.control.value && v.control.value !== false) ? '' : null"
     :data-has-help="hasLabelSlot ? '' : null"
     :data-has-focus="v.control.focused ? '' : null"
     :data-has-placeholder="v.base.placeholder ? '' : null"
@@ -30,12 +30,12 @@
                 <bt-progress-circular v-if="v.control.busy || v.control.validating"></bt-progress-circular>
                 <template v-if="hasFloatingErrors && v.control.invalid && v.control.validated">
                     <div ref="error-icon" class="error-icon">
-                        <icon-warning size="18" @click="v.control.focus()"></icon-warning>
+                        <i-material-warning size="18" @click="v.control.focus()"></i-material-warning>
                     </div>
                 </template>
                 <template v-if="hasFloatingHelp && hasHelpSlot">
                     <div ref="help-icon" class="help-icon">
-                        <icon-help size="18"></icon-help>
+                        <i-material-help size="18"></i-material-help>
                     </div>
                 </template>
                 <bt-form-control-state-overlay :v="v" v-if="v.base.showDebug"></bt-form-control-state-overlay>

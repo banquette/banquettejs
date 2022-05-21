@@ -1,6 +1,6 @@
 <div>
     <div ref="target" class="bt-form-control-state-overlay" @click.stop.prevent="toggle()" @mousedown.prevent="" v-bt-popover="{showDelay: 500, content: 'Show view data'}">
-        <icon-bug-report></icon-bug-report>
+        <i-material-bug-report></i-material-bug-report>
     </div>
     <Teleport to="body" v-if="visible">
         <div class="overlay" @click.stop="" v-bt-stick-to="overlayOptions" @mousedown.prevent="">

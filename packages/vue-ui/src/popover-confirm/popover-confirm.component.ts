@@ -1,4 +1,4 @@
-import { IconHelp } from "@banquette/vue-material-icons/icon-help";
+import { IconMaterialHelp } from "@banquette/vue-icons/material/help";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -11,7 +11,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-popover-confirm',
-    components: [DropdownComponent, IconHelp],
+    components: [DropdownComponent, IconMaterialHelp],
     directives: [BindThemeDirective],
     emits: ['confirm', 'cancel']
 })

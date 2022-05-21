@@ -1,15 +1,15 @@
-<Transition>
-    <div class="bt-alert" v-if="visible" v-bt-bind-theme>
+<Transition :name="transition !== false ? transition : undefined" @after-leave="onAfterLeave">
+    <div class="bt-alert" v-if="visible" :data-is-closable="closable ? '' : null" v-bt-bind-theme>
         <template v-if="!!icon">
-            <component :is="icon"></component>
+            <bt-icon :name="icon" :set="iconSet"></bt-icon>
         </template>
         <div class="body">
             <div class="title" v-if="hasSlot('title') || title">
-                <slot name="title">{{ title }}</slot>
+                <slot name="title" :close="close">{{ title }}</slot>
             </div>
             <span class="message">
                 <slot :close="close"></slot>
-                <span v-if="closable" class="close-icon" @click.stop.prevent="close()"><icon-close></icon-close></span>
+                <span v-if="closable" class="close-icon" @click.stop.prevent="close()"><i-material-close></i-material-close></span>
             </span>
             <bt-progress-horizontal v-if="ttl !== null" :progress="timeLeft" :progress-max="ttl"></bt-progress-horizontal>
         </div>

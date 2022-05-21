@@ -11,9 +11,9 @@ import { TableViewModel } from "@banquette/ui/table/table-view-model";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureInteger } from "@banquette/utils-type/ensure-integer";
 import { GenericCallback } from "@banquette/utils-type/types";
-import { IconKeyboardBackspace } from "@banquette/vue-material-icons/icon-keyboard-backspace";
-import { IconChevronLeft } from "@banquette/vue-material-icons/icon-chevron-left";
-import { IconChevronRight } from "@banquette/vue-material-icons/icon-chevron-right";
+import { IconMaterialKeyboardBackspace } from "@banquette/vue-icons/material/keyboard-backspace";
+import { IconMaterialChevronLeft } from "@banquette/vue-icons/material/chevron-left";
+import { IconMaterialChevronRight } from "@banquette/vue-icons/material/chevron-right";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -24,7 +24,7 @@ import { TextComponent } from "../../form/text";
 
 @Component({
     name: 'bt-table-pagination',
-    components: [TextComponent, SelectComponent, IconKeyboardBackspace, IconChevronLeft, IconChevronRight],
+    components: [TextComponent, SelectComponent, IconMaterialChevronRight, IconMaterialChevronLeft, IconMaterialKeyboardBackspace],
 })
 export default class PaginationComponent extends Vue {
     @Prop({type: Object, required: true}) public vm!: TableViewModel;

@@ -8,12 +8,11 @@ import { HeadlessTreeViewDataInterface } from "@banquette/ui/tree/headless-tree-
 import { HeadlessTreeViewModel } from "@banquette/ui/tree/headless-tree.view-model";
 import { Node } from '@banquette/ui/tree/node';
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { noop } from "@banquette/utils-misc/noop";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { Primitive, AnyObject } from "@banquette/utils-type/types";
-import { IconArrowDropDown } from "@banquette/vue-material-icons/icon-arrow-drop-down";
-import { IconHelp } from "@banquette/vue-material-icons/icon-help";
+import { IconMaterialArrowDropDown } from "@banquette/vue-icons/material/arrow-drop-down";
+import { IconMaterialHelp } from "@banquette/vue-icons/material/help";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -40,7 +39,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-tree',
-    components: [ProgressCircularComponent, IconArrowDropDown, IconHelp],
+    components: [ProgressCircularComponent, IconMaterialArrowDropDown, IconMaterialHelp],
     directives: [BindThemeDirective],
     emits: ['update:modelValue'],
 })

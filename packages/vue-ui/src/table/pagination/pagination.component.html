@@ -17,14 +17,14 @@
             <!-- First page -->
             <li class="page-item first-last first" :data-clickable="vm.pagination.allowFirstPage && !vm.pagination.currentState.isFirstPage">
                 <a href="" @click.prevent="vm.pagination.goTo(isOffset ? 1 : 0)">
-                    <icon-keyboard-backspace></icon-keyboard-backspace>
+                    <i-material-keyboard-backspace></i-material-keyboard-backspace>
                 </a>
             </li>
 
             <!-- Previous page -->
             <li class="page-item" :data-clickable="!vm.pagination.currentState.isFirstPage && isOffset">
                 <a href="" @click.prevent="vm.pagination.previous()">
-                    <icon-chevron-left></icon-chevron-left>
+                    <i-material-chevron-left></i-material-chevron-left>
                 </a>
             </li>
 
@@ -51,14 +51,14 @@
             <!-- Next page -->
             <li class="page-item" :data-clickable="!vm.pagination.currentState.isLastPage">
                 <a href="" @click.prevent="vm.pagination.next()">
-                    <icon-chevron-right></icon-chevron-right>
+                    <i-material-chevron-right></i-material-chevron-right>
                 </a>
             </li>
 
             <!-- Last page -->
             <li class="page-item first-last last" :data-clickable="vm.pagination.allowLastPage && !vm.pagination.currentState.isLastPage && isOffset">
                 <a href="" @click.prevent="vm.pagination.goTo(vm.pagination.currentState.totalPagesCount)">
-                    <icon-keyboard-backspace></icon-keyboard-backspace>
+                    <i-material-keyboard-backspace></i-material-keyboard-backspace>
                 </a>
             </li>
         </ul>

@@ -29,8 +29,8 @@
                 <div v-for="formFile in v.control.value" class="file-item" :class="{error: formFile.failed}">
                     <div class="file-details">
                         <bt-progress-circular v-if="formFile.uploading"></bt-progress-circular>
-                        <div class="error-icon" v-else-if="formFile.failed"><icon-error></icon-error></div>
-                        <icon-description v-else></icon-description>
+                        <div class="error-icon" v-else-if="formFile.failed"><i-material-error></i-material-error></div>
+                        <i-material-description v-else></i-material-description>
                         <div class="file-details-inner">
                             <div class="file-name">
                                 {{ formFile.filename }}
@@ -42,15 +42,15 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <div class="done-icon" v-if="formFile.succeeded"><icon-done></icon-done></div>
+                        <div class="done-icon" v-if="formFile.succeeded"><i-material-done></i-material-done></div>
                         <bt-button @click="start(formFile)" v-if="formFile.paused || formFile.failed">
-                            <icon-file-upload></icon-file-upload>
+                            <i-material-file-upload></i-material-file-upload>
                         </bt-button>
                         <bt-button @click="pause(formFile)" v-if="formFile.uploading">
-                            <icon-stop></icon-stop>
+                            <i-material-stop></i-material-stop>
                         </bt-button>
                         <bt-button @click="cancel(formFile)">
-                            <icon-close></icon-close>
+                            <i-material-close></i-material-close>
                         </bt-button>
                     </div>
                 </div>

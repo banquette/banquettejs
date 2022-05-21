@@ -1,11 +1,11 @@
 import { ControlViewDataInterface } from "@banquette/ui/form/control-view-data.interface";
-import { IconHelp } from "@banquette/vue-material-icons/icon-help";
-import { IconWarning } from "@banquette/vue-material-icons/icon-warning";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { IconMaterialHelp } from "@banquette/vue-icons/material/help";
+import { IconMaterialWarning } from "@banquette/vue-icons/material/warning";
 import { FormControlStateOverlayComponent } from "../../debug";
 import { PopoverDirective } from "../../popover";
 import { ProgressCircularComponent } from "../../progress/progress-circular";
@@ -15,7 +15,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-base-input',
-    components: [ProgressCircularComponent, FormControlStateOverlayComponent, IconWarning, IconHelp],
+    components: [ProgressCircularComponent, FormControlStateOverlayComponent, IconMaterialHelp, IconMaterialWarning],
     directives: [PopoverDirective]
 })
 export default class BaseInputComponent extends Vue {

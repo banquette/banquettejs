@@ -5,13 +5,13 @@ import { HttpMethod } from "@banquette/http/constants";
 import { FormFile } from "@banquette/ui/form/file/form-file";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { Primitive } from "@banquette/utils-type/types";
-import { IconClose } from "@banquette/vue-material-icons/icon-close";
-import { IconDescription } from "@banquette/vue-material-icons/icon-description";
-import { IconDone } from "@banquette/vue-material-icons/icon-done";
-import { IconError } from "@banquette/vue-material-icons/icon-error";
-import { IconFileUpload } from "@banquette/vue-material-icons/icon-file-upload";
-import { IconPlayArrow } from "@banquette/vue-material-icons/icon-play-arrow";
-import { IconStop } from "@banquette/vue-material-icons/icon-stop";
+import { IconMaterialClose } from "@banquette/vue-icons/material/close";
+import { IconMaterialDescription } from "@banquette/vue-icons/material/description";
+import { IconMaterialDone } from "@banquette/vue-icons/material/done";
+import { IconMaterialError } from "@banquette/vue-icons/material/error";
+import { IconMaterialFileUpload } from "@banquette/vue-icons/material/file-upload";
+import { IconMaterialPlayArrow } from "@banquette/vue-icons/material/play-arrow";
+import { IconMaterialStop } from "@banquette/vue-icons/material/stop";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
@@ -29,7 +29,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-file',
-    components: [BaseInputComponent, IconPlayArrow, IconStop, IconClose, IconFileUpload, IconDescription, IconDone, IconError],
+    components: [BaseInputComponent, IconMaterialClose, IconMaterialDescription, IconMaterialDone, IconMaterialError, IconMaterialFileUpload, IconMaterialPlayArrow, IconMaterialStop],
     directives: [BindThemeDirective]
 })
 export default class FormFileComponent extends AbstractVueFormComponent<FileViewDataInterface, FileViewModel> {
