@@ -15,8 +15,11 @@ export function getThemesForComponent(componentInstance: Vue): VueTheme[] {
     while (parentComponent) {
         parentComponent = maybeResolveTsInst(parentComponent);
         if (getComponentName(parentComponent) === 'bt-theme') {
-            themes.push(VueThemes.Get((parentComponent as ThemeComponent).name));
-            break ;
+            const btThemeName = (parentComponent as ThemeComponent).name;
+            if (btThemeName) {
+                themes.push(VueThemes.Get(btThemeName));
+                break;
+            }
         }
         parentComponent = parentComponent.$parent;
     }

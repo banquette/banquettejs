@@ -14,7 +14,7 @@ export class ThemeComponent extends Vue {
      * Name of the theme to apply.
      * If the theme doesn't exist yet, the component will update automatically when it becomes available.
      */
-    @Prop({type: String, required: true}) public name!: string;
+    @Prop({type: String, default: null}) public name!: string|null;
 
     private themeInUse: string|null = null;
     private unsubscribe: UnsubscribeFunction|null = null;
@@ -23,25 +23,30 @@ export class ThemeComponent extends Vue {
     public render(component: ComponentPublicInstance, context: SetupContext): any {
         const attrs = {class: 'bt-theme'};
 
-        if (this.themeInUse !== this.name && this.themeInUse !== null && VueThemes.Has(this.themeInUse)) {
-            VueThemes.Get(this.themeInUse).free();
-        }
-        if (VueThemes.Has(this.name)) {
-            const theme = VueThemes.Get(this.name);
-            attrs.class += ' ' + theme.id;
-            if (this.unsubscribe !== null) {
-                this.unsubscribe();
-                this.unsubscribe = null;
+        if (this.themeInUse !== this.name) {
+            if (this.themeInUse !== null && VueThemes.Has(this.themeInUse)) {
+                VueThemes.Get(this.themeInUse).free();
+                this.themeInUse = null;
             }
-            theme.use();
-            this.themeInUse = this.name;
-        } else if (this.unsubscribe === null) {
-            this.unsubscribe = VueThemes.OnCreated((event: ThemeEvent) => {
-                if (event.theme && event.theme.name === this.name) {
-                    // Force re-render
-                    this.$forceUpdate();
+            if (this.name) {
+                if (VueThemes.Has(this.name)) {
+                    const theme = VueThemes.Get(this.name);
+                    attrs.class += ' ' + theme.id;
+                    if (this.unsubscribe !== null) {
+                        this.unsubscribe();
+                        this.unsubscribe = null;
+                    }
+                    theme.use();
+                    this.themeInUse = this.name;
+                } else if (this.unsubscribe === null) {
+                    this.unsubscribe = VueThemes.OnCreated((event: ThemeEvent) => {
+                        if (event.theme && event.theme.name === this.name) {
+                            // Force re-render
+                            this.$forceUpdate();
+                        }
+                    });
                 }
-            });
+            }
         }
         return h('div', attrs, renderSlot(context.slots, 'default'));
     }
