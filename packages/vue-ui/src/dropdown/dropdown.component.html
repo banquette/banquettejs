@@ -1,4 +1,4 @@
-<div class="bt-dropdown">
+<div>
     <!-- :visible is always `true` but only act as a default value because if the user define a value for the "visible" prop, it will be in `$attrs` and override the value. -->
     <!-- Also, defining the "visible" prop disable the default behavior of the popover, based on mouse events. -->
     <bt-popover class="bt-dropdown" v-if="realTarget !== null" :visible="true" :target="realTarget" :teleport="null" placement="bottom" interactive v-bind="$attrs">
