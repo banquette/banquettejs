@@ -12,14 +12,15 @@
         "clean": "node scripts/build/clean.mjs",
         "build:aliases": "node scripts/update-tsconfigs-aliases.mjs",
         "build:changelog": "node scripts/generate-changelog.js",
-        "build:icons": "node scripts/generate-icons-components.mjs",
+        "generate:icons": "node scripts/generate-icons-components.mjs",
         "show-dependencies": "node scripts/show-packages-dependencies.mjs",
         "update-dependencies": "node scripts/update-packages-dependencies.mjs",
         "test": "npm run clean && jest --passWithNoTests",
         "release": "bash scripts/release.sh",
         "release:local": "bash scripts/release-local.sh",
         "copy:local": "node scripts/copy-locally.mjs",
-        "deploy:local": "npm run build && node scripts/copy-locally.mjs"
+        "deploy:local": "npm run build && node scripts/copy-locally.mjs",
+        "patch": "node scripts/patch-decorators-metadata.mjs"
     },
     "dependencies": {
         "@popperjs/core": "^2.11.2",
