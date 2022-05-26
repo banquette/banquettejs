@@ -19,7 +19,7 @@ import { PopoverConfigurationInterface } from "./popover-configuration.interface
 @Composable()
 export class PopoverComposable extends ComponentAwareComposable<Vue> {
     private static SHOW_EVENTS_MAP: Record<string, {show: string, hide: string}> = {
-        'hover': {show: 'mouseenter', hide: 'mouseleave'},
+        'mouseenter': {show: 'mouseenter', hide: 'mouseleave'},
         'mousedown': {show: 'mousedown', hide: 'mousedown-outside'},
         'click': {show: 'click', hide: 'click-outside'},
         'focus': {show: 'focus', hide: 'blur'}
@@ -65,18 +65,18 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      *
      * Possible values are:
      *
-     *   - hover: will show the popover when the mouse enters one of its targets
+     *   - mouseenter: will show the popover when the mouse enters one of its targets
      *   - click: will show the popover when a click is made on one of its targets
      *   - focus: will show the popover when one of its targets take the focus
      *
      * If no value is set to `hideOn`, an inverse event will automatically be set for each on the above,
      * to hide the popover:
      *
-     *   - hover: will set a `mouseleave` event as well
+     *   - mouseenter: will set a `mouseleave` event as well
      *   - click: will toggle the popover and hide the popover when clicking outside of it
      *   - focus: will set `blur` event as well
      */
-    @Prop({type: [Array, String], default: 'hover', transform: (v: any) => {
+    @Prop({type: [Array, String], default: 'mouseenter', transform: (v: any) => {
         if (isString(v)) {
             return v.split(',').map((i) => trim(i))
         }
@@ -88,7 +88,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * Defines the type of event listeners to add on the targets to make the popover disappear.
      *
      * Possible values are:
-     *   - mouseleave: automatically set when `showOn` is set to `hover` and `hideOn` is `null`
+     *   - mouseleave: automatically set when `showOn` is set to `mouseenter` and `hideOn` is `null`
      *   - click: hide the popover when clicking on the target
      *   - click-outside: hide the popover when clicking outside of any of its targets
      *   - mousedown-outside: hide the popover when a mousedown event is triggered outside of any of its targets
@@ -111,7 +111,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * Calling `show()` manually will make the popover visible immediately.
      * The delay only applies to DOM events.
      */
-    @Prop({type: [Object, Number], default: 0}) public showDelay!: number|Record<string, number>;
+    @Prop({default: 0, transform: (v) => !isObject(v) ? parseInt(v, 10) : v}) public showDelay!: number|Record<string, number>;
 
     /**
      * Time to wait in milliseconds before hiding the popover when its visibility becomes `false` through a DOM event.
@@ -120,13 +120,28 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * Calling `hide()` manually will make the popover visible immediately.
      * The delay only applies to DOM events.
      */
-    @Prop({type: [Object, Number], default: {mouseleave: 200}}) public hideDelay!: number|Record<string, number>;
+    @Prop({default: {mouseleave: 200}, transform: (v) => !isObject(v) ? parseInt(v, 10) : v}) public hideDelay!: number|Record<string, number>;
 
     /**
      * If `true`, the popover will remain visible while the mouse is over its content.
      * This only
      */
     @Prop({type: Boolean, default: false}) public interactive!: boolean;
+
+    /**
+     * Enable/disable the `flip` modifier of Popper.
+     */
+    @Prop({type: Boolean, default: true}) public flip!: boolean;
+
+    /**
+     * Enable/disable the `preventOverflow` modifier of Popper.
+     */
+    @Prop({type: Boolean, default: true}) public preventOverflow!: boolean;
+
+    /**
+     * Enable/disable the `computeStyles` modifier of Popper.
+     */
+    @Prop({type: Boolean, default: true}) public computeStyles!: boolean;
 
     /**
      * An HTML element or selector to teleport the popover into.
@@ -150,6 +165,14 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         }
         return v;
     }}) public offset!: [number, number]|null;
+
+    /**
+     * Custom options object directly passed to PopperJS.
+     *
+     * Beware, internal modifiers will be overridden if defined here,
+     * making the following props inoperative: `showArrow`, `offset`.
+     */
+    @Prop({type: Object, default: null}) public popperOptions!: any;
 
     /**
      * The final configuration object, ready to use by the host component.
@@ -223,7 +246,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Create a new options object that will be given to the `bt-stick-to` directive.
      */
-    @Watch(['target', 'placement', 'offset'], {immediate: ImmediateStrategy.Mounted})
+    @Watch(['target', 'placement', 'offset', 'popperOptions'], {immediate: ImmediateStrategy.Mounted})
     protected updateStickToOptions(): void {
         const targetsCandidates = (isString(this.target) ? this.target.split(',') : ensureArray(this.target)).map((i) => trim(i));
         if (!targetsCandidates.length && this.component.$el && this.component.$el.parentElement instanceof HTMLElement) {
@@ -245,33 +268,35 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
             popper: {
                 modifiers: [{
                     name: 'preventOverflow',
+                    enabled: this.preventOverflow,
                     options: {
                         altAxis: true
                     }
                 }, {
                     name: 'computeStyles',
+                    enabled: this.computeStyles,
                     options: {
                         adaptive: false
                     },
+                }, {
+                    name: 'flip',
+                    enabled: this.flip
+                }, {
+                    name: "arrow",
+                    enabled: this.showArrow,
+                    options: {
+                        padding: 10
+                    }
+                }, {
+                    name: 'offset',
+                    enabled: this.offset !== null,
+                    options: {
+                        offset: this.offset
+                    }
                 }]
             }
         };
-        if (this.offset !== null) {
-            this.config.stickToOptions.popper.modifiers.push({
-                name: 'offset',
-                options: {
-                    offset: this.offset
-                }
-            });
-        }
-        if (this.showArrow) {
-            this.config.stickToOptions.popper.modifiers.push({
-                name: "arrow",
-                options: {
-                    padding: 10
-                }
-            });
-        }
+        Object.assign(this.config.stickToOptions.popper, this.popperOptions || {});
     }
 
     /**

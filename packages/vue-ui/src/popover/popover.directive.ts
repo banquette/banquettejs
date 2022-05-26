@@ -85,8 +85,8 @@ export class PopoverDirective {
              */
             render: () => h(PopoverComponent, options.props)
         });
-        app.mount(container);
         options.target.append(container);
+        app.mount(container);
         return {el: container, app, options};
     }
 
