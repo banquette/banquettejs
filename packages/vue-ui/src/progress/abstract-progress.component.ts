@@ -11,22 +11,26 @@ export class AbstractProgressComponent extends Vue {
      * The percent or progression will depend on the min and max values (given by `progressMin` and `progressMax`).
      */
     @Prop({
-        type: Number,
+        type: [Number, String],
         default: null,
         transform: function(this: AbstractProgressComponent, v: any) {
-            return v !== null ? Math.max(this.progressMin, Math.min(this.progressMax, v)) : null;
+            if (v === null) {
+                return null;
+            }
+            v = parseFloat(v);
+            return Math.max(this.progressMin, Math.min(this.progressMax, v));
         }
     }) public progress!: number|null;
 
     /**
      * If `progress` is <= to this value, the percent of progression will be 0.
      */
-    @Prop({type: Number, default: 0}) public progressMin!: number;
+    @Prop({type: [Number, String], default: 0, transform: (v) => parseFloat(v)}) public progressMin!: number;
 
     /**
      * If `progress` is >= to this value, the percent of progression will be 100.
      */
-    @Prop({type: Number, default: 100}) public progressMax!: number;
+    @Prop({type: [Number, String], default: 100, transform: (v) => parseFloat(v)}) public progressMax!: number;
 
     /**
      * If `true` the progress text is visible.
