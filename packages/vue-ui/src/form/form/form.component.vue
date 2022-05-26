@@ -134,6 +134,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel<ViewData, ModelType>();
         // this.vm.viewData.__version = 0;
         this.vm.viewData.model = null;
+        this.vm.viewData.persistResponse = null;
         this.v = this.vm.viewData as ViewData;
 
         // So the proxy is used by the headless view model.
@@ -167,6 +168,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.onBeforePersist(event);
         }));
         this.unsubscribeFunctions.push(this.vm.onPersistSuccess((event: FormAfterPersistEventArg) => {
+            this.vm.viewData.persistResponse = event.response;
             this.$emit('persist-success', event);
             this.onPersistSuccess(event);
         }));
