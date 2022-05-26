@@ -6,13 +6,14 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { StickToDirective } from "../misc";
+import { StickToDirective, ClientOnlyComponent } from "../misc";
 import { PopoverComposable } from "./popover.composable";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-popover',
+    components: [ClientOnlyComponent],
     directives: [StickToDirective, BindThemeDirective],
     inheritAttrs: false
 })
@@ -29,6 +30,12 @@ export default class PopoverComponent extends Vue {
      */
     @Prop({type: [String, Boolean], default: undefined}) public transition!: string|false|undefined;
 
+    /**
+     * If `true` the dropdown content is always rendered, even when hidden.
+     */
+    @Prop({type: Boolean, default: false}) public renderHidden!: boolean;
+
+    @Expose() public shouldRender: boolean = false;
     @Expose() public isVisible: boolean = false;
 
     /**
@@ -62,6 +69,7 @@ export default class PopoverComponent extends Vue {
         if (this.popoverComposable.config.visible) {
             return ;
         }
+        this.shouldRender = false;
         this.popoverComposable.config.stickToOptions.enabled = false;
         this.$forceUpdate();
     }
@@ -69,6 +77,7 @@ export default class PopoverComponent extends Vue {
     @Watch('config.visible')
     public onVisibilityChange(newValue: any): void {
         if (newValue) {
+            this.shouldRender = true;
             this.popoverComposable.config.stickToOptions.enabled = newValue;
             // Force update is required so the `v-bt-stick-to` directive updates.
             this.$forceUpdate();

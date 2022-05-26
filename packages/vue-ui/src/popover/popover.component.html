@@ -1,20 +1,24 @@
-<Teleport :to="config.teleport" :disabled="!config.teleport">
-    <div
-        ref="popover"
-        class="bt-popover"
-        v-bind="$attrs"
-        v-bt-bind-theme
-        v-bt-stick-to="config.stickToOptions"
-    >
-        <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave" @enter="onEnter()" @after-enter="updated()">
-            <div v-show="isVisible" class="inner-wrapper">
-                <div role="tooltip" class="content" v-if="!config.allowHtml || hasNonEmptySlot('default')">
-                    <slot v-if="hasNonEmptySlot('default')"></slot>
-                    <template v-else>{{ config.content }}</template>
+<bt-client-only>
+    <Teleport :to="config.teleport" :disabled="!config.teleport">
+        <div
+            ref="popover"
+            class="bt-popover"
+            v-bind="$attrs"
+            v-bt-bind-theme
+            v-bt-stick-to="config.stickToOptions"
+        >
+            <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave" @enter="onEnter()" @after-enter="updated()">
+                <div v-show="isVisible" class="inner-wrapper">
+                    <template v-if="renderHidden || isVisible || shouldRender">
+                        <div role="tooltip" class="content" v-if="!config.allowHtml || hasNonEmptySlot('default')">
+                            <slot v-if="hasNonEmptySlot('default')"></slot>
+                            <template v-else>{{ config.content }}</template>
+                        </div>
+                        <div role="tooltip" class="content" v-else v-html="config.content"></div>
+                    </template>
+                    <div class="arrow" v-if="config.showArrow" data-popper-arrow></div>
                 </div>
-                <div role="tooltip" class="content" v-else v-html="config.content"></div>
-                <div class="arrow" v-if="config.showArrow" data-popper-arrow></div>
-            </div>
-        </Transition>
-    </div>
-</Teleport>
+            </Transition>
+        </div>
+    </Teleport>
+</bt-client-only>

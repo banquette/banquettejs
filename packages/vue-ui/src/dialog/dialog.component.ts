@@ -17,6 +17,7 @@ import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.d
 import { Vue } from "@banquette/vue-typescript/vue";
 import { useDraggable, Position } from "@vueuse/core";
 import { watch } from "vue";
+import { ClientOnlyComponent } from "../misc";
 import { OverlayComponent } from "../overlay";
 import { DialogEvents } from "./constant";
 import { HideDialogEventArg } from "./event/hide-dialog.event-arg";
@@ -27,7 +28,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-dialog',
-    components: [OverlayComponent],
+    components: [OverlayComponent, ClientOnlyComponent],
     directives: [BindThemeDirective],
     emits: ['update:modelValue', 'close'],
     factory: () => Injector.Get(DialogComponent)
