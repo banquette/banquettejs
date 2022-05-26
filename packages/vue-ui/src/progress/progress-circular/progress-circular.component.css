@@ -1,11 +1,11 @@
 
 .bt-progress-circular {
     --progress-circular-font-family: var(--bt-progress-circular-font-size, var(--bt-font-family-base));
-    --progress-circular-font-size: var(--bt-progress-circular-font-size, 10px);
+    --progress-circular-font-size: var(--bt-progress-circular-font-size, 0.25em);
     --progress-circular-font-weight: var(--bt-progress-circular-font-size, var(--bt-font-weight-normal));
     --progress-circular-text-color: var(--bt-progress-circular-text-color, inherit);
 
-    --progress-circular-size: var(--bt-progress-circular-size, 40px);
+    --progress-circular-size: var(--bt-progress-circular-size, 1em);
     --progress-circular-fill: var(--bt-progress-circular-fill, none);
     --progress-circular-stroke-color: var(--bt-progress-circular-stroke-color, var(--bt-color-primary));
 }
