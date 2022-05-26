@@ -42,5 +42,5 @@ export function isDecoratedComponentInstance(input: any): input is DecoratedComp
  * Test if the input is a `VccOpts` object.
  */
 export function isVccOpts(input: any): input is VccOpts {
-    return isObject(input) && isFunction(input.render) && COMPONENT_CTOR in input;
+    return isObject(input) && (isFunction(input.render) || isFunction(input.ssrRender)) && COMPONENT_CTOR in input;
 }
