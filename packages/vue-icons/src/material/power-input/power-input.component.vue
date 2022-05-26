@@ -10,5 +10,5 @@ export default class IconMaterialPowerInput {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 9 19 6' : '0 0 24 24'"><path d="M2 9v2h19V9H2zm0 6h5v-2H2v2zm7 0h5v-2H9v2zm7 0h5v-2h-5v2z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 9 19 6' : '0 0 24 24'"><path d="M2 9v2h19V9H2zm0 6h5v-2H2v2zm7 0h5v-2H9v2zm7 0h5v-2h-5v2z"/></svg></span>
 </template>

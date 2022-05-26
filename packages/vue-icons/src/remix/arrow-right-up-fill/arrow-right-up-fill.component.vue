@@ -10,5 +10,5 @@ export default class IconRemixArrowRightUpFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5.98 6 12.02 12.02' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m13.05 12.36-5.656 5.658-1.414-1.415 5.657-5.656-4.95-4.95H18V17.31z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5.98 6 12.02 12.02' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m13.05 12.36-5.656 5.658-1.414-1.415 5.657-5.656-4.95-4.95H18V17.31z"/></svg></span>
 </template>

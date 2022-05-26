@@ -10,5 +10,5 @@ export default class IconRemixLoader5Fill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '12 3 9 9' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '12 3 9 9' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg></span>
 </template>

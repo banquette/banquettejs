@@ -10,5 +10,5 @@ export default class IconRemixShareForwardBoxFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 1 21 20' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M9 3v2H4v14h16v-9h2v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm7 2V1l7 6h-9a2 2 0 0 0-2 2v6h-2V9a4 4 0 0 1 4-4h2z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 1 21 20' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M9 3v2H4v14h16v-9h2v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm7 2V1l7 6h-9a2 2 0 0 0-2 2v6h-2V9a4 4 0 0 1 4-4h2z"/></svg></span>
 </template>

@@ -10,5 +10,5 @@ export default class IconMaterialFastRewind {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2.5 6 17.5 12' : '0 0 24 24'"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6 8.5 6V6l-8.5 6z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2.5 6 17.5 12' : '0 0 24 24'"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6 8.5 6V6l-8.5 6z"/></svg></span>
 </template>

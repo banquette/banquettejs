@@ -10,5 +10,5 @@ export default class IconMaterialKeyboardArrowRight {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '8.59 5.75 7.41 12' : '0 0 24 24'"><path d="m8.59 16.34 4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '8.59 5.75 7.41 12' : '0 0 24 24'"><path d="m8.59 16.34 4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/></svg></span>
 </template>

@@ -10,5 +10,5 @@ export default class IconRemixCodeSLine {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '0 6.34 24 11.31' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m24 12-5.657 5.657-1.414-1.414L21.172 12l-4.243-4.243 1.414-1.414L24 12zM2.828 12l4.243 4.243-1.414 1.414L0 12l5.657-5.657L7.07 7.757 2.828 12z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '0 6.34 24 11.31' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m24 12-5.657 5.657-1.414-1.414L21.172 12l-4.243-4.243 1.414-1.414L24 12zM2.828 12l4.243 4.243-1.414 1.414L0 12l5.657-5.657L7.07 7.757 2.828 12z"/></svg></span>
 </template>

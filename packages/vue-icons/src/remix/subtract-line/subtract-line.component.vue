@@ -10,5 +10,5 @@ export default class IconRemixSubtractLine {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 11 14 2' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M5 11h14v2H5z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 11 14 2' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M5 11h14v2H5z"/></svg></span>
 </template>

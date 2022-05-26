@@ -10,5 +10,5 @@ export default class IconRemixArrowUpDownFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 3 20 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 8H8.001L8 20H6V8H2l5-5 5 5zm10 8-5 5-5-5h4V4h2v12h4z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 3 20 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 8H8.001L8 20H6V8H2l5-5 5 5zm10 8-5 5-5-5h4V4h2v12h4z"/></svg></span>
 </template>

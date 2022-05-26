@@ -10,5 +10,5 @@ export default class IconRemixTerminalFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2.52 4.93 18.48 16.07' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m11 12-7.071 7.071-1.414-1.414L8.172 12 2.515 6.343 3.929 4.93 11 12zm0 7h10v2H11v-2z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2.52 4.93 18.48 16.07' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m11 12-7.071 7.071-1.414-1.414L8.172 12 2.515 6.343 3.929 4.93 11 12zm0 7h10v2H11v-2z"/></svg></span>
 </template>

@@ -10,5 +10,5 @@ export default class IconRemixArrowDropLeftFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '9 8 4 8' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m9 12 4-4v8z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '9 8 4 8' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m9 12 4-4v8z"/></svg></span>
 </template>

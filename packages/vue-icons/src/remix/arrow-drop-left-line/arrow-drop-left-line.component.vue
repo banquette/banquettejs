@@ -10,5 +10,5 @@ export default class IconRemixArrowDropLeftLine {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '9 7.76 5.66 8.49' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m11.828 12 2.829 2.828-1.414 1.415L9 12l4.243-4.243 1.414 1.415L11.828 12z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '9 7.76 5.66 8.49' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m11.828 12 2.829 2.828-1.414 1.415L9 12l4.243-4.243 1.414 1.415L11.828 12z"/></svg></span>
 </template>

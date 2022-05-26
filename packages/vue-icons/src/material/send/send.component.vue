@@ -10,5 +10,5 @@ export default class IconMaterialSend {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 3 21 18' : '0 0 24 24'"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 3 21 18' : '0 0 24 24'"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></svg></span>
 </template>

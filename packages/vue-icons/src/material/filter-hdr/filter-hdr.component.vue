@@ -10,5 +10,5 @@ export default class IconMaterialFilterHdr {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '1 6 22 12' : '0 0 24 24'"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '1 6 22 12' : '0 0 24 24'"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z"/></svg></span>
 </template>

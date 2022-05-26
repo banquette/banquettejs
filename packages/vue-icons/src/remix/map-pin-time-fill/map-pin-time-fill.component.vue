@@ -10,5 +10,5 @@ export default class IconRemixMapPinTimeFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 2 18 21.73' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M13 11V6h-2v7h6v-2h-4zm5.364 6.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 2 18 21.73' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M13 11V6h-2v7h6v-2h-4zm5.364 6.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0z"/></svg></span>
 </template>

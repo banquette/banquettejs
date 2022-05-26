@@ -10,5 +10,5 @@ export default class IconRemixPlayLine {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '8 4.43 11.6 15.13' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.394 12 10 7.737v8.526L16.394 12zm2.982.416L8.777 19.482A.5.5 0 0 1 8 19.066V4.934a.5.5 0 0 1 .777-.416l10.599 7.066a.5.5 0 0 1 0 .832z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '8 4.43 11.6 15.13' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.394 12 10 7.737v8.526L16.394 12zm2.982.416L8.777 19.482A.5.5 0 0 1 8 19.066V4.934a.5.5 0 0 1 .777-.416l10.599 7.066a.5.5 0 0 1 0 .832z"/></svg></span>
 </template>

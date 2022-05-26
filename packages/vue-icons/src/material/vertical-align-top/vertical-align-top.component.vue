@@ -10,5 +10,5 @@ export default class IconMaterialVerticalAlignTop {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 3 16 18' : '0 0 24 24'"><path d="M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 3 16 18' : '0 0 24 24'"><path d="M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z"/></svg></span>
 </template>

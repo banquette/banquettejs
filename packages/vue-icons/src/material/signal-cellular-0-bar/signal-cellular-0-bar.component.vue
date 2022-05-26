@@ -10,5 +10,5 @@ export default class IconMaterialSignalCellular0Bar {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 2 20 20' : '0 0 24 24'"><path fill-opacity=".3" d="M2 22h20V2z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 2 20 20' : '0 0 24 24'"><path fill-opacity=".3" d="M2 22h20V2z"/></svg></span>
 </template>

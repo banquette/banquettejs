@@ -10,5 +10,5 @@ export default class IconMaterialFlashOn {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '7 2 10 20' : '0 0 24 24'"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '7 2 10 20' : '0 0 24 24'"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></span>
 </template>

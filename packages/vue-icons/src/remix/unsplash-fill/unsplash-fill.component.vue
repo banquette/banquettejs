@@ -10,5 +10,5 @@ export default class IconRemixUnsplashFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 3 18 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M8.5 11v5h7v-5H21v10H3V11h5.5zm7-8v5h-7V3h7z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 3 18 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M8.5 11v5h7v-5H21v10H3V11h5.5zm7-8v5h-7V3h7z"/></svg></span>
 </template>

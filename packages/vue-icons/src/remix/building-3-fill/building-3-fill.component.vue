@@ -10,5 +10,5 @@ export default class IconRemixBuilding3Fill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 1 18 20' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 10.111V1l11 6v14H3V7z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 1 18 20' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 10.111V1l11 6v14H3V7z"/></svg></span>
 </template>

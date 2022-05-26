@@ -10,5 +10,5 @@ export default class IconRemixGitCommitFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 8 18 8' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M15.874 13a4.002 4.002 0 0 1-7.748 0H3v-2h5.126a4.002 4.002 0 0 1 7.748 0H21v2h-5.126z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 8 18 8' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M15.874 13a4.002 4.002 0 0 1-7.748 0H3v-2h5.126a4.002 4.002 0 0 1 7.748 0H21v2h-5.126z"/></svg></span>
 </template>

@@ -10,5 +10,5 @@ export default class IconRemixSkipBackLine {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 4 13 16' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m8 11.333 10.223-6.815a.5.5 0 0 1 .777.416v14.132a.5.5 0 0 1-.777.416L8 12.667V19a1 1 0 0 1-2 0V5a1 1 0 1 1 2 0v6.333zm9 4.93V7.737L10.606 12 17 16.263z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 4 13 16' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m8 11.333 10.223-6.815a.5.5 0 0 1 .777.416v14.132a.5.5 0 0 1-.777.416L8 12.667V19a1 1 0 0 1-2 0V5a1 1 0 1 1 2 0v6.333zm9 4.93V7.737L10.606 12 17 16.263z"/></svg></span>
 </template>

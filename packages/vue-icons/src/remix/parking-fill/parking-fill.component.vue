@@ -10,5 +10,5 @@ export default class IconRemixParkingFill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 3 13 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M6 3h7a6 6 0 1 1 0 12h-3v6H6V3zm4 4v4h3a2 2 0 1 0 0-4h-3z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 3 13 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M6 3h7a6 6 0 1 1 0 12h-3v6H6V3zm4 4v4h3a2 2 0 1 0 0-4h-3z"/></svg></span>
 </template>

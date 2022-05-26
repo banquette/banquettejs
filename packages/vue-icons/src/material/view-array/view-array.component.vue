@@ -10,5 +10,5 @@ export default class IconMaterialViewArray {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 5 17 13' : '0 0 24 24'"><path d="M4 18h3V5H4v13zM18 5v13h3V5h-3zM8 18h9V5H8v13z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 5 17 13' : '0 0 24 24'"><path d="M4 18h3V5H4v13zM18 5v13h3V5h-3zM8 18h9V5H8v13z"/></svg></span>
 </template>

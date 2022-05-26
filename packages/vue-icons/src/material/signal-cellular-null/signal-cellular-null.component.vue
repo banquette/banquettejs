@@ -10,5 +10,5 @@ export default class IconMaterialSignalCellularNull {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 2 20 20' : '0 0 24 24'"><path d="M20 6.83V20H6.83L20 6.83M22 2 2 22h20V2z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 2 20 20' : '0 0 24 24'"><path d="M20 6.83V20H6.83L20 6.83M22 2 2 22h20V2z"/></svg></span>
 </template>

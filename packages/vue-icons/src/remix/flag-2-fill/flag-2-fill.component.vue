@@ -10,5 +10,5 @@ export default class IconRemixFlag2Fill {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 3 19.64 19' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M2 3h19.138a.5.5 0 0 1 .435.748L18 10l3.573 6.252a.5.5 0 0 1-.435.748H4v5H2V3z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 3 19.64 19' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M2 3h19.138a.5.5 0 0 1 .435.748L18 10l3.573 6.252a.5.5 0 0 1-.435.748H4v5H2V3z"/></svg></span>
 </template>

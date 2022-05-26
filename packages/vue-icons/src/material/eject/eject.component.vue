@@ -10,5 +10,5 @@ export default class IconMaterialEject {
 }
 </script>
 <template>
-    <span style="line-height: 0"><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 5 14 14' : '0 0 24 24'"><path d="M5 17h14v2H5zm7-12L5.33 15h13.34z"/></svg></span>
+    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 5 14 14' : '0 0 24 24'"><path d="M5 17h14v2H5zm7-12L5.33 15h13.34z"/></svg></span>
 </template>
