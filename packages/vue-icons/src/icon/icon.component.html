@@ -1,10 +1,9 @@
-<span class="bt-icon">
+<span class="bt-icon" v-bt-bind-theme>
     <component
         :is="iconName"
         :size="null"
         :color="null"
         v-if="isAvailable"
-        v-bt-bind-theme
         v-bind="$attrs"
     ></component>
     <span class="missing" v-if="!isAvailable" :title="'Unknown icon \'' + iconName + '\''">

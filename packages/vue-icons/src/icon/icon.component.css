@@ -4,7 +4,10 @@
     --icon-size: var(--bt-icon-size, 1em);
 
     display: inline-block;
-    line-height: 0;
+}
+
+.bt-icon :deep(svg) {
+    display: block;
 }
 
 .bt-icon :deep(svg:not([fill])) {
