@@ -206,7 +206,7 @@ export default class TreeComponent extends Vue {
                 if (node.remotePending) {
                     leftAddon = h(resolveComponent("bt-progress-circular"));
                 } else if (node.fetched) {
-                    leftAddon = h(resolveComponent('icon-arrow-drop-down'));
+                    leftAddon = h(resolveComponent('i-material-arrow-drop-down'), {crop: true});
                 } else {
                     leftAddon = h('div', {class: 'unknown-text'}, '?');
                 }
