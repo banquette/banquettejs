@@ -4,6 +4,7 @@ export const ThemeConfiguration = {
         vars: {
             backgroundColor                 : '@-background-color',
             valueBackgroundColor            : '@-value-background-color',
+            valueTextColor                  : '@-value-text-color',
             height                          : '@-height',
             borderRadius                    : '@-border-radius',
             indeterminateAnimationDuration  : '@-indeterminate-animation-duration',

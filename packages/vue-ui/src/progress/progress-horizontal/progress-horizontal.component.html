@@ -1,3 +1,9 @@
 <div class="bt-progress-horizontal" :data-indeterminate="isIndeterminate() ? '' : null" v-bt-bind-theme>
-    <div class="value" :style="{width}"></div>
+    <div class="value" :style="{width}">
+        <span class="text" v-if="showProgressText && !isIndeterminate()" :style="{left: width}">
+            <span class="inner">
+                <slot><span v-if="!isIndeterminate()">{{ animatedProgressText }}%</span></slot>
+            </span>
+        </span>
+    </div>
 </div>

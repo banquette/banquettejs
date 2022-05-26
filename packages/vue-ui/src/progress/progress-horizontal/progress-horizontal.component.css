@@ -1,33 +1,64 @@
 .bt-progress-horizontal {
     --progress-horizontal-background-color: var(--bt-progress-horizontal-background-color, var(--bt-color-gray-50));
     --progress-horizontal-value-background-color: var(--bt-progress-horizontal-value-background-color, var(--bt-color-primary));
-    --progress-horizontal-height: var(--bt-progress-horizontal-height, 6px);
+    --progress-horizontal-value-text-color: var(--bt-progress-horizontal-value-text-color, var(--bt-color-primary-contrast));
+    --progress-horizontal-height: var(--bt-progress-horizontal-height, 8px);
     --progress-horizontal-border-radius: var(--bt-progress-horizontal-border-radius, var(--bt-border-radius-sm));
 
-    --progress-horizontal-indeterminate-animation-duration: var(--bt-progress-horizontal-indeterminate-animation-duration, 0.8s);
+    --progress-horizontal-indeterminate-animation-duration: var(--bt-progress-horizontal-indeterminate-animation-duration, 1s);
     --progress-horizontal-determinate-animation-duration: var(--bt-progress-horizontal-determinate-animation-duration, 0.3s);
 }
 
 .bt-progress-horizontal {
+    width: 100%;
     height: var(--progress-horizontal-height);
     background: var(--progress-horizontal-background-color);
     border-radius: var(--progress-horizontal-border-radius);
-    width: 100%;
-    overflow: hidden;
+    position: relative;
 
-    .value {
+    & > .value {
         height: 100%;
         background: var(--progress-horizontal-value-background-color);
         border-radius: var(--progress-horizontal-border-radius);
+
+        & > .text {
+            position: absolute;
+            transition: left var(--progress-horizontal-determinate-animation-duration) ease-out;
+            color: var(--progress-horizontal-value-text-color);
+            border-radius: 50% 50% 50% 0;
+            background: var(--progress-horizontal-value-background-color);
+            transform: translate(-2px, -100%) rotate(-45deg);
+            transform-origin: bottom left;
+            left: 50%;
+            top: 0;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            & > .inner {
+                transform: rotate(45deg);
+                display: inline-block;
+                padding: 0.5em 0;
+                font-size: 0.7em;
+                font-weight: bold;
+                width: 2rem;
+                text-align: center;
+            }
+        }
     }
 
-    &[data-indeterminate] .value {
-        width: 100%;
-        animation: indeterminate var(--progress-horizontal-indeterminate-animation-duration) infinite linear;
-        transform-origin: 0 50%;
+    &[data-indeterminate] {
+        overflow: hidden;
+
+        & > .value {
+            width: 100%;
+            animation: indeterminate var(--progress-horizontal-indeterminate-animation-duration) infinite linear;
+            transform-origin: 0 50%;
+        }
     }
 
-    &:not([data-indeterminate]) .value {
+    &:not([data-indeterminate]) > .value {
         transition: width var(--progress-horizontal-determinate-animation-duration) ease-out;
     }
 }
