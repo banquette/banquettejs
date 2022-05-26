@@ -130,6 +130,11 @@
         top: var(--form-base-input-placeholder-y);
         left: var(--form-base-input-placeholder-x);
         padding: 0.1em 0;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: calc(100% - (var(--form-base-input-placeholder-x) * 2));
     }
 
     & > .extras {
