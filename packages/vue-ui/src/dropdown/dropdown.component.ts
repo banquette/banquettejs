@@ -18,6 +18,9 @@ import { ThemeConfiguration } from "./theme-configuration";
     inheritAttrs: false
 })
 export default class DropdownComponent extends Vue {
+    /**
+     * The element to make the dropdown show under.
+     */
     @Prop({type: [Object, String], default: null}) public target!: HTMLElement|string|null;
 
     @Expose() public realTarget: HTMLElement|string|null = null;
