@@ -54,7 +54,16 @@
         <template #before><slot name="before"></slot></template>
         <template #after><slot name="after"></slot></template>
     </bt-form-base-input>
-    <bt-dropdown ref="dropdown" :target="dropdownTarget" :visible="v.choicesVisible" :teleport="v.dropdownTeleport" class="bt-form-select-choices" :style="{minWidth: dropdownWidth + 'px', zIndex: v.dropdownZIndex}" @mousedown.prevent>
+    <bt-dropdown
+        ref="dropdown"
+        class="bt-form-select-choices"
+        :style="{minWidth: dropdownWidth + 'px', zIndex: v.dropdownZIndex}"
+        :target="dropdownTarget"
+        :visible="v.choicesVisible"
+        :teleport="v.dropdownTeleport"
+        render-hidden
+        @mousedown.prevent
+    >
         <choice-slot-wrapper position="before">
             <slot name="choices-before"></slot>
         </choice-slot-wrapper>
