@@ -1,9 +1,8 @@
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { trim } from "@banquette/utils-string/format/trim";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { AbstractConstructor } from "@banquette/utils-type/types";
 import { WatchOptions } from "@vue/runtime-core";
 import {
@@ -13,7 +12,7 @@ import {
     WatchStopHandle,
     VNode,
     Comment,
-    Fragment
+    Fragment, createElementBlock
 } from "vue";
 import { COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
@@ -146,5 +145,19 @@ export abstract class Vue implements ComponentPublicInstance {
             }
             return isString(node.children) ? node.children : '';
         }).join('');
+    }
+
+    /**
+     * Render a slot or return a default value if it does not exist.
+     */
+    protected renderSlot(name: string, defaultValue: VNode|VNode[]|string = ''): VNode|VNode[] {
+        const slot = this.$slots[name];
+        if (!isUndefined(slot)) {
+            return slot();
+        }
+        if (!isString(defaultValue)) {
+            return defaultValue;
+        }
+        return createElementBlock('span', null, defaultValue);
     }
 }
