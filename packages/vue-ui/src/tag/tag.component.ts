@@ -12,7 +12,8 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-tag',
     components: [IconMaterialClose],
-    directives: [BindThemeDirective]
+    directives: [BindThemeDirective],
+    emits: ['close']
 })
 export default class TagComponent extends Vue {
     /**
