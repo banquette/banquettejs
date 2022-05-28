@@ -168,6 +168,10 @@ export default class TabsComponent extends Vue {
     public onDirectionChange(): void {
         this.indicatorEl.removeAttribute('style');
         this.updateFocusIndicator();
+        // Wait the end of the transition.
+        window.setTimeout(() => {
+            this.updateFocusIndicator();
+        }, 300);
     }
 
 
