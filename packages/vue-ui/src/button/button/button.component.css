@@ -103,32 +103,3 @@
         }
     }
 }
-
-/**
- * Special case for `bt-form-base-input` addons.
- */
-:global(.bt-form-base-input .before > .bt-button),
-:global(.bt-form-base-input .before > .bt-button-wrapper > .bt-button) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: none;
-}
-
-:global(.bt-form-base-input .before > .bt-button:not(:first-child)),
-:global(.bt-form-base-input .before > .bt-button-wrapper:not(:first-child) > .bt-button) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-:global(.bt-form-base-input .after > .bt-button),
-:global(.bt-form-base-input .after > .bt-button-wrapper > .bt-button) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: none;
-}
-
-:global(.bt-form-base-input .after > .bt-button:not(:last-child)),
-:global(.bt-form-base-input .after > .bt-button-wrapper:not(:last-child) > .bt-button) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}

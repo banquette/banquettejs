@@ -308,6 +308,33 @@ VueThemes.Define('bt-button', {
                 }
             },
             cssCode: '& { aspect-ratio: 1 }'
+        },
+
+        /**
+         * In form addon.
+         */
+        {
+            match: {parent: 'bt-form-base-input'},
+            cssCode: `
+                :global(.before) &.bt-button .inner {
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                    border-right: none;
+                }
+
+                :global(.after) &.bt-button .inner {
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                }
+            `
+        },
+        {
+            match: {parent: 'bt-form-base-input', variant: 'light'},
+            cssCode: `
+                &.bt-button .inner {
+                    border-color: var(--bt-color-gray-200);
+                }
+            `
         }
     ]
 });
