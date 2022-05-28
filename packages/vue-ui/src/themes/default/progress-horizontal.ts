@@ -32,6 +32,6 @@ VueThemes.Define('bt-progress-horizontal', {
             cssVars: {
                 valueBackgroundColor: 'var(--bt-color-gray-200)',
             }
-        },
+        }
     ]
 });
