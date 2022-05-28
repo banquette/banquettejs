@@ -10,5 +10,5 @@ export default class IconRemixLineChartLine {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 3 18.71 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M5 3v16h16v2H3V3h2zm15.293 3.293 1.414 1.414L16 13.414l-3-2.999-4.293 4.292-1.414-1.414L13 7.586l3 2.999 4.293-4.292z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 3 18.71 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M5 3v16h16v2H3V3h2zm15.293 3.293 1.414 1.414L16 13.414l-3-2.999-4.293 4.292-1.414-1.414L13 7.586l3 2.999 4.293-4.292z"/></svg>
 </template>

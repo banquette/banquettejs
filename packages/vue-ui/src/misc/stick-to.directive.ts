@@ -16,7 +16,7 @@ import { DirectiveBinding } from "vue";
 
 interface OptionsInterface {
     enabled: boolean;
-    target: HTMLElement|string;
+    target: Element|string;
     placement?: PositioningStrategy;
     popper?: Partial<OptionsGeneric<any>>;
 }
@@ -36,7 +36,7 @@ export class StickToDirective {
     private bindings!: DirectiveBinding;
     private options!: OptionsInterface;
 
-    private target: HTMLElement|null = null;
+    private target: Element|null = null;
     private mutationObserverUnsubscribeFn: VoidCallback|null = null;
     private sizeObserverUnsubscribeFns: VoidCallback[] = [];
     private popper: Instance|null = null;
@@ -107,7 +107,7 @@ export class StickToDirective {
      * Here we have a reference on both the sticking element and the target,
      * so we can do the actual sticking thing.
      */
-    private attach(floatingEl: HTMLElement, targetEl: HTMLElement): void {
+    private attach(floatingEl: HTMLElement, targetEl: Element): void {
         let existingPosition: string = floatingEl.style.position;
         if (existingPosition !== 'fixed' && existingPosition !== 'absolute') {
             floatingEl.style.position = 'absolute';
@@ -125,7 +125,9 @@ export class StickToDirective {
             // The forceUpdate() reduces glitches when the target changes very quickly
             // and the floating element transform is animated.
             this.popper.forceUpdate();
-            this.observeTargetSize(targetEl);
+            if (targetEl instanceof HTMLElement) {
+                this.observeTargetSize(targetEl);
+            }
             this.observeTargetSize(floatingEl);
         } else {
             this.popper.setOptions(popperOptions).catch(console.error);
@@ -140,9 +142,9 @@ export class StickToDirective {
     /**
      * Try to resolve the target using the current value of the binding.
      */
-    private resolveTarget(): HTMLElement|null {
+    private resolveTarget(): Element|null {
         let target = this.options.target;
-        if (target instanceof HTMLElement) {
+        if (target instanceof Element) {
             return target;
         }
         if (!isString(target)) {
@@ -159,7 +161,7 @@ export class StickToDirective {
             let $parent = this.el.__vueParentComponent.ctx;
             do {
                 let candidate = isObject($parent.$refs) ? $parent.$refs[target] : null;
-                if (!isNullOrUndefined(candidate) && candidate.$el instanceof HTMLElement) {
+                if (!isNullOrUndefined(candidate) && candidate.$el instanceof Element) {
                     return candidate.$el;
                 }
                 $parent = $parent.$parent;
@@ -206,7 +208,7 @@ export class StickToDirective {
      */
     private resolveOptions(bindings: DirectiveBinding): OptionsInterface {
         let options = isFunction(bindings.value) ? bindings.value() : bindings.value;
-        if (options instanceof HTMLElement || !isObject(options)) {
+        if (options instanceof Element || !isObject(options)) {
             return {target: options, enabled: this.options ? this.options.enabled : true};
         }
         options = cloneDeepPrimitive(options);

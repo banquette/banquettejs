@@ -1,12 +1,9 @@
-<span class="bt-icon" v-bt-bind-theme>
-    <component
-        :is="iconName"
-        :size="null"
-        :color="null"
-        v-if="isAvailable"
-        v-bind="$attrs"
-    ></component>
-    <span class="missing" v-if="!isAvailable" :title="'Unknown icon \'' + iconName + '\''">
-        <i-remix-question-mark color="#fff" size="1em"></i-remix-question-mark>
-    </span>
-</span>
+<component
+    :is="iconName"
+    :size="null"
+    :color="null"
+    class="bt-icon"
+    v-if="isAvailable"
+    v-bind="$attrs"
+    v-bt-bind-theme
+></component>

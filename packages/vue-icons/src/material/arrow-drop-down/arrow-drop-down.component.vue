@@ -10,5 +10,5 @@ export default class IconMaterialArrowDropDown {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '7 10 10 5' : '0 0 24 24'"><path d="m7 10 5 5 5-5z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '7 10 10 5' : '0 0 24 24'"><path d="m7 10 5 5 5-5z"/></svg>
 </template>

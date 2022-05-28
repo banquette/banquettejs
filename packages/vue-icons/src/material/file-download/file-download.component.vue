@@ -10,5 +10,5 @@ export default class IconMaterialFileDownload {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 3 14 17' : '0 0 24 24'"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 3 14 17' : '0 0 24 24'"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
 </template>

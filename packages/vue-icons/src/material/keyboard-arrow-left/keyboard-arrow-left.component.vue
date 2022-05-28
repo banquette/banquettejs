@@ -10,5 +10,5 @@ export default class IconMaterialKeyboardArrowLeft {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '8 5.5 7.41 12' : '0 0 24 24'"><path d="m15.41 16.09-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '8 5.5 7.41 12' : '0 0 24 24'"><path d="m15.41 16.09-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/></svg>
 </template>

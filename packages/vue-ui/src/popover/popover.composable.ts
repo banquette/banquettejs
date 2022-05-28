@@ -28,7 +28,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Custom target element.
      */
-    @Prop({type: [String, Object], default: null}) public target!: HTMLElement|string;
+    @Prop({type: [String, Object], default: null}) public target!: Element|string;
 
     /**
      * Content of the popover.
@@ -146,7 +146,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * An HTML element or selector to teleport the popover into.
      */
-    @Prop({type: [Object, String], default: null}) public teleport!: HTMLElement|string|null;
+    @Prop({type: [Object, String], default: null}) public teleport!: Element|string|null;
 
     /**
      * To translate the popover from its original position.
@@ -186,11 +186,11 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         stickToOptions  : {}
     };
 
-    private targets: HTMLElement[] = [];
-    private activeTarget: HTMLElement|null = null;
+    private targets: Element[] = [];
+    private activeTarget: Element|null = null;
     private unsubscribeFunctions: Record<string, VoidCallback[]> = {};
     private scheduledVisibilityChange: {timerId: number|null, delay: number}|null = null;
-    private popoverEl: HTMLElement|null = null;
+    private popoverEl: Element|null = null;
 
     @Lifecycle('beforeUnmount')
     public beforeUnmount(): void {
@@ -212,7 +212,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         if (this.interactive) {
             // Wait for the next tick so the template has time to update and the reference to be assigned.
             this.component.$nextTick(() => {
-                if (this.component.$refs.popover instanceof HTMLElement) {
+                if (this.component.$refs.popover instanceof Element) {
                     this.bindInteractionRetainers(this.component.$refs.popover);
                 }
             });
@@ -249,7 +249,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     @Watch(['target', 'placement', 'offset', 'popperOptions'], {immediate: ImmediateStrategy.Mounted})
     protected updateStickToOptions(): void {
         const targetsCandidates = (isString(this.target) ? this.target.split(',') : ensureArray(this.target)).map((i) => trim(i));
-        if (!targetsCandidates.length && this.component.$el && this.component.$el.parentElement instanceof HTMLElement) {
+        if (!targetsCandidates.length && this.component.$el && this.component.$el.parentElement instanceof Element) {
             this.targets = [this.component.$el.parentElement];
         } else {
             this.targets = [];
@@ -328,7 +328,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * Bind events that will retain the visibility of the popover even after it has left the target element.
      * Only used if the popover is interactive.
      */
-    private bindInteractionRetainers(element: HTMLElement): void {
+    private bindInteractionRetainers(element: Element): void {
         this.popoverEl = element;
         this.clearEventsListeners('retainers');
         this.addEventListener(this.popoverEl, 'mousedown', noop, 'retainers'); // noop because we only want the preventPropagation
@@ -352,7 +352,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Bind an event to an element that will show the popover when triggered.
      */
-    private registerShowEvent(target: HTMLElement, eventType: string): void {
+    private registerShowEvent(target: Element, eventType: string): void {
         this.addEventListener(target, eventType, () => {
             // Switch the current target to the element on which the event occurred.
             if (this.config.stickToOptions.target !== target) {
@@ -366,7 +366,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Bind an event to an element that will hide the popover when triggered.
      */
-    private registerHideEvent(target: HTMLElement, eventType: string): void {
+    private registerHideEvent(target: Element, eventType: string): void {
         // Special case for *-outside events.
         if (eventType.substring(eventType.length - 8) === '-outside') {
             target = document.documentElement;
@@ -380,28 +380,28 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Try to resolve the HTML element on which the popover should be attached.
      */
-    private resolveTarget(target: any): HTMLElement[]|null {
-        if (target instanceof HTMLElement) {
+    private resolveTarget(target: any): Element[]|null {
+        if (target instanceof Element) {
             return [target];
         }
         if (isString(target) && isObject(this.component.$refs)) {
             let parent = this.component.$parent;
             while (parent) {
                 const ref: any = parent.$refs[target];
-                if (ref instanceof HTMLElement) {
+                if (ref instanceof Element) {
                     return [ref];
                 }
-                if (isObject(ref) && ref.$el instanceof HTMLElement) {
+                if (isObject(ref) && ref.$el instanceof Element) {
                     return [ref.$el];
                 }
                 parent = parent.$parent;
             }
         }
         if (isString(target)) {
-            const results: HTMLElement[] = [];
+            const results: Element[] = [];
             const queryResults = document.querySelectorAll(target);
             for (const queryResult of queryResults as any) {
-                if (queryResult instanceof HTMLElement) {
+                if (queryResult instanceof Element) {
                     results.push(queryResult);
                 }
             }
@@ -420,7 +420,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Add an event listener to an element and handle its de-registration.
      */
-    private addEventListener(target: HTMLElement, eventType: string, callback: VoidCallback, group: string = 'default'): void {
+    private addEventListener(target: Element, eventType: string, callback: VoidCallback, group: string = 'default'): void {
         const eventCallback = (event: Event) => {
             event.stopPropagation();
             callback();

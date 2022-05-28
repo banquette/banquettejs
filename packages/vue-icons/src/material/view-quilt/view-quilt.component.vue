@@ -10,5 +10,5 @@ export default class IconMaterialViewQuilt {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 5 17 13' : '0 0 24 24'"><path d="M10 18h5v-6h-5v6zm-6 0h5V5H4v13zm12 0h5v-6h-5v6zM10 5v6h11V5H10z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 5 17 13' : '0 0 24 24'"><path d="M10 18h5v-6h-5v6zm-6 0h5V5H4v13zm12 0h5v-6h-5v6zM10 5v6h11V5H10z"/></svg>
 </template>

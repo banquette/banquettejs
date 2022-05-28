@@ -10,5 +10,5 @@ export default class IconRemixArrowUpLine {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4.22 4 15.56 16' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4.22 4 15.56 16' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"/></svg>
 </template>

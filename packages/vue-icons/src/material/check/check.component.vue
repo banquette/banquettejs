@@ -10,5 +10,5 @@ export default class IconMaterialCheck {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3.41 5.59 17.59 13.41' : '0 0 24 24'"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3.41 5.59 17.59 13.41' : '0 0 24 24'"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
 </template>

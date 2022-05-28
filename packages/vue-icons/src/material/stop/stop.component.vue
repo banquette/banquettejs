@@ -10,5 +10,5 @@ export default class IconMaterialStop {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 6 12 12' : '0 0 24 24'"><path d="M6 6h12v12H6z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 6 12 12' : '0 0 24 24'"><path d="M6 6h12v12H6z"/></svg>
 </template>

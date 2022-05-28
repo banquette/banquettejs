@@ -10,5 +10,5 @@ export default class IconMaterialSignalCellular4Bar {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 2 20 20' : '0 0 24 24'"><path d="M2 22h20V2z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '2 2 20 20' : '0 0 24 24'"><path d="M2 22h20V2z"/></svg>
 </template>

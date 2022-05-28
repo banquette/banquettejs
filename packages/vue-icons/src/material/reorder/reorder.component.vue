@@ -10,5 +10,5 @@ export default class IconMaterialReorder {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 5 18 14' : '0 0 24 24'"><path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 5 18 14' : '0 0 24 24'"><path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z"/></svg>
 </template>

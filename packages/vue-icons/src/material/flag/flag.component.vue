@@ -10,5 +10,5 @@ export default class IconMaterialFlag {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 4 15 17' : '0 0 24 24'"><path d="M14.4 6 14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 4 15 17' : '0 0 24 24'"><path d="M14.4 6 14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>
 </template>

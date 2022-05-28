@@ -10,5 +10,5 @@ export default class IconRemixToggleFill {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '1 5 22 14' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M8 5h8a7 7 0 0 1 0 14H8A7 7 0 0 1 8 5zm8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '1 5 22 14' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M8 5h8a7 7 0 0 1 0 14H8A7 7 0 0 1 8 5zm8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
 </template>

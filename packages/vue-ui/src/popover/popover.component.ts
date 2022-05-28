@@ -1,4 +1,5 @@
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -34,6 +35,13 @@ export default class PopoverComponent extends Vue {
      * If `true` the dropdown content is always rendered, even when hidden.
      */
     @Prop({type: Boolean, default: false}) public renderHidden!: boolean;
+
+    @Computed() public get teleportTarget(): any {
+        if (!this.popoverComposable.config.teleport && this.popoverComposable.config.stickToOptions.target instanceof SVGElement) {
+            return 'body';
+        }
+        return this.popoverComposable.config.teleport;
+    }
 
     @Expose() public shouldRender: boolean = false;
     @Expose() public isVisible: boolean = false;

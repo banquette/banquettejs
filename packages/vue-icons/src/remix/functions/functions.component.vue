@@ -10,5 +10,5 @@ export default class IconRemixFunctions {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 4 14 16' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m5 18 7.68-6L5 6V4h14v2H8.263L16 12l-7.737 6H19v2H5v-2z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 4 14 16' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m5 18 7.68-6L5 6V4h14v2H8.263L16 12l-7.737 6H19v2H5v-2z"/></svg>
 </template>

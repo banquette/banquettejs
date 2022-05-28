@@ -10,5 +10,5 @@ export default class IconMaterialCallMissed {
 }
 </script>
 <template>
-    <span><svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 7 18 10.41' : '0 0 24 24'"><path d="M19.59 7 12 14.59 6.41 9H11V7H3v8h2v-4.59l7 7 9-9z"/></svg></span>
+    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 7 18 10.41' : '0 0 24 24'"><path d="M19.59 7 12 14.59 6.41 9H11V7H3v8h2v-4.59l7 7 9-9z"/></svg>
 </template>

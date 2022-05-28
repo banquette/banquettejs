@@ -73,7 +73,7 @@ export class PopoverDirective {
     private createInstance(options: OptionsInterface): InstanceDescriptorInterface {
         // mount() clears its container before adding the component to it.
         // So a wrapper is required to preserve the content of the element the tooltip has been setup on.
-        const container = document.createElement('div');
+        const container: HTMLElement = document.createElement(options.target instanceof SVGElement ? 'foreignObject' : 'div');
 
         // Make the wrapper absolute, so it doesn't disturb the document's flow
         container.style.position = 'absolute';
