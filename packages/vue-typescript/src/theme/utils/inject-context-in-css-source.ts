@@ -12,6 +12,9 @@ export function injectContextInCssSource(source: string, themeId: string, varian
     const scopesDelimiters: Array<[string, string, boolean?]> = [['{', '}'], ['(', ')'], ['[', ']']];
     const scopesStartDelimiters = ['{', '(', '['];
     for (let i = 0; i < selectors.length; ++i) {
+        // Globals part of the selector.
+        const globals: string[] = [];
+
         // Scope id
         if (scopeId !== null) {
             let scopeIdPos = null;
@@ -49,6 +52,19 @@ export function injectContextInCssSource(source: string, themeId: string, varian
                         while (--j >= 0 && selectors[i][0][j].match(/\s/));
                         scopeIdPos = j + 1;
                         break ;
+                    } else if (selectors[i][0].substring(j, j + 7) === ':global') {
+                        scopeIdPos = null;
+                        const offset1 = selectors[i][1] + j;
+                        const offset2 = source.indexOf('(', offset1 + 7);
+                        const offset3 = source.indexOf(')', offset1 + 7);
+                        const modifierContent = source.substring(offset2 + 1, offset3);
+                        let end = i + (offset3 - offset1) + 1;
+                        while (selectors[i][0][end].match(/\s/) && ++end);
+                        source = trim(source.substring(0, offset1) + source.substring(offset1 + (end -i)));
+                        selectors[i][0] = selectors[i][0].substring(end);
+                        selectors[i][2] -= end - i - 1;
+                        globals.push(modifierContent);
+                        --j;
                     }
                 }
                 if (currentScopeIndex !== null && c === scopesDelimiters[currentScopeIndex][1]) {
@@ -73,7 +89,7 @@ export function injectContextInCssSource(source: string, themeId: string, varian
         }
 
         // Theme id
-        source = insertInString(source, selectors[i][1], `.${themeId} `);
+        source = insertInString(source, selectors[i][1], `.${themeId} ${globals.join(' ') + (globals.length ? ' ' : '')}`);
     }
     return source;
 }

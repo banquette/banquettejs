@@ -87,6 +87,11 @@ describe('Context injection', () => {
         '.baz .qux :deep(.foo .bar) > span:hover {}'                : `.${tid} [${vid}] .baz .qux[${sid}] .foo .bar > span:hover {}`,
         '&.baz .qux :deep(.foo .bar) > :deep(.other) span:hover {}' : `.${tid} [${vid}].baz .qux[${sid}] .foo .bar > :deep(.other) span:hover {}`,
         ':deep(.foo) {}'                                            : `.${tid} [${vid}] [${sid}] .foo {}`,
+        '.foo {}'                                                   : `.${tid} [${vid}] .foo[${sid}] {}`,
+        '&.foo {}'                                                  : `.${tid} [${vid}].foo[${sid}] {}`,
+        ':global(.parent) .foo {}'                                  : `.${tid} .parent [${vid}] .foo[${sid}] {}`,
+        ':global(.parent) &.foo {}'                                 : `.${tid} .parent [${vid}].foo[${sid}] {}`,
+        ':global(.before) &.foo .s {}:global(.after) &.foo .s{}'        : `.${tid} .before [${vid}].foo .s[${sid}] {}.${tid} .after [${vid}].foo .s[${sid}]{}`,
     };
 
     for (const selector of Object.keys(tests)) {
