@@ -56,5 +56,9 @@
         resize: vertical;
         height: var(--form-text-height);
         line-height: var(--form-text-line-height);
+
+        &[data-resize-locked] {
+            resize: none;
+        }
     }
 }

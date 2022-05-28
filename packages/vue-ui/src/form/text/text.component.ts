@@ -29,13 +29,7 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewData
     @Import(BaseInputComposable, false) public base!: BaseInputComposable;
 
     /**
-     * If `true` the text input is a textarea.
-     */
-    @Prop({type: Boolean, default: false}) public multiline!: boolean;
-
-    /**
      * Input type.
-     * Only applicable if not multiline.
      */
     @Prop({type: String, default: 'text'}) public type!: string;
 
@@ -45,10 +39,35 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewData
     @Prop({type: String, default: 'off'}) public autoComplete!: string;
 
     /**
-     * Define the number of rows of the textarea.
-     * Only applicable if multiline.
+     * If `true`, the view value "rows" will be automatically adjusted
+     * based on the number of line breaks in the control's value.
+     */
+    @Prop({type: Boolean, default: false}) public autoSize!: boolean;
+
+    /**
+     * Control the manual resizing of the textarea.
+     * Only applicable if type === "textarea".
+     * If `autoSize` is `true`, the resize is automatically disabled.
+     */
+    @Prop({type: Boolean, default: null}) public resizable!: boolean;
+
+    /**
+     * Define a specific number of rows.
+     * Only applicable if type === "textarea".
      */
     @Prop({type: Number, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public rows!: number|null;
+
+    /**
+     * Define the minimum number of rows of the textarea.
+     * Only applicable if type === "textarea".
+     */
+    @Prop({type: Number, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public minRows!: number|null;
+
+    /**
+     * Define the maximum number of rows of the textarea.
+     * Only applicable if type === "textarea".
+     */
+    @Prop({type: Number, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public maxRows!: number|null;
 
     // Template refs
     @TemplateRef('inputWrapper') public inputWrapper!: HTMLElement|null;
@@ -99,11 +118,14 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewData
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['multiline', 'type', 'rows', 'autocomplete'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['type', 'rows', 'minRows', 'maxRows', 'autocomplete', 'autoSize', 'resizable'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
-        this.v.multiline = this.multiline;
         this.v.type = this.type;
         this.v.rows = this.rows;
         this.v.autoComplete = this.autoComplete;
+        this.vm.minRows = this.minRows;
+        this.vm.maxRows = this.maxRows;
+        this.vm.autoSize = this.autoSize;
+        this.vm.resizable = this.resizable;
     }
 }

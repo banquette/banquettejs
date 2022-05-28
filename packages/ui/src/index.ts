@@ -26,6 +26,10 @@ export * from './form/form/event/form-before-persist.event-arg';
 export * from './form/form/event/form-after-persist.event-arg';
 export * from './form/form/event/form-action-error.event-arg';
 
+// Text
+export * from './form/text/headless-text-view.model';
+export * from './form/text/headless-text-view-data.interface';
+
 // Checkbox
 export * from './form/checkbox/headless-checkbox-view.model';
 export * from './form/checkbox/headless-checkbox-view-data.interface';

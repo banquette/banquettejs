@@ -1,7 +1,7 @@
 <div class="bt-form-text" v-bt-bind-theme>
     <bt-form-base-input :v="v">
         <input
-            v-if="!v.multiline"
+            v-if="v.type !== 'textarea'"
             ref="input"
             :id="v.control.fullId"
             :type="v.type"
@@ -21,6 +21,7 @@
             v-model="v.control.value"
             :disabled="v.control.disabled ? '' : null"
             :rows="v.rows"
+            :data-resize-locked="!v.resizable ? '' : null"
             data-control
             @focus="v.control.onFocus()"
             @blur="v.control.onBlur()"
