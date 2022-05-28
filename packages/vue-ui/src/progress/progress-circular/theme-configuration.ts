@@ -9,6 +9,11 @@ export const ThemeConfiguration = {
             fill        : '@-fill',
             strokeColor : '@-stroke-color',
             size        : '@-size'
+        },
+        selectors: {
+            root: '&.bt-progress-circular',
+            text: '.inner > .progress',
+            circle: 'svg'
         }
     }
 };

@@ -9,6 +9,11 @@ export const ThemeConfiguration = {
             borderRadius                    : '@-border-radius',
             indeterminateAnimationDuration  : '@-indeterminate-animation-duration',
             determinateAnimationDuration    : '@-determinate-animation-duration'
+        },
+        selectors: {
+            root: '&.bt-progress-horizontal',
+            progressBar: '& > .value',
+            progressText: '& > .value > .text'
         }
     }
 };

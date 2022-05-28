@@ -20,31 +20,14 @@
         height: 100%;
         background: var(--progress-horizontal-value-background-color);
         border-radius: var(--progress-horizontal-border-radius);
+        text-align: right;
 
         & > .text {
-            position: absolute;
-            transition: left var(--progress-horizontal-determinate-animation-duration) ease-out;
-            color: var(--progress-horizontal-value-text-color);
-            border-radius: 50% 50% 50% 0;
-            background: var(--progress-horizontal-value-background-color);
-            transform: translate(-2px, -100%) rotate(-45deg);
-            transform-origin: bottom left;
-            left: 50%;
-            top: 0;
-            aspect-ratio: 1/1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            & > .inner {
-                transform: rotate(45deg);
-                display: inline-block;
-                padding: 0.5em 0;
-                font-size: 0.7em;
-                font-weight: bold;
-                width: 2rem;
-                text-align: center;
-            }
+            transform: translate(0, var(--progress-horizontal-height));
+            color: var(--progress-horizontal-value-background-color);
+            font-weight: bold;
+            display: inline-block;
+            font-size: 0.8em;
         }
     }
 

@@ -61,6 +61,10 @@ export class AbstractProgressComponent extends Vue {
             return ;
         }
         if (this.progressTimeout !== null) {
+            const percent = this.progressPercent();
+            if (percent !== null) {
+                this.animatedProgressText = Math.round(percent);
+            }
             window.cancelAnimationFrame(this.progressTimeout);
         }
         let t = 0;
