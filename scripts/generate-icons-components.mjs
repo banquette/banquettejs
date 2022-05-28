@@ -147,7 +147,7 @@ export default class ${className} {
 }
 </script>
 <template>
-    <span>${optimizeSvg(svg)}</span>
+    ${optimizeSvg(svg)}
 </template>`;
         fs.writeFileSync(componentPath, src);
 
