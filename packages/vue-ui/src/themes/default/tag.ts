@@ -1,18 +1,16 @@
-import { ThemeWildcard } from "@banquette/vue-typescript/theme/constant";
 import { VueThemes } from "@banquette/vue-typescript/theme/vue-themes";
 
 VueThemes.Define('bt-tag', {
-    [ThemeWildcard]: [
+    '*': [
         {
             match: 'success',
             cssVars: {
                 textColor: 'var(--bt-color-green-500)',
                 backgroundColor: 'var(--bt-color-green-50)',
                 borderColor: 'var(--bt-color-green-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-green-contrast)',
-                    backgroundColor: 'var(--bt-color-green-500)'
-                }
+                closeFillColor: 'var(--bt-color-green-500)',
+                closeFillHoverColor: 'var(--bt-color-green-500)',
+                closeBackgroundHoverColor: 'var(--bt-color-green-150)'
             }
         },
         {
@@ -21,10 +19,9 @@ VueThemes.Define('bt-tag', {
                 textColor: 'var(--bt-color-orange-500)',
                 backgroundColor: 'var(--bt-color-orange-50)',
                 borderColor: 'var(--bt-color-orange-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-orange-contrast)',
-                    backgroundColor: 'var(--bt-color-orange-500)'
-                }
+                closeFillColor: 'var(--bt-color-orange-500)',
+                closeFillHoverColor: 'var(--bt-color-orange-500)',
+                closeBackgroundHoverColor: 'var(--bt-color-orange-150)'
             }
         },
         {
@@ -33,10 +30,9 @@ VueThemes.Define('bt-tag', {
                 textColor: 'var(--bt-color-red-500)',
                 backgroundColor: 'var(--bt-color-red-50)',
                 borderColor: 'var(--bt-color-red-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-red-contrast)',
-                    backgroundColor: 'var(--bt-color-red-500)'
-                }
+                closeFillColor: 'var(--bt-color-red-500)',
+                closeFillHoverColor: 'var(--bt-color-red-500)',
+                closeBackgroundHoverColor: 'var(--bt-color-red-150)'
             }
         },
         {
@@ -45,10 +41,9 @@ VueThemes.Define('bt-tag', {
                 textColor: 'var(--bt-color-white)',
                 backgroundColor: 'var(--bt-color-gray-800)',
                 borderColor: 'var(--bt-color-gray-850)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-gray-850)',
-                    backgroundColor: 'var(--bt-color-white)'
-                }
+                closeFillColor: 'var(--bt-color-white)',
+                closeFillHoverColor: 'var(--bt-color-white)',
+                closeBackgroundHoverColor: 'var(--bt-color-gray-700)'
             }
         },
         {
@@ -57,10 +52,9 @@ VueThemes.Define('bt-tag', {
                 textColor: 'var(--bt-color-gray-550)',
                 backgroundColor: 'var(--bt-color-gray-50)',
                 borderColor: 'var(--bt-color-gray-150)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-white)',
-                    backgroundColor: 'var(--bt-color-gray-500)'
-                }
+                closeFillColor: 'var(--bt-color-gray-550)',
+                closeFillHoverColor: 'var(--bt-color-gray-550)',
+                closeBackgroundHoverColor: 'var(--bt-color-gray-150)'
             }
         },
 
@@ -68,40 +62,24 @@ VueThemes.Define('bt-tag', {
          * Size
          */
         {
+            match: 'xs',
+            cssVars: {fontSize: '0.5rem'}
+        },
+        {
             match: 'sm',
             cssVars: {fontSize: '0.65rem'}
         },
         {
             match: 'md',
-            cssVars: {fontSize: '1.1rem'}
+            cssVars: {fontSize: '1rem'}
         },
         {
             match: 'lg',
-            cssVars: {fontSize: '1.25rem'}
+            cssVars: {fontSize: '1.2rem'}
         },
         {
             match: 'xl',
-            cssVars: {fontSize: '1.5rem'}
-        },
-
-        /**
-         * Outline
-         */
-        {
-            match: 'outline',
-            cssVars: {
-                backgroundColor: 'none'
-            }
-        },
-        {
-            match: 'outline dark',
-            cssVars: {
-                textColor: 'var(--bt-color-gray-850)',
-                'close.hover' : {
-                    fillColor: 'var(--bt-color-white)',
-                    backgroundColor: 'var(--bt-color-gray-850)'
-                }
-            }
+            cssVars: {fontSize: '1.45rem'}
         }
     ]
 });
