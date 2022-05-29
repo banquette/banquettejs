@@ -1,7 +1,6 @@
 import { ApiEvents, ApiProcessorTag } from "@banquette/api/constant";
 import { ApiBeforeResponseEvent } from "@banquette/api/event/api-before-response.event";
 import { ApiRequestEvent } from "@banquette/api/event/api-request.event";
-import { ApiResponseEvent } from "@banquette/api/event/api-response.event";
 import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
