@@ -87,8 +87,8 @@ export abstract class AbstractVueFormComponent<
         ], ViewModelSequence.Initialize);
 
         // Configure step
-        this.eventPipeline.subscribe(ViewModelEvents.Configure, proxy(this.configureProxy, this));
         this.eventPipeline.subscribe(ViewModelEvents.Configure, proxy(this.configureViewModel, this));
+        this.eventPipeline.subscribe(ViewModelEvents.Configure, proxy(this.configureProxy, this));
 
         // Initialize step
         this.eventPipeline.subscribe(ViewModelEvents.Initialize, proxy(this.initializeProxy, this));
