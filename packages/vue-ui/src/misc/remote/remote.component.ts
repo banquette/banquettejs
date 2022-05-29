@@ -28,6 +28,7 @@ export default class RemoteComponent extends Vue {
     @Prop({type: Object, default: {}}) public headers!: Record<string, Primitive>;
 
     @Expose() public response: HttpResponse<any>|null = null;
+    @Expose() public bag: any = {};
 
     @Computed() public get waiting(): boolean { return this.response === null }
     @Computed() public get fetching(): boolean { return this.response !== null && this.response.status === HttpResponseStatus.Pending }
@@ -50,7 +51,7 @@ export default class RemoteComponent extends Vue {
         }
     }
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.NextTick})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.NextTick, deep: true})
     private syncConfigurationProps(): void {
         this.remote.updateConfiguration({
             url: this.url,
