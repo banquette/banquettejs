@@ -3,6 +3,7 @@
     --form-text-padding-y: var(--bt-form-text-padding-y, 0.8em);
     --form-text-height: var(--bt-form-text-height, auto);
     --form-text-line-height: var(--bt-form-text-line-height, 1.4);
+    --form-text-clear-icon-color: var(--bt-form-text-clear-icon-color, var(--bt-text-color-light));
 }
 
 .bt-form-text :deep(.bt-form-base-input) {
@@ -60,5 +61,12 @@
         &[data-resize-locked] {
             resize: none;
         }
+    }
+
+    .floating-extras > * { pointer-events: auto; }
+
+    .floating-extras .clearable-icon svg {
+        width: 1.2em;
+        fill: var(--form-text-clear-icon-color);
     }
 }

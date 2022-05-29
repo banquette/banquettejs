@@ -3,10 +3,11 @@ import { BaseVars } from "../base-input/theme-configuration";
 export const ThemeConfiguration = {
     css: {
         vars: {...BaseVars, ...{
-            paddingX    : '@-padding-x',
-            paddingY    : '@-padding-y',
-            height      : '@-height',
-            lineHeight  : '@-line-height',
+            paddingX        : '@-padding-x',
+            paddingY        : '@-padding-y',
+            height          : '@-height',
+            lineHeight      : '@-line-height',
+            clearIconColor  : '@-clear-icon-color'
         }},
         selectors: {
             root: {

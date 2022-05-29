@@ -1,5 +1,6 @@
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { IconRemixCloseCircleLine } from "@banquette/vue-icons/remix/close-circle-line";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -19,7 +20,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-text',
-    components: [BaseInputComponent],
+    components: [BaseInputComponent, IconRemixCloseCircleLine],
     directives: [BindThemeDirective]
 })
 export default class TextComponent extends AbstractVueFormComponent<TextViewDataInterface, TextViewModel> {
@@ -50,6 +51,11 @@ export default class TextComponent extends AbstractVueFormComponent<TextViewData
      * If `autoSize` is `true`, the resize is automatically disabled.
      */
     @Prop({type: Boolean, default: null}) public resizable!: boolean;
+
+    /**
+     * If `true`, the user can clear the value of the input via an icon.
+     */
+    @Prop({type: Boolean, default: false}) public clearable!: boolean;
 
     /**
      * Define a specific number of rows.

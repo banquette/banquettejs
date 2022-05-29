@@ -26,6 +26,9 @@
             @focus="v.control.onFocus()"
             @blur="v.control.onBlur()"
         ></textarea>
+        <template #extras-after>
+            <a href="" v-if="v.control.value && clearable && !v.control.disabled" class="clearable-icon" @click.stop.prevent="v.control.value = ''"><i-remix-close-circle-line crop></i-remix-close-circle-line></a>
+        </template>
         <template #label><slot></slot></template>
         <template #help><slot name="help"></slot></template>
         <template #before-raw><slot name="before-raw"></slot></template>
