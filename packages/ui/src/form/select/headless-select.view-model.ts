@@ -116,6 +116,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             choicesVisible: false,
             multiple: false,
             searchBuffer: '',
+            creationBuffer: '',
             searchMinLength: this.searchMinLength,
             remoteFetchStatus: ChoicesRemoteFetchStatus,
             remoteFetchError: null
@@ -511,21 +512,30 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         } else if (event.key === 'ArrowDown') {
             this.moveSelection(1);
         } else if (event.key === 'Enter') {
-            let found = false;
-            for (const item of this.inlinedChoices) {
-                if (item.focused) {
-                    this.selectChoice(item);
-                    this.focusChoice(item); // Because selecting a choice un focus everything.
-                    if (!this.multiple) {
-                        this.hideChoices();
+            let choiceToSelect: Choice|null = null;
+            if (this.allowCreation && this.viewData.creationBuffer.length > 0) {
+                for (const item of this.inlinedChoices) {
+                    if (item.identifier === this.viewData.creationBuffer) {
+                        choiceToSelect = item;
+                        break ;
                     }
-                    found = true;
-                    break;
+                }
+                this.selectChoice(this.viewData.creationBuffer);
+                this.setSearchString('');
+            } else {
+                for (const item of this.inlinedChoices) {
+                    if (item.focused) {
+                        choiceToSelect = item;
+                        break;
+                    }
                 }
             }
-            if (!found && this.allowCreation && this.viewData.searchBuffer.length > 0) {
-                this.selectChoice(this.viewData.searchBuffer);
-                this.setSearchString('');
+            if (choiceToSelect) {
+                this.selectChoice(choiceToSelect);
+                this.focusChoice(choiceToSelect); // Because selecting a choice un-focus everything.
+                if (!this.multiple) {
+                    this.hideChoices();
+                }
             }
         } else if (event.key === 'Escape') {
             this.unFocusAll();

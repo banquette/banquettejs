@@ -42,6 +42,11 @@ export interface HeadlessSelectViewDataInterface extends HeadlessControlViewData
     searchBuffer: string;
 
     /**
+     * The current value of the new item on creation.
+     */
+    creationBuffer: string;
+
+    /**
      * Status of the remote fetching.
      */
     remoteFetchStatus: ChoicesRemoteFetchStatus;
