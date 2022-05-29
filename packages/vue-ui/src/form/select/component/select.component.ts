@@ -7,7 +7,7 @@ import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback, Primitive } from "@banquette/utils-type/types";
-import { IconMaterialCancel } from "@banquette/vue-icons/material/cancel";
+import { IconRemixCloseCircleLine } from "@banquette/vue-icons/remix/close-circle-line";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
@@ -38,7 +38,7 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [BaseInputComponent, ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconMaterialCancel],
+    components: [BaseInputComponent, ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconRemixCloseCircleLine],
     directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['focus', 'blur', 'change']
 })
@@ -137,7 +137,15 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
 
     public constructor() {
         super();
-        this.eventPipeline.subscribe(ViewModelEvents.Ready, () => {});
+        // For the execution of all props watchers before the proxy is initialized
+        // to ensure everything is configured before the proxy calls `updateValueFromControl`
+        // to assign the value of the control.
+        this.eventPipeline.subscribe(ViewModelEvents.Configure, () => {
+            this.onBasePropsChange();
+            this.syncChoices();
+            this.updateSearchConfiguration();
+            this.updateSelectionVisibilityTracking();
+        });
     }
 
     /**
@@ -236,6 +244,9 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         } else {
             this.v.base.placeholder = this.baseComposable.placeholder;
         }
+        if (this.vm.allowCreation) {
+            this.v.creationBuffer = this.v.inputValue;
+        }
     }, 100);
 
     /**
@@ -272,7 +283,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         'closeOnSelection',
         'dropdownTeleport',
         'dropdownZIndex'
-    ], {immediate: ImmediateStrategy.BeforeMount})
+    ], {immediate: false})
     private onBasePropsChange(): void {
         this.vm.choicesLabel = this.choicesLabel;
         this.vm.choicesIdentifier = this.choicesIdentifier;
@@ -284,7 +295,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.v.dropdownZIndex = this.dropdownZIndex;
     }
 
-    @Watch('choices', {immediate: ImmediateStrategy.BeforeMount})
+    @Watch('choices', {immediate: false})
     private syncChoices(): void {
         this.vm.setChoices(this.choices || [], PropOrigin);
     }
@@ -306,7 +317,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.$emit('change', this.v.control.value);
     }
 
-    @Watch('v.choicesVisible', {immediate: false})
+    @Watch('v.choicesVisible', {immediate: ImmediateStrategy.BeforeMount})
     private onChoiceVisibilityChange(newValue: boolean): void {
         if (newValue && !this.v.isInputReadonly) {
             this.v.inputValue = this.v.searchBuffer;
@@ -322,7 +333,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     /**
      * Reconfigure the view model to match the new search configuration.
      */
-    @Watch(['searchType', 'searchRemoteParamName', 'searchMinLength', 'allowCreation', 'multiple'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['searchType', 'searchRemoteParamName', 'searchMinLength', 'allowCreation', 'multiple'], {immediate: false})
     public updateSearchConfiguration(): void {
         this.v.multiple = this.multiple;
         this.vm.searchType = this.searchType;
@@ -347,7 +358,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
     /**
      * Reconfigure the view and the value to match the couple multiple/lockHeight configuration.
      */
-    @Watch(['multiple', 'lockHeight'], {immediate: ImmediateStrategy.Mounted})
+    @Watch(['multiple', 'lockHeight'], {immediate: false})
     private updateSelectionVisibilityTracking(): void {
         this.v.multiple = this.multiple;
         this.v.isHeightLocked = this.lockHeight;

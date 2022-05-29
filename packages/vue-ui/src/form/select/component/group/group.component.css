@@ -1,9 +1,9 @@
 .bt-form-select-group {
     --form-select-group-padding-x: var(--bt-form-select-group-padding-x, 1em);
     --form-select-group-padding-y: var(--bt-form-select-group-padding-y, 0.8em);
-    --form-select-group-label-text-color: var(--bt-form-select-group-label-text-color, var(--bt-color-gray-600));
-    --form-select-group-label-font-weight: var(--bt-form-select-group-label-font-weight, var(--bt-font-weight-light));
-    --form-select-group-label-font-size: var(--bt-form-select-group-label-font-size, var(--bt-font-size-base));
+    --form-select-group-label-text-color: var(--bt-form-select-group-label-text-color, var(--bt-color-gray-450));
+    --form-select-group-label-font-weight: var(--bt-form-select-group-label-font-weight, var(--bt-font-weight-semibold));
+    --form-select-group-label-font-size: var(--bt-form-select-group-label-font-size, var(--bt-font-size-sm));
     --form-select-group-separator-color: var(--bt-form-select-group-separator-color, var(--bt-color-gray-100));
 }
 
