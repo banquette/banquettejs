@@ -116,7 +116,10 @@ export default class ChoiceComponent extends Vue {
         }
         // If internalChoice is not defined, this means the choice comes from a slot.
         if (!newValue) {
-            this.choice = this.parent.vm.normalizeChoice(this.value, this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin);
+            this.choice = this.parent.vm.normalizeChoice(
+                this.value === UndefinedValue ? this.getSlotTextContent('default') : this.value,
+                this.position === 'before' ? BeforeSlotOrigin : AfterSlotOrigin
+            );
             /**
              * If the returned value is `null` the template will not show anything
              * because of the `v-if` on the root node.
