@@ -44,6 +44,7 @@
         "vue": "^3.2.30"
     },
     "devDependencies": {
+        "npm": ">=8.11.0",
         "@babel/core": "^7.17.0",
         "@commitlint/cli": "^16.1.0",
         "@commitlint/config-conventional": "^16.0.0",
