@@ -1,3 +1,5 @@
+import { FormControl } from "@banquette/form/form-control";
+import { isObject } from "@banquette/utils-type/is-object";
 import { VoidCallback } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
@@ -8,9 +10,10 @@ import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.de
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { BaseInputComposable } from "../base-input/base-input.composable";
-import { ViewModelEvents } from "../constant";
 import { AbstractVueFormComponent } from "../abstract-vue-form.component";
+import { BaseInputComponent } from "../base-input";
+import { BaseInputComposable } from "../base-input/base-input.composable";
+import { ViewModelEvents, UndefinedValue } from "../constant";
 import { CheckboxViewDataInterface } from "./checkbox-view-data.interface";
 import { CheckboxViewModel } from "./checkbox.view-model";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -18,9 +21,12 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-checkbox',
+    components: [BaseInputComponent],
     directives: [BindThemeDirective]
 })
 export default class CheckboxComponent extends AbstractVueFormComponent<CheckboxViewDataInterface, CheckboxViewModel> {
+    private static ModelValuesMap = new WeakMap<any, FormControl>();
+
     /**
      * Holds the props exposed by the base input.
      */
@@ -126,6 +132,26 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
      */
     protected setupViewModel(): CheckboxViewModel {
         return new CheckboxViewModel(this.proxy, this.base);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected onModelValueChange(newValue: any): void {
+        if (newValue === UndefinedValue) {
+            return;
+        }
+        let control: FormControl;
+        if (isObject(newValue)) {
+            if (!CheckboxComponent.ModelValuesMap.has(newValue)) {
+                CheckboxComponent.ModelValuesMap.set(newValue, this.proxy.getControl());
+            }
+            control = CheckboxComponent.ModelValuesMap.get(newValue) as FormControl;
+        } else {
+            control = this.proxy.getControl();
+        }
+        this.proxy.setControl(control);
+        control.setValue(newValue);
     }
 
     /**
