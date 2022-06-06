@@ -30,21 +30,25 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
     public ignoreNonUploadedFiles: boolean = true;
 
     /**
-     * If `true`, when the whole list of files is replaced for each selection.
-     * Only makes sense if `multiple` is `true` too.
-     */
-    private replaceOnChange: boolean = false;
-
-    /**
      * Remote module
      */
     public remote: RemoteModule = new RemoteModule();
+
+    /**
+     * The HTML file element to sync with the selection (optional).
+     */
+    public input: HTMLInputElement|null = null;
 
     /**
      * A map between UploadFile instances and their respective http request.
      * The request is not stored in UploadFile to avoid exposing it to the view.
      */
     private uploadRequestsMap = new WeakMap<FormFile, HttpRequest>();
+
+    /**
+     * So we can manipulate the files of the input.
+     */
+    private dataTransfer = new DataTransfer();
 
     public constructor(control: FormViewControlInterface) {
         super(control);
@@ -127,7 +131,7 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
             throw new UsageException('`onFileSelectionChange` expect to be called by the `change` event of a file input.');
         }
         const newFiles = event.target.files !== null ? Array.from(event.target.files) : [];
-        if (this.replaceOnChange) {
+        if (!this.viewData.multiple) {
             const missingFiles = [];
             for (const file of this.viewData.control.value) {
                 if (file.file !== null && newFiles.indexOf(file.file) < 0) {
@@ -156,6 +160,7 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
         this.pause(file); // To stop the upload
         this.viewData.control.value.splice(pos, 1);
         this.updateControlValue();
+        this.removeFileFromInput(file);
     }
 
     /**
@@ -244,8 +249,13 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
         }
         this.viewData.control.value.push(uploadFile);
         if (!uploadFile.failed && this.autoStartUpload) {
-            this.start(uploadFile);
+            // Do not use `uploadFile` directly because the view may proxify it for change detection.
+            this.start(this.viewData.control.value[this.viewData.control.value.length - 1]);
         }
+        // Do not check if an input is assigned.
+        // Even if there is no input, still maintain the DataTransfer in sync
+        // in case one is assigned later on.
+        this.dataTransfer.items.add(file);
         this.updateControlValue();
     }
 
@@ -260,6 +270,29 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
         // This will force a recompute of the control value.
         this.viewData.control.value = this.viewData.control.value.slice(0);
     });
+
+    /**
+     * Remove a file from the file input.
+     */
+    private removeFileFromInput(file: FormFile): void {
+        if (!file.file) {
+            return ;
+        }
+        for (let i = 0; i < this.dataTransfer.items.length; ++i) {
+            const candidate = this.dataTransfer.items[i].getAsFile();
+            if (candidate && file.file.name === candidate.name) {
+                this.dataTransfer.items.remove(i);
+
+                // Only test the existence of the input here.
+                // Even if there is no input, still maintain the DataTransfer in sync
+                // in case one is assigned later on.
+                if (this.input) {
+                    this.input.files = this.dataTransfer.files;
+                }
+                return ;
+            }
+        }
+    }
 
     /**
      * Check if the input can be used as a value for the FormControl.

@@ -73,9 +73,20 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
     // Override the type to get autocompletion in the view.
     @Expose() public v!: FileViewDataInterface;
 
+    /**
+     * @inheritDoc
+     */
     public beforeMount(): void {
         super.beforeMount();
         this.base.floatingLabel = false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public mounted() {
+        super.mounted();
+        this.vm.input = this.$refs.input;
     }
 
     /**
