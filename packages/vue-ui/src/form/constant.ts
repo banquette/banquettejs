@@ -29,3 +29,8 @@ export enum ViewModelSequence {
      */
     Dispose = 'dispose'
 }
+
+/**
+ * To distinguish between `undefined` set from the end-user and the internal `undefined`.
+ */
+export const UndefinedValue = Symbol('undefined');

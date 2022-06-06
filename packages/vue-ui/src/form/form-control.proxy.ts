@@ -159,6 +159,11 @@ export class FormControlProxy implements FormViewControlInterface {
      */
     private onDetachSubscribers: VoidCallback[] = [];
 
+    /**
+     * If `true`, the control has been created by a call to `getControl`.
+     */
+    private isInternalControl: boolean = false;
+
     public constructor(@Inject(FormStorage) private formStorage: FormStorage) {
     }
 
@@ -193,11 +198,8 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public unsetViewModel(): void {
-        if (this.bridge && this.viewModel) {
-            this.bridge.unsetViewModel(this.viewModel);
-        }
-        this.viewModel = null;
         this.onControlUnassigned();
+        this.viewModel = null;
     }
 
     /**
@@ -317,20 +319,32 @@ export class FormControlProxy implements FormViewControlInterface {
     }
 
     /**
-     * Force the proxy to ensure a control exists (thus creating it if necessary) and to assign a value to it.
-     * This is used to bypass the requirement of having a `FormControl` set from the outside.
+     * This method guarantees that a FormControl is returned.
+     * If no control has been resolved yet, an internal control is created and associated with the proxy.
      */
-    public forceValue(value: any): void {
+    public getControl(): FormControl {
         if (this._control) {
-            this._control.setValue(value);
-            return ;
+            return this._control;
         }
-        if (!this.vModelControl) {
-            this.vModelControl = new FormControl(value);
-            this.onControlAssigned(this.vModelControl);
-        } else {
-            this.vModelControl.setValue(value);
+        this._control = new FormControl();
+        this.isInternalControl = true;
+        this.onControlAssigned(this._control);
+        return this._control;
+    }
+
+    /**
+     * Force the proxy to use a specific control.
+     */
+    public setControl(control: FormControl): void {
+        if (this._control) {
+            if (control.id === this._control.id) {
+                return ;
+            }
+            this.onControlUnassigned();
         }
+        this._control = control;
+        this.isInternalControl = true;
+        this.onControlAssigned(this._control);
     }
 
     /**
@@ -390,13 +404,18 @@ export class FormControlProxy implements FormViewControlInterface {
      */
     @Watch(['form', 'control'], {immediate: ImmediateStrategy.NextTick})
     private updateFormAndControl(): void {
+        if (this.isInternalControl) {
+            return ;
+        }
         this._form = this.resolveForm();
         const newControl = this.resolveControl(this._form);
         if (newControl !== this._control) {
-            const isNewAssignment = newControl && (!this._control || newControl.id !== this._control.id);
+            if (this._control && (!newControl || newControl.id !== this._control.id)) {
+                this.onControlUnassigned();
+            }
             this._control = newControl;
-            if (isNewAssignment) {
-                this.onControlAssigned(newControl);
+            if (this._control) {
+                this.onControlAssigned(this._control);
             }
         }
         if (!this._control && this._form && !this.controlAddedUnsubscribe) {
@@ -542,6 +561,9 @@ export class FormControlProxy implements FormViewControlInterface {
      * Called when the control instance is unassigned from the proxy.
      */
     private onControlUnassigned(): void {
+        if (this.bridge && this.viewModel) {
+            this.bridge.unsetViewModel(this.viewModel);
+        }
         this.bridge = null;
         for (const subscriber of this.onDetachSubscribers) {
             subscriber();

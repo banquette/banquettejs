@@ -14,12 +14,12 @@ import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { ViewModelEvents, ViewModelSequence } from "./constant";
+import { ViewModelEvents, ViewModelSequence, UndefinedValue } from "./constant";
 import { FormComponent } from "./form";
 import { FormControlProxy } from "./form-control.proxy";
 
 @Component({
-    emits: ['focus', 'blur', 'update:modelValue']
+    emits: ['change', 'focus', 'blur', 'update:modelValue']
 })
 export abstract class AbstractVueFormComponent<
     ViewDataType extends HeadlessControlViewDataInterface = HeadlessControlViewDataInterface,
@@ -28,7 +28,7 @@ export abstract class AbstractVueFormComponent<
     private static MaxId: number = 0;
 
     // "v-model" recipient
-    @Prop({default: undefined}) public modelValue!: any;
+    @Prop({default: UndefinedValue}) public modelValue!: any;
 
     /**
      * The original value given by the end-user through the html element.
@@ -196,12 +196,24 @@ export abstract class AbstractVueFormComponent<
     }
 
     /**
+     * Track when the view value changes and emit and "change" event.
+     */
+    @Watch('v.control.value', {immediate: false})
+    protected onValueChange(newValue: any): void {
+        this.$emit('change', newValue);
+    }
+
+    /**
      * Watch the `v-model` value.
      */
     @Watch('modelValue', {immediate: ImmediateStrategy.BeforeMount})
     protected onModelValueChange(newValue: any): void {
-        if (!isUndefined(newValue)) {
-            this.proxy.forceValue(newValue);
+        if (newValue !== UndefinedValue) {
+            // Calling `getControl` ensures that a control is returned.
+            // If no control has been assigned to the proxy, it will create one.
+            // Then we call `setValue` on the control directly, not its view model,
+            // because `v-model` is a model value, not a view value.
+            this.proxy.getControl().setValue(newValue);
         }
     }
 
