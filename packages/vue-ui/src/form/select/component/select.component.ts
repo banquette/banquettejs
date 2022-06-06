@@ -173,6 +173,9 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.lastKeyStrokeTime = (new Date()).getTime();
         this.vm.onKeyDown(event);
         this.updateInput();
+        if (event.key === 'Enter' && this.allowCreation) {
+            this.v.inputValue = this.v.creationBuffer = '';
+        }
     }
 
     @Expose() public selectChoice(choice: any): void {
@@ -256,6 +259,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         const vm = new SelectViewModel(this.proxy, this.baseComposable);
         vm.choicesOriginOrdering = [
             BeforeSlotOrigin,
+            ChoiceOrigin.User,
             PropOrigin,
             ChoiceOrigin.Default,
             ChoiceOrigin.Remote,

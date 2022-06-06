@@ -8,7 +8,12 @@ export const ChoiceOrigin = {
     /**
      * For choices coming from the remote composable.
      */
-    Remote: 'remote'
+    Remote: 'remote',
+
+    /**
+     * For choices created by the end-user.
+     */
+    User: 'user'
 };
 
 export const ChoicesEvents = {

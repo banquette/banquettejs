@@ -6,5 +6,8 @@
     @click.stop="select()"
 >
     <slot></slot>
-    <i-material-check v-if="choice.selected" class="checked-icon"></i-material-check>
+    <div class="icons">
+        <i-material-delete v-if="choice.origin === 'user'" class="trash-icon" @click.stop="remove()"></i-material-delete>
+        <i-material-check v-if="choice.selected" class="check-icon"></i-material-check>
+    </div>
 </bt-dropdown-item>

@@ -4,7 +4,6 @@ import { BasicState } from "@banquette/form/constant";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
 import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
 import { HttpResponse } from "@banquette/http/http-response";
-import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { recursionSafeSideEffectProxy } from "@banquette/utils-misc/recursion-safe-side-effect-proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
@@ -21,7 +20,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isPrimitive } from "@banquette/utils-type/is-primitive";
 import { isScalar } from "@banquette/utils-type/is-scalar";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive, Writeable } from "@banquette/utils-type/types";
+import { Primitive } from "@banquette/utils-type/types";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { Choice } from "./choice";
@@ -54,7 +53,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     /**
      * Define the order in which choices should be sorted by origin.
      */
-    public choicesOriginOrdering: string[] = [ChoiceOrigin.Default, ChoiceOrigin.Remote];
+    public choicesOriginOrdering: string[] = [ChoiceOrigin.User, ChoiceOrigin.Default, ChoiceOrigin.Remote];
 
     /**
      * Search behavior.
@@ -520,8 +519,12 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                         break ;
                     }
                 }
-                this.selectChoice(this.viewData.creationBuffer);
-                this.setSearchString('');
+                if (!choiceToSelect) {
+                    this.appendChoices([this.viewData.creationBuffer], ChoiceOrigin.User);
+                    this.selectChoice(this.viewData.creationBuffer);
+                    this.setSearchString('');
+                }
+                this.viewData.creationBuffer = '';
             } else {
                 for (const item of this.inlinedChoices) {
                     if (item.focused) {
@@ -718,7 +721,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             return value;
         }
         if (value instanceof Choice) {
-            return new SelectedChoice(value.label, value.identifier, value.originalValue);
+            return new SelectedChoice(value.label, value.identifier, value.value);
         }
         const identifier = this.extractChoiceIdentifier(value);
         if (isNullOrUndefined(identifier)) {
@@ -737,7 +740,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     /**
      * Method to call when modifying the list of available choices.
      */
-    private updateChoices = recursionSafeSideEffectProxy(oncePerCycleProxy(() => {
+    private updateChoices = recursionSafeSideEffectProxy(() => {
         const identifiers: Primitive[] = [];
 
         this.inlinedChoices = [];
@@ -759,6 +762,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                 } else {
                     originChoices.standalone.push(item);
                 }
+                this.inlinedChoices.push(item);
                 identifiers.push(item.identifier);
                 if (!item.disabled && item.visible) {
                     this.noChoiceAvailable = false;
@@ -779,22 +783,42 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                     this.selectChoice(item);
                 }
             }
-            for (const group of Object.keys(originChoices.grouped)) {
-                this.inlinedChoices.push.apply(this.inlinedChoices, originChoices.grouped[group]);
-            }
-            this.inlinedChoices.push.apply(this.inlinedChoices, originChoices.standalone);
         }
         this.updateChoicesSelectionStatus();
-    }, this));
+    });
 
     /**
      * Force update the "selected" flag of all choices.
      */
-    private updateChoicesSelectionStatus = oncePerCycleProxy(() => {
+    private updateChoicesSelectionStatus() {
         const identifiers: Primitive[] = [];
-        const values = ensureArray(this.viewData.control.value);
-        const update = (choice: Choice) => {
+        const values: Primitive[] = [];
+        const selectedChoices = ensureArray(this.viewData.control.value);
+        for (const value of selectedChoices) {
+            if (value instanceof SelectedChoice) {
+                identifiers.push(value.identifier);
+                if (!isObject(value.rawValue)) {
+                    values.push(value.rawValue);
+                }
+            }
+        }
+        this.viewData.selectedChoicesCount = 0;
+        this.viewData.visibleChoicesCount = 0;
+        for (const choice of this.inlinedChoices) {
             choice.selected = identifiers.indexOf(choice.identifier) > -1;
+            if (!choice.selected && values.indexOf(choice.value) > -1) {
+                choice.selected = true;
+                // In this case we may have a selected choice created from the FormControl's value
+                // before the choice has been created. We need to update the selected choice.
+                for (const value of selectedChoices) {
+                    if (value instanceof SelectedChoice) {
+                        if (value.rawValue === choice.value) {
+                            this.deselectChoice(value);
+                            this.selectChoice(choice);
+                        }
+                    }
+                }
+            }
             if (choice.selected) {
                 this.viewData.selectedChoicesCount++;
             }
@@ -805,25 +829,8 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             // if (choice.identifier === this.focusedIdentifier) {
             //     this.focusChoice(choice);
             // }
-        };
-        for (const value of values) {
-            if (value instanceof SelectedChoice) {
-                identifiers.push(value.identifier);
-            }
         }
-        this.viewData.selectedChoicesCount = 0;
-        this.viewData.visibleChoicesCount = 0;
-        for (const origin of Object.keys(this.viewData.choices)) {
-            for (const group of Object.keys(this.viewData.choices[origin].grouped)) {
-                for (const choice of this.viewData.choices[origin].grouped[group]) {
-                    update(choice);
-                }
-            }
-            for (const choice of this.viewData.choices[origin].standalone) {
-                update(choice);
-            }
-        }
-    }, this);
+    }
 
     /**
      * Test if a choice match the current search buffer.

@@ -3,6 +3,7 @@ import { Choice } from "@banquette/ui/form/select/choice";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { IconMaterialCheck } from "@banquette/vue-icons/material/check";
+import { IconMaterialDelete } from "@banquette/vue-icons/material/delete";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { InjectProvided } from "@banquette/vue-typescript/decorator/inject-provided.decorator";
@@ -10,13 +11,14 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { toRaw } from "vue";
-import { UndefinedValue, BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
+import { UndefinedValue } from "../../../constant";
+import { BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
 import type SelectGroupComponent from "../group/group.component";
 import type SelectComponent from "../select.component";
 
 @Component({
     name: 'bt-form-select-choice',
-    components: [IconMaterialCheck]
+    components: [IconMaterialCheck, IconMaterialDelete]
 })
 export default class ChoiceComponent extends Vue {
     /**
@@ -82,6 +84,16 @@ export default class ChoiceComponent extends Vue {
             return;
         }
         this.parent.vm.deselectChoice(this.choice.identifier);
+    }
+
+    @Expose() public remove(): void {
+        if (!this.choice) {
+            return;
+        }
+        if (this.choice.selected) {
+            this.deselect();
+        }
+        this.parent.vm.removeChoice(this.choice);
     }
 
     /**
@@ -201,7 +213,7 @@ export default class ChoiceComponent extends Vue {
         }
         // this.$el may be a comment for a frame until the `v-if` on the root node resolves.
         if (!isUndefined(this.$el.scrollIntoView)) {
-            this.$el.scrollIntoView({block: 'center'});
+            this.$el.scrollIntoView({block: 'nearest', inline: 'start'});
         }
     }
 }
