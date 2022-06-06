@@ -244,7 +244,7 @@ export default class TabsComponent extends Vue {
         this.observer.observe(this.$refs.content, {
             childList: true,
             attributes: false,
-            subtree: true
+            subtree: false
         });
     }
 
