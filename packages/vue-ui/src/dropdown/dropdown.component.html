@@ -1,4 +1,16 @@
-<div>
+<!--
+-- "position: relative" here to workaround a bug with PopperJS that appears with `bt-form-select`.
+-- When PopperJS calculates the size of the "offset parent" (the parent element of the one floating that the position will be relative to),
+-- there is a slight difference (less than 1px) between the height returned by `getBoundingClientRect()` and the one from `offsetHeight`.
+-- This should normally only happen if the element is scaled, but it does when the root element of `bt-form-select`.
+-- Popper then adjust the position of the dropdown incorrectly.
+--
+-- The workaround here is to force the offset parent to be in the dropdown component, on a div with no style whatsoever
+-- so there is less risk to have a height difference.
+--
+-- This issue still needs to be investigated properly to understand the height difference on the `bt-form-select`.
+-->
+<div style="position: relative">
     <!-- :visible is always `true` but only act as a default value because if the user define a value for the "visible" prop, it will be in `$attrs` and override the value. -->
     <!-- Also, defining the "visible" prop disable the default behavior of the popover, based on mouse events. -->
     <bt-popover class="bt-dropdown" v-if="realTarget !== null" :visible="true" :target="realTarget" :teleport="null" placement="bottom" interactive v-bind="$attrs">
