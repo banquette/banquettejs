@@ -2,7 +2,7 @@
 <!-- !v.control.value would resolve to `false` for `[]`, but v.control.value == false resolves to `true`. -->
 <div
     class="bt-form-base-input"
-    :data-has-value="(v.control.value && v.control.value !== false) ? '' : null"
+    :data-has-value="(v.control.value && v.control.value != false) ? '' : null"
     :data-has-help="hasLabelSlot ? '' : null"
     :data-has-focus="v.control.focused ? '' : null"
     :data-has-placeholder="v.base.placeholder ? '' : null"
