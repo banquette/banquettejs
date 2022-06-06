@@ -1,7 +1,7 @@
 import { proxy } from "@banquette/utils-misc/proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
+import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
-import { extend } from "@banquette/utils-object/extend";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -19,6 +19,7 @@ interface OptionsInterface {
     target: Element|string;
     placement?: PositioningStrategy;
     popper?: Partial<OptionsGeneric<any>>;
+    forceUpdate?: () => void;
 }
 
 /**
@@ -60,9 +61,12 @@ export class StickToDirective {
     public updated(el: HTMLElement, bindings: DirectiveBinding) {
         this.el = el;
         this.bindings = bindings;
-        this.options = this.resolveOptions(bindings);
-        bindings.value.forceUpdate = proxy(this.forceUpdate, this);
-        this.doUpdate();
+        const newOptions = this.resolveOptions(bindings);
+        if (!areObjectsEqual(this.options || {}, newOptions)) {
+            this.options = newOptions;
+            bindings.value.forceUpdate = proxy(this.forceUpdate, this);
+            this.doUpdate();
+        }
     }
 
     /**
@@ -212,14 +216,15 @@ export class StickToDirective {
             return {target: options, enabled: this.options ? this.options.enabled : true};
         }
         options = cloneDeepPrimitive(options);
-        options.popper = extend(cloneDeepPrimitive(this.options || {}), [{
-            enabled: options.enabled || true,
-            placement: options.placement || 'bottom'
-        }, options.popper || {}]);
+        options.placement = options.placement || 'bottom';
+        options.popper = options.popper || {};
+        options.forceUpdate = this.options ? this.options.forceUpdate : () => this.forceUpdate();
+        if (isUndefined(options.popper.placement)) {
+            options.popper.placement = options.placement;
+        }
         if (isUndefined(options.enabled)) {
             options.enabled = this.options ? this.options.enabled : true;
         }
-        options.forceUpdate = () => this.forceUpdate();
         return options;
     }
 
