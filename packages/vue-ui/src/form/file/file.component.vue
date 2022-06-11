@@ -24,6 +24,8 @@ import { BaseInputComponent } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { FileViewDataInterface } from "./file-view-data.interface";
 import { FileViewModel } from "./file.view-model";
+import { I18nDefaults } from "./i18n-defaults";
+import { I18nInterface } from "./i18n.interface";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
@@ -69,6 +71,10 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
     @Prop({type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
     @Prop({type: Object, default: {}}) public headers!: Record<string, Primitive>;
 
+    /**
+     * i18n configuration.
+     */
+    @Prop({type: Object, default: I18nDefaults}) public i18n!: I18nInterface;
 
     // Override the type to get autocompletion in the view.
     @Expose() public v!: FileViewDataInterface;

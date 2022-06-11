@@ -22,7 +22,7 @@
         <div class="inner-wrapper">
             <slot name="browse" :browse="browse">
                 <div class="browse" @click="browse()">
-                    <slot name="browse-text">Choose file</slot>
+                    <slot name="browse-text"><span v-html="i18n.empty"></span></slot>
                 </div>
             </slot>
             <div class="files-queue">
