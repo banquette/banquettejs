@@ -575,7 +575,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             return true;
         }
         const ctor = this.getModelMetadata().resolveAlias(this.modelType);
-        return ctor === value.constructor;
+        return value instanceof ctor;
     }
 
     /**
