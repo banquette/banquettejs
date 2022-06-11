@@ -223,7 +223,10 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     // Template
     if (data.component.template === false) {
         options.render = () => false;
-    } else if (isString(data.component.template) && data.component.template !== 'inherit') {
+    } else if (data.component.template === 'inherit' && isFunction((ctor as any).render)) {
+        // Assign the lowest render function in the inheritance hierarchy.
+        options.render = (ctor as any).render;
+    } else if (isString(data.component.template)) {
         options.template = data.component.template;
     }
 
