@@ -1,4 +1,5 @@
 import { ControlViewDataInterface } from "@banquette/ui/form/control-view-data.interface";
+import { isArray } from "@banquette/utils-type/is-array";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -58,6 +59,11 @@ export default class BaseInputComponent extends Vue {
 
     @Computed() public get hasFloatingHelp(): boolean {
         return this.v.base.floatingHelp || (this.v.base && this.v.base.inGroup);
+    }
+
+    @Computed() public get hasValue(): boolean {
+        const v: any = this.v.control.value;
+        return v !== '' && v !== null && v !== undefined && (!isArray(v) || v.length > 0);
     }
 
     /**
