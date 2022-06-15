@@ -43,6 +43,7 @@ import {
 import { BindModelEventArg } from "./event/bind-model.event-arg";
 import { FormActionErrorEventArg } from "./event/form-action-error.event-arg";
 import { FormAfterPersistEventArg } from "./event/form-after-persist.event-arg";
+import { FormAfterRemotePersistEventArg } from "./event/form-after-remote-persist.event-arg";
 import { FormBeforePersistEventArg } from "./event/form-before-persist.event-arg";
 import { RemoteValidationException } from "./exception/remote-validation.exception";
 import { HeadlessFormViewDataInterface } from "./headless-form-view-data.interface";
@@ -270,7 +271,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                 try {
                     await response.promise;
                     this.updateState(Action.Persist, Status.Success);
-                    this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new FormAfterPersistEventArg(response, payload));
+                    this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new FormAfterRemotePersistEventArg(response, payload));
                 } catch (e) {
                     if (response.isError) {
                         const maybeValidationException = RemoteValidationException.CreateFromUnknownInput(response.result);
@@ -285,6 +286,8 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                         }
                     }
                 }
+            } else {
+                this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new FormAfterPersistEventArg(payload));
             }
         };
         doSubmit().catch((reason: any) => {
