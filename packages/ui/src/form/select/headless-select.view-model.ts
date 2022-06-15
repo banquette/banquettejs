@@ -213,7 +213,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      * Add a choice to the selection.
      * The choice can be a `Choice` object, a `SelectedChoice` object or any other value.
      */
-    public selectChoice(choice: Choice|any): void {
+    public selectChoice(choice: Choice|any, canDeselect: boolean = true): void {
         if (choice instanceof Choice && choice.disabled) {
             return ;
         }
@@ -222,7 +222,9 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             const values = ensureArray(this.viewData.control.value);
             for (const candidate of values) {
                 if (candidate.identifier === choice.identifier) {
-                    this.deselectChoice(candidate);
+                    if (canDeselect) {
+                        this.deselectChoice(candidate);
+                    }
                     return ;
                 }
             }
@@ -780,7 +782,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                         this.viewData.control.value = this.createSelectedChoice(item);
                     }
                     this.unsureSelectedChoicesIdentifiers.splice(unsureIdx, 1);
-                    this.selectChoice(item);
+                    this.selectChoice(item, false);
                 }
             }
         }
@@ -814,7 +816,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                     if (value instanceof SelectedChoice) {
                         if (value.rawValue === choice.value) {
                             this.deselectChoice(value);
-                            this.selectChoice(choice);
+                            this.selectChoice(choice, false);
                         }
                     }
                 }
