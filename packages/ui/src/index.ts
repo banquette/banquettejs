@@ -24,6 +24,7 @@ export * from './form/form/headless-form-view-data.interface';
 export * from './form/form/event/bind-model.event-arg';
 export * from './form/form/event/form-before-persist.event-arg';
 export * from './form/form/event/form-after-persist.event-arg';
+export * from './form/form/event/form-after-remote-persist.event-arg';
 export * from './form/form/event/form-action-error.event-arg';
 
 // Text
