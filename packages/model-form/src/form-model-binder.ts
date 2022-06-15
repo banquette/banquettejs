@@ -272,51 +272,57 @@ export class FormModelBinder {
             } catch (e) {}
             return ;
         }
-        const pathParts = event.mutation.path.split('/');
-        let formContainer: FormGroupInterface = this.form;
-        let modelContainer = this.model;
-        let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
         let contextsDepth = 0;
-        const pushContext = (ctor: Constructor, property: string) => ++contextsDepth && this.pushContext(ctor, property);
-        let i;
+        try {
+            const pathParts = event.mutation.path.split('/');
+            let formContainer: FormGroupInterface = this.form;
+            let modelContainer = this.model;
+            let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
+            const pushContext = (ctor: Constructor, property: string) => ++contextsDepth && this.pushContext(ctor, property);
+            let i;
 
-        for (i = 1; i < pathParts.length; ++i) {
-            let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
-            if (treeChildName === '*' && event.mutation.type === MutationType.Insert && isArray(event.mutation.target)) {
-                pushContext(this.currentContextCtor, pathParts[i - 1]);
-                continue ;
+            for (i = 1; i < pathParts.length; ++i) {
+                let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
+                if (treeChildName === '*' && event.mutation.type === MutationType.Insert && isArray(event.mutation.target)) {
+                    pushContext(this.currentContextCtor, pathParts[i - 1]);
+                    continue;
+                }
+                treeContainer = treeContainer.children[treeChildName];
+                if (isUndefined(treeContainer)) {
+                    return;
+                }
+                if (i > 1) {
+                    formContainer = (formContainer as FormGroupInterface).get<FormGroupInterface>(pathParts[i - 1]);
+                    modelContainer = modelContainer[pathParts[i - 1]];
+                }
+                if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
+                    pushContext(treeContainer.ctor, pathParts[i]);
+                }
+                // Required if a change is made to an object used as value in a FormControl.
+                // If we do nothing the "path" will lead the binder deep inside the value of the FormControl,
+                // which is not a valid form tree, so we must stop when a FormControl is reached.
+                if (treeContainer.transformer.type === FormControlTransformerSymbol) {
+                    pushContext(this.currentContextCtor, pathParts[i]);
+                    break;
+                }
             }
-            treeContainer = treeContainer.children[treeChildName];
-            if (i > 1) {
-                formContainer = (formContainer as FormGroupInterface).get<FormGroupInterface>(pathParts[i - 1]);
-                modelContainer = modelContainer[pathParts[i - 1]];
+            if (!isString(this.currentContextProperty)) {
+                return;
             }
-            if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                pushContext(treeContainer.ctor, pathParts[i]);
-            }
-            // Required if a change is made to an object used as value in a FormControl.
-            // If we do nothing the "path" will lead the binder deep inside the value of the FormControl,
-            // which is not a valid form tree, so we must stop when a FormControl is reached.
-            if (treeContainer.transformer.type === FormControlTransformerSymbol) {
-                pushContext(this.currentContextCtor, pathParts[i]);
-                break ;
-            }
+            this.mutateForm(() => {
+                const cp = this.currentContextProperty as string;
+                if (treeContainer.transformer.type === FormControlTransformerSymbol) {
+                    this.syncFormControlWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
+                } else if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
+                    pushContext(modelContainer.constructor as Constructor, cp);
+                    this.syncFormObjectWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
+                } else if (treeContainer.transformer.type === FormArrayTransformerSymbol) {
+                    this.syncFormArrayWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
+                }
+            });
+        } finally {
+            this.popContext(contextsDepth);
         }
-        if (!isString(this.currentContextProperty)) {
-            return ;
-        }
-        this.mutateForm(() => {
-            const cp = this.currentContextProperty as string;
-            if (treeContainer.transformer.type === FormControlTransformerSymbol) {
-                this.syncFormControlWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
-            } else if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                pushContext(modelContainer.constructor as Constructor, cp);
-                this.syncFormObjectWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
-            } else if (treeContainer.transformer.type === FormArrayTransformerSymbol) {
-                this.syncFormArrayWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
-            }
-        });
-        this.popContext(contextsDepth);
     }
 
     /**
@@ -460,7 +466,7 @@ export class FormModelBinder {
      * Push context data on the stack.
      */
     private pushContext(ctor: Constructor, property: string): void {
-        this.contextStack.push({ctor, property})
+        this.contextStack.push({ctor, property});
     }
 
     /**
