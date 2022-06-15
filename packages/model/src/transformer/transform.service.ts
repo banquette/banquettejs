@@ -2,8 +2,10 @@ import { InjectMultiple } from "@banquette/dependency-injection/decorator/inject
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { ResolveCallback, RejectCallback } from "@banquette/promise/types";
 import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
 import { isArray } from "@banquette/utils-type/is-array";
+import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Complete, Constructor } from "@banquette/utils-type/types";
@@ -90,25 +92,59 @@ export class TransformService {
     }
 
     /**
-     * Call `transform` on multiple items in parallel.
-     *
-     * @private to keep the public Api simple.
+     * Transform a model from a custom format to another custom format.
      */
-    private transformCollection(items: any[], transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
-        return this.transformParallel(items, (item: any) => {
-            return this.transform(item, transformType, extra, wildcardTransformer);
-        });
+    public transformTransversal(value: any, inverseTransformType: symbol, modelType: ModelExtendedIdentifier, transformType: symbol): TransformResult {
+        return this.transformSequential([
+            () => this.transformInverse(value, modelType, inverseTransformType),
+            (previous: TransformResult) => this.transform(previous.result, transformType)
+        ]);
     }
 
     /**
-     * Call `transformInverse` on multiple items in parallel.
-     *
-     * @private to keep the public Api simple.
+     * Do a series of transforms sequentially.
      */
-    private transformCollectionInverse(values: any[], modelType: ModelExtendedIdentifier, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
-        return this.transformParallel(values, (value: any) => {
-            return this.transformInverse(value, modelType, transformType, extra, wildcardTransformer);
-        });
+    private transformSequential(sequence: Array<(previous: TransformResult) => TransformResult>): TransformResult {
+        const result = new TransformResult();
+        let currentIndex = -1;
+        let lastResult = new TransformResult<any>();
+        let promiseResolve: ResolveCallback<void>|null = null;
+        let promiseReject: RejectCallback|null = null;
+
+        const next = () => {
+            if (!isFunction(sequence[++currentIndex])) {
+                result.setResult(lastResult.result);
+                if (promiseResolve) {
+                    promiseResolve();
+                }
+                return ;
+            }
+            try {
+                const subResult = sequence[currentIndex](lastResult);
+                if (subResult.promise) {
+                    result.delayResponse(new Promise<void>((resolve, reject) => {
+                        promiseResolve = resolve;
+                        promiseReject = reject;
+                    }));
+                    subResult.promise.then(() => {
+                        lastResult = subResult;
+                        next();
+                    }).catch(promiseReject);
+                } else {
+                    lastResult = subResult;
+                    next();
+                }
+            } catch (e) {
+                if (promiseReject !== null) {
+                    promiseReject(e);
+                } else {
+                    throw e;
+                }
+                return ;
+            }
+        };
+        next();
+        return result;
     }
 
     /**
@@ -155,6 +191,28 @@ export class TransformService {
             result.setResult(buildFinalArray());
         }
         return result;
+    }
+
+    /**
+     * Call `transform` on multiple items in parallel.
+     *
+     * @private to keep the public Api simple.
+     */
+    private transformCollection(items: any[], transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
+        return this.transformParallel(items, (item: any) => {
+            return this.transform(item, transformType, extra, wildcardTransformer);
+        });
+    }
+
+    /**
+     * Call `transformInverse` on multiple items in parallel.
+     *
+     * @private to keep the public Api simple.
+     */
+    private transformCollectionInverse(values: any[], modelType: ModelExtendedIdentifier, transformType: symbol, extra?: Record<string, any>, wildcardTransformer?: TransformerInterface|null): TransformResult {
+        return this.transformParallel(values, (value: any) => {
+            return this.transformInverse(value, modelType, transformType, extra, wildcardTransformer);
+        });
     }
 
     /**
