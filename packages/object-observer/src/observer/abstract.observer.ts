@@ -217,7 +217,10 @@ export abstract class AbstractObserver<T extends object> {
             return ;
         }
         if (this.subscribeCounts[ObserverEvents.ChangedSync]) {
-            this.eventDispatcher.dispatch(ObserverEvents.ChangedSync, new MutationEvent(mutation));
+            const result = this.eventDispatcher.dispatch(ObserverEvents.ChangedSync, new MutationEvent(mutation));
+            if (result.error) {
+                console.error(result.errorDetail);
+            }
         }
         if (this.subscribeCounts[ObserverEvents.ChangedAsync]) {
             this.queueNotify(mutation);
