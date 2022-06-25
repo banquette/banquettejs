@@ -12,6 +12,7 @@ import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
 import { BindModelEventArg } from "@banquette/ui/form/form/event/bind-model.event-arg";
 import { FormActionErrorEventArg } from "@banquette/ui/form/form/event/form-action-error.event-arg";
 import { FormAfterPersistEventArg } from "@banquette/ui/form/form/event/form-after-persist.event-arg";
+import { FormAfterRemotePersistEventArg } from "@banquette/ui/form/form/event/form-after-remote-persist.event-arg";
 import { FormBeforePersistEventArg } from "@banquette/ui/form/form/event/form-before-persist.event-arg";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
@@ -168,7 +169,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.onBeforePersist(event);
         }));
         this.unsubscribeFunctions.push(this.vm.onPersistSuccess((event: FormAfterPersistEventArg) => {
-            this.vm.viewData.persistResponse = event.response;
+            this.vm.viewData.persistResponse = event instanceof FormAfterRemotePersistEventArg ? event.response : null;
             this.$emit('persist-success', event);
             this.onPersistSuccess(event);
         }));
