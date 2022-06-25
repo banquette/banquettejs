@@ -59,8 +59,11 @@ export class BindThemeDirective extends Vue {
         this.instance = anyToTsInst(bindings.instance);
         const metadata = anyToComponentMetadata(this.instance);
         const configuration = metadata ? metadata.themeable : null;
-        if (!this.instance || !metadata || !configuration) {
+        if (!this.instance || !metadata) {
             throw new UsageException('The "v-bt-bind-theme" directive can only be used on vue-typescript components.');
+        }
+        if (!configuration) {
+            throw new UsageException('You must add a @Themeable() decorator to your component to use the "v-bt-bind-theme" directive.');
         }
         this.metadata = metadata;
         this.configuration = configuration;
