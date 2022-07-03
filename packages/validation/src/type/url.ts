@@ -11,6 +11,6 @@ export const Url = (options: ValidatorOptionsInterface|string = {}): ValidatorIn
      * Thanks to Dan for the regex.
      * @source https://www.regextester.com/94502
      */
-    const reg = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm;
+    const reg = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/g;
     return Pattern(reg, assignOptionsDefaults(options, 'Must be a valid url.', 'url'));
 };

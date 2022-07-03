@@ -17,6 +17,12 @@ export function Pattern(pattern: RegExp, options: ValidatorOptionsInterface|stri
             if (context.value && (!isString(context.value) || !pattern.test(context.value))) {
                 context.result.addViolation(finalOptions.type, finalOptions.message);
             }
+            /**
+             * Must reset the last index in case the pattern uses the global flag.
+             * @see https://stackoverflow.com/a/11477448/1110635
+             * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test#using_test_on_a_regex_with_the_global_flag
+             */
+            pattern.lastIndex = 0;
             return context.result;
         }
     }, [SYNC_TAG].concat(finalOptions.tags), finalOptions.groups);
