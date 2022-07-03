@@ -29,6 +29,9 @@
 
     --button-appearance-animation-duration: var(--bt-button-appearance-animation-duration, 0.15s);
     --button-click-animation-duration: var(--bt-button-animation-click-duration, 30ms);
+
+    --button-padding-x: var(--bt-button-padding-x, 1em);
+    --button-padding-y: var(--bt-button-padding-y, 0.6em);
 }
 
 .bt-button {
@@ -59,7 +62,7 @@
         color var(--button-appearance-animation-duration) ease-out;
 
         position: relative;
-        padding: 0.6em 1em;
+        padding: var(--button-padding-y) var(--button-padding-x);
         margin: 0;
 
         &:hover, &:active, &:focus {

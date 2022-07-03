@@ -28,6 +28,9 @@ export const ThemeConfiguration = {
             borderDisabledColor     : '@-border-disabled-color',
             disabledOpacity         : '@-disabled-opacity',
 
+            paddingX                : '@-padding-x',
+            paddingY                : '@-padding-y',
+
             animation: {
                 appearanceDuration  : '@-animation-appearance-duration',
                 clickDuration       : '@-animation-click-duration'
