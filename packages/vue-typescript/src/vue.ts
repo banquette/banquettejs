@@ -122,6 +122,26 @@ export abstract class Vue implements ComponentPublicInstance {
     }
 
     /**
+     * Get an array of all Vue Typescript parent components.
+     */
+    protected getParentsNamesStack(): string[] {
+        let $parent = this.$parent;
+        const output: string[] = [];
+        while ($parent !== null) {
+            let prototype = anyToComponentCtor($parent);
+            while (prototype) {
+                const metadata = anyToComponentMetadata(prototype);
+                if (metadata && metadata.component.name) {
+                    output.push(metadata.component.name);
+                }
+                prototype = Object.getPrototypeOf(prototype);
+            }
+            $parent = $parent.$parent;
+        }
+        return output;
+    }
+
+    /**
      * Test if component is found in the parent hierarchy.
      */
     protected hasParent(component: any|string): boolean {
