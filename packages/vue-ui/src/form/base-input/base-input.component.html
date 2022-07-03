@@ -18,7 +18,7 @@
     <label :for="v.control.fullId" v-else-if="v.base.label">{{ v.base.label }}</label>
 
     <div class="input-group">
-        <div class="before" v-if="hasBeforeRawSlot || hasBeforeSlot">
+        <div class="before" v-if="hasBeforeRawSlot || hasBeforeSlot" data-form-input-addon>
             <slot name="before-raw" v-if="hasBeforeRawSlot"></slot>
             <div class="addon" v-if="hasBeforeSlot"><slot name="before"></slot></div>
         </div>
@@ -42,7 +42,7 @@
                 <slot name="extras-after"></slot>
             </div>
         </div>
-        <div class="after" v-if="hasAfterSlot || hasAfterRawSlot">
+        <div class="after" v-if="hasAfterSlot || hasAfterRawSlot" data-form-input-addon>
             <div class="addon" v-if="hasAfterSlot"><slot name="after"></slot></div>
             <slot name="after-raw" v-if="hasAfterRawSlot"></slot>
         </div>

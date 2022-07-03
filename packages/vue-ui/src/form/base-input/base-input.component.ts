@@ -70,7 +70,21 @@ export default class BaseInputComponent extends Vue {
      * Vue lifecycle.
      */
     public beforeMount(): void {
-        this.v.base.inGroup = this.hasParent('bt-form-base-input');
         this.v.base.hasAddon = this.hasAfterRawSlot || this.hasAfterSlot || this.hasBeforeRawSlot || this.hasBeforeSlot;
+    }
+
+    /**
+     * Vue lifecycle.
+     */
+    public mounted(): void {
+        let el = this.$el;
+        this.v.base.inGroup = false;
+        do {
+            if (el.closest && el.closest('[data-form-input-addon]') !== null) {
+                this.v.base.inGroup = true;
+                break ;
+            }
+            el = el.parentElement;
+        } while (el);
     }
 }
