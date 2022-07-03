@@ -21,10 +21,10 @@ function getCroppedViewBox(svg) {
     const paths = svg.querySelectorAll('path');
     const viewBox = svg.getAttribute('viewBox');
     const resultRect = {
-        top: -Infinity,
-        left: -Infinity,
-        bottom: Infinity,
-        right: Infinity
+        minX: Infinity,
+        minY: Infinity,
+        maxX: -Infinity,
+        maxY: -Infinity
     };
     for (const path of paths) {
         const localRect = svgPathBbox(path.getAttribute('d'));
@@ -32,12 +32,17 @@ function getCroppedViewBox(svg) {
             path.remove();
             continue;
         }
-        resultRect.left = Math.max(resultRect.left, localRect[0]);
-        resultRect.top = Math.max(resultRect.top, localRect[1]);
-        resultRect.right = Math.min(resultRect.right, localRect[2] - resultRect.left);
-        resultRect.bottom = Math.min(resultRect.bottom, localRect[3] - resultRect.top);
+        resultRect.minX = Math.min(resultRect.minX, localRect[0]);
+        resultRect.minY = Math.min(resultRect.minY, localRect[1]);
+        resultRect.maxX = Math.max(resultRect.maxX, localRect[2]);
+        resultRect.maxY = Math.max(resultRect.maxY, localRect[3]);
     }
-    return [formatNumber(resultRect.left), formatNumber(resultRect.top), formatNumber(resultRect.right), formatNumber(resultRect.bottom)].join(' ');
+    return [
+        formatNumber(resultRect.minX),
+        formatNumber(resultRect.minY),
+        formatNumber(resultRect.maxX - resultRect.minX),
+        formatNumber(resultRect.maxY - resultRect.minY)
+    ].join(' ');
 }
 
 /**
@@ -79,6 +84,9 @@ const configurations = [
                     if (!icon.match(/24px\.svg$/)) {
                         return;
                     }
+                    // if (icon !== 'ic_format_color_text_24px.svg') {
+                    //     return ;
+                    // }
                     output.push(path.join(svgDir, icon));
                 });
             });
@@ -123,7 +131,7 @@ for (const configuration of configurations) {
 
     const files = configuration.listFiles();
     for (const file of files) {
-        const svg = fs.readFileSync(file).toString().replace('<svg ', '<svg :width="size" :height="size" :fill="color"');
+        const svg = fs.readFileSync(file).toString().replace('<svg ', '<svg :width="!crop ? size : null" :height="size" :fill="color"');
         const filename = path.basename(file);
         const componentName = configuration.getComponentName(filename);
         const className = camelize(`Icon-${configuration.libName}-${componentName}`);
