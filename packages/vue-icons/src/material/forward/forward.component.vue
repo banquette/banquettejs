@@ -10,5 +10,5 @@ export default class IconMaterialForward {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 4 16 16' : '0 0 24 24'"><path d="M12 8V4l8 8-8 8v-4H4V8z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '4 4 16 16' : '0 0 24 24'"><path d="M12 8V4l8 8-8 8v-4H4V8z"/></svg>
 </template>

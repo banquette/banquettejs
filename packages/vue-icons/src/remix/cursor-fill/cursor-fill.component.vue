@@ -10,5 +10,5 @@ export default class IconRemixCursorFill {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6.92 1.63 12.22 20.25' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M13.91 12.36 17 20.854l-2.818 1.026-3.092-8.494-4.172 3.156 1.49-14.909 10.726 10.463z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '6.92 1.63 12.22 20.25' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M13.91 12.36 17 20.854l-2.818 1.026-3.092-8.494-4.172 3.156 1.49-14.909 10.726 10.463z"/></svg>
 </template>

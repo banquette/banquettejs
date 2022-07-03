@@ -10,5 +10,5 @@ export default class IconMaterialTrendingFlat {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 8 19 8' : '0 0 24 24'"><path d="m22 12-4-4v3H3v2h15v3z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '3 8 19 8' : '0 0 24 24'"><path d="m22 12-4-4v3H3v2h15v3z"/></svg>
 </template>

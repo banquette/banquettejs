@@ -10,5 +10,5 @@ export default class IconRemixArrowLeftDownLine {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '7 4.98 12.02 12.02' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m9 13.59 8.607-8.607 1.414 1.414-8.607 8.607H18v2H7v-11h2v7.585z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '7 4.98 12.02 12.02' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m9 13.59 8.607-8.607 1.414 1.414-8.607 8.607H18v2H7v-11h2v7.585z"/></svg>
 </template>

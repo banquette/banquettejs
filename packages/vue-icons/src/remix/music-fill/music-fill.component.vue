@@ -10,5 +10,5 @@ export default class IconRemixMusicFill {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 3 14 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 13.535V3h8v3h-6v11a4 4 0 1 1-2-3.465z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '6 3 14 18' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 13.535V3h8v3h-6v11a4 4 0 1 1-2-3.465z"/></svg>
 </template>

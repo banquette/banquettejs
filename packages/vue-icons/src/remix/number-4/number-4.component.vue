@@ -10,5 +10,5 @@ export default class IconRemixNumber4 {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '4 1.5 15 20.5' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M16 1.5V16h3v2h-3v4h-2v-4H4v-1.102L14 1.5h2zM14 16V5.171L6.968 16H14z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '4 1.5 15 20.5' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M16 1.5V16h3v2h-3v4h-2v-4H4v-1.102L14 1.5h2zM14 16V5.171L6.968 16H14z"/></svg>
 </template>

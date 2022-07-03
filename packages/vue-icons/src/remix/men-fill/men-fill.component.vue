@@ -10,5 +10,5 @@ export default class IconRemixMenFill {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 3 19 19' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M18.586 5H14V3h8v8h-2V6.414l-3.537 3.537a7.5 7.5 0 1 1-1.414-1.414L18.586 5z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '3 3 19 19' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M18.586 5H14V3h8v8h-2V6.414l-3.537 3.537a7.5 7.5 0 1 1-1.414-1.414L18.586 5z"/></svg>
 </template>

@@ -10,5 +10,5 @@ export default class IconMaterialSkipPrevious {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 6 12 12' : '0 0 24 24'"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '6 6 12 12' : '0 0 24 24'"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
 </template>

@@ -10,5 +10,5 @@ export default class IconMaterialFiberManualRecord {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '-Infinity -Infinity Infinity Infinity' : '0 0 24 24'"><circle fill="#010101" cx="12" cy="12" r="8"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? 'Infinity Infinity -Infinity -Infinity' : '0 0 24 24'"><circle fill="#010101" cx="12" cy="12" r="8"/></svg>
 </template>

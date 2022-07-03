@@ -10,5 +10,5 @@ export default class IconMaterialExpandMore {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 8.59 12 7.41' : '0 0 24 24'"><path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '6 8.59 12 7.41' : '0 0 24 24'"><path d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg>
 </template>

@@ -10,5 +10,5 @@ export default class IconRemixStarFill {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '0.59 0.5 22.83 21.71' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m12 18.26-7.053 3.948 1.575-7.928L.587 8.792l8.027-.952L12 .5l3.386 7.34 8.027.952-5.935 5.488 1.575 7.928z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '0.59 0.5 22.83 21.71' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="m12 18.26-7.053 3.948 1.575-7.928L.587 8.792l8.027-.952L12 .5l3.386 7.34 8.027.952-5.935 5.488 1.575 7.928z"/></svg>
 </template>

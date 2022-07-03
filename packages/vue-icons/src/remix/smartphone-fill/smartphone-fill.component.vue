@@ -10,5 +10,5 @@ export default class IconRemixSmartphoneFill {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 2 14 20' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M6 2h12a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm6 15a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '5 2 14 20' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M6 2h12a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm6 15a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>
 </template>

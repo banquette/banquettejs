@@ -10,5 +10,5 @@ export default class IconMaterialKeyboardArrowUp {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '6 8 12 7.41' : '0 0 24 24'"><path d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '6 8 12 7.41' : '0 0 24 24'"><path d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
 </template>

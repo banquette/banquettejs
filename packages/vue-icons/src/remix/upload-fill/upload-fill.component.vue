@@ -10,5 +10,5 @@ export default class IconRemixUploadFill {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 2 18 19' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 19h18v2H3v-2zm10-9v8h-2v-8H4l8-8 8 8h-7z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '3 2 18 19' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 19h18v2H3v-2zm10-9v8h-2v-8H4l8-8 8 8h-7z"/></svg>
 </template>

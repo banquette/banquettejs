@@ -10,5 +10,5 @@ export default class IconRemixWaterFlashLine {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 0.27 18 21.73' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3.1 7.05 8.05a7 7 0 1 0 9.9 0L12 3.1zm0-2.828 6.364 6.364a9 9 0 1 1-12.728 0L12 .272zM13 11h2.5L11 17.5V13H8.5L13 6.5V11z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '3 0.27 18 21.73' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3.1 7.05 8.05a7 7 0 1 0 9.9 0L12 3.1zm0-2.828 6.364 6.364a9 9 0 1 1-12.728 0L12 .272zM13 11h2.5L11 17.5V13H8.5L13 6.5V11z"/></svg>
 </template>

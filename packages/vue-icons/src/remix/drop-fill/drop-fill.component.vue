@@ -10,5 +10,5 @@ export default class IconRemixDropFill {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '3 0.27 18 21.73' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M5.636 6.636 12 .272l6.364 6.364a9 9 0 1 1-12.728 0z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '3 0.27 18 21.73' : '0 0 24 24'"><path fill="none" d="M0 0h24v24H0z"/><path d="M5.636 6.636 12 .272l6.364 6.364a9 9 0 1 1-12.728 0z"/></svg>
 </template>

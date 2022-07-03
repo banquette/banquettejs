@@ -10,5 +10,5 @@ export default class IconMaterialPlayArrow {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '8 5 11 14' : '0 0 24 24'"><path d="M8 5v14l11-7z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '8 5 11 14' : '0 0 24 24'"><path d="M8 5v14l11-7z"/></svg>
 </template>

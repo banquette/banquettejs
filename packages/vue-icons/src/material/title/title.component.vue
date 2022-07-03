@@ -10,5 +10,5 @@ export default class IconMaterialTitle {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '5 4 14 15' : '0 0 24 24'"><path d="M5 4v3h5.5v12h3V7H19V4z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '5 4 14 15' : '0 0 24 24'"><path d="M5 4v3h5.5v12h3V7H19V4z"/></svg>
 </template>

@@ -10,5 +10,5 @@ export default class IconMaterialVolumeMute {
 }
 </script>
 <template>
-    <svg :width="size" :height="size" :fill="color" :viewBox="crop ? '7 4 9 16' : '0 0 24 24'"><path d="M7 9v6h4l5 5V4l-5 5H7z"/></svg>
+    <svg :width="!crop ? size : null" :height="size" :fill="color" :viewBox="crop ? '7 4 9 16' : '0 0 24 24'"><path d="M7 9v6h4l5 5V4l-5 5H7z"/></svg>
 </template>
