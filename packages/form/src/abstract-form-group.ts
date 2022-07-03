@@ -399,7 +399,11 @@ export abstract class AbstractFormGroup<IdentifierType = unknown, ValueType = un
                     component.addError(violation.type, violation.message);
                 }
             }
-            this.markBasicState(BasicState.Invalid, this.id);
+            if (this.errors.length) {
+                this.markBasicState(BasicState.Invalid, this.id);
+            } else {
+                this.unmarkBasicState(BasicState.Invalid, this.id);
+            }
         }
         this.unmarkBasicState(BasicState.NotValidated, this.id);
         this.dispatch(FormEvents.ValidationEnd, () => new ValidationEndFormEvent(this, result));

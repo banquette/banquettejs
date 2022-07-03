@@ -858,7 +858,11 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
             for (const violation of result.violations) {
                 this.addError(violation.type, violation.message);
             }
-            this.markBasicState(BasicState.Invalid, this.id);
+            if (result.violations.length > 0) {
+                this.markBasicState(BasicState.Invalid, this.id);
+            } else {
+                this.unmarkBasicState(BasicState.Invalid, this.id);
+            }
         }
         this.unmarkBasicState(BasicState.NotValidated, this.id);
         this.dispatch(FormEvents.ValidationEnd, () => new ValidationEndFormEvent(this, result));
