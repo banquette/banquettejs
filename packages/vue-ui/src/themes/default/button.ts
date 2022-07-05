@@ -314,24 +314,24 @@ VueThemes.Define('bt-button', {
          * In form addon.
          */
         {
-            match: {parent: 'bt-form-base-input'},
+            match: '*',
             cssCode: `
-                :global(.before) &.bt-button .inner {
+                :global(.before[data-form-input-addon]) &.bt-button .inner {
                     border-top-right-radius: 0;
                     border-bottom-right-radius: 0;
                     border-right: none;
                 }
 
-                :global(.after) &.bt-button .inner {
+                :global(.after[data-form-input-addon]) &.bt-button .inner {
                     border-top-left-radius: 0;
                     border-bottom-left-radius: 0;
                 }
             `
         },
         {
-            match: {parent: 'bt-form-base-input', variant: 'light'},
+            match: {variant: 'light'},
             cssCode: `
-                &.bt-button .inner {
+                :global([data-form-input-addon])  &.bt-button .inner {
                     border-color: var(--bt-color-gray-200);
                 }
             `
