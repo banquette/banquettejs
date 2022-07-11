@@ -5,6 +5,9 @@
         "declarationDir": "../../dist",
         "rootDir": "..",
         "paths": {
+            "@banquette/vue-ui/form/tiptap": [
+                "packages/vue-ui/src/form/tiptap"
+            ],
             "@banquette/api/*": ["packages/api/src/*"],
             "@banquette/config/*": ["packages/config/src/*"],
             "@banquette/dependency-injection/*": [

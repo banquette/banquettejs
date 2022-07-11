@@ -1,0 +1,25 @@
+<div class="bt-form-tiptap" v-bt-bind-theme>
+    <bt-form-base-input :v="v">
+        <div class="inner-wrapper" v-if="innerConfiguration">
+            <div class="toolbars" v-show="editor" v-for="toolbar in innerConfiguration.toolbars" @click.stop.prevent>
+                <div class="toolbar">
+                    <component
+                        :is="component"
+                        v-for="component in toolbar"
+                        :configuration="innerConfiguration.modules[component] ? innerConfiguration.modules[component].configuration : {}"
+                    ></component>
+                </div>
+            </div>
+            <div v-show="false" v-for="(module, component) in innerConfiguration.modules">
+                <component :is="component" v-if="!module.inToolbar" :configuration="module.configuration"></component>
+            </div>
+            <editor-content
+                v-if="editor"
+                :editor="editor"
+                class="editor-content"
+            />
+        </div>
+        <template #label><slot></slot></template>
+        <template #help><slot name="help"></slot></template>
+    </bt-form-base-input>
+</div>

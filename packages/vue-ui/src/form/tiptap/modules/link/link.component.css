@@ -1,0 +1,23 @@
+.bt-form-tiptap-link {
+    display: inline-block;
+
+    .form-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2em;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 0.5em;
+    }
+
+    :deep(.bt-dialog .footer) {
+        width: 100%;
+        justify-content: space-between !important;
+    }
+}
+
+:global(.ProseMirror a) {
+    color: red;
+}

@@ -12,7 +12,7 @@ function loadTsConfig(path) {
     }
     const paths = config.compilerOptions.paths || {};
     config.compilerOptions.paths = Object.keys(paths)
-        .filter(k =>  k.indexOf('@banquette/'))
+        .filter(k => k.indexOf('@banquette/') < 0 || k.substring(k.length - 2) !== '/*')
         .reduce((obj, i) => {
             obj[i] = paths[i];
             return obj;
