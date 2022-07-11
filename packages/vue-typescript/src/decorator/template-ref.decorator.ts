@@ -4,12 +4,17 @@ import { isFunction } from "@banquette/utils-type/is-function";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
 
-export function TemplateRef(name: string): any {
+export interface TemplateRefDecoratorOptions {
+    name: string;
+    resolve: boolean;
+}
+
+export function TemplateRef(name: string, resolveComponent: boolean = true): any {
     return (prototype: any, propertyKey: string) => {
         if (!isNonEmptyString(propertyKey) || isFunction(prototype.constructor.prototype[propertyKey])) {
             throw new UsageException('You can only use @TemplateRef() on properties.');
         }
         const data: ComponentMetadataInterface = getOrCreateComponentMetadata(prototype);
-        data.templateRefs[propertyKey] = name;
+        data.templateRefs[propertyKey] = {name, resolve: resolveComponent};
     };
 }

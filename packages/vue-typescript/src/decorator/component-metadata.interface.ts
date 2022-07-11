@@ -7,6 +7,7 @@ import { InjectProvidedDecoratorOptions } from "./inject-provided.decorator";
 import { LifecycleHook } from "./lifecycle.decorator";
 import { PropMetadata } from "./prop.decorator";
 import { ProvideDecoratorOptions } from "./provide.decorator";
+import { TemplateRefDecoratorOptions } from "./template-ref.decorator";
 import { ThemeVarDecoratorOptions } from "./theme-var.decorator";
 import { ThemeableMetadata } from "./themeable.decorator";
 import { WatchMetadata } from "./watch.decorator";
@@ -76,7 +77,7 @@ export interface ComponentMetadataInterface {
     /**
      * References on HTML elements in the template.
      */
-    templateRefs: Record<string, string>;
+    templateRefs: Record<string, TemplateRefDecoratorOptions>;
 
     /**
      * Name of the method to use as a render function.

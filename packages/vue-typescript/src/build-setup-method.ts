@@ -59,11 +59,6 @@ import { isFunctionGetterSafe } from "./utils/is-function-getter-safe";
 import { isGetter } from "./utils/is-getter";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
 
-/**
- * A map between Vue instances and objects created by vue-typescript.
- */
-const vueInstancesMap: WeakMap<any, any> = new WeakMap<any, any>();
-
 export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
@@ -235,14 +230,16 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                         if (!inst.$refs) {
                             return null;
                         }
-                        const v = inst.$refs[data.templateRefs[_templateRefName]];
+                        const opts = data.templateRefs[_templateRefName];
+                        let v = inst.$refs[opts.name];
                         if (isNullOrUndefined(v)) {
                             return null;
                         }
-                        // Special case when a ref is set of a <component/> component.
-                        // Try to resolve the component instance if possible.
-                        if (isObject(v) && isObject(v._) && vueInstancesMap.has(v._)) {
-                            return vueInstancesMap.get(v._);
+                        if (!opts.resolve) {
+                            if (v instanceof Element) {
+                                return v;
+                            }
+                            return v.$el || v;
                         }
                         return anyToTsInst(v) || v;
                     },
