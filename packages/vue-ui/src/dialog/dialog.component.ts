@@ -11,6 +11,7 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
+import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
@@ -139,6 +140,8 @@ export default class DialogComponent extends Vue {
     @Expose() public dragTranslation: Position = {x: 0, y: 0};
     @Expose() public dragging: boolean = false;
 
+    @TemplateRef('overlay', false) public overlayEl!: Element;
+
     @Computed() public get dragTranslationStyle(): object {
         if (!this.draggable) {
             return {};
@@ -250,8 +253,7 @@ export default class DialogComponent extends Vue {
      */
     @Expose()
     public onOverlayMouseDown(event: MouseEvent): void {
-        if (this.closeByMask) {
-            event.stopPropagation();
+        if (this.closeByMask && event.target === this.overlayEl) {
             this.close();
         }
     }
