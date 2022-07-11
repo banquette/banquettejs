@@ -2,6 +2,7 @@ import { proxy } from "@banquette/utils-misc/proxy";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { VoidCallback } from "@banquette/utils-type/types";
 import { Directive } from "@banquette/vue-typescript/decorator/directive.decorator";
 import { DirectiveBinding } from "vue";
 
@@ -14,9 +15,8 @@ type EventType = 'click' | 'mousedown';
 export class ClickOutsideDirective {
     private el!: HTMLElement;
     private enabled: boolean = true;
-    private callback: ((event: MouseEvent, el: Element) => void)|null = null;
-    private handlerType: EventType = 'click';
-    private handlerProxy: ((event: MouseEvent) => void)|null = null;
+    private callback: VoidCallback|null = null;
+    private unbindHandler: VoidCallback|null = null;
 
     public beforeMount(el: HTMLElement, bindings: DirectiveBinding): void {
         this.updated(el, bindings);
@@ -31,48 +31,56 @@ export class ClickOutsideDirective {
             this.callback = bindings.value;
         }
         if (this.enabled && isFunction(this.callback)) {
-            this.bindHandler(this.resolveHandlerType(bindings));
+            this.bindHandler(this.el, this.resolveHandlerType(bindings));
         } else {
-            this.unbindHandler();
+            this.unbind();
         }
     }
 
     public unmounted(): void {
-        this.unbindHandler();
+        this.unbind();
     }
 
-    private bindHandler(eventType: EventType): void {
-        if (this.handlerProxy !== null) {
-            if (this.handlerType === eventType) {
-                return;
-            }
+    private bindHandler(el: HTMLElement, eventType: EventType): void {
+        this.unbind();
+        const handler = proxy(this.onTrigger, this);
+        window.addEventListener(eventType, handler);
+        this.unbindHandler = () => window.removeEventListener(eventType, handler);
+    }
+
+    private unbind(): void {
+        if (this.unbindHandler) {
             this.unbindHandler();
-        }
-        this.handlerType = eventType;
-        this.handlerProxy = proxy(this.onTrigger, this);
-        window.addEventListener(eventType, this.handlerProxy);
-    }
-
-    private unbindHandler(): void {
-        if (this.handlerProxy !== null) {
-            window.removeEventListener(this.handlerType, this.handlerProxy);
-            this.handlerProxy = null;
+            this.unbindHandler = null;
         }
     }
 
     private onTrigger(event: MouseEvent): void {
         let target: EventTarget|null = event.target;
-        if (this.callback !== null && target instanceof Element && this.el !== event.target && !this.el.contains(target)) {
-            this.callback(event, this.el);
+
+        if (this.callback !== null && (!(target instanceof HTMLElement) || this.isOutside(target))) {
+            this.callback();
         }
     }
 
     private resolveHandlerType(bindings: DirectiveBinding): EventType {
-        if (isObject(bindings.value)) {
-            if (bindings.value.eventType === 'mousedown') {
-                return 'mousedown';
-            }
+        return isObject(bindings.value) && bindings.value.eventType || 'mousedown';
+    }
+
+    private isOutside(target: HTMLElement): boolean {
+        if (this.el === target || this.el.contains(target)) {
+            return false;
         }
-        return 'click';
+        while (target) {
+            if (target.dataset.teleportedFrom) {
+                const virtualTarget = document.getElementById(target.dataset.teleportedFrom);
+                return virtualTarget !== null && !this.el.contains(virtualTarget);
+            }
+            if (!target.parentElement) {
+                break ;
+            }
+            target = target.parentElement;
+        }
+        return true;
     }
 }

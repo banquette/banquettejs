@@ -1,0 +1,7 @@
+<div :id="wrapperId">
+    <Teleport :to="to" :disabled="disabled">
+        <div :data-teleported-from="wrapperId">
+            <slot></slot>
+        </div>
+    </Teleport>
+</div>
