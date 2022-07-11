@@ -1,8 +1,9 @@
 <bt-client-only>
-    <Teleport :to="teleportTarget" :disabled="!teleportTarget">
+    <bt-teleport :to="teleportTarget" :disabled="!teleportTarget">
         <div
             ref="popover"
             class="bt-popover"
+            :style="styles"
             v-bind="$attrs"
             v-bt-bind-theme
             v-bt-stick-to="config.stickToOptions"
@@ -20,5 +21,5 @@
                 </div>
             </Transition>
         </div>
-    </Teleport>
+    </bt-teleport>
 </bt-client-only>

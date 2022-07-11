@@ -3,6 +3,7 @@ export interface PopoverConfigurationInterface {
     content: string|null;
     allowHtml: boolean;
     showArrow: boolean;
-    teleport: Element|string|null;
+    teleport: Element|string|'auto'|null;
+    zIndex: number|'auto'|null;
     stickToOptions: any;
 }

@@ -146,7 +146,12 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * An HTML element or selector to teleport the popover into.
      */
-    @Prop({type: [Object, String], default: null}) public teleport!: Element|string|null;
+    @Prop({type: [Object, String], default: 'auto'}) public teleport!: Element|string|'auto'|null;
+
+    /**
+     * The z-index to apply on the floating element.
+     */
+    @Prop({type: [Number, String], default: 'auto'}) public zIndex!: number|'auto'|null;
 
     /**
      * To translate the popover from its original position.
@@ -182,7 +187,8 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         allowHtml       : false,
         visible         : false,
         showArrow       : true,
-        teleport        : null,
+        teleport        : 'auto',
+        zIndex          : 'auto',
         stickToOptions  : {}
     };
 
@@ -230,12 +236,13 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['content', 'visible', 'allowHtml', 'showArrow', 'teleport'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['content', 'visible', 'allowHtml', 'showArrow', 'teleport', 'zIndex'], {immediate: ImmediateStrategy.BeforeMount})
     protected updateBaseConfig(): void {
         this.config.content = this.content;
         this.config.showArrow = this.showArrow;
         this.config.allowHtml = this.allowHtml;
         this.config.teleport = this.teleport;
+        this.config.zIndex = this.zIndex;
 
         // Meaning "if the control of the visibility is direct from the outside".
         if (this.visible !== null) {

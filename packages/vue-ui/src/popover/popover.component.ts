@@ -1,3 +1,5 @@
+import { isNumeric } from "@banquette/utils-type/is-numeric";
+import { Primitive } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -7,14 +9,14 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { StickToDirective, ClientOnlyComponent } from "../misc";
+import { StickToDirective, ClientOnlyComponent, TeleportComponent } from "../misc";
 import { PopoverComposable } from "./popover.composable";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-popover',
-    components: [ClientOnlyComponent],
+    components: [ClientOnlyComponent, TeleportComponent],
     directives: [StickToDirective, BindThemeDirective],
     inheritAttrs: false
 })
@@ -37,20 +39,42 @@ export default class PopoverComponent extends Vue {
     @Prop({type: Boolean, default: false}) public renderHidden!: boolean;
 
     @Computed() public get teleportTarget(): any {
+        if (this.popoverComposable.config.teleport === 'auto' && this.shouldTeleportToBody()) {
+            return 'body';
+        }
         if (!this.popoverComposable.config.teleport && this.popoverComposable.config.stickToOptions.target instanceof SVGElement) {
             return 'body';
         }
-        return this.popoverComposable.config.teleport;
+        return this.popoverComposable.config.teleport === 'auto' ? null : this.popoverComposable.config.teleport;
+    }
+
+    @Computed() public get styles(): Record<string, Primitive> {
+        const styles: Record<string, Primitive> = {};
+        if (this.popoverComposable) {
+            if (this.popoverComposable.config.zIndex === 'auto') {
+                if (this.highestZIndex !== null) {
+                    styles.zIndex = this.highestZIndex;
+                }
+            } else {
+                styles.zIndex = this.popoverComposable.config.zIndex;
+            }
+        }
+        return styles;
     }
 
     @Expose() public shouldRender: boolean = false;
     @Expose() public isVisible: boolean = false;
+    private highestZIndex: number|null = null;
 
     /**
      * Vue lifecycle.
      */
     public beforeMount() {
         this.popoverComposable.config.stickToOptions.enabled = false;
+    }
+
+    public mounted(): void {
+        this.highestZIndex = this.findHighestZIndex();
     }
 
     /**
@@ -98,5 +122,36 @@ export default class PopoverComponent extends Vue {
             // Just set the flag to `false` and let Vue call `onAfterLeave`.
             this.isVisible = false;
         }
+    }
+
+    /**
+     * Test if the floating element should be teleported in the body to be displayed properly.
+     */
+    private shouldTeleportToBody(): boolean {
+        let el = this.$el;
+        while (el instanceof Element) {
+            const styles = window.getComputedStyle(el);
+            if (styles.overflow !== 'visible') {
+                return true;
+            }
+            el = el.parentElement;
+        }
+        return false;
+    }
+
+    /**
+     * Try to determine the best z-index based on parent elements z-indexes.
+     */
+    private findHighestZIndex(): number|null {
+        let el = this.$el;
+        let max: number | null = null;
+        while (el instanceof Element) {
+            const styles = window.getComputedStyle(el);
+            if (isNumeric(styles.zIndex)) {
+                max = Math.max(max !== null ? max : -Infinity, parseInt(styles.zIndex, 10));
+            }
+            el = el.parentElement;
+        }
+        return max;
     }
 }
