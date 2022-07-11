@@ -19,6 +19,7 @@ import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { TransformService } from "@banquette/model/transformer/transform.service";
 import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { debounce } from "@banquette/utils-misc/debounce";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { extend } from "@banquette/utils-object/extend";
@@ -26,7 +27,7 @@ import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isObject, isObjectLiteral } from "@banquette/utils-type/is-object";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Writeable } from "@banquette/utils-type/types";
+import { Writeable, Constructor } from "@banquette/utils-type/types";
 import { HeadlessInterface } from "../../headless.interface";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import {
@@ -72,13 +73,17 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     /**
      * Optional type of the model to bind the form with.
      */
-    private _modelType: ModelExtendedIdentifier|null = null;
+    private _modelType: Constructor<any>|null = null;
     public get modelType(): ModelExtendedIdentifier|null {
         return this._modelType;
     }
     public set modelType(value: ModelExtendedIdentifier|null) {
-        this._modelType = value;
-        this.load();
+        const resolved = value !== null ? this.getModelMetadata().resolveAlias(value) : null;
+        const requiresLoad = this._modelType !== resolved;
+        this._modelType = resolved;
+        if (requiresLoad) {
+            this.load();
+        }
     }
 
     /**
@@ -92,8 +97,11 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         return this._loadData;
     }
     public set loadData(value: any) {
+        const requiresLoad = !areEqual(this._loadData, value);
         this._loadData = value;
-        this.load();
+        if (requiresLoad) {
+            this.load();
+        }
     }
 
     /**
@@ -553,8 +561,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             // If loadData is not an instance of the expected type of model
             // we assume it's a POJO, so we need to convert back to a model.
             if (!this.isValidModelInstance(this.loadData)) {
-                const ctor = this.getModelMetadata().resolveAlias(this._modelType as ModelExtendedIdentifier);
-                const pojoTransformResult = this.getTransformService().transformInverse(this.loadData, ctor, PojoTransformerSymbol);
+                const pojoTransformResult = this.getTransformService().transformInverse(this.loadData, this._modelType as Constructor, PojoTransformerSymbol);
                 if (pojoTransformResult.promise) {
                     await pojoTransformResult.promise;
                 }

@@ -7,6 +7,7 @@ import { UnsubscribeFunction } from "@banquette/event/type";
 import { HttpMethod } from "@banquette/http/constants";
 import { HttpResponse } from "@banquette/http/http-response";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { extend } from "@banquette/utils-object/extend";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -98,10 +99,17 @@ export class RemoteModule {
      * Update the configuration and notify of the change.
      */
     public updateConfiguration(configuration: Partial<RemoteConfigurationInterface>): void {
+        let changed = false;
         for (const prop of ['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'payloadType', 'responseType', 'allowMultiple']) {
-            (this as any)[prop] = !isUndefined((configuration as any)[prop]) ? (configuration as any)[prop] : (this as any)[prop];
+            const newValue = !isUndefined((configuration as any)[prop]) ? (configuration as any)[prop] : (this as any)[prop];
+            if (!changed && !areEqual((this as any)[prop], newValue)) {
+                changed = true;
+            }
+            (this as any)[prop] = newValue;
         }
-        this.eventDispatcher.dispatch(RemoteModuleEvents.ConfigurationChange);
+        if (changed) {
+            this.eventDispatcher.dispatch(RemoteModuleEvents.ConfigurationChange);
+        }
     }
 
     /**
