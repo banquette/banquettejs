@@ -1,0 +1,12 @@
+.bt-form-tiptap-character-count {
+    --form-tiptap-character-count-text-color: var(--bt-form-tiptap-character-count-text-color, var(--bt-color-gray-400));
+    --form-tiptap-character-count-font-size: var(--bt-form-tiptap-character-count-font-size, 1em);
+}
+
+.bt-form-tiptap-character-count {
+    font-size: var(--form-tiptap-character-count-font-size);
+    padding: 0 1em 1em 1em;
+    text-align: right;
+    line-height: 1.4;
+    color: var(--form-tiptap-character-count-text-color);
+}

@@ -1,0 +1,22 @@
+
+.bt-form-tiptap-heading-dropdown {
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 0.5em;
+
+        .addons {
+            display: none;
+            gap: 0.3em;
+        }
+
+        &[data-active] {
+            font-weight: bold;
+
+            .addons {
+                display: flex;
+            }
+        }
+    }
+}
