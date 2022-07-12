@@ -52,6 +52,7 @@
             display: flex;
             gap: 0.2em;
             padding: 0.4em;
+            height: 3.3em;
             border-bottom: 1px solid var(--bt-color-gray-100);
 
             :deep(.bt-button.toolbar-button) {
