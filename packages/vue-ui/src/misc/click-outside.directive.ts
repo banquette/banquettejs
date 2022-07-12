@@ -58,7 +58,7 @@ export class ClickOutsideDirective {
     private onTrigger(event: MouseEvent): void {
         let target: EventTarget|null = event.target;
 
-        if (this.callback !== null && (!(target instanceof HTMLElement) || this.isOutside(target))) {
+        if (this.callback !== null && ((!(target instanceof HTMLElement) && !(target instanceof SVGElement)) || this.isOutside(target))) {
             this.callback();
         }
     }
@@ -67,7 +67,7 @@ export class ClickOutsideDirective {
         return isObject(bindings.value) && bindings.value.eventType || 'mousedown';
     }
 
-    private isOutside(target: HTMLElement): boolean {
+    private isOutside(target: HTMLElement|SVGElement): boolean {
         if (this.el === target || this.el.contains(target)) {
             return false;
         }
