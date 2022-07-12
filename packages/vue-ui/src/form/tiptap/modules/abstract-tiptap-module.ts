@@ -1,6 +1,4 @@
 import { UsageException } from "@banquette/exception/usage.exception";
-import { extend } from "@banquette/utils-object/extend";
-import { ensureObject } from "@banquette/utils-type/ensure-object";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
@@ -17,7 +15,7 @@ export abstract class AbstractTiptapModule<Conf = any> extends Vue implements Ti
         type: Object,
         default: {},
         transform(this: AbstractTiptapModule<Conf>, v: any) {
-            return extend(ensureObject(this.getDefaultConfiguration()), ensureObject(v));
+            return Object.assign({}, this.getDefaultConfiguration(), v || {});
         }
     })
     public configuration!: Conf;
