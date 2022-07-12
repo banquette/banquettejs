@@ -44,6 +44,7 @@
 .bt-form-tiptap {
     .inner-wrapper {
         width: 100%;
+        position: relative;
     }
 
     .toolbars {

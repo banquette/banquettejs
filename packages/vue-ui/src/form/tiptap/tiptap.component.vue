@@ -118,7 +118,9 @@ export default class TiptapComponent extends AbstractVueFormComponent<TiptapView
     /**
      * Holds the props exposed by the base input.
      */
-    @Import(BaseInputComposable, false) public base!: BaseInputComposable;
+    @Import(BaseInputComposable, {
+        floatingLabel: false
+    }) public base!: BaseInputComposable;
 
     @Prop({
         type: [String, Object],
@@ -164,6 +166,14 @@ export default class TiptapComponent extends AbstractVueFormComponent<TiptapView
      * Each module register itself in this array by calling `registerModule` on its parent component.
      */
     private modules: TiptapModuleInterface[] = [];
+
+    /**
+     * @inheritDoc
+     */
+    public beforeMount(): void {
+        super.beforeMount();
+        this.base.floatingLabel = false;
+    }
 
     /**
      * @inheritDoc
