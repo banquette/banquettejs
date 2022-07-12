@@ -5,5 +5,6 @@ export const I18nDefaults: I18nInterface = {
     textColorReset: 'Reset color',
     backgroundColorTitle: 'Background color',
     backgroundColorReset: 'No color',
+    emptyTitle: 'Nothing here',
     popover: 'Text color'
 };

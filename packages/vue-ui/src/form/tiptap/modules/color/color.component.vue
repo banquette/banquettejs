@@ -25,8 +25,8 @@ declare module '@banquette/vue-ui/form/tiptap' {
         color: {
             color?: Partial<ColorOptions>,
             highlight?: Partial<HighlightOptions>,
-            textColors: string[][],
-            backgroundColors: string[][]
+            textColors?: string[][],
+            backgroundColors?: string[][]
         }
     }
 }
@@ -47,15 +47,27 @@ export default class UnderlineComponent extends AbstractTiptapModule<ModuleInter
      */
     @Prop({type: Object, default: I18nDefaults}) public i18n!: I18nInterface;
 
-    @Computed() public textColorsPalettes(): string[][] {
+    @Computed() public get textColorsPalettes(): string[][] {
         return this.configuration.textColors || [];
     }
 
-    @Computed() public backgroundColorsPalettes(): string[][] {
+    @Computed() public get backgroundColorsPalettes(): string[][] {
         return this.configuration.backgroundColors || [];
     }
 
-    @Expose() public dropdownVisible: boolean = false;
+    @Computed() public get hasBackgroundColorsPalettes(): boolean {
+        return this.backgroundColorsPalettes.reduce((acc: number, item: string[]) => {
+            acc += item.length;
+            return acc;
+        }, 0) > 0;
+    }
+
+    @Computed() public get hasTextColorsPalettes(): boolean {
+        return this.textColorsPalettes.reduce((acc: number, item: string[]) => {
+            acc += item.length;
+            return acc;
+        }, 0) > 0;
+    }
 
     /**
      * @inheritDoc
@@ -69,22 +81,18 @@ export default class UnderlineComponent extends AbstractTiptapModule<ModuleInter
 
     @Expose() public setColor(color: string): void {
         this.editor.chain().focus().setColor(color).run();
-        this.dropdownVisible = false;
     }
 
     @Expose() public unsetColor(): void {
         this.editor.chain().focus().unsetColor().run();
-        this.dropdownVisible = false;
     }
 
     @Expose() public setHighlight(color: string): void {
         this.editor.chain().focus().setHighlight({color}).run();
-        this.dropdownVisible = false;
     }
 
     @Expose() public unsetHighlight(): void {
         this.editor.chain().focus().unsetHighlight().run();
-        this.dropdownVisible = false;
     }
 
     /**
@@ -125,41 +133,45 @@ export default class UnderlineComponent extends AbstractTiptapModule<ModuleInter
         v-if="editor"
         :disabled="!enabled"
         class="bt-form-tiptap-color toolbar-button"
-        @click="dropdownVisible = !dropdownVisible"
     >
         <i-material-text-format crop></i-material-text-format>
         <i-material-arrow-drop-down crop size="0.3em"></i-material-arrow-drop-down>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
 
-        <bt-dropdown :visible="dropdownVisible" class="bt-form-tiptap-color-dropdown">
-            <div class="wrapper" v-bt-click-outside="{eventType: 'mousedown', callback: () => dropdownVisible = false}">
-                <div class="column">
-                    <span class="title">{{ i18n.textColorTitle }}</span>
-                    <div class="palette" v-for="palette in textColorsPalettes">
-                        <a class="color"
-                           v-for="color in palette"
-                           :data-active="editor.isActive('textStyle', {color}) ? '' : null"
-                           :style="{backgroundColor: color}"
-                           @click="setColor(color)"></a>
+        <template #toggle="{close}">
+            <bt-dropdown class="bt-form-tiptap-color-dropdown">
+                <div class="wrapper">
+                    <div class="column" v-if="hasTextColorsPalettes">
+                        <span class="title">{{ i18n.textColorTitle }}</span>
+                        <div class="palette" v-for="palette in textColorsPalettes">
+                            <a class="color"
+                               v-for="color in palette"
+                               :data-active="editor.isActive('textStyle', {color}) ? '' : null"
+                               :style="{backgroundColor: color}"
+                               @click="setColor(color); close()"></a>
+                        </div>
+                        <bt-button :variant="variants.resetColorButton" @click="unsetColor(); close()">
+                            <i-material-format-color-reset crop></i-material-format-color-reset> {{ i18n.textColorReset }}
+                        </bt-button>
                     </div>
-                    <bt-button :variant="variants.resetColorButton" @click="unsetColor()">
-                        <i-material-format-color-reset crop></i-material-format-color-reset> {{ i18n.textColorReset }}
-                    </bt-button>
-                </div>
-                <div class="column">
-                    <span class="title">{{ i18n.backgroundColorTitle }}</span>
-                    <div class="palette" v-for="palette in backgroundColorsPalettes">
-                        <a class="color"
-                           v-for="color in palette"
-                           :data-active="editor.isActive('highlight', {color}) ? '' : null"
-                           :style="{backgroundColor: color}"
-                           @click="setHighlight(color)"></a>
+                    <div class="column" v-if="hasBackgroundColorsPalettes">
+                        <span class="title">{{ i18n.backgroundColorTitle }}</span>
+                        <div class="palette" v-for="palette in backgroundColorsPalettes">
+                            <a class="color"
+                               v-for="color in palette"
+                               :data-active="editor.isActive('highlight', {color}) ? '' : null"
+                               :style="{backgroundColor: color}"
+                               @click="setHighlight(color); close()"></a>
+                        </div>
+                        <bt-button :variant="variants.resetBackgroundButton" @click="unsetHighlight(); close()">
+                            <i-material-format-color-reset crop></i-material-format-color-reset> {{ i18n.backgroundColorReset }}
+                        </bt-button>
                     </div>
-                    <bt-button :variant="variants.resetBackgroundButton" @click="unsetHighlight()">
-                        <i-material-format-color-reset crop></i-material-format-color-reset> {{ i18n.backgroundColorReset }}
-                    </bt-button>
+                    <div class="column" v-if="!hasTextColorsPalettes && !hasBackgroundColorsPalettes">
+                        <span class="title">{{ i18n.emptyTitle }}</span>
+                    </div>
                 </div>
-            </div>
-        </bt-dropdown>
+            </bt-dropdown>
+        </template>
     </bt-button>
 </template>

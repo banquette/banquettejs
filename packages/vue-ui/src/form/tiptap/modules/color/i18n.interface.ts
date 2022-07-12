@@ -21,6 +21,11 @@ export interface I18nInterface {
     backgroundColorReset: string;
 
     /**
+     * Title to show when no colors are available.
+     */
+    emptyTitle: string;
+
+    /**
      * Text of the popover.
      * An empty string will disable the popover.
      */

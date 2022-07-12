@@ -14,9 +14,9 @@
         flex-direction: column;
         gap: 0.4em;
 
-        &:first-child {
-            border-right: 1px solid var(--bt-color-gray-100);
-            padding-right: 1em;
+        & + .column {
+            border-left: 1px solid var(--bt-color-gray-100);
+            padding-left: 1em;
         }
     }
 
