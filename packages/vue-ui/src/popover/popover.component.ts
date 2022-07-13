@@ -73,6 +73,9 @@ export default class PopoverComponent extends Vue {
         this.popoverComposable.config.stickToOptions.enabled = false;
     }
 
+    /**
+     * Vue lifecycle.
+     */
     public mounted(): void {
         this.highestZIndex = this.findHighestZIndex();
     }
