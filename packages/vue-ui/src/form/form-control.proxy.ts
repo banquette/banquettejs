@@ -145,9 +145,9 @@ export class FormControlProxy implements FormViewControlInterface {
     private viewModel!: FormViewModelInterface|null;
 
     /**
-     * A key/value pair of methods to call on the control when it becomes available.
+     * Array of methods waiting to be called when the control becomes available.
      */
-    private methodsQueue: Record<string, ProxifiedCallInterface[]> = {};
+    private methodsQueue: ProxifiedCallInterface[] = [];
 
     /**
      * The list of subscribers to call each time a "real" FormControl instance is assigned.
@@ -206,56 +206,56 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public markAsDisabled(): void {
-        this.callControlMethod('markAsDisabled');
+        this.callControlMethod('markAsDisabled', true, true);
     }
 
     /**
      * @inheritDoc
      */
     public markAsEnabled(): void {
-        this.callControlMethod('markAsEnabled');
+        this.callControlMethod('markAsEnabled', true, true);
     }
 
     /**
      * @inheritDoc
      */
     public markAsFocused(): void {
-        this.callControlMethod('markAsFocused');
+        this.callControlMethod('markAsFocused', true, true);
     }
 
     /**
      * @inheritDoc
      */
     public markAsBlurred(): void {
-        this.callControlMethod('markAsBlurred');
+        this.callControlMethod('markAsBlurred', true, true);
     }
 
     /**
      * @inheritDoc
      */
     public markAsBusy(): void {
-        this.callControlMethod('markAsBusy');
+        this.callControlMethod('markAsBusy', true, true);
     }
 
     /**
      * @inheritDoc
      */
     public markAsNotBusy(): void {
-        this.callControlMethod('markAsNotBusy');
+        this.callControlMethod('markAsNotBusy', true, true);
     }
 
     /**
      * @inheritDoc
      */
     public setDefaultValue(value: any): void {
-        this.callControlMethod('setDefaultValue', false, value);
+        this.callControlMethod('setDefaultValue', false, true, value);
     }
 
     /**
      * @inheritDoc
      */
     public setValue(value: any): void {
-        this.callControlMethod('setValue', false, value);
+        this.callControlMethod('setValue', false, false, value);
     }
 
     /**
@@ -280,14 +280,14 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public setExtras(extras: Record<string, any>): void {
-        this.callControlMethod('setExtras', true, extras);
+        this.callControlMethod('setExtras', true, false, extras);
     }
 
     /**
      * @inheritDoc
      */
     public getExtra<T = any>(name: string, defaultValue: any): T {
-        const result = this.callControlMethod('getExtras', false, name, defaultValue);
+        const result = this.callControlMethod('getExtras', false, false, name, defaultValue);
         if (result.done) {
             return result.returnValue;
         }
@@ -298,14 +298,14 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public setExtra(name: string, value: any): void {
-        this.callControlMethod('setExtra', false, name, value);
+        this.callControlMethod('setExtra', false, false, name, value);
     }
 
     /**
      * Set the validator to use to the validate the value of the component.
      */
     public setValidator(validator: ValidatorInterface|null): void {
-        this.callControlMethod('setValidator', true, validator);
+        this.callControlMethod('setValidator', true, true, validator);
     }
 
     /**
@@ -430,20 +430,22 @@ export class FormControlProxy implements FormViewControlInterface {
      * Try to call a method on the control or queue the call if no control is available yet.
      * The queue will automatically be flushed when the control becomes available.
      */
-    private callControlMethod(method: keyof FormViewControlInterface, replayable: boolean = true, ...args: any[]): ProxifiedCallInterface {
+    private callControlMethod(method: keyof FormViewControlInterface,
+                              replayable: boolean = true,
+                              skippable: boolean = false,
+                              ...args: any[]): ProxifiedCallInterface {
         const call: ProxifiedCallInterface = {
+            method,
             args,
             done: false,
-            returnValue: undefined
+            returnValue: undefined,
+            skippable
         };
         if (this.bridge) {
             call.returnValue = this.bridge[method].apply(this.bridge, args as any);
             call.done = true;
         } else if (replayable) {
-            if (isUndefined(this.methodsQueue[method])) {
-                this.methodsQueue[method] = [];
-            }
-            this.methodsQueue[method].push(call);
+            this.methodsQueue.push(call);
         }
         return call;
     }
@@ -452,14 +454,14 @@ export class FormControlProxy implements FormViewControlInterface {
      * Generic method to subscribe to an event on a possibly not existing control.
      */
     private subscribeToControl(methodName: keyof FormViewControlInterface, callback: GenericCallback, priority?: number): UnsubscribeFunction {
-        const call = this.callControlMethod(methodName, true, callback, priority);
+        const call = this.callControlMethod(methodName, true, false, callback, priority);
         return () => {
             if (call.done && isFunction(call.returnValue)) {
                 call.returnValue();
-            } else if (!call.done && !isUndefined(this.methodsQueue[methodName])) {
-                for (let i = 0; i < this.methodsQueue[methodName].length; ++i) {
-                    if (this.methodsQueue[methodName][i] === call) {
-                        this.methodsQueue[methodName].splice(i, 1);
+            } else if (!call.done) {
+                for (let i = 0; i < this.methodsQueue.length; ++i) {
+                    if (this.methodsQueue[i] === call) {
+                        this.methodsQueue.splice(i, 1);
                         break ;
                     }
                 }
@@ -471,13 +473,22 @@ export class FormControlProxy implements FormViewControlInterface {
      * Execute all control methods in the queue and clear the queue.
      */
     private flushControlMethodsQueue(bridge: FormViewControlInterface, control: FormControl): void {
-        for (const method of Object.keys(this.methodsQueue)) {
-            for (const call of this.methodsQueue[method]) {
-                call.returnValue = bridge[method as keyof FormViewControlInterface].apply(control, call.args);
-                call.done = true;
+        // Purge skippable methods
+        const found: string[] = [];
+        for (let i = this.methodsQueue.length - 1; i >= 0; i--) {
+            if (this.methodsQueue[i].skippable) {
+                if (found.indexOf(this.methodsQueue[i].method) > -1) {
+                    this.methodsQueue.splice(i, 1);
+                    continue ;
+                }
+                found.push(this.methodsQueue[i].method);
             }
         }
-        this.methodsQueue = {};
+        for (const call of this.methodsQueue) {
+            call.returnValue = bridge[call.method].apply(control, call.args);
+            call.done = true;
+        }
+        this.methodsQueue = [];
     }
 
     /**

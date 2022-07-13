@@ -1,3 +1,5 @@
+import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
+
 /**
  * Represent a call to a form control.
  *
@@ -5,6 +7,11 @@
  * we can save it and have a way to store the return value.
  */
 export interface ProxifiedCallInterface {
+    /**
+     * The method to call.
+     */
+    method: keyof FormViewControlInterface;
+
     /**
      * Has the call been made yet?
      */
@@ -19,4 +26,9 @@ export interface ProxifiedCallInterface {
      * The return value of the call.
      */
     returnValue: any;
+
+    /**
+     * If `true`, only the last call will be performed if present multiple times in the stack.
+     */
+    skippable: boolean;
 }
