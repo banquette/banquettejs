@@ -7,7 +7,7 @@ import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-
 import { FormControl } from "@banquette/form/form-control";
 import { NodePropResolver } from "@banquette/ui/tree/constant";
 import { Node } from "@banquette/ui/tree/node";
-import { isArray } from "@banquette/utils-type/is-array";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isPrimitive } from "@banquette/utils-type/is-primitive";
@@ -24,6 +24,7 @@ import { TreeComponent } from "../../tree";
 import { BaseInputComponent } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { AbstractVueFormComponent } from "../abstract-vue-form.component";
+import { UndefinedValue } from "../constant";
 import { CheckboxDataInterface } from "./checkbox-data.interface";
 import { ThemeConfiguration } from "./theme-configuration";
 import { TreeViewDataInterface } from "./tree-view-data.interface";
@@ -39,7 +40,9 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
     /**
      * Holds the props exposed by the base input.
      */
-    @Import(BaseInputComposable, false) public base!: BaseInputComposable;
+    @Import(BaseInputComposable, {
+        floatingLabel: false
+    }) public base!: BaseInputComposable;
 
     /**
      * Defines how to resolve the nodes' value.
@@ -72,10 +75,9 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
     public beforeMount() {
         super.beforeMount();
         this.proxy.onReady(() => {
-            if (!isArray(this.v.control.value)) {
-                this.v.control.value = !isUndefined(this.v.control.value) ? [this.v.control.value] : [];
-            }
+            this.v.control.value = !isUndefined(this.v.control.value) && this.v.control.value !== UndefinedValue ? ensureArray(this.v.control.value) : [];
         });
+        this.base.floatingLabel = false;
     }
 
     /**
