@@ -35,6 +35,9 @@ for (const packageName of Object.keys(dependencies)) {
 
     console.log(`Update ${chalk.blue(packageName)} dependencies.`);
     for (const dependency of dependencies[packageName]) {
+        if (packageName === dependency) {
+            continue ;
+        }
         const subPackageJson = getPackageJsonContent(dependency);
         if (!subPackageJson.version) {
             throw `Missing version for package "${dependency}".`;
