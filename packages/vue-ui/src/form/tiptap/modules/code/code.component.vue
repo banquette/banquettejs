@@ -15,7 +15,9 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        code: Partial<CodeOptions>
+        code: {
+            tiptap?: Partial<CodeOptions>
+        }
     }
 }
 
@@ -34,7 +36,7 @@ export default class CodeComponent extends AbstractTiptapModule<ModuleInterface[
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [Code.configure(this.configuration)];
+        return [Code.configure(this.configuration.tiptap)];
     }
 
     @Expose() public toggle(): void {
@@ -45,7 +47,7 @@ export default class CodeComponent extends AbstractTiptapModule<ModuleInterface[
 <style src="./code.component.css"></style>
 <template>
     <bt-button class="toolbar-button" @click="toggle()" :disabled="!enabled" :data-active="editor.isActive('code') ? '' : null" v-if="editor">
-        <i-material-code size="0.9em" crop></i-material-code>
+        <i-material-code width="1em" height="0.9em" crop></i-material-code>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
     </bt-button>
 </template>

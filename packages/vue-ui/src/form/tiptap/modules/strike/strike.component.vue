@@ -15,7 +15,9 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        strike: Partial<StrikeOptions>
+        strike: {
+            tiptap?: Partial<StrikeOptions>
+        }
     }
 }
 
@@ -34,7 +36,7 @@ export default class StrikeComponent extends AbstractTiptapModule<ModuleInterfac
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [Strike.configure(this.configuration)];
+        return [Strike.configure(this.configuration.tiptap)];
     }
 
     @Expose() public toggle(): void {
@@ -44,7 +46,7 @@ export default class StrikeComponent extends AbstractTiptapModule<ModuleInterfac
 </script>
 <template>
     <bt-button class="toolbar-button" @click="toggle()" :disabled="!enabled" :data-active="editor.isActive('strike') ? '' : null" v-if="editor">
-        <i-material-format-strikethrough crop></i-material-format-strikethrough>
+        <i-material-format-strikethrough width="1em" crop></i-material-format-strikethrough>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
     </bt-button>
 </template>

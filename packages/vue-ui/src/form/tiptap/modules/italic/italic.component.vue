@@ -15,7 +15,9 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        italic: Partial<ItalicOptions>
+        italic: {
+            tiptap?: Partial<ItalicOptions>
+        }
     }
 }
 
@@ -34,7 +36,7 @@ export default class ItalicComponent extends AbstractTiptapModule<ModuleInterfac
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [Italic.configure(this.configuration)];
+        return [Italic.configure(this.configuration.tiptap)];
     }
 
     @Expose() public toggle(): void {

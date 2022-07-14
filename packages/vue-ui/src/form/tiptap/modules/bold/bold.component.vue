@@ -15,7 +15,9 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        bold: Partial<BoldOptions>
+        bold: {
+            tiptap?: Partial<BoldOptions>
+        }
     }
 }
 
@@ -34,7 +36,7 @@ export default class BoldComponent extends AbstractTiptapModule<ModuleInterface[
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [Bold.configure(this.configuration)];
+        return [Bold.configure(this.configuration.tiptap)];
     }
 
     @Expose() public toggle(): void {

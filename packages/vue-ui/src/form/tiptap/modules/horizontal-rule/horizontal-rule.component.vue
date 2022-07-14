@@ -15,7 +15,9 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        horizontalRule: Partial<HorizontalRuleOptions>
+        horizontalRule: {
+            tiptap?: Partial<HorizontalRuleOptions>
+        }
     }
 }
 
@@ -34,7 +36,7 @@ export default class HorizonalRuleComponent extends AbstractTiptapModule<ModuleI
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [HorizontalRule.configure(this.configuration)];
+        return [HorizontalRule.configure(this.configuration.tiptap)];
     }
 
     @Expose() public toggle(): void {
@@ -43,8 +45,8 @@ export default class HorizonalRuleComponent extends AbstractTiptapModule<ModuleI
 }
 </script>
 <template>
-    <bt-button class="toolbar-button" @click="toggle()" :disabled="!enabled" :data-active="editor.isActive('bold') ? '' : null" v-if="editor">
-        <i-material-horizontal-rule crop></i-material-horizontal-rule>
+    <bt-button class="toolbar-button" @click="toggle()" :disabled="!enabled" v-if="editor">
+        <i-material-horizontal-rule width="1em" crop></i-material-horizontal-rule>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
     </bt-button>
 </template>

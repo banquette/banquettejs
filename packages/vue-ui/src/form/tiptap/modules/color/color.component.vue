@@ -7,6 +7,7 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Highlight, HighlightOptions } from "@tiptap/extension-highlight";
 import { Color, ColorOptions } from "@tiptap/extension-color";
 import { Extensions } from "@tiptap/vue-3";
@@ -34,6 +35,7 @@ declare module '@banquette/vue-ui/form/tiptap' {
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-tiptap-color',
+    directives: [BindThemeDirective],
     components: [ButtonComponent, PopoverComponent, IconMaterialTextFormat, IconMaterialArrowDropDown, IconMaterialFormatColorReset]
 })
 export default class UnderlineComponent extends AbstractTiptapModule<ModuleInterface["color"]> {
@@ -131,11 +133,12 @@ export default class UnderlineComponent extends AbstractTiptapModule<ModuleInter
 <template>
     <bt-button
         v-if="editor"
+        v-bt-bind-theme
         :disabled="!enabled"
         class="bt-form-tiptap-color toolbar-button"
     >
         <i-material-text-format crop></i-material-text-format>
-        <i-material-arrow-drop-down crop size="0.3em"></i-material-arrow-drop-down>
+        <i-material-arrow-drop-down crop width="0.8em"></i-material-arrow-drop-down>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
 
         <template #toggle="{close}">

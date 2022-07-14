@@ -15,7 +15,9 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        underline: Partial<UnderlineOptions>
+        underline: {
+            tiptap?: Partial<UnderlineOptions>
+        }
     }
 }
 
@@ -34,7 +36,7 @@ export default class UnderlineComponent extends AbstractTiptapModule<ModuleInter
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [Underline.configure(this.configuration)];
+        return [Underline.configure(this.configuration.tiptap)];
     }
 
     @Expose() public toggle(): void {

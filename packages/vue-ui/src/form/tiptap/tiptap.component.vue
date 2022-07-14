@@ -23,13 +23,13 @@ import Text from '@tiptap/extension-text';
 import { Editor, EditorContent, Extensions } from '@tiptap/vue-3'
 import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { BaseInputComposable } from "../base-input/base-input.composable";
-import { TextViewModel } from "../text/text.view-model";
 import { TiptapModuleInterface } from "./modules/tiptap-module.interface";
 import { TiptapConfigurationStorage } from "./tiptap-configuration-storage";
 import { TiptapConfigurationInterface } from "./tiptap-configuration.interface";
 import { TiptapViewDataInterface } from "./tiptap-view-data.interface";
 import { TiptapViewModel } from "./tiptap.view-model";
-import { isTiptapConfiguration } from "./utils";
+import { isTiptapConfiguration } from "./type";
+import { ModulesToolbarAliases } from "./utils";
 
 type ModuleInUse = {configuration: AnyObject, inToolbar: boolean};
 interface InnerConfigurationInterface {
@@ -49,65 +49,6 @@ interface InnerConfigurationInterface {
     extensions: Extensions;
 }
 
-// @Themeable({
-//     css: {
-//         vars: {
-//             color: 'slvxvxoa',
-//             outlineWidth: 'm4vweagr',
-//             outlineColor: 'aqqhi16f',
-//             padding: 'x73pwbop',
-//             borderRadius: 'b0whwn2z',
-//             boxShadow: 'ejw144jm',
-//             background: 'fafhipdb',
-//             fontSize: 'yvwfinhn',
-//
-//             label: {
-//                 color: 'hjoqe90v',
-//                 margin: 'r60agvhh',
-//                 fontSize: 'xb4919f6',
-//                 fontWeight: 'cfvnkwve'
-//             },
-//
-//             placeholder: {
-//                 color: 'qdw6a9fh',
-//                 fontSize: 'bec4uu9b'
-//             },
-//
-//             focused: {
-//                 outlineWidth: 'e2xlw36v',
-//                 outlineColor: 'b1hj6140',
-//                 background: 'nfwwjp5t',
-//                 boxShadow: 'd6zvc2x5'
-//             },
-//
-//             error: {
-//                 outlineWidth: 'x63if0mt',
-//                 outlineColor: 'q30w5vdm',
-//                 background: 'fv3912g0',
-//                 boxShadow: 'cub29qik',
-//
-//                 focused: {
-//                     outlineWidth: 'i5th4lyv'
-//                 }
-//             },
-//
-//             disabled: {
-//                 outline: 'fa2n3mu4',
-//                 background: 'w0bfunmz',
-//                 boxShadow: 'nqf8p3jj',
-//
-//                 label: {
-//                     color: 'b9gdkbqj',
-//                     fontWeight: 'h9nc2z49'
-//                 }
-//             },
-//
-//             help: {
-//                 color: 'fpv8mky0'
-//             }
-//         }
-//     }
-// })
 @Themeable()
 @Component({
     name: 'bt-form-tiptap',
@@ -254,14 +195,18 @@ export default class TiptapComponent extends AbstractVueFormComponent<TiptapView
     private resolveConfiguration(conf: TiptapConfigurationInterface): InnerConfigurationInterface {
         const output: InnerConfigurationInterface = {toolbars: [], modules: {}, extensions: conf.extensions || []};
         const resolveComponentName = (name: string): string|null => {
-            name = kebabCase(name);
-            const namesCandidates = ['bt-form-tiptap-' + name, name];
+            const normalizedName = kebabCase(name);
+            const namesCandidates = ['bt-form-tiptap-' + normalizedName, normalizedName];
+            if (!isUndefined(ModulesToolbarAliases[name])) {
+                const alias = ModulesToolbarAliases[name];
+                namesCandidates.push.apply(namesCandidates, ['bt-form-tiptap-' + alias, alias]);
+            }
             for (const candidate of namesCandidates) {
                 if (Object.keys(this.$.root.appContext.components).indexOf(candidate) > -1) {
                     return candidate;
                 }
             }
-            console.warn(`Failed to find an existing Vue component for name "${name}". The following names have been tried: ${namesCandidates.join(', ')}`);
+            console.warn(`Failed to find an existing Vue component for name "${normalizedName}". The following names have been tried: ${namesCandidates.join(', ')}`);
             return null;
         };
         if (isArray(conf.toolbars)) {

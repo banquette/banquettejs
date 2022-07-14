@@ -4,6 +4,7 @@ import { Component } from "@banquette/vue-typescript/decorator/component.decorat
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { CharacterCount, CharacterCountOptions } from "@tiptap/extension-character-count";
 import { Extensions } from "@tiptap/vue-3";
 import { ModuleInterface } from "../../../";
@@ -17,7 +18,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
         characterCount: {
-            characterCount?: Partial<CharacterCountOptions>,
+            tiptap?: Partial<CharacterCountOptions>,
             showCharacters?: boolean,
             showWords?: boolean
         };
@@ -27,6 +28,7 @@ declare module '@banquette/vue-ui/form/tiptap' {
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-tiptap-character-count',
+    directives: [BindThemeDirective],
     components: [PopoverComponent, ButtonComponent, IconMaterialFormatClear]
 })
 export default class CharacterCountComponent extends AbstractTiptapModule<ModuleInterface["characterCount"]> {
@@ -41,7 +43,7 @@ export default class CharacterCountComponent extends AbstractTiptapModule<Module
         }
         return this.i18n.charactersText
             .replace('{current}', this.editor.storage.characterCount.characters())
-            .replace('{limit}', String(this.configuration.characterCount!.limit));
+            .replace('{limit}', String(this.configuration.tiptap!.limit));
     }
 
     @Computed() public get wordsText(): string {
@@ -55,7 +57,7 @@ export default class CharacterCountComponent extends AbstractTiptapModule<Module
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [CharacterCount.configure(this.configuration.characterCount)];
+        return [CharacterCount.configure(this.configuration.tiptap)];
     }
 
     /**
@@ -63,7 +65,7 @@ export default class CharacterCountComponent extends AbstractTiptapModule<Module
      */
     protected getDefaultConfiguration(): Partial<ModuleInterface["characterCount"]> {
         return {
-            characterCount: {limit: 240},
+            tiptap: {limit: 240},
             showCharacters: true,
             showWords: false,
         };
@@ -72,7 +74,7 @@ export default class CharacterCountComponent extends AbstractTiptapModule<Module
 </script>
 <style src="./character-count.component.css"></style>
 <template>
-    <div class="bt-form-tiptap-character-count">
+    <div class="bt-form-tiptap-character-count" v-bt-bind-theme>
         <div v-if="configuration.showCharacters">{{ charactersText }}</div>
         <div v-if="configuration.showWords">{{ wordsText }}</div>
     </div>

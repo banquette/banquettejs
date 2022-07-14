@@ -67,6 +67,7 @@
                 --button-font-size: 1em;
                 --button-padding-x: 0.9em;
                 --button-padding-y: 0.75em;
+                min-width: 2.8em;
                 min-height: 100%;
 
                 &[data-active] {

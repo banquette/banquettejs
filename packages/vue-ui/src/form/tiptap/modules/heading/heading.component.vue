@@ -19,7 +19,9 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        heading: Partial<HeadingOptions>
+        heading: {
+            tiptap?: Partial<HeadingOptions>
+        }
     }
 }
 
@@ -35,7 +37,7 @@ export default class HeadingComponent extends AbstractTiptapModule<ModuleInterfa
     @Prop({type: Object, default: I18nDefaults}) public i18n!: I18nInterface;
 
     @Computed() public get availableLevels(): Level[] {
-        return ensureArray(this.configuration.levels);
+        return ensureArray(this.configuration.tiptap?.levels);
     }
 
     @Expose() public selectedLevel: Level|null = null;
@@ -44,7 +46,7 @@ export default class HeadingComponent extends AbstractTiptapModule<ModuleInterfa
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [Heading.configure(this.configuration)];
+        return [Heading.configure(this.configuration.tiptap)];
     }
 
     @Expose() public toggleHeading(level: Level): void {
@@ -61,7 +63,9 @@ export default class HeadingComponent extends AbstractTiptapModule<ModuleInterfa
 
     protected getDefaultConfiguration(): Partial<ModuleInterface["heading"]> {
         return {
-            levels: [1, 2, 3, 4, 5, 6]
+            tiptap: {
+                levels: [1, 2, 3, 4, 5, 6]
+            }
         };
     }
 }
@@ -69,7 +73,7 @@ export default class HeadingComponent extends AbstractTiptapModule<ModuleInterfa
 <style src="./heading.component.css" scoped></style>
 <template>
     <bt-button :disabled="!enabled" class="bt-form-tiptap-heading toolbar-button" v-if="editor">
-        <i-material-title crop></i-material-title>
+        <i-material-title width="1em" crop></i-material-title>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
         <template #toggle="{close}">
             <bt-dropdown class="bt-form-tiptap-heading-dropdown">

@@ -16,7 +16,11 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        history: Partial<HistoryOptions>
+        history: {
+            tiptap?: Partial<HistoryOptions>,
+            showUndo?: boolean,
+            showRedo?: boolean
+        }
     }
 }
 
@@ -35,7 +39,7 @@ export default class HistoryComponent extends AbstractTiptapModule<ModuleInterfa
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [History.configure(this.configuration)];
+        return [History.configure(this.configuration.tiptap)];
     }
 
     @Expose() public undo(): void {
@@ -45,14 +49,21 @@ export default class HistoryComponent extends AbstractTiptapModule<ModuleInterfa
     @Expose() public redo(): void {
         this.editor.chain().focus().redo().run();
     }
+
+    protected getDefaultConfiguration(): Partial<ModuleInterface["history"]> {
+        return {
+            showUndo: true,
+            showRedo: true
+        };
+    }
 }
 </script>
 <template>
-    <bt-button class="toolbar-button" @click="undo()" :disabled="!editor.can().undo()" v-if="editor">
+    <bt-button class="toolbar-button" @click="undo()" :disabled="!editor.can().undo()" v-if="editor && configuration.showUndo">
         <i-material-undo :size="null" width="1em" crop></i-material-undo>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.undoPopover">{{ i18n.undoPopover }}</bt-popover>
     </bt-button>
-    <bt-button class="toolbar-button" @click="redo()" :disabled="!editor.can().redo()" v-if="editor">
+    <bt-button class="toolbar-button" @click="redo()" :disabled="!editor.can().redo()" v-if="editor && configuration.showRedo">
         <i-material-redo :size="null" width="1em" crop></i-material-redo>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.redoPopover">{{ i18n.redoPopover }}</bt-popover>
     </bt-button>

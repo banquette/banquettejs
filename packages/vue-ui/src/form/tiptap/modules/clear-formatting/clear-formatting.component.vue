@@ -48,7 +48,7 @@ export default class ClearFormattingComponent extends AbstractTiptapModule<Modul
 </script>
 <template>
     <bt-button class="toolbar-button" @click="clearFormatting()" :disabled="!enabled">
-        <i-material-format-clear crop></i-material-format-clear>
+        <i-material-format-clear width="1em" crop></i-material-format-clear>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
     </bt-button>
 </template>

@@ -17,7 +17,8 @@ import { I18nInterface } from "./i18n.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        fontFamily: Partial<FontFamilyOptions> & {
+        fontFamily: {
+            tiptap?: Partial<FontFamilyOptions>,
             availableFonts: string[];
         }
     }
@@ -56,7 +57,7 @@ export default class FontFamilyComponent extends AbstractTiptapModule<ModuleInte
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [TextStyle, FontFamily];
+        return [TextStyle, FontFamily.configure(this.configuration.tiptap)];
     }
 
     @Expose() public setFont(font: string): void {
@@ -144,7 +145,7 @@ export default class FontFamilyComponent extends AbstractTiptapModule<ModuleInte
 <template>
     <bt-button :disabled="!enabled" class="bt-form-tiptap-font-family toolbar-button" v-if="editor">
         {{ selectedFont }}
-        <i-material-arrow-drop-down crop size="0.3em"></i-material-arrow-drop-down>
+        <i-material-arrow-drop-down crop width="0.8em"></i-material-arrow-drop-down>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
         <template #toggle="{close}">
             <bt-dropdown class="bt-form-tiptap-font-family-dropdown">

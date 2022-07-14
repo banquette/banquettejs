@@ -14,6 +14,7 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { ModuleInterface } from "../../../";
 import { EditorEvents } from "@tiptap/core/dist/packages/core/src/types";
 import { Link, LinkOptions } from "@tiptap/extension-link";
@@ -30,13 +31,16 @@ import { VariantsInterface } from "./variants.interface";
 
 declare module '@banquette/vue-ui/form/tiptap' {
     interface ModuleInterface {
-        link: Partial<LinkOptions>
+        link: {
+            tiptap?: Partial<LinkOptions>
+        }
     }
 }
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-tiptap-link',
+    directives: [BindThemeDirective],
     components: [PopoverComponent, ButtonComponent, DialogComponent, IconMaterialLink]
 })
 export default class LinkComponent extends AbstractTiptapModule<ModuleInterface["link"]> {
@@ -71,7 +75,7 @@ export default class LinkComponent extends AbstractTiptapModule<ModuleInterface[
      * @inheritDoc
      */
     public getExtensions(): Extensions {
-        return [Link.configure(this.configuration)];
+        return [Link.configure(this.configuration.tiptap)];
     }
 
     public onTransaction = (() => {
@@ -181,9 +185,9 @@ export default class LinkComponent extends AbstractTiptapModule<ModuleInterface[
 </script>
 <style src="./link.component.css" scoped></style>
 <template>
-    <div class="bt-form-tiptap-link">
+    <div class="bt-form-tiptap-link" v-bt-bind-theme>
         <bt-button class="toolbar-button" @click="showDialog()" :disabled="!enabled" :data-active="editor.isActive('link') ? '' : null" v-if="editor">
-            <i-material-link size="0.8em" crop></i-material-link>
+            <i-material-link width="1em" height="0.75em" crop></i-material-link>
             <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
         </bt-button>
         <bt-dialog v-model="dialogVisible" :teleport="null" destroy-on-close>
