@@ -9,7 +9,7 @@ export interface TemplateRefDecoratorOptions {
     resolve: boolean;
 }
 
-export function TemplateRef(name: string, resolveComponent: boolean = true): any {
+export function TemplateRef(name: string, resolveComponent: boolean = false): any {
     return (prototype: any, propertyKey: string) => {
         if (!isNonEmptyString(propertyKey) || isFunction(prototype.constructor.prototype[propertyKey])) {
             throw new UsageException('You can only use @TemplateRef() on properties.');
