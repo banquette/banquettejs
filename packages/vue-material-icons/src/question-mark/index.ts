@@ -1,0 +1,1 @@
+export { default as IconMaterialQuestionMark } from './question-mark.component.vue';

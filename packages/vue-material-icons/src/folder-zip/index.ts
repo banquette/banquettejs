@@ -1,0 +1,1 @@
+export { default as IconMaterialFolderZip } from './folder-zip.component.vue';

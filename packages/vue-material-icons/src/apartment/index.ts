@@ -1,0 +1,1 @@
+export { default as IconMaterialApartment } from './apartment.component.vue';

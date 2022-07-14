@@ -1,0 +1,1 @@
+export { default as IconMaterialElectricMoped } from './electric-moped.component.vue';

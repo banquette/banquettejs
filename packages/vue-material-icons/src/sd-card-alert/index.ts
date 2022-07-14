@@ -1,0 +1,1 @@
+export { default as IconMaterialSdCardAlert } from './sd-card-alert.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialUmbrella } from './umbrella.component.vue';

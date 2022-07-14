@@ -1,0 +1,1 @@
+export { default as IconMaterialVerticalSplit } from './vertical-split.component.vue';

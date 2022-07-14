@@ -5,6 +5,7 @@ export * from './debug';
 export * from './dialog';
 export * from './dropdown';
 export * from './form';
+export * from './icon';
 export * from './misc';
 export * from './popover';
 export * from './popover-confirm';

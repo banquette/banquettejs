@@ -1,0 +1,1 @@
+export { default as IconMaterialPropaneTank } from './propane-tank.component.vue';

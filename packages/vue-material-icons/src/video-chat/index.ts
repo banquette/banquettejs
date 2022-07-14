@@ -1,0 +1,1 @@
+export { default as IconMaterialVideoChat } from './video-chat.component.vue';

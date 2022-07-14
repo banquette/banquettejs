@@ -1,0 +1,1 @@
+export { default as IconMaterialBloodtype } from './bloodtype.component.vue';

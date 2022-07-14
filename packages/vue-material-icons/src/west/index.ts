@@ -1,0 +1,1 @@
+export { default as IconMaterialWest } from './west.component.vue';

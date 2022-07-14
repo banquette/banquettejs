@@ -1,0 +1,1 @@
+export { default as IconMaterialNoTransfer } from './no-transfer.component.vue';

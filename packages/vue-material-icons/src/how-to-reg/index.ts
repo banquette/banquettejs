@@ -1,0 +1,1 @@
+export { default as IconMaterialHowToReg } from './how-to-reg.component.vue';

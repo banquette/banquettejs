@@ -1,0 +1,1 @@
+export { default as IconMaterialIosShare } from './ios-share.component.vue';

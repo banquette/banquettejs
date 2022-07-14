@@ -1,6 +1,6 @@
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { IconRemixCloseCircleLine } from "@banquette/vue-icons/remix/close-circle-line";
+import { IconRemixCloseCircleLine } from "@banquette/vue-remix-icons/close-circle-line";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";

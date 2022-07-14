@@ -1,4 +1,4 @@
-import { IconMaterialHelp } from "@banquette/vue-icons/material/help";
+import { IconMaterialHelp } from "@banquette/vue-material-icons/help";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";

@@ -1,0 +1,1 @@
+export { default as IconMaterialFreeCancellation } from './free-cancellation.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialTextRotationAngleup } from './text-rotation-angleup.component.vue';

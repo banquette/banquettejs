@@ -1,0 +1,1 @@
+export { default as IconMaterialGroupRemove } from './group-remove.component.vue';

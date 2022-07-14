@@ -1,7 +1,7 @@
 <script lang="ts">
-import { IconMaterialArrowDropDown } from "@banquette/vue-icons/material/arrow-drop-down";
-import { IconMaterialFormatColorReset } from "@banquette/vue-icons/material/format-color-reset";
-import { IconMaterialTextFormat } from "@banquette/vue-icons/material/text-format";
+import { IconMaterialArrowDropDown } from "@banquette/vue-material-icons/arrow-drop-down";
+import { IconMaterialFormatColorReset } from "@banquette/vue-material-icons/format-color-reset";
+import { IconMaterialTextFormat } from "@banquette/vue-material-icons/text-format";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";

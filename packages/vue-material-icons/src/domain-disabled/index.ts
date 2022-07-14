@@ -1,0 +1,1 @@
+export { default as IconMaterialDomainDisabled } from './domain-disabled.component.vue';

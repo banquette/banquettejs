@@ -1,0 +1,1 @@
+export { default as IconMaterialDirectionsRailwayFilled } from './directions-railway-filled.component.vue';

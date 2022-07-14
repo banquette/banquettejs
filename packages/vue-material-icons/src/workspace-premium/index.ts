@@ -1,0 +1,1 @@
+export { default as IconMaterialWorkspacePremium } from './workspace-premium.component.vue';

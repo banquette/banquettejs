@@ -1,0 +1,1 @@
+export { default as IconMaterialDiscount } from './discount.component.vue';

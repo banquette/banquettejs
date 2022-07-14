@@ -1,0 +1,1 @@
+export { default as IconMaterialPointOfSale } from './point-of-sale.component.vue';

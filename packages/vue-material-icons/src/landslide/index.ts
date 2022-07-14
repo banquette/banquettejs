@@ -1,0 +1,1 @@
+export { default as IconMaterialLandslide } from './landslide.component.vue';

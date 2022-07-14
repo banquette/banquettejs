@@ -1,0 +1,1 @@
+export { default as IconMaterialPersonalInjury } from './personal-injury.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialCameraOutdoor } from './camera-outdoor.component.vue';

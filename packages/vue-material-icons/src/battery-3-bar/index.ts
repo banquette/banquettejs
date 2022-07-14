@@ -1,0 +1,1 @@
+export { default as IconMaterialBattery3Bar } from './battery-3-bar.component.vue';

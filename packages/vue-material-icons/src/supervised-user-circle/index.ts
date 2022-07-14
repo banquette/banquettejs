@@ -1,0 +1,1 @@
+export { default as IconMaterialSupervisedUserCircle } from './supervised-user-circle.component.vue';

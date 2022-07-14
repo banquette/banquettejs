@@ -1,0 +1,1 @@
+export { default as IconMaterialDocumentScanner } from './document-scanner.component.vue';

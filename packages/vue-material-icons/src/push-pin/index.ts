@@ -1,0 +1,1 @@
+export { default as IconMaterialPushPin } from './push-pin.component.vue';

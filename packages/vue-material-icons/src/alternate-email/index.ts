@@ -1,0 +1,1 @@
+export { default as IconMaterialAlternateEmail } from './alternate-email.component.vue';

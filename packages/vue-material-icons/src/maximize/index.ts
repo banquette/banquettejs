@@ -1,0 +1,1 @@
+export { default as IconMaterialMaximize } from './maximize.component.vue';

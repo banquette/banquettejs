@@ -1,0 +1,1 @@
+export { default as IconMaterialCorporateFare } from './corporate-fare.component.vue';

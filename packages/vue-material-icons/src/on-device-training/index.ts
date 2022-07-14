@@ -1,0 +1,1 @@
+export { default as IconMaterialOnDeviceTraining } from './on-device-training.component.vue';

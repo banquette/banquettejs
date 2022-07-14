@@ -1,0 +1,1 @@
+export { default as IconMaterialLuggage } from './luggage.component.vue';

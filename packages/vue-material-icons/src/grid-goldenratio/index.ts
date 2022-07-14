@@ -1,0 +1,1 @@
+export { default as IconMaterialGridGoldenratio } from './grid-goldenratio.component.vue';

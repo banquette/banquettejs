@@ -1,0 +1,1 @@
+export { default as IconMaterialMonitorWeight } from './monitor-weight.component.vue';

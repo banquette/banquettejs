@@ -1,0 +1,1 @@
+export { default as IconMaterialCancelPresentation } from './cancel-presentation.component.vue';

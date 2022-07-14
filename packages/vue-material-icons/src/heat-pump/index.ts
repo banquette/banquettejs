@@ -1,0 +1,1 @@
+export { default as IconMaterialHeatPump } from './heat-pump.component.vue';

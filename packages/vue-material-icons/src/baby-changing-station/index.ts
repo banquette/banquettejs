@@ -1,0 +1,1 @@
+export { default as IconMaterialBabyChangingStation } from './baby-changing-station.component.vue';

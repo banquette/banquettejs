@@ -1,0 +1,1 @@
+export { default as IconMaterialSick } from './sick.component.vue';

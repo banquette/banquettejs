@@ -1,0 +1,1 @@
+export { default as IconMaterialCircleNotifications } from './circle-notifications.component.vue';

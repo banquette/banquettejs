@@ -1,0 +1,1 @@
+export { default as IconMaterialBusAlert } from './bus-alert.component.vue';

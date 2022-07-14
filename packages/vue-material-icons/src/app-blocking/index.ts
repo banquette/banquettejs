@@ -1,0 +1,1 @@
+export { default as IconMaterialAppBlocking } from './app-blocking.component.vue';

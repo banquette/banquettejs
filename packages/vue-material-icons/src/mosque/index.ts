@@ -1,0 +1,1 @@
+export { default as IconMaterialMosque } from './mosque.component.vue';

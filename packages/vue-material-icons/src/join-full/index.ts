@@ -1,0 +1,1 @@
+export { default as IconMaterialJoinFull } from './join-full.component.vue';

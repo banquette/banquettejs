@@ -1,0 +1,1 @@
+export { default as IconMaterialCurrencyYen } from './currency-yen.component.vue';

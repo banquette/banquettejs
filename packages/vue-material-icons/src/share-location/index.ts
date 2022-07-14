@@ -1,0 +1,1 @@
+export { default as IconMaterialShareLocation } from './share-location.component.vue';

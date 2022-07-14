@@ -1,0 +1,1 @@
+export { default as IconMaterialLabelOff } from './label-off.component.vue';

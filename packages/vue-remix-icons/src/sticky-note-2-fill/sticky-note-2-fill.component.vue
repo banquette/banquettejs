@@ -1,0 +1,15 @@
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+
+@Component('i-remix-sticky-note-2-fill')
+export default class IconRemixStickyNote2Fill {
+    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
+    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
+    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
+    @Prop({type: Boolean, default: false}) public crop!: boolean;
+}
+</script>
+<template>
+    <svg :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '3 3 18 18' : '0 0 24 24'"><path d="m21 16-5.003 5H3.998A.996.996 0 0 1 3 20.007V3.993C3 3.445 3.445 3 3.993 3h16.014c.548 0 .993.447.993.999V16z"/></svg>
+</template>

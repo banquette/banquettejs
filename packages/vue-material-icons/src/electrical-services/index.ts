@@ -1,0 +1,1 @@
+export { default as IconMaterialElectricalServices } from './electrical-services.component.vue';

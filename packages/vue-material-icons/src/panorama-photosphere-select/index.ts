@@ -1,0 +1,1 @@
+export { default as IconMaterialPanoramaPhotosphereSelect } from './panorama-photosphere-select.component.vue';

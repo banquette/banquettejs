@@ -1,0 +1,1 @@
+export { default as IconMaterialStarOutline } from './star-outline.component.vue';

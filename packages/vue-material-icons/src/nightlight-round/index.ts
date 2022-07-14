@@ -1,0 +1,1 @@
+export { default as IconMaterialNightlightRound } from './nightlight-round.component.vue';

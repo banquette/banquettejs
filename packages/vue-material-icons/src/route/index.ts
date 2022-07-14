@@ -1,0 +1,1 @@
+export { default as IconMaterialRoute } from './route.component.vue';

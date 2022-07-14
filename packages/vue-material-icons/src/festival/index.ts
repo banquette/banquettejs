@@ -1,0 +1,1 @@
+export { default as IconMaterialFestival } from './festival.component.vue';

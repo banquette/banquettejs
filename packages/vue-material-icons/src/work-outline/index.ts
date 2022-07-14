@@ -1,0 +1,1 @@
+export { default as IconMaterialWorkOutline } from './work-outline.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialHdrAutoSelect } from './hdr-auto-select.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialCurrencyExchange } from './currency-exchange.component.vue';

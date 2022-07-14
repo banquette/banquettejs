@@ -1,0 +1,1 @@
+export { default as IconMaterialAutofpsSelect } from './autofps-select.component.vue';

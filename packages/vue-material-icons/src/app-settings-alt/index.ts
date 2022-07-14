@@ -1,0 +1,1 @@
+export { default as IconMaterialAppSettingsAlt } from './app-settings-alt.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialPersonOff } from './person-off.component.vue';

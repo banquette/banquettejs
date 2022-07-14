@@ -1,0 +1,1 @@
+export { default as IconMaterialCellWifi } from './cell-wifi.component.vue';

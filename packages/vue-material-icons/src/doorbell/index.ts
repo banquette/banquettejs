@@ -1,0 +1,1 @@
+export { default as IconMaterialDoorbell } from './doorbell.component.vue';

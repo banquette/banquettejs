@@ -1,0 +1,1 @@
+export { default as IconMaterialNoMeals } from './no-meals.component.vue';

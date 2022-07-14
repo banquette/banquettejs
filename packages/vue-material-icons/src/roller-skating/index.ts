@@ -1,0 +1,1 @@
+export { default as IconMaterialRollerSkating } from './roller-skating.component.vue';

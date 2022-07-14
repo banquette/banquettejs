@@ -1,0 +1,1 @@
+export { default as IconMaterialAltRoute } from './alt-route.component.vue';

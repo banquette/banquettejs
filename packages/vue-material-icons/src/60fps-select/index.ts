@@ -1,0 +1,1 @@
+export { default as IconMaterial60fpsSelect } from './60fps-select.component.vue';

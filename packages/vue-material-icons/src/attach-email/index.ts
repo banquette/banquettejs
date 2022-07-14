@@ -1,0 +1,1 @@
+export { default as IconMaterialAttachEmail } from './attach-email.component.vue';

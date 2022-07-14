@@ -1,0 +1,1 @@
+export { default as IconMaterialEditNote } from './edit-note.component.vue';

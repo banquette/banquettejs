@@ -1,0 +1,1 @@
+export { default as IconMaterialChecklistRtl } from './checklist-rtl.component.vue';

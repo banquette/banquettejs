@@ -1,5 +1,5 @@
 <script lang="ts">
-import { IconMaterialFormatClear } from "@banquette/vue-icons/material/format-clear";
+import { IconMaterialFormatClear } from "@banquette/vue-material-icons/format-clear";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";

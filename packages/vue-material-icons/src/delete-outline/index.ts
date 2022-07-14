@@ -1,0 +1,1 @@
+export { default as IconMaterialDeleteOutline } from './delete-outline.component.vue';

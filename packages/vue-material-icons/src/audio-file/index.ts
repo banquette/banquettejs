@@ -1,0 +1,1 @@
+export { default as IconMaterialAudioFile } from './audio-file.component.vue';

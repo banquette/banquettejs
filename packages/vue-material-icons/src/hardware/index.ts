@@ -1,0 +1,1 @@
+export { default as IconMaterialHardware } from './hardware.component.vue';

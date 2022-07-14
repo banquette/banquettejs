@@ -7,7 +7,7 @@ import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback, Primitive } from "@banquette/utils-type/types";
-import { IconRemixCloseCircleLine } from "@banquette/vue-icons/remix/close-circle-line";
+import { IconRemixCloseCircleLine } from "@banquette/vue-remix-icons/close-circle-line";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";

@@ -1,0 +1,1 @@
+export { default as IconMaterialShieldMoon } from './shield-moon.component.vue';

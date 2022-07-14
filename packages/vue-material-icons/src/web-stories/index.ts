@@ -1,0 +1,1 @@
+export { default as IconMaterialWebStories } from './web-stories.component.vue';

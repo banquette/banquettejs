@@ -1,0 +1,1 @@
+export { default as IconMaterialOutgoingMail } from './outgoing-mail.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialKeyboardAlt } from './keyboard-alt.component.vue';

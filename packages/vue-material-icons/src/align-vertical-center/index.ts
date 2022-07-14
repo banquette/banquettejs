@@ -1,0 +1,1 @@
+export { default as IconMaterialAlignVerticalCenter } from './align-vertical-center.component.vue';

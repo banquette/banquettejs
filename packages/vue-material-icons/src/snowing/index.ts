@@ -1,0 +1,1 @@
+export { default as IconMaterialSnowing } from './snowing.component.vue';

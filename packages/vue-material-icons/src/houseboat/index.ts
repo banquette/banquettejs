@@ -1,0 +1,1 @@
+export { default as IconMaterialHouseboat } from './houseboat.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialEngineering } from './engineering.component.vue';

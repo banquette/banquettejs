@@ -1,0 +1,15 @@
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+
+@Component('i-remix-user-unfollow-fill')
+export default class IconRemixUserUnfollowFill {
+    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
+    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
+    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
+    @Prop({type: Boolean, default: false}) public crop!: boolean;
+}
+</script>
+<template>
+    <svg :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '4 1 18.54 21' : '0 0 24 24'"><path d="M14 14.252V22H4a8 8 0 0 1 10-7.748zM12 13c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm7 3.586 2.121-2.122 1.415 1.415L20.414 18l2.122 2.121-1.415 1.415L19 19.414l-2.121 2.122-1.415-1.415L17.586 18l-2.122-2.121 1.415-1.415L19 16.586z"/></svg>
+</template>

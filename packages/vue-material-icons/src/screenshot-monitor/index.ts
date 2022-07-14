@@ -1,0 +1,1 @@
+export { default as IconMaterialScreenshotMonitor } from './screenshot-monitor.component.vue';

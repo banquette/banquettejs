@@ -1,0 +1,1 @@
+export { default as IconMaterialViewSidebar } from './view-sidebar.component.vue';

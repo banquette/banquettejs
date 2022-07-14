@@ -1,0 +1,1 @@
+export { default as IconMaterialMultipleStop } from './multiple-stop.component.vue';

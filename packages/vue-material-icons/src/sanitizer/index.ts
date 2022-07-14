@@ -1,0 +1,1 @@
+export { default as IconMaterialSanitizer } from './sanitizer.component.vue';

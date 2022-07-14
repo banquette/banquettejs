@@ -1,0 +1,1 @@
+export { default as IconMaterialFactory } from './factory.component.vue';

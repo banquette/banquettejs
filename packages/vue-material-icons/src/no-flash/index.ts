@@ -1,0 +1,1 @@
+export { default as IconMaterialNoFlash } from './no-flash.component.vue';

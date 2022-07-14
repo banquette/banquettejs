@@ -1,0 +1,1 @@
+export { default as IconMaterialBlindsClosed } from './blinds-closed.component.vue';

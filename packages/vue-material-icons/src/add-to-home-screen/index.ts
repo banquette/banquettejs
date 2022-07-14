@@ -1,0 +1,1 @@
+export { default as IconMaterialAddToHomeScreen } from './add-to-home-screen.component.vue';

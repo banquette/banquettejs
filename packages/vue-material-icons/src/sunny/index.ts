@@ -1,0 +1,1 @@
+export { default as IconMaterialSunny } from './sunny.component.vue';

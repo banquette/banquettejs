@@ -1,0 +1,1 @@
+export { default as IconMaterial30fpsSelect } from './30fps-select.component.vue';

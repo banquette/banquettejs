@@ -1,0 +1,1 @@
+export { default as IconMaterialCalendarViewMonth } from './calendar-view-month.component.vue';

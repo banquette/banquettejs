@@ -1,0 +1,1 @@
+export { default as IconMaterialPattern } from './pattern.component.vue';

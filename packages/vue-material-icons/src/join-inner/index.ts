@@ -1,0 +1,1 @@
+export { default as IconMaterialJoinInner } from './join-inner.component.vue';

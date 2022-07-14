@@ -1,0 +1,1 @@
+export { default as IconMaterialRtt } from './rtt.component.vue';

@@ -1,0 +1,18 @@
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+
+@Component('i-material-signal-wifi-statusbar-connected-no-internet-4')
+export default class IconMaterialSignalWifiStatusbarConnectedNoInternet4 {
+    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
+    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
+    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
+    @Prop({type: Boolean, default: false}) public crop!: boolean;
+    @Prop({type: String, default: 'default'}) public version!: string;
+}
+</script>
+<template>
+    <svg v-if="version === 'sharp' || version === 'twotone'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '0 4 22.92 17' : '0 0 24 24'"><path d="M19 18h2v2h-2zm0-8h2v6h-2z"/><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21l5-5.01V8h5.92C19.97 5.51 16.16 4 12 4z"/></svg>
+    <svg v-else-if="version === 'round'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '0.44 4 22.48 16.58' : '0 0 24 24'"><path d="M22.92 8H17v7.99l-4.29 4.3c-.39.39-1.02.39-1.42 0L.73 9.71C.32 9.3.35 8.63.79 8.24 3.78 5.6 7.7 4 12 4c4.16 0 7.97 1.51 10.92 4zM20 18c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1z"/></svg>
+    <svg v-else :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '0 4 22.92 17' : '0 0 24 24'"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21l5-5.01V8h5.92C19.97 5.51 16.16 4 12 4zm7 14h2v2h-2z"/><path d="M19 10h2v6h-2z"/></svg>
+</template>

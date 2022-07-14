@@ -1,0 +1,1 @@
+export { default as IconMaterialLiquor } from './liquor.component.vue';

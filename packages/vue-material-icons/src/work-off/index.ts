@@ -1,0 +1,1 @@
+export { default as IconMaterialWorkOff } from './work-off.component.vue';

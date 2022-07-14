@@ -11,7 +11,7 @@ import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive } from "@banquette/utils-type/types";
-import { IconMaterialReport } from "@banquette/vue-icons/material/report";
+import { IconMaterialReport } from "@banquette/vue-material-icons/report";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";

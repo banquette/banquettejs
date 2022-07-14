@@ -1,0 +1,1 @@
+export { default as IconMaterialJavascript } from './javascript.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialToggleOn } from './toggle-on.component.vue';

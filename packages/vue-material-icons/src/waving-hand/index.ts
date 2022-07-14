@@ -1,0 +1,1 @@
+export { default as IconMaterialWavingHand } from './waving-hand.component.vue';

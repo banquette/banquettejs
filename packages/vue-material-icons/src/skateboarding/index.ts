@@ -1,0 +1,1 @@
+export { default as IconMaterialSkateboarding } from './skateboarding.component.vue';

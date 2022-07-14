@@ -1,0 +1,1 @@
+export { default as IconMaterialPowerOff } from './power-off.component.vue';

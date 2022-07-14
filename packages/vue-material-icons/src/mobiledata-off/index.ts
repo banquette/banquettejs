@@ -1,0 +1,1 @@
+export { default as IconMaterialMobiledataOff } from './mobiledata-off.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSpeed } from './speed.component.vue';

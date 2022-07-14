@@ -1,0 +1,1 @@
+export { default as IconMaterialAnimation } from './animation.component.vue';

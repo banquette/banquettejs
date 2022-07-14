@@ -1,0 +1,1 @@
+export { default as IconMaterialNightShelter } from './night-shelter.component.vue';

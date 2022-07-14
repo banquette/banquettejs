@@ -1,0 +1,1 @@
+export { default as IconMaterialPlayLesson } from './play-lesson.component.vue';

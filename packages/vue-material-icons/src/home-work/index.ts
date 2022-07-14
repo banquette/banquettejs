@@ -1,0 +1,1 @@
+export { default as IconMaterialHomeWork } from './home-work.component.vue';

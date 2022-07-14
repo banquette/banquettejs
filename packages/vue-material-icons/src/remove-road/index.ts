@@ -1,0 +1,1 @@
+export { default as IconMaterialRemoveRoad } from './remove-road.component.vue';

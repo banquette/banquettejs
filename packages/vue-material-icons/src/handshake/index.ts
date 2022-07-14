@@ -1,0 +1,1 @@
+export { default as IconMaterialHandshake } from './handshake.component.vue';

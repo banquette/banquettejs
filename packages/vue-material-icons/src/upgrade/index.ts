@@ -1,0 +1,1 @@
+export { default as IconMaterialUpgrade } from './upgrade.component.vue';

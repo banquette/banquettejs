@@ -1,0 +1,1 @@
+export { default as IconMaterialTravelExplore } from './travel-explore.component.vue';

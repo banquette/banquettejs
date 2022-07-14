@@ -1,0 +1,1 @@
+export { default as IconMaterialFoundation } from './foundation.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialDeselect } from './deselect.component.vue';

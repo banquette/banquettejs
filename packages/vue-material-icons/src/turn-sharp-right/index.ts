@@ -1,0 +1,1 @@
+export { default as IconMaterialTurnSharpRight } from './turn-sharp-right.component.vue';

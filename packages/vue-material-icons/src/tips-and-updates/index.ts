@@ -1,0 +1,1 @@
+export { default as IconMaterialTipsAndUpdates } from './tips-and-updates.component.vue';

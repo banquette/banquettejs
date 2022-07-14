@@ -1,0 +1,1 @@
+export { default as IconMaterialAccountTree } from './account-tree.component.vue';

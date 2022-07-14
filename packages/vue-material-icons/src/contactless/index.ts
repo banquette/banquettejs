@@ -1,0 +1,1 @@
+export { default as IconMaterialContactless } from './contactless.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialCo2 } from './co2.component.vue';

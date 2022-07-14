@@ -1,0 +1,1 @@
+export { default as IconMaterialHeadphonesBattery } from './headphones-battery.component.vue';

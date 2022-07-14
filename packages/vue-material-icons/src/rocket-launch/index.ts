@@ -1,0 +1,1 @@
+export { default as IconMaterialRocketLaunch } from './rocket-launch.component.vue';

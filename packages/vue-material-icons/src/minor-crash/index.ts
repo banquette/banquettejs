@@ -1,0 +1,1 @@
+export { default as IconMaterialMinorCrash } from './minor-crash.component.vue';

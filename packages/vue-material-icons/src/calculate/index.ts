@@ -1,0 +1,1 @@
+export { default as IconMaterialCalculate } from './calculate.component.vue';

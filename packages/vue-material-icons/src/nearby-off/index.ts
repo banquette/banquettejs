@@ -1,0 +1,1 @@
+export { default as IconMaterialNearbyOff } from './nearby-off.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialPersonSearch } from './person-search.component.vue';

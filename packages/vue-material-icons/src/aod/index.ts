@@ -1,0 +1,1 @@
+export { default as IconMaterialAod } from './aod.component.vue';

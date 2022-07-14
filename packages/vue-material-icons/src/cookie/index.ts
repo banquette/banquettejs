@@ -1,0 +1,1 @@
+export { default as IconMaterialCookie } from './cookie.component.vue';

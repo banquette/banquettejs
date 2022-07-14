@@ -1,0 +1,1 @@
+export { default as IconMaterialPrivacyTip } from './privacy-tip.component.vue';

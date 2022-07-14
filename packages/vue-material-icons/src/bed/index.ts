@@ -1,0 +1,1 @@
+export { default as IconMaterialBed } from './bed.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialMotionPhotosAuto } from './motion-photos-auto.component.vue';

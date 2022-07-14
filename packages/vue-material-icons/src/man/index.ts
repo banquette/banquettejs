@@ -1,0 +1,1 @@
+export { default as IconMaterialMan } from './man.component.vue';

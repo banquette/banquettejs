@@ -1,0 +1,1 @@
+export { default as IconMaterialTextIncrease } from './text-increase.component.vue';

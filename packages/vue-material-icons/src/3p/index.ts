@@ -1,0 +1,1 @@
+export { default as IconMaterial3p } from './3p.component.vue';

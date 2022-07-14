@@ -1,0 +1,1 @@
+export { default as IconMaterialLtePlusMobiledata } from './lte-plus-mobiledata.component.vue';

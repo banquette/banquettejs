@@ -1,0 +1,1 @@
+export { default as IconMaterialNightlight } from './nightlight.component.vue';

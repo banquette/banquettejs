@@ -1,0 +1,1 @@
+export { default as IconMaterialElectricBike } from './electric-bike.component.vue';

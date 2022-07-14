@@ -1,0 +1,1 @@
+export { default as IconMaterialDoorFront } from './door-front.component.vue';

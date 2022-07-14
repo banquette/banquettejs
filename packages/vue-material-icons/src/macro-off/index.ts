@@ -1,0 +1,1 @@
+export { default as IconMaterialMacroOff } from './macro-off.component.vue';

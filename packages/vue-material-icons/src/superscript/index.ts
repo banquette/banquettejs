@@ -1,0 +1,1 @@
+export { default as IconMaterialSuperscript } from './superscript.component.vue';

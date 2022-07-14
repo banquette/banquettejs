@@ -1,0 +1,1 @@
+export { default as IconMaterialRollerShadesClosed } from './roller-shades-closed.component.vue';

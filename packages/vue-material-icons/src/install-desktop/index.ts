@@ -1,0 +1,1 @@
+export { default as IconMaterialInstallDesktop } from './install-desktop.component.vue';

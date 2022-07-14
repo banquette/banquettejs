@@ -1,0 +1,1 @@
+export { default as IconMaterialMargin } from './margin.component.vue';

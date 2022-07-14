@@ -1,0 +1,1 @@
+export { default as IconMaterialCatchingPokemon } from './catching-pokemon.component.vue';

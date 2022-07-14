@@ -1,0 +1,1 @@
+export { default as IconMaterialCabin } from './cabin.component.vue';

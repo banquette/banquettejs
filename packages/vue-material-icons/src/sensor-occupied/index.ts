@@ -1,0 +1,1 @@
+export { default as IconMaterialSensorOccupied } from './sensor-occupied.component.vue';

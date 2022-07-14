@@ -1,0 +1,1 @@
+export { default as IconMaterialWifiProtectedSetup } from './wifi-protected-setup.component.vue';

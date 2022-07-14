@@ -1,0 +1,1 @@
+export { default as IconMaterial7k } from './7k.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialBlender } from './blender.component.vue';

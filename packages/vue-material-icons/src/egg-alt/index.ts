@@ -1,0 +1,1 @@
+export { default as IconMaterialEggAlt } from './egg-alt.component.vue';

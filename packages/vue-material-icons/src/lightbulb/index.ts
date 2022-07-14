@@ -1,0 +1,1 @@
+export { default as IconMaterialLightbulb } from './lightbulb.component.vue';

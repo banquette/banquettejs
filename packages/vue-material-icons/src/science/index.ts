@@ -1,0 +1,1 @@
+export { default as IconMaterialScience } from './science.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialRealEstateAgent } from './real-estate-agent.component.vue';

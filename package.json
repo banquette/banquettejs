@@ -7,12 +7,12 @@
         "dist/*"
     ],
     "scripts": {
-        "build": "node scripts/build/build.mjs",
+        "build": "node --max-old-space-size=8192 scripts/build/build.mjs",
         "watch": "node scripts/build/watch.mjs",
         "clean": "node scripts/build/clean.mjs",
         "build:aliases": "node scripts/update-tsconfigs-aliases.mjs",
         "build:changelog": "node scripts/generate-changelog.js",
-        "generate:icons": "node scripts/generate-icons-components.mjs",
+        "generate:icons": "node --max-old-space-size=8192 scripts/generate-icons-components.mjs",
         "show-dependencies": "node scripts/show-packages-dependencies.mjs",
         "update-dependencies": "node scripts/update-packages-dependencies.mjs",
         "test": "npm run clean && jest --passWithNoTests",
@@ -46,7 +46,6 @@
         "@tiptap/vue-3": "^2.0.0-beta.90",
         "@vueuse/core": "^8.2.0",
         "inversify": "^6.0.1",
-        "material-design-icons": "^3.0.1",
         "object-observer": "^4.7.2",
         "qs": "^6.10.3",
         "reflect-metadata": "^0.1.13",

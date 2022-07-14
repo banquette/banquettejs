@@ -1,0 +1,1 @@
+export { default as IconMaterialNetworkPing } from './network-ping.component.vue';

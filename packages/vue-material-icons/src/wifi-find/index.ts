@@ -1,0 +1,1 @@
+export { default as IconMaterialWifiFind } from './wifi-find.component.vue';

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { IconMaterialFormatClear } from "@banquette/vue-icons/material/format-clear";
-import { IconMaterialTitle } from "@banquette/vue-icons/material/title";
+import { IconMaterialFormatClear } from "@banquette/vue-material-icons/format-clear";
+import { IconMaterialTitle } from "@banquette/vue-material-icons/title";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";

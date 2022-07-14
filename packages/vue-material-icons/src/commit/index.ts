@@ -1,0 +1,1 @@
+export { default as IconMaterialCommit } from './commit.component.vue';

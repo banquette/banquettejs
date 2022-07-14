@@ -1,0 +1,1 @@
+export { default as IconMaterialHomeMax } from './home-max.component.vue';

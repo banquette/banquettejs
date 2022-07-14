@@ -140,7 +140,7 @@ export default class DialogComponent extends Vue {
     @Expose() public dragTranslation: Position = {x: 0, y: 0};
     @Expose() public dragging: boolean = false;
 
-    @TemplateRef('overlay', false) public overlayEl!: Element;
+    @TemplateRef('overlay') public overlayEl!: Element;
 
     @Computed() public get dragTranslationStyle(): object {
         if (!this.draggable) {

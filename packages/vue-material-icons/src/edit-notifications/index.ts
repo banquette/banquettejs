@@ -1,0 +1,1 @@
+export { default as IconMaterialEditNotifications } from './edit-notifications.component.vue';

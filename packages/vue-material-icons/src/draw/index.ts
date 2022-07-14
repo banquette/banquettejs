@@ -1,0 +1,1 @@
+export { default as IconMaterialDraw } from './draw.component.vue';

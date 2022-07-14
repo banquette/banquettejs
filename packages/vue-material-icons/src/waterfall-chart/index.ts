@@ -1,0 +1,1 @@
+export { default as IconMaterialWaterfallChart } from './waterfall-chart.component.vue';

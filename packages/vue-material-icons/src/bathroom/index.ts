@@ -1,0 +1,1 @@
+export { default as IconMaterialBathroom } from './bathroom.component.vue';

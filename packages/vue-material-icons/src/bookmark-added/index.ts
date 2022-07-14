@@ -1,0 +1,1 @@
+export { default as IconMaterialBookmarkAdded } from './bookmark-added.component.vue';

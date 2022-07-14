@@ -1,0 +1,1 @@
+export { default as IconMaterialVideoSettings } from './video-settings.component.vue';

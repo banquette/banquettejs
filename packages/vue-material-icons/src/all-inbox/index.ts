@@ -1,0 +1,1 @@
+export { default as IconMaterialAllInbox } from './all-inbox.component.vue';

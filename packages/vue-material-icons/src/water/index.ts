@@ -1,0 +1,1 @@
+export { default as IconMaterialWater } from './water.component.vue';

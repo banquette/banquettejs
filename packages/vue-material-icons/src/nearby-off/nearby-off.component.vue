@@ -1,0 +1,18 @@
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+
+@Component('i-material-nearby-off')
+export default class IconMaterialNearbyOff {
+    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
+    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
+    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
+    @Prop({type: Boolean, default: false}) public crop!: boolean;
+    @Prop({type: String, default: 'default'}) public version!: string;
+}
+</script>
+<template>
+    <svg v-if="version === 'sharp'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '1.18 1.18 21.64 21.64' : '0 0 24 24'"><path d="M22.82 12.01 18.83 16l-1.81-1.81L19.2 12 12 4.8 9.81 6.99 8 5.17l3.99-3.99 10.83 10.83zm-1.63 9.18-1.41 1.41L16 18.83l-3.99 3.99L1.18 11.99 5.17 8 1.39 4.22 2.8 2.81l18.39 18.38zm-7-4.17-1.39-1.39-.8.8L7.58 12l.8-.8-1.4-1.39L4.8 12l7.2 7.2 2.19-2.18zM16.42 12 12 7.58l-.8.8 4.42 4.42.8-.8z"/></svg>
+    <svg v-else-if="version === 'round'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '1.81 2 20.19 20.19' : '0 0 24 24'"><path d="M21.41 13.42 18.83 16l-1.81-1.81L19.2 12 12 4.8 9.81 6.99 8 5.17l2.58-2.58c.78-.78 2.05-.78 2.83 0l8 8c.79.78.79 2.04 0 2.83zm-.93 8.48a.996.996 0 0 1-1.41 0L16 18.83l-2.58 2.58c-.78.78-2.05.78-2.83 0l-8-8c-.78-.78-.78-2.05 0-2.83L5.17 8 2.1 4.93a.996.996 0 1 1 1.41-1.41l16.98 16.97c.38.38.38 1.02-.01 1.41zm-6.29-4.88-1.39-1.39-.09.09c-.39.39-1.02.39-1.42 0l-3.01-3.01a.996.996 0 0 1 0-1.41l.09-.09-1.4-1.39L4.8 12l7.2 7.2 2.19-2.18zm1.52-5.73L12.7 8.28a.996.996 0 0 0-1.41 0l-.09.1 4.42 4.42.09-.09c.39-.39.39-1.03 0-1.42z"/></svg>
+    <svg v-else :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '1.39 2 20.61 20.6' : '0 0 24 24'"><path d="M21.41 13.42 18.83 16l-1.81-1.81L19.2 12 12 4.8 9.81 6.99 8 5.17l2.58-2.58c.78-.78 2.05-.78 2.83 0l8 8c.79.78.79 2.04 0 2.83zm-.22 7.77-1.41 1.41L16 18.83l-2.58 2.58c-.78.78-2.05.78-2.83 0l-8-8c-.78-.78-.78-2.05 0-2.83L5.17 8 1.39 4.22 2.8 2.81l18.39 18.38zm-7-4.17-1.39-1.39-.8.8L7.58 12l.8-.8-1.4-1.39L4.8 12l7.2 7.2 2.19-2.18zM16.42 12 12 7.58l-.8.8 4.42 4.42.8-.8z"/></svg>
+</template>

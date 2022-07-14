@@ -1,0 +1,1 @@
+export { default as IconMaterialWaterDamage } from './water-damage.component.vue';

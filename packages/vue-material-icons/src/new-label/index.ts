@@ -1,0 +1,1 @@
+export { default as IconMaterialNewLabel } from './new-label.component.vue';

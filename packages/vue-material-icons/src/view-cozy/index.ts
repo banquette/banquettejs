@@ -1,0 +1,1 @@
+export { default as IconMaterialViewCozy } from './view-cozy.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialUnsubscribe } from './unsubscribe.component.vue';

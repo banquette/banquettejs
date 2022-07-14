@@ -1,0 +1,1 @@
+export { default as IconMaterialWrongLocation } from './wrong-location.component.vue';

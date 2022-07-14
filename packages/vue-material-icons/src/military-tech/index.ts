@@ -1,0 +1,1 @@
+export { default as IconMaterialMilitaryTech } from './military-tech.component.vue';

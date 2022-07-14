@@ -1,0 +1,1 @@
+export { default as IconMaterialQrCodeScanner } from './qr-code-scanner.component.vue';

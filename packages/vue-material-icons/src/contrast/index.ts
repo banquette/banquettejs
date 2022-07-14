@@ -1,0 +1,1 @@
+export { default as IconMaterialContrast } from './contrast.component.vue';

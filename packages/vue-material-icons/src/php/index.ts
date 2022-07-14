@@ -1,0 +1,1 @@
+export { default as IconMaterialPhp } from './php.component.vue';

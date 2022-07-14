@@ -1,0 +1,1 @@
+export { default as IconMaterialAutoFixOff } from './auto-fix-off.component.vue';

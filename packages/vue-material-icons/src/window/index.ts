@@ -1,0 +1,1 @@
+export { default as IconMaterialWindow } from './window.component.vue';

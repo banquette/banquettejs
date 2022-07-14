@@ -1,0 +1,1 @@
+export { default as IconMaterialReceiptLong } from './receipt-long.component.vue';

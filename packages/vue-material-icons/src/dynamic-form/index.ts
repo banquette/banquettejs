@@ -1,0 +1,1 @@
+export { default as IconMaterialDynamicForm } from './dynamic-form.component.vue';

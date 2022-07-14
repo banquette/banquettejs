@@ -1,0 +1,1 @@
+export { default as IconMaterialCarRepair } from './car-repair.component.vue';

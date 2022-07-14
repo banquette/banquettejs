@@ -1,0 +1,1 @@
+export { default as IconMaterialAdminPanelSettings } from './admin-panel-settings.component.vue';

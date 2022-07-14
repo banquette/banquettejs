@@ -1,0 +1,1 @@
+export { default as IconMaterialChargingStation } from './charging-station.component.vue';

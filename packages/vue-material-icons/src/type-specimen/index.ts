@@ -1,0 +1,1 @@
+export { default as IconMaterialTypeSpecimen } from './type-specimen.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialDesk } from './desk.component.vue';

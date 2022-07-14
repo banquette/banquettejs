@@ -1,0 +1,1 @@
+export { default as IconMaterialPriceChange } from './price-change.component.vue';

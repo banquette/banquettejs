@@ -1,0 +1,1 @@
+export { default as IconMaterialRiceBowl } from './rice-bowl.component.vue';

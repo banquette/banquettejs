@@ -1,0 +1,1 @@
+export { default as IconMaterialMiscellaneousServices } from './miscellaneous-services.component.vue';

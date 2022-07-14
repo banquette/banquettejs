@@ -1,0 +1,1 @@
+export { default as IconMaterialRule } from './rule.component.vue';

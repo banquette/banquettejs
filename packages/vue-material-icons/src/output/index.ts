@@ -1,0 +1,1 @@
+export { default as IconMaterialOutput } from './output.component.vue';

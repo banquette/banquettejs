@@ -1,0 +1,1 @@
+export { default as IconMaterialLabelImportantOutline } from './label-important-outline.component.vue';

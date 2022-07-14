@@ -1,0 +1,1 @@
+export { default as IconMaterialAccessTimeFilled } from './access-time-filled.component.vue';

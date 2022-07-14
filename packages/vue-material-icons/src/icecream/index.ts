@@ -1,0 +1,1 @@
+export { default as IconMaterialIcecream } from './icecream.component.vue';

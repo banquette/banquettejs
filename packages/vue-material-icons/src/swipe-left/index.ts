@@ -1,0 +1,1 @@
+export { default as IconMaterialSwipeLeft } from './swipe-left.component.vue';

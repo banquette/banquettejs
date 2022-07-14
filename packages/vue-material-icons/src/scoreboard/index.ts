@@ -1,0 +1,1 @@
+export { default as IconMaterialScoreboard } from './scoreboard.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialEMobiledata } from './e-mobiledata.component.vue';

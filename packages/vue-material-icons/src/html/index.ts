@@ -1,0 +1,1 @@
+export { default as IconMaterialHtml } from './html.component.vue';

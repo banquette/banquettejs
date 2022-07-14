@@ -1,0 +1,14 @@
+{
+    "name": "@banquette/vue-remix-icons",
+    "version": "0.1.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "directory": "packages/vue-remix-icons"
+    },
+    "license": "Apache-2.0",
+    "main": "_bundles/index.cjs.prod.js",
+    "module": "index.js",
+    "types": "index.d.ts",
+    "dependencies": {"@banquette/vue-typescript": "^0.1.0"}
+}

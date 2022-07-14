@@ -1,0 +1,1 @@
+export { default as IconMaterialCampaign } from './campaign.component.vue';

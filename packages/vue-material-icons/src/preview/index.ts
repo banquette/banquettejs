@@ -1,0 +1,1 @@
+export { default as IconMaterialPreview } from './preview.component.vue';

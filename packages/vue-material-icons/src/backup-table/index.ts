@@ -1,0 +1,1 @@
+export { default as IconMaterialBackupTable } from './backup-table.component.vue';

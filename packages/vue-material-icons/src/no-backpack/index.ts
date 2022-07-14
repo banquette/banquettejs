@@ -1,0 +1,1 @@
+export { default as IconMaterialNoBackpack } from './no-backpack.component.vue';

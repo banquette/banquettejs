@@ -1,0 +1,1 @@
+export { default as IconMaterialHomeMini } from './home-mini.component.vue';

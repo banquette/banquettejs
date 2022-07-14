@@ -1,0 +1,1 @@
+export { default as IconMaterialWebhook } from './webhook.component.vue';

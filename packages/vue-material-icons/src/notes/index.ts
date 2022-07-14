@@ -1,0 +1,1 @@
+export { default as IconMaterialNotes } from './notes.component.vue';

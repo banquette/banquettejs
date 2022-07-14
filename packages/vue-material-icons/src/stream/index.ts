@@ -1,0 +1,1 @@
+export { default as IconMaterialStream } from './stream.component.vue';

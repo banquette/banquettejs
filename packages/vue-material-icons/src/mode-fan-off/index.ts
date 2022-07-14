@@ -1,0 +1,1 @@
+export { default as IconMaterialModeFanOff } from './mode-fan-off.component.vue';

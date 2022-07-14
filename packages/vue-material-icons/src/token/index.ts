@@ -1,0 +1,1 @@
+export { default as IconMaterialToken } from './token.component.vue';

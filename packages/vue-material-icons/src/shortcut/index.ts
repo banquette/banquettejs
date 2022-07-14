@@ -1,0 +1,1 @@
+export { default as IconMaterialShortcut } from './shortcut.component.vue';

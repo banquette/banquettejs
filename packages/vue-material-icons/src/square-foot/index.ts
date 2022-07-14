@@ -1,0 +1,1 @@
+export { default as IconMaterialSquareFoot } from './square-foot.component.vue';

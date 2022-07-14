@@ -1,0 +1,1 @@
+export { default as IconMaterialSystemSecurityUpdateGood } from './system-security-update-good.component.vue';

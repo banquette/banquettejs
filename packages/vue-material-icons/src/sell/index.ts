@@ -1,0 +1,1 @@
+export { default as IconMaterialSell } from './sell.component.vue';

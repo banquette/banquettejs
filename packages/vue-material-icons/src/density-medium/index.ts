@@ -1,0 +1,1 @@
+export { default as IconMaterialDensityMedium } from './density-medium.component.vue';

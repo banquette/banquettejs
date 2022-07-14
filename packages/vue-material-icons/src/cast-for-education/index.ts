@@ -1,0 +1,1 @@
+export { default as IconMaterialCastForEducation } from './cast-for-education.component.vue';

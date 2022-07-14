@@ -1,0 +1,1 @@
+export { default as IconMaterialThermostat } from './thermostat.component.vue';

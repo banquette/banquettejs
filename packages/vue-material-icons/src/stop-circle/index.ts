@@ -1,0 +1,1 @@
+export { default as IconMaterialStopCircle } from './stop-circle.component.vue';

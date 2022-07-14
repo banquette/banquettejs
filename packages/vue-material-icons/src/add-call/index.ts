@@ -1,0 +1,1 @@
+export { default as IconMaterialAddCall } from './add-call.component.vue';

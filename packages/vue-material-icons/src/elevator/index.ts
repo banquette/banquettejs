@@ -1,0 +1,1 @@
+export { default as IconMaterialElevator } from './elevator.component.vue';

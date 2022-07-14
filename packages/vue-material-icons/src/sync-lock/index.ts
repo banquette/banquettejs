@@ -1,0 +1,1 @@
+export { default as IconMaterialSyncLock } from './sync-lock.component.vue';

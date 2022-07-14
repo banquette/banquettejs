@@ -1,0 +1,1 @@
+export { default as IconMaterialPark } from './park.component.vue';

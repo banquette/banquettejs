@@ -1,0 +1,1 @@
+export { default as IconMaterialCoffee } from './coffee.component.vue';

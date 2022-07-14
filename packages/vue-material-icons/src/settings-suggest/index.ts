@@ -1,0 +1,1 @@
+export { default as IconMaterialSettingsSuggest } from './settings-suggest.component.vue';

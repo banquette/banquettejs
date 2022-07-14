@@ -1,0 +1,1 @@
+export { default as IconMaterialDataSaverOff } from './data-saver-off.component.vue';

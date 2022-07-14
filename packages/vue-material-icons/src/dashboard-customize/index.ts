@@ -1,0 +1,1 @@
+export { default as IconMaterialDashboardCustomize } from './dashboard-customize.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialDynamicFeed } from './dynamic-feed.component.vue';

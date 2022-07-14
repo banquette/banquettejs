@@ -1,0 +1,1 @@
+export { default as IconMaterialPestControl } from './pest-control.component.vue';

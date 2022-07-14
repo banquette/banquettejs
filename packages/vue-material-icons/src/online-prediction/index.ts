@@ -1,0 +1,1 @@
+export { default as IconMaterialOnlinePrediction } from './online-prediction.component.vue';

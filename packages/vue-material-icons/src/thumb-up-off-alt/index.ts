@@ -1,0 +1,1 @@
+export { default as IconMaterialThumbUpOffAlt } from './thumb-up-off-alt.component.vue';

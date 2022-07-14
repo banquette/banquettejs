@@ -1,0 +1,1 @@
+export { default as IconMaterialGasMeter } from './gas-meter.component.vue';

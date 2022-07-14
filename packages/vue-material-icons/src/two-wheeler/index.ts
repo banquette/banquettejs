@@ -1,0 +1,1 @@
+export { default as IconMaterialTwoWheeler } from './two-wheeler.component.vue';

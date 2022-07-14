@@ -1,0 +1,1 @@
+export { default as IconMaterialRampLeft } from './ramp-left.component.vue';

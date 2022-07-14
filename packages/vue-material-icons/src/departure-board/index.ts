@@ -1,0 +1,1 @@
+export { default as IconMaterialDepartureBoard } from './departure-board.component.vue';

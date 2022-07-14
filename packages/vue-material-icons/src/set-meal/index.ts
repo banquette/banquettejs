@@ -1,0 +1,1 @@
+export { default as IconMaterialSetMeal } from './set-meal.component.vue';

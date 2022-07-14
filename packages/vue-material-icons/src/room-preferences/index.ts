@@ -1,0 +1,1 @@
+export { default as IconMaterialRoomPreferences } from './room-preferences.component.vue';

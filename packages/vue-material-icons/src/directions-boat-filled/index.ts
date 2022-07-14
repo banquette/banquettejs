@@ -1,0 +1,1 @@
+export { default as IconMaterialDirectionsBoatFilled } from './directions-boat-filled.component.vue';

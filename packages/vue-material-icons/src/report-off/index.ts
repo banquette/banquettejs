@@ -1,0 +1,1 @@
+export { default as IconMaterialReportOff } from './report-off.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialOutbond } from './outbond.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialMapsHomeWork } from './maps-home-work.component.vue';

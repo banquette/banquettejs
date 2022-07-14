@@ -1,0 +1,1 @@
+export { default as IconMaterialCrueltyFree } from './cruelty-free.component.vue';

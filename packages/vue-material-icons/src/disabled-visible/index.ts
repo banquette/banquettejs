@@ -1,0 +1,1 @@
+export { default as IconMaterialDisabledVisible } from './disabled-visible.component.vue';

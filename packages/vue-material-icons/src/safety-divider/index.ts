@@ -1,0 +1,1 @@
+export { default as IconMaterialSafetyDivider } from './safety-divider.component.vue';

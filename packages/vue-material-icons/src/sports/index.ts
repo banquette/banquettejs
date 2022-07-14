@@ -1,0 +1,1 @@
+export { default as IconMaterialSports } from './sports.component.vue';

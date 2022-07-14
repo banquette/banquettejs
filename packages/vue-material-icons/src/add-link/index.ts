@@ -1,0 +1,1 @@
+export { default as IconMaterialAddLink } from './add-link.component.vue';

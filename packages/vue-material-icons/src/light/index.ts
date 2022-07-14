@@ -1,0 +1,1 @@
+export { default as IconMaterialLight } from './light.component.vue';

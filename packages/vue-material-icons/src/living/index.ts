@@ -1,0 +1,1 @@
+export { default as IconMaterialLiving } from './living.component.vue';

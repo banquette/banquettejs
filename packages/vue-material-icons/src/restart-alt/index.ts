@@ -1,0 +1,1 @@
+export { default as IconMaterialRestartAlt } from './restart-alt.component.vue';

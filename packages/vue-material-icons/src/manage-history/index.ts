@@ -1,0 +1,1 @@
+export { default as IconMaterialManageHistory } from './manage-history.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialHub } from './hub.component.vue';

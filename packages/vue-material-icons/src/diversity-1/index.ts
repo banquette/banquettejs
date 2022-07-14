@@ -1,0 +1,1 @@
+export { default as IconMaterialDiversity1 } from './diversity-1.component.vue';

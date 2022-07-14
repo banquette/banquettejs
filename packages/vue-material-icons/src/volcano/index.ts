@@ -1,0 +1,1 @@
+export { default as IconMaterialVolcano } from './volcano.component.vue';

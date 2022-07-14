@@ -1,0 +1,1 @@
+export { default as IconMaterialVapeFree } from './vape-free.component.vue';

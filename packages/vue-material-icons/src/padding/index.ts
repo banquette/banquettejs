@@ -1,0 +1,1 @@
+export { default as IconMaterialPadding } from './padding.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialVolumeDownAlt } from './volume-down-alt.component.vue';

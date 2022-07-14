@@ -1,0 +1,1 @@
+export { default as IconMaterialNoteAlt } from './note-alt.component.vue';

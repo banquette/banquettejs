@@ -1,0 +1,1 @@
+export { default as IconMaterialMuseum } from './museum.component.vue';

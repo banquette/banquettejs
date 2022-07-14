@@ -1,0 +1,1 @@
+export { default as IconMaterialFax } from './fax.component.vue';

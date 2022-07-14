@@ -1,0 +1,1 @@
+export { default as IconMaterialUnfoldMoreDouble } from './unfold-more-double.component.vue';

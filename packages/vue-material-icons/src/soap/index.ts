@@ -1,0 +1,1 @@
+export { default as IconMaterialSoap } from './soap.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialCloudySnowing } from './cloudy-snowing.component.vue';

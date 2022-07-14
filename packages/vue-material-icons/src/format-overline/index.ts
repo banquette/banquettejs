@@ -1,0 +1,1 @@
+export { default as IconMaterialFormatOverline } from './format-overline.component.vue';

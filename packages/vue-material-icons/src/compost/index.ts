@@ -1,0 +1,1 @@
+export { default as IconMaterialCompost } from './compost.component.vue';

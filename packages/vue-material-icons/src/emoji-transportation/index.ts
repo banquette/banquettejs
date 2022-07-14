@@ -1,0 +1,1 @@
+export { default as IconMaterialEmojiTransportation } from './emoji-transportation.component.vue';

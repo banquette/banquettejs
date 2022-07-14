@@ -1,0 +1,1 @@
+export { default as IconMaterialDirtyLens } from './dirty-lens.component.vue';

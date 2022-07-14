@@ -1,0 +1,1 @@
+export { default as IconMaterialMedicalInformation } from './medical-information.component.vue';

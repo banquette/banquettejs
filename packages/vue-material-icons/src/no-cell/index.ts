@@ -1,0 +1,1 @@
+export { default as IconMaterialNoCell } from './no-cell.component.vue';

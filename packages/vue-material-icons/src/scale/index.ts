@@ -1,0 +1,1 @@
+export { default as IconMaterialScale } from './scale.component.vue';

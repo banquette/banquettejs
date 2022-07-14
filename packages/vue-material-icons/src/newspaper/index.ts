@@ -1,0 +1,1 @@
+export { default as IconMaterialNewspaper } from './newspaper.component.vue';

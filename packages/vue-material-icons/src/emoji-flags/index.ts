@@ -1,0 +1,1 @@
+export { default as IconMaterialEmojiFlags } from './emoji-flags.component.vue';

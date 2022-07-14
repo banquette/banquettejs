@@ -1,0 +1,1 @@
+export { default as IconMaterialMicrowave } from './microwave.component.vue';

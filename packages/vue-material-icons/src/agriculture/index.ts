@@ -1,0 +1,1 @@
+export { default as IconMaterialAgriculture } from './agriculture.component.vue';

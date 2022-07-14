@@ -1,0 +1,1 @@
+export { default as IconMaterialSnowmobile } from './snowmobile.component.vue';

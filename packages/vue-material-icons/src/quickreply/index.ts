@@ -1,0 +1,1 @@
+export { default as IconMaterialQuickreply } from './quickreply.component.vue';

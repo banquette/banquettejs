@@ -1,0 +1,1 @@
+export { default as IconMaterialDangerous } from './dangerous.component.vue';

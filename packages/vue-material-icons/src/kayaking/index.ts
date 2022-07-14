@@ -1,0 +1,1 @@
+export { default as IconMaterialKayaking } from './kayaking.component.vue';

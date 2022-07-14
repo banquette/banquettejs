@@ -1,0 +1,1 @@
+export { default as IconMaterialDoorSliding } from './door-sliding.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialAttribution } from './attribution.component.vue';

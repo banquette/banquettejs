@@ -1,0 +1,1 @@
+export { default as IconMaterialTour } from './tour.component.vue';

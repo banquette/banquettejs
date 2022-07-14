@@ -1,0 +1,1 @@
+export { default as IconMaterialPianoOff } from './piano-off.component.vue';

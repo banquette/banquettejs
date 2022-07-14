@@ -1,0 +1,1 @@
+export { default as IconMaterialChurch } from './church.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialCastle } from './castle.component.vue';

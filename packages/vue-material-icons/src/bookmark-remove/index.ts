@@ -1,0 +1,1 @@
+export { default as IconMaterialBookmarkRemove } from './bookmark-remove.component.vue';

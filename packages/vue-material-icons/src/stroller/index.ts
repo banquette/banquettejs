@@ -1,0 +1,1 @@
+export { default as IconMaterialStroller } from './stroller.component.vue';

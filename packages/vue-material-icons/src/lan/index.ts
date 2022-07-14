@@ -1,0 +1,1 @@
+export { default as IconMaterialLan } from './lan.component.vue';

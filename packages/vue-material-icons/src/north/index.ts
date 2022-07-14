@@ -1,0 +1,1 @@
+export { default as IconMaterialNorth } from './north.component.vue';

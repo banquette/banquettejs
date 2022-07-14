@@ -1,0 +1,1 @@
+export { default as IconMaterialEgg } from './egg.component.vue';

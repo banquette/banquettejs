@@ -1,0 +1,1 @@
+export { default as IconMaterialWallet } from './wallet.component.vue';

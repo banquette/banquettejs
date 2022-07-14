@@ -1,0 +1,1 @@
+export { default as IconMaterialCircle } from './circle.component.vue';

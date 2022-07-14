@@ -1,0 +1,1 @@
+export { default as IconMaterialPassword } from './password.component.vue';

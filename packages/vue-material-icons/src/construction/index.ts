@@ -1,0 +1,1 @@
+export { default as IconMaterialConstruction } from './construction.component.vue';

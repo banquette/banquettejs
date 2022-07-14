@@ -1,0 +1,1 @@
+export { default as IconMaterialVapingRooms } from './vaping-rooms.component.vue';

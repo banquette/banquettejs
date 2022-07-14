@@ -1,0 +1,1 @@
+export { default as IconMaterialTakeoutDining } from './takeout-dining.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialOutbox } from './outbox.component.vue';

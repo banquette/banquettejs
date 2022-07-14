@@ -1,0 +1,1 @@
+export { default as IconMaterialDiamond } from './diamond.component.vue';

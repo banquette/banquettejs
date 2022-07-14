@@ -1,0 +1,1 @@
+export { default as IconMaterialSyncAlt } from './sync-alt.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSignalWifiBad } from './signal-wifi-bad.component.vue';

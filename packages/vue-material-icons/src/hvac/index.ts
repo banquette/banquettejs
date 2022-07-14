@@ -1,0 +1,1 @@
+export { default as IconMaterialHvac } from './hvac.component.vue';

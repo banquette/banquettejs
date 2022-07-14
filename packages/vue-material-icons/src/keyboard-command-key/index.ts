@@ -1,0 +1,1 @@
+export { default as IconMaterialKeyboardCommandKey } from './keyboard-command-key.component.vue';

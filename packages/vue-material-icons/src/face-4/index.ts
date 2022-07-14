@@ -1,0 +1,1 @@
+export { default as IconMaterialFace4 } from './face-4.component.vue';

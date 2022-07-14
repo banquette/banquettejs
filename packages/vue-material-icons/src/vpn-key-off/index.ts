@@ -1,0 +1,1 @@
+export { default as IconMaterialVpnKeyOff } from './vpn-key-off.component.vue';

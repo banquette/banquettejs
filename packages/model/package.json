@@ -15,6 +15,7 @@
         "@banquette/dependency-injection": "^0.1.0",
         "@banquette/exception": "^0.1.0",
         "@banquette/object-observer": "^0.1.0",
+        "@banquette/promise": "^0.1.0",
         "@banquette/utils-misc": "^0.1.0",
         "@banquette/utils-object": "^0.1.0",
         "@banquette/utils-reflection": "^0.1.0",

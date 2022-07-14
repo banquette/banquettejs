@@ -1,0 +1,1 @@
+export { default as IconMaterialWifiCalling } from './wifi-calling.component.vue';

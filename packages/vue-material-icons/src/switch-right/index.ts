@@ -1,0 +1,1 @@
+export { default as IconMaterialSwitchRight } from './switch-right.component.vue';

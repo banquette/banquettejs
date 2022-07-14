@@ -1,0 +1,1 @@
+export { default as IconMaterialDataThresholding } from './data-thresholding.component.vue';

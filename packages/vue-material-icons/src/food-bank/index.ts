@@ -1,0 +1,1 @@
+export { default as IconMaterialFoodBank } from './food-bank.component.vue';

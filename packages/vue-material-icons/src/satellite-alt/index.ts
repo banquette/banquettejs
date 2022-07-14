@@ -1,0 +1,1 @@
+export { default as IconMaterialSatelliteAlt } from './satellite-alt.component.vue';

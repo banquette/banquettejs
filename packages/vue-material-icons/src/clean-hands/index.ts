@@ -1,0 +1,1 @@
+export { default as IconMaterialCleanHands } from './clean-hands.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSensors } from './sensors.component.vue';

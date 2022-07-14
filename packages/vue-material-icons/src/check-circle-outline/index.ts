@@ -1,0 +1,1 @@
+export { default as IconMaterialCheckCircleOutline } from './check-circle-outline.component.vue';

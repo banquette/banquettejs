@@ -1,0 +1,1 @@
+export { default as IconMaterialAddchart } from './addchart.component.vue';

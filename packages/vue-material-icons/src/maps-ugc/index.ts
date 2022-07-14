@@ -1,0 +1,1 @@
+export { default as IconMaterialMapsUgc } from './maps-ugc.component.vue';

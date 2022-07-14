@@ -1,0 +1,1 @@
+export { default as IconMaterialDeblur } from './deblur.component.vue';

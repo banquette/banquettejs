@@ -1,0 +1,1 @@
+export { default as IconMaterialLineAxis } from './line-axis.component.vue';

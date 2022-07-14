@@ -1,0 +1,1 @@
+export { default as IconMaterialHeadphones } from './headphones.component.vue';

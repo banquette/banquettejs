@@ -1,0 +1,1 @@
+export { default as IconMaterialMasks } from './masks.component.vue';

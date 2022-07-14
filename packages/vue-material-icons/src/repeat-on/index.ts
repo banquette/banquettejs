@@ -1,0 +1,1 @@
+export { default as IconMaterialRepeatOn } from './repeat-on.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialPersonRemove } from './person-remove.component.vue';

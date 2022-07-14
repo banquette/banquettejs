@@ -1,0 +1,1 @@
+export { default as IconMaterialDensitySmall } from './density-small.component.vue';

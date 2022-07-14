@@ -1,0 +1,1 @@
+export { default as IconMaterialCyclone } from './cyclone.component.vue';

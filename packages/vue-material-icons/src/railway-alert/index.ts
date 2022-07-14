@@ -1,0 +1,1 @@
+export { default as IconMaterialRailwayAlert } from './railway-alert.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialPhishing } from './phishing.component.vue';

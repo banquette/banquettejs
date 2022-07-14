@@ -1,0 +1,1 @@
+export { default as IconMaterialFlaky } from './flaky.component.vue';

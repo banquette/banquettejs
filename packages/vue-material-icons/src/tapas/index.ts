@@ -1,0 +1,1 @@
+export { default as IconMaterialTapas } from './tapas.component.vue';

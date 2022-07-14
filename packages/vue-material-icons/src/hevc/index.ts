@@ -1,0 +1,1 @@
+export { default as IconMaterialHevc } from './hevc.component.vue';

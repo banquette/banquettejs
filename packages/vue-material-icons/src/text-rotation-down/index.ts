@@ -1,0 +1,1 @@
+export { default as IconMaterialTextRotationDown } from './text-rotation-down.component.vue';

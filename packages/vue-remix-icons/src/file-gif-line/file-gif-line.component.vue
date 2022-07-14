@@ -1,0 +1,15 @@
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+
+@Component('i-remix-file-gif-line')
+export default class IconRemixFileGifLine {
+    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
+    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
+    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
+    @Prop({type: Boolean, default: false}) public crop!: boolean;
+}
+</script>
+<template>
+    <svg :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '3 2 18 20' : '0 0 24 24'"><path d="m16 2 5 5v13.993A1 1 0 0 1 20.007 22H3.993A1 1 0 0 1 3 21.008V2.992C3 2.444 3.447 2 3.999 2H16zm-1 2H5v16h14V8h-4V4zm-2 6v5h-1v-5h1zm-2 0v1H9a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1v-1H9v-1h2v2a1 1 0 0 1-1 1H9a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2h2zm6 0v1h-2v1h2v1h-2v2h-1v-5h3z"/></svg>
+</template>

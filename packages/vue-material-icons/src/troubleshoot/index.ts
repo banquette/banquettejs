@@ -1,0 +1,1 @@
+export { default as IconMaterialTroubleshoot } from './troubleshoot.component.vue';

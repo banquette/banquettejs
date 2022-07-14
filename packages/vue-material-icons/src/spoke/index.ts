@@ -1,0 +1,1 @@
+export { default as IconMaterialSpoke } from './spoke.component.vue';

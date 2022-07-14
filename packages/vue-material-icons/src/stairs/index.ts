@@ -1,0 +1,1 @@
+export { default as IconMaterialStairs } from './stairs.component.vue';

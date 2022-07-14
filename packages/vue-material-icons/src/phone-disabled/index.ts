@@ -1,0 +1,1 @@
+export { default as IconMaterialPhoneDisabled } from './phone-disabled.component.vue';

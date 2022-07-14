@@ -1,0 +1,1 @@
+export { default as IconMaterialDirectionsOff } from './directions-off.component.vue';

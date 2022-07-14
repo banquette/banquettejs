@@ -1,0 +1,1 @@
+export { default as IconMaterialMarkUnreadChatAlt } from './mark-unread-chat-alt.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialHPlusMobiledata } from './h-plus-mobiledata.component.vue';

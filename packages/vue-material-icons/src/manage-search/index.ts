@@ -1,0 +1,1 @@
+export { default as IconMaterialManageSearch } from './manage-search.component.vue';

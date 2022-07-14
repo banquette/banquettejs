@@ -1,0 +1,1 @@
+export { default as IconMaterialHiking } from './hiking.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialArrowLeft } from './arrow-left.component.vue';

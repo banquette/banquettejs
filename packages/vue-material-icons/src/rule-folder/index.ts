@@ -1,0 +1,1 @@
+export { default as IconMaterialRuleFolder } from './rule-folder.component.vue';

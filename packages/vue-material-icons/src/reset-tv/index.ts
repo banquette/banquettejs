@@ -1,0 +1,1 @@
+export { default as IconMaterialResetTv } from './reset-tv.component.vue';

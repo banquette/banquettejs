@@ -1,0 +1,1 @@
+export { default as IconMaterialCurrencyRupee } from './currency-rupee.component.vue';

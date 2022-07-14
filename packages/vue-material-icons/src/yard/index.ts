@@ -1,0 +1,1 @@
+export { default as IconMaterialYard } from './yard.component.vue';

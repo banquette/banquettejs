@@ -1,0 +1,1 @@
+export { default as IconMaterialMobileFriendly } from './mobile-friendly.component.vue';

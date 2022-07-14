@@ -1,0 +1,1 @@
+export { default as IconMaterialPodcasts } from './podcasts.component.vue';

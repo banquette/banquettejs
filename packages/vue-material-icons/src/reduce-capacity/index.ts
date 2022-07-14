@@ -1,0 +1,1 @@
+export { default as IconMaterialReduceCapacity } from './reduce-capacity.component.vue';

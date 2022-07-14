@@ -1,0 +1,1 @@
+export { default as IconMaterialSpatialTracking } from './spatial-tracking.component.vue';

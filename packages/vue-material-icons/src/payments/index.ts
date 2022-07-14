@@ -1,0 +1,1 @@
+export { default as IconMaterialPayments } from './payments.component.vue';

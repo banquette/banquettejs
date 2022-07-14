@@ -1,0 +1,1 @@
+export { default as IconMaterialHorizontalSplit } from './horizontal-split.component.vue';

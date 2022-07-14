@@ -1,0 +1,1 @@
+export { default as IconMaterialInsertPageBreak } from './insert-page-break.component.vue';

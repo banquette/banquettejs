@@ -1,0 +1,1 @@
+export { default as IconMaterialDryCleaning } from './dry-cleaning.component.vue';

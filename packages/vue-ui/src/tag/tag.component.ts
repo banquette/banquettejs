@@ -1,4 +1,4 @@
-import { IconMaterialClose } from "@banquette/vue-icons/material/close";
+import { IconMaterialClose } from "@banquette/vue-material-icons/close";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";

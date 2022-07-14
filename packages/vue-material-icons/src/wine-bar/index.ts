@@ -1,0 +1,1 @@
+export { default as IconMaterialWineBar } from './wine-bar.component.vue';

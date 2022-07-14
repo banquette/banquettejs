@@ -1,0 +1,1 @@
+export { default as IconMaterialPersonAddDisabled } from './person-add-disabled.component.vue';

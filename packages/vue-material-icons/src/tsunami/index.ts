@@ -1,0 +1,1 @@
+export { default as IconMaterialTsunami } from './tsunami.component.vue';

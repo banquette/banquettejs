@@ -1,0 +1,1 @@
+export { default as IconMaterialVaccines } from './vaccines.component.vue';

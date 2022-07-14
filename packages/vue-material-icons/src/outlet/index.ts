@@ -1,0 +1,1 @@
+export { default as IconMaterialOutlet } from './outlet.component.vue';

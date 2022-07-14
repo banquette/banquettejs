@@ -1,0 +1,1 @@
+export { default as IconMaterialWhatsapp } from './whatsapp.component.vue';

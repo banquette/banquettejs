@@ -1,0 +1,1 @@
+export { default as IconMaterialDeveloperBoardOff } from './developer-board-off.component.vue';

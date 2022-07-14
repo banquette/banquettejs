@@ -1,0 +1,1 @@
+export { default as IconMaterialParagliding } from './paragliding.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialBarChart } from './bar-chart.component.vue';

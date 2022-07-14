@@ -1,0 +1,1 @@
+export { default as IconMaterialBalance } from './balance.component.vue';

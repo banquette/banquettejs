@@ -1,0 +1,1 @@
+export { default as IconMaterialScreenSearchDesktop } from './screen-search-desktop.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialHotelClass } from './hotel-class.component.vue';

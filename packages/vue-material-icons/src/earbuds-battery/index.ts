@@ -1,0 +1,1 @@
+export { default as IconMaterialEarbudsBattery } from './earbuds-battery.component.vue';

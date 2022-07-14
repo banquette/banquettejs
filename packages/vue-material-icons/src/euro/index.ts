@@ -1,0 +1,1 @@
+export { default as IconMaterialEuro } from './euro.component.vue';

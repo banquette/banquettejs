@@ -1,0 +1,1 @@
+export { default as IconMaterialNoPhotography } from './no-photography.component.vue';

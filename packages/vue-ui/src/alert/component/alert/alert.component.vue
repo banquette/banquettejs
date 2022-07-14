@@ -1,8 +1,7 @@
 <style src="./alert.component.css" scoped></style>
 <template src="./alert.component.html" ></template>
 <script lang="ts">
-import { IconComponent } from "@banquette/vue-icons/icon";
-import { IconMaterialClose } from "@banquette/vue-icons/material/close";
+import { IconMaterialClose } from "@banquette/vue-material-icons/close";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -13,6 +12,7 @@ import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/wa
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ButtonComponent } from "../../../button";
+import { IconComponent } from "../../../icon";
 import { ProgressHorizontalComponent } from "../../../progress/progress-horizontal";
 import { ThemeConfiguration } from "./theme-configuration";
 

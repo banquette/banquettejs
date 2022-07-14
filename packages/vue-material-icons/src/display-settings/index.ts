@@ -1,0 +1,1 @@
+export { default as IconMaterialDisplaySettings } from './display-settings.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialBatterySaver } from './battery-saver.component.vue';

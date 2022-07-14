@@ -14,6 +14,7 @@
         "@banquette/event": "^0.1.0",
         "@banquette/exception": "^0.1.0",
         "@banquette/utils-array": "^0.1.0",
+        "@banquette/utils-dom": "^0.1.0",
         "@banquette/utils-misc": "^0.1.0",
         "@banquette/utils-object": "^0.1.0",
         "@banquette/utils-random": "^0.1.0",

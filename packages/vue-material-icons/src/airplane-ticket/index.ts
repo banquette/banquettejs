@@ -1,0 +1,1 @@
+export { default as IconMaterialAirplaneTicket } from './airplane-ticket.component.vue';

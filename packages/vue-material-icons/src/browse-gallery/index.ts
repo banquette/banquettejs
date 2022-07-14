@@ -1,0 +1,1 @@
+export { default as IconMaterialBrowseGallery } from './browse-gallery.component.vue';

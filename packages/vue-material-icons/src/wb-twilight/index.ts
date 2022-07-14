@@ -1,0 +1,1 @@
+export { default as IconMaterialWbTwilight } from './wb-twilight.component.vue';

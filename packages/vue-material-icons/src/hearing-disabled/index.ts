@@ -1,0 +1,1 @@
+export { default as IconMaterialHearingDisabled } from './hearing-disabled.component.vue';

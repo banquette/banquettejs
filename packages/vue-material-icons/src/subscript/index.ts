@@ -1,0 +1,1 @@
+export { default as IconMaterialSubscript } from './subscript.component.vue';

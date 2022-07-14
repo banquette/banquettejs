@@ -1,0 +1,1 @@
+export { default as IconMaterial4gPlusMobiledata } from './4g-plus-mobiledata.component.vue';

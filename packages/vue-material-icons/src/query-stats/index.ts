@@ -1,0 +1,1 @@
+export { default as IconMaterialQueryStats } from './query-stats.component.vue';

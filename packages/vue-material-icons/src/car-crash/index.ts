@@ -1,0 +1,1 @@
+export { default as IconMaterialCarCrash } from './car-crash.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialMeetingRoom } from './meeting-room.component.vue';

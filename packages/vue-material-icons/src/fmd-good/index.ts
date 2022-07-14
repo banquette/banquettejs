@@ -1,0 +1,1 @@
+export { default as IconMaterialFmdGood } from './fmd-good.component.vue';

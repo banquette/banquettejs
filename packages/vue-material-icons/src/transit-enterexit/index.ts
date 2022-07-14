@@ -1,0 +1,1 @@
+export { default as IconMaterialTransitEnterexit } from './transit-enterexit.component.vue';

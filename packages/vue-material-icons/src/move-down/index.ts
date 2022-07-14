@@ -1,0 +1,1 @@
+export { default as IconMaterialMoveDown } from './move-down.component.vue';

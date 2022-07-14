@@ -1,0 +1,1 @@
+export { default as IconMaterialNumbers } from './numbers.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialGarage } from './garage.component.vue';

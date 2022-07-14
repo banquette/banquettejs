@@ -1,0 +1,1 @@
+export { default as IconMaterialRecycling } from './recycling.component.vue';

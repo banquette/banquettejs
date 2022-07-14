@@ -1,0 +1,1 @@
+export { default as IconMaterialDesignServices } from './design-services.component.vue';

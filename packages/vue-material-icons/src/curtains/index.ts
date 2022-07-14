@@ -1,0 +1,1 @@
+export { default as IconMaterialCurtains } from './curtains.component.vue';

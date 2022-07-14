@@ -1,0 +1,1 @@
+export { default as IconMaterialElectricBolt } from './electric-bolt.component.vue';

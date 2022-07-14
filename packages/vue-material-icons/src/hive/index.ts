@@ -1,0 +1,1 @@
+export { default as IconMaterialHive } from './hive.component.vue';

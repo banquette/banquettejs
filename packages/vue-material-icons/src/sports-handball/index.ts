@@ -1,0 +1,1 @@
+export { default as IconMaterialSportsHandball } from './sports-handball.component.vue';

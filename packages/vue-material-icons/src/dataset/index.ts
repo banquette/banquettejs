@@ -1,0 +1,1 @@
+export { default as IconMaterialDataset } from './dataset.component.vue';

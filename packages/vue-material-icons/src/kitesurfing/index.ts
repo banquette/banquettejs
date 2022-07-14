@@ -1,0 +1,1 @@
+export { default as IconMaterialKitesurfing } from './kitesurfing.component.vue';

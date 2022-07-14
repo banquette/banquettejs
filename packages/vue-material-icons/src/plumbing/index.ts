@@ -1,0 +1,1 @@
+export { default as IconMaterialPlumbing } from './plumbing.component.vue';

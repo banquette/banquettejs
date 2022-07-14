@@ -1,0 +1,1 @@
+export { default as IconMaterialSouth } from './south.component.vue';

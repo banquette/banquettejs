@@ -1,0 +1,1 @@
+export { default as IconMaterialEmojiSymbols } from './emoji-symbols.component.vue';

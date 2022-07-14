@@ -1,0 +1,1 @@
+export { default as IconMaterialFacebook } from './facebook.component.vue';

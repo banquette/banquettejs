@@ -1,0 +1,1 @@
+export { default as IconMaterialContactSupport } from './contact-support.component.vue';

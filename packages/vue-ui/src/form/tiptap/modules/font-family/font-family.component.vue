@@ -1,6 +1,6 @@
 <script lang="ts">
 import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
-import { IconMaterialWarning } from "@banquette/vue-icons/material/warning";
+import { IconMaterialWarning } from "@banquette/vue-material-icons/warning";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";

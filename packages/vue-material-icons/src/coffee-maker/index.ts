@@ -1,0 +1,1 @@
+export { default as IconMaterialCoffeeMaker } from './coffee-maker.component.vue';

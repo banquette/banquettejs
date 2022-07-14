@@ -1,0 +1,1 @@
+export { default as IconMaterialCameraIndoor } from './camera-indoor.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialAddTask } from './add-task.component.vue';

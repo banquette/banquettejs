@@ -1,0 +1,1 @@
+export { default as IconMaterialDatasetLinked } from './dataset-linked.component.vue';

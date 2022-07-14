@@ -1,0 +1,1 @@
+export { default as IconMaterialApproval } from './approval.component.vue';

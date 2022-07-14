@@ -1,0 +1,1 @@
+export { default as IconMaterialBalcony } from './balcony.component.vue';

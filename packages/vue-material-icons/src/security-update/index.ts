@@ -1,0 +1,1 @@
+export { default as IconMaterialSecurityUpdate } from './security-update.component.vue';

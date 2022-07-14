@@ -1,0 +1,1 @@
+export { default as IconMaterialTornado } from './tornado.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialTurnRight } from './turn-right.component.vue';

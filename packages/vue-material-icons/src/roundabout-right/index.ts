@@ -1,0 +1,1 @@
+export { default as IconMaterialRoundaboutRight } from './roundabout-right.component.vue';

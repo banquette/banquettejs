@@ -1,0 +1,1 @@
+export { default as IconMaterialFaceRetouchingNatural } from './face-retouching-natural.component.vue';

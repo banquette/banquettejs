@@ -1,0 +1,1 @@
+export { default as IconMaterialSource } from './source.component.vue';

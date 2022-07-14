@@ -1,0 +1,1 @@
+export { default as IconMaterialOutbound } from './outbound.component.vue';

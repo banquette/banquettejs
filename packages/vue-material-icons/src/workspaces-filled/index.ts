@@ -1,0 +1,1 @@
+export { default as IconMaterialWorkspacesFilled } from './workspaces-filled.component.vue';

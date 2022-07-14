@@ -1,0 +1,1 @@
+export { default as IconMaterialReportGmailerrorred } from './report-gmailerrorred.component.vue';

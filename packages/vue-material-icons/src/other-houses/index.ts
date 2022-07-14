@@ -1,0 +1,1 @@
+export { default as IconMaterialOtherHouses } from './other-houses.component.vue';

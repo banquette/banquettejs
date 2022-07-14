@@ -1,0 +1,1 @@
+export { default as IconMaterialGMobiledata } from './g-mobiledata.component.vue';

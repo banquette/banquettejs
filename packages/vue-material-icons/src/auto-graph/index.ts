@@ -1,0 +1,1 @@
+export { default as IconMaterialAutoGraph } from './auto-graph.component.vue';

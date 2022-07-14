@@ -1,0 +1,1 @@
+export { default as IconMaterialEdgesensorHigh } from './edgesensor-high.component.vue';

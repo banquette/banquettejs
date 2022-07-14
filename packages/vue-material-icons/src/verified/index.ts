@@ -1,0 +1,1 @@
+export { default as IconMaterialVerified } from './verified.component.vue';

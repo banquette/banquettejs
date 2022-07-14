@@ -1,0 +1,1 @@
+export { default as IconMaterialMode } from './mode.component.vue';

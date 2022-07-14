@@ -1,0 +1,1 @@
+export { default as IconMaterialLinkOff } from './link-off.component.vue';

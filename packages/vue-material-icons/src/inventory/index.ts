@@ -1,0 +1,1 @@
+export { default as IconMaterialInventory } from './inventory.component.vue';

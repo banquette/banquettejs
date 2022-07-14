@@ -1,0 +1,1 @@
+export { default as IconMaterialFileCopy } from './file-copy.component.vue';

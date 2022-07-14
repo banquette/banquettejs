@@ -1,0 +1,1 @@
+export { default as IconMaterialEco } from './eco.component.vue';

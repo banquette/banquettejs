@@ -1,0 +1,1 @@
+export { default as IconMaterialSplitscreen } from './splitscreen.component.vue';

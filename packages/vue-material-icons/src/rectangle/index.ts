@@ -1,0 +1,1 @@
+export { default as IconMaterialRectangle } from './rectangle.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialHls } from './hls.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSouthAmerica } from './south-america.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFolderDelete } from './folder-delete.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialNoLuggage } from './no-luggage.component.vue';

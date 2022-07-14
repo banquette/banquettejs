@@ -1,0 +1,1 @@
+export { default as IconMaterialAddReaction } from './add-reaction.component.vue';

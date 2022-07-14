@@ -1,0 +1,1 @@
+export { default as IconMaterialAttractions } from './attractions.component.vue';

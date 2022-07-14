@@ -1,0 +1,1 @@
+export { default as IconMaterialFolderCopy } from './folder-copy.component.vue';

@@ -8,7 +8,7 @@ import { trim } from "@banquette/utils-string/format/trim";
 import { And } from "@banquette/validation/type/and";
 import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { Url } from "@banquette/validation/type/url";
-import { IconMaterialLink } from "@banquette/vue-icons/material/link";
+import { IconMaterialLink } from "@banquette/vue-material-icons/link";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";

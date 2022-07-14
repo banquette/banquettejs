@@ -1,0 +1,1 @@
+export { default as IconMaterialSwipeUpAlt } from './swipe-up-alt.component.vue';

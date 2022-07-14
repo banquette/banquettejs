@@ -1,0 +1,1 @@
+export { default as IconMaterialAirlines } from './airlines.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialExpand } from './expand.component.vue';

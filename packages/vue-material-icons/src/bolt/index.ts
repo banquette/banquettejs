@@ -1,0 +1,1 @@
+export { default as IconMaterialBolt } from './bolt.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialVerticalShadesClosed } from './vertical-shades-closed.component.vue';

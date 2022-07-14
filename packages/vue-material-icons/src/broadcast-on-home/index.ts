@@ -1,0 +1,1 @@
+export { default as IconMaterialBroadcastOnHome } from './broadcast-on-home.component.vue';

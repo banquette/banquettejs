@@ -1,0 +1,1 @@
+export { default as IconMaterialPolyline } from './polyline.component.vue';

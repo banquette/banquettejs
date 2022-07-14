@@ -1,0 +1,1 @@
+export { default as IconMaterialTableChart } from './table-chart.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialScore } from './score.component.vue';

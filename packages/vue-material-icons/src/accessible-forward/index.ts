@@ -1,0 +1,1 @@
+export { default as IconMaterialAccessibleForward } from './accessible-forward.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialImagesearchRoller } from './imagesearch-roller.component.vue';

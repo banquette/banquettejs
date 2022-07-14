@@ -1,0 +1,1 @@
+export { default as IconMaterialSelfImprovement } from './self-improvement.component.vue';

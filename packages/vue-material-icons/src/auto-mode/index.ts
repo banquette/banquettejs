@@ -1,0 +1,1 @@
+export { default as IconMaterialAutoMode } from './auto-mode.component.vue';

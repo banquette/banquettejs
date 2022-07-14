@@ -1,0 +1,1 @@
+export { default as IconMaterialChairAlt } from './chair-alt.component.vue';

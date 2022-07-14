@@ -1,0 +1,1 @@
+export { default as IconMaterialRollerShades } from './roller-shades.component.vue';

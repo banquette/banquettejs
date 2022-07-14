@@ -1,0 +1,1 @@
+export { default as IconMaterialSignpost } from './signpost.component.vue';

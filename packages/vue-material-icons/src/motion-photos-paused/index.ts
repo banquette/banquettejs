@@ -1,0 +1,1 @@
+export { default as IconMaterialMotionPhotosPaused } from './motion-photos-paused.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialShower } from './shower.component.vue';

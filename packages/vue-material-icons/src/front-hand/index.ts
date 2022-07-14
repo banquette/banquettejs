@@ -1,0 +1,1 @@
+export { default as IconMaterialFrontHand } from './front-hand.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSwitchAccessShortcutAdd } from './switch-access-shortcut-add.component.vue';

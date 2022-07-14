@@ -1,0 +1,1 @@
+export { default as IconMaterialStart } from './start.component.vue';

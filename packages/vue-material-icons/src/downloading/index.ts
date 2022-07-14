@@ -1,0 +1,1 @@
+export { default as IconMaterialDownloading } from './downloading.component.vue';

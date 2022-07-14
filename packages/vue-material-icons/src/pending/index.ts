@@ -1,0 +1,1 @@
+export { default as IconMaterialPending } from './pending.component.vue';

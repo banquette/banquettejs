@@ -1,0 +1,1 @@
+export { default as IconMaterialVideoStable } from './video-stable.component.vue';

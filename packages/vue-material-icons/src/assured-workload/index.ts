@@ -1,0 +1,1 @@
+export { default as IconMaterialAssuredWorkload } from './assured-workload.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialGroupOff } from './group-off.component.vue';

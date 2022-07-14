@@ -5,8 +5,8 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { IconMaterialHelp } from "@banquette/vue-icons/material/help";
-import { IconMaterialWarning } from "@banquette/vue-icons/material/warning";
+import { IconMaterialHelp } from "@banquette/vue-material-icons/help";
+import { IconMaterialWarning } from "@banquette/vue-material-icons/warning";
 import { FormControlStateOverlayComponent } from "../../debug";
 import { PopoverDirective } from "../../popover";
 import { ProgressCircularComponent } from "../../progress/progress-circular";

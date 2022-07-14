@@ -1,0 +1,1 @@
+export { default as IconMaterialStickyNote2 } from './sticky-note-2.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialWbTwighlight } from './wb-twighlight.component.vue';

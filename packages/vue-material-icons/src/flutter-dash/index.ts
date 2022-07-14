@@ -1,0 +1,1 @@
+export { default as IconMaterialFlutterDash } from './flutter-dash.component.vue';

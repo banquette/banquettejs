@@ -1,0 +1,1 @@
+export { default as IconMaterialFilePresent } from './file-present.component.vue';

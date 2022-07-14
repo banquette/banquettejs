@@ -1,0 +1,1 @@
+export { default as IconMaterialGifBox } from './gif-box.component.vue';

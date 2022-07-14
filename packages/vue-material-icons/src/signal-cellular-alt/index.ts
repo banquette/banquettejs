@@ -1,0 +1,1 @@
+export { default as IconMaterialSignalCellularAlt } from './signal-cellular-alt.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialKeyboardOptionKey } from './keyboard-option-key.component.vue';

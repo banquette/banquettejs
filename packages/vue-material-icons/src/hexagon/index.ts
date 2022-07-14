@@ -1,0 +1,1 @@
+export { default as IconMaterialHexagon } from './hexagon.component.vue';

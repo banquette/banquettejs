@@ -1,0 +1,1 @@
+export { default as IconMaterialPhotoCameraBack } from './photo-camera-back.component.vue';

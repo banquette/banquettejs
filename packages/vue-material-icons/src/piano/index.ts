@@ -1,0 +1,1 @@
+export { default as IconMaterialPiano } from './piano.component.vue';

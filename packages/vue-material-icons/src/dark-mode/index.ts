@@ -1,0 +1,1 @@
+export { default as IconMaterialDarkMode } from './dark-mode.component.vue';

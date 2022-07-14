@@ -1,0 +1,1 @@
+export { default as IconMaterialFence } from './fence.component.vue';

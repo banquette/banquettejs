@@ -1,0 +1,1 @@
+export { default as IconMaterialSmartToy } from './smart-toy.component.vue';

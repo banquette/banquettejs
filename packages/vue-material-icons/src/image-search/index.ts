@@ -1,0 +1,1 @@
+export { default as IconMaterialImageSearch } from './image-search.component.vue';

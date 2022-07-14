@@ -1,0 +1,1 @@
+export { default as IconMaterialSsidChart } from './ssid-chart.component.vue';

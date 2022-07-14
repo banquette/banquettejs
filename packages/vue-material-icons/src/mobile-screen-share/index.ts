@@ -1,0 +1,1 @@
+export { default as IconMaterialMobileScreenShare } from './mobile-screen-share.component.vue';

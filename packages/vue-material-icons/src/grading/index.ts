@@ -1,0 +1,1 @@
+export { default as IconMaterialGrading } from './grading.component.vue';

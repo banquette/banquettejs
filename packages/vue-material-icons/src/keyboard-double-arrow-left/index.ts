@@ -1,0 +1,1 @@
+export { default as IconMaterialKeyboardDoubleArrowLeft } from './keyboard-double-arrow-left.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialRemoveModerator } from './remove-moderator.component.vue';

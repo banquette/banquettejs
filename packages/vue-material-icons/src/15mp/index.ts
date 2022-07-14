@@ -1,0 +1,1 @@
+export { default as IconMaterial15mp } from './15mp.component.vue';

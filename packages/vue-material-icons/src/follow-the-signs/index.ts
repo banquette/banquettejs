@@ -1,0 +1,1 @@
+export { default as IconMaterialFollowTheSigns } from './follow-the-signs.component.vue';

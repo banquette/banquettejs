@@ -1,0 +1,1 @@
+export { default as IconMaterialSignLanguage } from './sign-language.component.vue';

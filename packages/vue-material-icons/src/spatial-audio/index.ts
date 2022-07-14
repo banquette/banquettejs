@@ -1,0 +1,1 @@
+export { default as IconMaterialSpatialAudio } from './spatial-audio.component.vue';

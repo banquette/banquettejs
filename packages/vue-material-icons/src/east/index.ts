@@ -1,0 +1,1 @@
+export { default as IconMaterialEast } from './east.component.vue';

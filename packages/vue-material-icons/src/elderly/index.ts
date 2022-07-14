@@ -1,0 +1,1 @@
+export { default as IconMaterialElderly } from './elderly.component.vue';

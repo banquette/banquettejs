@@ -1,0 +1,1 @@
+export { default as IconMaterialNightsStay } from './nights-stay.component.vue';

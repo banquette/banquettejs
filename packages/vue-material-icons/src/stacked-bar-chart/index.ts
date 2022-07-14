@@ -1,0 +1,1 @@
+export { default as IconMaterialStackedBarChart } from './stacked-bar-chart.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialTableView } from './table-view.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialClosedCaptionDisabled } from './closed-caption-disabled.component.vue';

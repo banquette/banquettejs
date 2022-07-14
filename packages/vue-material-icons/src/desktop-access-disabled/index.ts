@@ -1,0 +1,1 @@
+export { default as IconMaterialDesktopAccessDisabled } from './desktop-access-disabled.component.vue';

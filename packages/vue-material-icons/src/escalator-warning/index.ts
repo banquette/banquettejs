@@ -1,0 +1,1 @@
+export { default as IconMaterialEscalatorWarning } from './escalator-warning.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialMonitor } from './monitor.component.vue';

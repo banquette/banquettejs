@@ -1,0 +1,1 @@
+export { default as IconMaterialFlightClass } from './flight-class.component.vue';

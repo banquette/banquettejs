@@ -1,0 +1,1 @@
+export { default as IconMaterialMoveUp } from './move-up.component.vue';

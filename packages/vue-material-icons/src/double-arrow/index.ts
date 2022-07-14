@@ -1,0 +1,1 @@
+export { default as IconMaterialDoubleArrow } from './double-arrow.component.vue';

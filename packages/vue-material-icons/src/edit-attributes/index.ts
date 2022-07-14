@@ -1,0 +1,1 @@
+export { default as IconMaterialEditAttributes } from './edit-attributes.component.vue';

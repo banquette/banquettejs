@@ -1,0 +1,1 @@
+export { default as IconMaterialBrowserNotSupported } from './browser-not-supported.component.vue';

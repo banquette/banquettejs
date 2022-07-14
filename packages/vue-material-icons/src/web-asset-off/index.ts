@@ -1,0 +1,1 @@
+export { default as IconMaterialWebAssetOff } from './web-asset-off.component.vue';

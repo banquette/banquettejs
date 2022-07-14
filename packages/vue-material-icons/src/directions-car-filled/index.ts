@@ -1,0 +1,1 @@
+export { default as IconMaterialDirectionsCarFilled } from './directions-car-filled.component.vue';

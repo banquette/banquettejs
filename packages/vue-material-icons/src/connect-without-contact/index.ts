@@ -1,0 +1,1 @@
+export { default as IconMaterialConnectWithoutContact } from './connect-without-contact.component.vue';

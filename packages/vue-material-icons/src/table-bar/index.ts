@@ -1,0 +1,1 @@
+export { default as IconMaterialTableBar } from './table-bar.component.vue';

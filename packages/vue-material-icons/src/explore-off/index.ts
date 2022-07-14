@@ -1,0 +1,1 @@
+export { default as IconMaterialExploreOff } from './explore-off.component.vue';

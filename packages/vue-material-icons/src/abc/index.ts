@@ -1,0 +1,1 @@
+export { default as IconMaterialAbc } from './abc.component.vue';

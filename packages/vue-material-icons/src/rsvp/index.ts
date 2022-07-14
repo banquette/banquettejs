@@ -1,0 +1,1 @@
+export { default as IconMaterialRsvp } from './rsvp.component.vue';

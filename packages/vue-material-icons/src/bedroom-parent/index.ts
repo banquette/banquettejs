@@ -1,0 +1,1 @@
+export { default as IconMaterialBedroomParent } from './bedroom-parent.component.vue';

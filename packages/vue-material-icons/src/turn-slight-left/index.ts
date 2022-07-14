@@ -1,0 +1,1 @@
+export { default as IconMaterialTurnSlightLeft } from './turn-slight-left.component.vue';

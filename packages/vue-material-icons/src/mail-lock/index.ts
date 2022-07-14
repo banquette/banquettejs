@@ -1,0 +1,1 @@
+export { default as IconMaterialMailLock } from './mail-lock.component.vue';

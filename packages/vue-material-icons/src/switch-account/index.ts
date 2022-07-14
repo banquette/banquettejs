@@ -1,0 +1,1 @@
+export { default as IconMaterialSwitchAccount } from './switch-account.component.vue';

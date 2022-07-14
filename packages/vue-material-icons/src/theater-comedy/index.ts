@@ -1,0 +1,1 @@
+export { default as IconMaterialTheaterComedy } from './theater-comedy.component.vue';

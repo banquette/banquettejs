@@ -1,0 +1,1 @@
+export { default as IconMaterialFireTruck } from './fire-truck.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialEditRoad } from './edit-road.component.vue';

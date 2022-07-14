@@ -1,0 +1,1 @@
+export { default as IconMaterialNoAccounts } from './no-accounts.component.vue';

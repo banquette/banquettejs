@@ -1,0 +1,1 @@
+export { default as IconMaterialFilterAlt } from './filter-alt.component.vue';

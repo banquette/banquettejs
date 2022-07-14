@@ -1,0 +1,1 @@
+export { default as IconMaterialBattery6Bar } from './battery-6-bar.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFitbit } from './fitbit.component.vue';

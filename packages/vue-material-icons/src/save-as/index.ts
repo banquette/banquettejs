@@ -1,0 +1,1 @@
+export { default as IconMaterialSaveAs } from './save-as.component.vue';

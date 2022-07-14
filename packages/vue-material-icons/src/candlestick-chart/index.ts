@@ -1,0 +1,1 @@
+export { default as IconMaterialCandlestickChart } from './candlestick-chart.component.vue';

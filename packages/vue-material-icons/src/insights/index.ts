@@ -1,0 +1,1 @@
+export { default as IconMaterialInsights } from './insights.component.vue';

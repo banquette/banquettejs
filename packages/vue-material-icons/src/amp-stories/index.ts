@@ -1,0 +1,1 @@
+export { default as IconMaterialAmpStories } from './amp-stories.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialModeOfTravel } from './mode-of-travel.component.vue';

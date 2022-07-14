@@ -1,0 +1,1 @@
+export { default as IconMaterialFemale } from './female.component.vue';

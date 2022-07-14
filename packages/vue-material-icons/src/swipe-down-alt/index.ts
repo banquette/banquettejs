@@ -1,0 +1,1 @@
+export { default as IconMaterialSwipeDownAlt } from './swipe-down-alt.component.vue';

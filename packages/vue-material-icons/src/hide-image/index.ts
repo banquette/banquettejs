@@ -1,0 +1,1 @@
+export { default as IconMaterialHideImage } from './hide-image.component.vue';

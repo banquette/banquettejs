@@ -1,0 +1,1 @@
+export { default as IconMaterialMoreTime } from './more-time.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialLightbulbCircle } from './lightbulb-circle.component.vue';

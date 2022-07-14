@@ -11,8 +11,8 @@ import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { Primitive, AnyObject } from "@banquette/utils-type/types";
-import { IconMaterialArrowDropDown } from "@banquette/vue-icons/material/arrow-drop-down";
-import { IconMaterialHelp } from "@banquette/vue-icons/material/help";
+import { IconMaterialArrowDropDown } from "@banquette/vue-material-icons/arrow-drop-down";
+import { IconMaterialHelp } from "@banquette/vue-material-icons/help";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -206,7 +206,7 @@ export default class TreeComponent extends Vue {
                 if (node.remotePending) {
                     leftAddon = h(resolveComponent("bt-progress-circular"));
                 } else if (node.fetched) {
-                    leftAddon = h(resolveComponent('i-material-arrow-drop-down'), {crop: true});
+                    leftAddon = h(resolveComponent('i-material-arrow-drop-down'), {crop: true, width: '0.85em'});
                 } else {
                     leftAddon = h('div', {class: 'unknown-text'}, '?');
                 }

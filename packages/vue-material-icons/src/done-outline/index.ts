@@ -1,0 +1,1 @@
+export { default as IconMaterialDoneOutline } from './done-outline.component.vue';

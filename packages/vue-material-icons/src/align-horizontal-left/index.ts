@@ -1,0 +1,1 @@
+export { default as IconMaterialAlignHorizontalLeft } from './align-horizontal-left.component.vue';

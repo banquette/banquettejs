@@ -1,0 +1,1 @@
+export { default as IconMaterialBikeScooter } from './bike-scooter.component.vue';

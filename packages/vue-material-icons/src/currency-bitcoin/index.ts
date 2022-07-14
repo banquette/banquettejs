@@ -1,0 +1,1 @@
+export { default as IconMaterialCurrencyBitcoin } from './currency-bitcoin.component.vue';

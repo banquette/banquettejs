@@ -1,0 +1,1 @@
+export { default as IconMaterialSummarize } from './summarize.component.vue';

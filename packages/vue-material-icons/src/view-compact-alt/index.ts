@@ -1,0 +1,1 @@
+export { default as IconMaterialViewCompactAlt } from './view-compact-alt.component.vue';

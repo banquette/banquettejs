@@ -1,0 +1,1 @@
+export { default as IconMaterialDoorBack } from './door-back.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSwapHorizontalCircle } from './swap-horizontal-circle.component.vue';

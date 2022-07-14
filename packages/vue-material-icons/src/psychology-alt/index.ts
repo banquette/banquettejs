@@ -1,0 +1,1 @@
+export { default as IconMaterialPsychologyAlt } from './psychology-alt.component.vue';

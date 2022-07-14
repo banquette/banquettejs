@@ -1,0 +1,1 @@
+export { default as IconMaterialFitScreen } from './fit-screen.component.vue';

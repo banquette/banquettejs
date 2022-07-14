@@ -1,0 +1,1 @@
+export { default as IconMaterialSoupKitchen } from './soup-kitchen.component.vue';

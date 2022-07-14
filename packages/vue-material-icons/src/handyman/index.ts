@@ -1,0 +1,1 @@
+export { default as IconMaterialHandyman } from './handyman.component.vue';

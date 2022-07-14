@@ -1,0 +1,1 @@
+export { default as IconMaterialSupportAgent } from './support-agent.component.vue';

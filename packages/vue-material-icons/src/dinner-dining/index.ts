@@ -1,0 +1,1 @@
+export { default as IconMaterialDinnerDining } from './dinner-dining.component.vue';

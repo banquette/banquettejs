@@ -1,0 +1,1 @@
+export { default as IconMaterialSip } from './sip.component.vue';

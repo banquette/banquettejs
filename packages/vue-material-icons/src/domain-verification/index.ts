@@ -1,0 +1,1 @@
+export { default as IconMaterialDomainVerification } from './domain-verification.component.vue';

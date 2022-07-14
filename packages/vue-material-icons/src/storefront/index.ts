@@ -1,0 +1,1 @@
+export { default as IconMaterialStorefront } from './storefront.component.vue';

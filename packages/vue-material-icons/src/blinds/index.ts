@@ -1,0 +1,1 @@
+export { default as IconMaterialBlinds } from './blinds.component.vue';

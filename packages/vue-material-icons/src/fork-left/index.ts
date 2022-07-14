@@ -1,0 +1,1 @@
+export { default as IconMaterialForkLeft } from './fork-left.component.vue';

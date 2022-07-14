@@ -1,0 +1,1 @@
+export { default as IconMaterialWash } from './wash.component.vue';

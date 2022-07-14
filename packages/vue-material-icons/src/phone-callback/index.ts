@@ -1,0 +1,1 @@
+export { default as IconMaterialPhoneCallback } from './phone-callback.component.vue';

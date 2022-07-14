@@ -1,0 +1,1 @@
+export { default as IconMaterialDoNotStep } from './do-not-step.component.vue';

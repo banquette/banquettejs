@@ -1,0 +1,1 @@
+export { default as IconMaterialSquare } from './square.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFaceUnlock } from './face-unlock.component.vue';

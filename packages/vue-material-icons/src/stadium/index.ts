@@ -1,0 +1,1 @@
+export { default as IconMaterialStadium } from './stadium.component.vue';

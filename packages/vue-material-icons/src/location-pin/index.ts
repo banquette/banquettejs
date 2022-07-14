@@ -1,0 +1,1 @@
+export { default as IconMaterialLocationPin } from './location-pin.component.vue';

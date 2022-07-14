@@ -1,0 +1,1 @@
+export { default as IconMaterialSmartScreen } from './smart-screen.component.vue';

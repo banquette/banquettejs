@@ -1,0 +1,1 @@
+export { default as IconMaterialCelebration } from './celebration.component.vue';

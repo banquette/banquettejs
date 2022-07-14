@@ -1,0 +1,1 @@
+export { default as IconMaterialSynagogue } from './synagogue.component.vue';

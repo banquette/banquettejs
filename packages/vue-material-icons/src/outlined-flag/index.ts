@@ -1,0 +1,1 @@
+export { default as IconMaterialOutlinedFlag } from './outlined-flag.component.vue';

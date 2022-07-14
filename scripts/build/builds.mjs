@@ -229,8 +229,12 @@ export const Builds = Object.assign({},
         module: 'Banquette.Vue.Ui'
     }),
     createBuildVariants({
-        package: 'vue-icons',
-        module: 'Banquette.Vue.Icons'
+        package: 'vue-material-icons',
+        module: 'Banquette.Vue.MaterialIcons'
+    }, 'esm'),
+    createBuildVariants({
+        package: 'vue-remix-icons',
+        module: 'Banquette.Vue.RemixIcons'
     }, 'esm'),
     createBuildVariants({
         package: 'vue-typescript',

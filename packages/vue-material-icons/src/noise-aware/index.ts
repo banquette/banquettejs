@@ -1,0 +1,1 @@
+export { default as IconMaterialNoiseAware } from './noise-aware.component.vue';

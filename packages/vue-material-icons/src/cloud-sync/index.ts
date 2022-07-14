@@ -1,0 +1,1 @@
+export { default as IconMaterialCloudSync } from './cloud-sync.component.vue';

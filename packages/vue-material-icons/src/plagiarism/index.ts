@@ -1,0 +1,1 @@
+export { default as IconMaterialPlagiarism } from './plagiarism.component.vue';

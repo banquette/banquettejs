@@ -1,0 +1,1 @@
+export { default as IconMaterialWarehouse } from './warehouse.component.vue';

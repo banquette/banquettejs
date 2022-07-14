@@ -1,6 +1,6 @@
 <script lang="ts">
-import { IconMaterialRedo } from "@banquette/vue-icons/material/redo";
-import { IconMaterialUndo } from "@banquette/vue-icons/material/undo";
+import { IconMaterialRedo } from "@banquette/vue-material-icons/redo";
+import { IconMaterialUndo } from "@banquette/vue-material-icons/undo";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";

@@ -1,0 +1,1 @@
+export { default as IconMaterialEditSquare } from './edit-square.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialJoinLeft } from './join-left.component.vue';

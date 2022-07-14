@@ -1,0 +1,1 @@
+export { default as IconMaterialHouseSiding } from './house-siding.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialFolderOff } from './folder-off.component.vue';

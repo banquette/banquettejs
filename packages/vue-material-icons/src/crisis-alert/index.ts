@@ -1,0 +1,1 @@
+export { default as IconMaterialCrisisAlert } from './crisis-alert.component.vue';

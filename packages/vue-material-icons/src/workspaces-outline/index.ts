@@ -1,0 +1,1 @@
+export { default as IconMaterialWorkspacesOutline } from './workspaces-outline.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialDevicesFold } from './devices-fold.component.vue';

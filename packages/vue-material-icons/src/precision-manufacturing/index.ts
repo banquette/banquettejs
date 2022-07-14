@@ -1,0 +1,1 @@
+export { default as IconMaterialPrecisionManufacturing } from './precision-manufacturing.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialSchema } from './schema.component.vue';

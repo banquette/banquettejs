@@ -1,0 +1,1 @@
+export { default as IconMaterialWidthWide } from './width-wide.component.vue';

@@ -1,0 +1,1 @@
+export { default as IconMaterialBiotech } from './biotech.component.vue';

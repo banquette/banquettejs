@@ -1,0 +1,1 @@
+export { default as IconMaterialDomainAdd } from './domain-add.component.vue';

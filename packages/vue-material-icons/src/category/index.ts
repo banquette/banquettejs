@@ -1,0 +1,1 @@
+export { default as IconMaterialCategory } from './category.component.vue';

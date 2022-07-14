@@ -1,0 +1,1 @@
+export { default as IconMaterialFontDownloadOff } from './font-download-off.component.vue';

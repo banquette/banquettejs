@@ -1,0 +1,1 @@
+export { default as IconMaterialFlourescent } from './flourescent.component.vue';

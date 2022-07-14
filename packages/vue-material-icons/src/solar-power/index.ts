@@ -1,0 +1,1 @@
+export { default as IconMaterialSolarPower } from './solar-power.component.vue';

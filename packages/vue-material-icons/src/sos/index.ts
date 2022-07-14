@@ -1,0 +1,1 @@
+export { default as IconMaterialSos } from './sos.component.vue';

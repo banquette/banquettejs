@@ -1,0 +1,1 @@
+export { default as IconMaterialTranscribe } from './transcribe.component.vue';

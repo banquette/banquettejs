@@ -1,0 +1,1 @@
+export { default as IconMaterialOfflineShare } from './offline-share.component.vue';

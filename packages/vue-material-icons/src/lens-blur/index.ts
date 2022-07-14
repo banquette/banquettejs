@@ -1,0 +1,1 @@
+export { default as IconMaterialLensBlur } from './lens-blur.component.vue';

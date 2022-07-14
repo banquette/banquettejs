@@ -1,0 +1,1 @@
+export { default as IconMaterialNat } from './nat.component.vue';
