@@ -71,6 +71,11 @@ export class Choice {
     public external: boolean = true;
 
     /**
+     * `true` if the Choice instance has been just been created.
+     */
+    public new: boolean = true;
+
+    /**
      * The raw value to use in the form.
      */
     public value: any;

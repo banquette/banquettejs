@@ -769,20 +769,27 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                 if (!item.disabled && item.visible) {
                     this.noChoiceAvailable = false;
                 }
-                const unsureIdx = this.unsureSelectedChoicesIdentifiers.indexOf(item.identifier);
-                if (unsureIdx > -1) {
-                    if (this.viewData.multiple) {
-                        for (let i = 0; this.viewData.control.value.length; ++i) {
-                            if (this.viewData.control.value[i].identifier === item.identifier) {
-                                this.viewData.control.value[i] = this.createSelectedChoice(item);
-                                break ;
+                // If the item has just been created, meaning it's the first time it is processed in `updateChoices`.
+                if (item.new) {
+                    // First let's check if it matches one of the SelectedChoice that have been marked as "unsure"
+                    // because no existing choice were found when it was created.
+                    const unsureIdx = this.unsureSelectedChoicesIdentifiers.indexOf(item.identifier);
+                    if (unsureIdx > -1) {
+                        // Do not simply select the choice, but replace the current value in the control by a
+                        // selected choice created from the Choice item that matches.
+                        if (this.viewData.multiple) {
+                            for (let i = 0; this.viewData.control.value.length; ++i) {
+                                if (this.viewData.control.value[i].identifier === item.identifier) {
+                                    this.viewData.control.value[i] = this.createSelectedChoice(item);
+                                    break ;
+                                }
                             }
+                        } else {
+                            this.viewData.control.value = this.createSelectedChoice(item);
                         }
-                    } else {
-                        this.viewData.control.value = this.createSelectedChoice(item);
+                        this.unsureSelectedChoicesIdentifiers.splice(unsureIdx, 1);
                     }
-                    this.unsureSelectedChoicesIdentifiers.splice(unsureIdx, 1);
-                    this.selectChoice(item, false);
+                    item.new = false;
                 }
             }
         }
@@ -808,19 +815,6 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         this.viewData.visibleChoicesCount = 0;
         for (const choice of this.inlinedChoices) {
             choice.selected = identifiers.indexOf(choice.identifier) > -1;
-            if (!choice.selected && values.indexOf(choice.value) > -1) {
-                choice.selected = true;
-                // In this case we may have a selected choice created from the FormControl's value
-                // before the choice has been created. We need to update the selected choice.
-                for (const value of selectedChoices) {
-                    if (value instanceof SelectedChoice) {
-                        if (value.rawValue === choice.value) {
-                            this.deselectChoice(value);
-                            this.selectChoice(choice, false);
-                        }
-                    }
-                }
-            }
             if (choice.selected) {
                 this.viewData.selectedChoicesCount++;
             }
@@ -828,9 +822,6 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             if (choice.visible) {
                 this.viewData.visibleChoicesCount++;
             }
-            // if (choice.identifier === this.focusedIdentifier) {
-            //     this.focusChoice(choice);
-            // }
         }
     }
 
