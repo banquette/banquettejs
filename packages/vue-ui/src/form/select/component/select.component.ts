@@ -234,8 +234,13 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         }
         this.v.control.onBlur();
         this.v.isInputFocused = false;
-        this.vm.hideChoices();
         this.lastBlurTime = (new Date()).getTime();
+
+        // Check that the vm is still defined because this event can occur
+        // while the component is being unmounted in certain edge cases.
+        if (!isUndefined(this.vm)) {
+            this.vm.hideChoices();
+        }
     }
 
     @Expose() public onInputChange = debounce(() => {
