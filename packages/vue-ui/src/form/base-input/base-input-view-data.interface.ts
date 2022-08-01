@@ -34,6 +34,11 @@ export interface BaseInputViewDataInterface {
     floatingHelp: boolean;
 
     /**
+     * If `true`, a little asterisk extras is shown, indicating to the user that the field is mandatory.
+     */
+    required: boolean;
+
+    /**
      * If `true`, show the debug overlay.
      */
     showDebug: boolean;

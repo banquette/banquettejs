@@ -68,6 +68,10 @@
         display: block;
         line-height: 1;
         color: var(--form-base-input-label-color);
+        white-space: nowrap;
+        max-width: calc(100% - (var(--form-base-input-placeholder-x) * 2));
+        text-overflow: ellipsis;
+        overflow: hidden;
         transition:
             top var(--form-base-input-label-transition-duration) ease-in-out,
             font-size var(--form-base-input-label-transition-duration) ease-in-out,
@@ -142,6 +146,11 @@
         flex-direction: column;
         gap: 0.3em;
         margin-top: 0.3em;
+    }
+
+    .asterisk {
+        font-size: 0.8em;
+        color: var(--bt-color-red-500);
     }
 
     /**

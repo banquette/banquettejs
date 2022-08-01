@@ -42,6 +42,11 @@ export class BaseInputComposable implements HeadlessInterface<BaseInputViewDataI
     @Prop({type: Boolean, default: false}) public floatingHelp!: boolean;
 
     /**
+     * If `true`, a little asterisk extras is shown, indicating to the user that the field is mandatory.
+     */
+    @Prop({type: Boolean, default: false}) public required!: boolean;
+
+    /**
      * If `true`, show the debug overlay.
      */
     @Prop({type: Boolean, default: false}) public debug!: boolean;
@@ -56,7 +61,7 @@ export class BaseInputComposable implements HeadlessInterface<BaseInputViewDataI
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['label', 'placeholder', 'help', 'floatingLabel', 'floatingErrors', 'floatingHelp', 'debug'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['label', 'placeholder', 'help', 'floatingLabel', 'floatingErrors', 'floatingHelp', 'required', 'debug'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
         this.viewData.label = this.label;
         this.viewData.placeholder = this.placeholder;
@@ -64,6 +69,7 @@ export class BaseInputComposable implements HeadlessInterface<BaseInputViewDataI
         this.viewData.floatingLabel = this.floatingLabel;
         this.viewData.floatingErrors = this.floatingErrors;
         this.viewData.floatingHelp = this.floatingHelp;
+        this.viewData.required = this.required;
         this.viewData.showDebug = this.debug;
     }
 }

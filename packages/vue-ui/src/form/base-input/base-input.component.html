@@ -40,6 +40,7 @@
                 </template>
                 <bt-form-control-state-overlay :v="v" v-if="v.base.showDebug"></bt-form-control-state-overlay>
                 <slot name="extras-after"></slot>
+                <span class="asterisk" v-if="v.base.required">&lowast;</span>
             </div>
         </div>
         <div class="after" v-if="hasAfterSlot || hasAfterRawSlot" data-form-input-addon>
