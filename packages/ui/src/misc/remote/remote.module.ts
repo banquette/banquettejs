@@ -108,7 +108,7 @@ export class RemoteModule {
             (this as any)[prop] = newValue;
         }
         if (changed) {
-            this.eventDispatcher.dispatch(RemoteModuleEvents.ConfigurationChange);
+            this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.ConfigurationChange);
         }
     }
 

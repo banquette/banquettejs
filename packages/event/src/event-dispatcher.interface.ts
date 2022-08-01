@@ -19,6 +19,11 @@ export interface EventDispatcherInterface {
     dispatch<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean, tags?: symbol[]): DispatchResult<T>;
 
     /**
+     * Same as `dispatch()` but with additional error log in case something goes wrong.
+     */
+    dispatchWithErrorHandling<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean, tags?: symbol[]): DispatchResult<T>;
+
+    /**
      * Try to trigger and event but keep the call in a queue if no listeners have been registered yet.
      * The dispatch will run again when a subscriber is registered.
      */

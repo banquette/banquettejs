@@ -191,7 +191,7 @@ export class HttpService {
             this.runningRequestsCount++;
 
             // Before request.
-            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(
+            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatchWithErrorHandling(
                 HttpEvents.BeforeRequest,
                 new RequestEvent(queuedRequest.request),
                 true,
@@ -205,7 +205,7 @@ export class HttpService {
             const adapterResponse: AdapterResponse = await adapterPromise;
 
             // Before response.
-            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatch(
+            await this.ensureDispatchSucceeded(this.eventDispatcher.dispatchWithErrorHandling(
                 HttpEvents.BeforeResponse,
                 new BeforeResponseEvent(adapterResponse, queuedRequest.request as AdapterRequest),
                 true,
@@ -237,7 +237,7 @@ export class HttpService {
         }
         queuedRequest.response.setStatus(HttpResponseStatus.Success);
         queuedRequest.resolve(queuedRequest.response);
-        this.eventDispatcher.dispatch(HttpEvents.RequestSuccess, new ResponseEvent(queuedRequest.request, queuedRequest.response), true, queuedRequest.request.tags);
+        this.eventDispatcher.dispatchWithErrorHandling(HttpEvents.RequestSuccess, new ResponseEvent(queuedRequest.request, queuedRequest.response), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 
@@ -248,7 +248,7 @@ export class HttpService {
         if (error instanceof NetworkException && error.retryable && queuedRequest.triesLeft > 0) {
             queuedRequest.executeAt = HttpService.CalculateNextTryTime(queuedRequest);
             queuedRequest.isExecuting = false;
-            this.eventDispatcher.dispatch(HttpEvents.RequestQueued, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
+            this.eventDispatcher.dispatchWithErrorHandling(HttpEvents.RequestQueued, new RequestEvent(queuedRequest.request), true, queuedRequest.request.tags);
             if (this.networkWatcher.isOnline()) {
                 this.processQueue();
             }
@@ -257,7 +257,7 @@ export class HttpService {
         queuedRequest.response.error = error;
         queuedRequest.response.setStatus(error instanceof RequestCanceledException ? HttpResponseStatus.Canceled : HttpResponseStatus.Error);
         queuedRequest.reject(queuedRequest.response);
-        this.eventDispatcher.dispatch(HttpEvents.RequestFailure, new ResponseEvent(queuedRequest.request, queuedRequest.response), true, queuedRequest.request.tags);
+        this.eventDispatcher.dispatchWithErrorHandling(HttpEvents.RequestFailure, new ResponseEvent(queuedRequest.request, queuedRequest.response), true, queuedRequest.request.tags);
         this.removeFromQueue(queuedRequest);
     }
 
@@ -319,7 +319,7 @@ export class HttpService {
             this.handleRequestFailure(queueRequest, new RequestCanceledException());
         });
         this.scheduleQueueForProcess();
-        this.eventDispatcher.dispatch(HttpEvents.RequestQueued, new RequestEvent(request), true, request.tags);
+        this.eventDispatcher.dispatchWithErrorHandling(HttpEvents.RequestQueued, new RequestEvent(request), true, request.tags);
     }
 
     /**

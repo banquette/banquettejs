@@ -1,5 +1,7 @@
+import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { arrayIntersect } from "@banquette/utils-array/array-intersect";
 import { Not } from "@banquette/utils-misc/not";
+import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isType } from "@banquette/utils-type/is-type";
@@ -66,7 +68,7 @@ export class EventDispatcher implements EventDispatcherInterface {
             //
             window.setTimeout(() => {
                 for (const event of events) {
-                    this.dispatch(type, event.arg);
+                    this.dispatchWithErrorHandling(type, event.arg);
                 }
             });
         }
@@ -133,6 +135,23 @@ export class EventDispatcher implements EventDispatcherInterface {
     }
 
     /**
+     * Same as `dispatch()` but with additional error log in case something goes wrong.
+     */
+    public dispatchWithErrorHandling<T = any>(type: symbol, event?: EventArg|null, sequential: boolean = false, tags: symbol[] = []): DispatchResult<T> {
+        const result = this.dispatch(type, event, sequential, tags);
+        const handleError = (error: any) => {
+            const message = `Dispatch failed for Symbol("${getSymbolDescription(type)}"). Reason: ${ExceptionFactory.EnsureException(error).message}`;
+            console.error(message, error);
+        };
+        if (result.promise) {
+            result.promise.catch(handleError);
+        } else if (result.error) {
+            handleError(result.errorDetail);
+        }
+        return result;
+    }
+
+    /**
      * Try to trigger and event but keep the call in a queue if no subscribers have been registered yet.
      * The dispatch will run again when a subscriber is registered.
      */
@@ -140,7 +159,7 @@ export class EventDispatcher implements EventDispatcherInterface {
         event = isNullOrUndefined(event) ? new EventArg() : event;
         const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
         if (subscribers.length > 0) {
-            return void this.dispatch(type, event);
+            return void this.dispatchWithErrorHandling(type, event);
         }
         const queue = ensureArray(this.queue[type]);
         queue.push({event});

@@ -229,7 +229,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                 this.form.enable();
                 this.form.reset();
                 this.bindModel();
-                this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.LoadSuccess);
+                this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.LoadSuccess);
                 return ;
             }
             try {
@@ -253,8 +253,12 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             firstLoad = false;
             this.form.disable();
             this.updateState(Action.Load, Status.Working);
-            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BeforeLoad);
-            loadNext();
+            const dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeLoad);
+            if (dispatchResult.promise) {
+                dispatchResult.promise.then(loadNext);
+            } else {
+                loadNext();
+            }
         };
     })(), 0, false);
 
@@ -271,7 +275,13 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             }
             const payload: any = this.modelInstance ? this.modelInstance : this.form.value;
             const persistEvent = new FormBeforePersistEventArg(payload);
-            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BeforePersist, persistEvent);
+            let dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforePersist, persistEvent);
+            if (dispatchResult.promise) {
+                await dispatchResult.promise;
+            }
+            if (dispatchResult.error) {
+                return ;
+            }
             if (this.persistRemote.isApplicable && !persistEvent.defaultPrevented) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
@@ -315,7 +325,15 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     public async validate(): Promise<boolean> {
         this.updateState(Action.Validate, Status.Working);
-        this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BeforeValidate);
+        const dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeValidate);
+        if (dispatchResult.promise) {
+            await dispatchResult.promise;
+        }
+        if (dispatchResult.error) {
+            this.updateState(Action.Validate, Status.Failure);
+            this.setError(ErrorType.Internal, dispatchResult.errorDetail);
+            return false;
+        }
         if (!(await this.form.validate())) {
             this.updateState(Action.Validate, Status.Failure);
             this.setError(ErrorType.Validate, null);
@@ -489,7 +507,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             (this as Writeable<HeadlessFormViewModel>).modelInstance = binder.bind(this.modelInstance, this.form);
             (this as Writeable<HeadlessFormViewModel>).binder = binder;
 
-            this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.BindModel, new BindModelEventArg(this.modelInstance, binder));
+            this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BindModel, new BindModelEventArg(this.modelInstance, binder));
         }
     }
 

@@ -217,10 +217,7 @@ export abstract class AbstractObserver<T extends object> {
             return ;
         }
         if (this.subscribeCounts[ObserverEvents.ChangedSync]) {
-            const result = this.eventDispatcher.dispatch(ObserverEvents.ChangedSync, new MutationEvent(mutation));
-            if (result.error) {
-                console.error(result.errorDetail);
-            }
+            this.eventDispatcher.dispatchWithErrorHandling(ObserverEvents.ChangedSync, new MutationEvent(mutation));
         }
         if (this.subscribeCounts[ObserverEvents.ChangedAsync]) {
             this.queueNotify(mutation);
@@ -298,7 +295,7 @@ export abstract class AbstractObserver<T extends object> {
                 queued = true;
                 queueMicrotask(() => {
                     if (this.eventDispatcher !== null) {
-                        this.eventDispatcher.dispatch(ObserverEvents.ChangedAsync, new MutationsCollectionEvent(this.mutationsQueue));
+                        this.eventDispatcher.dispatchWithErrorHandling(ObserverEvents.ChangedAsync, new MutationsCollectionEvent(this.mutationsQueue));
                     }
                     this.mutationsQueue = [];
                     queued = false;
