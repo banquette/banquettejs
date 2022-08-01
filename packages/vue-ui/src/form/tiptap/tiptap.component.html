@@ -3,11 +3,12 @@
         <div class="inner-wrapper" v-if="innerConfiguration">
             <div class="toolbars" v-show="editor" v-for="toolbar in innerConfiguration.toolbars" @click.stop.prevent>
                 <div class="toolbar">
-                    <component
-                        :is="component"
-                        v-for="component in toolbar"
-                        :configuration="innerConfiguration.modules[component] ? innerConfiguration.modules[component].configuration : {}"
-                    ></component>
+                    <div class="item-wrapper" v-for="component in toolbar">
+                        <component
+                            :is="component"
+                            :configuration="innerConfiguration.modules[component] ? innerConfiguration.modules[component].configuration : {}"
+                        ></component>
+                    </div>
                 </div>
             </div>
             <editor-content

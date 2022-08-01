@@ -50,10 +50,22 @@
     .toolbars {
         .toolbar {
             display: flex;
-            gap: 0.2em;
-            padding: 0.4em;
-            height: 3.3em;
-            border-bottom: 1px solid var(--bt-color-gray-100);
+            flex-wrap: wrap;
+
+            .item-wrapper {
+                border-bottom: 1px solid var(--bt-color-gray-100);
+                height: 3em;
+                flex-grow: 1;
+                display: flex;
+                align-items: stretch;
+                padding: 0.4em 0 0.4em 0.4em;
+            }
+
+            &::after{
+                content: " ";
+                flex: 100;
+                border-bottom: 1px solid var(--bt-color-gray-100);
+            }
 
             :deep(.bt-button.toolbar-button) {
                 --button-border-width: 0;
@@ -67,8 +79,6 @@
                 --button-font-size: 1em;
                 --button-padding-x: 0.9em;
                 --button-padding-y: 0.75em;
-                min-width: 2.8em;
-                min-height: 100%;
 
                 &[data-active] {
                     --button-text-color: var(--form-tiptap-toolbar-button-text-active-color);
@@ -81,7 +91,7 @@
     .editor-content {
         width: 100%;
 
-        :deep([contenteditable]) {
+        & > :deep([contenteditable]) {
             outline: none;
             padding: var(--form-tiptap-padding-x) var(--form-tiptap-padding-y);
         }
