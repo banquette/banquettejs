@@ -72,7 +72,7 @@ export default class CharacterCountComponent extends AbstractTiptapModule<Module
     }
 }
 </script>
-<style src="./character-count.component.css"></style>
+<style src="./character-count.component.css" scoped></style>
 <template>
     <div class="bt-form-tiptap-character-count" v-bt-bind-theme>
         <div v-if="configuration.showCharacters">{{ charactersText }}</div>

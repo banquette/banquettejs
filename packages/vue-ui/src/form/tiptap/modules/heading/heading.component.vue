@@ -73,7 +73,8 @@ export default class HeadingComponent extends AbstractTiptapModule<ModuleInterfa
 <style src="./heading.component.css" scoped></style>
 <template>
     <bt-button :disabled="!enabled" class="bt-form-tiptap-heading toolbar-button" v-if="editor">
-        <i-material-title width="1em" crop></i-material-title>
+        <i-material-title height="0.95em" crop></i-material-title>
+        <i-material-arrow-drop-down crop width="0.7em"></i-material-arrow-drop-down>
         <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
         <template #toggle="{close}">
             <bt-dropdown class="bt-form-tiptap-heading-dropdown">
