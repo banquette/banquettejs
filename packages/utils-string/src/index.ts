@@ -1,4 +1,5 @@
 
+export * from './fixed-digits';
 export * from './insert-in-string';
 export * from './is-empty-string';
 export * from './is-non-empty-string';
