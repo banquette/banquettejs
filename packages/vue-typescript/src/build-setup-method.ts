@@ -9,7 +9,6 @@ import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor, GenericCallback } from "@banquette/utils-type/types";
@@ -33,10 +32,11 @@ import {
     onMounted,
     nextTick,
     onBeforeUnmount,
-    toRaw
+    toRaw,
+    ComponentInternalInstance
 } from "vue";
 import { ComponentAwareComposable } from "./component-aware.composable";
-import { HOOKS_MAP, COMPONENT_INSTANCE, ACTIVE_VARIANTS } from "./constants";
+import { HOOKS_MAP, COMPONENT_TS_INSTANCE, ACTIVE_VARIANTS, COMPONENT_VUE_INSTANCE } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
@@ -65,13 +65,38 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         let unmounted: boolean = false;
         let computedVersion: Ref = ref(1);
         const output: Record<any, any> = {};
+        let vueInst: any = getCurrentInstance() as ComponentInternalInstance & {[COMPONENT_TS_INSTANCE]: any};
+
         if (inst === null) {
             // Trick so Vue doesn't stop and show a warning because there is no render function on the component.
             // noop is assigned because this is not the function that will be used in reality.
             if (isUndefined(ctor.prototype.render)) {
                 ctor.prototype.render = noop;
             }
-            inst = instantiate(ctor, data.component);
+            inst = new Proxy(instantiate(ctor, data.component), {
+                get(target: any, p: string): any {
+                    if (p[0] === '$') {
+                        return inst[COMPONENT_VUE_INSTANCE][p] || target[p];
+                    }
+                    return target[p];
+                }
+            });
+            // Set the Vue object we have to ensure an object is always available,
+            // but make it writable, so it can be overridden by the `beforeCreate()` hook.
+            Object.defineProperty(inst, COMPONENT_VUE_INSTANCE, {
+                enumerable: false,
+                configurable: true,
+                writable: true,
+                value: vueInst
+            });
+
+            // Make the Typescript instance available through the Vue instance.
+            Object.defineProperty(vueInst, COMPONENT_TS_INSTANCE, {
+                enumerable: false,
+                configurable: false,
+                writable: false,
+                value: inst
+            });
 
             if (data.themeable) {
                 if (!isUndefined(inst[data.themeable.prop])) {
@@ -110,7 +135,6 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                             get(target: any, name: string): any {
                                 let value: any = target[name];
                                 if (name === 'value') {
-
                                     //
                                     // This is a hot fix for an issue with the theming on props.
                                     // Because the variants matching is now normally done in the bt-bind-theme directive,
@@ -596,13 +620,6 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         }
 
         if (props !== null) {
-            const vueInstance = getCurrentInstance();
-            Object.defineProperty(vueInstance, COMPONENT_INSTANCE, {
-                enumerable: false,
-                configurable: false,
-                writable: false,
-                value: inst
-            });
             onBeforeMount(incrementActiveComponentsCount);
             onBeforeUnmount(() => {
                 unmounted = true;

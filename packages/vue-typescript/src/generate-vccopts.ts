@@ -17,7 +17,8 @@ import {
     PRE_CONSTRUCTION_HOOKS,
     HOOKS_MAP,
     COMPONENT_CTOR,
-    COMPONENT_INSTANCE
+    COMPONENT_TS_INSTANCE,
+    COMPONENT_VUE_INSTANCE
 } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
@@ -30,7 +31,6 @@ import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-me
 import { isVccOpts, isDecoratedComponentConstructor } from "./utils/guards";
 import { injectVueProperties } from "./utils/inject-vue-properties";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
-import { Vue } from "./vue";
 import { VueBuilder } from "./vue-builder";
 
 /**
@@ -190,34 +190,22 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     });
 
     options.beforeCreate = function(this: DecoratedComponentInstance) {
-        const inst = this.$[COMPONENT_INSTANCE];
-        //
-        // If the component inherits from the "Vue" class this means the user
-        // may want to access theses attributes or methods.
-        //
-        // Also, theming depends on the use of $forceUpdate(),
-        // so getters are always defined if the component is themeable.
-        //
-        if (inst instanceof Vue || data.themeable !== null) {
-            defineGetter(inst, '$', () => this.$);
-            defineGetter(inst, '$props', () => this.$props);
-            defineGetter(inst, '$attrs', () => this.$attrs);
-            defineGetter(inst, '$slots', () => this.$slots);
-            defineGetter(inst, '$emit', () => this.$emit);
-            defineGetter(inst, '$data', () => this.$data);
-            defineGetter(inst, '$el', () => this.$el);
-            defineGetter(inst, '$options', () => this.$options);
-            defineGetter(inst, '$refs', () => this.$refs);
-            defineGetter(inst, '$root', () => this.$root);
-            defineGetter(inst, '$forceUpdate', () => this.$forceUpdate);
-            defineGetter(inst, '$nextTick', () => this.$nextTick);
-            defineGetter(inst, '$watch', () => this.$watch);
-            defineGetter(inst, '$parent', () => this.$parent);
-            defineGetter(inst, '$resolvedParent', () => {
-                const $parent = this.$parent;
-                return $parent !== null ? maybeResolveTsInst($parent) : null;
-            });
-        }
+        // Retrieve the Typescript instance from the Vue object.
+        const inst = this.$[COMPONENT_TS_INSTANCE];
+
+        // Assign the Vue object (this) into the instance so the proxy around
+        // the component can use the proxified object.
+        Object.defineProperty(inst, COMPONENT_VUE_INSTANCE, {
+            enumerable: false,
+            configurable: false,
+            writable: false,
+            value: this
+        });
+
+        defineGetter(inst, '$resolvedParent', () => {
+            const $parent = this.$parent;
+            return $parent !== null ? maybeResolveTsInst($parent) : null;
+        });
     };
 
     // Template

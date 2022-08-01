@@ -1,6 +1,7 @@
 import { Constructor } from "@banquette/utils-type/types";
+import { ComponentCustomProperties } from "@vue/runtime-core";
 import { ComponentOptionsWithObjectProps, ComponentPublicInstance } from "vue";
-import { DECORATORS_METADATA, VUE_CLASS_COMPONENT_OPTIONS, COMPONENT_INSTANCE, COMPONENT_CTOR } from "./constants";
+import { DECORATORS_METADATA, VUE_CLASS_COMPONENT_OPTIONS, COMPONENT_TS_INSTANCE, COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 
 /**
@@ -58,7 +59,7 @@ export type DecoratedComponentConstructor = Constructor & {
 export type DecoratedComponentInstance = ComponentPublicInstance & {
     $: {
         type: VccOpts
-        [COMPONENT_INSTANCE]: DecoratedComponentInstance
+        [COMPONENT_TS_INSTANCE]: DecoratedComponentInstance
     },
     $resolvedParent: ComponentPublicInstance|null
 };

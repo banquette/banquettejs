@@ -34,10 +34,23 @@ export const DECORATORS_METADATA_CACHE = '__bvcCache';
 export const COMPONENT_CTOR = '__bvcCtor';
 
 /**
- * Hidden attribute used to maintained a link between the Vue object and the real object instance.
+ * A reference on the Typescript instance of the component, stored in the Vue instance.
  * Used to get the parent component instance.
  */
-export const COMPONENT_INSTANCE = '__bvcInst';
+export const COMPONENT_TS_INSTANCE = '__bvctsInst';
+
+/**
+ * A reference on the proxified Vue instance of a component.
+ *
+ * This is necessary because the instance returned by `getCurrentInstance()` in the setup method
+ * is not proxified yet. Meaning that it will not resolve plugins.
+ *
+ * If we only keep a reference on the non-proxified object, doing for example `this.$router`
+ * in a Typescript instance, will fail.
+ *
+ * This reference is add to the Typescript instance via the `beforeCreate()` hook.
+ */
+export const COMPONENT_VUE_INSTANCE = '__bvcvInst';
 
 /**
  * Holds the list of active theme variants.

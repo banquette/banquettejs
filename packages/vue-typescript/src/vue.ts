@@ -4,53 +4,46 @@ import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { AbstractConstructor } from "@banquette/utils-type/types";
-import { WatchOptions } from "@vue/runtime-core";
+import { ComponentCustomProperties, WatchOptions } from "@vue/runtime-core";
 import {
-    ComponentPublicInstance,
-    ComponentInternalInstance,
-    Slots,
-    WatchStopHandle,
     VNode,
     Comment,
-    Fragment, createElementBlock
+    Fragment,
+    createElementBlock,
+    ComponentPublicInstance,
+    ComponentInternalInstance,
+    Slots, WatchStopHandle
 } from "vue";
 import { COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
-import { VccOpts } from "./type";
 import { vccOptsToMetadata, maybeResolveTsInst, anyToComponentMetadata, anyToComponentCtor } from "./utils/converters";
 import { isInstanceOf } from "./utils/is-instance-of";
 
 /**
- * Fake implementation of the public attributes of the vue instance.
- * The real implementation will be swapped when the component is initialized if it extends this class.
+ * Base class components can inherit from the access Vue's public properties and methods.
  */
-export abstract class Vue implements ComponentPublicInstance {
+export abstract class Vue implements ComponentPublicInstance, ComponentCustomProperties {
     static [COMPONENT_CTOR]: any;
+    
+    declare public $: ComponentInternalInstance & { type: any };
+    declare public $attrs: Record<string, unknown>;
+    declare public $data: any;
+    declare public $el: any;
+    declare public $options: any;
+    declare public $parent: ComponentPublicInstance | null;
+    declare public $resolvedParent: ComponentPublicInstance | null;
+    declare public $props: any;
+    declare public $refs: Record<string, any>;
+    declare public $slots: Slots;
+    declare public $root: ComponentPublicInstance | null;
 
-    /**
-     * Placeholder attributes and methods.
-     * Overridden when vccOpts object is built.
-     */
-    public $!: ComponentInternalInstance & {type: VccOpts};
-    public $attrs!: Record<string, unknown>;
-    public $data: any;
-    public $el: any;
-    public $options: any;
-    public $parent: ComponentPublicInstance|null = null;
-    public $resolvedParent: ComponentPublicInstance|null = null;
-    public $props: any;
-    public $refs!: Record<string, any>;
-    public $slots!: Slots;
-    public $root: ComponentPublicInstance|null = null;
-
-    public $emit(eventName: string, ...args: any[]): void { }
-    public $forceUpdate(): void { }
-    public $forceUpdateComputed(): void { }
+    // Fake implementation of the public attributes of the vue instance.
+    // The real implementation will be swapped when the component is initialized if it extends this class.
+    public $emit(eventName: string, ...args: any[]): void {}
+    public $forceUpdate(): void {}
+    public $forceUpdateComputed(): void {}
     public $nextTick<T>(fn: ((this: T) => void) | undefined): Promise<void> { return Promise.resolve() }
-    public $watch(source: string | Function, cb: Function, options: WatchOptions|undefined): WatchStopHandle {
-        return null as any;
-    };
-    // End of placeholders.
+    public $watch(source: string | Function, cb: Function, options: WatchOptions | undefined): WatchStopHandle { return () => {} }
 
     /**
      * Test if a slot is defined.

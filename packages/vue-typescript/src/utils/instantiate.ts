@@ -7,8 +7,5 @@ import { ComposableDecoratorOptions } from "../decorator/composable.decorator";
  * Create an instance of component.
  */
 export function instantiate(ctor: Constructor, options: ComponentDecoratorOptions|ComposableDecoratorOptions): any {
-    if (!isNullOrUndefined(options.factory)) {
-        return options.factory();
-    }
-    return new ctor();
+    return !isNullOrUndefined(options.factory) ? options.factory() : new ctor();
 }

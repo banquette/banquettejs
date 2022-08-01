@@ -2,7 +2,7 @@ import { isConstructor } from "@banquette/utils-type/is-constructor";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { ComponentPublicInstance } from "vue";
-import { COMPONENT_INSTANCE, DECORATORS_METADATA, COMPONENT_CTOR } from "../constants";
+import { COMPONENT_TS_INSTANCE, DECORATORS_METADATA, COMPONENT_CTOR } from "../constants";
 import {
     DecoratedComponentConstructor,
     DecoratedComponentInstance,
@@ -35,7 +35,7 @@ export function isComponentInstance(input: any): input is ComponentPublicInstanc
  * Test if the input is a `DecoratedComponentInstance`.
  */
 export function isDecoratedComponentInstance(input: any): input is DecoratedComponentInstance {
-    return isComponentInstance(input) && COMPONENT_INSTANCE in input.$;
+    return isComponentInstance(input) && COMPONENT_TS_INSTANCE in input.$;
 }
 
 /**

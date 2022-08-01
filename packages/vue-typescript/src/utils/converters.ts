@@ -4,7 +4,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
 import { ComponentPublicInstance } from "vue";
-import { VUE_CLASS_COMPONENT_OPTIONS, COMPONENT_INSTANCE, COMPONENT_CTOR, DECORATORS_METADATA } from "../constants";
+import { VUE_CLASS_COMPONENT_OPTIONS, COMPONENT_TS_INSTANCE, COMPONENT_CTOR, DECORATORS_METADATA } from "../constants";
 import { ComponentMetadataInterface } from "../decorator/component-metadata.interface";
 import { VccOpts, DecoratedComponentInstance, DecoratedComponentConstructor } from "../type";
 import { Vue } from "../vue";
@@ -46,7 +46,7 @@ export function vueInstToVccOpts(inst: DecoratedComponentInstance|Vue): VccOpts 
  * Get the Typescript class behind a component instance.
  */
 export function vueInstToTsInst(inst: DecoratedComponentInstance): DecoratedComponentInstance {
-    return inst.$[COMPONENT_INSTANCE];
+    return inst.$[COMPONENT_TS_INSTANCE];
 }
 
 /**
@@ -130,8 +130,8 @@ export function anyToTsInst(input: any): any {
     if (isDecoratedComponentInstance(input)) {
         return vueInstToTsInst(input);
     }
-    if (isObject(input) && !isUndefined(input.__vueParentComponent) && isObject(input.__vueParentComponent[COMPONENT_INSTANCE])) {
-        return input.__vueParentComponent[COMPONENT_INSTANCE];
+    if (isObject(input) && !isUndefined(input.__vueParentComponent) && isObject(input.__vueParentComponent[COMPONENT_TS_INSTANCE])) {
+        return input.__vueParentComponent[COMPONENT_TS_INSTANCE];
     }
     return null;
 }
