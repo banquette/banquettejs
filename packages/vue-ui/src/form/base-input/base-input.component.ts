@@ -8,7 +8,7 @@ import { Vue } from "@banquette/vue-typescript/vue";
 import { IconMaterialHelp } from "@banquette/vue-material-icons/help";
 import { IconMaterialWarning } from "@banquette/vue-material-icons/warning";
 import { FormControlStateOverlayComponent } from "../../debug";
-import { PopoverDirective } from "../../popover";
+import { PopoverDirective, PopoverComponent } from "../../popover";
 import { ProgressCircularComponent } from "../../progress/progress-circular";
 import { BaseInputViewDataInterface } from "./base-input-view-data.interface";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -16,7 +16,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-base-input',
-    components: [ProgressCircularComponent, FormControlStateOverlayComponent, IconMaterialHelp, IconMaterialWarning],
+    components: [ProgressCircularComponent, FormControlStateOverlayComponent, IconMaterialHelp, IconMaterialWarning, PopoverComponent],
     directives: [PopoverDirective]
 })
 export default class BaseInputComponent extends Vue {
