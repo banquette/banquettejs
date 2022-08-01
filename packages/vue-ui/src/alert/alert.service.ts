@@ -44,7 +44,7 @@ export class AlertService {
     private showAlert(options: AlertOptionsInterface): void {
         this.flushQueue();
         const result: DispatchResult = this.eventDispatcher.dispatch(AlertEvents.Show, new ShowAlertEvent(options));
-        if (result.results.indexOf(true) < 0) {
+        if (!result.error && result.results.indexOf(true) < 0) {
             if (!this.queue.length) {
                 const wrapper = document.createElement('div');
                 createApp(AlertsStackComponent).mount(wrapper);
