@@ -1,5 +1,3 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventArg } from "@banquette/event/event-arg";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
@@ -25,14 +23,12 @@ import { HideDialogEventArg } from "./event/hide-dialog.event-arg";
 import { ShowDialogEventArg } from "./event/show-dialog.event-arg";
 import { ThemeConfiguration } from "./theme-configuration";
 
-@Module()
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-dialog',
     components: [OverlayComponent, ClientOnlyComponent],
     directives: [BindThemeDirective],
-    emits: ['update:modelValue', 'close'],
-    factory: () => Injector.Get(DialogComponent)
+    emits: ['update:modelValue', 'close']
 })
 export default class DialogComponent extends Vue {
     private static ScrollLockedCount: number = 0;
@@ -154,9 +150,11 @@ export default class DialogComponent extends Vue {
     private draggableUnsubscribeFunctions: VoidCallback[] = [];
     private oldBodyOverflow: string|null = null;
     private shown: boolean = false;
+    private eventDispatcher: EventDispatcherService;
 
-    public constructor(@Inject(EventDispatcherService) private eventDispatcher: EventDispatcherService) {
+    public constructor() {
         super();
+        this.eventDispatcher = Injector.Get(EventDispatcherService);
     }
 
     /**
