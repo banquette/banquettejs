@@ -7,7 +7,7 @@
         "directory": "packages/utils-type"
     },
     "license": "Apache-2.0",
-    "main": "_bundles/index.cjs.prod.js",
+    "main": "_cjs/prod/index.js",
     "module": "index.js",
     "types": "index.d.ts",
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c",

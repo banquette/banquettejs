@@ -33,25 +33,29 @@ function createBuildVariants(config, type = null) {
     // CommonJS (for nodejs or bundlers)
     if (types.indexOf('cjs') > -1) {
         variants[`${config.package}-cjs-dev`] = {
+            preserveModules: true,
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
             entry: resolve(`packages/${config.package}/src/index.ts`),
-            outputFile: resolve(`dist/${config.package}/_bundles/index.cjs.dev.js`),
+            outputDir: `dist/${config.package}/_cjs/dev`,
             format: 'cjs',
             env: 'development',
             moduleName: config.module,
             externals,
+            exports: 'auto',
             banner: generateBanner(config.package, 'CommonJS')
         };
         variants[`${config.package}-cjs-prod`] = {
+            preserveModules: true,
             package: config.package,
             rootDir: resolve(`packages/${config.package}`),
             entry: resolve(`packages/${config.package}/src/index.ts`),
-            outputFile: resolve(`dist/${config.package}/_bundles/index.cjs.prod.js`),
+            outputDir: `dist/${config.package}/_cjs/prod`,
             format: 'cjs',
             env: 'production',
             moduleName: config.module,
             externals,
+            exports: 'auto',
             banner: generateBanner(config.package, 'CommonJS')
         };
     }
@@ -67,35 +71,9 @@ function createBuildVariants(config, type = null) {
             format: 'es',
             moduleName: config.module,
             externals,
-            banner: generateBanner(config.package, 'ES2015')
+            banner: generateBanner(config.package, 'ESM')
         };
     }
-
-    // UMD (for browser)
-    // if (types.indexOf('umd') > -1) {
-    //     variants[`${config.package}-umd-dev`] = {
-    //         package: config.package,
-    //         rootDir: resolve(`packages/${config.package}`),
-    //         entry: resolve(`packages/${config.package}/src/index.ts`),
-    //         outputFile: resolve(`packages/${config.package}/dist/index.umd.dev.js`),
-    //         format: 'umd',
-    //         env: 'development',
-    //         moduleName: config.module,
-    //         externals,
-    //         banner: generateBanner(config.package, 'UMD')
-    //     };
-    //     variants[`${config.package}-umd-prod`] = {
-    //         package: config.package,
-    //         rootDir: resolve(`packages/${config.package}`),
-    //         entry: resolve(`packages/${config.package}/src/index.ts`),
-    //         outputFile: resolve(`packages/${config.package}/dist/index.umd.prod.js`),
-    //         format: 'umd',
-    //         env: 'production',
-    //         moduleName: config.module,
-    //         externals,
-    //         banner: generateBanner(config.package, 'UMD')
-    //     };
-    // }
     return variants;
 }
 

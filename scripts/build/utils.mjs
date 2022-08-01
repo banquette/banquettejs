@@ -77,7 +77,6 @@ export function getRollupConfig(buildConfig) {
         },
         input: buildConfig.entry,
         external: (candidate) => {
-
             for (const pattern of externals) {
                 if (pattern instanceof RegExp && candidate.match(pattern)) {
                     return true;
@@ -93,6 +92,7 @@ export function getRollupConfig(buildConfig) {
             format: buildConfig.format,
             banner: buildConfig.banner,
             name: buildConfig.moduleName,
+            exports: buildConfig.exports,
             globals: Globals
         }
     };
@@ -150,9 +150,9 @@ function writeOutput(config, output) {
         const typesDir = path.join(baseDir, 'src');
         const testsDir = path.join(baseDir, '__tests__');
         fs.copySync(typesDir, baseDir);
-        fs.rmdirSync(typesDir, {recursive: true});
+        fs.rm(typesDir, {recursive: true});
         if (fs.pathExistsSync(testsDir)) {
-            fs.rmdirSync(testsDir, {recursive: true});
+            fs.rm(testsDir, {recursive: true});
         }
         const files = getAllFiles(path.resolve(__dirname, '../../', output.dir));
         for (let i = 0; i < files.length; ++i) {
@@ -169,6 +169,14 @@ function writeOutput(config, output) {
         const distDir = path.resolve(__dirname, `../../dist/${config._name}`);
         for (const file of ['package.json', 'tsconfig.json']) {
             fs.copySync(path.join(packageDir, file), path.join(distDir, file));
+        }
+    } else if (config.output.format === 'cjs') {
+        const fixImportsRegex = /require\(('|")@banquette\/([^\/]+)\//gm;
+        const files = getAllFiles(path.resolve(__dirname, '../../', output.dir));
+        for (let i = 0; i < files.length; ++i) {
+            let fcontent = fs.readFileSync(files[i]).toString();
+            fcontent = fcontent.replaceAll(fixImportsRegex, `require($1@banquette/$2/_cjs/${config._env === 'development' ? 'dev' : 'prod'}/`);
+            fs.writeFileSync(files[i], fcontent);
         }
     }
 }
@@ -229,9 +237,9 @@ export function cleanupBuilds(configs) {
         const packageName = config.package;
         if (packageName && cleaned.indexOf(packageName) < 0) {
             console.log(`${chalk.red('Cleaning')} builds of package ${chalk.blue(packageName)}.`);
-            const target = path.resolve(__dirname, `../../dist/${packageName}`);
+            const target = path.resolve(__dirname, `../../dist/${packageName}/esm`);
             if (fs.existsSync(target)) {
-                fs.rmdirSync(target, {recursive: true});
+                fs.rm(target, {recursive: true});
             }
             cleaned.push(packageName);
         }

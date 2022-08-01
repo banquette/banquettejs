@@ -7,12 +7,13 @@
         "directory": "packages/storage"
     },
     "license": "Apache-2.0",
-    "main": "_bundles/index.cjs.prod.js",
+    "main": "_cjs/prod/index.js",
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
         "@banquette/config": "^0.1.0",
         "@banquette/dependency-injection": "^0.1.0",
+        "@banquette/event": "^0.1.0",
         "@banquette/exception": "^0.1.0",
         "@banquette/utils-misc": "^0.1.0",
         "@banquette/utils-type": "^0.1.0"

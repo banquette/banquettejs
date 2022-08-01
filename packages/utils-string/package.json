@@ -7,7 +7,7 @@
         "directory": "packages/utils-string"
     },
     "license": "Apache-2.0",
-    "main": "_bundles/index.cjs.prod.js",
+    "main": "_cjs/prod/index.js",
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
