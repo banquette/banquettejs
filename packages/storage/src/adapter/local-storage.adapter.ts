@@ -1,6 +1,7 @@
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { StorageAdapterTag } from "../constant";
 import { AbstractAdapter } from "./abstract.adapter";
 import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";
@@ -24,16 +25,16 @@ export class LocalStorageAdapter extends AbstractAdapter implements SynchronousA
     /**
      * Get the value associated with the given key.
      */
-    public async get<T>(key: string, defaultValue: any = null): Promise<T|null> {
+    public async get<T, D = null>(key: string, defaultValue?: D): Promise<T|D> {
         return this.getSync(key, defaultValue);
     }
 
     /**
      * Get the value associated with the given key synchronously.
      */
-    public getSync<T>(key: string, defaultValue: any = null): T|null {
+    public getSync<T, D = null>(key: string, defaultValue?: D): T|D {
         const value: string|null = window.localStorage.getItem(key);
-        return value !== null ? this.decode(value) : defaultValue;
+        return value !== null ? this.decode(value) : (!isUndefined(defaultValue) ? defaultValue : (null as any));
     }
 
     /**
@@ -47,7 +48,9 @@ export class LocalStorageAdapter extends AbstractAdapter implements SynchronousA
      * Set the value for the given key synchronously.
      */
     public setSync(key: string, value: any): void {
+        const oldValue = this.getSync(key);
         window.localStorage.setItem(key, this.encode(value));
+        this.notifyKeyChange(key, value, oldValue);
     }
 
     /**
@@ -61,7 +64,9 @@ export class LocalStorageAdapter extends AbstractAdapter implements SynchronousA
      * Remove any value associated with this key synchronously.
      */
     public removeSync(key: string): void {
+        const oldValue = this.getSync(key);
         window.localStorage.removeItem(key);
+        this.notifyKeyChange(key, undefined, oldValue);
     }
 
     /**
@@ -76,6 +81,7 @@ export class LocalStorageAdapter extends AbstractAdapter implements SynchronousA
      */
     public clearSync(): void {
         window.localStorage.clear();
+        this.notifyClear();
     }
 
     /**

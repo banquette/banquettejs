@@ -1,8 +1,13 @@
+import { EventDispatcher } from "@banquette/event/event-dispatcher";
+import { UnsubscribeFunction } from "@banquette/event/type";
 import { ensureNumber } from "@banquette/utils-type/ensure-number";
 import { isBoolean } from "@banquette/utils-type/is-boolean";
 import { isNumber } from "@banquette/utils-type/is-number";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { StorageEvents } from "../constant";
+import { StorageClearEvent } from "../event/storage-clear.event";
+import { StorageKeyChangeEvent } from "../event/storage-key-change.event";
 import { AdapterInterface } from "./adapter.interface";
 
 const UndefinedSymbol = Symbol('undefined');
@@ -28,7 +33,7 @@ export abstract class AbstractAdapter implements AdapterInterface {
     /**
      * Get the value associated with the given key.
      */
-    public abstract get<T>(key: string, defaultValue?: any): Promise<T|null>;
+    public abstract get<T, D = null>(key: string, defaultValue?: D): Promise<T|D>;
 
     /**
      * Set the value for the given key.
@@ -59,6 +64,24 @@ export abstract class AbstractAdapter implements AdapterInterface {
      * So the storage can handle asynchronous tasks synchronously.
      */
     private virtualValues: Record<string, string|symbol> = {};
+
+    /**
+     * On demand dispatcher to only dispatch if there is a subscriber.
+     */
+    private _eventDispatcher: EventDispatcher|null = null;
+    private get eventDispatcher(): EventDispatcher {
+        if (this._eventDispatcher === null) {
+            this._eventDispatcher = new EventDispatcher();
+        }
+        return this._eventDispatcher;
+    }
+
+    /**
+     * Be notified when anything changes in the storage.
+     */
+    public onChange(callback: (event: StorageKeyChangeEvent|StorageClearEvent) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(StorageEvents.Change, callback);
+    }
 
     /**
      * Encode the value into a string holding the original type.
@@ -124,8 +147,8 @@ export abstract class AbstractAdapter implements AdapterInterface {
     }
 
     /**
-     * Mark a key as removed until the next js cycle so is any call trying the use the key
-     * in the interval time will fail to get the removed value.
+     * Mark a key as removed until the next js cycle so if a something try the use the key
+     * in the interval it will fail to get the removed value.
      */
     protected markAsRemoved(key: string): void {
         key = key.trim();
@@ -135,5 +158,23 @@ export abstract class AbstractAdapter implements AdapterInterface {
                 delete this.virtualValues[key];
             }
         });
+    }
+
+    /**
+     * Notify the outside world that a key has changed in the storage.
+     */
+    protected notifyKeyChange(key: string, newValue: any, oldValue: any): void {
+        if (this._eventDispatcher && newValue !== oldValue) {
+            this._eventDispatcher.dispatch(StorageEvents.Change, new StorageKeyChangeEvent(key, newValue, oldValue));
+        }
+    }
+
+    /**
+     * Notify the outside world that the storage has been cleared.
+     */
+    protected notifyClear(): void {
+        if (this._eventDispatcher) {
+            this._eventDispatcher.dispatch(StorageEvents.Change, new StorageClearEvent());
+        }
     }
 }

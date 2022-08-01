@@ -35,14 +35,14 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
     /**
      * Get the value associated with the given key.
      */
-    public async get<T>(key: string, defaultValue: any = null): Promise<T|null> {
+    public async get<T, D = null>(key: string, defaultValue?: D): Promise<T|D> {
         return this.getSync(key, defaultValue);
     }
 
     /**
      * Get the value associated with the given key synchronously.
      */
-    public getSync<T>(key: string, defaultValue: any = null): T | null {
+    public getSync<T, D = null>(key: string, defaultValue?: D): T|D {
         const value = '; ' + document.cookie;
         const parts: string[] = value.split('; ' + this.prefix + key + '=');
         if (parts.length === 2) {
@@ -53,7 +53,7 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
         if (!isUndefined(virtualValue)) {
             return this.decode(virtualValue);
         }
-        return defaultValue;
+        return !isUndefined(defaultValue) ? defaultValue : (null as any);
     }
 
     /**
@@ -67,12 +67,14 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      * Set the value for the given key synchronously.
      */
     public setSync(key: string, value: any): void {
+        const oldValue = this.getSync(key);
         const date = new Date();
         date.setTime(date.getTime() + (4 * 365 * 24 * 60 * 60 * 1000));
         const expires = '; expires=' + date.toUTCString();
         const encoded = this.encode(value);
         document.cookie = (this.prefix ? this.prefix : '') + key + '=' + this.encode(value)  + expires + '; path=/';
         this.setVirtual(key, encoded);
+        this.notifyKeyChange(key, value, oldValue);
     }
 
     /**
@@ -86,8 +88,10 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      * Remove any value associated with this key synchronously.
      */
     public removeSync(key: string): void {
+        const oldValue = this.getSync(key);
         document.cookie = this.prefix + key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         this.markAsRemoved(key);
+        this.notifyKeyChange(key, undefined, oldValue);
     }
 
     /**
@@ -105,6 +109,7 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
         for (const key of keys) {
             this.removeSync(key);
         }
+        this.notifyClear();
     }
 
     /**

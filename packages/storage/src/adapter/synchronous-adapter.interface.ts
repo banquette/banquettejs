@@ -3,7 +3,7 @@ export interface SynchronousAdapterInterface {
     /**
      * Get the value associated with the given key synchronously.
      */
-    getSync<T>(key: string, defaultValue?: any): T|null;
+    getSync<T, D = null>(key: string, defaultValue?: D): T|D;
 
     /**
      * Set a value synchronously.

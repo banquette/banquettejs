@@ -1,3 +1,6 @@
+import { UnsubscribeFunction } from "@banquette/event/type";
+import { StorageClearEvent } from "../event/storage-clear.event";
+import { StorageKeyChangeEvent } from "../event/storage-key-change.event";
 
 export interface AdapterInterface {
     /**
@@ -14,7 +17,7 @@ export interface AdapterInterface {
     /**
      * Get the value associated with the given key.
      */
-    get<T>(key: string, defaultValue?: any): Promise<T|null>;
+    get<T, D = null>(key: string, defaultValue?: D): Promise<T|D>;
 
     /**
      * Set the value for the given key.
@@ -40,4 +43,9 @@ export interface AdapterInterface {
      * Gets the list of all keys stored in the storage.
      */
     keys(): Promise<string[]>;
+
+    /**
+     * Subscribe to change notifications on the storage.
+     */
+    onChange(callback: (event: StorageKeyChangeEvent|StorageClearEvent) => void): UnsubscribeFunction;
 }
