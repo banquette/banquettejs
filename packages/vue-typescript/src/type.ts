@@ -61,5 +61,6 @@ export type DecoratedComponentInstance = ComponentPublicInstance & {
         type: VccOpts
         [COMPONENT_TS_INSTANCE]: DecoratedComponentInstance
     },
-    $resolvedParent: ComponentPublicInstance|null
+    $resolvedParent: ComponentPublicInstance|null,
+    $plugins: ComponentCustomProperties
 };

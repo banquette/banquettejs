@@ -193,6 +193,10 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
         // Retrieve the Typescript instance from the Vue object.
         const inst = this.$[COMPONENT_TS_INSTANCE];
 
+        // In the context of `beforeCreate`, "this" is the Vue instance.
+        // Keep a reference on it for closures below.
+        const that = this;
+
         // Assign the Vue object (this) into the instance so the proxy around
         // the component can use the proxified object.
         Object.defineProperty(inst, COMPONENT_VUE_INSTANCE, {
@@ -202,8 +206,56 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
             value: this
         });
 
-        defineGetter(inst, '$resolvedParent', () => {
-            const $parent = this.$parent;
+        /**
+         * Plugins are accessible from `this` on the component because it implements
+         * `ComponentCustomProperties`, but the typings doesn't work without redefining the class
+         * on the "project side" with what is missing.
+         *
+         * For example, to be able to do `this.$store` in a component, the user will have to
+         * redefine the `Vue` base class to declare this new property, as `ComponentCustomProperties` is
+         * empty when vue-typescript is built:
+         *
+         * ```
+         * import { Vue as VueBase } from '@banquette/vue-typescript';
+         * import { Store } from "vuex";
+         *
+         * export class Vue extends VueBase {
+         *     declare $store: Store<State>;
+         * }
+         * ```
+         * Now Typescript can see that `Vue` contains a variable `$store`.
+         *
+         * So to make it easier, a variable `$plugins` is added, that gives the exact same result.
+         * So `this.$store` is exactly the same as `this.$plugins.$store`.
+         *
+         * The difference is that Typescript accepts that `$plugins` implements `ComponentCustomProperties`
+         * with all its augmentations, so `$store` is available by simply doing:
+         *
+         * ```
+         * import { Store } from 'vuex';
+         *
+         * declare module '@vue/runtime-core' {
+         *     export interface ComponentCustomProperties {
+         *         $store: Store<State>;
+         *     }
+         * }
+         * ```
+         * That most libs do on their own. So there is nothing to do for the end user.
+         *
+         * So basically here, we simply alias `this` through `$plugins`, so the linter is happy.
+         *
+         * It's important to add `$plugins` on the Vue instance though, and not the TS instance,
+         * because all accesses for properties starting with a `$` are redirected to the Vue instance
+         * by the global proxy around the component, defined in `buildSetupMethod()`.
+         */
+        defineGetter(this, '$plugins', () => that);
+
+        /**
+         * Same goes for every other additional getter, they must be added to the Vue instance
+         * if their name starts with a `$`.
+         */
+        defineGetter(this, '$resolvedParent', () => {
+            const $parent = that.$parent;
             return $parent !== null ? maybeResolveTsInst($parent) : null;
         });
     };

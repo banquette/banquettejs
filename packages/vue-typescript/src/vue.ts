@@ -24,7 +24,7 @@ import { isInstanceOf } from "./utils/is-instance-of";
  */
 export abstract class Vue implements ComponentPublicInstance, ComponentCustomProperties {
     static [COMPONENT_CTOR]: any;
-    
+
     declare public $: ComponentInternalInstance & { type: any };
     declare public $attrs: Record<string, unknown>;
     declare public $data: any;
@@ -36,6 +36,7 @@ export abstract class Vue implements ComponentPublicInstance, ComponentCustomPro
     declare public $refs: Record<string, any>;
     declare public $slots: Slots;
     declare public $root: ComponentPublicInstance | null;
+    declare public $plugins: ComponentCustomProperties;
 
     // Fake implementation of the public attributes of the vue instance.
     // The real implementation will be swapped when the component is initialized if it extends this class.
