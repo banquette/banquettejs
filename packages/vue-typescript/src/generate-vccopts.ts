@@ -245,7 +245,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
          * So basically here, we simply alias `this` through `$plugins`, so the linter is happy.
          *
          * It's important to add `$plugins` on the Vue instance though, and not the TS instance,
-         * because all accesses for properties starting with a `$` are redirected to the Vue instance
+         * because all accesses to properties starting with a `$` are redirected to the Vue instance
          * by the global proxy around the component, defined in `buildSetupMethod()`.
          */
         defineGetter(this, '$plugins', () => that);
