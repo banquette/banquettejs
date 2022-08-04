@@ -3,7 +3,7 @@ import { ThenableInterface } from "./thenable.interface";
 /**
  * Executor callbacks types.
  */
-export type ResolveCallback<T> = (value: T | ThenableInterface<T>) => void;
+export type ResolveCallback<T> = (value?: T | ThenableInterface<T>) => void;
 export type RejectCallback = (reason?: any) => void;
 export type ProgressCallback = (value: any) => void;
 

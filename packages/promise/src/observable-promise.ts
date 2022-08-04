@@ -359,7 +359,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
     /**
      * Create a resolved promise.
      */
-    public static Resolve<T>(value: T | ThenableInterface<T>): ObservablePromise<T> {
+    public static Resolve<T>(value?: T | ThenableInterface<T>): ObservablePromise<T> {
         return new ObservablePromise<T>((resolve: ResolveCallback<T>) => {
             resolve(value);
         });
