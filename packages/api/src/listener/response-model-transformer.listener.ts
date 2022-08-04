@@ -11,6 +11,7 @@ import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { TransformService } from "@banquette/model/transformer/transform.service";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { ApiProcessorTag, ApiEvents } from "../constant";
 import { ApiResponseEvent } from "../event/api-response.event";
@@ -36,7 +37,7 @@ function onRequestSuccess(event: ApiResponseEvent) {
             event.httpEvent.response.result = transformResult.result;
         }
     };
-    const ctor = modelMetadata.resolveAlias(event.apiRequest.model);
+    const ctor = modelMetadata.resolveAlias(isArray(event.apiRequest.model) ? event.apiRequest.model[1] : event.apiRequest.model);
     const transformResult = transformService.transformInverse(responseBody, ctor, ApiTransformerSymbol);
     if (transformResult.promise !== null) {
         return transformResult.promise.then(handleResult);

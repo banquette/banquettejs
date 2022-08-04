@@ -2,10 +2,11 @@ import { AbstractRequestBuilder } from "@banquette/http/abstract-http-request.bu
 import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { ApiRequest } from "./api-request";
 import { ApiRequestFactory } from "./api-request.factory";
+import { ModelBidirectionalExtendedIdentifier } from "./type";
 
 export class ApiRequestBuilder extends AbstractRequestBuilder<ApiRequest> {
     private _endpoint: string|null = null;
-    private _model: ModelExtendedIdentifier|null = null;
+    private _model: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null = null;
 
     /**
      * Set the name of the endpoint.
@@ -18,7 +19,7 @@ export class ApiRequestBuilder extends AbstractRequestBuilder<ApiRequest> {
     /**
      * Set the model to use.
      */
-    public model(identifier: ModelExtendedIdentifier|null): ApiRequestBuilder {
+    public model(identifier: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null): ApiRequestBuilder {
         this._model = identifier;
         return this;
     }

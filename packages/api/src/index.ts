@@ -1,5 +1,6 @@
 
 export * from './constant';
+export * from './type';
 export * from './config';
 export * from './api.service';
 export * from './api-configuration.interface';

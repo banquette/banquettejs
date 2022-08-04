@@ -5,6 +5,7 @@ import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive } from "@banquette/utils-type/types";
 import { ApiEndpointOverride } from "./api-endpoint-override";
+import { ModelBidirectionalExtendedIdentifier } from "./type";
 
 export class ApiRequest {
     private static MaxId: number = 0;
@@ -17,9 +18,9 @@ export class ApiRequest {
     /**
      * Create a ApiRequest object.
      *
-     * @param model             A model identifier.
+     * @param model             A model identifier or a couple of identifiers to separate the request from the response.
      * @param endpoint          The name of an ApiEndpoint.
-     * @param url               Raw url to use instead of a endpoint.
+     * @param url               Raw url to use instead of an endpoint.
      * @param method            Http method.
      * @param params            Url parameters.
      * @param payload           Body of the request.
@@ -33,10 +34,10 @@ export class ApiRequest {
      * @param withCredentials   If true, cookies and auth headers are included in the request.
      * @param mimeType          MimeType of the payload.
      * @param tags              Tags that will be sent with emitted events.
-     * @param extras            Any additional data you want to associated with the request.
+     * @param extras            Any additional data you want to associate with the request.
      *                          This object will not be sent with the request.
      */
-    public constructor(public model: ModelExtendedIdentifier|null,
+    public constructor(public model: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null,
                        public endpoint: string|null,
                        public url: string|null,
                        public method?: HttpMethod,

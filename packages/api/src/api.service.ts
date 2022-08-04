@@ -15,6 +15,7 @@ import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isString } from "@banquette/utils-type/is-string";
@@ -34,6 +35,7 @@ import { ApiResponseEvent } from "./event/api-response.event";
 // Import built-in listeners
 import './listener/request-model-transformer.listener';
 import './listener/response-model-transformer.listener';
+import { ModelBidirectionalExtendedIdentifier } from "./type";
 
 @Service()
 export class ApiService {
@@ -84,7 +86,7 @@ export class ApiService {
      * Shorthand for a basic POST request.
      * Use `ApiService::build()` for more complex requests.
      */
-    public post<T>(endpoint: string, model?: ModelExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
+    public post<T>(endpoint: string, model?: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.POST)
             .endpoint(endpoint)
@@ -99,7 +101,7 @@ export class ApiService {
      * Shorthand for a basic PUT request.
      * Use `ApiService::build()` for more complex requests.
      */
-    public put<T>(endpoint: string, model?: ModelExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
+    public put<T>(endpoint: string, model?: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.PUT)
             .endpoint(endpoint)
@@ -114,7 +116,7 @@ export class ApiService {
      * Shorthand for a basic PATCH request.
      * Use `ApiService::build()` for more complex requests.
      */
-    public patch<T>(endpoint: string, model?: ModelExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
+    public patch<T>(endpoint: string, model?: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.PATCH)
             .endpoint(endpoint)
@@ -129,7 +131,7 @@ export class ApiService {
      * Shorthand for a basic DELETE request.
      * Use `ApiService::build()` for more complex requests.
      */
-    public delete<T>(endpoint: string, model?: ModelExtendedIdentifier|null, params?: Record<string, Primitive>): HttpResponse<T> {
+    public delete<T>(endpoint: string, model?: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null, params?: Record<string, Primitive>): HttpResponse<T> {
         return this.send(this.build()
             .method(HttpMethod.DELETE)
             .endpoint(endpoint)
@@ -142,9 +144,9 @@ export class ApiService {
     /**
      * Send an ApiRequest.
      */
-    public send<T>(endpoint: string, model?: ModelExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T>;
+    public send<T>(endpoint: string, model?: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T>;
     public send<T>(request: ApiRequest): HttpResponse<T>;
-    public send<T>(requestOrEndpoint: string|ApiRequest, model?: ModelExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
+    public send<T>(requestOrEndpoint: string|ApiRequest, model?: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null, payload?: any, params?: Record<string, Primitive>): HttpResponse<T> {
         let request: ApiRequest;
         if (isString(requestOrEndpoint)) {
             const builder = this.build();
@@ -160,7 +162,7 @@ export class ApiService {
         }
         let endpoint: ApiEndpoint|null = null;
         if (request.endpoint !== null) {
-            const modelCtor = request.model !== null ? this.modelMetadata.resolveAlias(request.model) : null;
+            const modelCtor = request.model !== null ? this.modelMetadata.resolveAlias(isArray(request.model) ? request.model[0] : request.model) : null;
             endpoint = this.endpointsStorage.getEndpoint(request.endpoint, modelCtor);
         }
         if (endpoint === null) {
