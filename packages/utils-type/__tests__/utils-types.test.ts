@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { ObservablePromise } from "@banquette/promise/observable-promise";
 import { noop } from "../src/utils";
 import { isPojo, isPrimitive, isPromiseLike, isObject, isUndefined } from "../src";
 
@@ -7,26 +8,27 @@ class Foo {}
 let currentTestingFunction: Function = noop;
 
 const candidateValues: Record<string, any> = {
-    '{}'                    : {},
-    'Object.create(null)'   : Object.create(null),
-    'function() {}'         : function () {},
-    '[]'                    : [],
-    'new Date()'            : new Date(),
-    'true'                  : true,
-    '"abc"'                 : "abc",
-    '123'                   : 123,
-    'RegExp'                : new RegExp(/.*/),
-    'null'                  : null,
-    'undefined'             : undefined,
-    'Object.create({})'     : Object.create({}),
-    'new Foo()'             : new Foo(),
-    '{constructor: Foo}'    : {constructor: Foo},
-    '{constructor: "Foo"}'  : {constructor: "Foo"},
-    '{ then: () => null }'  : { then: () => null },
-    '{ then: 2 }'           : { then: 2 },
-    'new Promise(...)'      : new Promise(() => {}),
-    'function in obj'       : {num: 2, str: 'string', func: () => 2},
-    'function in obj (deep)': {sub: {func: () => 2}}
+    '{}'                            : {},
+    'Object.create(null)'           : Object.create(null),
+    'function() {}'                 : function () {},
+    '[]'                            : [],
+    'new Date()'                    : new Date(),
+    'true'                          : true,
+    '"abc"'                         : "abc",
+    '123'                           : 123,
+    'RegExp'                        : new RegExp(/.*/),
+    'null'                          : null,
+    'undefined'                     : undefined,
+    'Object.create({})'             : Object.create({}),
+    'new Foo()'                     : new Foo(),
+    '{constructor: Foo}'            : {constructor: Foo},
+    '{constructor: "Foo"}'          : {constructor: "Foo"},
+    '{ then: () => null }'          : { then: () => null },
+    '{ then: 2 }'                   : { then: 2 },
+    'ObservablePromise.Resolve()'   : ObservablePromise.Resolve(),
+    'new Promise(...)'              : new Promise(() => {}),
+    'function in obj'               : {num: 2, str: 'string', func: () => 2},
+    'function in obj (deep)'        : {sub: {func: () => 2}}
 };
 
 function createTest(description: string, expected: boolean, ...args: any[]) {
@@ -50,51 +52,53 @@ function createTestSuite(testFunction: Function, tests: Record<string, boolean>)
 
 describe('isPromiseLike', () => {
     createTestSuite(isPromiseLike, {
-        '{}'                    : false,
-        'Object.create(null)'   : false,
-        'function() {}'         : false,
-        '[]'                    : false,
-        'new Date()'            : false,
-        'true'                  : false,
-        '"abc"'                 : false,
-        '123'                   : false,
-        'RegExp'                : false,
-        'null'                  : false,
-        'undefined'             : false,
-        'Object.create({})'     : false,
-        'new Foo()'             : false,
-        '{constructor: Foo}'    : false,
-        '{constructor: "Foo"}'  : false,
-        '{ then: () => null }'  : true,
-        '{ then: 2 }'           : false,
-        'new Promise(...)'      : true,
-        'function in obj'       : false,
-        'function in obj (deep)': false
+        '{}'                            : false,
+        'Object.create(null)'           : false,
+        'function() {}'                 : false,
+        '[]'                            : false,
+        'new Date()'                    : false,
+        'true'                          : false,
+        '"abc"'                         : false,
+        '123'                           : false,
+        'RegExp'                        : false,
+        'null'                          : false,
+        'undefined'                     : false,
+        'Object.create({})'             : false,
+        'new Foo()'                     : false,
+        '{constructor: Foo}'            : false,
+        '{constructor: "Foo"}'          : false,
+        '{ then: () => null }'          : false,
+        '{ then: 2 }'                   : false,
+        'ObservablePromise.Resolve()'   : true,
+        'new Promise(...)'              : true,
+        'function in obj'               : false,
+        'function in obj (deep)'        : false
     });
 });
 
 describe('isPojo', () => {
     createTestSuite(isPojo, {
-        '{}'                    : true,
-        'Object.create(null)'   : true,
-        'function() {}'         : false,
-        '[]'                    : false,
-        'new Date()'            : false,
-        'true'                  : false,
-        '"abc"'                 : false,
-        '123'                   : false,
-        'RegExp'                : false,
-        'null'                  : false,
-        'undefined'             : false,
-        'Object.create({})'     : false,
-        'new Foo()'             : false,
-        '{constructor: Foo}'    : false,
-        '{constructor: "Foo"}'  : true,
-        '{ then: () => null }'  : false,
-        '{ then: 2 }'           : true,
-        'new Promise(...)'      : false,
-        'function in obj'       : false,
-        'function in obj (deep)': false
+        '{}'                            : true,
+        'Object.create(null)'           : true,
+        'function() {}'                 : false,
+        '[]'                            : false,
+        'new Date()'                    : false,
+        'true'                          : false,
+        '"abc"'                         : false,
+        '123'                           : false,
+        'RegExp'                        : false,
+        'null'                          : false,
+        'undefined'                     : false,
+        'Object.create({})'             : false,
+        'new Foo()'                     : false,
+        '{constructor: Foo}'            : false,
+        '{constructor: "Foo"}'          : true,
+        '{ then: () => null }'          : false,
+        '{ then: 2 }'                   : true,
+        'ObservablePromise.Resolve()'   : false,
+        'new Promise(...)'              : false,
+        'function in obj'               : false,
+        'function in obj (deep)'        : false
     });
 });
 
