@@ -1,5 +1,5 @@
 import { noop } from "../utils-misc/src";
-import { isArray, ensureString } from "../utils-type/src";
+import { isObject, isArray, ensureString } from "../utils-type/src";
 
 let currentTestingFunction: Function = noop;
 
@@ -16,4 +16,13 @@ export function createGenericTestSuite(testFunction: Function, tests: Array<[any
             (expect(currentTestingFunction.apply(null, args)) as any)[method](testItem[1][0]);
         });
     }
+}
+
+export function removeFromObject(obj: any, keys: string[]) {
+    if (isObject(obj)) {
+        for (const k of keys) {
+            delete obj[k];
+        }
+    }
+    return obj;
 }

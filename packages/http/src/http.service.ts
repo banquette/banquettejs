@@ -319,7 +319,10 @@ export class HttpService {
             this.handleRequestFailure(queueRequest, new RequestCanceledException());
         });
         this.scheduleQueueForProcess();
-        this.eventDispatcher.dispatchWithErrorHandling(HttpEvents.RequestQueued, new RequestEvent(request), true, request.tags);
+        const dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HttpEvents.RequestQueued, new RequestEvent(request), true, request.tags);
+        if (dispatchResult.error) {
+            this.handleRequestFailure(queueRequest, ExceptionFactory.EnsureException(dispatchResult.errorDetail));
+        }
     }
 
     /**

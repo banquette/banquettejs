@@ -5,6 +5,7 @@ import { EventDispatcherService } from "@banquette/event/event-dispatcher.servic
 import { UsageException } from "@banquette/exception/usage.exception";
 import { ObservablePromise } from "@banquette/promise/observable-promise";
 import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc/timeout";
+import { removeFromObject } from "../../__tests__/utils";
 import {
     XhrAdapter,
     HttpConfigurationSymbol,
@@ -131,18 +132,15 @@ describe('check the HttpRequest objects created by shortcut methods', () => {
             return async () => {
                 const unsubscribe = eventDispatcher.subscribe(HttpEvents.RequestQueued, (event: RequestEvent) => {
                     unsubscribe();
-                    expect(event.request).toMatchObject(HttpRequestFactory.Create({
-                        method: HttpMethod.GET,
+                    expect(removeFromObject(event.request, ['id', 'cancelCallback'])).toMatchObject(removeFromObject(HttpRequestFactory.Create({
+                        method: method.toUpperCase() as HttpMethod,
                         url: '//test',
                         payload: null,
-                        responseType: ResponseTypeJson,
-                        headers: {'x-test': 'test'}
-                    }));
+                        responseType: ResponseTypeAutoDetect,
+                        params: {'foo': 'bar'}
+                    }), ['id', 'cancelCallback']));
                 });
-                try {
-                    await (http as any)[_method]('//test', {'x-test': 'test'}).promise;
-                } catch (e) {
-                }
+                await (http as any)[_method]('//test', {'foo': 'bar'}).promise;
             };
         })(method));
     }
@@ -152,16 +150,16 @@ describe('check the HttpRequest objects created by shortcut methods', () => {
             return async () => {
                 const unsubscribe = eventDispatcher.subscribe(HttpEvents.RequestQueued, (event: RequestEvent) => {
                     unsubscribe();
-                    expect(event.request).toMatchObject(HttpRequestFactory.Create({
+                    expect(removeFromObject(event.request, ['id', 'cancelCallback'])).toMatchObject(removeFromObject(HttpRequestFactory.Create({
                         method: _method.toUpperCase() as HttpMethod,
                         url: '//test',
                         payload: {value: 2},
-                        responseType: ResponseTypeJson,
-                        headers: {'x-test': 'test'}
-                    }));
+                        responseType: ResponseTypeAutoDetect,
+                        params: {'foo': 'bar'}
+                    }), ['id', 'cancelCallback']));
                 });
                 try {
-                    await (http as any)[_method]('//test', {value: 2}, {'x-test': 'test'}).promise;
+                    await (http as any)[_method]('//test', {value: 2}, {'foo': 'bar'}).promise;
                 } catch (e) { }
             };
         })(method));
