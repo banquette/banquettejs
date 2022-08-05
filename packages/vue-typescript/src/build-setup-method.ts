@@ -74,11 +74,11 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 ctor.prototype.render = noop;
             }
             inst = new Proxy(instantiate(ctor, data.component), {
-                get(target: any, p: string): any {
-                    if (p[0] === '$') {
-                        return inst[COMPONENT_VUE_INSTANCE][p] || target[p];
+                get(target: any, p: string, receiver: any): any {
+                    if (p[0] === '$' && inst[COMPONENT_VUE_INSTANCE][p]) {
+                        return inst[COMPONENT_VUE_INSTANCE][p];
                     }
-                    return target[p];
+                    return Reflect.get(target, p, receiver);
                 }
             });
             // Set the Vue object we have to ensure an object is always available,
