@@ -18,19 +18,19 @@ function onBeforeRequest(event: RequestEvent) {
         return;
     }
     event.stopPropagation();
-    if (isNullOrUndefined(event.request.payload)) {
+    if (!isNullOrUndefined(event.request.payload)) {
+        if (!isArray(event.request.payload) && !isObject(event.request.payload)) {
+            throw new UsageException('Invalid payload for JSON encoding. An object or array is expected.');
+        }
+        try {
+            event.request.payload = JSON.stringify(event.request.payload);
+        } catch (e) {
+            throw new UsageException('Failed to encode request payload to JSON.', ExceptionFactory.EnsureException(e));
+        }
+    } else {
         event.request.payload = '{}';
-        return ;
     }
-    if (!isArray(event.request.payload) && !isObject(event.request.payload)) {
-        throw new UsageException('Invalid payload for JSON encoding. An object or array is expected.');
-    }
-    try {
-        event.request.payload = JSON.stringify(event.request.payload);
-        event.request.headers.set('Content-Type', 'application/json');
-    } catch (e) {
-        throw new UsageException('Failed to encode request payload to JSON.', ExceptionFactory.EnsureException(e));
-    }
+    event.request.headers.set('Content-Type', 'application/json');
 }
 Injector.Get(EventDispatcherService).subscribe<RequestEvent>(
     HttpEvents.BeforeRequest,
