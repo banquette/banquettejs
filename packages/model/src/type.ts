@@ -1,3 +1,4 @@
+import { ModelBidirectionalExtendedIdentifier } from "@banquette/api/type";
 import { Constructor } from "@banquette/utils-type/types";
 
 /**
@@ -14,6 +15,12 @@ export type ModelIdentifier = Constructor;
  * Group any type of identifier acceptable for a model.
  */
 export type ModelExtendedIdentifier = ModelIdentifier | ModelAlias;
+
+/**
+ * Shorthand types.
+ */
+export type AnyModel = ModelExtendedIdentifier | ModelBidirectionalExtendedIdentifier;
+export type AnyModelOptional = AnyModel | null;
 
 /**
  * Custom models factory function.
