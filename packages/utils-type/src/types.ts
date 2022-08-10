@@ -83,3 +83,13 @@ export interface AnyObject {
     [key: string|number]: any;
     length?: never;
 }
+
+/**
+ * Gets the arguments types of a function.
+ */
+export type ArgumentTypes<T> = T extends (... args: infer U ) => infer R ? U: never;
+
+/**
+ * Replace the return type of a function by another while keeping its arguments intact.
+ */
+export type ReplaceReturnType<T, TNewReturn> = (...a: ArgumentTypes<T>) => TNewReturn;
