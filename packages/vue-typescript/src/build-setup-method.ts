@@ -295,8 +295,21 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             if (exposedName === false) {
                 continue ;
             }
-            // Special case for computed getters to avoid calling them.
-            if (!isUndefined(data.computed[exposedInstanceName]) && isGetter(ctor, exposedInstanceName)) {
+            // Check if the exposed property is not a getter, to avoid calling them by doing `inst[exposedInstanceName]`.
+            const descriptor = getPropertyDescriptor(ctor, exposedInstanceName);
+            if (descriptor && (descriptor.get || descriptor.set)) {
+                // If declared as a computed, no need to expose it again.
+                if (isUndefined(data.computed[exposedInstanceName])) {
+                    // If not, assign the getter and setter to using the descriptor to avoid calling the getter.
+                    ((getter: any, setter: any) => {
+                        Object.defineProperty(output, exposedName, {
+                            get: getter,
+                            set: setter,
+                            enumerable: true,
+                            configurable: true
+                        });
+                    })(descriptor.get, descriptor.set);
+                }
                 continue ;
             }
             // For methods
