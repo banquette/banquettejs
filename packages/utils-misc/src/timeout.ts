@@ -10,6 +10,6 @@ export async function waitForNextCycle(): Promise<void> {
  */
 export async function waitForDelay(duration: number): Promise<void> {
     return new Promise<void>((resolve) => {
-        window.setTimeout(resolve, duration);
+        setTimeout(resolve, duration);
     });
 }
