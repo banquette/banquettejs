@@ -3,6 +3,9 @@ export * from './fixed-digits';
 export * from './insert-in-string';
 export * from './is-empty-string';
 export * from './is-non-empty-string';
+export * from './utf8-size';
+export * from './php-serialize';
+export * from './php-unserialize';
 
 /**
  * Case
