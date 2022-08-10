@@ -23,6 +23,7 @@ import { areEqual } from "@banquette/utils-misc/are-equal";
 import { debounce } from "@banquette/utils-misc/debounce";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { extend } from "@banquette/utils-object/extend";
+import { filterWithMask } from "@banquette/utils-object/filter-with-mask";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
 import { isObject, isObjectLiteral } from "@banquette/utils-type/is-object";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
@@ -235,7 +236,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             try {
                 const result = steps[current++]();
                 if (isPromiseLike(result)) {
-                    result.then(() => loadNext()).catch((reason: any) => {
+                    result.then(() => loadNext(), (reason: any) => {
                         this.setError(ErrorType.Load, reason);
                     });
                 } else {
@@ -568,9 +569,8 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     // Make the controls concrete the the root value is set.
                     formTransformResult.result.getByPattern('**').markAsConcrete();
 
-                    // Remove undefined values to allow for partial pojo.
-                    const values = formTransformResult.result.value;
-                    Object.keys(values).forEach(key => values[key] === undefined && delete values[key]);
+                    // Ensure only the keys defined in `loadData` are kept from the output of the form.
+                    const values = filterWithMask(formTransformResult.result.value, this.loadData);
 
                     // Assign the result as default.
                     this.form.setDefaultValue(values);
