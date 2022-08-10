@@ -3,6 +3,7 @@ export * from './add-to-object-if-defined';
 export * from './compare-objects';
 export * from './are-objects-equal';
 export * from './extend';
+export * from './filter-with-mask';
 export * from './clone-deep';
 export * from './clone-deep-primitive';
 export * from './clone-object-with-mask';
