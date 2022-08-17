@@ -37,7 +37,7 @@ export class DispatchResult<T = any> {
      */
     public registerCall(call: DispatchCallInterface): void {
         if (isPromiseLike(call.result)) {
-            this.delayResponse(call.result);
+            this.delayResponse(call.result as Promise<DispatchResult>);
         } else {
             this.addResult(call.result);
         }
