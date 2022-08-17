@@ -318,7 +318,7 @@ describe('changed', () => {
         checkStates(form, {[BasicState.Changed]: true});
     });
 
-    test('not changed when a value deep in an object it set back to default value', () => {
+    test('still changed when a value deep in an object it set back to default value, the check is only made for primitive values.', () => {
         const control: FormControl = form.get('extras');
         (control.value as any).c[2].c3 = 'new';
         control.setValue(control.value);
@@ -328,8 +328,8 @@ describe('changed', () => {
         (control.value as any).c[2].c3 = 'c3';
         control.setValue(control.value);
 
-        checkStates(control, {[BasicState.Changed]: false});
-        checkStates(form, {[BasicState.Changed]: false});
+        checkStates(control, {[BasicState.Changed]: true});
+        checkStates(form, {[BasicState.Changed]: true});
     });
 });
 

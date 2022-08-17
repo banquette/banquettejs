@@ -286,10 +286,10 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
         this.forEach((child: FormComponentInterface, name: string) => {
             this.value[name] = child.value;
         }, this.foreachFilters[FilterGroup.UpdateValue]);
-        this.dispatch(FormEvents.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         if (this.parent !== null && !this.hasContext(CallContext.Parent)) {
             this.parent.updateValue();
         }
+        this.dispatch(FormEvents.ValueChanged, () => new ValueChangedFormEvent(this, oldValue, this.value));
         this.validateSelfIfStrategyMatches(ValidationStrategy.OnChange);
     }
 
