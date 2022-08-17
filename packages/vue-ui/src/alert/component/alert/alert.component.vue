@@ -61,8 +61,8 @@ export default class AlertComponent extends Vue {
     @Prop({type: [String, Boolean], default: undefined}) public transition!: string|false|undefined;
 
     /**
-     * Bi-directional binding for the visibility so the dialog can be closed
-     * both from the inside and outside of the component.
+     * Bidirectional binding for the visibility so the dialog can be closed
+     * both from the inside and outside the component.
      */
     @Computed()
     public get visible(): boolean {
