@@ -1,11 +1,10 @@
 import 'reflect-metadata';
 import { ObservablePromise } from "@banquette/promise/observable-promise";
-import { noop } from "../src/utils";
 import { isPojo, isPrimitive, isPromiseLike, isObject, isUndefined } from "../src";
 
 class Foo {}
 
-let currentTestingFunction: Function = noop;
+let currentTestingFunction: Function = () => {};
 
 const candidateValues: Record<string, any> = {
     '{}'                            : {},
