@@ -21,7 +21,8 @@ export * from './headless.interface';
  */
 export * from './form/form/headless-form-view.model';
 export * from './form/form/headless-form-view-data.interface';
-export * from './form/form/event/bind-model.event-arg';
+export * from './form/form/event/before-bind-model.event-arg';
+export * from './form/form/event/after-bind-model.event-arg';
 export * from './form/form/event/form-before-persist.event-arg';
 export * from './form/form/event/form-after-persist.event-arg';
 export * from './form/form/event/form-after-remote-persist.event-arg';

@@ -42,7 +42,8 @@ import {
     HeadlessFormViewModelEvents,
     ErrorTypeEventMap
 } from "./constant";
-import { BindModelEventArg } from "./event/bind-model.event-arg";
+import { AfterBindModelEventArg } from "./event/after-bind-model.event-arg";
+import { BeforeBindModelEventArg } from "./event/before-bind-model.event-arg";
 import { FormActionErrorEventArg } from "./event/form-action-error.event-arg";
 import { FormAfterPersistEventArg } from "./event/form-after-persist.event-arg";
 import { FormAfterRemotePersistEventArg } from "./event/form-after-remote-persist.event-arg";
@@ -459,10 +460,17 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     }
 
     /**
+     * Triggered when the model is about to be bound to the form.
+     */
+    public onBeforeBindModel(cb: (event: BeforeBindModelEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforeBindModel, cb);
+    }
+
+    /**
      * Triggered when the model has been bound to the form.
      */
-    public onBindModel(cb: (event: BindModelEventArg) => void): UnsubscribeFunction {
-        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BindModel, cb);
+    public onAfterBindModel(cb: (event: AfterBindModelEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.AfterBindModel, cb);
     }
 
     /**
@@ -504,11 +512,13 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     private bindModel(): void {
         if (this._modelType && !this.binder && this.modelInstance) {
+            this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeBindModel, new BeforeBindModelEventArg(this.modelInstance));
+
             const binder = Injector.Get(FormModelBinder);
             (this as Writeable<HeadlessFormViewModel>).modelInstance = binder.bind(this.modelInstance, this.form);
             (this as Writeable<HeadlessFormViewModel>).binder = binder;
 
-            this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BindModel, new BindModelEventArg(this.modelInstance, binder));
+            this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.AfterBindModel, new AfterBindModelEventArg(this.modelInstance, binder));
         }
     }
 
@@ -530,7 +540,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     throw new UsageException(baseError + ` An instance of "${String(this.modelType)}" is expected.`);
                 }
                 (this as Writeable<HeadlessFormViewModel>).modelInstance = response.result;
-                this.bindModel();
             } else if (isObject(response.result)) {
                 this.form.setDefaultValue(response.result);
             } else {
