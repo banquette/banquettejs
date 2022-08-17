@@ -1,6 +1,6 @@
 <div class="bt-popover-confirm" v-bt-bind-theme>
     <div class="slot-wrapper" @click.stop.prevent="showDropdown">
-        <slot></slot>
+        <slot :open="showDropdown"></slot>
     </div>
     <bt-dropdown class="bt-popover-confirm-dropdown" :visible="dropdownVisible" v-bind="$attrs">
         <div v-bt-click-outside="cancel" @click.stop>
