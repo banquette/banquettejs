@@ -1,5 +1,6 @@
 <div
     class="bt-button"
+    :data-is-disabled="disabled ? '' : null"
     v-bt-click-outside="{eventType: 'mousedown', callback: hideToggle, enabled: isToggleSlotVisible}"
     v-bt-bind-theme
 >
@@ -13,7 +14,7 @@
         :disabled="disabled ? '' : null"
         :data-active="active ? '' : null"
         :data-toggle-visible="isToggleSlotVisible ? '' : null"
-        @click="onClick($event)"
+        @click.stop="onClick($event)"
         @mousedown="toggle($event)"
         @focus="onFocus()"
         @blur="onBlur()"

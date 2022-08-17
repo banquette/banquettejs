@@ -19,7 +19,8 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-button',
     components: [ProgressCircularComponent],
-    directives: [ClickOutsideDirective, BindThemeDirective]
+    directives: [ClickOutsideDirective, BindThemeDirective],
+    emits: ['click']
 })
 export default class ButtonComponent extends Vue {
     /**
@@ -94,7 +95,7 @@ export default class ButtonComponent extends Vue {
     }
 
     /**
-     * Internal toggle status for the the "toggle" slot.
+     * Internal toggle status for the "toggle" slot.
      */
     @Ref() private toggledAttr: boolean = false;
 
@@ -107,9 +108,8 @@ export default class ButtonComponent extends Vue {
      * Show/hide the "toggle" slot (if defined).
      */
     @Expose() public onClick(event: UIEvent): void {
-        if (this.disabled) {
-            event.preventDefault();
-            event.stopPropagation();
+        if (!this.disabled) {
+            this.$emit('click', event);
         }
     }
 
