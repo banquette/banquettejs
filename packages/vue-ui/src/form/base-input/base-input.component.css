@@ -12,18 +12,20 @@
     --form-base-input-font-size: var(--bt-form-base-input-font-size, var(--bt-font-size-base));
     --form-base-input-font-weight: var(--bt-form-base-input-font-weight, var(--bt-font-weight-normal));
 
+    --form-base-input-border-radius: var(--bt-form-base-input-border-radius, var(--bt-border-radius-base));
+    --form-base-input-border-width: var(--bt-form-base-input-border-width, var(--bt-border-width-base));
+    --form-base-input-border-style: var(--bt-form-base-input-border-style, var(--bt-border-style-base));
+
     --form-base-input-border-color: var(--bt-form-base-input-border-color, var(--bt-color-gray-200));
+    --form-base-input-border-focus-width: var(--bt-form-base-input-border-focus-width, var(--form-base-input-border-width));
     --form-base-input-border-focus-color: var(--bt-form-base-input-border-focus-color, var(--bt-color-primary));
+    --form-base-input-border-error-width: var(--bt-form-base-input-border-error-width, var(--form-base-input-border-width));
     --form-base-input-border-error-color: var(--bt-form-base-input-border-error-color, var(--bt-color-red-500));
     --form-base-input-border-disabled-color: var(--bt-form-base-input-border-disabled-color, var(--bt-color-gray-200));
 
     --form-base-input-background-color: var(--bt-form-base-input-background-color, var(--bt-color-white));
     --form-base-input-background-disabled-color: var(--bt-form-base-input-background-disabled-color, var(--bt-color-gray-50));
     --form-base-input-addon-background-color: var(--bt-form-base-input-addon-background-color, var(--bt-color-gray-50));
-
-    --form-base-input-border-radius: var(--bt-form-base-input-border-radius, var(--bt-border-radius-base));
-    --form-base-input-border-width: var(--bt-form-base-input-border-width, var(--bt-border-width-base));
-    --form-base-input-border-style: var(--bt-form-base-input-border-style, var(--bt-border-style-base));
 
     --form-base-input-placeholder-x: var(--bt-form-base-input-placeholder-x, 0.8rem);
     --form-base-input-placeholder-y: var(--bt-form-base-input-placeholder-y, 0.75rem);
@@ -90,18 +92,18 @@
 
     &[data-has-after-addon] > .input-group .input {
         box-shadow:
-            1px 0 0 0 var(--form-base-input-border-color) inset,
-            0 1px 0 0 var(--form-base-input-border-color) inset,
-            0 -1px 0 0 var(--form-base-input-border-color) inset;
+            var(--form-base-input-border-width) 0 0 0 var(--form-base-input-border-color) inset,
+            0 var(--form-base-input-border-width) 0 0 var(--form-base-input-border-color) inset,
+            0 calc(var(--form-base-input-border-width) * -1) 0 0 var(--form-base-input-border-color) inset;
     }
 
     &[data-has-focus] {
         & > .input-group > .input {
             box-shadow:
-                1px 0 0 0 var(--form-base-input-border-focus-color) inset,
-                1px 0 0 0 var(--form-base-input-border-focus-color),
-                0 1px 0 0 var(--form-base-input-border-focus-color) inset,
-                0 -1px 0 0 var(--form-base-input-border-focus-color) inset;
+                var(--form-base-input-border-focus-width) 0 0 0 var(--form-base-input-border-focus-color) inset,
+                var(--form-base-input-border-focus-width) 0 0 0 var(--form-base-input-border-focus-color),
+                0 var(--form-base-input-border-focus-width) 0 0 var(--form-base-input-border-focus-color) inset,
+                0 calc(var(--form-base-input-border-focus-width) * -1) 0 0 var(--form-base-input-border-focus-color) inset;
             z-index: 2;
         }
 
@@ -110,7 +112,7 @@
         }
 
         &:not([data-has-after-addon]) > .input-group > .input {
-            box-shadow: 0 0 0 1px var(--form-base-input-border-focus-color) inset;
+            box-shadow: 0 0 0 var(--form-base-input-border-focus-width) var(--form-base-input-border-focus-color) inset;
         }
     }
 
@@ -191,16 +193,16 @@
     }
 
     &:not([data-has-after-addon]) > .input-group > .input {
-        box-shadow: 0 0 0 1px var(--form-base-input-border-color) inset;
+        box-shadow: 0 0 0 var(--form-base-input-border-width) var(--form-base-input-border-color) inset;
     }
 
     .before > .addon {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
         box-shadow:
-            1px 0 0 0 var(--form-base-input-border-color) inset,
-            0 1px 0 0 var(--form-base-input-border-color) inset,
-            0 -1px 0 0 var(--form-base-input-border-color) inset;
+            var(--form-base-input-border-width) 0 0 0 var(--form-base-input-border-color) inset,
+            0 var(--form-base-input-border-width) 0 0 var(--form-base-input-border-color) inset,
+            0 calc(var(--form-base-input-border-width) * -1) 0 0 var(--form-base-input-border-color) inset;
     }
 
     .after > .addon {
@@ -269,10 +271,10 @@
     &[data-has-error] {
         & > .input-group > .input {
             box-shadow:
-                1px 0 0 0 var(--form-base-input-border-error-color) inset,
-                1px 0 0 0 var(--form-base-input-border-error-color),
-                0 1px 0 0 var(--form-base-input-border-error-color) inset,
-                0 -1px 0 0 var(--form-base-input-border-error-color) inset;
+                var(--form-base-input-border-error-width) 0 0 0 var(--form-base-input-border-error-color) inset,
+                var(--form-base-input-border-error-width) 0 0 0 var(--form-base-input-border-error-color),
+                0 var(--form-base-input-border-error-width) 0 0 var(--form-base-input-border-error-color) inset,
+                0 calc(var(--form-base-input-border-error-width) * -1) 0 0 var(--form-base-input-border-error-color) inset;
             z-index: 1;
         }
 
@@ -286,7 +288,7 @@
         }
 
         &:not([data-has-after-addon]) > .input-group > .input {
-            box-shadow: 0 0 0 1px var(--form-base-input-border-error-color) inset;
+            box-shadow: 0 0 0 var(--form-base-input-border-error-width) var(--form-base-input-border-error-color) inset;
         }
     }
 

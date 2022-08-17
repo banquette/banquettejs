@@ -27,7 +27,9 @@
     --bt-form-base-input-font-weight: var(--bt-form-select-font-weight);
 
     --bt-form-base-input-border-color: var(--bt-form-select-border-color);
+    --bt-form-base-input-border-focus-width: var(--bt-form-text-border-focus-width);
     --bt-form-base-input-border-focus-color: var(--bt-form-select-border-focus-color);
+    --bt-form-base-input-border-error-width: var(--bt-form-text-border-error-width);
     --bt-form-base-input-border-error-color: var(--bt-form-select-border-error-color);
     --bt-form-base-input-border-disabled-color: var(--bt-form-select-border-disabled-color);
 
