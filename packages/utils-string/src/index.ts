@@ -6,6 +6,8 @@ export * from './is-non-empty-string';
 export * from './utf8-size';
 export * from './php-serialize';
 export * from './php-unserialize';
+export * from './json-decode';
+export * from './json-encode';
 
 /**
  * Case
