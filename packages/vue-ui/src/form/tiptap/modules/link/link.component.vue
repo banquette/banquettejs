@@ -10,15 +10,13 @@ import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { Url } from "@banquette/validation/type/url";
 import { IconMaterialLink } from "@banquette/vue-material-icons/link";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { ModuleInterface } from "../../../";
 import { EditorEvents } from "@tiptap/core/dist/packages/core/src/types";
 import { Link, LinkOptions } from "@tiptap/extension-link";
 import { Extensions } from "@tiptap/vue-3";
+import { ModuleInterface } from "../../../";
 import { ButtonComponent } from "../../../../button";
 import { DialogComponent } from "../../../../dialog";
 import { PopoverComponent } from "../../../../popover";
@@ -40,7 +38,6 @@ declare module '@banquette/vue-ui/form/tiptap' {
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-tiptap-link',
-    directives: [BindThemeDirective],
     components: [PopoverComponent, ButtonComponent, DialogComponent, IconMaterialLink]
 })
 export default class LinkComponent extends AbstractTiptapModule<ModuleInterface["link"]> {
@@ -53,10 +50,6 @@ export default class LinkComponent extends AbstractTiptapModule<ModuleInterface[
      * i18n configuration.
      */
     @Prop({type: Object, default: I18nDefaults}) public i18n!: I18nInterface;
-
-    @Computed() public get isFormValid(): boolean {
-        return this.form.valid;
-    }
 
     @Expose() public form!: FormGroupInterface;
     @Expose() public dialogVisible: boolean = false;
@@ -185,11 +178,11 @@ export default class LinkComponent extends AbstractTiptapModule<ModuleInterface[
 </script>
 <style src="./link.component.css" scoped></style>
 <template>
-    <div class="bt-form-tiptap-link" v-bt-bind-theme>
-        <bt-button class="toolbar-button" @click="showDialog()" :disabled="!enabled" :data-active="editor.isActive('link') ? '' : null" v-if="editor">
-            <i-material-link width="1em" height="0.75em" crop></i-material-link>
-            <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
-        </bt-button>
+    <bt-button class="toolbar-button" @click="showDialog()" :disabled="!enabled" :data-active="editor.isActive('link') ? '' : null" v-if="editor">
+        <i-material-link width="1em" crop></i-material-link>
+        <bt-popover :show-delay="500" :hide-delay="0" v-if="i18n.popover">{{ i18n.popover }}</bt-popover>
+    </bt-button>
+    <div class="bt-form-tiptap-link">
         <bt-dialog v-model="dialogVisible" :teleport="null" destroy-on-close>
             <template #header>{{ i18n.dialogTitle }}</template>
             <template #footer="{close}">
@@ -198,7 +191,7 @@ export default class LinkComponent extends AbstractTiptapModule<ModuleInterface[
                 </div>
                 <div class="buttons">
                     <bt-button class="cancel" :variant="variants.dialogCancelButton" @click="close()">{{ i18n.cancelButton }}</bt-button>
-                    <bt-button class="validate" :variant="variants.dialogConfirmButton" :disabled="!isFormValid" @click="apply() && close()">{{ i18n.confirmButton }}</bt-button>
+                    <bt-button class="validate" :variant="variants.dialogConfirmButton" :disabled="!form.valid" @click="apply() && close()">{{ i18n.confirmButton }}</bt-button>
                 </div>
             </template>
 
