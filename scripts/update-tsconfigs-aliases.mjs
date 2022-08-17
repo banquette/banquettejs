@@ -40,7 +40,7 @@ for (const packageName of packages) {
                 if (ignoredPackages.indexOf(subPackageName) > -1) {
                     continue ;
                 }
-                config.compilerOptions.paths[`@banquette/${subPackageName}/*`] = [`packages/${subPackageName}/src/*`];
+                config.compilerOptions.paths[`@banquette/${subPackageName}/*`] = [`./packages/${subPackageName}/src/*`];
             }
         }
         console.log(`Update ${chalk.cyan('tsconfig.json')} of package ${chalk.blue(packageName)}.`);

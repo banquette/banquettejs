@@ -5,49 +5,53 @@
         "declarationDir": "../../dist",
         "rootDir": "..",
         "paths": {
-            "@banquette/api/*": ["packages/api/src/*"],
-            "@banquette/config/*": ["packages/config/src/*"],
+            "@banquette/api/*": ["./packages/api/src/*"],
+            "@banquette/config/*": ["./packages/config/src/*"],
             "@banquette/dependency-injection/*": [
-                "packages/dependency-injection/src/*"
+                "./packages/dependency-injection/src/*"
             ],
-            "@banquette/dom-modules/*": ["packages/dom-modules/src/*"],
-            "@banquette/event/*": ["packages/event/src/*"],
-            "@banquette/exception/*": ["packages/exception/src/*"],
-            "@banquette/fingerprint/*": ["packages/fingerprint/src/*"],
-            "@banquette/form/*": ["packages/form/src/*"],
-            "@banquette/http/*": ["packages/http/src/*"],
-            "@banquette/inversify/*": ["packages/inversify/src/*"],
-            "@banquette/log/*": ["packages/log/src/*"],
-            "@banquette/model/*": ["packages/model/src/*"],
-            "@banquette/model-form/*": ["packages/model-form/src/*"],
+            "@banquette/dom-modules/*": ["./packages/dom-modules/src/*"],
+            "@banquette/event/*": ["./packages/event/src/*"],
+            "@banquette/exception/*": ["./packages/exception/src/*"],
+            "@banquette/fingerprint/*": ["./packages/fingerprint/src/*"],
+            "@banquette/form/*": ["./packages/form/src/*"],
+            "@banquette/http/*": ["./packages/http/src/*"],
+            "@banquette/inversify/*": ["./packages/inversify/src/*"],
+            "@banquette/log/*": ["./packages/log/src/*"],
+            "@banquette/model/*": ["./packages/model/src/*"],
+            "@banquette/model-form/*": ["./packages/model-form/src/*"],
             "@banquette/model-validation/*": [
-                "packages/model-validation/src/*"
+                "./packages/model-validation/src/*"
             ],
-            "@banquette/object-observer/*": ["packages/object-observer/src/*"],
-            "@banquette/promise/*": ["packages/promise/src/*"],
-            "@banquette/storage/*": ["packages/storage/src/*"],
-            "@banquette/utils-array/*": ["packages/utils-array/src/*"],
-            "@banquette/utils-crypto/*": ["packages/utils-crypto/src/*"],
-            "@banquette/utils-date/*": ["packages/utils-date/src/*"],
-            "@banquette/utils-dom/*": ["packages/utils-dom/src/*"],
-            "@banquette/utils-easing/*": ["packages/utils-easing/src/*"],
-            "@banquette/utils-glob/*": ["packages/utils-glob/src/*"],
-            "@banquette/utils-misc/*": ["packages/utils-misc/src/*"],
-            "@banquette/utils-object/*": ["packages/utils-object/src/*"],
-            "@banquette/utils-random/*": ["packages/utils-random/src/*"],
+            "@banquette/object-observer/*": [
+                "./packages/object-observer/src/*"
+            ],
+            "@banquette/promise/*": ["./packages/promise/src/*"],
+            "@banquette/storage/*": ["./packages/storage/src/*"],
+            "@banquette/utils-array/*": ["./packages/utils-array/src/*"],
+            "@banquette/utils-crypto/*": ["./packages/utils-crypto/src/*"],
+            "@banquette/utils-date/*": ["./packages/utils-date/src/*"],
+            "@banquette/utils-dom/*": ["./packages/utils-dom/src/*"],
+            "@banquette/utils-easing/*": ["./packages/utils-easing/src/*"],
+            "@banquette/utils-glob/*": ["./packages/utils-glob/src/*"],
+            "@banquette/utils-misc/*": ["./packages/utils-misc/src/*"],
+            "@banquette/utils-object/*": ["./packages/utils-object/src/*"],
+            "@banquette/utils-random/*": ["./packages/utils-random/src/*"],
             "@banquette/utils-reflection/*": [
-                "packages/utils-reflection/src/*"
+                "./packages/utils-reflection/src/*"
             ],
-            "@banquette/utils-string/*": ["packages/utils-string/src/*"],
-            "@banquette/utils-type/*": ["packages/utils-type/src/*"],
-            "@banquette/validation/*": ["packages/validation/src/*"],
-            "@banquette/vue-dom-module/*": ["packages/vue-dom-module/src/*"],
+            "@banquette/utils-string/*": ["./packages/utils-string/src/*"],
+            "@banquette/utils-type/*": ["./packages/utils-type/src/*"],
+            "@banquette/validation/*": ["./packages/validation/src/*"],
+            "@banquette/vue-dom-module/*": ["./packages/vue-dom-module/src/*"],
             "@banquette/vue-material-icons/*": [
-                "packages/vue-material-icons/src/*"
+                "./packages/vue-material-icons/src/*"
             ],
-            "@banquette/vue-remix-icons/*": ["packages/vue-remix-icons/src/*"],
-            "@banquette/vue-typescript/*": ["packages/vue-typescript/src/*"],
-            "@banquette/vue-ui/*": ["packages/vue-ui/src/*"]
+            "@banquette/vue-remix-icons/*": [
+                "./packages/vue-remix-icons/src/*"
+            ],
+            "@banquette/vue-typescript/*": ["./packages/vue-typescript/src/*"],
+            "@banquette/vue-ui/*": ["./packages/vue-ui/src/*"]
         }
     },
     "exclude": []
