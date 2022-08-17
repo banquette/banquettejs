@@ -56,7 +56,6 @@ import { getPropertyDescriptor } from "./utils/get-property-descriptor";
 import { isDecoratedComponentConstructor } from "./utils/guards";
 import { instantiate } from "./utils/instantiate";
 import { isFunctionGetterSafe } from "./utils/is-function-getter-safe";
-import { isGetter } from "./utils/is-getter";
 import { resolveImportPublicName } from "./utils/resolve-import-public-name";
 
 export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
