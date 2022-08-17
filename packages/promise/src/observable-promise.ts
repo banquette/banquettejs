@@ -196,7 +196,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      */
     public timeout(delay: number): ObservablePromiseInterface<CompleteT> {
         return new ObservablePromise((resolve: ResolveCallback<any>, reject: RejectCallback, progress: ProgressCallback) => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 if (this.isPending()) {
                     this.reject(new TimeoutException());
                 }
@@ -283,7 +283,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      * Set the result value of the promise, and its definitive status.
      */
     private settle(result: any, status: PromiseStatus): void {
-        window.setTimeout(() => {
+        setTimeout(() => {
             if (status === PromiseStatus.Pending) {
                 throw new UsageException('You can\'t set the pending status.');
             }
@@ -444,7 +444,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
      */
     public static ResolveAfterDelay<T = any>(delay: number, value?: T): ObservablePromise<T> {
         return new ObservablePromise<T>((resolve: ResolveCallback<T>) => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 resolve(value as T);
             }, delay);
         });
@@ -469,7 +469,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                 if (delta >= delay) {
                     forward(type, result);
                 } else {
-                    window.setTimeout(() => {
+                    setTimeout(() => {
                         forward(type, result);
                     }, delay - delta);
                 }
