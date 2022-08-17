@@ -6,10 +6,3 @@ export function getSymbolDescription(symbol: symbol): string {
     const names = regExp.exec(symbol.toString()) || [];
     return names[1];
 }
-
-/**
- * Dummy function doing nothing.
- */
-export function noop() {
-    // Do nothing.
-}
