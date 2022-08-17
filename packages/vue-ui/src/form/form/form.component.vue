@@ -9,7 +9,8 @@ import { HttpMethod } from "@banquette/http/constants";
 import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
-import { BindModelEventArg } from "@banquette/ui/form/form/event/bind-model.event-arg";
+import { AfterBindModelEventArg } from "@banquette/ui/form/form/event/after-bind-model.event-arg";
+import { BeforeBindModelEventArg } from "@banquette/ui/form/form/event/before-bind-model.event-arg";
 import { FormActionErrorEventArg } from "@banquette/ui/form/form/event/form-action-error.event-arg";
 import { FormAfterPersistEventArg } from "@banquette/ui/form/form/event/form-after-persist.event-arg";
 import { FormAfterRemotePersistEventArg } from "@banquette/ui/form/form/event/form-after-remote-persist.event-arg";
@@ -39,7 +40,8 @@ import { FormViewDataInterface } from "./form-view-data.interface";
         'before-validate',
         'validate-success',
         'validate-error',
-        'bind-model',
+        'before-bind-model',
+        'after-bind-model',
         'update:disabled'
     ]
 })
@@ -189,10 +191,15 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.$emit('validate-error', event);
             this.onValidateError(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.onBindModel((event: BindModelEventArg) => {
-            this.$emit('bind-model', event);
+        this.unsubscribeFunctions.push(this.vm.onBeforeBindModel((event: BeforeBindModelEventArg) => {
+            this.$emit('before-bind-model', event);
             this.v.model = event.model as ModelType;
-            this.onBindModel(event);
+            this.onBeforeBindModel(event);
+        }));
+        this.unsubscribeFunctions.push(this.vm.onAfterBindModel((event: AfterBindModelEventArg) => {
+            this.$emit('after-bind-model', event);
+            this.v.model = event.model as ModelType;
+            this.onAfterBindModel(event);
         }));
     }
 
@@ -230,7 +237,8 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
     /* virtual */ protected onBeforeValidate(event: EventArg): void {}
     /* virtual */ protected onValidateSuccess(event: EventArg): void {}
     /* virtual */ protected onValidateError(event: FormActionErrorEventArg): void {}
-    /* virtual */ protected onBindModel(event: BindModelEventArg): void {}
+    /* virtual */ protected onBeforeBindModel(event: BeforeBindModelEventArg): void {}
+    /* virtual */ protected onAfterBindModel(event: AfterBindModelEventArg): void {}
 
     /**
      * Force the update of the view.
