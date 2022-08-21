@@ -13,7 +13,6 @@ import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { anyToTsInst } from "@banquette/vue-typescript/utils/converters";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { PopoverConfigurationInterface } from "./popover-configuration.interface";
 
@@ -258,9 +257,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     protected updateStickToOptions(): void {
         const targetsCandidates = (isString(this.target) ? this.target.split(',') : ensureArray(this.target)).map((i) => trim(i));
         if (!targetsCandidates.length && this.component.$el && this.component.$el.parentElement instanceof Element) {
-            // Try to see if the parent element is a component.
-            // If so, use its root as it's probably want to end-user wanted.
-            const component = anyToTsInst(this.component.$el.parentElement);
+            const component = this.component.$el.parentElement;
             if (component && component.$el) {
                 this.targets = [component.$el];
             } else {

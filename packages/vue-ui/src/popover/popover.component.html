@@ -1,4 +1,8 @@
 <bt-client-only>
+    <!--
+    "bt-teleport" is used to workaround the issue #6347 where directives inside a teleport are not unmounted properly.
+    @see https://github.com/vuejs/core/issues/6347
+    -->
     <bt-teleport :to="teleportTarget" :disabled="!teleportTarget">
         <div
             ref="popover"
@@ -8,7 +12,7 @@
             v-bt-bind-theme
             v-bt-stick-to="config.stickToOptions"
         >
-            <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave" @enter="onEnter()" @after-enter="updated()">
+            <Transition :name="transition !== false ? transition : undefined" :css="transition !== false" @after-leave="onAfterLeave()" @enter="onEnter()" @after-enter="updated()">
                 <div v-show="isVisible" class="inner-wrapper">
                     <template v-if="renderHidden || isVisible || shouldRender">
                         <div role="tooltip" class="content" v-if="!config.allowHtml || hasNonEmptySlot('default')">
