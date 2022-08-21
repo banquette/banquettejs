@@ -1,6 +1,6 @@
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
-import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { trim } from "@banquette/utils-string/format/trim";
 import { isFunction } from "@banquette/utils-type/is-function";
@@ -62,7 +62,7 @@ export class StickToDirective {
         this.el = el;
         this.bindings = bindings;
         const newOptions = this.resolveOptions(bindings);
-        if (!areObjectsEqual(this.options || {}, newOptions)) {
+        if (!areEqual(this.options || {}, newOptions)) {
             this.options = newOptions;
             bindings.value.forceUpdate = proxy(this.forceUpdate, this);
             this.doUpdate();
