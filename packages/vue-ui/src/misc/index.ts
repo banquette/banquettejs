@@ -1,5 +1,6 @@
 
 export * from './call';
+export * from './conditional-wrapper';
 export * from './remote';
 export * from './teleport';
 export * from './click-outside.directive';
