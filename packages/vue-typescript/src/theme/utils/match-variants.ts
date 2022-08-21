@@ -13,8 +13,8 @@ import { splitVariantString } from "./split-variant-string";
 function matchVariantSelector(selector: VariantSelectorCandidateInterface,
                               expectedVariants: string[],
                               actualVariants: string[],
-                              expectedProps: Record<string, Primitive|PropCallback>,
-                              expectedAttrs: Record<string, Primitive|AttrCallback>,
+                              expectedProps: Record<string, Primitive|PropCallback>|null,
+                              expectedAttrs: Record<string, Primitive|AttrCallback>|null,
                               componentInst: any): boolean {
 
     // Variant
@@ -25,19 +25,21 @@ function matchVariantSelector(selector: VariantSelectorCandidateInterface,
     }
 
     // Props
-    for (const key of Object.keys(expectedProps)) {
-        const candidate = expectedProps[key];
-        if (isFunction(candidate)) {
-            if (!candidate(componentInst[key])) {
+    if (expectedProps !== null) {
+        for (const key of Object.keys(expectedProps)) {
+            const candidate = expectedProps[key];
+            if (isFunction(candidate)) {
+                if (!candidate(componentInst[key])) {
+                    return false;
+                }
+            } else if (expectedProps[key] !== componentInst[key]) {
                 return false;
             }
-        } else if (expectedProps[key] !== componentInst[key]) {
-            return false;
         }
     }
 
     // Attrs
-    if (Object.keys(expectedAttrs).length > 0 && componentInst.$el) {
+    if (expectedAttrs !== null && componentInst.$el) {
         const $el = componentInst.$el;
         for (const key of Object.keys(expectedAttrs)) {
             const candidate = expectedAttrs[key];

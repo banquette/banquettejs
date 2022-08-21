@@ -26,7 +26,7 @@ interface ComponentVariants {
 }
 
 export class VueTheme {
-    private static ActiveStyleElements: HTMLStyleElement[] = [];
+    private static ActiveWildcardStyleElements: HTMLStyleElement[] = [];
 
     /**
      * Unique identifier that will be used to inject styles.
@@ -145,6 +145,7 @@ export class VueTheme {
         if (!isBrowser()) {
             return ;
         }
+        let tmpIdentifier = [];
         for (const componentName of Object.keys(this.variants)) {
             let componentStyles = '';
             const component = this.variants[componentName];
@@ -170,6 +171,7 @@ export class VueTheme {
                 }
                 const cssVarsKeys = Object.keys(variant.cssVarsMap);
                 if (cssVarsKeys.length > 0) {
+                    tmpIdentifier.push(variant.theme.id);
                     variantStyles += `.${variant.theme.id} [data-${variant.uid}]` + (variant.scopeId !== null ? `[${variant.scopeId}]` : '');
                     variantStyles += " {\n";
                     for (const key of cssVarsKeys) {
@@ -192,21 +194,34 @@ export class VueTheme {
                     const style = document.createElement('style');
                     style.setAttribute('type', 'text/css');
                     component.styleElement = style;
-                    if (this.name !== ThemeWildcard) {
-                        VueTheme.ActiveStyleElements.push(style);
-                    }
-                    if (this.name === ThemeWildcard && VueTheme.ActiveStyleElements.length && VueTheme.ActiveStyleElements[0].parentNode) {
-                        VueTheme.ActiveStyleElements[0].parentNode.insertBefore(style, VueTheme.ActiveStyleElements[0]);
+
+                    const l = VueTheme.ActiveWildcardStyleElements.length;
+                    if (l && VueTheme.ActiveWildcardStyleElements[l - 1].parentNode && VueTheme.ActiveWildcardStyleElements[l - 1].nextSibling) {
+                        VueTheme.ActiveWildcardStyleElements[l - 1].parentNode!.insertBefore(style, VueTheme.ActiveWildcardStyleElements[l - 1].nextSibling);
                     } else {
-                        document.head.appendChild(style);
+                        let headChildren = Array.from(document.head.children), i;
+                        for (i = 0; i < headChildren.length; ++i) {
+                            if (headChildren[i].tagName.toLowerCase() === 'style') {
+                                document.head.insertBefore(style, headChildren[i]);
+                                break;
+                            }
+                        }
+                        if (i >= headChildren.length) {
+                            document.head.appendChild(style);
+                        }
+                    }
+                    if (this.name === ThemeWildcard) {
+                        VueTheme.ActiveWildcardStyleElements.push(style);
                     }
                 }
                 component.styleElement.innerHTML = componentStyles;
             } else if (component.styleElement !== null) {
-                for (let i = 0; this.name !== ThemeWildcard && i < VueTheme.ActiveStyleElements.length; ++i) {
-                    if (VueTheme.ActiveStyleElements[i] === component.styleElement) {
-                        VueTheme.ActiveStyleElements.splice(i, 1);
-                        break ;
+                if (this.name === ThemeWildcard) {
+                    for (let i = 0; i < VueTheme.ActiveWildcardStyleElements.length; ++i) {
+                        if (VueTheme.ActiveWildcardStyleElements[i] === component.styleElement) {
+                            VueTheme.ActiveWildcardStyleElements.splice(i, 1);
+                            break;
+                        }
                     }
                 }
                 component.styleElement.remove();

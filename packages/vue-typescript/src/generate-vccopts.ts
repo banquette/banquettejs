@@ -250,6 +250,21 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
          */
         defineGetter(this, '$plugins', () => that);
 
+        defineGetter(inst, '$', () => this.$);
+        defineGetter(inst, '$props', () => this.$props);
+        defineGetter(inst, '$attrs', () => this.$attrs);
+        defineGetter(inst, '$slots', () => this.$slots);
+        defineGetter(inst, '$emit', () => this.$emit);
+        defineGetter(inst, '$data', () => this.$data);
+        defineGetter(inst, '$el', () => this.$el);
+        defineGetter(inst, '$options', () => this.$options);
+        defineGetter(inst, '$refs', () => this.$refs);
+        defineGetter(inst, '$root', () => this.$root);
+        defineGetter(inst, '$forceUpdate', () => this.$forceUpdate);
+        defineGetter(inst, '$nextTick', () => this.$nextTick);
+        defineGetter(inst, '$watch', () => this.$watch);
+        defineGetter(inst, '$parent', () => this.$parent);
+
         /**
          * Same goes for every other additional getter, they must be added to the Vue instance
          * if their name starts with a `$`.

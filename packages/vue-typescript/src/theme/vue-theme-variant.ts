@@ -7,7 +7,6 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive, Writeable } from "@banquette/utils-type/types";
 import { VarsMapInterface, ThemeableMetadata } from "../decorator/themeable.decorator";
-import { getActiveComponentsCount } from "../utils/components-count";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { Vue } from "../vue";
 import { ThemesEvents, PropCallback } from "./constant";
@@ -46,6 +45,11 @@ export class VueThemeVariant {
      * Key/value pair holding propsMap values.
      */
     public readonly propsMap: Record<string, Primitive|PropCallback> = {};
+
+    /**
+     * Shortcut for `Object.keys(this.propsMap)`.
+     */
+    public readonly propsKeys: string[] = [];
 
     /**
      * Ids of other variants to apply when the variant matches.
@@ -188,6 +192,7 @@ export class VueThemeVariant {
      */
     public props(map: Record<string, Primitive|PropCallback>): VueThemeVariant {
         Object.assign(this.propsMap, map);
+        (this as Writeable<VueThemeVariant>).propsKeys = Object.keys(this.propsMap);
         this.scheduleChangeNotification();
         return this;
     }
@@ -197,6 +202,7 @@ export class VueThemeVariant {
      */
     public clearProps(): VueThemeVariant {
         (this as Writeable<VueThemeVariant>).propsMap = {};
+        (this as Writeable<VueThemeVariant>).propsKeys = [];
         this.scheduleChangeNotification();
         return this;
     }
@@ -240,7 +246,7 @@ export class VueThemeVariant {
     private scheduleChangeNotification = (() => {
         let scheduled = false;
         return (): void => {
-            if (scheduled || !getActiveComponentsCount()) {
+            if (scheduled) {
                 return;
             }
             scheduled = true;

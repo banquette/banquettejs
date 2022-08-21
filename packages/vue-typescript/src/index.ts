@@ -37,4 +37,4 @@ export * from './theme/bind-theme.directive';
 export * from './utils/guards';
 export * from './utils/converters';
 export * from './utils/is-instance-of';
-export { getActiveComponentsCount } from './utils/components-count';
+export * from './utils/components-count';

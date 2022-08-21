@@ -84,9 +84,8 @@ function defineProxy(ctor: Constructor, options: DirectiveDecoratorOptions, hook
 }
 
 /**
- * Define a class as a Vue component.
- * You must put this on every class you want to be used like a Vue component.
- * The component will automatically be registered into the VueBuilder in the specified groups.
+ * Define a class as a Vue directive.
+ * Each usage of the directive will have its own Typescript instance.
  */
 export function Directive(name: string): any;
 export function Directive(options: Partial<DirectiveDecoratorOptions>): any;

@@ -1,5 +1,5 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
-import { h, SetupContext, renderSlot, ComponentPublicInstance } from "vue";
+import { h, renderSlot } from "vue";
 import { Component } from "../decorator/component.decorator";
 import { Prop } from "../decorator/prop.decorator";
 import { Render } from "../decorator/render.decorator";
@@ -20,7 +20,7 @@ export class ThemeComponent extends Vue {
     private unsubscribe: UnsubscribeFunction|null = null;
 
     @Render()
-    public render(component: ComponentPublicInstance, context: SetupContext): any {
+    public render(context: any): any {
         const attrs = {class: 'bt-theme'};
 
         if (this.themeInUse !== this.name) {
@@ -48,7 +48,7 @@ export class ThemeComponent extends Vue {
                 }
             }
         }
-        return h('div', attrs, renderSlot(context.slots, 'default'));
+        return h('div', attrs, renderSlot(context.$slots, 'default'));
     }
 
     @Watch('name')

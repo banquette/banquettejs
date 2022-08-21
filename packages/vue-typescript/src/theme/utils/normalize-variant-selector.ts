@@ -18,36 +18,43 @@ export function normalizeVariantSelector(selectors: VariantSelector|VariantSelec
         if (isString(selector)) {
             selector = {variant: selector};
         }
-        const normalizedSelector: VariantSelectorCandidateInterface = {variants: [], props: {}, attrs: {}, parents: []};
+        const normalizedSelector: VariantSelectorCandidateInterface = {variants: [], props: null, attrs: null, parents: []};
 
         // Variant
         if (!isUndefined(selector.variant)) {
             normalizedSelector.variants = selector.variant.split(' ').map((i) => trim(i)).filter((i) => i.length > 0).sort();
             if (normalizedSelector.variants.length > 0) {
-                output.identifier += '#variant:string:' + normalizedSelector.variants.join(' ');
+                output.identifier += '#_v:s:' + normalizedSelector.variants.join(' ');
             }
         }
 
         // Props
         if (!isUndefined(selector.props)) {
             const keys = Object.keys(selector.props).sort();
+
+            if (normalizedSelector.props === null) {
+                normalizedSelector.props = {};
+            }
             for (const key of keys) {
                 let value = trim(String(selector.props[key]));
                 if (key === 'variant') {
                     value = value.split(' ').map((i) => trim(i)).sort().join(' ');
                 }
                 normalizedSelector.props[key] = selector.props[key];
-                output.identifier += '#' + key + ':' + typeof(selector.props[key]) + ':' + value;
+                output.identifier += '#' + key + ':' + String(typeof(selector.props[key]))[0] + ':' + value;
             }
         }
 
         // Attrs
         if (!isUndefined(selector.attrs)) {
             const keys = Object.keys(selector.attrs).sort();
+            if (normalizedSelector.attrs === null) {
+                normalizedSelector.attrs = {};
+            }
             for (const key of keys) {
                 let value = trim(String(selector.attrs[key]));
                 normalizedSelector.attrs[key] = selector.attrs[key];
-                output.identifier += '#attr:' + key + ':' + typeof(selector.attrs[key]) + ':' + value;
+                output.identifier += '#_a:' + key + ':' + String(typeof(selector.attrs[key])) + ':' + value;
             }
         }
 
@@ -62,7 +69,7 @@ export function normalizeVariantSelector(selectors: VariantSelector|VariantSelec
                 const candidateSelector = normalizedParent.candidates[0];
                 candidateSelector.name = parent.name;
                 normalizedSelector.parents.push(candidateSelector);
-                output.identifier += '#parent:' + candidateSelector.name + ':' + normalizedParent.identifier;
+                output.identifier += '#_p:' + candidateSelector.name + ':' + normalizedParent.identifier;
             }
         }
         output.candidates.push(normalizedSelector);
