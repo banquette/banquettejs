@@ -1,5 +1,5 @@
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { throttle } from "@banquette/utils-misc/throttle";
-import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback } from "@banquette/utils-type/types";
 
@@ -229,7 +229,7 @@ class VueDebugOverlay {
      * Check what keys are pressed and apply the corresponding action.
      */
     private applyKeyboardActions(): boolean {
-        if (areObjectsEqual(this.pressedKeys, ['Control', 'D', 'Shift'])) {
+        if (areEqual(this.pressedKeys, ['Control', 'D', 'Shift'])) {
             if (!this.enabled) {
                 document.body.append(this.menuElement);
                 this.enabled = true;
