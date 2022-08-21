@@ -1,21 +1,27 @@
-import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
-import { isArray } from "@banquette/utils-type/is-array";
 import { isObjectLiteral } from "@banquette/utils-type/is-object";
+import { isArray } from "@banquette/utils-type/is-array";
 
 /**
  * Test if two values are strictly equal, no matter their type.
  */
 export function areEqual(a: any, b: any): boolean {
-    const ta: string = a === null ? 'null' : typeof(a);
-    const tb: string = b === null ? 'null' : typeof(b);
+    const ta: string = a === null ? 'null' : typeof (a);
+    const tb: string = b === null ? 'null' : typeof (b);
     if (ta !== tb) {
         return false;
     }
-    if (ta === 'undefined' || ta === 'null') {
-        return true;
+    if (ta !== 'object' || (!isArray(a) && !isObjectLiteral(a)) || (!isArray(b) && !isObjectLiteral(b))) {
+        return a === b;
     }
-    if (ta === 'object' && (isArray(a) || isObjectLiteral(a)) && (isArray(b) || isObjectLiteral(b))) {
-        return areObjectsEqual(a, b);
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length) {
+        return false;
     }
-    return a === b;
+    for (const key of aKeys) {
+        if (!areEqual(a[key], b[key])) {
+            return false;
+        }
+    }
+    return true;
 }

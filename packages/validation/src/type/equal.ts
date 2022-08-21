@@ -1,4 +1,4 @@
-import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { ensureSameType } from "@banquette/utils-type/ensure-same-type";
 import { isObject } from "@banquette/utils-type/is-object";
 import { SYNC_TAG } from "../constant";
@@ -17,7 +17,7 @@ export function Equal(value: any, strict: boolean = true, options: ValidatorOpti
     return createValidator({
         validate: (context: ValidationContextInterface): ValidationResult => {
             if (isObject(value)) {
-                if (context.value === null || !isObject(context.value) || !areObjectsEqual(value, context.value)) {
+                if (context.value === null || !isObject(context.value) || !areEqual(value, context.value)) {
                     context.result.addViolation(finalOptions.type, finalOptions.message);
                 }
             } else if ((strict && value !== context.value) || (!strict && ensureSameType(context.value, value) !== value)) {

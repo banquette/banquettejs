@@ -1,6 +1,6 @@
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
 import { UnsubscribeFunction } from "@banquette/event/type";
-import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { flattenObject } from "@banquette/utils-object/flatten-object";
@@ -157,7 +157,7 @@ export class FilteringModule implements ModuleInterface {
      */
     private notifyChange(): void {
         const exported = this.getActiveFilters();
-        if (!areObjectsEqual(exported, this.lastNotifiedFilters)) {
+        if (!areEqual(exported, this.lastNotifiedFilters)) {
             this.changed = true;
             this.lastNotifiedFilters = exported;
             this.eventDispatcher.dispatch(FilteringEvents.Changed);

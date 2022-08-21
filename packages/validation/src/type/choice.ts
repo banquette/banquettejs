@@ -1,4 +1,4 @@
-import { areObjectsEqual } from "@banquette/utils-object/are-objects-equal";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { isObject } from "@banquette/utils-type/is-object";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
@@ -18,7 +18,7 @@ export function Choice(choices: any[], options: ValidatorOptionsInterface|string
             if (isObject(context.value)) {
                 let i;
                 for (i = 0; i < choices.length; ++i) {
-                    if (isObject(choices[i]) && areObjectsEqual(choices[i], context.value)) {
+                    if (isObject(choices[i]) && areEqual(choices[i], context.value)) {
                         break ;
                     }
                 }
