@@ -761,10 +761,11 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                         originChoices.grouped[item.group] = [];
                     }
                     originChoices.grouped[item.group].push(item);
+                    this.inlinedChoices.push(originChoices.grouped[item.group][originChoices.grouped[item.group].length - 1]); // Assign it from `originChoices` so if there is a proxy it's conserved.
                 } else {
                     originChoices.standalone.push(item);
+                    this.inlinedChoices.push(originChoices.standalone[originChoices.standalone.length - 1]); // Assign it from `originChoices` so if there is a proxy it's conserved.
                 }
-                this.inlinedChoices.push(item);
                 identifiers.push(item.identifier);
                 if (!item.disabled && item.visible) {
                     this.noChoiceAvailable = false;
