@@ -123,7 +123,7 @@ describe('ValueChanged', () => {
         expect(source).toStrictEqual(control);
     });
 
-    test('doesn\'t trigger when the new value is a primitive and is the same as the current value', () => {
+    test('doesn\'t trigger when the value does not change', () => {
         const control = form.get('username');
         const changes: any[] = [];
         const defaultValue = control.value;
@@ -132,30 +132,28 @@ describe('ValueChanged', () => {
         });
 
         // First change
-        control.setValue('new'); // Here a change is detected because the new value is a primitive.
-        control.setValue('new'); // No change here, same value as above
+        control.setValue('new');
+        control.setValue('new');
 
         // Second change
-        control.setValue({test: 2}); // A change is detected because the value is not a primitive
-        control.setValue({test: 2}); // A change is detected because the value is not a primitive
+        control.setValue({test: 2});
+        control.setValue({test: 2});
 
         // Third change
         const foo1 = new Foo();
-        control.setValue(foo1); // A change is detected because the value is not a primitive
+        control.setValue(foo1);
 
         // Fourth change
         const foo2 = new Foo();
-        control.setValue(foo2); // A change is detected because the value is not a primitive
-        control.setValue(foo2); // A change is detected because the value is not a primitive
+        control.setValue(foo2);
+        control.setValue(foo2);
 
-        expect(changes.length).toEqual(6);
+        expect(changes.length).toEqual(4);
         expect(areEqual([
             [defaultValue, 'new'],
             ['new', {test: 2}],
-            [{test: 2}, {test: 2}],
             [{test: 2}, foo1],
-            [foo1, foo2],
-            [foo2, foo2],
+            [foo1, foo2]
         ], changes)).toEqual(true);
     });
 
