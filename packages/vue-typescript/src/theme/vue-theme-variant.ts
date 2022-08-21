@@ -71,6 +71,12 @@ export class VueThemeVariant {
      */
     public readonly configuration!: ThemeableMetadata;
 
+    /**
+     * Define the priority of the variant relative to the other variants of the theme.
+     * The higher the priority, the latest the variant will be processed, thus overriding previous variants.
+     */
+    public readonly priorityNumber: number = 0;
+
     public constructor(public readonly theme: VueTheme,
                        public readonly selector: NormalizedVariantSelectorInterface,
                        private eventDispatcher: EventDispatcher) {
@@ -217,6 +223,15 @@ export class VueThemeVariant {
     }
 
     /**
+     * Set the variant's priority.
+     */
+    public priority(priority: number): VueThemeVariant {
+        (this as Writeable<VueThemeVariant>).priorityNumber = priority;
+        this.eventDispatcher.dispatch(ThemesEvents.VariantPriorityChanged, new ThemeVariantEvent(this));
+        return this;
+    }
+
+    /**
      * Mark the variant as used.
      */
     public use(component: Vue, configuration: ThemeableMetadata): void {
@@ -238,6 +253,13 @@ export class VueThemeVariant {
      */
     public onUse(cb: (event: ThemeVariantEvent) => any): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(ThemesEvents.VariantUsed, cb);
+    }
+
+    /**
+     * Be notified when the priority of the variant is modified.
+     */
+    public onPriorityChange(cb: (event: ThemeVariantEvent) => any): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(ThemesEvents.VariantPriorityChanged, cb);
     }
 
     /**

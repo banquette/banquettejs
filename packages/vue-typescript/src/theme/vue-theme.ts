@@ -18,10 +18,12 @@ interface VariantItem {
     variant: VueThemeVariant;
     onChangeUnsubscribeFn: UnsubscribeFunction;
     onUseUnsubscribeFn: UnsubscribeFunction;
+    onPriorityChangedUnsubscribeFn: UnsubscribeFunction;
 }
 
 interface ComponentVariants {
-    variants: Record<string, VariantItem>;
+    variants: VueThemeVariant[];
+    variantsIndex: Record<string, VariantItem>;
     styleElement: HTMLStyleElement|null;
 }
 
@@ -54,7 +56,7 @@ export class VueTheme {
      * Get all variants of a component.
      */
     public getVariants(componentName: string): VueThemeVariant[] {
-        return !isUndefined(this.variants[componentName]) ? Object.values(this.variants[componentName].variants).map((i) => i.variant) : [];
+        return !isUndefined(this.variants[componentName]) ? Object.values(this.variants[componentName].variantsIndex).map((i) => i.variant) : [];
     }
 
     /**
@@ -64,15 +66,15 @@ export class VueTheme {
         const normalizedVariantSelector = normalizeVariantSelector(selector);
         const variantId = normalizedVariantSelector.identifier;
         if (isUndefined(this.variants[componentName])) {
-            this.variants[componentName] = {variants: {}, styleElement: null};
+            this.variants[componentName] = {variants: [], variantsIndex: {}, styleElement: null};
         }
-        if (isUndefined(this.variants[componentName].variants[variantId])) {
+        if (isUndefined(this.variants[componentName].variantsIndex[variantId])) {
             const variant = new VueThemeVariant(this, normalizedVariantSelector, this.eventDispatcher);
-            this.variants[componentName].variants[variantId] = {
+            this.variants[componentName].variantsIndex[variantId] = {
                 variant,
                 onUseUnsubscribeFn: variant.onUse((event: ThemeVariantEvent) => {
                     if (event.variant === variant) {
-                        this.variants[componentName].variants[variantId].onUseUnsubscribeFn();
+                        this.variants[componentName].variantsIndex[variantId].onUseUnsubscribeFn();
                         this.injectInDOM();
                     }
                 }),
@@ -81,9 +83,15 @@ export class VueTheme {
                         this.injectInDOM();
                     }
                 }),
+                onPriorityChangedUnsubscribeFn: variant.onPriorityChange(() => {
+                    this.variants[componentName].variants = this.variants[componentName].variants.sort((a: VueThemeVariant, b: VueThemeVariant) => {
+                        return a.priorityNumber - b.priorityNumber;
+                    });
+                }),
             };
+            this.variants[componentName].variants.push(variant);
         }
-        return this.variants[componentName].variants[variantId].variant;
+        return this.variants[componentName].variantsIndex[variantId].variant;
     }
 
     /**
@@ -91,10 +99,15 @@ export class VueTheme {
      */
     public removeVariant(selector: VariantSelector|VariantSelector[], componentName: string): void {
         const variantId = normalizeVariantSelector(selector).identifier;
-        if (!isUndefined(this.variants[componentName]) && !isUndefined(this.variants[componentName].variants[variantId])) {
-            this.variants[componentName].variants[variantId].onUseUnsubscribeFn();
-            this.variants[componentName].variants[variantId].onChangeUnsubscribeFn();
-            delete this.variants[componentName].variants[variantId];
+        if (!isUndefined(this.variants[componentName]) && !isUndefined(this.variants[componentName].variantsIndex[variantId])) {
+            this.variants[componentName].variantsIndex[variantId].onUseUnsubscribeFn();
+            this.variants[componentName].variantsIndex[variantId].onChangeUnsubscribeFn();
+            const variantInstance = this.variants[componentName].variantsIndex[variantId];
+            const pos = this.variants[componentName].variants.indexOf(variantInstance.variant);
+            if (pos > -1) {
+                this.variants[componentName].variants.splice(pos, 1);
+            }
+            delete this.variants[componentName].variantsIndex[variantId];
         }
     }
 
@@ -149,8 +162,7 @@ export class VueTheme {
         for (const componentName of Object.keys(this.variants)) {
             let componentStyles = '';
             const component = this.variants[componentName];
-            for (const variantName of Object.keys(component.variants)) {
-                const variant = component.variants[variantName].variant;
+            for (const variant of component.variants) {
                 if (!variant.used) {
                     continue;
                 }

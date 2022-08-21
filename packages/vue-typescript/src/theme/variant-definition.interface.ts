@@ -37,4 +37,10 @@ export interface VariantDefinitionInterface {
      * Raw css override.
      */
     cssCode?: string;
+
+    /**
+     * Define the priority of the variant relative to the other variants of the theme.
+     * The higher the priority, the latest the variant will be processed, thus overriding variants with lower priority.
+     */
+    priority?: number;
 }

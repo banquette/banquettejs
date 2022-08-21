@@ -24,7 +24,13 @@ export const ThemesEvents = {
     /**
      * Triggered when a value is marked as used by a component.
      */
-    VariantUsed: Symbol('variant-used')
+    VariantUsed: Symbol('variant-used'),
+
+    /**
+     * Triggered when the priority of a variant has been explicitly set,
+     * so the theme can update its variants ordering.
+     */
+    VariantPriorityChanged: Symbol('variant-priority-changed')
 }
 
 /**
