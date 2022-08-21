@@ -166,7 +166,7 @@ export default class TreeComponent extends Vue {
     }
 
     @Render()
-    public render(component: ComponentPublicInstance, context: SetupContext) {
+    public render(context: any) {
         const theme = resolveDirective("bt-bind-theme") as any;
         const childNodes: VNode[] = [];
         if (this.showRoot) {
@@ -182,7 +182,7 @@ export default class TreeComponent extends Vue {
         );
     }
 
-    private renderNode(context: SetupContext, node: Node, slotName: string = 'node', level = 0): VNode {
+    private renderNode(context: any, node: Node, slotName: string = 'node', level = 0): VNode {
         const that = this;
         const collapsable = h(CollapsableComponent, {
             modelValue: !node.expanded,
@@ -192,7 +192,7 @@ export default class TreeComponent extends Vue {
         }, {
             title: () => {
                 const titleNodes = [
-                    renderSlot(context.slots, slotName, {
+                    renderSlot(context.$slots, slotName, {
                         node: node,
                         toggle: () => this.vm.toggleNode(node),
                         expand: () => this.vm.expandNode(node),
