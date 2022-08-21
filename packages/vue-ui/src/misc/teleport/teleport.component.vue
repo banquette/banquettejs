@@ -1,8 +1,10 @@
 <script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
+import { VNodeChild } from "@vue/runtime-core";
+import { Teleport, openBlock, createElementBlock, createBlock, createElementVNode, renderSlot } from "vue";
 
 @Component('bt-teleport')
 export default class TeleportComponent extends Vue {
@@ -12,10 +14,22 @@ export default class TeleportComponent extends Vue {
      * Required. Specify target container.
      * Can either be a selector or an actual element.
      */
-    @Prop({type: [Object, String]}) public to!: string|HTMLElement
+    @Prop({type: [Object, String], default: null}) public to!: string|HTMLElement|null;
     @Prop({type: Boolean, default: false, required: true}) public disabled!: boolean;
 
-    @Expose() public wrapperId: string = '__bt-teleport-' + TeleportComponent.MaxId++;
+    private wrapperId: string = '__bt-teleport-' + TeleportComponent.MaxId++;
+
+    @Render() public render(context: any): VNodeChild {
+        if (this.disabled || !this.to) {
+            return renderSlot(context.$slots, 'default');
+        }
+        return (openBlock(), createElementBlock('div', {id: this.wrapperId}, [
+            (openBlock(), createBlock(Teleport as any, {to: context.to}, [
+                createElementVNode('div', {'data-teleported-from': this.wrapperId }, [
+                    renderSlot(context.$slots, 'default')
+                ], 8, ['data-teleported-from'])
+            ], 8, ['to']))
+        ], 8, ['id']));
+    }
 }
 </script>
-<template src="./teleport.component.html" ></template>
