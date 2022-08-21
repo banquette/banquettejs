@@ -1,8 +1,8 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { UsageException } from "@banquette/exception/usage.exception";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { isPrimitive } from "@banquette/utils-type/is-primitive";
 import { Writeable, GenericCallback } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { AbstractFormComponent } from "./abstract-form-component";
@@ -75,9 +75,8 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
         let locked: boolean = false;
         return (value: any): void => {
             try {
-                const isValuePrimitive = isPrimitive(value);
-                if (locked || (isValuePrimitive && value === this.lastValue)) {
-                    return ;
+                if (locked || areEqual(this.lastValue, value)) {
+                    return;
                 }
                 locked = true;
                 const beforeValueChangeEvent = new BeforeValueChangeFormEvent(this, this.lastValue, value);
@@ -88,7 +87,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                     });
                     return;
                 }
-                if (!isValuePrimitive || value !== beforeValueChangeEvent.newValue) {
+                if (!areEqual(beforeValueChangeEvent.newValue, value)) {
                     this.viewModels.forEach((vm) => {
                         vm.setValue(beforeValueChangeEvent.newValue);
                     });
@@ -104,7 +103,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                     }
                 });
                 this.markBasicState(BasicState.Dirty);
-                if (!isValuePrimitive || value !== this.defaultValue) {
+                if (!areEqual(this.defaultValue, value)) {
                     this.markBasicState(BasicState.Changed);
                 } else {
                     this.unmarkBasicState(BasicState.Changed);
