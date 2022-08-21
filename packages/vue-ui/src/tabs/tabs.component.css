@@ -19,7 +19,8 @@
     --tabs-indicator-focus-transition-duration: var(--bt-tabs-indicator-focus-transition-duration, 0.3s);
 
     --tabs-content-background: var(--bt-tabs-content-background, none);
-    --tabs-content-padding: var(--bt-tabs-content-padding, 1rem);
+    --tabs-content-padding: var(--bt-tabs-content-padding, 1em);
+    --tabs-toggles-padding: var(--bt-tabs-toggles-padding, 0 1em);
 }
 
 .bt-tabs {
@@ -35,6 +36,7 @@
         font-weight: var(--tabs-font-weight);
         color: var(--tabs-text-color);
         background: var(--tabs-background-color);
+        padding: var(--tabs-toggles-padding);
 
         & > .focus-indicator {
             position: absolute;
@@ -102,7 +104,7 @@
     }
 
     & > .content {
-        padding: var(--tabs-content-padding) 0 0 0;
+        padding: var(--tabs-content-padding);
         background: var(--tabs-content-background);
         flex-grow: 1;
     }
@@ -151,10 +153,6 @@
                 transform: translateX(var(--tabs-separator-border-width));
             }
         }
-
-        & > .content {
-            padding: 0 0 0 var(--tabs-content-padding);
-        }
     }
 
     &[data-direction="right"] {
@@ -174,10 +172,6 @@
                 left: 0;
                 transform: translateX(calc(var(--tabs-separator-border-width) * -1));
             }
-        }
-
-        & > .content {
-            padding: 0 var(--tabs-content-padding) 0 0;
         }
     }
 }

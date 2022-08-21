@@ -17,6 +17,7 @@ export const ThemeConfiguration = {
 
             contentBackground: '@-content-background',
             contentPadding: '@-content-padding',
+            togglesPadding: '@-toggles-padding',
 
             textFocusTransitionDuration: '@-text-focus-transition-duration',
             indicatorFocusTransitionDuration: '@-indicator-focus-transition-duration'
