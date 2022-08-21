@@ -91,9 +91,9 @@ export class EventDispatcher implements EventDispatcherInterface {
         const result = new DispatchResult<T>();
         let index = -1;
 
-        const next = () => {
+        const next = (): boolean => {
             if (++index >= subscribers.length) {
-                return ;
+                return false;
             }
             const subscriber = subscribers[index];
             if (index > 0 && e.propagationStopped) {
@@ -117,20 +117,23 @@ export class EventDispatcher implements EventDispatcherInterface {
                         // and we don't want to continue if one of the subscriber fails.
                         // If the promise rejects, the result will fail and nothing else will happen.
                         result.localPromise.then(next);
-                    } else {
-                        next();
+                        return false;
                     }
+                    return true;
                 } catch (e) {
                     // dispatch() must never throw, so if an exception is thrown,
                     // we capture it and set the result on error.
                     // The end user can then decide to throw the error stored in "errorDetails" if they want to.
                     result.fail(e);
+                    return false;
                 }
-            } else {
-                next();
             }
+            return true;
         };
-        next();
+        let cont = true;
+        while (cont) {
+            cont = next();
+        }
         return result;
     }
 
