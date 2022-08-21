@@ -64,7 +64,7 @@ export default class ChoiceComponent extends Vue {
      * Vue lifecycle hook.
      */
     public unmounted(): void {
-        if (this.internalChoice === null && this.choice !== null) {
+        if (this.internalChoice === null && this.choice !== null && this.parent && this.parent.vm) {
             this.parent.vm.removeChoice(this.choice);
         }
     }
@@ -207,13 +207,31 @@ export default class ChoiceComponent extends Vue {
     /**
      * Scroll the choice into the view.
      */
-    private scrollIntoView(): void {
-        if (!this.choice) {
-            return ;
-        }
-        // this.$el may be a comment for a frame until the `v-if` on the root node resolves.
-        if (!isUndefined(this.$el.scrollIntoView)) {
-            this.$el.scrollIntoView({block: 'nearest', inline: 'start'});
-        }
-    }
+    private scrollIntoView = (() => {
+        let tries = 0;
+        let timer: number|null = null;
+        const tryToScroll = () => {
+            // Test if the element or one of its parent has a display: none
+            // @see https://stackoverflow.com/a/53068496
+            if (!!this.$el.offsetParent) {
+                const ph = this.$el.parentNode.offsetHeight;
+                const ch = this.$el.offsetHeight;
+                this.$el.parentNode.scrollTop = this.$el.offsetTop - ((ph / 2) - (ch / 2));
+                if (timer) {
+                    window.clearTimeout(timer);
+                }
+                timer = null;
+            } else if (tries < 20) {
+                timer = window.setTimeout(tryToScroll);
+                ++tries;
+            }
+        };
+        return (): void => {
+            if (timer !== null || !this.choice || isUndefined(this.$el.scrollIntoView)) {
+                return;
+            }
+            tries = 0;
+            tryToScroll();
+        };
+    })();
 }
