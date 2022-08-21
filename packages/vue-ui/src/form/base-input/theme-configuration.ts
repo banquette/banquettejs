@@ -1,40 +1,40 @@
 
 export const BaseVars = {
-    fontFamily              : '@-font-family',
-    fontSize                : '@-font-size',
-    fontWeight              : '@-font-weight',
-    textColor               : '@-text-color',
-    backgroundColor         : '@-background-color',
-    backgroundDisabledColor : '@-background-disabled-color',
-    borderColor             : '@-border-color',
-    borderRadius            : '@-border-radius',
-    borderWidth             : '@-border-width',
-    borderStyle             : '@-border-style',
-    borderFocusWidth        : '@-border-focus-width',
-    borderFocusColor        : '@-border-focus-color',
-    borderErrorWidth        : '@-border-error-width',
-    borderErrorColor        : '@-border-error-color',
-    placeholderX            : '@-placeholder-x',
-    placeholderY            : '@-placeholder-y',
+    fontFamily              : 'bt-form-base-input-font-family',
+    fontSize                : 'bt-form-base-input-font-size',
+    fontWeight              : 'bt-form-base-input-font-weight',
+    textColor               : 'bt-form-base-input-text-color',
+    backgroundColor         : 'bt-form-base-input-background-color',
+    backgroundDisabledColor : 'bt-form-base-input-background-disabled-color',
+    borderColor             : 'bt-form-base-input-border-color',
+    borderRadius            : 'bt-form-base-input-border-radius',
+    borderWidth             : 'bt-form-base-input-border-width',
+    borderStyle             : 'bt-form-base-input-border-style',
+    borderFocusWidth        : 'bt-form-base-input-border-focus-width',
+    borderFocusColor        : 'bt-form-base-input-border-focus-color',
+    borderErrorWidth        : 'bt-form-base-input-border-error-width',
+    borderErrorColor        : 'bt-form-base-input-border-error-color',
+    placeholderX            : 'bt-form-base-input-placeholder-x',
+    placeholderY            : 'bt-form-base-input-placeholder-y',
 
     // Label
-    labelTextColor          : '@-label-color',
-    labelTransitionDuration : '@-label-transition-duration',
+    labelTextColor          : 'bt-form-base-input-label-color',
+    labelTransitionDuration : 'bt-form-base-input-label-transition-duration',
 
     // Help
-    helpTextColor           : '@-help-color',
-    helpFontSize            : '@-help-font-size',
+    helpTextColor           : 'bt-form-base-input-help-color',
+    helpFontSize            : 'bt-form-base-input-help-font-size',
 
     // Error
-    errorTextColor          : '@-error-text-color',
-    errorFontSize           : '@-error-font-size',
+    errorTextColor          : 'bt-form-base-input-error-text-color',
+    errorFontSize           : 'bt-form-base-input-error-font-size',
 
     // Disabled
-    disabledColor           : '@-border-disabled-color',
+    disabledColor           : 'bt-form-base-input-border-disabled-color',
 
     // Addons
-    addonBorderColor        : '@-addon-background-color',
-    addonTextColor          : '@-text-addon-color'
+    addonBorderColor        : 'bt-form-base-input-addon-background-color',
+    addonTextColor          : 'bt-form-base-input-text-addon-color'
 };
 
 export const ThemeConfiguration = {

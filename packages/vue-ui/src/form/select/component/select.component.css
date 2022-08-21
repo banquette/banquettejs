@@ -13,38 +13,6 @@
     --form-select-clear-icon-color: var(--bt-form-select-clear-icon-color, var(--bt-text-color-light));
 }
 
-.bt-form-select :deep(.bt-form-base-input) {
-    --bt-form-base-input-text-color: var(--bt-form-select-text-color);
-    --bt-form-base-input-label-color: var(--bt-form-select-label-color);
-    --bt-form-base-input-help-color: var(--bt-form-select-help-color);
-    --bt-form-base-input-help-font-size: var(--bt-form-select-help-font-size);
-    --bt-form-base-input-error-text-color: var(--bt-form-select-error-text-color);
-    --bt-form-base-input-error-font-size: var(--bt-form-select-error-font-size);
-    --bt-form-base-input-text-addon-color: var(--bt-form-select-text-addon-color);
-
-    --bt-form-base-input-font-family: var(--bt-form-select-font-family);
-    --bt-form-base-input-font-size: var(--bt-form-select-font-size);
-    --bt-form-base-input-font-weight: var(--bt-form-select-font-weight);
-
-    --bt-form-base-input-border-color: var(--bt-form-select-border-color);
-    --bt-form-base-input-border-focus-width: var(--bt-form-text-border-focus-width);
-    --bt-form-base-input-border-focus-color: var(--bt-form-select-border-focus-color);
-    --bt-form-base-input-border-error-width: var(--bt-form-text-border-error-width);
-    --bt-form-base-input-border-error-color: var(--bt-form-select-border-error-color);
-    --bt-form-base-input-border-disabled-color: var(--bt-form-select-border-disabled-color);
-
-    --bt-form-base-input-background-color: var(--bt-form-select-background-color);
-    --bt-form-base-input-background-disabled-color: var(--bt-form-select-background-disabled-color);
-    --bt-form-base-input-addon-background-color: var(--bt-form-select-addon-background-color);
-
-    --bt-form-base-input-border-radius: var(--bt-form-select-border-radius);
-    --bt-form-base-input-border-width: var(--bt-form-select-border-width);
-    --bt-form-base-input-border-style: var(--bt-form-select-border-style);
-
-    --bt-form-base-input-placeholder-x: var(--form-select-padding-x);
-    --bt-form-base-input-placeholder-y: var(--form-select-padding-y);
-}
-
 .bt-form-select {
     width: 100%;
     position: relative;
