@@ -47,8 +47,8 @@ export function Model(): TransformerInterface {
         const ctor = metadata.getRelation(context.ctor, highestProperty);
         if (ctor === null) {
             throw new UsageException(
-                `No relation has been defined for "${context.ctor.name}::${context.property}".
-                Please define a "@Relation()" decorator on "${context.property}".`
+                `No relation has been defined for "${context.ctor.name}::${highestProperty}".
+                Please define a "@Relation()" decorator on "${highestProperty}".`
             );
         }
         return ctor;
