@@ -9,6 +9,7 @@
  */
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
+import { HttpResponseStatus } from "@banquette/http/constants";
 import { ModelMetadataService } from "@banquette/model/model-metadata.service";
 import { TransformService } from "@banquette/model/transformer/transform.service";
 import { isArray } from "@banquette/utils-type/is-array";
@@ -32,6 +33,7 @@ function onRequestSuccess(event: ApiResponseEvent) {
     }
     const handleResult = () => {
         if (transformResult.error) {
+            event.httpEvent.response.setStatus(HttpResponseStatus.Error);
             event.httpEvent.response.error = transformResult.errorDetail;
         } else {
             event.httpEvent.response.result = transformResult.result;
