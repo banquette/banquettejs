@@ -1,3 +1,9 @@
+/**
+ * The CSS defines the base variables.
+ */
+import './styles/vars.css';
 
-import './button';
-import './tag';
+/**
+ * Theme adjustments are all defined in Typescript.
+ */
+import './components';

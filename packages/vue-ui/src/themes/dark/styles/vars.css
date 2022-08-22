@@ -1,5 +1,5 @@
 /**
- * Default theme base variables.
+ * Dark theme base variables.
  */
 :root {
     /**
@@ -17,14 +17,17 @@
     --bt-color-primary: var(--bt-color-blue);
     --bt-color-secondary: var(--bt-color-green);
 
-    /* Base colors rgb */
+    /**
+     * Naked rgb colors, so an opacity can be added by doing:
+     * color: rgba(var(--bt-color-blue-rgb), 0.5)
+     */
     --bt-color-blue-rgb: 64, 158, 255;
     --bt-color-green-rgb: 103, 194, 58;
     --bt-color-orange-rgb: 230, 162, 60;
     --bt-color-red-rgb: 245, 108, 108;
     --bt-color-gray-rgb: 144, 147, 153;
     --bt-color-primary-rgb: var(--bt-color-blue-rgb);
-    --bt-color-secondary-rgb: var(--bt-color-green-rbg);
+    --bt-color-secondary-rgb: var(--bt-color-green-rgb);
 
     /* Contrast colors */
     --bt-color-blue-contrast: var(--bt-color-white);

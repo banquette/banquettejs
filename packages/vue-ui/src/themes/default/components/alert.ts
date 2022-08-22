@@ -144,3 +144,5 @@ VueThemes.Define('bt-progress-horizontal', {
         }
     ]
 });
+
+export {}
