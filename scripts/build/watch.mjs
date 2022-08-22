@@ -13,13 +13,11 @@ let highestBuildWatched = -1;
 let startedBuildsCount = 0;
 function buildFromIndex(index) {
     watch(getRollupConfig(builds[keys[index]]), () => {
-        //console.log("START BUILD [" + index + "]");
         if ((!startedBuildsCount && highestBuildWatched === keys.length - 1) || highestBuildWatched < 0) {
             cleanupBuilds([builds[keys[index]]]);
         }
         ++startedBuildsCount;
     }, () => {
-        // console.log('FINISHED FOR INDEX [' + index + '][' + highestBuildWatched + ']');
         building = false;
         --startedBuildsCount;
         highestBuildWatched = Math.max(highestBuildWatched, index);

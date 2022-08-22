@@ -195,10 +195,10 @@ for (const configuration of configurations) {
     const duplicates = [];
 
     console.log(`Generating ${chalk.blue(configuration.libName)} icons...`);
-    // if (fs.existsSync(configuration.outputDir)) {
-    //     fs.rmdirSync(configuration.outputDir, {recursive: true});
-    // }
-    // fs.mkdirSync(configuration.outputDir, {recursive: true});
+    if (fs.existsSync(configuration.outputDir)) {
+        fs.rmdirSync(configuration.outputDir, {recursive: true});
+    }
+    fs.mkdirSync(configuration.outputDir, {recursive: true});
 
     let count = 0;
     const files = configuration.listFiles();
@@ -208,10 +208,10 @@ for (const configuration of configurations) {
         const componentDir = path.join(configuration.outputDir, componentName);
         const componentPath = path.join(componentDir, componentName + '.component.vue');
 
-        // if (fs.existsSync(componentDir)) {
-        //     duplicates.push(componentName);
-        //     continue;
-        // }
+        if (fs.existsSync(componentDir)) {
+            duplicates.push(componentName);
+            continue;
+        }
         const svgs = [];
         const versions = Object.keys(files[filename]);
         if (!versions.length) {
@@ -265,33 +265,30 @@ export default class ${className} {
         if (src.indexOf('v-else') > -1 && src.indexOf('v-if') < 0) {
             console.log('found');
         }
-       // fs.mkdirSync(componentDir);
-       // fs.writeFileSync(componentPath, src);
+        fs.mkdirSync(componentDir);
+        fs.writeFileSync(componentPath, src);
         const indexPath = path.join(componentDir, 'index.ts');
-        //fs.writeFileSync(indexPath, `export { default as ${className} } from './${componentName + '.component.vue'}';`);
+        fs.writeFileSync(indexPath, `export { default as ${className} } from './${componentName + '.component.vue'}';`);
         imports.push(`import './${componentName}/${componentName + '.component.vue'}';`);
         ++count;
-        if (count % 100 === 0) {
-            console.log(count);
-        }
     }
-//     console.log('Conflicting components names:', duplicates);
-//     console.log('Total icons:', count);
-//     fs.writeFileSync(path.join(configuration.outputDir, 'index.ts'), imports.join("\n") + `
-// //
-// // Fix to avoid having the following warning when building:
-// // "createCommentVNode" is imported from external module "vue" but never used in "...".
-// // for each icon.
-// //
-// // TODO: Find a proper fix.
-// //
-// export { createCommentVNode } from "vue";
-// `);
-//     fs.writeFileSync(path.join(configuration.outputDir, 'vue-shim-d.ts'), `declare module "*.vue" {
-//     import { defineComponent } from 'vue';
+    console.log('Conflicting components names:', duplicates);
+    console.log('Total icons:', count);
+    fs.writeFileSync(path.join(configuration.outputDir, 'index.ts'), imports.join("\n") + `
 //
-//     const component: ReturnType<typeof defineComponent>;
-//     export default component;
-// }
-// `);
+// Fix to avoid having the following warning when building:
+// "createCommentVNode" is imported from external module "vue" but never used in "...".
+// for each icon.
+//
+// TODO: Find a proper fix.
+//
+export { createCommentVNode } from "vue";
+`);
+    fs.writeFileSync(path.join(configuration.outputDir, 'vue-shim-d.ts'), `declare module "*.vue" {
+    import { defineComponent } from 'vue';
+
+    const component: ReturnType<typeof defineComponent>;
+    export default component;
+}
+`);
 }
