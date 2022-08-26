@@ -59,7 +59,7 @@ export function injectContextInCssSource(source: string, themeId: string, varian
                         const offset3 = source.indexOf(')', offset1 + 7);
                         const modifierContent = source.substring(offset2 + 1, offset3);
                         let end = i + (offset3 - offset1) + 1;
-                        while (selectors[i][0][end].match(/\s/) && ++end);
+                        while (end < selectors[i][0].length && selectors[i][0][end].match(/\s/) && ++end);
                         source = trim(source.substring(0, offset1) + source.substring(offset1 + (end -i)));
                         selectors[i][0] = selectors[i][0].substring(end);
                         selectors[i][2] -= end - i - 1;
