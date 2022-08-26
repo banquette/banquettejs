@@ -10,7 +10,7 @@
 --
 -- This issue still needs to be investigated properly to understand the height difference on the `bt-form-select`.
 -->
-<div style="position: relative">
+<div style="position: relative" v-bt-bind-theme>
     <!-- :visible is always `true` but only act as a default value because if the user define a value for the "visible" prop, it will be in `$attrs` and override the value. -->
     <!-- Also, defining the "visible" prop disable the default behavior of the popover, based on mouse events. -->
     <bt-popover class="bt-dropdown" v-if="realTarget !== null" :visible="true" :target="realTarget" placement="bottom" interactive v-bind="$attrs">

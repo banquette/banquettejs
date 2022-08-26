@@ -2,12 +2,13 @@
     --dialog-header-font-family: var(--bt-dialog-header-font-family, var(--bt-font-family-base));
     --dialog-header-font-size: var(--bt-dialog-header-font-size, var(--bt-font-size-lg));
     --dialog-header-font-weight: var(--bt-dialog-header-font-weight, var(--bt-font-weight-semibold));
+    --dialog-header-text-color: var(--bt-dialog-header-text-color, var(--bt-text-color-base));
 
     --dialog-background: var(--bt-dialog-background, var(--bt-color-white));
     --dialog-border-radius: var(--bt-dialog-border-radius, var(--bt-border-radius-base));
     --dialog-shadow: var(--bt-dialog-shadow, var(--bt-shadow-dialog));
 
-    --dialog-border-color: var(--bt-dialog-border-color, var(--bt-color-gray-100));
+    --dialog-border-color: var(--bt-dialog-border-color, var(--bt-color-gray-50));
     --dialog-border-style: var(--bt-dialog-border-style, var(--bt-border-style-base));
     --dialog-border-width: var(--bt-dialog-border-width, var(--bt-border-width-base));
 
@@ -39,6 +40,7 @@
                     display: flex;
                     align-items: center;
                     padding: 1em;
+                    color: var(--dialog-header-text-color);
                     font-family: var(--dialog-header-font-family);
                     font-size: var(--dialog-header-font-size);
                     font-weight: var(--dialog-header-font-weight);
@@ -49,7 +51,7 @@
                 & > .header {
                     position: relative;
                     justify-content: space-between;
-                    border-bottom: 1px solid var(--bt-color-gray-50);
+                    border-bottom: 1px solid var(--dialog-border-color);
 
                     & > .close-icon {
                         position: absolute;
@@ -73,7 +75,7 @@
                 & > .footer {
                     justify-content: flex-end;
                     gap: 0.5em;
-                    border-top: 1px solid var(--bt-color-gray-50);
+                    border-top: 1px solid var(--dialog-border-color);
                 }
 
                 & > .body {

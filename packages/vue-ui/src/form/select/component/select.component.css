@@ -1,6 +1,4 @@
 .bt-form-select {
-    --form-select-padding-x: var(--bt-form-select-padding-x, 1em);
-    --form-select-padding-y: var(--bt-form-select-padding-y, 0.8em);
     --form-select-input-min-width: var(--bt-form-select-input-min-width, 150px);
 
     --form-select-tag-text-color: var(--bt-form-select-tag-text-color, var(--bt-color-gray-550));
@@ -20,11 +18,14 @@
     min-width: 0;
 
     & > :deep(.bt-form-base-input) {
+        &:not([data-is-disabled]) .input-wrapper {
+            cursor: pointer;
+        }
+
         .input-wrapper {
             display: flex;
             flex-wrap: wrap;
             width: 100%;
-            cursor: pointer;
 
             &::before {
                 content: '';
@@ -55,7 +56,7 @@
                         width: 100%;
                         height: 100%;
                         min-width:0;
-                        padding: var(--form-select-padding-y) var(--form-select-padding-x);
+                        padding: var(--form-base-input-placeholder-y) var(--form-base-input-placeholder-x);
                         border: none;
                         background: none;
                         outline: none;
@@ -94,11 +95,11 @@
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
-                    right: var(--form-select-padding-x);
+                    right: var(--form-base-input-placeholder-x);
                     cursor: pointer;
 
                     &.alone {
-                        right: var(--form-select-padding-x);
+                        right: var(--form-base-input-placeholder-x);
                         left: auto
                     }
                 }

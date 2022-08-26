@@ -24,8 +24,10 @@
     --form-base-input-border-disabled-color: var(--bt-form-base-input-border-disabled-color, var(--bt-color-gray-200));
 
     --form-base-input-background-color: var(--bt-form-base-input-background-color, var(--bt-color-white));
-    --form-base-input-background-disabled-color: var(--bt-form-base-input-background-disabled-color, var(--bt-color-gray-50));
+    --form-base-input-background-disabled-color: var(--bt-form-base-input-background-disabled-color, var(--form-base-input-background-color));
     --form-base-input-addon-background-color: var(--bt-form-base-input-addon-background-color, var(--bt-color-gray-50));
+
+    --form-base-input-disabled-opacity: var(--bt-form-base-input-disabled-opacity, 0.5);
 
     --form-base-input-placeholder-x: var(--bt-form-base-input-placeholder-x, 0.8rem);
     --form-base-input-placeholder-y: var(--bt-form-base-input-placeholder-y, 0.75rem);
@@ -87,7 +89,7 @@
         background-color: var(--form-base-input-background-color);
         top: var(--form-base-input-placeholder-y);
         left: var(--form-base-input-placeholder-x);
-        padding: 0.1em 0.2em;
+        padding: 0.1em 0.2em 0 0.2em;
     }
 
     &[data-has-after-addon] > .input-group .input {
@@ -259,6 +261,7 @@
         }
 
         & > .input-group > .input {
+            opacity: var(--form-base-input-disabled-opacity);
             border-color: var(--form-base-input-border-disabled-color);
             background-color: var(--form-base-input-background-disabled-color);
             cursor: not-allowed;

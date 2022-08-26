@@ -62,14 +62,14 @@ VueThemes.Define('bt-button', {
                 borderColor: 'var(--bt-color-primary)',
                 textColor: 'var(--bt-color-primary)',
 
-                backgroundHoverColor: 'var(--bt-color-primary-50)',
-                borderHoverColor: 'var(--bt-color-primary-250)',
+                backgroundHoverColor: 'rgba(var(--bt-color-primary-rgb), 0.1)',
+                borderHoverColor: 'rgba(var(--bt-color-primary-rgb), 0.6)',
 
-                backgroundFocusColor: 'var(--bt-color-primary-50)',
-                borderFocusColor: 'var(--bt-color-primary-250)',
+                backgroundFocusColor: 'rgba(var(--bt-color-primary-rgb), 0.15)',
+                borderFocusColor: 'rgba(var(--bt-color-primary-rgb), 0.6)',
 
-                backgroundActiveColor: 'var(--bt-color-primary-50)',
-                borderActiveColor: 'var(--bt-color-primary-100)'
+                backgroundActiveColor: 'rgba(var(--bt-color-primary-rgb), 0.15)',
+                borderActiveColor: 'transparent'
             }
         },
         {
@@ -78,14 +78,14 @@ VueThemes.Define('bt-button', {
                 borderColor: 'var(--bt-color-green)',
                 textColor: 'var(--bt-color-green)',
 
-                backgroundHoverColor: 'var(--bt-color-green-50)',
-                borderHoverColor: 'var(--bt-color-green-250)',
+                backgroundHoverColor: 'rgba(var(--bt-color-green-rgb), 0.1)',
+                borderHoverColor: 'rgba(var(--bt-color-green-rgb), 0.6)',
 
-                backgroundFocusColor: 'var(--bt-color-green-50)',
-                borderFocusColor: 'var(--bt-color-green-250)',
+                backgroundFocusColor: 'rgba(var(--bt-color-green-rgb), 0.15)',
+                borderFocusColor: 'rgba(var(--bt-color-green-rgb), 0.6)',
 
-                backgroundActiveColor: 'var(--bt-color-green-50)',
-                borderActiveColor: 'var(--bt-color-green-100)'
+                backgroundActiveColor: 'rgba(var(--bt-color-green-rgb), 0.15)',
+                borderActiveColor: 'transparent'
             }
         },
         {
@@ -94,14 +94,14 @@ VueThemes.Define('bt-button', {
                 borderColor: 'var(--bt-color-orange)',
                 textColor: 'var(--bt-color-orange)',
 
-                backgroundHoverColor: 'var(--bt-color-orange-50)',
-                borderHoverColor: 'var(--bt-color-orange-250)',
+                backgroundHoverColor: 'rgba(var(--bt-color-orange-rgb), 0.1)',
+                borderHoverColor: 'rgba(var(--bt-color-orange-rgb), 0.6)',
 
-                backgroundFocusColor: 'var(--bt-color-orange-50)',
-                borderFocusColor: 'var(--bt-color-orange-250)',
+                backgroundFocusColor: 'rgba(var(--bt-color-orange-rgb), 0.15)',
+                borderFocusColor: 'rgba(var(--bt-color-orange-rgb), 0.6)',
 
-                backgroundActiveColor: 'var(--bt-color-orange-50)',
-                borderActiveColor: 'var(--bt-color-orange-100)'
+                backgroundActiveColor: 'rgba(var(--bt-color-orange-rgb), 0.15)',
+                borderActiveColor: 'transparent'
             }
         },
         {
@@ -110,14 +110,14 @@ VueThemes.Define('bt-button', {
                 borderColor: 'var(--bt-color-red)',
                 textColor: 'var(--bt-color-red)',
 
-                backgroundHoverColor: 'var(--bt-color-red-50)',
-                borderHoverColor: 'var(--bt-color-red-250)',
+                backgroundHoverColor: 'rgba(var(--bt-color-red-rgb), 0.1)',
+                borderHoverColor: 'rgba(var(--bt-color-red-rgb), 0.6)',
 
-                backgroundFocusColor: 'var(--bt-color-red-50)',
-                borderFocusColor: 'var(--bt-color-red-250)',
+                backgroundFocusColor: 'rgba(var(--bt-color-red-rgb), 0.15)',
+                borderFocusColor: 'rgba(var(--bt-color-red-rgb), 0.6)',
 
-                backgroundActiveColor: 'var(--bt-color-red-50)',
-                borderActiveColor: 'var(--bt-color-red-100)'
+                backgroundActiveColor: 'rgba(var(--bt-color-red-rgb), 0.15)',
+                borderActiveColor: 'transparent'
             }
         },
         {
@@ -163,80 +163,56 @@ VueThemes.Define('bt-button', {
                 borderColor: 'transparent',
                 textColor: 'var(--bt-color-primary)',
 
-                backgroundHoverColor: 'var(--bt-color-primary-50)',
-                textHoverColor: 'var(--bt-color-primary)',
+                backgroundHoverColor: 'rgba(var(--bt-color-primary-rgb), 0.1)',
+                borderHoverColor: 'transparent',
 
-                backgroundFocusColor: 'var(--bt-color-primary-50)',
-                textFocusColor: 'var(--bt-color-primary)',
+                backgroundFocusColor: 'rgba(var(--bt-color-primary-rgb), 0.15)',
+                borderFocusColor: 'transparent',
 
-                backgroundActiveColor: 'var(--bt-color-primary-100)',
-                textActiveColor: 'var(--bt-color-primary)'
+                backgroundActiveColor: 'rgba(var(--bt-color-primary-rgb), 0.15)',
+                borderActiveColor: 'transparent',
             }
         },
         {
             match: 'link success',
             cssVars: {
                 textColor: 'var(--bt-color-green)',
-
-                backgroundHoverColor: 'var(--bt-color-green-50)',
-                textHoverColor: 'var(--bt-color-green)',
-
-                backgroundFocusColor: 'var(--bt-color-green-50)',
-                textFocusColor: 'var(--bt-color-green)',
-
-                backgroundActiveColor: 'var(--bt-color-green-100)',
-                textActiveColor: 'var(--bt-color-green)'
+                backgroundHoverColor: 'rgba(var(--bt-color-green-rgb), 0.1)',
+                backgroundFocusColor: 'rgba(var(--bt-color-green-rgb), 0.15)',
+                backgroundActiveColor: 'rgba(var(--bt-color-green-rgb), 0.15)'
             }
         },
         {
             match: 'link warning',
             cssVars: {
                 textColor: 'var(--bt-color-orange)',
-
-                backgroundHoverColor: 'var(--bt-color-orange-50)',
-                textHoverColor: 'var(--bt-color-orange)',
-
-                backgroundFocusColor: 'var(--bt-color-orange-50)',
-                textFocusColor: 'var(--bt-color-orange)',
-
-                backgroundActiveColor: 'var(--bt-color-orange-100)',
-                textActiveColor: 'var(--bt-color-orange)'
+                backgroundHoverColor: 'rgba(var(--bt-color-orange-rgb), 0.1)',
+                backgroundFocusColor: 'rgba(var(--bt-color-orange-rgb), 0.15)',
+                backgroundActiveColor: 'rgba(var(--bt-color-orange-rgb), 0.15)'
             }
         },
         {
             match: 'link danger',
             cssVars: {
                 textColor: 'var(--bt-color-red)',
-
-                backgroundHoverColor: 'var(--bt-color-red-50)',
-                textHoverColor: 'var(--bt-color-red)',
-
-                backgroundFocusColor: 'var(--bt-color-red-50)',
-                textFocusColor: 'var(--bt-color-red)',
-
-                backgroundActiveColor: 'var(--bt-color-red-100)',
-                textActiveColor: 'var(--bt-color-red)'
+                backgroundHoverColor: 'rgba(var(--bt-color-red-rgb), 0.1)',
+                backgroundFocusColor: 'rgba(var(--bt-color-red-rgb), 0.15)',
+                backgroundActiveColor: 'rgba(var(--bt-color-red-rgb), 0.15)'
             }
         },
         {
             match: 'link dark',
             cssVars: {
                 textColor: 'var(--bt-color-gray-800)',
-
                 backgroundHoverColor: 'var(--bt-color-gray-150)',
-                textHoverColor: 'var(--bt-color-gray-750)',
-
-                backgroundFocusColor: 'var(--bt-color-gray-150)',
-                textFocusColor: 'var(--bt-color-gray-750)',
-
-                backgroundActiveColor: 'var(--bt-color-gray-200)',
-                textActiveColor: 'var(--bt-color-gray-750)'
+                backgroundFocusColor:  'var(--bt-color-gray-150)',
+                backgroundActiveColor:  'var(--bt-color-gray-150)'
             }
         },
         {
             match: 'link light',
             cssVars: {
-                textColor: 'var(--bt-color-gray-550)',
+                textColor: 'var(--bt-color-gray-450)',
 
                 backgroundHoverColor: 'var(--bt-color-gray-50)',
                 textHoverColor: 'var(--bt-color-gray-550)',

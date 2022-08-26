@@ -31,9 +31,11 @@ export const BaseVars = {
 
     // Disabled
     disabledColor           : 'bt-form-base-input-border-disabled-color',
+    disabledOpacity         : 'bt-form-base-input-disabled-opacity',
 
     // Addons
-    addonBorderColor        : 'bt-form-base-input-addon-background-color',
+    addonBackgroundColor    : 'bt-form-base-input-addon-background-color',
+    addonBorderColor        : 'bt-form-base-input-addon-border-color',
     addonTextColor          : 'bt-form-base-input-text-addon-color'
 };
 

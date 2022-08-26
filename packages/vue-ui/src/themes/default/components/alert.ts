@@ -1,13 +1,16 @@
+import { ThemeWildcard } from "@banquette/vue-typescript/theme/constant";
 import { VueThemes } from "@banquette/vue-typescript/theme/vue-themes";
 
 VueThemes.Define('bt-alert', {
-    '*': [
+    [ThemeWildcard]: [
         {
             match: 'primary',
             cssVars: {
                 backgroundColor: 'var(--bt-color-primary)',
                 textColor: 'var(--bt-color-primary-contrast)',
+                closeFillColor: 'var(--bt-color-primary-contrast)',
                 closeFillHoverColor: 'var(--bt-color-primary)',
+                closeBackgroundHoverColor: 'var(--bt-color-primary-150)'
             }
         },
         {
@@ -15,6 +18,7 @@ VueThemes.Define('bt-alert', {
             cssVars: {
                 backgroundColor: 'var(--bt-color-green)',
                 textColor: 'var(--bt-color-green-contrast)',
+                closeFillColor: 'var(--bt-color-green-contrast)',
                 closeFillHoverColor: 'var(--bt-color-green-600)',
                 closeBackgroundHoverColor: 'var(--bt-color-green-150)',
             }
@@ -24,6 +28,7 @@ VueThemes.Define('bt-alert', {
             cssVars: {
                 backgroundColor: 'var(--bt-color-orange)',
                 textColor: 'var(--bt-color-orange-contrast)',
+                closeFillColor: 'var(--bt-color-orange-contrast)',
                 closeFillHoverColor: 'var(--bt-color-orange-600)',
                 closeBackgroundHoverColor: 'var(--bt-color-orange-150)',
             }
@@ -33,6 +38,7 @@ VueThemes.Define('bt-alert', {
             cssVars: {
                 backgroundColor: 'var(--bt-color-red)',
                 textColor: 'var(--bt-color-red-contrast)',
+                closeFillColor: 'var(--bt-color-red-contrast)',
                 closeFillHoverColor: 'var(--bt-color-red-600)',
                 closeBackgroundHoverColor: 'var(--bt-color-red-150)',
             }
@@ -40,8 +46,9 @@ VueThemes.Define('bt-alert', {
         {
             match: 'dark',
             cssVars: {
-                backgroundColor: 'var(--bt-color-gray-700)',
+                backgroundColor: 'var(--bt-color-gray-800)',
                 textColor: 'var(--bt-color-white)',
+                closeFillColor: 'var(--bt-color-white)',
                 closeFillHoverColor: 'var(--bt-color-gray-800)',
                 closeBackgroundHoverColor: 'var(--bt-color-gray-500)',
             }
@@ -50,9 +57,10 @@ VueThemes.Define('bt-alert', {
             match: 'light',
             cssVars: {
                 backgroundColor: 'var(--bt-color-gray-150)',
-                textColor: 'var(--bt-color-gray-600)',
+                textColor: 'var(--bt-color-gray-750)',
+                closeFillColor: 'var(--bt-color-gray-800)',
                 closeFillHoverColor: 'var(--bt-color-gray-800)',
-                closeBackgroundHoverColor: 'var(--bt-color-gray-500)',
+                closeBackgroundHoverColor: 'var(--bt-color-gray-300)',
             }
         },
 
@@ -62,48 +70,61 @@ VueThemes.Define('bt-alert', {
         {
             match: 'primary faded',
             cssVars: {
-                backgroundColor: 'var(--bt-color-primary-50)',
-                textColor: 'var(--bt-color-primary)'
+                textColor: 'var(--bt-color-primary)',
+                backgroundColor: 'rgba(var(--bt-color-primary-rgb), 0.1)',
+                closeFillColor: 'var(--bt-color-primary-500)',
+                closeFillHoverColor: 'var(--bt-color-primary-550)',
+                closeBackgroundHoverColor: 'rgba(var(--bt-color-primary-rgb), 0.2)'
             }
         },
         {
             match: 'success faded',
             cssVars: {
-                backgroundColor: 'var(--bt-color-green-50)',
                 textColor: 'var(--bt-color-green)',
-                closeBackgroundHoverColor: 'var(--bt-color-green-150)',
+                backgroundColor: 'rgba(var(--bt-color-green-rgb), 0.1)',
+                closeFillColor: 'var(--bt-color-green-500)',
+                closeFillHoverColor: 'var(--bt-color-green-550)',
+                closeBackgroundHoverColor: 'rgba(var(--bt-color-green-rgb), 0.2)'
             }
         },
         {
             match: 'warning faded',
             cssVars: {
-                backgroundColor: 'var(--bt-color-orange-50)',
                 textColor: 'var(--bt-color-orange)',
-                closeBackgroundHoverColor: 'var(--bt-color-orange-150)',
+                backgroundColor: 'rgba(var(--bt-color-orange-rgb), 0.1)',
+                closeFillColor: 'var(--bt-color-orange-500)',
+                closeFillHoverColor: 'var(--bt-color-orange-550)',
+                closeBackgroundHoverColor: 'rgba(var(--bt-color-orange-rgb), 0.2)'
             }
         },
         {
             match: 'danger faded',
             cssVars: {
-                backgroundColor: 'var(--bt-color-red-50)',
                 textColor: 'var(--bt-color-red)',
-                closeBackgroundHoverColor: 'var(--bt-color-red-150)',
+                backgroundColor: 'rgba(var(--bt-color-red-rgb), 0.1)',
+                closeFillColor: 'var(--bt-color-red-500)',
+                closeFillHoverColor: 'var(--bt-color-red-550)',
+                closeBackgroundHoverColor: 'rgba(var(--bt-color-red-rgb), 0.2)'
             }
         },
         {
             match: 'dark faded',
             cssVars: {
-                backgroundColor: 'var(--bt-color-gray-300)',
                 textColor: 'var(--bt-color-gray-800)',
-                closeBackgroundHoverColor: 'var(--bt-color-gray-50)',
+                backgroundColor: 'rgba(var(--bt-color-gray-rgb), 0.3)',
+                closeFillColor: 'var(--bt-color-gray-800)',
+                closeFillHoverColor: 'var(--bt-color-gray-800)',
+                closeBackgroundHoverColor: 'var(--bt-color-gray-300)'
             }
         },
         {
             match: 'light faded',
             cssVars: {
-                backgroundColor: 'var(--bt-color-gray-50)',
-                textColor: 'var(--bt-color-gray-600)',
-                closeBackgroundHoverColor: 'var(--bt-color-gray-50)',
+                textColor: 'var(--bt-color-gray-650)',
+                backgroundColor: 'rgba(var(--bt-color-gray-rgb), 0.1)',
+                closeFillColor: 'var(--bt-color-gray-600)',
+                closeFillHoverColor: 'var(--bt-color-gray-650)',
+                closeBackgroundHoverColor: 'var(--bt-color-gray-200)'
             }
         },
 
@@ -133,7 +154,7 @@ VueThemes.Define('bt-alert', {
  * Progress.
  */
 VueThemes.Define('bt-progress-horizontal', {
-    '*': [
+    [ThemeWildcard]: [
         {
             match: {parent: 'bt-alert'},
             cssVars: {

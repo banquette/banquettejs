@@ -9,6 +9,7 @@ export const ThemeConfiguration = {
             textHoverColor          : '@-text-hover-color',
             backgroundColor         : '@-background-color',
             backgroundHoverColor    : '@-background-hover-color',
+            borderColor             : '@-border-color',
             borderRadius            : '@-border-radius',
             dividerColor            : '@-divider-color',
             shadow                  : '@-shadow',
