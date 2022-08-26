@@ -352,7 +352,7 @@ export default class SelectComponent extends AbstractVueFormComponent<SelectView
         this.v.isInputReadonly = this.vm.searchType === SearchType.None && !this.allowCreation;
     }
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['remoteUrl', 'remoteEndpoint', 'remoteMethod', 'remoteModel', 'remoteUrlParams', 'remoteHeaders'], {immediate: ImmediateStrategy.BeforeMount})
     private syncRemoteProps(): void {
         this.vm.remote.updateConfiguration({
             url: this.url,
