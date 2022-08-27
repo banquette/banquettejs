@@ -19,7 +19,7 @@ const BASE_OBJ = {
 
 describe('flatten', () => {
     createGenericTestSuite(flattenObject, [
-        [BASE_OBJ, {
+        ['Default configuration', [BASE_OBJ], {
             'foo.bar.a': 'a',
             'foo.bar.b.b1': 'b1',
             'foo.bar.b.b2': 'b2',
@@ -27,11 +27,8 @@ describe('flatten', () => {
             'foo.bar.c': 'c',
             'foo.baz': 'baz',
             'second': 'second'
-        }]
-    ], 'toStrictEqual');
-
-    createGenericTestSuite(flattenObject, [
-        [BASE_OBJ, [{
+        }],
+        ['With "->" as separator', [BASE_OBJ, '->'], {
             'foo->bar->a': 'a',
             'foo->bar->b->b1': 'b1',
             'foo->bar->b->b2': 'b2',
@@ -39,11 +36,8 @@ describe('flatten', () => {
             'foo->bar->c': 'c',
             'foo->baz': 'baz',
             'second': 'second'
-        }, '->']]
-    ], 'toStrictEqual');
-
-    createGenericTestSuite(flattenObject, [
-        [BASE_OBJ, [{
+        }],
+        ['With "_" as separator and max depth from root of 1', [BASE_OBJ, '_', 1], {
             'foo_bar': {
                 a: 'a',
                 b: {
@@ -55,11 +49,8 @@ describe('flatten', () => {
             },
             'foo_baz': 'baz',
             'second': 'second'
-        }, '_', 1]]
-    ], 'toStrictEqual');
-
-    createGenericTestSuite(flattenObject, [
-        [BASE_OBJ, [{
+        }],
+        ['With "." as separator and max depth from root of 2', [BASE_OBJ, '.', 2], {
             'foo.bar.a': 'a',
             'foo.bar.b': {
                 b1: 'b1',
@@ -69,11 +60,8 @@ describe('flatten', () => {
             'foo.bar.c': 'c',
             'foo.baz': 'baz',
             'second': 'second'
-        }, '.', 2]]
-    ], 'toStrictEqual');
-
-    createGenericTestSuite(flattenObject, [
-        [BASE_OBJ, [{
+        }],
+        ['With "_" as separator and total max depth of 1', [BASE_OBJ, '.', -1], {
             'foo.bar': {a: 'a', c: 'c'},
             'foo.bar.b': {
                 b1: 'b1',
@@ -82,11 +70,8 @@ describe('flatten', () => {
             },
             'foo': {baz: 'baz'},
             'second': 'second'
-        }, '.', -1]]
-    ], 'toStrictEqual');
-
-    createGenericTestSuite(flattenObject, [
-        [BASE_OBJ, [{
+        }],
+        ['With "." as separator and max total max depth of 2', [BASE_OBJ, '.', -2], {
             foo: {
                 bar: {
                     a: 'a',
@@ -102,6 +87,6 @@ describe('flatten', () => {
                 }
             },
             second: 'second'
-        }, '.', -2]]
+        }]
     ], 'toStrictEqual');
 });
