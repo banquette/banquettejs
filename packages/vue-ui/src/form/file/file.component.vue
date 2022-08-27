@@ -4,6 +4,8 @@
 import { HttpMethod } from "@banquette/http/constants";
 import { FormFile } from "@banquette/ui/form/file/form-file";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { humanSizeToByteCount } from "@banquette/utils-string/format/human-size-to-byte-count";
+import { isString } from "@banquette/utils-type/is-string";
 import { Primitive } from "@banquette/utils-type/types";
 import { IconMaterialClose } from "@banquette/vue-material-icons/close";
 import { IconMaterialDescription } from "@banquette/vue-material-icons/description";
@@ -63,6 +65,18 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
     @Prop({type: String, default: null}) public accept!: string|null;
 
     /**
+     * Limit the size of individual files.
+     */
+    @Prop({type: [String, Number], default: null, transform: (v) => isString(v) ? humanSizeToByteCount(v) : v})
+    public maxIndividualSize!: number|null;
+
+    /**
+     * Limit the total size of all uploaded files cumulated.
+     */
+    @Prop({type: [String, Number], default: null, transform: (v) => isString(v) ? humanSizeToByteCount(v) : v})
+    public maxTotalSize!: number|null;
+
+    /**
      * Remote module props.
      */
     @Prop({type: String, default: null}) public url!: string|null;
@@ -99,7 +113,7 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
      * @inheritDoc
      */
     protected setupViewModel(): FileViewModel {
-        return new FileViewModel(this.proxy, this.base);
+        return new FileViewModel(this.proxy, this.base, this.i18n);
     }
 
     /**
@@ -152,10 +166,12 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
         this.vm.start(file);
     }
 
-    @Watch(['multiple', 'autoStart', 'accept', 'ignoreNonUploadedFiles'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['multiple', 'autoStart', 'accept', 'maxIndividualSize', 'maxTotalSize', 'ignoreNonUploadedFiles'], {immediate: ImmediateStrategy.BeforeMount})
     private syncConfigurationProps(): void {
-        this.v.multiple = this.multiple;
-        this.v.accept = this.accept;
+        this.vm.maxIndividualSize = this.maxIndividualSize;
+        this.vm.maxTotalSize = this.maxTotalSize;
+        this.vm.multiple = this.multiple;
+        this.vm.accept = this.accept;
         this.vm.autoStartUpload = this.autoStart;
         this.vm.ignoreNonUploadedFiles = this.ignoreNonUploadedFiles;
     }

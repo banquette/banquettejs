@@ -1,11 +1,6 @@
 
 export interface I18nInterface {
     /**
-     * Text to show when there is no file selected.
-     */
-    empty: string;
-
-    /**
      * Text to show as file name when no file name is available.
      */
     noName: string;

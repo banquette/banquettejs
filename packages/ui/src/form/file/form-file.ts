@@ -1,9 +1,10 @@
-import { humanFileSize } from "@banquette/utils-string/format/human-file-size";
+import { byteCountToHumanSize } from "@banquette/utils-string/format/byte-count-to-human-size";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isValidNumber } from "@banquette/utils-type/is-valid-number";
 import { Writeable } from "@banquette/utils-type/types";
 import { UploadStatus } from "./constant";
+import { I18nInterface } from "./i18n.interface";
 
 /**
  * A decorator around a File object, adding additional information related to the upload.
@@ -38,7 +39,7 @@ export class FormFile {
     }
     public set totalSize(value: number|null) {
         this._totalSize = value;
-        (this as Writeable<FormFile>).totalSizeText = value !== null ? humanFileSize(value) : null;
+        (this as Writeable<FormFile>).totalSizeText = value !== null ? byteCountToHumanSize(value) : null;
     }
 
     /**
@@ -55,7 +56,7 @@ export class FormFile {
     }
     public set uploadedSize(value: number|null) {
         this._uploadedSize = value;
-        (this as Writeable<FormFile>).uploadedSizeText = value !== null ? humanFileSize(value) : null;
+        (this as Writeable<FormFile>).uploadedSizeText = value !== null ? byteCountToHumanSize(value) : null;
     }
 
     /**
@@ -90,10 +91,10 @@ export class FormFile {
     public get failed(): boolean { return this.status === UploadStatus.Failed }
     public get remote(): boolean { return this.status === UploadStatus.Remote }
 
-    public constructor(file: File|null = null) {
+    public constructor(file: File|null, i18n: I18nInterface) {
         this.file = file;
         this.type = file !== null ? file.type : null;
-        this.filename = file !== null ? file.name : this.filename;
+        this.filename = file !== null ? file.name : i18n.noName;
         this.progress = file !== null ? 0 : null;
         this.uploadedSize = file !== null ? 0 : null;
         this.totalSize = file !== null ? file.size : null;
@@ -111,11 +112,11 @@ export class FormFile {
      * what is expected at all, an instance will still be created with the default values,
      * so something can appear on the view.
      */
-    public static Create(input: any): FormFile {
+    public static Create(input: any, i18n: I18nInterface): FormFile {
         if (input instanceof File) {
-            return new FormFile(input);
+            return new FormFile(input, i18n);
         }
-        const instance = new FormFile();
+        const instance = new FormFile(null, i18n);
         if (isObject(input)) {
             if (isNonEmptyString(input.name)) {
                 instance.filename = input.name;

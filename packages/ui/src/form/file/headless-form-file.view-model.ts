@@ -4,6 +4,7 @@ import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { TransferProgressEvent } from "@banquette/http/event/transfer-progress.event";
 import { HttpRequest } from "@banquette/http/http-request";
 import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
+import { byteCountToHumanSize } from "@banquette/utils-string/format/byte-count-to-human-size";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
@@ -14,11 +15,42 @@ import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { UploadStatus, FileUploadTag } from "./constant";
 import { FormFile } from "./form-file";
 import { HeadlessFormFileViewDataInterface } from "./headless-form-file-view-data.interface";
+import { I18nInterface } from "./i18n.interface";
 
 /**
  * The view model logic behind a generic file form control.
  */
 export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileViewDataInterface = HeadlessFormFileViewDataInterface> extends HeadlessControlViewModel<ViewDataType> {
+    /**
+     * `true` to allow the input to hold multiple files.
+     */
+    public get multiple(): boolean {
+        return this.viewData.multiple;
+    }
+    public set multiple(value: boolean) {
+        this.viewData.multiple = value;
+    }
+
+    /**
+     * Validation pattern to check input files with.
+     */
+    public get accept(): string|null {
+        return this.viewData.accept;
+    }
+    public set accept(value: string|null) {
+        this.viewData.accept = value;
+    }
+
+    /**
+     * Limit the size of individual files.
+     */
+    public maxIndividualSize: number|null = null;
+
+    /**
+     * Limit the total size of all uploaded files cumulated.
+     */
+    public maxTotalSize: number|null = null;
+
     /**
      * If `true`, each file will start uploading immediately after being queued.
      */
@@ -50,7 +82,7 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
      */
     private dataTransfer = new DataTransfer();
 
-    public constructor(control: FormViewControlInterface) {
+    public constructor(control: FormViewControlInterface, private i18n: I18nInterface) {
         super(control);
         this.viewData.control.value = [];
         this.remote.updateConfiguration({
@@ -72,10 +104,10 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
 
         // Remove all files with no File object.
         // These files have been added by the FormControl.
-        const viewValue = ensureArray(this.viewData.control.value).filter((i) => i.file !== null);
+        const viewValue = ensureArray(this.viewData.control.value).filter((i) => !(i instanceof FormFile) || i.file !== null);
 
         for (const item of controlValueArray) {
-            viewValue.push(FormFile.Create(item));
+            viewValue.push(FormFile.Create(item, this.i18n));
         }
         return viewValue;
     }
@@ -84,33 +116,33 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
      * @inheritDoc
      */
     public viewValueToControlValue(viewValue: any): any {
-        const resolveFileValue = (file: FormFile) => {
+        const resolveFileValue = (file: FormFile|any): FormFile|any => {
+            // If the file is any custom value, keep it as is.
+            if (!(file instanceof FormFile)) {
+                return file;
+            }
+            // If the file has been added manually from the outside, just keep the given value.
             if (file.status === UploadStatus.Remote) {
                 return file.serverResponse;
             }
 
             // If the file is not uploaded and not uploading, add the blob as is
-            // so it can be send as part of the form.
+            // so it can be sent as part of the form.
             if (file.status === UploadStatus.Paused) {
                 return !this.ignoreNonUploadedFiles ? file.file : null;
             }
             // If the file has already been successfully uploaded to the server,
             // try to set the server's response instead (we don't want to upload it again).
-            // If the server did not return anything, set a generic data structure
-            // and hope the server will know what to do with it...
-            if (file.status === UploadStatus.Succeeded) {
-                return file.serverResponse || {
-                    name: file.filename,
-                    size: file.totalSize,
-                    type: file.type
-                };
+            // If the server did not return anything, use the FormFile as value.
+            if (file.status === UploadStatus.Succeeded || (!this.ignoreNonUploadedFiles && file.status === UploadStatus.Uploading)) {
+                return file.serverResponse || file.file;
             }
             // Otherwise, if the file is uploading or failed to upload, don't include it at all.
             return null;
         };
 
-        if (this.viewData.multiple) {
-            return this.viewData.control.value.reduce((acc: File[], item: FormFile) => {
+        if (this.multiple) {
+            return this.viewData.control.value.reduce((acc: Array<FormFile|any>, item: FormFile|any) => {
                 const value = resolveFileValue(item);
                 if (value !== null) {
                     acc.push(value);
@@ -131,7 +163,7 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
             throw new UsageException('`onFileSelectionChange` expect to be called by the `change` event of a file input.');
         }
         const newFiles = event.target.files !== null ? Array.from(event.target.files) : [];
-        if (!this.viewData.multiple) {
+        if (!this.multiple) {
             const missingFiles = [];
             for (const file of this.viewData.control.value) {
                 if (file.file !== null && newFiles.indexOf(file.file) < 0) {
@@ -206,7 +238,7 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
      * Start the upload of a file.
      */
     public start(file: FormFile): void {
-        if (file.status === UploadStatus.Uploading || file.status === UploadStatus.Succeeded) {
+        if (!file.file || file.status === UploadStatus.Uploading || file.status === UploadStatus.Succeeded || !this.validateFile(file)) {
             return ;
         }
         const existingRequest = this.uploadRequestsMap.get(file);
@@ -227,7 +259,7 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
             file.serverResponse = this.isAcceptableAsServerResponse(response.result) ? response.result : undefined;
             file.status = UploadStatus.Succeeded;
         }).catch(() => {
-            file.error = response.error ? response.error.message : 'Unknown error';
+            file.error = response.error ? response.error.message : this.i18n.unknownError;
             file.status = UploadStatus.Failed;
         }).finally(() => {
             this.uploadRequestsMap.delete(file);
@@ -241,11 +273,10 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
      * Add a file to the queue.
      */
     public queue(file: File): void {
-        const uploadFile = new FormFile(file);
+        const uploadFile = new FormFile(file, this.i18n);
 
-        if (this.viewData.accept && !this.isAcceptableFile(file, this.viewData.accept)) {
+        if (!this.validateFile(uploadFile)) {
             uploadFile.status = UploadStatus.Failed;
-            uploadFile.error = 'Invalid type of file.';
         }
         this.viewData.control.value.push(uploadFile);
         if (!uploadFile.failed && this.autoStartUpload) {
@@ -310,16 +341,47 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
     /**
      * Test if a file matches an "accept" pattern.
      */
-    private isAcceptableFile(file: File, accept: string): boolean {
+    private validateFile(file: FormFile): boolean {
+        if (!file.file) {
+            file.error = this.i18n.unknownError;
+            return false;
+        }
+        if (!this.isAcceptableType(file.file)) {
+            file.error = this.i18n.invalidType;
+            return false;
+        }
+        if (this.maxIndividualSize !== null && file.file.size > this.maxIndividualSize) {
+            file.error = this.i18n.individualSizeExceeded.replace('{size}', byteCountToHumanSize(this.maxIndividualSize));
+            return false;
+        }
+        if (this.maxTotalSize !== null) {
+            const sum = this.viewData.control.value.reduce((acc: number, item: FormFile) => {
+                return acc + (item.file ? item.file.size : 0);
+            }, this.viewData.control.value.indexOf(file) > -1 ? 0 : file.file.size);
+            if (sum > this.maxTotalSize) {
+                file.error = this.i18n.totalSizeExceeded.replace('{size}', byteCountToHumanSize(this.maxTotalSize));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check if the type of a file is acceptable in the current configuration.
+     */
+    private isAcceptableType(file: File): boolean {
+        if (!this.accept) {
+            return true;
+        }
         let extension: string|null = null;
-        const candidates = accept.split(',').map((i) => trim(i)).filter((i) => i.length);
+        const candidates = this.accept.split(',').map((i) => trim(i)).filter((i) => i.length);
         for (const candidate of candidates) {
             if (candidate[0] === '.') {
                 if (!extension) {
                     extension = file.name.slice((Math.max(0, file.name.lastIndexOf(".")) || Infinity) + 1);
-                    if ('.' + extension === candidate) {
-                        return true;
-                    }
+                }
+                if ('.' + extension === candidate) {
+                    return true;
                 }
             } else if ((new RegExp(candidate.replace( '*', '.\*')).test(file.type))) {
                 return true;
