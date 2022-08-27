@@ -1,9 +1,9 @@
 /**
  * Convert a size in bytes to a human friendly string.
  */
-export function humanFileSize(bytes: number, si: boolean = true) {
-    const thresh = si ? 1000 : 1024;
-    if (Math.abs(bytes) < thresh) {
+export function byteCountToHumanSize(bytes: number, si: boolean = true) {
+    const multiple = si ? 1000 : 1024;
+    if (Math.abs(bytes) < multiple) {
         return bytes + ' B';
     }
     const units = si
@@ -11,8 +11,8 @@ export function humanFileSize(bytes: number, si: boolean = true) {
         : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
     let u = -1;
     do {
-        bytes /= thresh;
+        bytes /= multiple;
         ++u;
-    } while (Math.abs(bytes) >= thresh && u < units.length - 1);
+    } while (Math.abs(bytes) >= multiple && u < units.length - 1);
     return bytes.toFixed(1) + ' ' + units[u];
 }
