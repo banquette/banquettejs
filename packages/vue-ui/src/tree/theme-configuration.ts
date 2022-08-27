@@ -2,11 +2,17 @@
 export const ThemeConfiguration = {
     css: {
         vars: {
-            fontFamily                  : '@-font-family',
-            fontSize                    : '@-font-size',
-            fontWeight                  : '@-font-weight',
-            textColor                   : '@-text-color',
-            textHoverColor              : '@-text-hover-color'
+            itemFontFamily              : '@-item-font-family',
+            itemFontSize                : '@-item-font-size',
+            itemFontWeight              : '@-item-font-weight',
+            itemTextColor               : '@-item-text-color',
+            itemTextHoverColor          : '@-item-text-hover-color',
+
+            itemBackgroundColor         : '@-item-background-color',
+            itemBackgroundHoverColor    : '@-item-background-hover-color',
+            itemIconColor               : '@-item-icon-color',
+
+            itemDisabledOpacity         : '@-item-disabled-opacity'
         },
         selectors: {
             root: '&.bt-tree'

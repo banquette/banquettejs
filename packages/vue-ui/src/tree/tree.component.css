@@ -11,6 +11,8 @@
     --tree-item-background-hover-color: var(--bt-tree-item-background-hover-color, var(--bt-color-gray-50));
 
     --tree-item-icon-color: var(--bt-tree-item-background-color, var(--bt-text-color-light));
+
+    --tree-item-disabled-opacity: var(--bt-tree-item-disabled-opacity, 0.5);
 }
 
 .bt-tree {
@@ -65,6 +67,14 @@
         &[data-empty] {
             & > :deep(.bt-collapsable) > .title > .addon svg {
                 opacity: 0;
+            }
+        }
+
+        &[data-is-disabled] {
+            opacity: var(--tree-item-disabled-opacity);
+
+            & > :deep(.bt-collapsable) > .title {
+                cursor: not-allowed;
             }
         }
     }

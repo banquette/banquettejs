@@ -5,7 +5,7 @@
             ref="input"
             :id="v.control.fullId"
             :type="v.type"
-            :tabindex="v.control.tabIndex"
+            :tabindex="!v.control.disabled ? v.control.tabIndex : null"
             v-model="v.control.value"
             :disabled="v.control.disabled ? '' : null"
             :autocomplete="v.autoComplete"
@@ -17,7 +17,7 @@
             v-else
             ref="textarea"
             :id="v.control.fullId"
-            :tabindex="v.control.tabIndex"
+            :tabindex="!v.control.disabled ? v.control.tabIndex : null"
             v-model="v.control.value"
             :disabled="v.control.disabled ? '' : null"
             :rows="v.rows"

@@ -1,6 +1,6 @@
 <div
     class="bt-form-checkbox"
-    :tabindex="v.control.tabIndex"
+    :tabindex="!v.control.disabled ? v.control.tabIndex : null"
     :data-is-disabled="v.control.disabled ? '' : null"
     :data-is-checked="v.checked ? '' : null"
     :data-is-indeterminate="v.indeterminate ? '' : null"

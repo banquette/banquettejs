@@ -15,36 +15,6 @@
     --form-file-item-action-button-active-background: var(--bt-form-file-item-action-button-active-background, var(--bt-color-primary-100));
 
     --form-file-done-icon-color: var(--bt-form-file-done-icon-color, var(--bt-color-green-500));
-
-    --form-file-padding-x: var(--bt-form-file-padding-x, 1em);
-    --form-file-padding-y: var(--bt-form-file-padding-y, 0.8em);
-}
-
-.bt-form-file :deep(.bt-form-base-input) {
-    --bt-form-base-input-text-color: var(--bt-form-file-text-color);
-    --bt-form-base-input-label-color: var(--bt-form-file-label-color);
-    --bt-form-base-input-help-color: var(--bt-form-file-help-color);
-    --bt-form-base-input-help-font-size: var(--bt-form-file-help-font-size);
-    --bt-form-base-input-error-text-color: var(--bt-form-file-error-text-color);
-    --bt-form-base-input-error-font-size: var(--bt-form-file-error-font-size);
-    --bt-form-base-input-text-addon-color: var(--bt-form-file-text-addon-color);
-
-    --bt-form-base-input-font-family: var(--bt-form-file-font-family);
-    --bt-form-base-input-font-size: var(--bt-form-file-font-size);
-    --bt-form-base-input-font-weight: var(--bt-form-file-font-weight);
-
-    --bt-form-base-input-border-color: var(--bt-form-file-border-color);
-    --bt-form-base-input-border-focus-color: var(--bt-form-file-border-focus-color);
-    --bt-form-base-input-border-error-color: var(--bt-form-file-border-error-color);
-    --bt-form-base-input-border-disabled-color: var(--bt-form-file-border-disabled-color);
-
-    --bt-form-base-input-background-color: var(--bt-form-file-background-color);
-    --bt-form-base-input-background-disabled-color: var(--bt-form-file-background-disabled-color);
-    --bt-form-base-input-addon-background-color: var(--bt-form-file-addon-background-color);
-
-    --bt-form-base-input-border-radius: var(--bt-form-file-border-radius);
-    --bt-form-base-input-border-width: var(--bt-form-file-border-width);
-    --bt-form-base-input-border-style: var(--bt-form-file-border-style);
 }
 
 .bt-form-file {
@@ -59,7 +29,11 @@
     }
 
     .browse {
-        padding: var(--form-file-padding-y) var(--form-file-padding-x);
+        padding: var(--form-base-input-placeholder-y) var(--form-base-input-placeholder-x);
+    }
+
+    &:not([data-is-disabled]) .browse {
+        cursor: pointer;
     }
 
     .file-item {

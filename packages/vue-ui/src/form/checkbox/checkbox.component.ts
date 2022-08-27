@@ -124,7 +124,9 @@ export default class CheckboxComponent extends AbstractVueFormComponent<Checkbox
     }
 
     @Expose() public toggle(): void {
-        this.vm.toggle();
+        if (!this.disabled) {
+            this.vm.toggle();
+        }
     }
 
     /**

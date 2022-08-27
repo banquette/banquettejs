@@ -20,18 +20,6 @@
 }
 
 .bt-form-checkbox :deep(.bt-form-base-input) {
-    --bt-form-base-input-text-color: var(--bt-form-checkbox-text-color);
-    --bt-form-base-input-label-color: var(--bt-form-checkbox-label-color);
-    --bt-form-base-input-help-color: var(--bt-form-checkbox-help-color);
-    --bt-form-base-input-help-font-size: var(--bt-form-checkbox-help-font-size);
-    --bt-form-base-input-error-text-color: var(--bt-form-checkbox-error-text-color);
-    --bt-form-base-input-error-font-size: var(--bt-form-checkbox-error-font-size);
-    --bt-form-base-input-text-addon-color: var(--bt-form-checkbox-text-addon-color);
-
-    --bt-form-base-input-font-family: var(--bt-form-checkbox-font-family);
-    --bt-form-base-input-font-size: var(--bt-form-checkbox-font-size);
-    --bt-form-base-input-font-weight: var(--bt-form-checkbox-font-weight);
-
     --bt-form-base-input-border-color: transparent;
     --bt-form-base-input-border-focus-color: transparent;
     --bt-form-base-input-border-error-color: transparent;
@@ -45,12 +33,14 @@
 
 .bt-form-checkbox {
     position: relative;
-    display: flex;
+    display: inline-flex;
+    flex-grow: 0;
     align-items: center;
     gap: 0.75em;
     outline: 1px solid transparent;
 
     &, * { cursor: pointer; }
+    &[data-is-disabled], &[data-is-disabled] * { cursor: not-allowed; }
 
     label {
         color: inherit;
@@ -76,12 +66,12 @@
         }
     }
 
-    &:hover .checkbox {
+    &:not([data-is-disabled]):hover .checkbox {
         border-color: var(--form-checkbox-outline-hover-color);
         outline: var(--form-checkbox-outline-hover-width) solid var(--form-checkbox-outline-hover-color);
     }
 
-    &[data-has-focus] .checkbox {
+    &[data-has-focus]:not([data-is-disabled]) .checkbox {
         border-color: var(--form-checkbox-outline-focused-color);
         outline: var(--form-checkbox-outline-focused-width) solid var(--form-checkbox-outline-focused-color);
     }
@@ -91,12 +81,12 @@
         outline: var(--form-checkbox-outline-width) solid var(--form-checkbox-error-color);
     }
 
-    &[data-has-error][data-has-focus] .checkbox {
+    &[data-has-error][data-has-focus]:not([data-is-disabled]) .checkbox {
         border-color: var(--form-checkbox-error-color);
         outline: var(--form-checkbox-outline-focused-width) solid var(--form-checkbox-error-color);
     }
 
-    &[data-has-error]:hover .checkbox {
+    &[data-has-error]:not([data-is-disabled]):hover .checkbox {
         border-color: var(--form-checkbox-error-color);
         outline: var(--form-checkbox-outline-hover-width) solid var(--form-checkbox-error-color);
     }
@@ -127,11 +117,6 @@
 
     &[data-has-group] .checkbox {
         border-radius: 50%;
-    }
-
-    &[data-is-disabled] {
-        pointer-events: none;
-        opacity: 0.4;
     }
 
     &[data-is-indeterminate] .checkbox::before {

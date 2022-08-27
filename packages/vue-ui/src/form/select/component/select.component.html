@@ -14,7 +14,7 @@
                     <input
                         ref="input"
                         :id="v.control.fullId"
-                        :tabindex="v.control.tabIndex"
+                        :tabindex="!v.control.disabled ? v.control.tabIndex : null"
                         type="text"
                         v-model="v.inputValue"
                         :disabled="v.control.disabled ? '' : null"

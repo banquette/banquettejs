@@ -1,20 +1,5 @@
-.bt-form-tree {
-
-}
 
 .bt-form-tree :deep(.bt-form-base-input) {
-    --bt-form-base-input-text-color: var(--bt-form-tree-text-color);
-    --bt-form-base-input-label-color: var(--bt-form-tree-label-color);
-    --bt-form-base-input-help-color: var(--bt-form-tree-help-color);
-    --bt-form-base-input-help-font-size: var(--bt-form-tree-help-font-size);
-    --bt-form-base-input-error-text-color: var(--bt-form-tree-error-text-color);
-    --bt-form-base-input-error-font-size: var(--bt-form-tree-error-font-size);
-    --bt-form-base-input-text-addon-color: var(--bt-form-tree-text-addon-color);
-
-    --bt-form-base-input-font-family: var(--bt-form-tree-font-family);
-    --bt-form-base-input-font-size: var(--bt-form-tree-font-size);
-    --bt-form-base-input-font-weight: var(--bt-form-tree-font-weight);
-
     --bt-form-base-input-border-color: transparent;
     --bt-form-base-input-border-focus-color: transparent;
     --bt-form-base-input-border-error-color: transparent;

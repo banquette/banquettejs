@@ -1,11 +1,4 @@
 .bt-form-select-choice {
-    --form-select-choice-text-color: var(--bt-form-select-choice-text-color, var(--bt-color-primary));
-    --form-select-choice-check-icon-color: var(--bt-form-select-choice-check-icon-color, var(--bt-color-primary));
-    --form-select-choice-trash-icon-color: var(--bt-form-select-choice-trash-icon-color, var(--bt-color-red-500));
-    --form-select-choice-background-focus-color: var(--bt-form-select-choice-background-focus-color, var(--bt-color-gray-50));
-}
-
-.bt-form-select-choice {
     position: relative;
     display: flex;
     align-items: center;

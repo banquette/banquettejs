@@ -5,10 +5,25 @@
     --form-select-tag-border-color: var(--bt-form-select-tag-border-color, var(--bt-color-gray-150));
     --form-select-tag-background-color: var(--bt-form-select-tag-background-color, var(--bt-color-gray-50));
     --form-select-tag-max-width: var(--bt-form-select-tag-max-width, 200px);
+    --form-select-tag-close-fill-color: var(--bt-form-select-close-fill-color, var(--form-select-tag-text-color));
     --form-select-tag-close-fill-hover-color: var(--bt-form-select-close-fill-hover-color, var(--form-select-tag-text-color));
     --form-select-tag-close-background-hover-color: var(--bt-form-select-close-background-hover-color, var(--form-select-tag-border-color));
 
     --form-select-clear-icon-color: var(--bt-form-select-clear-icon-color, var(--bt-text-color-light));
+
+    /* Choice */
+    --form-select-choice-text-color: var(--bt-form-select-choice-text-color, var(--bt-color-primary));
+    --form-select-choice-check-icon-color: var(--bt-form-select-choice-check-icon-color, var(--bt-color-primary));
+    --form-select-choice-trash-icon-color: var(--bt-form-select-choice-trash-icon-color, var(--bt-color-red-500));
+    --form-select-choice-background-focus-color: var(--bt-form-select-choice-background-focus-color, var(--bt-color-gray-50));
+
+    /* Group */
+    --form-select-group-padding-x: var(--bt-form-select-group-padding-x, 1em);
+    --form-select-group-padding-y: var(--bt-form-select-group-padding-y, 0.8em);
+    --form-select-group-label-text-color: var(--bt-form-select-group-label-text-color, var(--bt-color-gray-450));
+    --form-select-group-label-font-weight: var(--bt-form-select-group-label-font-weight, var(--bt-font-weight-semibold));
+    --form-select-group-label-font-size: var(--bt-form-select-group-label-font-size, var(--bt-font-size-sm));
+    --form-select-group-separator-color: var(--bt-form-select-group-separator-color, var(--bt-color-gray-100));
 }
 
 .bt-form-select {
@@ -207,6 +222,7 @@
         --bt-tag-text-color: var(--form-select-tag-text-color);
         --bt-tag-border-color: var(--form-select-tag-border-color);
         --bt-tag-background-color: var(--form-select-tag-background-color);
+        --bt-tag-close-fill-color: var(--form-select-tag-close-fill-color);
         --bt-tag-close-fill-hover-color: var(--form-select-tag-close-fill-hover-color);
         --bt-tag-close-background-hover-color: var(--form-select-tag-close-background-hover-color);
         --bt-tag-max-width: var(--form-select-tag-max-width);

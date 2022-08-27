@@ -1,6 +1,6 @@
 <div
     class="bt-form-file"
-    :tabindex="v.control.tabIndex"
+    :tabindex="!v.control.disabled ? v.control.tabIndex : null"
     v-bt-bind-theme
     :data-is-multiple="v.multiple ? '' : null"
     :data-has-value="v.control.value.length > 0 ? '' : null"
