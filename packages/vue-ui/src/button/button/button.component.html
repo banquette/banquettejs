@@ -1,6 +1,7 @@
 <div
     class="bt-button"
     :data-is-disabled="disabled ? '' : null"
+    :data-is-working="working ? '' : null"
     v-bt-click-outside="{eventType: 'mousedown', callback: hideToggle, enabled: isToggleSlotVisible}"
     v-bt-bind-theme
 >
@@ -9,7 +10,7 @@
         ref="root"
         :href="href"
         :target="target"
-        tabindex="0"
+        :tabindex="!disabled ? 0 : null"
         class="inner"
         :disabled="disabled ? '' : null"
         :data-active="active ? '' : null"

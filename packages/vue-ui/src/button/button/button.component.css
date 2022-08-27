@@ -41,6 +41,10 @@
         cursor: not-allowed;
     }
 
+    &[data-is-working] {
+        cursor: wait;
+    }
+
     .inner {
         width: 100%;
         display: inline-flex;
