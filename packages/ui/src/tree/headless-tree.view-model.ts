@@ -8,6 +8,7 @@ import { replaceStringVariables } from "@banquette/utils-string/format/replace-s
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
 import { ensureString } from "@banquette/utils-type/ensure-string";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isPrimitive } from "@banquette/utils-type/is-primitive";
@@ -203,7 +204,7 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
     /**
      * Try to normalize a raw value into a Node.
      */
-    public normalizeNode(item: object, parent: Node|null): Node|null {
+    public normalizeNode(item: any, parent: Node|null): Node|null {
         if (item instanceof Node) {
             return item;
         }
@@ -216,7 +217,9 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
         if (userExpanded !== null) {
             instance.expanded = userExpanded;
         }
-        this.rawNodes.set(item, instance);
+        if (isObject(item)) {
+            this.rawNodes.set(item, instance);
+        }
         return instance;
     }
 
@@ -276,7 +279,7 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
      */
     private changeNodeChildrenVisibility(nodeOrId: Node|number, targetVisibility: boolean|'inverse'): void {
         const node = nodeOrId instanceof Node ? nodeOrId : this.getNodeById(nodeOrId);
-        if (!node) {
+        if (!node || node.disabled) {
             return ;
         }
         node.expanded = targetVisibility === true || (targetVisibility === 'inverse' && !node.expanded);
@@ -300,6 +303,9 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
             return String(item);
         }
         const defaultLabel = '(unknown label)';
+        if (isArray(item)) {
+            return item.length > 0 ? item[0] : defaultLabel;
+        }
         if (!isObject(item)) {
             return defaultLabel;
         }
@@ -324,6 +330,9 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
     private extractNodeChildren(item: any): any[] {
         if (isFunction(this.nodesChildren)) {
             return ensureArray(this.nodesChildren(item));
+        }
+        if (isArray(item)) {
+            return item.slice(1);
         }
         if (!isObject(item) || !this.nodesChildren) {
             return [];
