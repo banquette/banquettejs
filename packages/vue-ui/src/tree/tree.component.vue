@@ -21,17 +21,7 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
-import {
-    h,
-    resolveDirective,
-    withDirectives,
-    renderSlot,
-    VNode,
-    SetupContext,
-    toRaw,
-    resolveComponent,
-    ComponentPublicInstance
-} from "vue";
+import { h, resolveDirective, withDirectives, renderSlot, VNode, toRaw, resolveComponent } from "vue";
 import { CollapsableComponent } from "../collapsable";
 import { ProgressCircularComponent } from "../progress/progress-circular";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -230,7 +220,8 @@ export default class TreeComponent extends Vue {
         return h('div', {
             class: 'bt-tree-item',
             'data-expanded': node.expanded ? '' : null,
-            'data-empty': node.fetched && !node.childrenVisibleCount ? '' : null
+            'data-empty': node.fetched && !node.childrenVisibleCount ? '' : null,
+            'data-is-disabled': node.disabled ? '' : null
         }, [
             collapsable
         ]);
