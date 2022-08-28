@@ -17,13 +17,13 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-collapsable',
     directives: [BindThemeDirective],
-    emits: ['update:modelValue']
+    emits: ['update:opened']
 })
 export default class CollapsableComponent extends Vue {
     /**
      * Control the visibility of the collapsable content.
      */
-    @Prop({type: Boolean, default: true}) public modelValue!: boolean;
+    @Prop({type: Boolean, default: true}) public opened!: boolean;
 
     /**
      * If `true`, the content is destroyed when collapsed.
@@ -95,7 +95,7 @@ export default class CollapsableComponent extends Vue {
                 this.transitioning = false;
             }, this.transitionDuration);
         });
-        this.$emit('update:modelValue', false);
+        this.$emit('update:opened', true);
     }
 
     /**
@@ -128,15 +128,15 @@ export default class CollapsableComponent extends Vue {
                 this.transitioning = false;
             }, this.transitionDuration);
         });
-        this.$emit('update:modelValue', true);
+        this.$emit('update:opened', false);
     }
 
-    @Watch('modelValue', {immediate: ImmediateStrategy.Mounted})
+    @Watch('opened', {immediate: ImmediateStrategy.Mounted})
     private onCollapsableChange(newValue: boolean): void {
         if (newValue) {
-            this.close();
-        } else {
             this.open();
+        } else {
+            this.close();
         }
     }
 
