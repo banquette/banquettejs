@@ -86,10 +86,9 @@ export class Node {
     /**
      * The raw value the Node instance has been created from.
      */
-    public readonly rawValue: AnyObject;
+    public readonly originalValue: AnyObject;
 
-    public constructor(rawValue: AnyObject, public readonly parent: Node|null = null) {
-        this.rawValue = rawValue;
+    public constructor(originalValue: AnyObject, public readonly parent: Node|null = null) {
+        this.originalValue = originalValue;
     }
-
 }

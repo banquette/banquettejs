@@ -248,12 +248,12 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
      */
     private extractNodeValue(node: Node): any {
         if (isFunction(this.nodesValue)) {
-            return this.nodesValue(node.rawValue);
+            return this.nodesValue(node.originalValue);
         }
-        if (!isObject(node.rawValue) || !this.nodesValue) {
-            return node.rawValue;
+        if (!isObject(node.originalValue) || !this.nodesValue) {
+            return node.originalValue;
         }
-        return node.rawValue[this.nodesValue];
+        return node.originalValue[this.nodesValue];
     }
 
     /**

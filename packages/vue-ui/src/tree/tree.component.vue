@@ -94,7 +94,7 @@ export default class TreeComponent extends Vue {
         this.vm.fetchRemoteNodes();
 
         this.unsubscribeFunctions.push(this.vm.onNodeRemoved((event: NodeRemovedEventArg) => {
-            this.removeFromModelValue(toRaw(event.node.rawValue));
+            this.removeFromModelValue(toRaw(event.node.originalValue));
         }));
     }
 
@@ -160,7 +160,7 @@ export default class TreeComponent extends Vue {
         const theme = resolveDirective("bt-bind-theme") as any;
         const childNodes: VNode[] = [];
         if (this.showRoot) {
-            childNodes.push(this.renderNode(context, this.v.root, 'root'));
+            childNodes.push(this.renderNode(context, this.v.root, 'node'));
         } else {
             for (const node of this.v.root.children) {
                 childNodes.push(this.renderNode(context, node));

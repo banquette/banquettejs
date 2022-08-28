@@ -1,7 +1,6 @@
 <div class="bt-form-tree" v-bt-bind-theme>
     <bt-form-base-input :v="v">
         <bt-tree v-bind="$attrs">
-            <template #root="sp"><slot name="root" v-bind="sp"></slot></template>
             <template #node="sp">
                 <div class="bt-tree-title-wrapper">
                     <bt-form-checkbox :control="getCheckboxData(sp.node).control"
