@@ -1,5 +1,5 @@
 <Transition :name="transition !== false ? transition : undefined" @after-leave="onAfterLeave">
-    <div class="bt-alert" v-if="visible" :data-is-closable="closable ? '' : null" v-bt-bind-theme>
+    <div class="bt-alert" v-if="isVisible" :data-is-closable="closable ? '' : null" v-bt-bind-theme>
         <template v-if="!!icon">
             <bt-icon :name="icon" :set="iconSet"></bt-icon>
         </template>

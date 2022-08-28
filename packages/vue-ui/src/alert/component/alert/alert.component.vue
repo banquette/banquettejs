@@ -21,12 +21,9 @@ import { ThemeConfiguration } from "./theme-configuration";
     name: 'bt-alert',
     components: [IconComponent, ButtonComponent, ProgressHorizontalComponent, IconMaterialClose],
     directives: [BindThemeDirective],
-    emits: ['update:modelValue', 'close'],
+    emits: ['update:visible', 'close'],
 })
 export default class AlertComponent extends Vue {
-    // "v-model" recipient
-    @Prop({type: Boolean, default: false}) public modelValue!: boolean;
-
     /**
      * An optional title to show above the content.
      * You can also override the "title" slot.
@@ -61,15 +58,20 @@ export default class AlertComponent extends Vue {
     @Prop({type: [String, Boolean], default: undefined}) public transition!: string|false|undefined;
 
     /**
+     * Bi-directional visibility control.
+     */
+    @Prop({type: Boolean, default: null}) public visible!: boolean|null;
+
+    /**
      * Bidirectional binding for the visibility so the dialog can be closed
      * both from the inside and outside the component.
      */
     @Computed()
-    public get visible(): boolean {
-        return this.modelValue || this.internalVisible;
+    public get isVisible(): boolean {
+        return this.visible === true || this.internalVisible;
     }
-    public set visible(value: boolean) {
-        this.$emit('update:modelValue', value);
+    public set isVisible(value: boolean) {
+        this.$emit('update:visible', value);
     }
 
     /**
@@ -99,11 +101,21 @@ export default class AlertComponent extends Vue {
     }
 
     /**
-     * Remove the alert.
+     * Show the alert.
+     */
+    @Expose() public show(): void {
+        this.isVisible = true;
+        this.internalVisible = true;
+        this.$forceUpdateComputed();
+    }
+
+    /**
+     * Hide the alert.
      */
     @Expose() public close(): void {
-        this.visible = false;
+        this.isVisible = false;
         this.internalVisible = false;
+        this.$forceUpdateComputed();
     }
 
     @Expose() public onAfterLeave(): void {
@@ -119,6 +131,15 @@ export default class AlertComponent extends Vue {
         this.ttlStartTime = (new Date()).getTime();
         this.timeLeft = newValue;
         this.updateTimeLeft();
+    }
+
+    @Watch('visible', {immediate: false})
+    private onVisibilityChange(newValue: boolean): void {
+        if (newValue) {
+            this.show();
+        } else {
+            this.close();
+        }
     }
 
     /**
