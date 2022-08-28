@@ -47,8 +47,9 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
     /**
      * Defines how to resolve the nodes' value.
      * Can be:
-     *   - the name of the property to use when the input is an object.
-     *   - a function that takes the raw input and returns the value to use.
+     *   - the name of the property to use when the input is an object,
+     *   - a function that takes the raw input and returns the value to use,
+     *   - `null` to use the original value of the node.
      */
     @Prop({type: [String, Function], default: null}) public nodesValue!: NodePropResolver<any>;
 
@@ -210,10 +211,11 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
                 this.checkboxesData[parent.id].indeterminate = false;
                 if (selectedCount && !unselectedCount && !indeterminateCount) {
                     this.checkboxesData[parent.id].control.setValue(true);
-                } else if (indeterminateCount || (selectedCount && unselectedCount)) {
-                    this.checkboxesData[parent.id].indeterminate = true;
                 } else {
+                    this.nodesSelectionUpdateStack.push(parent.id);
+                    this.checkboxesData[parent.id].indeterminate = indeterminateCount > 0 || (selectedCount > 0 && unselectedCount > 0);
                     this.checkboxesData[parent.id].control.setValue(false);
+                    this.nodesSelectionUpdateStack.pop();
                 }
             }
             parent = parent.parent;
@@ -272,8 +274,8 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
     /**
      * Get the identifier from an object value.
      *
-     * This is only required if the value (the one stored in the FormControl) is an object.
-     * In which case it is impossible to compare it with the value of a Node, the object reference
+     * This is only required if the model value (the one stored in the FormControl) is an object.
+     * In this case it is impossible to compare it with the value of a Node, the object reference
      * will certainly not be the same, even if both objects represent the same thing.
      *
      * The identifier is a Primitive type, so easily comparable.
