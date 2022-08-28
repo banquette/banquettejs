@@ -10,16 +10,12 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { ProgressCircularComponent } from "../../progress/progress-circular";
-import { RemoteComposable } from "./remote.composable";
 
 @Component({
     name: 'bt-remote',
     components: [ProgressCircularComponent]
 })
 export default class RemoteComponent extends Vue {
-    /**
-     * @see RemoteComposable
-     */
     @Prop({type: String, default: null}) public url!: string|null;
     @Prop({type: String, default: null}) public endpoint!: string|null;
     @Prop({type: String, default: null}) public model!: string|null;
