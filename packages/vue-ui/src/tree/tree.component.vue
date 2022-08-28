@@ -31,11 +31,13 @@ import { ThemeConfiguration } from "./theme-configuration";
     name: 'bt-tree',
     components: [ProgressCircularComponent, IconMaterialArrowDropDown, IconMaterialHelp],
     directives: [BindThemeDirective],
-    emits: ['update:modelValue'],
+    emits: ['update:data'],
 })
 export default class TreeComponent extends Vue {
-    // "v-model" recipient
-    @Prop({type: Array, default: null}) public modelValue!: AnyObject[]|null;
+    /**
+     * Local data to display in the tree.
+     */
+    @Prop({type: Array, default: null}) public data!: AnyObject[]|null;
 
     /**
      * Defines how to resolve the nodes' labels, identifiers, children and disabled status.
@@ -113,12 +115,12 @@ export default class TreeComponent extends Vue {
      */
     private removeFromModelValue(raw: AnyObject, parents: any|null = null): void {
         if (parents === null) {
-            parents = this.modelValue;
+            parents = this.data;
         }
         for (const key of Object.keys(parents)) {
             if (toRaw(parents[key]) === raw && isArray(parents)) {
                 parents.splice(parseInt(key, 10), 1);
-                this.$emit('update:modelValue', this.modelValue);
+                this.$emit('update:data', this.data);
                 return ;
             }
             if (isObject(parents[key])) {
@@ -136,10 +138,10 @@ export default class TreeComponent extends Vue {
         this.vm.remoteNodeUrlParam = this.nodeUrlParam;
     }
 
-    @Watch('modelValue', {immediate: ImmediateStrategy.BeforeMount, deep: true})
+    @Watch('data', {immediate: ImmediateStrategy.BeforeMount, deep: true})
     private assignLocalData(): void {
-        if (this.modelValue !== null) {
-            this.vm.synchronize(this.modelValue);
+        if (this.data !== null) {
+            this.vm.synchronize(this.data);
         }
     }
 
@@ -175,9 +177,9 @@ export default class TreeComponent extends Vue {
     private renderNode(context: any, node: Node, slotName: string = 'node', level = 0): VNode {
         const that = this;
         const collapsable = h(CollapsableComponent, {
-            modelValue: !node.expanded,
-            'onUpdate:modelValue': (value: any) => {
-                node.expanded = !value;
+            opened: node.expanded,
+            'onUpdate:opened': (value: boolean) => {
+                node.expanded = value;
             }
         }, {
             title: () => {
