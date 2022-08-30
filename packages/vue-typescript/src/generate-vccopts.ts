@@ -110,14 +110,16 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     if (!isUndefined(data.component.components)) {
         options.components = {};
         for (const key of getObjectKeys(data.component.components)) {
-            const item = data.component.components[key];
+            const item = data.component.components[key] as Component;
             let componentConstructor = isConstructor(item) ? item : (isVccOpts(item) ? vccOptsToCtor(item) : null);
             if (componentConstructor !== null) {
                 const componentDecoratorsData = getOrCreateComponentMetadata(componentConstructor.prototype);
                 const componentName = !isUndefined(componentDecoratorsData.component) ? componentDecoratorsData.component.name : key;
-                options.components[componentName] = item as Component;
+                options.components[componentName] = item;
             } else if (!isNumeric(key)) {
-                options.components[key] = item as Component;
+                options.components[key] = item;
+            } else if (isString(item.name)) {
+                options.components[item.name] = item;
             } else {
                 throw new UsageException(`You must provide a name for the components added to the "components" option if they don't use \`VueTypescript\`.`);
             }
