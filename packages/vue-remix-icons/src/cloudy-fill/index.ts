@@ -1,1 +1,0 @@
-export { default as IconRemixCloudyFill } from './cloudy-fill.component.vue';

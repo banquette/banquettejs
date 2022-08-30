@@ -1,1 +1,0 @@
-export { default as IconRemixStackLine } from './stack-line.component.vue';

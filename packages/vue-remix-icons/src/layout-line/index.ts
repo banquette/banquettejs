@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutLine } from './layout-line.component.vue';

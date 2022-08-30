@@ -1,1 +1,0 @@
-export { default as IconRemixDeleteBackLine } from './delete-back-line.component.vue';

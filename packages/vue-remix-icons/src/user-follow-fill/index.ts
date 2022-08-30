@@ -1,1 +1,0 @@
-export { default as IconRemixUserFollowFill } from './user-follow-fill.component.vue';

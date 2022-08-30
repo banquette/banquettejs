@@ -1,1 +1,8 @@
-export { default as IconMaterialGavel } from './gavel.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialGavel } from './gavel.component.vue';
+
+VueBuilder.RegisterComponent('i-material-gavel', IconMaterialGavel);
+
+export { IconMaterialGavel }
+

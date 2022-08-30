@@ -1,1 +1,0 @@
-export { default as IconRemixCustomerService2Fill } from './customer-service-2-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixVipDiamondFill } from './vip-diamond-fill.component.vue';

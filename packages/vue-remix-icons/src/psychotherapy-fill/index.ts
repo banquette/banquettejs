@@ -1,1 +1,0 @@
-export { default as IconRemixPsychotherapyFill } from './psychotherapy-fill.component.vue';

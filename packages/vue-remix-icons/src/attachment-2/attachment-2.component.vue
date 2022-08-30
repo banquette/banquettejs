@@ -1,15 +1,11 @@
-<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+<script>
+import { h } from 'vue';
 
-@Component('i-remix-attachment-2')
-export default class IconRemixAttachment2 {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;
+export default {
+    name: 'i-remix-attachment-2',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        return h('svg',{"viewBox":this.crop !== undefined ? '2.88 2.11 17.61 19.01' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"m14.828 7.757-5.656 5.657a1 1 0 1 0 1.414 1.414l5.657-5.656A3 3 0 1 0 12 4.929l-5.657 5.657a5 5 0 1 0 7.071 7.07L19.071 12l1.414 1.414-5.657 5.657a7 7 0 1 1-9.9-9.9l5.658-5.656a5 5 0 0 1 7.07 7.07L12 16.244A3 3 0 1 1 7.757 12l5.657-5.657 1.414 1.414z"},[])]);
+    }
 }
 </script>
-<template>
-    <svg :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '2.88 2.11 17.61 19.01' : '0 0 24 24'"><path d="m14.828 7.757-5.656 5.657a1 1 0 1 0 1.414 1.414l5.657-5.656A3 3 0 1 0 12 4.929l-5.657 5.657a5 5 0 1 0 7.071 7.07L19.071 12l1.414 1.414-5.657 5.657a7 7 0 1 1-9.9-9.9l5.658-5.656a5 5 0 0 1 7.07 7.07L12 16.244A3 3 0 1 1 7.757 12l5.657-5.657 1.414 1.414z"/></svg>
-</template>

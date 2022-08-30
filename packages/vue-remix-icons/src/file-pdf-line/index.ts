@@ -1,1 +1,0 @@
-export { default as IconRemixFilePdfLine } from './file-pdf-line.component.vue';

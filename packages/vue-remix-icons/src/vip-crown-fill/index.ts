@@ -1,1 +1,0 @@
-export { default as IconRemixVipCrownFill } from './vip-crown-fill.component.vue';

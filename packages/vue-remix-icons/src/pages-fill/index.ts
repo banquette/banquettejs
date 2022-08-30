@@ -1,1 +1,0 @@
-export { default as IconRemixPagesFill } from './pages-fill.component.vue';

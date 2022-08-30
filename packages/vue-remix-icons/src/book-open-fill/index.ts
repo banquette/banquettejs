@@ -1,1 +1,0 @@
-export { default as IconRemixBookOpenFill } from './book-open-fill.component.vue';

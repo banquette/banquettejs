@@ -1,1 +1,0 @@
-export { default as IconRemixShieldUserFill } from './shield-user-fill.component.vue';

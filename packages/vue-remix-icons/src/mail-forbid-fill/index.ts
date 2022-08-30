@@ -1,1 +1,0 @@
-export { default as IconRemixMailForbidFill } from './mail-forbid-fill.component.vue';

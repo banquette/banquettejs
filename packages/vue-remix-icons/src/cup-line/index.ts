@@ -1,1 +1,0 @@
-export { default as IconRemixCupLine } from './cup-line.component.vue';

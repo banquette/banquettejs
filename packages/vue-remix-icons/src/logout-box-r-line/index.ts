@@ -1,1 +1,0 @@
-export { default as IconRemixLogoutBoxRLine } from './logout-box-r-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixZhihuFill } from './zhihu-fill.component.vue';

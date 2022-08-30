@@ -1,1 +1,0 @@
-export { default as IconRemixHotspotLine } from './hotspot-line.component.vue';

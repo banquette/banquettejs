@@ -1,1 +1,0 @@
-export { default as IconRemixGhostSmileLine } from './ghost-smile-line.component.vue';

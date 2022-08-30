@@ -1,1 +1,8 @@
-export { default as IconMaterialPerson4 } from './person-4.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialPerson4 } from './person-4.component.vue';
+
+VueBuilder.RegisterComponent('i-material-person-4', IconMaterialPerson4);
+
+export { IconMaterialPerson4 }
+

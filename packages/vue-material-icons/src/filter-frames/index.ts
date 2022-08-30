@@ -1,1 +1,8 @@
-export { default as IconMaterialFilterFrames } from './filter-frames.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialFilterFrames } from './filter-frames.component.vue';
+
+VueBuilder.RegisterComponent('i-material-filter-frames', IconMaterialFilterFrames);
+
+export { IconMaterialFilterFrames }
+

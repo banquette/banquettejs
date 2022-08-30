@@ -1,1 +1,0 @@
-export { default as IconRemixDropFill } from './drop-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixUbuntuLine } from './ubuntu-line.component.vue';

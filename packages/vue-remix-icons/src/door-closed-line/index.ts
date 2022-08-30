@@ -1,1 +1,0 @@
-export { default as IconRemixDoorClosedLine } from './door-closed-line.component.vue';

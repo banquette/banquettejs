@@ -1,1 +1,0 @@
-export { default as IconRemixCalendarEventFill } from './calendar-event-fill.component.vue';

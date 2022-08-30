@@ -1,1 +1,0 @@
-export { default as IconRemixHardDriveFill } from './hard-drive-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLayout5Fill } from './layout-5-fill.component.vue';

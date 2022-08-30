@@ -1,1 +1,0 @@
-export { default as IconRemixAndroidLine } from './android-line.component.vue';

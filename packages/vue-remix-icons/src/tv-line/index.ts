@@ -1,1 +1,0 @@
-export { default as IconRemixTvLine } from './tv-line.component.vue';

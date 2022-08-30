@@ -1,1 +1,0 @@
-export { default as IconRemixMarkPenLine } from './mark-pen-line.component.vue';

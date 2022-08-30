@@ -1,1 +1,0 @@
-export { default as IconRemixMicrosoftFill } from './microsoft-fill.component.vue';

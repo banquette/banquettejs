@@ -1,1 +1,0 @@
-export { default as IconRemixDisqusLine } from './disqus-line.component.vue';

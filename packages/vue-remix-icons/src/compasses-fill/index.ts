@@ -1,1 +1,0 @@
-export { default as IconRemixCompassesFill } from './compasses-fill.component.vue';

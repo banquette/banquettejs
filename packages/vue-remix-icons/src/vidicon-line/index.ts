@@ -1,1 +1,0 @@
-export { default as IconRemixVidiconLine } from './vidicon-line.component.vue';

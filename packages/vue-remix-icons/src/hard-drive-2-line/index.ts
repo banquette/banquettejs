@@ -1,1 +1,0 @@
-export { default as IconRemixHardDrive2Line } from './hard-drive-2-line.component.vue';

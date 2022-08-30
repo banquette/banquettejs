@@ -1,1 +1,0 @@
-export { default as IconRemixPulseFill } from './pulse-fill.component.vue';

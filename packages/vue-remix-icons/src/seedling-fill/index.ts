@@ -1,1 +1,0 @@
-export { default as IconRemixSeedlingFill } from './seedling-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixFahrenheitLine } from './fahrenheit-line.component.vue';

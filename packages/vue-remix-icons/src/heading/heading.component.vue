@@ -1,15 +1,11 @@
-<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+<script>
+import { h } from 'vue';
 
-@Component('i-remix-heading')
-export default class IconRemixHeading {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;
+export default {
+    name: 'i-remix-heading',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        return h('svg',{"viewBox":this.crop !== undefined ? '5 4 14 17' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M17 11V4h2v17h-2v-8H7v8H5V4h2v7z"},[])]);
+    }
 }
 </script>
-<template>
-    <svg :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '5 4 14 17' : '0 0 24 24'"><path d="M17 11V4h2v17h-2v-8H7v8H5V4h2v7z"/></svg>
-</template>

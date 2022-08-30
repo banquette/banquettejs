@@ -1,1 +1,0 @@
-export { default as IconRemixTaobaoFill } from './taobao-fill.component.vue';

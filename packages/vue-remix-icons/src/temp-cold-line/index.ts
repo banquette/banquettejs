@@ -1,1 +1,0 @@
-export { default as IconRemixTempColdLine } from './temp-cold-line.component.vue';

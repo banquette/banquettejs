@@ -1,1 +1,0 @@
-export { default as IconRemixServiceFill } from './service-fill.component.vue';

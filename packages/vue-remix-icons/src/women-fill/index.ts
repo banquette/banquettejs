@@ -1,1 +1,0 @@
-export { default as IconRemixWomenFill } from './women-fill.component.vue';

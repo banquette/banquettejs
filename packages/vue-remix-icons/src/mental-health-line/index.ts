@@ -1,1 +1,0 @@
-export { default as IconRemixMentalHealthLine } from './mental-health-line.component.vue';

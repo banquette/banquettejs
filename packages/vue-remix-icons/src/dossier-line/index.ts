@@ -1,1 +1,0 @@
-export { default as IconRemixDossierLine } from './dossier-line.component.vue';

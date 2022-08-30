@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutBottomFill } from './layout-bottom-fill.component.vue';

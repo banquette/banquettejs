@@ -1,1 +1,0 @@
-export { default as IconRemixRedPacketFill } from './red-packet-fill.component.vue';

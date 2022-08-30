@@ -1,1 +1,0 @@
-export { default as IconRemixFacebookFill } from './facebook-fill.component.vue';

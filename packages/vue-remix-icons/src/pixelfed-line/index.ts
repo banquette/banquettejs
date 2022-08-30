@@ -1,1 +1,0 @@
-export { default as IconRemixPixelfedLine } from './pixelfed-line.component.vue';

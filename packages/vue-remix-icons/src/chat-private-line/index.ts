@@ -1,1 +1,0 @@
-export { default as IconRemixChatPrivateLine } from './chat-private-line.component.vue';

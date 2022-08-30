@@ -1,1 +1,8 @@
-export { default as IconMaterialCrueltyFree } from './cruelty-free.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialCrueltyFree } from './cruelty-free.component.vue';
+
+VueBuilder.RegisterComponent('i-material-cruelty-free', IconMaterialCrueltyFree);
+
+export { IconMaterialCrueltyFree }
+

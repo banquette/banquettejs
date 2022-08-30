@@ -1,1 +1,0 @@
-export { default as IconRemixFolderForbidLine } from './folder-forbid-line.component.vue';

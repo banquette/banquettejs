@@ -1,1 +1,0 @@
-export { default as IconRemixCameraLensFill } from './camera-lens-fill.component.vue';

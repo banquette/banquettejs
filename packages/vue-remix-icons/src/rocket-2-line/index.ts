@@ -1,1 +1,0 @@
-export { default as IconRemixRocket2Line } from './rocket-2-line.component.vue';

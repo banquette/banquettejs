@@ -1,1 +1,0 @@
-export { default as IconRemixTempHotFill } from './temp-hot-fill.component.vue';

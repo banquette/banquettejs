@@ -1,1 +1,0 @@
-export { default as IconRemixRocketFill } from './rocket-fill.component.vue';

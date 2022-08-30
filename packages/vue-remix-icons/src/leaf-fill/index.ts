@@ -1,1 +1,0 @@
-export { default as IconRemixLeafFill } from './leaf-fill.component.vue';

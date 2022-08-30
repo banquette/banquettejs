@@ -1,1 +1,0 @@
-export { default as IconRemixLockUnlockLine } from './lock-unlock-line.component.vue';

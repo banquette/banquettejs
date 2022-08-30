@@ -1,1 +1,0 @@
-export { default as IconRemixShowersLine } from './showers-line.component.vue';

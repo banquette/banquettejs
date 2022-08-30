@@ -1,1 +1,0 @@
-export { default as IconRemixSipFill } from './sip-fill.component.vue';

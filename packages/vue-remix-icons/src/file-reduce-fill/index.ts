@@ -1,1 +1,0 @@
-export { default as IconRemixFileReduceFill } from './file-reduce-fill.component.vue';

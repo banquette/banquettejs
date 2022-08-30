@@ -1,1 +1,0 @@
-export { default as IconRemixCelsiusLine } from './celsius-line.component.vue';

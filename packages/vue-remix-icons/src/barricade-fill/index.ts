@@ -1,1 +1,0 @@
-export { default as IconRemixBarricadeFill } from './barricade-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixSunCloudyLine } from './sun-cloudy-line.component.vue';

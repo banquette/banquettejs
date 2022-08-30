@@ -1,1 +1,0 @@
-export { default as IconRemixPassportFill } from './passport-fill.component.vue';

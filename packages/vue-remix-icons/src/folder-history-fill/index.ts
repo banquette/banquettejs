@@ -1,1 +1,0 @@
-export { default as IconRemixFolderHistoryFill } from './folder-history-fill.component.vue';

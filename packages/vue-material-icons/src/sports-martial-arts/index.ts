@@ -1,1 +1,8 @@
-export { default as IconMaterialSportsMartialArts } from './sports-martial-arts.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialSportsMartialArts } from './sports-martial-arts.component.vue';
+
+VueBuilder.RegisterComponent('i-material-sports-martial-arts', IconMaterialSportsMartialArts);
+
+export { IconMaterialSportsMartialArts }
+

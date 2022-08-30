@@ -1,1 +1,0 @@
-export { default as IconRemixTerminalWindowLine } from './terminal-window-line.component.vue';

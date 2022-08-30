@@ -1,1 +1,0 @@
-export { default as IconRemixWifiOffFill } from './wifi-off-fill.component.vue';

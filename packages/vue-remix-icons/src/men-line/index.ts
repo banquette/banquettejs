@@ -1,1 +1,0 @@
-export { default as IconRemixMenLine } from './men-line.component.vue';

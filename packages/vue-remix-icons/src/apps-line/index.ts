@@ -1,1 +1,0 @@
-export { default as IconRemixAppsLine } from './apps-line.component.vue';

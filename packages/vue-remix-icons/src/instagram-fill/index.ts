@@ -1,1 +1,0 @@
-export { default as IconRemixInstagramFill } from './instagram-fill.component.vue';

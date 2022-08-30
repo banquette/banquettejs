@@ -1,1 +1,0 @@
-export { default as IconRemixDashboard2Fill } from './dashboard-2-fill.component.vue';

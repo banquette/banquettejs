@@ -1,1 +1,0 @@
-export { default as IconRemixMediumLine } from './medium-line.component.vue';

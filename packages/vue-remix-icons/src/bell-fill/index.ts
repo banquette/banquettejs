@@ -1,1 +1,0 @@
-export { default as IconRemixBellFill } from './bell-fill.component.vue';

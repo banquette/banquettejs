@@ -1,17 +1,13 @@
-<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+<script>
+import { h } from 'vue';
 
-@Component('i-material-elderly-woman')
-export default class IconMaterialElderlyWoman {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;
-    @Prop({type: String, default: 'default'}) public version!: string;
+export default {
+    name: 'i-material-elderly-woman',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        if (this.version === 'round')
+    return h('svg',{"viewBox":this.crop !== undefined ? '6 1 14 22' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M18.52 11c-1.57 0-2.94-.9-3.6-2.21l-.79-1.67C14.12 7.1 13.63 6 12.34 6 8.72 6 6 16.69 6 19h2.5L7 21c-.33.44-.24 1.07.2 1.4.44.33 1.07.24 1.4-.2L11 19h2v3c0 .55.45 1 1 1s1-.45 1-1v-2.71c0-.22-.04-.43-.1-.64L13 13l.49-2.71A6.02 6.02 0 0 0 17 12.81V13c0 .28.22.5.5.5s.5-.22.5-.5v-.5c0-.28.22-.5.5-.5s.5.22.5.5v10c0 .28.22.5.5.5s.5-.22.5-.5v-10c0-.79-.62-1.5-1.48-1.5zM11.6 2.91c-.06.19-.1.38-.1.59 0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2c-.21 0-.4.04-.59.1-.15-.35-.5-.6-.91-.6-.55 0-1 .45-1 1 0 .41.25.76.6.91z"},[])]);
+return h('svg',{"viewBox":this.crop !== undefined ? '6 1 14 22' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M18.5 11c-1.56 0-2.92-.9-3.58-2.21l-.79-1.67C14.12 7.1 13.63 6 12.34 6 8.72 6 6 16.69 6 19h2.5l-2.1 2.8L8 23l3-4h2v4h2v-4.03L13 13l.49-2.71A6.02 6.02 0 0 0 17 12.81v.69h1v-1c0-.28.22-.5.5-.5s.5.22.5.5V23h1V12.5c0-.83-.67-1.5-1.5-1.5zm-6.9-8.09c-.06.19-.1.38-.1.59 0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2c-.21 0-.4.04-.59.1-.15-.35-.5-.6-.91-.6-.55 0-1 .45-1 1 0 .41.25.76.6.91z"},[])]);
+    }
 }
 </script>
-<template>
-    <svg v-if="version === 'round'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '6 1 14 22' : '0 0 24 24'"><path d="M18.52 11c-1.57 0-2.94-.9-3.6-2.21l-.79-1.67C14.12 7.1 13.63 6 12.34 6 8.72 6 6 16.69 6 19h2.5L7 21c-.33.44-.24 1.07.2 1.4.44.33 1.07.24 1.4-.2L11 19h2v3c0 .55.45 1 1 1s1-.45 1-1v-2.71c0-.22-.04-.43-.1-.64L13 13l.49-2.71A6.02 6.02 0 0 0 17 12.81V13c0 .28.22.5.5.5s.5-.22.5-.5v-.5c0-.28.22-.5.5-.5s.5.22.5.5v10c0 .28.22.5.5.5s.5-.22.5-.5v-10c0-.79-.62-1.5-1.48-1.5zM11.6 2.91c-.06.19-.1.38-.1.59 0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2c-.21 0-.4.04-.59.1-.15-.35-.5-.6-.91-.6-.55 0-1 .45-1 1 0 .41.25.76.6.91z"/></svg>
-    <svg v-else :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '6 1 14 22' : '0 0 24 24'"><path d="M18.5 11c-1.56 0-2.92-.9-3.58-2.21l-.79-1.67C14.12 7.1 13.63 6 12.34 6 8.72 6 6 16.69 6 19h2.5l-2.1 2.8L8 23l3-4h2v4h2v-4.03L13 13l.49-2.71A6.02 6.02 0 0 0 17 12.81v.69h1v-1c0-.28.22-.5.5-.5s.5.22.5.5V23h1V12.5c0-.83-.67-1.5-1.5-1.5zm-6.9-8.09c-.06.19-.1.38-.1.59 0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2c-.21 0-.4.04-.59.1-.15-.35-.5-.6-.91-.6-.55 0-1 .45-1 1 0 .41.25.76.6.91z"/></svg>
-</template>

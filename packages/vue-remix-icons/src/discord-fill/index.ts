@@ -1,1 +1,0 @@
-export { default as IconRemixDiscordFill } from './discord-fill.component.vue';

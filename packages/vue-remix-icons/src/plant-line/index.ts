@@ -1,1 +1,0 @@
-export { default as IconRemixPlantLine } from './plant-line.component.vue';

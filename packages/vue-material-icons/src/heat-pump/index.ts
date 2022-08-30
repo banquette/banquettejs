@@ -1,1 +1,8 @@
-export { default as IconMaterialHeatPump } from './heat-pump.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialHeatPump } from './heat-pump.component.vue';
+
+VueBuilder.RegisterComponent('i-material-heat-pump', IconMaterialHeatPump);
+
+export { IconMaterialHeatPump }
+

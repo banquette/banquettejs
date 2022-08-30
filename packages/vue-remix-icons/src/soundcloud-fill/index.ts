@@ -1,1 +1,0 @@
-export { default as IconRemixSoundcloudFill } from './soundcloud-fill.component.vue';

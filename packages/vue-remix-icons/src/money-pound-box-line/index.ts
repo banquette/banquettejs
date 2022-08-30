@@ -1,1 +1,0 @@
-export { default as IconRemixMoneyPoundBoxLine } from './money-pound-box-line.component.vue';

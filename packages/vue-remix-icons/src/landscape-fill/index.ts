@@ -1,1 +1,0 @@
-export { default as IconRemixLandscapeFill } from './landscape-fill.component.vue';

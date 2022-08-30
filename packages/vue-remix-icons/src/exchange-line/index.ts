@@ -1,1 +1,0 @@
-export { default as IconRemixExchangeLine } from './exchange-line.component.vue';

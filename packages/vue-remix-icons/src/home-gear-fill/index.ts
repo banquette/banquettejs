@@ -1,1 +1,0 @@
-export { default as IconRemixHomeGearFill } from './home-gear-fill.component.vue';

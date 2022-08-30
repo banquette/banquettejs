@@ -1,1 +1,0 @@
-export { default as IconRemixWallet3Fill } from './wallet-3-fill.component.vue';

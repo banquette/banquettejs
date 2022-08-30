@@ -1,1 +1,0 @@
-export { default as IconRemixDriveFill } from './drive-fill.component.vue';

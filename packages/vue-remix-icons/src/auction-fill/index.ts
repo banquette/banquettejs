@@ -1,1 +1,0 @@
-export { default as IconRemixAuctionFill } from './auction-fill.component.vue';

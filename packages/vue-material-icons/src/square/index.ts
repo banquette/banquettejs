@@ -1,1 +1,8 @@
-export { default as IconMaterialSquare } from './square.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialSquare } from './square.component.vue';
+
+VueBuilder.RegisterComponent('i-material-square', IconMaterialSquare);
+
+export { IconMaterialSquare }
+

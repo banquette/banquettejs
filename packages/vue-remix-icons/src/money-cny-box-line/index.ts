@@ -1,1 +1,0 @@
-export { default as IconRemixMoneyCnyBoxLine } from './money-cny-box-line.component.vue';

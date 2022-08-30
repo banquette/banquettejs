@@ -1,1 +1,0 @@
-export { default as IconRemixMoonClearLine } from './moon-clear-line.component.vue';

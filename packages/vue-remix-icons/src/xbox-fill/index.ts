@@ -1,1 +1,0 @@
-export { default as IconRemixXboxFill } from './xbox-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixOperaFill } from './opera-fill.component.vue';

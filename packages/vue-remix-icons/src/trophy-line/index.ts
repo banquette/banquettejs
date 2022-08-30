@@ -1,1 +1,0 @@
-export { default as IconRemixTrophyLine } from './trophy-line.component.vue';

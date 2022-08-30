@@ -1,1 +1,0 @@
-export { default as IconRemixPriceTag2Line } from './price-tag-2-line.component.vue';

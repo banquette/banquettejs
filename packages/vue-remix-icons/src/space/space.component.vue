@@ -1,15 +1,11 @@
-<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+<script>
+import { h } from 'vue';
 
-@Component('i-remix-space')
-export default class IconRemixSpace {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;
+export default {
+    name: 'i-remix-space',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        return h('svg',{"viewBox":this.crop !== undefined ? '2 9 20 6' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M4 9v4h16V9h2v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9h2z"},[])]);
+    }
 }
 </script>
-<template>
-    <svg :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '2 9 20 6' : '0 0 24 24'"><path d="M4 9v4h16V9h2v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V9h2z"/></svg>
-</template>

@@ -1,1 +1,0 @@
-export { default as IconRemixBatteryShareFill } from './battery-share-fill.component.vue';

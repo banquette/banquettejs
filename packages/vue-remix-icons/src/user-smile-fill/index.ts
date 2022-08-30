@@ -1,1 +1,0 @@
-export { default as IconRemixUserSmileFill } from './user-smile-fill.component.vue';

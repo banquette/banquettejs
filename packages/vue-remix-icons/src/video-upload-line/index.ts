@@ -1,1 +1,0 @@
-export { default as IconRemixVideoUploadLine } from './video-upload-line.component.vue';

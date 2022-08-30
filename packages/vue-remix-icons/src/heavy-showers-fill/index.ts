@@ -1,1 +1,0 @@
-export { default as IconRemixHeavyShowersFill } from './heavy-showers-fill.component.vue';

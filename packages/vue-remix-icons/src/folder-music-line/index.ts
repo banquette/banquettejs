@@ -1,1 +1,0 @@
-export { default as IconRemixFolderMusicLine } from './folder-music-line.component.vue';

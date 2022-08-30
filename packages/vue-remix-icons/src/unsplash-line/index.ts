@@ -1,1 +1,0 @@
-export { default as IconRemixUnsplashLine } from './unsplash-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixBattery2ChargeFill } from './battery-2-charge-fill.component.vue';

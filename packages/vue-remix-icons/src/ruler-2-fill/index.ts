@@ -1,1 +1,0 @@
-export { default as IconRemixRuler2Fill } from './ruler-2-fill.component.vue';

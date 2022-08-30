@@ -1,1 +1,0 @@
-export { default as IconRemixDvFill } from './dv-fill.component.vue';

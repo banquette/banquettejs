@@ -1,1 +1,0 @@
-export { default as IconRemixPictureInPictureFill } from './picture-in-picture-fill.component.vue';

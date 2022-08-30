@@ -1,1 +1,0 @@
-export { default as IconRemixArrowDownCircleFill } from './arrow-down-circle-fill.component.vue';

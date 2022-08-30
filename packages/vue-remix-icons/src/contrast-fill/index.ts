@@ -1,1 +1,0 @@
-export { default as IconRemixContrastFill } from './contrast-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixGlobalLine } from './global-line.component.vue';

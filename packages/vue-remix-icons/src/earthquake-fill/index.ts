@@ -1,1 +1,0 @@
-export { default as IconRemixEarthquakeFill } from './earthquake-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLinkedinFill } from './linkedin-fill.component.vue';

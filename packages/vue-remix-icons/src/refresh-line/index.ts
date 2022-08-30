@@ -1,1 +1,0 @@
-export { default as IconRemixRefreshLine } from './refresh-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixHotelFill } from './hotel-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixSafe2Fill } from './safe-2-fill.component.vue';

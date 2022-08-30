@@ -1,1 +1,8 @@
-export { default as IconMaterialEscalatorWarning } from './escalator-warning.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialEscalatorWarning } from './escalator-warning.component.vue';
+
+VueBuilder.RegisterComponent('i-material-escalator-warning', IconMaterialEscalatorWarning);
+
+export { IconMaterialEscalatorWarning }
+

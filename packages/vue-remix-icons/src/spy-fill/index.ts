@@ -1,1 +1,0 @@
-export { default as IconRemixSpyFill } from './spy-fill.component.vue';

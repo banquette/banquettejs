@@ -1,1 +1,0 @@
-export { default as IconRemixMediumFill } from './medium-fill.component.vue';

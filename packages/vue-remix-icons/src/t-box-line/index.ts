@@ -1,1 +1,0 @@
-export { default as IconRemixTBoxLine } from './t-box-line.component.vue';

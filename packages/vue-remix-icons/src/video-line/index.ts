@@ -1,1 +1,0 @@
-export { default as IconRemixVideoLine } from './video-line.component.vue';

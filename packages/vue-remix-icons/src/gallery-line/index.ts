@@ -1,1 +1,0 @@
-export { default as IconRemixGalleryLine } from './gallery-line.component.vue';

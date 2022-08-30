@@ -1,1 +1,0 @@
-export { default as IconRemixAlipayLine } from './alipay-line.component.vue';

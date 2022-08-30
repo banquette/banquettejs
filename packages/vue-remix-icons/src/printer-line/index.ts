@@ -1,1 +1,0 @@
-export { default as IconRemixPrinterLine } from './printer-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixImageEditLine } from './image-edit-line.component.vue';

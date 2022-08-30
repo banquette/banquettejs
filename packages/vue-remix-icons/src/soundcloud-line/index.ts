@@ -1,1 +1,0 @@
-export { default as IconRemixSoundcloudLine } from './soundcloud-line.component.vue';

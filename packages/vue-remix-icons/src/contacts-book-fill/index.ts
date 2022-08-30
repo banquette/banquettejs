@@ -1,1 +1,0 @@
-export { default as IconRemixContactsBookFill } from './contacts-book-fill.component.vue';

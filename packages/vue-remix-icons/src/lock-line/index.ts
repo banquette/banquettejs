@@ -1,1 +1,0 @@
-export { default as IconRemixLockLine } from './lock-line.component.vue';

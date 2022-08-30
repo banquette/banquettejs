@@ -1,1 +1,0 @@
-export { default as IconRemixScreenshot2Fill } from './screenshot-2-fill.component.vue';

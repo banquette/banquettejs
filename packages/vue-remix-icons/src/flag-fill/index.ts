@@ -1,1 +1,0 @@
-export { default as IconRemixFlagFill } from './flag-fill.component.vue';

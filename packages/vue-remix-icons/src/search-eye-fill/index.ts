@@ -1,1 +1,0 @@
-export { default as IconRemixSearchEyeFill } from './search-eye-fill.component.vue';

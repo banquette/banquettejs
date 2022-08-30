@@ -1,1 +1,0 @@
-export { default as IconRemixFingerprint2Line } from './fingerprint-2-line.component.vue';

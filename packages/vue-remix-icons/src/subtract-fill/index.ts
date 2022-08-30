@@ -1,1 +1,0 @@
-export { default as IconRemixSubtractFill } from './subtract-fill.component.vue';

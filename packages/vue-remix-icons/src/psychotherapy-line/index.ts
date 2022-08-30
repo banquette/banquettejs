@@ -1,1 +1,0 @@
-export { default as IconRemixPsychotherapyLine } from './psychotherapy-line.component.vue';

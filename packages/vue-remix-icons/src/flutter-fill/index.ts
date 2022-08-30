@@ -1,1 +1,0 @@
-export { default as IconRemixFlutterFill } from './flutter-fill.component.vue';

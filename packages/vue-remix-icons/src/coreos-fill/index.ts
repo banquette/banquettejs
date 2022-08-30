@@ -1,1 +1,0 @@
-export { default as IconRemixCoreosFill } from './coreos-fill.component.vue';

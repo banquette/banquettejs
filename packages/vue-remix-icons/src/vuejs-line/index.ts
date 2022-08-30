@@ -1,1 +1,0 @@
-export { default as IconRemixVuejsLine } from './vuejs-line.component.vue';

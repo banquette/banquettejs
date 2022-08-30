@@ -1,1 +1,0 @@
-export { default as IconRemixHome4Fill } from './home-4-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixAirplayLine } from './airplay-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixRadarLine } from './radar-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixTaxiFill } from './taxi-fill.component.vue';

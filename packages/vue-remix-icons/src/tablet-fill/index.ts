@@ -1,1 +1,0 @@
-export { default as IconRemixTabletFill } from './tablet-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixPlug2Fill } from './plug-2-fill.component.vue';

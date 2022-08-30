@@ -1,1 +1,0 @@
-export { default as IconRemixSteamLine } from './steam-line.component.vue';

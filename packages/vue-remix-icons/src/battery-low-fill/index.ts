@@ -1,1 +1,0 @@
-export { default as IconRemixBatteryLowFill } from './battery-low-fill.component.vue';

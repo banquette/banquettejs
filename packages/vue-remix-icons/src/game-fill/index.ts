@@ -1,1 +1,0 @@
-export { default as IconRemixGameFill } from './game-fill.component.vue';

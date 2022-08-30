@@ -1,1 +1,0 @@
-export { default as IconRemixWindow2Fill } from './window-2-fill.component.vue';

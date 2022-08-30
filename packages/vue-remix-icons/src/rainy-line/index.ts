@@ -1,1 +1,0 @@
-export { default as IconRemixRainyLine } from './rainy-line.component.vue';

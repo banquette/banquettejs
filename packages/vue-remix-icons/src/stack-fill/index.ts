@@ -1,1 +1,0 @@
-export { default as IconRemixStackFill } from './stack-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixRewindMiniLine } from './rewind-mini-line.component.vue';

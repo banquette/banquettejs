@@ -1,1 +1,0 @@
-export { default as IconRemixSignalWifiFill } from './signal-wifi-fill.component.vue';

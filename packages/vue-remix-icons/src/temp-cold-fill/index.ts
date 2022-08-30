@@ -1,1 +1,0 @@
-export { default as IconRemixTempColdFill } from './temp-cold-fill.component.vue';

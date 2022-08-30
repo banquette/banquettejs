@@ -1,1 +1,0 @@
-export { default as IconRemixCoupon2Line } from './coupon-2-line.component.vue';

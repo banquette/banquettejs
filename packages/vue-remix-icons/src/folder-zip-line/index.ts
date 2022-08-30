@@ -1,1 +1,0 @@
-export { default as IconRemixFolderZipLine } from './folder-zip-line.component.vue';

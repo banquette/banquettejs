@@ -1,1 +1,0 @@
-export { default as IconRemixHospitalFill } from './hospital-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixDoorLockBoxFill } from './door-lock-box-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixAtFill } from './at-fill.component.vue';

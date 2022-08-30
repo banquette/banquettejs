@@ -2,11 +2,11 @@
 <template src="./tree.component.html" ></template>
 <script lang="ts">
 import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
 import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
 import { FormControl } from "@banquette/form/form-control";
 import { NodePropResolver } from "@banquette/ui/tree/constant";
 import { Node } from "@banquette/ui/tree/node";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -237,7 +237,11 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
                 }
             } else {
                 const identifier = this.extractValueIdentifier(candidate);
-                if (identifier === nodeValue) {
+                if (identifier !== null) {
+                    if (identifier === nodeValue) {
+                        return i;
+                    }
+                } else if (areEqual(candidate, nodeValue)) {
                     return i;
                 }
             }
@@ -259,36 +263,29 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
     }
 
     /**
-     * Extract the value of a Node while ensuring to get a Primitive.
-     * If the value is an object, the primitive will be extracted from it
-     * using the "valueIdentifier" property.
+     * Extract from a Node object the value to use to compare it with other nodes.
      */
-    private extractNodeComparableValue(node: Node): Primitive {
+    private extractNodeComparableValue(node: Node): any {
         const value = this.extractNodeValue(node);
         if (isPrimitive(value)) {
             return value;
         }
-        return this.extractValueIdentifier(value);
+        const identifier = this.extractValueIdentifier(value);
+        if (identifier !== null) {
+            return identifier
+        }
+        return value;
     }
 
     /**
-     * Get the identifier from an object value.
-     *
-     * This is only required if the model value (the one stored in the FormControl) is an object.
-     * In this case it is impossible to compare it with the value of a Node, the object reference
-     * will certainly not be the same, even if both objects represent the same thing.
-     *
-     * The identifier is a Primitive type, so easily comparable.
+     * Try to get the identifier from an object value.
      */
     private extractValueIdentifier(value: any): any {
         if (isFunction(this.valueIdentifier)) {
             return this.valueIdentifier(value);
         }
         if (!this.valueIdentifier || !isPrimitive(value[this.valueIdentifier])) {
-            throw new UsageException(
-                `You must define what property to use as identifier for the selected values if you store objects. ` +
-                `Use the "value-identifier" prop.`
-            );
+            return null;
         }
         return value[this.valueIdentifier];
     }

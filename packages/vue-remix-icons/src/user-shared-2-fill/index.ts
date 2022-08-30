@@ -1,1 +1,0 @@
-export { default as IconRemixUserShared2Fill } from './user-shared-2-fill.component.vue';

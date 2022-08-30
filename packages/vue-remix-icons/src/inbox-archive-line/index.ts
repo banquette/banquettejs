@@ -1,1 +1,0 @@
-export { default as IconRemixInboxArchiveLine } from './inbox-archive-line.component.vue';

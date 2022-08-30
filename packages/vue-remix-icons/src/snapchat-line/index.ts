@@ -1,1 +1,0 @@
-export { default as IconRemixSnapchatLine } from './snapchat-line.component.vue';

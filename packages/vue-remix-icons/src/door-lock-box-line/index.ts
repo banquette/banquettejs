@@ -1,1 +1,0 @@
-export { default as IconRemixDoorLockBoxLine } from './door-lock-box-line.component.vue';

@@ -1,17 +1,13 @@
-<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+<script>
+import { h } from 'vue';
 
-@Component('i-material-wifi-1-bar')
-export default class IconMaterialWifi1Bar {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;
-    @Prop({type: String, default: 'default'}) public version!: string;
+export default {
+    name: 'i-material-wifi-1-bar',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        if (this.version === 'round')
+    return h('svg',{"viewBox":this.crop !== undefined ? '10 16 4 4' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('circle',{"cx":"12","cy":"18",r:"2"},[])]);
+return h('svg',{"viewBox":this.crop !== undefined ? '8.47 16 7.06 5' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M15.53 17.46 12 21l-3.53-3.54c.9-.9 2.15-1.46 3.53-1.46s2.63.56 3.53 1.46z"},[])]);
+    }
 }
 </script>
-<template>
-    <svg v-if="version === 'round'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '10 16 4 4' : '0 0 24 24'"><circle cx="12" cy="18" r="2"/></svg>
-    <svg v-else :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '8.47 16 7.06 5' : '0 0 24 24'"><path d="M15.53 17.46 12 21l-3.53-3.54c.9-.9 2.15-1.46 3.53-1.46s2.63.56 3.53 1.46z"/></svg>
-</template>

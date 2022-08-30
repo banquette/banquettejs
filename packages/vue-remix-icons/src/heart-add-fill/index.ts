@@ -1,1 +1,0 @@
-export { default as IconRemixHeartAddFill } from './heart-add-fill.component.vue';

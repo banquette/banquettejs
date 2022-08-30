@@ -1,1 +1,0 @@
-export { default as IconRemixHeartLine } from './heart-line.component.vue';

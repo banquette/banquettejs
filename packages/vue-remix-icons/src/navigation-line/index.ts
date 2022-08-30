@@ -1,1 +1,0 @@
-export { default as IconRemixNavigationLine } from './navigation-line.component.vue';

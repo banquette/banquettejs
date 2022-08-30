@@ -1,1 +1,0 @@
-export { default as IconRemixRuler2Line } from './ruler-2-line.component.vue';

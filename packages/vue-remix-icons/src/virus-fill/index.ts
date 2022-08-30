@@ -1,1 +1,0 @@
-export { default as IconRemixVirusFill } from './virus-fill.component.vue';

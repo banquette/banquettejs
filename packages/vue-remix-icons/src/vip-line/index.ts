@@ -1,1 +1,0 @@
-export { default as IconRemixVipLine } from './vip-line.component.vue';

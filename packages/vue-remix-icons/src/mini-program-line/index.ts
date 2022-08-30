@@ -1,1 +1,0 @@
-export { default as IconRemixMiniProgramLine } from './mini-program-line.component.vue';

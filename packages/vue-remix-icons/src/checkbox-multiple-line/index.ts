@@ -1,1 +1,0 @@
-export { default as IconRemixCheckboxMultipleLine } from './checkbox-multiple-line.component.vue';

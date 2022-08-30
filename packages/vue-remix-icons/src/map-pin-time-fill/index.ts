@@ -1,1 +1,0 @@
-export { default as IconRemixMapPinTimeFill } from './map-pin-time-fill.component.vue';

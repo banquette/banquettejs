@@ -1,1 +1,0 @@
-export { default as IconRemixGithubFill } from './github-fill.component.vue';

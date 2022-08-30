@@ -1,1 +1,0 @@
-export { default as IconRemixAspectRatioFill } from './aspect-ratio-fill.component.vue';

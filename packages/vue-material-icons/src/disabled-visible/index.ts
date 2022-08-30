@@ -1,1 +1,8 @@
-export { default as IconMaterialDisabledVisible } from './disabled-visible.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialDisabledVisible } from './disabled-visible.component.vue';
+
+VueBuilder.RegisterComponent('i-material-disabled-visible', IconMaterialDisabledVisible);
+
+export { IconMaterialDisabledVisible }
+

@@ -1,1 +1,0 @@
-export { default as IconRemixRotateLockLine } from './rotate-lock-line.component.vue';

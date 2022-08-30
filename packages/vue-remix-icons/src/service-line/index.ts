@@ -1,1 +1,0 @@
-export { default as IconRemixServiceLine } from './service-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixZhihuLine } from './zhihu-line.component.vue';

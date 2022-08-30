@@ -1,1 +1,0 @@
-export { default as IconRemixChat3Line } from './chat-3-line.component.vue';

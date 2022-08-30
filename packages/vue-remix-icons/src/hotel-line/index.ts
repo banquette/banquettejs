@@ -1,1 +1,0 @@
-export { default as IconRemixHotelLine } from './hotel-line.component.vue';

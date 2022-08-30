@@ -1,1 +1,0 @@
-export { default as IconRemixFunctionFill } from './function-fill.component.vue';

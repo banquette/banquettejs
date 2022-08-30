@@ -1,1 +1,0 @@
-export { default as IconRemixSunFoggyFill } from './sun-foggy-fill.component.vue';

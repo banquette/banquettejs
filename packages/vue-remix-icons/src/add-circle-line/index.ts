@@ -1,1 +1,0 @@
-export { default as IconRemixAddCircleLine } from './add-circle-line.component.vue';

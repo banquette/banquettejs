@@ -1,1 +1,0 @@
-export { default as IconRemixFireLine } from './fire-line.component.vue';

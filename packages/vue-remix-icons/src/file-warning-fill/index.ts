@@ -1,1 +1,0 @@
-export { default as IconRemixFileWarningFill } from './file-warning-fill.component.vue';

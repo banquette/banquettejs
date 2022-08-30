@@ -1,1 +1,0 @@
-export { default as IconRemixShoppingBag2Line } from './shopping-bag-2-line.component.vue';

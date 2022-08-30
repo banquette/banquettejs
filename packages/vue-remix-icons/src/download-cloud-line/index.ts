@@ -1,1 +1,0 @@
-export { default as IconRemixDownloadCloudLine } from './download-cloud-line.component.vue';

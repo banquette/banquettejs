@@ -1,1 +1,8 @@
-export { default as IconMaterialVideocam } from './videocam.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialVideocam } from './videocam.component.vue';
+
+VueBuilder.RegisterComponent('i-material-videocam', IconMaterialVideocam);
+
+export { IconMaterialVideocam }
+

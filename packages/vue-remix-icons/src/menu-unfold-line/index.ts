@@ -1,1 +1,0 @@
-export { default as IconRemixMenuUnfoldLine } from './menu-unfold-line.component.vue';

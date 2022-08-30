@@ -1,1 +1,0 @@
-export { default as IconRemixStarSFill } from './star-s-fill.component.vue';

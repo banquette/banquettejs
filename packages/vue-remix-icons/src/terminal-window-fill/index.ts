@@ -1,1 +1,0 @@
-export { default as IconRemixTerminalWindowFill } from './terminal-window-fill.component.vue';

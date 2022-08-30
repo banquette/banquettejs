@@ -1,1 +1,0 @@
-export { default as IconRemixReplyFill } from './reply-fill.component.vue';

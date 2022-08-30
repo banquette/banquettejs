@@ -1,1 +1,0 @@
-export { default as IconRemixOilFill } from './oil-fill.component.vue';

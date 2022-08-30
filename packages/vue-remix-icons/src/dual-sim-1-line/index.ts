@@ -1,1 +1,0 @@
-export { default as IconRemixDualSim1Line } from './dual-sim-1-line.component.vue';

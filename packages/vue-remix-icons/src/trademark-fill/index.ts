@@ -1,1 +1,0 @@
-export { default as IconRemixTrademarkFill } from './trademark-fill.component.vue';

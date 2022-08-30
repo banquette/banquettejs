@@ -1,1 +1,0 @@
-export { default as IconRemixHomeWifiFill } from './home-wifi-fill.component.vue';

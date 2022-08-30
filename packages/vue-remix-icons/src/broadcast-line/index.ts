@@ -1,1 +1,0 @@
-export { default as IconRemixBroadcastLine } from './broadcast-line.component.vue';

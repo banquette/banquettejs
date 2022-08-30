@@ -1,1 +1,0 @@
-export { default as IconRemixGatsbyFill } from './gatsby-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixWindowsLine } from './windows-line.component.vue';

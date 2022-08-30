@@ -1,1 +1,0 @@
-export { default as IconRemixEmotionLaughFill } from './emotion-laugh-fill.component.vue';

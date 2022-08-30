@@ -1,1 +1,0 @@
-export { default as IconRemixScanFill } from './scan-fill.component.vue';

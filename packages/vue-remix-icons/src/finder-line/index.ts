@@ -1,1 +1,0 @@
-export { default as IconRemixFinderLine } from './finder-line.component.vue';

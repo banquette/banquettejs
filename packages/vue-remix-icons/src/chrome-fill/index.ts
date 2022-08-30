@@ -1,1 +1,0 @@
-export { default as IconRemixChromeFill } from './chrome-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixTumblrLine } from './tumblr-line.component.vue';

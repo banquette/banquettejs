@@ -1,1 +1,0 @@
-export { default as IconRemixOrderPlayFill } from './order-play-fill.component.vue';

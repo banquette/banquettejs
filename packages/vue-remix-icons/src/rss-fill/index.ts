@@ -1,1 +1,0 @@
-export { default as IconRemixRssFill } from './rss-fill.component.vue';

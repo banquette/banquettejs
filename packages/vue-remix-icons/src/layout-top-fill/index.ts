@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutTopFill } from './layout-top-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixFacebookLine } from './facebook-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixBookletFill } from './booklet-fill.component.vue';

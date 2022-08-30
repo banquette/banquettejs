@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutBottom2Line } from './layout-bottom-2-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixFileZipFill } from './file-zip-fill.component.vue';

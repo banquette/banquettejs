@@ -1,1 +1,0 @@
-export { default as IconRemixTapeLine } from './tape-line.component.vue';

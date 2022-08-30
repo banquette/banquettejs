@@ -1,1 +1,0 @@
-export { default as IconRemix24HoursFill } from './24-hours-fill.component.vue';

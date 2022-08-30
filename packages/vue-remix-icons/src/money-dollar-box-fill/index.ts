@@ -1,1 +1,0 @@
-export { default as IconRemixMoneyDollarBoxFill } from './money-dollar-box-fill.component.vue';

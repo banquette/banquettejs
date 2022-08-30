@@ -1,1 +1,0 @@
-export { default as IconRemixRadioLine } from './radio-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixPhoneCameraLine } from './phone-camera-line.component.vue';

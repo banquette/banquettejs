@@ -1,1 +1,0 @@
-export { default as IconRemixCoupon5Fill } from './coupon-5-fill.component.vue';

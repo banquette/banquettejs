@@ -1,1 +1,0 @@
-export { default as IconRemixEraserFill } from './eraser-fill.component.vue';

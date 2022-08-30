@@ -1,1 +1,0 @@
-export { default as IconRemixDiscLine } from './disc-line.component.vue';

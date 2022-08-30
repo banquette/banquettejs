@@ -1,1 +1,0 @@
-export { default as IconRemixSideBarFill } from './side-bar-fill.component.vue';

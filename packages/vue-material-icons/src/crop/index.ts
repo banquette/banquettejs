@@ -1,1 +1,8 @@
-export { default as IconMaterialCrop } from './crop.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialCrop } from './crop.component.vue';
+
+VueBuilder.RegisterComponent('i-material-crop', IconMaterialCrop);
+
+export { IconMaterialCrop }
+

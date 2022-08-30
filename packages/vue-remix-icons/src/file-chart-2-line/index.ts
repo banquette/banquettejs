@@ -1,1 +1,0 @@
-export { default as IconRemixFileChart2Line } from './file-chart-2-line.component.vue';

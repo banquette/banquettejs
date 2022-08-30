@@ -1,1 +1,0 @@
-export { default as IconRemixCamera2Line } from './camera-2-line.component.vue';

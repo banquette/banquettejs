@@ -1,1 +1,0 @@
-export { default as IconRemixCellphoneLine } from './cellphone-line.component.vue';

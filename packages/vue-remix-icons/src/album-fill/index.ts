@@ -1,1 +1,0 @@
-export { default as IconRemixAlbumFill } from './album-fill.component.vue';

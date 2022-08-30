@@ -1,1 +1,0 @@
-export { default as IconRemixMore2Line } from './more-2-line.component.vue';

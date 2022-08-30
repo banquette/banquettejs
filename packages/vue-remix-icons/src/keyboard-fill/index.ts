@@ -1,1 +1,0 @@
-export { default as IconRemixKeyboardFill } from './keyboard-fill.component.vue';

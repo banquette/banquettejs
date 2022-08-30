@@ -1,1 +1,0 @@
-export { default as IconRemixSideBarLine } from './side-bar-line.component.vue';

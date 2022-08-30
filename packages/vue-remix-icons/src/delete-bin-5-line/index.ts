@@ -1,1 +1,0 @@
-export { default as IconRemixDeleteBin5Line } from './delete-bin-5-line.component.vue';

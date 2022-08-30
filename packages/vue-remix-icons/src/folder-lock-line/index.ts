@@ -1,1 +1,0 @@
-export { default as IconRemixFolderLockLine } from './folder-lock-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixEvernoteLine } from './evernote-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixSunFill } from './sun-fill.component.vue';

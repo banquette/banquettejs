@@ -1,1 +1,0 @@
-export { default as IconRemixShipFill } from './ship-fill.component.vue';

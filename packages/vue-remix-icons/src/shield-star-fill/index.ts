@@ -1,1 +1,0 @@
-export { default as IconRemixShieldStarFill } from './shield-star-fill.component.vue';

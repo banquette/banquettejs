@@ -1,1 +1,0 @@
-export { default as IconRemixDoorFill } from './door-fill.component.vue';

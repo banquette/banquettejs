@@ -1,1 +1,0 @@
-export { default as IconRemixPhoneFindLine } from './phone-find-line.component.vue';

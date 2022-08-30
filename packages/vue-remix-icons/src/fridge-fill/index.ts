@@ -1,1 +1,0 @@
-export { default as IconRemixFridgeFill } from './fridge-fill.component.vue';

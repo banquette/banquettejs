@@ -1,1 +1,0 @@
-export { default as IconRemixShieldCrossLine } from './shield-cross-line.component.vue';

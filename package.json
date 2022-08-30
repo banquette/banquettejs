@@ -91,6 +91,7 @@
         "rollup-plugin-vue": "^6.0.0",
         "semantic-release": "^19.0.2",
         "style-inject": "^0.3.0",
+        "svg-parser": "^2.0.4",
         "svg-path-bbox": "^1.2.1",
         "svgo": "^2.8.0",
         "terser": "^5.10.0",

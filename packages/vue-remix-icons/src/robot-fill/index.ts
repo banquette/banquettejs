@@ -1,1 +1,0 @@
-export { default as IconRemixRobotFill } from './robot-fill.component.vue';

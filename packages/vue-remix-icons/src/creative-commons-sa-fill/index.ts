@@ -1,1 +1,0 @@
-export { default as IconRemixCreativeCommonsSaFill } from './creative-commons-sa-fill.component.vue';

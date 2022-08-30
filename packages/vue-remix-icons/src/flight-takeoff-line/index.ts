@@ -1,1 +1,0 @@
-export { default as IconRemixFlightTakeoffLine } from './flight-takeoff-line.component.vue';

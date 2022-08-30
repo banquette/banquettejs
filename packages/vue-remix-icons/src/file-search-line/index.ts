@@ -1,1 +1,0 @@
-export { default as IconRemixFileSearchLine } from './file-search-line.component.vue';

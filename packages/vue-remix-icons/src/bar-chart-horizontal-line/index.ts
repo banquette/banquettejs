@@ -1,1 +1,0 @@
-export { default as IconRemixBarChartHorizontalLine } from './bar-chart-horizontal-line.component.vue';

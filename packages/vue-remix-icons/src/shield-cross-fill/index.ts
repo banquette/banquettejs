@@ -1,1 +1,0 @@
-export { default as IconRemixShieldCrossFill } from './shield-cross-fill.component.vue';

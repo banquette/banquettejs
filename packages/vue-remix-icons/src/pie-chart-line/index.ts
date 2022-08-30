@@ -1,1 +1,0 @@
-export { default as IconRemixPieChartLine } from './pie-chart-line.component.vue';

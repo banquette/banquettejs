@@ -1,1 +1,8 @@
-export { default as IconMaterialTabUnselected } from './tab-unselected.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialTabUnselected } from './tab-unselected.component.vue';
+
+VueBuilder.RegisterComponent('i-material-tab-unselected', IconMaterialTabUnselected);
+
+export { IconMaterialTabUnselected }
+

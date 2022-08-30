@@ -1,1 +1,0 @@
-export { default as IconRemixSpam2Line } from './spam-2-line.component.vue';

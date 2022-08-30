@@ -1,1 +1,0 @@
-export { default as IconRemixFileDamageFill } from './file-damage-fill.component.vue';

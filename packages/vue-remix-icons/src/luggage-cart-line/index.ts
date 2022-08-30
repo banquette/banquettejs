@@ -1,1 +1,0 @@
-export { default as IconRemixLuggageCartLine } from './luggage-cart-line.component.vue';

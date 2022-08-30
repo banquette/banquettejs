@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutMasonryLine } from './layout-masonry-line.component.vue';

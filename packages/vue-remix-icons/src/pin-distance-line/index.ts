@@ -1,1 +1,0 @@
-export { default as IconRemixPinDistanceLine } from './pin-distance-line.component.vue';

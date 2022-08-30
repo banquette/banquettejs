@@ -1,1 +1,0 @@
-export { default as IconRemixPaypalFill } from './paypal-fill.component.vue';

@@ -1,1 +1,8 @@
-export { default as IconMaterialCompress } from './compress.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialCompress } from './compress.component.vue';
+
+VueBuilder.RegisterComponent('i-material-compress', IconMaterialCompress);
+
+export { IconMaterialCompress }
+

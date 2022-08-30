@@ -1,1 +1,0 @@
-export { default as IconRemixGroup2Fill } from './group-2-fill.component.vue';

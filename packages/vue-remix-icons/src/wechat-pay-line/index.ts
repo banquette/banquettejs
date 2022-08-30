@@ -1,1 +1,0 @@
-export { default as IconRemixWechatPayLine } from './wechat-pay-line.component.vue';

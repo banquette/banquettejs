@@ -1,1 +1,0 @@
-export { default as IconRemixPlayListFill } from './play-list-fill.component.vue';

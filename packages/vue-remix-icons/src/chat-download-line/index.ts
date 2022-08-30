@@ -1,1 +1,0 @@
-export { default as IconRemixChatDownloadLine } from './chat-download-line.component.vue';

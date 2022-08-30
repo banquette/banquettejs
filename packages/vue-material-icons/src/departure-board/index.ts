@@ -1,1 +1,8 @@
-export { default as IconMaterialDepartureBoard } from './departure-board.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialDepartureBoard } from './departure-board.component.vue';
+
+VueBuilder.RegisterComponent('i-material-departure-board', IconMaterialDepartureBoard);
+
+export { IconMaterialDepartureBoard }
+

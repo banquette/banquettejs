@@ -1,1 +1,0 @@
-export { default as IconRemixLayout4Line } from './layout-4-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixTrafficLightLine } from './traffic-light-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixHqFill } from './hq-fill.component.vue';

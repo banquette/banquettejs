@@ -1,1 +1,0 @@
-export { default as IconRemixStopFill } from './stop-fill.component.vue';

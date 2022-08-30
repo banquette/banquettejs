@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutRight2Fill } from './layout-right-2-fill.component.vue';

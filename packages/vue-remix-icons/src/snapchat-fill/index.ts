@@ -1,1 +1,0 @@
-export { default as IconRemixSnapchatFill } from './snapchat-fill.component.vue';

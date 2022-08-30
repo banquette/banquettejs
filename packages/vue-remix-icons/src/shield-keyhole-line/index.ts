@@ -1,1 +1,0 @@
-export { default as IconRemixShieldKeyholeLine } from './shield-keyhole-line.component.vue';

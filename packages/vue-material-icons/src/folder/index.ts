@@ -1,1 +1,8 @@
-export { default as IconMaterialFolder } from './folder.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialFolder } from './folder.component.vue';
+
+VueBuilder.RegisterComponent('i-material-folder', IconMaterialFolder);
+
+export { IconMaterialFolder }
+

@@ -1,1 +1,0 @@
-export { default as IconRemixToolsFill } from './tools-fill.component.vue';

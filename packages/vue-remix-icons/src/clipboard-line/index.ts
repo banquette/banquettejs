@@ -1,1 +1,0 @@
-export { default as IconRemixClipboardLine } from './clipboard-line.component.vue';

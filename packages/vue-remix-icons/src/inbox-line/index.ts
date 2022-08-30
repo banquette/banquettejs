@@ -1,1 +1,0 @@
-export { default as IconRemixInboxLine } from './inbox-line.component.vue';

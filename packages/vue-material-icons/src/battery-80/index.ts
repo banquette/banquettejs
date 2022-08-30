@@ -1,1 +1,8 @@
-export { default as IconMaterialBattery80 } from './battery-80.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialBattery80 } from './battery-80.component.vue';
+
+VueBuilder.RegisterComponent('i-material-battery-80', IconMaterialBattery80);
+
+export { IconMaterialBattery80 }
+

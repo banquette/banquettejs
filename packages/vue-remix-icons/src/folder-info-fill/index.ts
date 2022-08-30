@@ -1,1 +1,0 @@
-export { default as IconRemixFolderInfoFill } from './folder-info-fill.component.vue';

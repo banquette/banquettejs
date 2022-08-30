@@ -1,1 +1,0 @@
-export { default as IconRemixRidingLine } from './riding-line.component.vue';

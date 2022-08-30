@@ -1,1 +1,0 @@
-export { default as IconRemixBaseStationLine } from './base-station-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixAlarmWarningFill } from './alarm-warning-fill.component.vue';

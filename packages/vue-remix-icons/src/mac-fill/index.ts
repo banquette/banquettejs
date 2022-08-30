@@ -1,1 +1,0 @@
-export { default as IconRemixMacFill } from './mac-fill.component.vue';

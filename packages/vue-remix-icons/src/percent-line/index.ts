@@ -1,1 +1,0 @@
-export { default as IconRemixPercentLine } from './percent-line.component.vue';

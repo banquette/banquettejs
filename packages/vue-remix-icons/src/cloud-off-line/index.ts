@@ -1,1 +1,0 @@
-export { default as IconRemixCloudOffLine } from './cloud-off-line.component.vue';

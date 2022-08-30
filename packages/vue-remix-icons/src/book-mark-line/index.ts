@@ -1,1 +1,0 @@
-export { default as IconRemixBookMarkLine } from './book-mark-line.component.vue';

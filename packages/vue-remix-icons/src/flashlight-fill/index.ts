@@ -1,1 +1,0 @@
-export { default as IconRemixFlashlightFill } from './flashlight-fill.component.vue';

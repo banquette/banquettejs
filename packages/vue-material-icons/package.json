@@ -6,6 +6,7 @@
         "url": "https://github.com/@banquette/core/banquettejs.git",
         "directory": "packages/vue-material-icons"
     },
+    "type": "module",
     "license": "Apache-2.0",
     "main": "_cjs/prod/index.js",
     "module": "index.js",

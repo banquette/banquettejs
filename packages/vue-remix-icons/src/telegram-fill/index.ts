@@ -1,1 +1,0 @@
-export { default as IconRemixTelegramFill } from './telegram-fill.component.vue';

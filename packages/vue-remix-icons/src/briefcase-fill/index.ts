@@ -1,1 +1,0 @@
-export { default as IconRemixBriefcaseFill } from './briefcase-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixPolaroid2Line } from './polaroid-2-line.component.vue';

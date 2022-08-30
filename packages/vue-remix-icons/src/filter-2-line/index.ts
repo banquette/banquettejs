@@ -1,1 +1,0 @@
-export { default as IconRemixFilter2Line } from './filter-2-line.component.vue';

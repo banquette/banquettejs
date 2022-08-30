@@ -1,1 +1,0 @@
-export { default as IconRemixMailCloseFill } from './mail-close-fill.component.vue';

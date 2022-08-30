@@ -1,1 +1,8 @@
-export { default as IconMaterialAirlineSeatReclineNormal } from './airline-seat-recline-normal.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialAirlineSeatReclineNormal } from './airline-seat-recline-normal.component.vue';
+
+VueBuilder.RegisterComponent('i-material-airline-seat-recline-normal', IconMaterialAirlineSeatReclineNormal);
+
+export { IconMaterialAirlineSeatReclineNormal }
+

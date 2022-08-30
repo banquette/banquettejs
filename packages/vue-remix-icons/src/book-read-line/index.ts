@@ -1,1 +1,0 @@
-export { default as IconRemixBookReadLine } from './book-read-line.component.vue';

@@ -1,1 +1,8 @@
-export { default as IconMaterialCurrencyYuan } from './currency-yuan.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialCurrencyYuan } from './currency-yuan.component.vue';
+
+VueBuilder.RegisterComponent('i-material-currency-yuan', IconMaterialCurrencyYuan);
+
+export { IconMaterialCurrencyYuan }
+

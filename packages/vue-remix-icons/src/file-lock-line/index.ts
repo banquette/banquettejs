@@ -1,1 +1,0 @@
-export { default as IconRemixFileLockLine } from './file-lock-line.component.vue';

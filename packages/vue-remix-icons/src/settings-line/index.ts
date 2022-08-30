@@ -1,1 +1,0 @@
-export { default as IconRemixSettingsLine } from './settings-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLoader2Fill } from './loader-2-fill.component.vue';

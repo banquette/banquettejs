@@ -1,1 +1,0 @@
-export { default as IconRemixVipDiamondLine } from './vip-diamond-line.component.vue';

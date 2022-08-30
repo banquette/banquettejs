@@ -7,7 +7,7 @@ import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback, Primitive } from "@banquette/utils-type/types";
-import { IconRemixCloseCircleLine } from "@banquette/vue-remix-icons/close-circle-line";
+import { IconRemixCloseCircle } from "@banquette/vue-remix-icons/close-circle";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
@@ -38,7 +38,7 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [BaseInputComponent, ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconRemixCloseCircleLine],
+    components: [BaseInputComponent, ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconRemixCloseCircle],
     directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['focus', 'blur', 'change']
 })

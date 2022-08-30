@@ -1,1 +1,0 @@
-export { default as IconRemixVolumeDownLine } from './volume-down-line.component.vue';

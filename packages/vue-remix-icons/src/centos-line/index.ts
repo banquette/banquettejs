@@ -1,1 +1,0 @@
-export { default as IconRemixCentosLine } from './centos-line.component.vue';

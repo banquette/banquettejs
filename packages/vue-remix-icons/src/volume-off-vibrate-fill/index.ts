@@ -1,1 +1,0 @@
-export { default as IconRemixVolumeOffVibrateFill } from './volume-off-vibrate-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLinksLine } from './links-line.component.vue';

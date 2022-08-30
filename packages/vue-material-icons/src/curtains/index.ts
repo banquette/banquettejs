@@ -1,1 +1,8 @@
-export { default as IconMaterialCurtains } from './curtains.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialCurtains } from './curtains.component.vue';
+
+VueBuilder.RegisterComponent('i-material-curtains', IconMaterialCurtains);
+
+export { IconMaterialCurtains }
+

@@ -1,1 +1,8 @@
-export { default as IconMaterialMedicalServices } from './medical-services.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialMedicalServices } from './medical-services.component.vue';
+
+VueBuilder.RegisterComponent('i-material-medical-services', IconMaterialMedicalServices);
+
+export { IconMaterialMedicalServices }
+

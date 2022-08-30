@@ -1,1 +1,0 @@
-export { default as IconRemixFolderKeyholeLine } from './folder-keyhole-line.component.vue';

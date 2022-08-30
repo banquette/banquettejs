@@ -1,1 +1,0 @@
-export { default as IconRemixBallPenLine } from './ball-pen-line.component.vue';

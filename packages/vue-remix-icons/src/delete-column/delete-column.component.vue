@@ -1,15 +1,11 @@
-<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+<script>
+import { h } from 'vue';
 
-@Component('i-remix-delete-column')
-export default class IconRemixDeleteColumn {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;
+export default {
+    name: 'i-remix-delete-column',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        return h('svg',{"viewBox":this.crop !== undefined ? '5 3 16 18' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M12 3a1 1 0 0 1 1 1v8a5 5 0 1 1 .213 8.152L13 20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm-1 2H7v14h4V5zm8 10h-6v2h6v-2z"},[])]);
+    }
 }
 </script>
-<template>
-    <svg :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '5 3 16 18' : '0 0 24 24'"><path d="M12 3a1 1 0 0 1 1 1v8a5 5 0 1 1 .213 8.152L13 20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm-1 2H7v14h4V5zm8 10h-6v2h6v-2z"/></svg>
-</template>

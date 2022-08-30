@@ -1,1 +1,0 @@
-export { default as IconRemixFileCloudLine } from './file-cloud-line.component.vue';

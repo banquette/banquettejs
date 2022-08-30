@@ -1,1 +1,0 @@
-export { default as IconRemixVideoDownloadFill } from './video-download-fill.component.vue';

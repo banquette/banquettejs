@@ -1,1 +1,0 @@
-export { default as IconRemixSafeLine } from './safe-line.component.vue';

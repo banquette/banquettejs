@@ -1,1 +1,0 @@
-export { default as IconRemixInputMethodLine } from './input-method-line.component.vue';

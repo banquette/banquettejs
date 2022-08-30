@@ -1,1 +1,0 @@
-export { default as IconRemixTestTubeLine } from './test-tube-line.component.vue';

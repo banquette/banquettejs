@@ -1,1 +1,0 @@
-export { default as IconRemixTShirtAirFill } from './t-shirt-air-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixStopMiniLine } from './stop-mini-line.component.vue';

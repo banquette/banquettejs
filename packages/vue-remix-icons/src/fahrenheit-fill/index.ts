@@ -1,1 +1,0 @@
-export { default as IconRemixFahrenheitFill } from './fahrenheit-fill.component.vue';

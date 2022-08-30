@@ -1,1 +1,0 @@
-export { default as IconRemixMoonLine } from './moon-line.component.vue';

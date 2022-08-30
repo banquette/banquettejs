@@ -1,1 +1,0 @@
-export { default as IconRemixFileShredFill } from './file-shred-fill.component.vue';

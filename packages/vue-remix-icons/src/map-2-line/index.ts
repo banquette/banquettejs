@@ -1,1 +1,0 @@
-export { default as IconRemixMap2Line } from './map-2-line.component.vue';

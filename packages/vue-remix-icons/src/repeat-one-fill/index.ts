@@ -1,1 +1,0 @@
-export { default as IconRemixRepeatOneFill } from './repeat-one-fill.component.vue';

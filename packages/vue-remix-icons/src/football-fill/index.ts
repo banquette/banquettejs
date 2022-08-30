@@ -1,1 +1,0 @@
-export { default as IconRemixFootballFill } from './football-fill.component.vue';

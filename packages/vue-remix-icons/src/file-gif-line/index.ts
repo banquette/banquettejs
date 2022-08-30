@@ -1,1 +1,0 @@
-export { default as IconRemixFileGifLine } from './file-gif-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixGovernmentFill } from './government-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixChargingPile2Line } from './charging-pile-2-line.component.vue';

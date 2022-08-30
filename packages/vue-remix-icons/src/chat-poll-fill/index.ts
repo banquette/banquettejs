@@ -1,1 +1,0 @@
-export { default as IconRemixChatPollFill } from './chat-poll-fill.component.vue';

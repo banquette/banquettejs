@@ -1,1 +1,0 @@
-export { default as IconRemixHeartAddLine } from './heart-add-line.component.vue';

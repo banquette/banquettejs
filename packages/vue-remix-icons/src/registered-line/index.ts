@@ -1,1 +1,0 @@
-export { default as IconRemixRegisteredLine } from './registered-line.component.vue';

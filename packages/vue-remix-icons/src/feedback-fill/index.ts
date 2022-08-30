@@ -1,1 +1,0 @@
-export { default as IconRemixFeedbackFill } from './feedback-fill.component.vue';

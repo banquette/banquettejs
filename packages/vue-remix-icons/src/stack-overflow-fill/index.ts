@@ -1,1 +1,0 @@
-export { default as IconRemixStackOverflowFill } from './stack-overflow-fill.component.vue';

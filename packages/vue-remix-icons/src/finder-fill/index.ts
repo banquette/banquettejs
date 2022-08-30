@@ -1,1 +1,0 @@
-export { default as IconRemixFinderFill } from './finder-fill.component.vue';

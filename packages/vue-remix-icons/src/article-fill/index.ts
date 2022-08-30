@@ -1,1 +1,0 @@
-export { default as IconRemixArticleFill } from './article-fill.component.vue';

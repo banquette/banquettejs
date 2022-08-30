@@ -1,1 +1,0 @@
-export { default as IconRemixCloudWindyFill } from './cloud-windy-fill.component.vue';

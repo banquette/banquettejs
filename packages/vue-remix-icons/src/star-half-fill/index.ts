@@ -1,1 +1,0 @@
-export { default as IconRemixStarHalfFill } from './star-half-fill.component.vue';

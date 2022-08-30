@@ -1,1 +1,0 @@
-export { default as IconRemixFolderDownloadLine } from './folder-download-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixMovieLine } from './movie-line.component.vue';

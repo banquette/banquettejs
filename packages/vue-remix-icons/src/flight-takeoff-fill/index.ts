@@ -1,1 +1,0 @@
-export { default as IconRemixFlightTakeoffFill } from './flight-takeoff-fill.component.vue';

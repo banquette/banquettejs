@@ -1,1 +1,0 @@
-export { default as IconRemixCodeSSlashFill } from './code-s-slash-fill.component.vue';

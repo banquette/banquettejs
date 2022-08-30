@@ -1,1 +1,0 @@
-export { default as IconRemixFacebookBoxLine } from './facebook-box-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLogoutBoxRFill } from './logout-box-r-fill.component.vue';

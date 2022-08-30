@@ -1,1 +1,0 @@
-export { default as IconRemixUbuntuFill } from './ubuntu-fill.component.vue';

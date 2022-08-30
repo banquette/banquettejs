@@ -1,1 +1,0 @@
-export { default as IconRemixExternalLinkFill } from './external-link-fill.component.vue';

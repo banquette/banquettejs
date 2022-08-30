@@ -1,1 +1,0 @@
-export { default as IconRemixEye2Line } from './eye-2-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixArrowRightDownFill } from './arrow-right-down-fill.component.vue';

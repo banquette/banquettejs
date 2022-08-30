@@ -1,1 +1,0 @@
-export { default as IconRemixMapPinRangeFill } from './map-pin-range-fill.component.vue';

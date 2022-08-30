@@ -1,1 +1,0 @@
-export { default as IconRemixPagesLine } from './pages-line.component.vue';

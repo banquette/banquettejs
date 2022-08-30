@@ -1,1 +1,0 @@
-export { default as IconRemixSteering2Fill } from './steering-2-fill.component.vue';

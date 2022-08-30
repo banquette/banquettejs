@@ -1,1 +1,0 @@
-export { default as IconRemixStockLine } from './stock-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixInstallLine } from './install-line.component.vue';

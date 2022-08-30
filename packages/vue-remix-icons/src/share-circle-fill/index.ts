@@ -1,1 +1,0 @@
-export { default as IconRemixShareCircleFill } from './share-circle-fill.component.vue';

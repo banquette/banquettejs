@@ -1,1 +1,0 @@
-export { default as IconRemixHealthBookLine } from './health-book-line.component.vue';

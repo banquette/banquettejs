@@ -1,1 +1,0 @@
-export { default as IconRemixTrainWifiLine } from './train-wifi-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutGridLine } from './layout-grid-line.component.vue';

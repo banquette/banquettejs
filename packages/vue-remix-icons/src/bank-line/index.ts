@@ -1,1 +1,0 @@
-export { default as IconRemixBankLine } from './bank-line.component.vue';

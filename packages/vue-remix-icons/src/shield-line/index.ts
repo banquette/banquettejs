@@ -1,1 +1,0 @@
-export { default as IconRemixShieldLine } from './shield-line.component.vue';

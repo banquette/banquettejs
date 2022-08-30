@@ -1,1 +1,0 @@
-export { default as IconRemixThumbUpFill } from './thumb-up-fill.component.vue';

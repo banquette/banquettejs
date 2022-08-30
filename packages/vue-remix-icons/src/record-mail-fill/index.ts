@@ -1,1 +1,0 @@
-export { default as IconRemixRecordMailFill } from './record-mail-fill.component.vue';

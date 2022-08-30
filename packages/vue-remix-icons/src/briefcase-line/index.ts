@@ -1,1 +1,0 @@
-export { default as IconRemixBriefcaseLine } from './briefcase-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixArchiveFill } from './archive-fill.component.vue';

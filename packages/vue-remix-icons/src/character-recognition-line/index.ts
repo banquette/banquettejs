@@ -1,1 +1,0 @@
-export { default as IconRemixCharacterRecognitionLine } from './character-recognition-line.component.vue';

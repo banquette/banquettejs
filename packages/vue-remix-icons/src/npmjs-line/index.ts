@@ -1,1 +1,0 @@
-export { default as IconRemixNpmjsLine } from './npmjs-line.component.vue';

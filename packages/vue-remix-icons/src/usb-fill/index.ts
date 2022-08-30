@@ -1,1 +1,0 @@
-export { default as IconRemixUsbFill } from './usb-fill.component.vue';

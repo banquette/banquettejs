@@ -5,6 +5,7 @@ import svgPathBbox from 'svg-path-bbox';
 import { JSDOM } from 'jsdom';
 import { optimize } from 'svgo';
 import { fileURLToPath } from "url";
+import { parse } from 'svg-parser';
 
 function camelize(input) {
     return input.substring(0, 1).toUpperCase() + input.replace(/-./g, i => i[1].toUpperCase()).substring(1);
@@ -96,7 +97,7 @@ function getCroppedViewBox(svg) {
         bounds.maxY = Math.max(bounds.maxY, localRect[3]);
     }
     if (bounds.minX === Infinity) {
-         return false;
+        return false;
     }
     return [
         formatNumber(bounds.minX),
@@ -107,25 +108,50 @@ function getCroppedViewBox(svg) {
 }
 
 /**
- * Optimize a svg source using svgo and add a condition to the viewbox.
+ * Parse a svg source, optimize it and return an object the represents its structure.
  */
-function getOptimizeSvgSource(path) {
-    let svgSource = fs.readFileSync(path).toString();
+function tokenizeSvg(path) {
+    const svgSource = fs.readFileSync(path).toString();
     const dom = new JSDOM(`<!DOCTYPE html>${svgSource}`);
     const svg = dom.window.document.querySelector('svg');
     svg.removeAttribute('xmlns');
     svg.removeAttribute('width');
     svg.removeAttribute('height');
     const croppedViewBox = getCroppedViewBox(svg);
-    svgSource = optimize(svg.outerHTML, {
+    const parsed = parse(optimize(svg.outerHTML, {
         multipass: true
-    }).data;
-    if (croppedViewBox !== false) {
-        return svgSource.replace(/viewBox="([^"]+)"/, `:viewBox="crop ? '${croppedViewBox}' : '$1'"`);
+    }).data).children[0];
+
+    if (!croppedViewBox) {
+        console.log(chalk.red('Failed to crop view box') + ' for ' + chalk.blue(path));
+        console.log(svg.outerHTML);
     }
-    console.log(chalk.red('Failed to crop view box') + ' for ' + chalk.blue(path));
-    console.log(svg.outerHTML);
-    return svgSource;
+    parsed.properties.croppedViewBox = croppedViewBox;
+    return parsed;
+}
+
+function tokenToRenderCode(token) {
+    let h = [`'${token.tagName}'`, {}, []];
+    if (token.tagName === 'svg') {
+        if (token.properties.croppedViewBox) {
+            h[1].viewBox = `this.crop !== undefined ? '${token.properties.croppedViewBox}' : '${token.properties.viewBox}'`;
+        } else {
+            h[1].viewBox = `"${token.properties.viewBox}"`;
+        }
+        delete token.properties.croppedViewBox;
+        delete token.properties.viewBox;
+
+        h[1].width = "this.width";
+        h[1].height = "this.height || (!this.width ? '1em' : null)";
+        h[1].fill = "this.color || 'currentColor'";
+    }
+    for (const attr of Object.keys(token.properties)) {
+        h[1][attr] = `"${token.properties[attr]}"`;
+    }
+    for (const children of token.children) {
+        h[2].push(tokenToRenderCode(children));
+    }
+    return `h(${h[0]},{${Object.keys(h[1]).reduce((r, k) => r.concat([`${k.match(/^[a-z0-9]$/i) ? k : ('"'+k+'"')}:${h[1][k]}`]) , [])}},[${h[2].join(',')}])`;
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -178,8 +204,22 @@ const configurations = [
                     return;
                 }
                 fs.readdirSync(typePath).forEach(function (icon) {
+                    const matches = Array.from(icon.matchAll(/(?:^|-)(\w+)/g));
+                    if (!matches.length) {
+                        console.error(`Unable to determine version of ${chalk.red(icon)}.`);
+                        return ;
+                    }
+                    const lastMatch = matches[matches.length - 1][1];
+                    const version = lastMatch === 'fill' || lastMatch === 'line' ? lastMatch : 'default';
+                    if (version !== 'default') {
+                        matches.pop();
+                    }
+                    const name = matches.reduce((r, i) => r.concat([i[1]]), []).join('-');
+                    if (typeof(output[name]) === 'undefined') {
+                        output[name] = {};
+                    }
                     icon = icon.replace(/_/g, '-');
-                    output[icon] = {default: path.join(typePath, icon)};
+                    output[name][version] = path.join(typePath, icon);
                 });
             });
             return output;
@@ -212,63 +252,59 @@ for (const configuration of configurations) {
             duplicates.push(componentName);
             continue;
         }
-        const svgs = [];
         const versions = Object.keys(files[filename]);
         if (!versions.length) {
             console.log(`No version found for "${chalk.blue(filename)}"`);
             continue ;
         }
         // Generate optimized sources.
-        const optimizedSources = [];
+        const renderCodes = [];
         for (let i = 0, j; i < versions.length; i++) {
-            const source = getOptimizeSvgSource(files[filename][versions[i]]);
-            for (j = 0; j < optimizedSources.length; ++j) {
-                if (optimizedSources[j].svg === source) {
-                    optimizedSources[j].versions.push(versions[i]);
+            const token = tokenizeSvg(files[filename][versions[i]]);
+            const renderCode = tokenToRenderCode(token);
+            for (j = 0; j < renderCodes.length; ++j) {
+                if (renderCodes[j].code === renderCode) {
+                    renderCodes[j].versions.push(versions[i]);
                     break ;
                 }
             }
-            if (j >= optimizedSources.length) {
-                optimizedSources.push({svg: source, versions: [versions[i]]});
+            if (j >= renderCodes.length) {
+                renderCodes.push({code: renderCode, versions: [versions[i]]});
             }
         }
-        if (optimizedSources.length >= 5) {
-            console.log(filename);
+        const renderLines = [];
+        for (let i = renderCodes.length - 1; i >= 0; --i) {
+            if (i > 0) {
+                renderLines.push(`if (this.version === '${renderCodes[i].versions.join('\' || this.version === \'')}')`);
+            }
+            renderLines.push(`${!!(renderLines.length % 2) ? '    ' : ''}return ${renderCodes[i].code};`);
         }
+        let src = `<script>
+import { h } from 'vue';
 
-        // So "default" version is last.
-        for (let i = optimizedSources.length - 1; i >= 0; i--) {
-            const versionCondition = 'version === \'' + optimizedSources[i].versions.join('\' || version === \'') + '\'';
-            const condition = optimizedSources.length > 1 ? ((i > 0 ? (('v-' + (i < optimizedSources.length - 1 ? 'else-' : '') + 'if') + `="${versionCondition}" `) : 'v-else ')) : '';
-            svgs.push(optimizedSources[i].svg.replace('<svg ', `<svg ${condition}:width="width" :height="height || (!width ? '1em' : null)" :fill="color" `));
-        }
-        let src = `<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-
-@Component('i-${configuration.libName}-${componentName}')
-export default class ${className} {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;`;
-        if (optimizedSources.length > 1) {
-            src += `
-    @Prop({type: String, default: 'default'}) public version!: string;`;
-        }
-        src += `
+export default {
+    name: 'i-${configuration.libName}-${componentName}',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        ${renderLines.join("\n")}
+    }
 }
-</script>
-<template>
-    ${svgs.join("\n    ")}
-</template>`;
+</script>`;
         if (src.indexOf('v-else') > -1 && src.indexOf('v-if') < 0) {
             console.log('found');
         }
         fs.mkdirSync(componentDir);
         fs.writeFileSync(componentPath, src);
         const indexPath = path.join(componentDir, 'index.ts');
-        fs.writeFileSync(indexPath, `export { default as ${className} } from './${componentName + '.component.vue'}';`);
+        fs.writeFileSync(indexPath, `
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as ${className} } from './${componentName + '.component.vue'}';
+
+VueBuilder.RegisterComponent('i-${configuration.libName}-${componentName}', ${className});
+
+export { ${className} }
+
+`);
         imports.push(`import './${componentName}/${componentName + '.component.vue'}';`);
         ++count;
     }

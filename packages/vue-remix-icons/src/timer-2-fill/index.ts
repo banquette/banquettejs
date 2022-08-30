@@ -1,1 +1,0 @@
-export { default as IconRemixTimer2Fill } from './timer-2-fill.component.vue';

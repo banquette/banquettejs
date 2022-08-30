@@ -1,1 +1,0 @@
-export { default as IconRemixBus2Line } from './bus-2-line.component.vue';

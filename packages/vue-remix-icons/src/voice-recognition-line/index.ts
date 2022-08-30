@@ -1,1 +1,0 @@
-export { default as IconRemixVoiceRecognitionLine } from './voice-recognition-line.component.vue';

@@ -1,1 +1,8 @@
-export { default as IconMaterialDry } from './dry.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialDry } from './dry.component.vue';
+
+VueBuilder.RegisterComponent('i-material-dry', IconMaterialDry);
+
+export { IconMaterialDry }
+

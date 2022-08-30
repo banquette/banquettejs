@@ -1,1 +1,0 @@
-export { default as IconRemixFileDownloadFill } from './file-download-fill.component.vue';

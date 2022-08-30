@@ -1,1 +1,0 @@
-export { default as IconRemixSlideshow3Fill } from './slideshow-3-fill.component.vue';

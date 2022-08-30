@@ -1,1 +1,0 @@
-export { default as IconRemixPolaroidFill } from './polaroid-fill.component.vue';

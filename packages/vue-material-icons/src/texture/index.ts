@@ -1,1 +1,8 @@
-export { default as IconMaterialTexture } from './texture.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialTexture } from './texture.component.vue';
+
+VueBuilder.RegisterComponent('i-material-texture', IconMaterialTexture);
+
+export { IconMaterialTexture }
+

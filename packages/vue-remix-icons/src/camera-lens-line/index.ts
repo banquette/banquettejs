@@ -1,1 +1,0 @@
-export { default as IconRemixCameraLensLine } from './camera-lens-line.component.vue';

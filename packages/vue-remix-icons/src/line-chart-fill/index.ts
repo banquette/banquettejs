@@ -1,1 +1,0 @@
-export { default as IconRemixLineChartFill } from './line-chart-fill.component.vue';

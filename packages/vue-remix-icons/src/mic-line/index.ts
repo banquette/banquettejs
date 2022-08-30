@@ -1,1 +1,0 @@
-export { default as IconRemixMicLine } from './mic-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutRight2Line } from './layout-right-2-line.component.vue';

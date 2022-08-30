@@ -1,1 +1,0 @@
-export { default as IconRemixMickeyFill } from './mickey-fill.component.vue';

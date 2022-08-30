@@ -1,1 +1,0 @@
-export { default as IconRemixTicket2Line } from './ticket-2-line.component.vue';

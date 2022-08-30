@@ -1,1 +1,0 @@
-export { default as IconRemixOilLine } from './oil-line.component.vue';

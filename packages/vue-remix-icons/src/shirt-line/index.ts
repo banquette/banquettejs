@@ -1,1 +1,0 @@
-export { default as IconRemixShirtLine } from './shirt-line.component.vue';

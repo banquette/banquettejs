@@ -1,1 +1,0 @@
-export { default as IconRemixNotificationBadgeFill } from './notification-badge-fill.component.vue';

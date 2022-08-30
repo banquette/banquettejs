@@ -1,1 +1,0 @@
-export { default as IconRemixCheckFill } from './check-fill.component.vue';

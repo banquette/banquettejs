@@ -1,1 +1,0 @@
-export { default as IconRemixRouteLine } from './route-line.component.vue';

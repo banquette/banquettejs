@@ -1,1 +1,0 @@
-export { default as IconRemixPictureInPictureLine } from './picture-in-picture-line.component.vue';

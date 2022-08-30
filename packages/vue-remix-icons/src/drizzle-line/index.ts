@@ -1,1 +1,0 @@
-export { default as IconRemixDrizzleLine } from './drizzle-line.component.vue';

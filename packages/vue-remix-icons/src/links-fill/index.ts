@@ -1,1 +1,0 @@
-export { default as IconRemixLinksFill } from './links-fill.component.vue';

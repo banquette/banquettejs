@@ -1,1 +1,0 @@
-export { default as IconRemixUserReceived2Line } from './user-received-2-line.component.vue';

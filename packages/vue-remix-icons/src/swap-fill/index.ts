@@ -1,1 +1,0 @@
-export { default as IconRemixSwapFill } from './swap-fill.component.vue';

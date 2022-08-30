@@ -1,1 +1,0 @@
-export { default as IconRemixArtboardLine } from './artboard-line.component.vue';

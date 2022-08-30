@@ -1,1 +1,0 @@
-export { default as IconRemixShareBoxFill } from './share-box-fill.component.vue';

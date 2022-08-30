@@ -1,1 +1,0 @@
-export { default as IconRemixNotificationLine } from './notification-line.component.vue';

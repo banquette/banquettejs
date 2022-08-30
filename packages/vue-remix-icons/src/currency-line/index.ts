@@ -1,1 +1,0 @@
-export { default as IconRemixCurrencyLine } from './currency-line.component.vue';

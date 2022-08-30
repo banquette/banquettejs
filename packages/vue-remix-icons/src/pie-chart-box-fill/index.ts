@@ -1,1 +1,0 @@
-export { default as IconRemixPieChartBoxFill } from './pie-chart-box-fill.component.vue';

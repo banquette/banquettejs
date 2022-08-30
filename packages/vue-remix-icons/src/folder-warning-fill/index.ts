@@ -1,1 +1,0 @@
-export { default as IconRemixFolderWarningFill } from './folder-warning-fill.component.vue';

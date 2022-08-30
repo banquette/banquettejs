@@ -1,1 +1,0 @@
-export { default as IconRemixQuestionFill } from './question-fill.component.vue';

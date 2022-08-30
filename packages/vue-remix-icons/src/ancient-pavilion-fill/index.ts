@@ -1,1 +1,0 @@
-export { default as IconRemixAncientPavilionFill } from './ancient-pavilion-fill.component.vue';

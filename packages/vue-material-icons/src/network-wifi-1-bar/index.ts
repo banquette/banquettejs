@@ -1,1 +1,8 @@
-export { default as IconMaterialNetworkWifi1Bar } from './network-wifi-1-bar.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialNetworkWifi1Bar } from './network-wifi-1-bar.component.vue';
+
+VueBuilder.RegisterComponent('i-material-network-wifi-1-bar', IconMaterialNetworkWifi1Bar);
+
+export { IconMaterialNetworkWifi1Bar }
+

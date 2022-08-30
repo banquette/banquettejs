@@ -1,1 +1,0 @@
-export { default as IconRemixChatFollowUpLine } from './chat-follow-up-line.component.vue';

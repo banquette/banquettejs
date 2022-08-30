@@ -1,1 +1,0 @@
-export { default as IconRemixUserSettingsFill } from './user-settings-fill.component.vue';

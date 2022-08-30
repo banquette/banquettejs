@@ -1,1 +1,0 @@
-export { default as IconRemixAdvertisementFill } from './advertisement-fill.component.vue';

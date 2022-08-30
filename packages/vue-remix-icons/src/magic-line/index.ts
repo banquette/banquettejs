@@ -1,1 +1,0 @@
-export { default as IconRemixMagicLine } from './magic-line.component.vue';

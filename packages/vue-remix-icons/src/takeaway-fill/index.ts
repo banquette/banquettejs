@@ -1,1 +1,0 @@
-export { default as IconRemixTakeawayFill } from './takeaway-fill.component.vue';

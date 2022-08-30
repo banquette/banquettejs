@@ -1,1 +1,0 @@
-export { default as IconRemixScales3Fill } from './scales-3-fill.component.vue';

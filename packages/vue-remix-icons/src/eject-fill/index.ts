@@ -1,1 +1,0 @@
-export { default as IconRemixEjectFill } from './eject-fill.component.vue';

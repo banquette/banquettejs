@@ -1,1 +1,0 @@
-export { default as IconRemixDribbbleFill } from './dribbble-fill.component.vue';

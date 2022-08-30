@@ -1,1 +1,0 @@
-export { default as IconRemixSailboatFill } from './sailboat-fill.component.vue';

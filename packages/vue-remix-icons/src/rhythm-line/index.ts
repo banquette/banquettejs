@@ -1,1 +1,0 @@
-export { default as IconRemixRhythmLine } from './rhythm-line.component.vue';

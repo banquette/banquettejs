@@ -1,1 +1,0 @@
-export { default as IconRemixCreativeCommonsZeroLine } from './creative-commons-zero-line.component.vue';

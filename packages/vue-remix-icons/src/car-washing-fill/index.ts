@@ -1,1 +1,0 @@
-export { default as IconRemixCarWashingFill } from './car-washing-fill.component.vue';

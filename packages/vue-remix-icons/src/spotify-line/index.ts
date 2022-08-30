@@ -1,1 +1,0 @@
-export { default as IconRemixSpotifyLine } from './spotify-line.component.vue';

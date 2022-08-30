@@ -1,1 +1,0 @@
-export { default as IconRemixLoader4Line } from './loader-4-line.component.vue';

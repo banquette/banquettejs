@@ -1,1 +1,0 @@
-export { default as IconRemixRoadsterLine } from './roadster-line.component.vue';

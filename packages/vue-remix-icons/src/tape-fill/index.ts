@@ -1,1 +1,0 @@
-export { default as IconRemixTapeFill } from './tape-fill.component.vue';

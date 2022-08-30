@@ -1,1 +1,0 @@
-export { default as IconRemixCarFill } from './car-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixEyeCloseFill } from './eye-close-fill.component.vue';

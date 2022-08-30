@@ -1,1 +1,0 @@
-export { default as IconRemixBarcodeLine } from './barcode-line.component.vue';

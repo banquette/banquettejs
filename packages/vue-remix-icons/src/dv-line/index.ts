@@ -1,1 +1,0 @@
-export { default as IconRemixDvLine } from './dv-line.component.vue';

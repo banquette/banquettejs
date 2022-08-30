@@ -1,1 +1,0 @@
-export { default as IconRemixFolderShieldFill } from './folder-shield-fill.component.vue';

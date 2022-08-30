@@ -1,1 +1,0 @@
-export { default as IconRemixEmotion2Fill } from './emotion-2-fill.component.vue';

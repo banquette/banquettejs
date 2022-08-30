@@ -1,1 +1,8 @@
-export { default as IconMaterialFullscreen } from './fullscreen.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialFullscreen } from './fullscreen.component.vue';
+
+VueBuilder.RegisterComponent('i-material-fullscreen', IconMaterialFullscreen);
+
+export { IconMaterialFullscreen }
+

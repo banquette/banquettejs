@@ -1,1 +1,0 @@
-export { default as IconRemixBusWifiLine } from './bus-wifi-line.component.vue';

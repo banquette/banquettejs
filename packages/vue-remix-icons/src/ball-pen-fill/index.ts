@@ -1,1 +1,0 @@
-export { default as IconRemixBallPenFill } from './ball-pen-fill.component.vue';

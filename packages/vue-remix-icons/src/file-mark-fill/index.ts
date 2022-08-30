@@ -1,1 +1,0 @@
-export { default as IconRemixFileMarkFill } from './file-mark-fill.component.vue';

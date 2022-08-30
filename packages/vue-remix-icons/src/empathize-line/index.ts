@@ -1,1 +1,0 @@
-export { default as IconRemixEmpathizeLine } from './empathize-line.component.vue';

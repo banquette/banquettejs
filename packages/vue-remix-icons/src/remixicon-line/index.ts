@@ -1,1 +1,0 @@
-export { default as IconRemixRemixiconLine } from './remixicon-line.component.vue';

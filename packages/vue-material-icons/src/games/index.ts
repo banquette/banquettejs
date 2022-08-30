@@ -1,1 +1,8 @@
-export { default as IconMaterialGames } from './games.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialGames } from './games.component.vue';
+
+VueBuilder.RegisterComponent('i-material-games', IconMaterialGames);
+
+export { IconMaterialGames }
+

@@ -1,1 +1,0 @@
-export { default as IconRemixSunLine } from './sun-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixSwordLine } from './sword-line.component.vue';

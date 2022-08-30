@@ -1,1 +1,0 @@
-export { default as IconRemixArchiveLine } from './archive-line.component.vue';

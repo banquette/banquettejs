@@ -1,1 +1,0 @@
-export { default as IconRemixServerLine } from './server-line.component.vue';

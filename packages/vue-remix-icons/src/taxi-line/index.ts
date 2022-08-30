@@ -1,1 +1,0 @@
-export { default as IconRemixTaxiLine } from './taxi-line.component.vue';

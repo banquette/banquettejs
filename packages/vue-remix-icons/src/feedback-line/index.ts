@@ -1,1 +1,0 @@
-export { default as IconRemixFeedbackLine } from './feedback-line.component.vue';

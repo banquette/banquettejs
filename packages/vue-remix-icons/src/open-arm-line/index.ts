@@ -1,1 +1,0 @@
-export { default as IconRemixOpenArmLine } from './open-arm-line.component.vue';

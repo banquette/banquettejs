@@ -1,1 +1,0 @@
-export { default as IconRemixSpectrumLine } from './spectrum-line.component.vue';

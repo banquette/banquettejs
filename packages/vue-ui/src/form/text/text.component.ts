@@ -1,6 +1,6 @@
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { IconRemixCloseCircleLine } from "@banquette/vue-remix-icons/close-circle-line";
+import { IconRemixCloseCircle } from "@banquette/vue-remix-icons/close-circle";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -20,7 +20,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-text',
-    components: [BaseInputComponent, IconRemixCloseCircleLine],
+    components: [BaseInputComponent, IconRemixCloseCircle],
     directives: [BindThemeDirective]
 })
 export default class TextComponent extends AbstractVueFormComponent<TextViewDataInterface, TextViewModel> {

@@ -1,1 +1,0 @@
-export { default as IconRemixChatSmileLine } from './chat-smile-line.component.vue';

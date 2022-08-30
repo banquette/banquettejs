@@ -1,1 +1,0 @@
-export { default as IconRemixFileShredLine } from './file-shred-line.component.vue';

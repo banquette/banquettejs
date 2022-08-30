@@ -1,1 +1,0 @@
-export { default as IconRemixAmazonLine } from './amazon-line.component.vue';

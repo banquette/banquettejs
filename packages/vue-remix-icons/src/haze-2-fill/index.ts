@@ -1,1 +1,0 @@
-export { default as IconRemixHaze2Fill } from './haze-2-fill.component.vue';

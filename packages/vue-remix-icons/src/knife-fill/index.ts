@@ -1,1 +1,0 @@
-export { default as IconRemixKnifeFill } from './knife-fill.component.vue';

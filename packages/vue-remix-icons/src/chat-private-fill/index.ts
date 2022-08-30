@@ -1,1 +1,0 @@
-export { default as IconRemixChatPrivateFill } from './chat-private-fill.component.vue';

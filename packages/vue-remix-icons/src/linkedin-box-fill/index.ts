@@ -1,1 +1,0 @@
-export { default as IconRemixLinkedinBoxFill } from './linkedin-box-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixRecycleFill } from './recycle-fill.component.vue';

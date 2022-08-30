@@ -1,1 +1,0 @@
-export { default as IconRemixUninstallFill } from './uninstall-fill.component.vue';

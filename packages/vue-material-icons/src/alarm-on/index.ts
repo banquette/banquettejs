@@ -1,1 +1,8 @@
-export { default as IconMaterialAlarmOn } from './alarm-on.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialAlarmOn } from './alarm-on.component.vue';
+
+VueBuilder.RegisterComponent('i-material-alarm-on', IconMaterialAlarmOn);
+
+export { IconMaterialAlarmOn }
+

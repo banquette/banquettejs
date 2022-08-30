@@ -1,1 +1,0 @@
-export { default as IconRemixAnticlockwiseFill } from './anticlockwise-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixFilePaperLine } from './file-paper-line.component.vue';

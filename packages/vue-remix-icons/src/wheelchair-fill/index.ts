@@ -1,1 +1,0 @@
-export { default as IconRemixWheelchairFill } from './wheelchair-fill.component.vue';

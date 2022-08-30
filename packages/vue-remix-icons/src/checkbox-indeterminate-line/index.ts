@@ -1,1 +1,0 @@
-export { default as IconRemixCheckboxIndeterminateLine } from './checkbox-indeterminate-line.component.vue';

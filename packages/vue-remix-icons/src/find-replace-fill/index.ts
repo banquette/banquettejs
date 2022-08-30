@@ -1,1 +1,0 @@
-export { default as IconRemixFindReplaceFill } from './find-replace-fill.component.vue';

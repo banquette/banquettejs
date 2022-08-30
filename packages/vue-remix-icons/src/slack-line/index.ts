@@ -1,1 +1,0 @@
-export { default as IconRemixSlackLine } from './slack-line.component.vue';

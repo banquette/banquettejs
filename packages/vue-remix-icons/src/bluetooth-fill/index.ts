@@ -1,1 +1,0 @@
-export { default as IconRemixBluetoothFill } from './bluetooth-fill.component.vue';

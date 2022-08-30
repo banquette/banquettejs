@@ -1,1 +1,8 @@
-export { default as IconMaterialFilterHdr } from './filter-hdr.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialFilterHdr } from './filter-hdr.component.vue';
+
+VueBuilder.RegisterComponent('i-material-filter-hdr', IconMaterialFilterHdr);
+
+export { IconMaterialFilterHdr }
+

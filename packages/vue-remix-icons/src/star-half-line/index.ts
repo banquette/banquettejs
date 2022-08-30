@@ -1,1 +1,0 @@
-export { default as IconRemixStarHalfLine } from './star-half-line.component.vue';

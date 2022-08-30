@@ -1,1 +1,0 @@
-export { default as IconRemixWindow2Line } from './window-2-line.component.vue';

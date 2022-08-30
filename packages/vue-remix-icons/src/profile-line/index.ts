@@ -1,1 +1,0 @@
-export { default as IconRemixProfileLine } from './profile-line.component.vue';

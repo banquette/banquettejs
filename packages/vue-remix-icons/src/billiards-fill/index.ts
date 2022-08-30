@@ -1,1 +1,0 @@
-export { default as IconRemixBilliardsFill } from './billiards-fill.component.vue';

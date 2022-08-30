@@ -1,1 +1,0 @@
-export { default as IconRemixFileMarkLine } from './file-mark-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutGridFill } from './layout-grid-fill.component.vue';

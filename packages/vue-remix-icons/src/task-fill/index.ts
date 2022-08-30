@@ -1,1 +1,0 @@
-export { default as IconRemixTaskFill } from './task-fill.component.vue';

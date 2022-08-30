@@ -1,1 +1,0 @@
-export { default as IconRemixGitMergeLine } from './git-merge-line.component.vue';

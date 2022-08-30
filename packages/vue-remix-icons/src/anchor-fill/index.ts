@@ -1,1 +1,0 @@
-export { default as IconRemixAnchorFill } from './anchor-fill.component.vue';

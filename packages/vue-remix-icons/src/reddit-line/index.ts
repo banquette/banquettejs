@@ -1,1 +1,0 @@
-export { default as IconRemixRedditLine } from './reddit-line.component.vue';

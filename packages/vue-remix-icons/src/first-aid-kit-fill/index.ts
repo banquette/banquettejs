@@ -1,1 +1,0 @@
-export { default as IconRemixFirstAidKitFill } from './first-aid-kit-fill.component.vue';

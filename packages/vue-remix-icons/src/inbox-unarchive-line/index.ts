@@ -1,1 +1,0 @@
-export { default as IconRemixInboxUnarchiveLine } from './inbox-unarchive-line.component.vue';

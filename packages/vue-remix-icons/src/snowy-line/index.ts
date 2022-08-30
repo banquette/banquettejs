@@ -1,1 +1,0 @@
-export { default as IconRemixSnowyLine } from './snowy-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixRestaurantFill } from './restaurant-fill.component.vue';

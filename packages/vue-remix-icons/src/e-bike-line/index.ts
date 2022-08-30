@@ -1,1 +1,0 @@
-export { default as IconRemixEBikeLine } from './e-bike-line.component.vue';

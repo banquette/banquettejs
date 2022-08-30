@@ -1,1 +1,0 @@
-export { default as IconRemixGovernmentLine } from './government-line.component.vue';

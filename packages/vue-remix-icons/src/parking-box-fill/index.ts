@@ -1,1 +1,0 @@
-export { default as IconRemixParkingBoxFill } from './parking-box-fill.component.vue';

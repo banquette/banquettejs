@@ -1,1 +1,0 @@
-export { default as IconRemixRewindMiniFill } from './rewind-mini-fill.component.vue';

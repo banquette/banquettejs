@@ -1,1 +1,0 @@
-export { default as IconRemixFileExcel2Fill } from './file-excel-2-fill.component.vue';

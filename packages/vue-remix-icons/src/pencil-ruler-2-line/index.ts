@@ -1,1 +1,0 @@
-export { default as IconRemixPencilRuler2Line } from './pencil-ruler-2-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixTwitterFill } from './twitter-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixGameLine } from './game-line.component.vue';

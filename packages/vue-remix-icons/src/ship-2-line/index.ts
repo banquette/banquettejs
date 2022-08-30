@@ -1,1 +1,0 @@
-export { default as IconRemixShip2Line } from './ship-2-line.component.vue';

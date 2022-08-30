@@ -1,1 +1,8 @@
-export { default as IconMaterialDirectionsTransitFilled } from './directions-transit-filled.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialDirectionsTransitFilled } from './directions-transit-filled.component.vue';
+
+VueBuilder.RegisterComponent('i-material-directions-transit-filled', IconMaterialDirectionsTransitFilled);
+
+export { IconMaterialDirectionsTransitFilled }
+

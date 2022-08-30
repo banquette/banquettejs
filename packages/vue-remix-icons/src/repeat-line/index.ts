@@ -1,1 +1,0 @@
-export { default as IconRemixRepeatLine } from './repeat-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixArrowLeftCircleLine } from './arrow-left-circle-line.component.vue';

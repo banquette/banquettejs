@@ -1,1 +1,0 @@
-export { default as IconRemixParenthesesLine } from './parentheses-line.component.vue';

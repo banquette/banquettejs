@@ -1,1 +1,0 @@
-export { default as IconRemixKeynoteFill } from './keynote-fill.component.vue';

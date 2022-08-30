@@ -1,1 +1,0 @@
-export { default as IconRemixFridgeLine } from './fridge-line.component.vue';

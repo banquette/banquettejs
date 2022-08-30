@@ -1,1 +1,0 @@
-export { default as IconRemixLineChartLine } from './line-chart-line.component.vue';

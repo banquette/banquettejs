@@ -1,1 +1,8 @@
-export { default as IconMaterialPrint } from './print.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialPrint } from './print.component.vue';
+
+VueBuilder.RegisterComponent('i-material-print', IconMaterialPrint);
+
+export { IconMaterialPrint }
+

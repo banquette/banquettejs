@@ -1,1 +1,0 @@
-export { default as IconRemixArrowLeftDownLine } from './arrow-left-down-line.component.vue';

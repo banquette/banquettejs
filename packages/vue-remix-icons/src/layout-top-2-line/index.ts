@@ -1,1 +1,0 @@
-export { default as IconRemixLayoutTop2Line } from './layout-top-2-line.component.vue';

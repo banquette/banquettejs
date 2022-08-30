@@ -1,1 +1,0 @@
-export { default as IconRemixCloseCircleLine } from './close-circle-line.component.vue';

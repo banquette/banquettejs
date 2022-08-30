@@ -1,1 +1,0 @@
-export { default as IconRemixSlackFill } from './slack-fill.component.vue';

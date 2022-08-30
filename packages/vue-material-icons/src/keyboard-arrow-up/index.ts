@@ -1,1 +1,8 @@
-export { default as IconMaterialKeyboardArrowUp } from './keyboard-arrow-up.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialKeyboardArrowUp } from './keyboard-arrow-up.component.vue';
+
+VueBuilder.RegisterComponent('i-material-keyboard-arrow-up', IconMaterialKeyboardArrowUp);
+
+export { IconMaterialKeyboardArrowUp }
+

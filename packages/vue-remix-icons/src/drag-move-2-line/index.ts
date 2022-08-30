@@ -1,1 +1,0 @@
-export { default as IconRemixDragMove2Line } from './drag-move-2-line.component.vue';

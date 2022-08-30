@@ -1,1 +1,0 @@
-export { default as IconRemixWalletLine } from './wallet-line.component.vue';

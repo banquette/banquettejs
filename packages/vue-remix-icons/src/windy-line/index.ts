@@ -1,1 +1,0 @@
-export { default as IconRemixWindyLine } from './windy-line.component.vue';

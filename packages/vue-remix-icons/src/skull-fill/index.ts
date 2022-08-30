@@ -1,1 +1,0 @@
-export { default as IconRemixSkullFill } from './skull-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixSnowyFill } from './snowy-fill.component.vue';

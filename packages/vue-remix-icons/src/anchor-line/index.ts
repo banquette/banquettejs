@@ -1,1 +1,0 @@
-export { default as IconRemixAnchorLine } from './anchor-line.component.vue';

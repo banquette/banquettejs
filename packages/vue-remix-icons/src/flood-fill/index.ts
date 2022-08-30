@@ -1,1 +1,0 @@
-export { default as IconRemixFloodFill } from './flood-fill.component.vue';

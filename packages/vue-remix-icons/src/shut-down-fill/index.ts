@@ -1,1 +1,0 @@
-export { default as IconRemixShutDownFill } from './shut-down-fill.component.vue';

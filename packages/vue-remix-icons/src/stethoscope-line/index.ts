@@ -1,1 +1,0 @@
-export { default as IconRemixStethoscopeLine } from './stethoscope-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixSwordFill } from './sword-fill.component.vue';

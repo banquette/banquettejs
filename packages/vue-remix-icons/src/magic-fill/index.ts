@@ -1,1 +1,0 @@
-export { default as IconRemixMagicFill } from './magic-fill.component.vue';

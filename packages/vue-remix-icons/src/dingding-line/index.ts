@@ -1,1 +1,0 @@
-export { default as IconRemixDingdingLine } from './dingding-line.component.vue';

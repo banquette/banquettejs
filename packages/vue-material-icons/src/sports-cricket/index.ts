@@ -1,1 +1,8 @@
-export { default as IconMaterialSportsCricket } from './sports-cricket.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialSportsCricket } from './sports-cricket.component.vue';
+
+VueBuilder.RegisterComponent('i-material-sports-cricket', IconMaterialSportsCricket);
+
+export { IconMaterialSportsCricket }
+

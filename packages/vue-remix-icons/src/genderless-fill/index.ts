@@ -1,1 +1,0 @@
-export { default as IconRemixGenderlessFill } from './genderless-fill.component.vue';

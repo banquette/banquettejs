@@ -1,1 +1,0 @@
-export { default as IconRemixFileShield2Line } from './file-shield-2-line.component.vue';

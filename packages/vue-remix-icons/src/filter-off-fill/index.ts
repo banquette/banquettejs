@@ -1,1 +1,0 @@
-export { default as IconRemixFilterOffFill } from './filter-off-fill.component.vue';

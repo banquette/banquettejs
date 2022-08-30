@@ -1,1 +1,0 @@
-export { default as IconRemixInvisionLine } from './invision-line.component.vue';

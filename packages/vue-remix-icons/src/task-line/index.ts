@@ -1,1 +1,0 @@
-export { default as IconRemixTaskLine } from './task-line.component.vue';

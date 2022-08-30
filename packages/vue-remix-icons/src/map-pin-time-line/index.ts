@@ -1,1 +1,0 @@
-export { default as IconRemixMapPinTimeLine } from './map-pin-time-line.component.vue';

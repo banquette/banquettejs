@@ -1,1 +1,0 @@
-export { default as IconRemixPaletteLine } from './palette-line.component.vue';

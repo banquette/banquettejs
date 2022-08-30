@@ -1,1 +1,0 @@
-export { default as IconRemixClockwise2Line } from './clockwise-2-line.component.vue';

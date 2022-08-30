@@ -1,1 +1,0 @@
-export { default as IconRemixPencilRuler2Fill } from './pencil-ruler-2-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixCodeBoxFill } from './code-box-fill.component.vue';

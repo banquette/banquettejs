@@ -1,1 +1,0 @@
-export { default as IconRemixUsbLine } from './usb-line.component.vue';

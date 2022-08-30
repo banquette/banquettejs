@@ -1,1 +1,0 @@
-export { default as IconRemixArrowDropLeftFill } from './arrow-drop-left-fill.component.vue';

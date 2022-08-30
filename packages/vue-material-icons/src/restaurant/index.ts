@@ -1,1 +1,8 @@
-export { default as IconMaterialRestaurant } from './restaurant.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialRestaurant } from './restaurant.component.vue';
+
+VueBuilder.RegisterComponent('i-material-restaurant', IconMaterialRestaurant);
+
+export { IconMaterialRestaurant }
+

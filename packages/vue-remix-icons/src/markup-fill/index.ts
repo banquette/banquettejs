@@ -1,1 +1,0 @@
-export { default as IconRemixMarkupFill } from './markup-fill.component.vue';

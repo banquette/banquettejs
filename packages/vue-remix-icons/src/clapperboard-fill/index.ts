@@ -1,1 +1,0 @@
-export { default as IconRemixClapperboardFill } from './clapperboard-fill.component.vue';

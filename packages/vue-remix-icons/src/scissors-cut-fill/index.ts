@@ -1,1 +1,0 @@
-export { default as IconRemixScissorsCutFill } from './scissors-cut-fill.component.vue';

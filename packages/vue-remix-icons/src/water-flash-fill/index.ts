@@ -1,1 +1,0 @@
-export { default as IconRemixWaterFlashFill } from './water-flash-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixMessage2Fill } from './message-2-fill.component.vue';

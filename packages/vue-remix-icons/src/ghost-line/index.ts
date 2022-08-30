@@ -1,1 +1,0 @@
-export { default as IconRemixGhostLine } from './ghost-line.component.vue';

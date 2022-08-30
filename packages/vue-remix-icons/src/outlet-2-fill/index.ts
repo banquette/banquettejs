@@ -1,1 +1,0 @@
-export { default as IconRemixOutlet2Fill } from './outlet-2-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixUserSearchLine } from './user-search-line.component.vue';

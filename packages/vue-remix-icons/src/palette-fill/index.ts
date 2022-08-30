@@ -1,1 +1,0 @@
-export { default as IconRemixPaletteFill } from './palette-fill.component.vue';

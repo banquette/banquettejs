@@ -1,1 +1,0 @@
-export { default as IconRemixUserFollowLine } from './user-follow-line.component.vue';

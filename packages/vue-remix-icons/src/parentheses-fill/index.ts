@@ -1,1 +1,0 @@
-export { default as IconRemixParenthesesFill } from './parentheses-fill.component.vue';

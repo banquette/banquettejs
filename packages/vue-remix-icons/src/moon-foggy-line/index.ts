@@ -1,1 +1,0 @@
-export { default as IconRemixMoonFoggyLine } from './moon-foggy-line.component.vue';

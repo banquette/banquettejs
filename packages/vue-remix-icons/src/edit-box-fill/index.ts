@@ -1,1 +1,0 @@
-export { default as IconRemixEditBoxFill } from './edit-box-fill.component.vue';

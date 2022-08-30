@@ -1,1 +1,0 @@
-export { default as IconRemixCheckLine } from './check-line.component.vue';

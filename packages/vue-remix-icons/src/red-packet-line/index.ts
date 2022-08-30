@@ -1,1 +1,0 @@
-export { default as IconRemixRedPacketLine } from './red-packet-line.component.vue';

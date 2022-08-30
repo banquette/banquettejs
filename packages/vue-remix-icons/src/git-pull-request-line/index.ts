@@ -1,1 +1,0 @@
-export { default as IconRemixGitPullRequestLine } from './git-pull-request-line.component.vue';

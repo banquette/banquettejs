@@ -1,1 +1,0 @@
-export { default as IconRemixParkingBoxLine } from './parking-box-line.component.vue';

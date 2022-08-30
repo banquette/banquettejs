@@ -1,1 +1,0 @@
-export { default as IconRemixWhatsappLine } from './whatsapp-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixNpmjsFill } from './npmjs-fill.component.vue';

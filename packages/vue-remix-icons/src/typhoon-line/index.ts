@@ -1,1 +1,0 @@
-export { default as IconRemixTyphoonLine } from './typhoon-line.component.vue';

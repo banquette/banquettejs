@@ -1,1 +1,0 @@
-export { default as IconRemixDirectionFill } from './direction-fill.component.vue';

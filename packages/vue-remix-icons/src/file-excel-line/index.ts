@@ -1,1 +1,0 @@
-export { default as IconRemixFileExcelLine } from './file-excel-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixHonorOfKingsLine } from './honor-of-kings-line.component.vue';

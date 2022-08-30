@@ -1,1 +1,0 @@
-export { default as IconRemixReactjsFill } from './reactjs-fill.component.vue';

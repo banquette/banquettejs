@@ -1,1 +1,0 @@
-export { default as IconRemixCloseLine } from './close-line.component.vue';

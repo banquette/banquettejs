@@ -1,1 +1,0 @@
-export { default as IconRemixRestTimeFill } from './rest-time-fill.component.vue';

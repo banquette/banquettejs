@@ -1,1 +1,0 @@
-export { default as IconRemixGobletLine } from './goblet-line.component.vue';

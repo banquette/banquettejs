@@ -1,1 +1,0 @@
-export { default as IconRemixVoiceRecognitionFill } from './voice-recognition-fill.component.vue';

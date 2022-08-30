@@ -1,1 +1,0 @@
-export { default as IconRemixZoomOutFill } from './zoom-out-fill.component.vue';

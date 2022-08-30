@@ -1,1 +1,0 @@
-export { default as IconRemixLungsLine } from './lungs-line.component.vue';

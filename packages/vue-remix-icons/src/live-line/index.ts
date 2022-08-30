@@ -1,1 +1,0 @@
-export { default as IconRemixLiveLine } from './live-line.component.vue';

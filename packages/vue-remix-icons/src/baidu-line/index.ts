@@ -1,1 +1,0 @@
-export { default as IconRemixBaiduLine } from './baidu-line.component.vue';

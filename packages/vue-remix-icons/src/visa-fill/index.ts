@@ -1,1 +1,0 @@
-export { default as IconRemixVisaFill } from './visa-fill.component.vue';

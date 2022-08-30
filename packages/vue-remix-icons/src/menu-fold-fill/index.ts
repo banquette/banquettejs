@@ -1,1 +1,0 @@
-export { default as IconRemixMenuFoldFill } from './menu-fold-fill.component.vue';

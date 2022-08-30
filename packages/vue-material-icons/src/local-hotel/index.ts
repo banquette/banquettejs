@@ -1,1 +1,8 @@
-export { default as IconMaterialLocalHotel } from './local-hotel.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialLocalHotel } from './local-hotel.component.vue';
+
+VueBuilder.RegisterComponent('i-material-local-hotel', IconMaterialLocalHotel);
+
+export { IconMaterialLocalHotel }
+

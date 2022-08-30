@@ -1,1 +1,0 @@
-export { default as IconRemixSignalWifiErrorLine } from './signal-wifi-error-line.component.vue';

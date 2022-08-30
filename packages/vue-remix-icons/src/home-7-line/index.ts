@@ -1,1 +1,0 @@
-export { default as IconRemixHome7Line } from './home-7-line.component.vue';

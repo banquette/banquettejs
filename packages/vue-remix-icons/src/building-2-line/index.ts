@@ -1,1 +1,0 @@
-export { default as IconRemixBuilding2Line } from './building-2-line.component.vue';

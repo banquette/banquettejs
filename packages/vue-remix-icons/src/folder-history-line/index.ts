@@ -1,1 +1,0 @@
-export { default as IconRemixFolderHistoryLine } from './folder-history-line.component.vue';

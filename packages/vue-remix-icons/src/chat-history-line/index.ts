@@ -1,1 +1,0 @@
-export { default as IconRemixChatHistoryLine } from './chat-history-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixTravestiFill } from './travesti-fill.component.vue';

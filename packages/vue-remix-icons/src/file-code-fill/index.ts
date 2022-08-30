@@ -1,1 +1,0 @@
-export { default as IconRemixFileCodeFill } from './file-code-fill.component.vue';

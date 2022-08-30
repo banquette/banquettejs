@@ -1,1 +1,0 @@
-export { default as IconRemixShieldCheckFill } from './shield-check-fill.component.vue';

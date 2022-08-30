@@ -1,1 +1,0 @@
-export { default as IconRemixChatForwardLine } from './chat-forward-line.component.vue';

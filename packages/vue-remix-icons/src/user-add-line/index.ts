@@ -1,1 +1,0 @@
-export { default as IconRemixUserAddLine } from './user-add-line.component.vue';

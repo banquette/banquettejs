@@ -1,1 +1,0 @@
-export { default as IconRemixBrush3Line } from './brush-3-line.component.vue';

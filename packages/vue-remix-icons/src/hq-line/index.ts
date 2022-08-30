@@ -1,1 +1,0 @@
-export { default as IconRemixHqLine } from './hq-line.component.vue';

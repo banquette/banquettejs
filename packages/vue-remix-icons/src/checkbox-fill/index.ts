@@ -1,1 +1,0 @@
-export { default as IconRemixCheckboxFill } from './checkbox-fill.component.vue';

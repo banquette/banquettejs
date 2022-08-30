@@ -1,1 +1,0 @@
-export { default as IconRemixPushpinLine } from './pushpin-line.component.vue';

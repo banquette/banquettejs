@@ -1,1 +1,0 @@
-export { default as IconRemixShareCircleLine } from './share-circle-line.component.vue';

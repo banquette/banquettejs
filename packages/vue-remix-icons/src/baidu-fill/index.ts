@@ -1,1 +1,0 @@
-export { default as IconRemixBaiduFill } from './baidu-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixDraftLine } from './draft-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixUploadCloud2Line } from './upload-cloud-2-line.component.vue';

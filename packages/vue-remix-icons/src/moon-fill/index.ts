@@ -1,1 +1,0 @@
-export { default as IconRemixMoonFill } from './moon-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixMoneyEuroCircleLine } from './money-euro-circle-line.component.vue';

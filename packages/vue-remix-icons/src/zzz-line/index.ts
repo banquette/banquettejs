@@ -1,1 +1,0 @@
-export { default as IconRemixZzzLine } from './zzz-line.component.vue';

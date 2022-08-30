@@ -1,1 +1,8 @@
-export { default as IconMaterialIcecream } from './icecream.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialIcecream } from './icecream.component.vue';
+
+VueBuilder.RegisterComponent('i-material-icecream', IconMaterialIcecream);
+
+export { IconMaterialIcecream }
+

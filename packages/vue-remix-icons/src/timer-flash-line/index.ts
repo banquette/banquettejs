@@ -1,1 +1,0 @@
-export { default as IconRemixTimerFlashLine } from './timer-flash-line.component.vue';

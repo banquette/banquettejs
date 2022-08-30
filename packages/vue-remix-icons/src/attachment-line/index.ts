@@ -1,1 +1,0 @@
-export { default as IconRemixAttachmentLine } from './attachment-line.component.vue';

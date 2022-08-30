@@ -1,1 +1,8 @@
-export { default as IconMaterialLogout } from './logout.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialLogout } from './logout.component.vue';
+
+VueBuilder.RegisterComponent('i-material-logout', IconMaterialLogout);
+
+export { IconMaterialLogout }
+

@@ -1,1 +1,0 @@
-export { default as IconRemixRainbowLine } from './rainbow-line.component.vue';

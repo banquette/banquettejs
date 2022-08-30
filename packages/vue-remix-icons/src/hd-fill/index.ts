@@ -1,1 +1,0 @@
-export { default as IconRemixHdFill } from './hd-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixSpeedMiniLine } from './speed-mini-line.component.vue';

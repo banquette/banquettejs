@@ -1,1 +1,0 @@
-export { default as IconRemixKakaoTalkLine } from './kakao-talk-line.component.vue';

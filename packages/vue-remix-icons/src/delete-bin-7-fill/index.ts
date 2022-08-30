@@ -1,1 +1,0 @@
-export { default as IconRemixDeleteBin7Fill } from './delete-bin-7-fill.component.vue';

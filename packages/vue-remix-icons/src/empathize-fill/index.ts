@@ -1,1 +1,0 @@
-export { default as IconRemixEmpathizeFill } from './empathize-fill.component.vue';

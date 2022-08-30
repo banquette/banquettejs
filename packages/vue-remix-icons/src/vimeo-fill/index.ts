@@ -1,1 +1,0 @@
-export { default as IconRemixVimeoFill } from './vimeo-fill.component.vue';

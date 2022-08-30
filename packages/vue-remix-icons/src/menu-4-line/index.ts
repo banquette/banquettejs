@@ -1,1 +1,0 @@
-export { default as IconRemixMenu4Line } from './menu-4-line.component.vue';

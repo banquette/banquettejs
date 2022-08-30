@@ -1,1 +1,0 @@
-export { default as IconRemixScales2Line } from './scales-2-line.component.vue';

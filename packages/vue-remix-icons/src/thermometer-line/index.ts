@@ -1,1 +1,0 @@
-export { default as IconRemixThermometerLine } from './thermometer-line.component.vue';

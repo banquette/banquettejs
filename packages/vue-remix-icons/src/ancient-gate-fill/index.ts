@@ -1,1 +1,0 @@
-export { default as IconRemixAncientGateFill } from './ancient-gate-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixBearSmileLine } from './bear-smile-line.component.vue';

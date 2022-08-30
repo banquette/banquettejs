@@ -1,1 +1,0 @@
-export { default as IconRemixNotificationFill } from './notification-fill.component.vue';

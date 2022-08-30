@@ -1,1 +1,0 @@
-export { default as IconRemixArrowUpSFill } from './arrow-up-s-fill.component.vue';

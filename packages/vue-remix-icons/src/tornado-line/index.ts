@@ -1,1 +1,0 @@
-export { default as IconRemixTornadoLine } from './tornado-line.component.vue';

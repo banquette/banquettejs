@@ -1,1 +1,8 @@
-export { default as IconMaterialRule } from './rule.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialRule } from './rule.component.vue';
+
+VueBuilder.RegisterComponent('i-material-rule', IconMaterialRule);
+
+export { IconMaterialRule }
+

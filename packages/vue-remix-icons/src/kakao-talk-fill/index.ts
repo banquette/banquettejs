@@ -1,1 +1,0 @@
-export { default as IconRemixKakaoTalkFill } from './kakao-talk-fill.component.vue';

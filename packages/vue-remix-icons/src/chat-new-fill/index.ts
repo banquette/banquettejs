@@ -1,1 +1,0 @@
-export { default as IconRemixChatNewFill } from './chat-new-fill.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixStarSLine } from './star-s-line.component.vue';

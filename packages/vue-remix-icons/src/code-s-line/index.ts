@@ -1,1 +1,0 @@
-export { default as IconRemixCodeSLine } from './code-s-line.component.vue';

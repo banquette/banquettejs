@@ -1,1 +1,0 @@
-export { default as IconRemixSensorLine } from './sensor-line.component.vue';

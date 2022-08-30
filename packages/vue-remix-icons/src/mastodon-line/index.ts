@@ -1,1 +1,0 @@
-export { default as IconRemixMastodonLine } from './mastodon-line.component.vue';

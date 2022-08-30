@@ -1,1 +1,0 @@
-export { default as IconRemixHandCoinFill } from './hand-coin-fill.component.vue';

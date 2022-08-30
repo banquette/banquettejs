@@ -1,1 +1,0 @@
-export { default as IconRemixFileTransferFill } from './file-transfer-fill.component.vue';

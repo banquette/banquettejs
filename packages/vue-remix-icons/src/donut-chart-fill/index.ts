@@ -1,1 +1,0 @@
-export { default as IconRemixDonutChartFill } from './donut-chart-fill.component.vue';

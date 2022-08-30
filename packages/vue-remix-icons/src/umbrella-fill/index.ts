@@ -1,1 +1,0 @@
-export { default as IconRemixUmbrellaFill } from './umbrella-fill.component.vue';

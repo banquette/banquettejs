@@ -1,1 +1,0 @@
-export { default as IconRemixKnifeLine } from './knife-line.component.vue';

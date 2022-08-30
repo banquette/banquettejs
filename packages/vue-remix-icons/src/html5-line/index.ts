@@ -1,1 +1,0 @@
-export { default as IconRemixHtml5Line } from './html5-line.component.vue';

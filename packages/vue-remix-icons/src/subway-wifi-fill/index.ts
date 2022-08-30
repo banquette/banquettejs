@@ -1,1 +1,0 @@
-export { default as IconRemixSubwayWifiFill } from './subway-wifi-fill.component.vue';

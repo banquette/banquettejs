@@ -1,1 +1,8 @@
-export { default as IconMaterialAutoMode } from './auto-mode.component.vue';
+
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { default as IconMaterialAutoMode } from './auto-mode.component.vue';
+
+VueBuilder.RegisterComponent('i-material-auto-mode', IconMaterialAutoMode);
+
+export { IconMaterialAutoMode }
+

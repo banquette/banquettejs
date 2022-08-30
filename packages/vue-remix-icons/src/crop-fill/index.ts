@@ -1,1 +1,0 @@
-export { default as IconRemixCropFill } from './crop-fill.component.vue';

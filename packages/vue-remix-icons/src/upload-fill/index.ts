@@ -1,1 +1,0 @@
-export { default as IconRemixUploadFill } from './upload-fill.component.vue';

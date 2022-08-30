@@ -1,1 +1,0 @@
-export { default as IconRemixCloseCircleFill } from './close-circle-fill.component.vue';

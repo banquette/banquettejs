@@ -1,1 +1,0 @@
-export { default as IconRemixMacbookLine } from './macbook-line.component.vue';

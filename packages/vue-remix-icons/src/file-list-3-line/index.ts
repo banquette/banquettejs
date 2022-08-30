@@ -1,1 +1,0 @@
-export { default as IconRemixFileList3Line } from './file-list-3-line.component.vue';

@@ -1,1 +1,0 @@
-export { default as IconRemixFlutterLine } from './flutter-line.component.vue';

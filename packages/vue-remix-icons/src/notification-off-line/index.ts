@@ -1,1 +1,0 @@
-export { default as IconRemixNotificationOffLine } from './notification-off-line.component.vue';

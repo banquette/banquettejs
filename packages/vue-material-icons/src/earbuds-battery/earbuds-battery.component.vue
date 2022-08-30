@@ -1,20 +1,19 @@
-<script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+<script>
+import { h } from 'vue';
 
-@Component('i-material-earbuds-battery')
-export default class IconMaterialEarbudsBattery {
-    @Prop({type: [String, Number], default: null}) public width!: string|number|null;
-    @Prop({type: [String, Number], default: null}) public height!: string|number|null;
-    @Prop({type: String, default: 'currentColor'}) public color!: string|null;
-    @Prop({type: Boolean, default: false}) public crop!: boolean;
-    @Prop({type: String, default: 'default'}) public version!: string;
+export default {
+    name: 'i-material-earbuds-battery',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render() {
+        if (this.version === 'twotone')
+    return h('svg',{"viewBox":this.crop !== undefined ? '2 6 20 12' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{"opacity":"0.3",d:"M18 9h2v7h-2z"},[]),h('path',{d:"M10.62 6C8.76 6 7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38C14 7.51 12.49 6 10.62 6zM21 7h-1V6h-2v1h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-1 9h-2V9h2v7z"},[])]);
+if (this.version === 'sharp')
+    return h('svg',{"viewBox":this.crop !== undefined ? '2 6 20 12' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M20 7V6h-2v1h-2v11h6V7zM5.38 16.5c-1.04 0-1.88-.84-1.88-1.87V10H6V6H4c-1.1 0-2 .9-2 2v6.63C2 16.49 3.51 18 5.37 18s3.37-1.51 3.37-3.37V9.37c0-1.04.84-1.87 1.87-1.87 1.04 0 1.87.84 1.87 1.87V14H10v4h2c1.1 0 2-.9 2-2V9.37C14 7.51 12.49 6 10.63 6 8.76 6 7.25 7.51 7.25 9.37v5.25c0 1.04-.84 1.88-1.87 1.88z"},[])]);
+if (this.version === 'round')
+    return h('svg',{"viewBox":this.crop !== undefined ? '2 6 20 12' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M21 7h-1v-.5c0-.28-.22-.5-.5-.5h-1c-.28 0-.5.22-.5.5V7h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-7 2.38C14 7.51 12.49 6 10.62 6S7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38z"},[])]);
+if (this.version === 'outlined')
+    return h('svg',{"viewBox":this.crop !== undefined ? '2 6 20 12' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M21 7h-1V6h-2v1h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-1 9h-2V9h2v7zm-6-6.62C14 7.51 12.49 6 10.62 6S7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38z"},[])]);
+return h('svg',{"viewBox":this.crop !== undefined ? '2 6 20 12' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M21 7h-1V6h-2v1h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zM10.62 6C8.76 6 7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38C14 7.51 12.49 6 10.62 6z"},[])]);
+    }
 }
 </script>
-<template>
-    <svg v-if="version === 'twotone'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '2 6 20 12' : '0 0 24 24'"><path opacity=".3" d="M18 9h2v7h-2z"/><path d="M10.62 6C8.76 6 7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38C14 7.51 12.49 6 10.62 6zM21 7h-1V6h-2v1h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-1 9h-2V9h2v7z"/></svg>
-    <svg v-else-if="version === 'sharp'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '2 6 20 12' : '0 0 24 24'"><path d="M20 7V6h-2v1h-2v11h6V7zM5.38 16.5c-1.04 0-1.88-.84-1.88-1.87V10H6V6H4c-1.1 0-2 .9-2 2v6.63C2 16.49 3.51 18 5.37 18s3.37-1.51 3.37-3.37V9.37c0-1.04.84-1.87 1.87-1.87 1.04 0 1.87.84 1.87 1.87V14H10v4h2c1.1 0 2-.9 2-2V9.37C14 7.51 12.49 6 10.63 6 8.76 6 7.25 7.51 7.25 9.37v5.25c0 1.04-.84 1.88-1.87 1.88z"/></svg>
-    <svg v-else-if="version === 'round'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '2 6 20 12' : '0 0 24 24'"><path d="M21 7h-1v-.5c0-.28-.22-.5-.5-.5h-1c-.28 0-.5.22-.5.5V7h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-7 2.38C14 7.51 12.49 6 10.62 6S7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38z"/></svg>
-    <svg v-else-if="version === 'outlined'" :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '2 6 20 12' : '0 0 24 24'"><path d="M21 7h-1V6h-2v1h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zm-1 9h-2V9h2v7zm-6-6.62C14 7.51 12.49 6 10.62 6S7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38z"/></svg>
-    <svg v-else :width="width" :height="height || (!width ? '1em' : null)" :fill="color" :viewBox="crop ? '2 6 20 12' : '0 0 24 24'"><path d="M21 7h-1V6h-2v1h-1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V8c0-.55-.45-1-1-1zM10.62 6C8.76 6 7.25 7.51 7.25 9.38v5.25c0 1.04-.84 1.88-1.88 1.88s-1.87-.85-1.87-1.89v-4.7c.16.05.33.08.5.08 1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2v6.62C2 16.49 3.51 18 5.38 18s3.38-1.51 3.38-3.38V9.38c0-1.04.84-1.88 1.88-1.88s1.88.84 1.88 1.88v4.7c-.18-.05-.35-.08-.52-.08-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2V9.38C14 7.51 12.49 6 10.62 6z"/></svg>
-</template>

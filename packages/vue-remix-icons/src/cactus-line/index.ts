@@ -1,1 +1,0 @@
-export { default as IconRemixCactusLine } from './cactus-line.component.vue';

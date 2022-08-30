@@ -1,1 +1,0 @@
-export { default as IconRemixPriceTagFill } from './price-tag-fill.component.vue';

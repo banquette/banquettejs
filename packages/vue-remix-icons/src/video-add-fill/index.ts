@@ -1,1 +1,0 @@
-export { default as IconRemixVideoAddFill } from './video-add-fill.component.vue';

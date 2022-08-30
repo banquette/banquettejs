@@ -1,1 +1,0 @@
-export { default as IconRemixAccountPinBoxFill } from './account-pin-box-fill.component.vue';

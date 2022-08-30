@@ -1,1 +1,0 @@
-export { default as IconRemixBoxingFill } from './boxing-fill.component.vue';

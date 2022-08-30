@@ -1,1 +1,0 @@
-export { default as IconRemixVideoChatFill } from './video-chat-fill.component.vue';

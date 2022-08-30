@@ -1,1 +1,0 @@
-export { default as IconRemixTempHotLine } from './temp-hot-line.component.vue';

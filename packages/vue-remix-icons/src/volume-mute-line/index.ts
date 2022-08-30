@@ -1,1 +1,0 @@
-export { default as IconRemixVolumeMuteLine } from './volume-mute-line.component.vue';
