@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialStop } from './stop.component.vue';
 
 VueBuilder.RegisterComponent('i-material-stop', IconMaterialStop);

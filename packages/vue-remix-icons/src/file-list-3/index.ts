@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconRemixFileList3 } from './file-list-3.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-file-list-3', IconRemixFileList3);

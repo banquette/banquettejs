@@ -297,7 +297,7 @@ export default {
         fs.writeFileSync(componentPath, src);
         const indexPath = path.join(componentDir, 'index.ts');
         fs.writeFileSync(indexPath, `
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as ${className} } from './${componentName + '.component.vue'}';
 
 VueBuilder.RegisterComponent('i-${configuration.libName}-${componentName}', ${className});

@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialDepartureBoard } from './departure-board.component.vue';
 
 VueBuilder.RegisterComponent('i-material-departure-board', IconMaterialDepartureBoard);

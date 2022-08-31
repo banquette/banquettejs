@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialTextSnippet } from './text-snippet.component.vue';
 
 VueBuilder.RegisterComponent('i-material-text-snippet', IconMaterialTextSnippet);

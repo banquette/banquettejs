@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconRemixTable2 } from './table-2.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-table-2', IconRemixTable2);

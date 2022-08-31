@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialForward30 } from './forward-30.component.vue';
 
 VueBuilder.RegisterComponent('i-material-forward-30', IconMaterialForward30);

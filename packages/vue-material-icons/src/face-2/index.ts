@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialFace2 } from './face-2.component.vue';
 
 VueBuilder.RegisterComponent('i-material-face-2', IconMaterialFace2);

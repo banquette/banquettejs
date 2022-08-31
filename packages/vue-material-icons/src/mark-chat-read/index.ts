@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialMarkChatRead } from './mark-chat-read.component.vue';
 
 VueBuilder.RegisterComponent('i-material-mark-chat-read', IconMaterialMarkChatRead);

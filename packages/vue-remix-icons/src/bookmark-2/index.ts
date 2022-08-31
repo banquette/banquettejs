@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconRemixBookmark2 } from './bookmark-2.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-bookmark-2', IconRemixBookmark2);

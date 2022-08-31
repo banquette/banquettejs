@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialEditSquare } from './edit-square.component.vue';
 
 VueBuilder.RegisterComponent('i-material-edit-square', IconMaterialEditSquare);

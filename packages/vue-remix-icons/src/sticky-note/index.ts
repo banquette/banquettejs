@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconRemixStickyNote } from './sticky-note.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-sticky-note', IconRemixStickyNote);

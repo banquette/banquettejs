@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconRemixLayout4 } from './layout-4.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-layout-4', IconRemixLayout4);

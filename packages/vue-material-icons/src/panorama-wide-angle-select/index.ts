@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialPanoramaWideAngleSelect } from './panorama-wide-angle-select.component.vue';
 
 VueBuilder.RegisterComponent('i-material-panorama-wide-angle-select', IconMaterialPanoramaWideAngleSelect);

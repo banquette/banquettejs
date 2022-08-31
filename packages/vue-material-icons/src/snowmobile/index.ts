@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialSnowmobile } from './snowmobile.component.vue';
 
 VueBuilder.RegisterComponent('i-material-snowmobile', IconMaterialSnowmobile);

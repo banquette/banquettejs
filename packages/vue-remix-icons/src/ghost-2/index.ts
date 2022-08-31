@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconRemixGhost2 } from './ghost-2.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-ghost-2', IconRemixGhost2);

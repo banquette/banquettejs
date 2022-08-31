@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconMaterialErrorOutline } from './error-outline.component.vue';
 
 VueBuilder.RegisterComponent('i-material-error-outline', IconMaterialErrorOutline);

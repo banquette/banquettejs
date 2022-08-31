@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { default as IconRemixHardDrive2 } from './hard-drive-2.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-hard-drive-2', IconRemixHardDrive2);
