@@ -642,13 +642,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             });
 
             if (data.renderMethod !== null) {
-                // Because we return the render function, we need to expose explicitly the output.
-                context.expose(output);
-
-                const render = inst[data.renderMethod];
-                return function(...args: any[]) {
-                    return render.apply(inst, args.concat([output]));
-                };
+                return proxy(inst[data.renderMethod], inst);
             }
         }
         return output;
