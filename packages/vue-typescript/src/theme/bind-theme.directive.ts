@@ -1,7 +1,6 @@
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { proxy } from "@banquette/utils-misc/proxy";
-import { throttle } from "@banquette/utils-misc/throttle";
 import { DirectiveBinding } from "vue";
 import { ACTIVE_VARIANTS } from "../constants";
 import { ComponentMetadataInterface } from "../decorator/component-metadata.interface";
@@ -67,9 +66,9 @@ export class BindThemeDirective extends Vue {
         }
         this.metadata = metadata;
         this.configuration = configuration;
-        VueThemes.OnChanged(() => {
+        this.unsubscribeFns.push(VueThemes.OnChanged(() => {
             this.computeChanges(el);
-        });
+        }));
     }
 
     public beforeMount(el: Element): void {
