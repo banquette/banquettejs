@@ -47,15 +47,26 @@ export class EventDispatcher implements EventDispatcherInterface {
                                          priority: number = 0,
                                          filteringTags: symbol[]|null = null,
                                          propagationTags: symbol[] = []): UnsubscribeFunction {
-        const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
+        let subscribers: SubscriberInterface[]|undefined = this.subscribers[type], i;
+        if (isUndefined(subscribers)) {
+            this.subscribers[type] = subscribers = [];
+        }
         if (!propagationTags.length) {
             propagationTags.push(DEFAULT_TAG);
         }
-        subscribers.push({callback: callback as (event: EventArg) => void, priority, filteringTags, propagationTags});
-        subscribers.sort((a: SubscriberInterface, b: SubscriberInterface) => {
-            return b.priority - a.priority;
-        });
-        this.subscribers[type] = subscribers;
+        let l = subscribers.length;
+        const newSubscriber = {
+            callback: callback as (event: EventArg) => void,
+            priority,
+            filteringTags,
+            propagationTags
+        };
+        for (i = 0; i < l && subscribers[i].priority >= priority; ++i);
+        if (i >= l) {
+            subscribers.push(newSubscriber);
+        } else {
+            subscribers.splice(i, 0, newSubscriber);
+        }
         let events: any;
         // If we have events waiting for a subscriber, trigger them.
         if (!isUndefined((events = this.queue[type]))) {
@@ -73,9 +84,12 @@ export class EventDispatcher implements EventDispatcherInterface {
             });
         }
         return () => {
-            this.subscribers[type] = this.getSubscribersForType(type).filter((subscriber: SubscriberInterface) => {
-                return subscriber.callback !== callback;
-            });
+            for (let i = 0; i < subscribers!.length; ++i) {
+                if (subscribers![i].callback === callback) {
+                    subscribers!.splice(i--, 1);
+                    break ;
+                }
+            }
         };
     }
 
@@ -87,7 +101,7 @@ export class EventDispatcher implements EventDispatcherInterface {
         const e = !isType<EventArg>(event, Not(isNullOrUndefined)) ? new EventArg() : event;
         const propagationStoppedTags: symbol[] = [];
         let propagationStopped: boolean = false;
-        const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
+        const subscribers: SubscriberInterface[] = ([] as SubscriberInterface[]).concat(this.subscribers[type] || []);
         const result = new DispatchResult<T>();
         let index = -1;
 
@@ -130,7 +144,7 @@ export class EventDispatcher implements EventDispatcherInterface {
             }
             return true;
         };
-        let cont = true;
+        let cont = subscribers.length > 0;
         while (cont) {
             cont = next();
         }
@@ -160,7 +174,7 @@ export class EventDispatcher implements EventDispatcherInterface {
      */
     public dispatchSafe(type: symbol, event?: EventArg|null): void {
         event = isNullOrUndefined(event) ? new EventArg() : event;
-        const subscribers: SubscriberInterface[] = this.getSubscribersForType(type);
+        const subscribers: SubscriberInterface[] = this.subscribers[type] || [];
         if (subscribers.length > 0) {
             return void this.dispatchWithErrorHandling(type, event);
         }
@@ -178,12 +192,5 @@ export class EventDispatcher implements EventDispatcherInterface {
         } else {
             this.subscribers[type] = [];
         }
-    }
-
-    /**
-     * Get the list of subscribers for a type of event.
-     */
-    private getSubscribersForType(type: symbol): SubscriberInterface[] {
-        return !isUndefined(this.subscribers[type]) ? ([] as SubscriberInterface[]).concat(this.subscribers[type]) : [];
     }
 }
