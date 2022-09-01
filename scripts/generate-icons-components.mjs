@@ -2,10 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import svgPathBbox from 'svg-path-bbox';
-import { JSDOM } from 'jsdom';
-import { optimize } from 'svgo';
-import { fileURLToPath } from "url";
-import { parse } from 'svg-parser';
+import {JSDOM} from 'jsdom';
+import {optimize} from 'svgo';
+import {fileURLToPath} from "url";
+import {parse} from 'svg-parser';
 
 function camelize(input) {
     return input.substring(0, 1).toUpperCase() + input.replace(/-./g, i => i[1].toUpperCase()).substring(1);
@@ -134,24 +134,37 @@ function tokenToRenderCode(token) {
     let h = [`'${token.tagName}'`, {}, []];
     if (token.tagName === 'svg') {
         if (token.properties.croppedViewBox) {
-            h[1].viewBox = `this.crop !== undefined ? '${token.properties.croppedViewBox}' : '${token.properties.viewBox}'`;
+            h[1].viewBox = `c ? '${token.properties.croppedViewBox}' : '${token.properties.viewBox}'`;
         } else {
             h[1].viewBox = `"${token.properties.viewBox}"`;
         }
-        delete token.properties.croppedViewBox;
-        delete token.properties.viewBox;
-
-        h[1].width = "this.width";
-        h[1].height = "this.height || (!this.width ? '1em' : null)";
-        h[1].fill = "this.color || 'currentColor'";
+        h[1].width = "w";
+        h[1].height = "s";
+        h[1].fill = "f";
     }
     for (const attr of Object.keys(token.properties)) {
-        h[1][attr] = `"${token.properties[attr]}"`;
+        if (attr !== 'viewBox' && attr !== 'croppedViewBox') {
+            h[1][attr] = `"${token.properties[attr]}"`;
+        }
     }
     for (const children of token.children) {
         h[2].push(tokenToRenderCode(children));
     }
     return `h(${h[0]},{${Object.keys(h[1]).reduce((r, k) => r.concat([`${k.match(/^[a-z0-9]$/i) ? k : ('"'+k+'"')}:${h[1][k]}`]) , [])}},[${h[2].join(',')}])`;
+}
+
+function tokenToRenderTree(token) {
+    const tagsMap = ['g', 'path', 'polygon', 'rect', 'circle', 'ellipse', 'defs', 'use', 'clipPath'];
+    const children = token.children.reduce((r, i) => r.concat([tokenToRenderTree(i)]), []);
+    if (token.tagName === 'svg') {
+        const croppedViewBox = token.properties.croppedViewBox;
+        return [token.properties.viewBox, croppedViewBox || token.properties.viewBox, children];
+    }
+    const shapeIndex = tagsMap.indexOf(token.tagName);
+    if (shapeIndex < 0) {
+        throw `Unsupported element ${token.tagName}.`;
+    }
+    return [shapeIndex, Object.keys(token.properties).reduce((r, k) => r.concat([[k, token.properties[k]]]) , []), children];
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -230,10 +243,14 @@ const configurations = [
     }
 ];
 
-for (const configuration of configurations) {
+const globalIndex = [[], []];
+for (let libIndex = 0; libIndex < configurations.length; ++libIndex) {
+    const configuration = configurations[libIndex];
     const imports = [];
     const duplicates = [];
 
+    globalIndex[0].push(configuration.libName);
+    globalIndex[1].push({});
     console.log(`Generating ${chalk.blue(configuration.libName)} icons...`);
     if (fs.existsSync(configuration.outputDir)) {
         fs.rmdirSync(configuration.outputDir, {recursive: true});
@@ -257,25 +274,35 @@ for (const configuration of configurations) {
             console.log(`No version found for "${chalk.blue(filename)}"`);
             continue ;
         }
-        // Generate optimized sources.
         const renderCodes = [];
+        if (typeof(globalIndex[1][libIndex][componentName]) === 'undefined') {
+            globalIndex[1][libIndex][componentName] = [{}];
+        }
         for (let i = 0, j; i < versions.length; i++) {
             const token = tokenizeSvg(files[filename][versions[i]]);
             const renderCode = tokenToRenderCode(token);
+
             for (j = 0; j < renderCodes.length; ++j) {
                 if (renderCodes[j].code === renderCode) {
                     renderCodes[j].versions.push(versions[i]);
+
+                    if (typeof(globalIndex[1][libIndex][componentName][0][renderCodes[j].versions[0]]) === 'undefined') {
+                        throw `Existing version "${renderCodes[j].versions[0]}" not found for component "${componentName}".`;
+                    }
+                    globalIndex[1][libIndex][componentName][0][versions[i]] = globalIndex[1][libIndex][componentName][0][renderCodes[j].versions[0]];
                     break ;
                 }
             }
             if (j >= renderCodes.length) {
                 renderCodes.push({code: renderCode, versions: [versions[i]]});
+                globalIndex[1][libIndex][componentName][0][versions[i]] = renderCodes.length;
+                globalIndex[1][libIndex][componentName].push(tokenToRenderTree(token));
             }
         }
         const renderLines = [];
         for (let i = renderCodes.length - 1; i >= 0; --i) {
             if (i > 0) {
-                renderLines.push(`if (this.version === '${renderCodes[i].versions.join('\' || this.version === \'')}')`);
+                renderLines.push(`if (v === '${renderCodes[i].versions.join('\' || v === \'')}')`);
             }
             renderLines.push(`${!!(renderLines.length % 2) ? '    ' : ''}return ${renderCodes[i].code};`);
         }
@@ -286,6 +313,7 @@ export default {
     name: 'i-${configuration.libName}-${componentName}',
     props: ['width', 'height', 'color', 'crop', 'version'],
     render() {
+        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
         ${renderLines.join("\n")}
     }
 }
@@ -327,4 +355,32 @@ export { createCommentVNode } from "vue";
     export default component;
 }
 `);
+}
+
+
+/**
+ * Write ALL icons in a single file.
+ */
+// let globalIndexBuffer = `export const Icons = [\n    ${JSON.stringify(globalIndex[0])},\n    [\n`;
+// for (let i = 0; i < globalIndex[1].length; ++i) {
+//     globalIndexBuffer += ' '.repeat(8) + '{\n';
+//     for (let j = 0, k = Object.keys(globalIndex[1][i]); j < k.length; ++j) {
+//         globalIndexBuffer += ' '.repeat(12) + `'${k[j]}':` + JSON.stringify(globalIndex[1][i][k[j]]) + ',\n';
+//     }
+//     globalIndexBuffer += ' '.repeat(8) + '},\n';
+// }
+// globalIndexBuffer += '    ]\n];';
+//
+// fs.writeFileSync(path.join(__dirname, 'icons.ts'), globalIndexBuffer);
+
+/**
+ * Write a file for each set of icons.
+ */
+for (let i = 0; i < globalIndex[1].length; ++i) {
+    let globalIndexBuffer = `export const Icons = {\n`;
+    for (let j = 0, k = Object.keys(globalIndex[1][i]); j < k.length; ++j) {
+        globalIndexBuffer += ' '.repeat(4) + `'${k[j]}':` + JSON.stringify(globalIndex[1][i][k[j]]) + ',\n';
+    }
+    globalIndexBuffer += '};';
+    fs.writeFileSync(path.join(__dirname, `${globalIndex[0][i]}-icons.ts`), globalIndexBuffer);
 }
