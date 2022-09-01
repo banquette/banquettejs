@@ -1,18 +1,4 @@
 
 .bt-icon {
-    --icon-color: var(--bt-icon-color, currentColor);
-    --icon-size: var(--bt-icon-size, 1em);
     display: inline-block;
-}
-
-.bt-icon:not([fill]) {
-    fill: var(--icon-color);
-}
-
-.bt-icon:not([width]) {
-    width: var(--icon-size);
-}
-
-.bt-icon:not([height]) {
-    height: var(--icon-size);
 }
