@@ -56,7 +56,7 @@ export class VueTheme {
      * Get all variants of a component.
      */
     public getVariants(componentName: string): VueThemeVariant[] {
-        return !isUndefined(this.variants[componentName]) ? Object.values(this.variants[componentName].variantsIndex).map((i) => i.variant) : [];
+        return !isUndefined(this.variants[componentName]) ? this.variants[componentName].variants : [];
     }
 
     /**
