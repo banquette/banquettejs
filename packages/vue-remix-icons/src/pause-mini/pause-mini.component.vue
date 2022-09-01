@@ -5,7 +5,8 @@ export default {
     name: 'i-remix-pause-mini',
     props: ['width', 'height', 'color', 'crop', 'version'],
     render() {
-        return h('svg',{"viewBox":this.crop !== undefined ? '7 6 10 12' : '0 0 24 24',"width":this.width,"height":this.height || (!this.width ? '1em' : null),"fill":this.color || 'currentColor'},[h('path',{d:"M15 7a1 1 0 0 1 2 0v10a1 1 0 1 1-2 0V7zM7 7a1 1 0 1 1 2 0v10a1 1 0 1 1-2 0V7z"},[])]);
+        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+        return h('svg',{"viewBox":c ? '7 6 10 12' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M15 7a1 1 0 0 1 2 0v10a1 1 0 1 1-2 0V7zM7 7a1 1 0 1 1 2 0v10a1 1 0 1 1-2 0V7z"},[])]);
     }
 }
 </script>
