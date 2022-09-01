@@ -9,7 +9,6 @@ import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { VNodeChild } from "@vue/runtime-core";
 import {
     resolveDirective,
     withDirectives,
@@ -111,7 +110,8 @@ export default class IconComponent extends Vue {
     /**
      * Try to render the icon's svg.
      */
-    @Render() public render(context: any): VNodeChild {
+    @Render() public render(context: any) {
+        const btBindTheme = resolveDirective("bt-bind-theme");
         if (this.isLocal) {
             let data = this.icons![1][this.localSetIndex][this.name];
             const version = this.version || Object.keys(data[0])[0];
@@ -128,12 +128,14 @@ export default class IconComponent extends Vue {
                     }
                     return output;
                 };
-                return h('svg', {
+                return withDirectives(h('svg', {
                     width: this.width,
                     height: this.height || (!this.width ? '1em' : null),
                     fill: this.color || 'currentColor',
                     viewBox: data[Number(this.crop)]
-                }, createChildren(data[2]));
+                }, createChildren(data[2])), [
+                    [btBindTheme as any]
+                ]);
             }
         }
         if (this.isAmbient) {
@@ -141,6 +143,7 @@ export default class IconComponent extends Vue {
                 key: 0,
                 size: null,
                 color: null,
+                crop: this.crop,
                 class: "bt-icon"
             }, context.$attrs), null, 16 /* FULL_PROPS */)), [
                 [resolveDirective("bt-bind-theme") as Directive]
