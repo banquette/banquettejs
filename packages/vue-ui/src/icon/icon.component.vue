@@ -140,9 +140,9 @@ export default class IconComponent extends Vue {
         }
         if (this.isAmbient) {
             return withDirectives((openBlock(), createBlock(resolveDynamicComponent(this.iconName), mergeProps({
-                key: 0,
-                size: null,
-                color: null,
+                width: this.width,
+                height: this.height,
+                color: this.color,
                 crop: this.crop,
                 class: "bt-icon"
             }, context.$attrs), null, 16 /* FULL_PROPS */)), [
