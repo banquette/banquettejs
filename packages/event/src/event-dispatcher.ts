@@ -86,7 +86,7 @@ export class EventDispatcher implements EventDispatcherInterface {
         return () => {
             for (let i = 0; i < subscribers!.length; ++i) {
                 if (subscribers![i].callback === callback) {
-                    subscribers!.splice(i--, 1);
+                    subscribers!.splice(i, 1);
                     break ;
                 }
             }

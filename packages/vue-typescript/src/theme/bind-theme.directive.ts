@@ -105,7 +105,7 @@ export class BindThemeDirective extends Vue {
     /**
      * Rematch all themes and variants for the component.
      */
-    private computeChanges = (el: Element): void => {
+    private computeChanges(el: Element): void {
         const themes = getThemesForComponent(this.instance);
         const themesParentsTrackers: ThemeParentsTracker[] = [];
         const activeVariantsAttributes: string[] = [];
@@ -182,7 +182,7 @@ export class BindThemeDirective extends Vue {
 
             this.activeVariantsAttributesStr = activeVariantsAttributesStr;
         }
-    };
+    }
 
     /**
      * Force the update of everything in the current instance.
