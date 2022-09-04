@@ -88,8 +88,7 @@ export const HeadlessFormViewModelEvents = {
      * Validation related events.
      */
     BeforeValidate: Symbol('before-validate'),
-    ValidateSuccess: Symbol('validate-success'),
-    ValidateError: Symbol('validate-error'),
+    AfterValidate: Symbol('after-validate'),
 
     /**
      * Emitted when the model is binding to the form.
@@ -108,7 +107,7 @@ export const ErrorTypeStatusMap: Record<ErrorType, Action> = {
 export const ErrorTypeEventMap: Record<ErrorType, symbol|null> = {
     [ErrorType.Load]: HeadlessFormViewModelEvents.LoadError,
     [ErrorType.Persist]: HeadlessFormViewModelEvents.PersistError,
-    [ErrorType.Validate]: HeadlessFormViewModelEvents.ValidateError,
+    [ErrorType.Validate]: null,
     [ErrorType.Internal]: null
 };
 

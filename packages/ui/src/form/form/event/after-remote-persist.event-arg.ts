@@ -1,7 +1,7 @@
 import { HttpResponse } from "@banquette/http/http-response";
-import { FormAfterPersistEventArg } from "./form-after-persist.event-arg";
+import { AfterPersistEventArg } from "./after-persist.event-arg";
 
-export class FormAfterRemotePersistEventArg extends FormAfterPersistEventArg {
+export class AfterRemotePersistEventArg extends AfterPersistEventArg {
     public constructor(public readonly response: HttpResponse<any>, public readonly payload: any) {
         super(payload);
     }

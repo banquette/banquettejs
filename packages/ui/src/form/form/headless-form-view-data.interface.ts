@@ -1,4 +1,5 @@
 import { FormComponentInterface } from "@banquette/form/form-component.interface";
+import { FormError } from "@banquette/form/form-error";
 import { Action } from "./constant";
 
 /**
@@ -24,7 +25,10 @@ export interface HeadlessFormViewDataInterface {
     validateSuccess: boolean;
 
     /**
-     * Current active errors.
+     * Map of errors concerning the headless form itself, not the underlying `FormGroup`.
+     * Indexed by error type.
+     *
+     * @see ErrorType
      */
     errorsMap: Record<string, string|null>;
 
@@ -50,10 +54,16 @@ export interface HeadlessFormViewDataInterface {
         changed: boolean;
         unchanged: boolean;
         value: any;
+        errorsDeepMap: Record<string, FormError[]>;
     };
 
     /**
      * Try to get a control, and create it if missing.
      */
     getControl(path: string, throwIfMissing?: boolean): FormComponentInterface|null;
+
+    /**
+     * A `shorthand` for `form.errorsDeepMap[path]` that ensures an array is returned.
+     */
+    getControlErrors(path: string): FormError[];
 }

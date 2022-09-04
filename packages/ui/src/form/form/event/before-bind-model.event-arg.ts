@@ -5,5 +5,4 @@ export class BeforeBindModelEventArg extends EventArg {
     public constructor(public readonly model: AnyObject) {
         super();
     }
-
 }

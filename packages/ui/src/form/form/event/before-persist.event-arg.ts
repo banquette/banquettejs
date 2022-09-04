@@ -1,6 +1,6 @@
 import { EventArg } from "@banquette/event/event-arg";
 
-export class FormBeforePersistEventArg extends EventArg {
+export class BeforePersistEventArg extends EventArg {
     public constructor(public payload: any) {
         super();
     }

@@ -6,25 +6,29 @@ import { UnsubscribeFunction } from "@banquette/event/type";
 import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { BasicState } from "@banquette/form/constant";
+import { FormEvent } from "@banquette/form/event/form-event";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
+import { ValidationEndFormEvent } from "@banquette/form/event/validation-end.form-event";
 import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
 import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
 import { FormComponentInterface } from "@banquette/form/form-component.interface";
 import { FormControl } from "@banquette/form/form-control";
+import { FormError } from "@banquette/form/form-error";
 import { FormObject } from "@banquette/form/form-object";
 import { HttpResponse } from "@banquette/http/http-response";
 import { FormModelBinder } from "@banquette/model-form/form-model-binder";
 import { FormTransformerSymbol } from "@banquette/model-form/transformer/root/form";
 import { ModelMetadataService } from "@banquette/model/model-metadata.service";
+import { TransformResult } from "@banquette/model/transform-result";
 import { TransformService } from "@banquette/model/transformer/transform.service";
 import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { areEqual } from "@banquette/utils-misc/are-equal";
-import { debounce } from "@banquette/utils-misc/debounce";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { extend } from "@banquette/utils-object/extend";
 import { filterWithMask } from "@banquette/utils-object/filter-with-mask";
 import { getObjectValue } from "@banquette/utils-object/get-object-value";
+import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isObject, isObjectLiteral } from "@banquette/utils-type/is-object";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
@@ -43,11 +47,14 @@ import {
     ErrorTypeEventMap
 } from "./constant";
 import { AfterBindModelEventArg } from "./event/after-bind-model.event-arg";
+import { AfterValidateEventArg } from "./event/after-validate.event-arg";
 import { BeforeBindModelEventArg } from "./event/before-bind-model.event-arg";
-import { FormActionErrorEventArg } from "./event/form-action-error.event-arg";
-import { FormAfterPersistEventArg } from "./event/form-after-persist.event-arg";
-import { FormAfterRemotePersistEventArg } from "./event/form-after-remote-persist.event-arg";
-import { FormBeforePersistEventArg } from "./event/form-before-persist.event-arg";
+import { BeforeValidateEventArg } from "./event/before-validate.event-arg";
+import { ActionErrorEventArg } from "./event/action-error.event-arg";
+import { AfterPersistEventArg } from "./event/after-persist.event-arg";
+import { AfterRemotePersistEventArg } from "./event/after-remote-persist.event-arg";
+import { BeforePersistEventArg } from "./event/before-persist.event-arg";
+import { BeforeLoadEventArg } from "./event/before-load.event-arg";
 import { RemoteValidationException } from "./exception/remote-validation.exception";
 import { HeadlessFormViewDataInterface } from "./headless-form-view-data.interface";
 
@@ -83,7 +90,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         const resolved = value !== null ? this.getModelMetadata().resolveAlias(value) : null;
         const requiresLoad = this._modelType !== resolved;
         this._modelType = resolved;
-        if (requiresLoad) {
+        if (requiresLoad && !this.is(Action.Load, Status.Working)) {
             this.load();
         }
     }
@@ -101,7 +108,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     public set loadData(value: any) {
         const requiresLoad = !areEqual(this._loadData, value);
         this._loadData = value;
-        if (requiresLoad) {
+        if (requiresLoad && !this.is(Action.Load, Status.Working)) {
             this.load();
         }
     }
@@ -121,15 +128,33 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     private eventDispatcher = new EventDispatcher();
 
     public constructor() {
-        this.setViewData({errorsMap: {}, getControl: proxy(this.getControl, this)} as any);
+        this.setViewData({
+            errorsMap: {},
+            getControl: proxy(this.getControl, this),
+            getControlErrors: proxy(this.getControlErrors, this)
+        } as any);
         this.updateState(Action.Load, Status.Working);
-        this.unsubscribeMethods.push(this.loadRemote.onConfigurationChange(proxy(this.load, this)));
+        this.unsubscribeMethods.push(this.loadRemote.onConfigurationChange(() => {
+            if (!this.is(Action.Load, Status.Working)) {
+                this.load();
+            }
+        }));
         this.unsubscribeMethods.push(this.form.onStateChanged((event: StateChangedFormEvent) => {
             if (event.state === BasicState.Validating && !event.newValue && this.form.valid) {
                 this.removeError(ErrorType.Validate);
             }
             (this.viewData.form as any)[event.state] = event.newValue;
         }));
+        this.unsubscribeMethods.push(this.form.onValidationStart((event: FormEvent) => {
+            // Wrap the event for name normalization.
+            const dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeValidate, new BeforeValidateEventArg(event.source));
+            if (dispatchResult.defaultPrevented) {
+                event.preventDefault();
+            }
+        }, 0, false));
+        this.unsubscribeMethods.push(this.form.onValidationEnd((event: ValidationEndFormEvent) => {
+            this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.AfterValidate, new AfterValidateEventArg(event.source, event.result));
+        }, 0, false));
         this.unsubscribeMethods.push(this.form.onValueChanged((event: ValueChangedFormEvent) => {
             this.viewData.form.value = event.newValue;
         }));
@@ -139,6 +164,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      * @inheritDoc
      */
     public setViewData(viewData: ViewDataType): void {
+        const that = this;
         (this as Writeable<HeadlessFormViewModel>).viewData = extend(viewData, {
             form: {
                 invalid         : false,
@@ -160,7 +186,8 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                 get untouched(): boolean            { return !this.touched },
                 get unchanged(): boolean            { return !this.changed },
                 get notBusy()                       { return !this.busy },
-                get enabled()                       { return !this.disabled }
+                get enabled()                       { return !this.disabled },
+                get errorsDeepMap()                 { return that.form.errorsDeepMap }
             }
         });
     }
@@ -212,9 +239,16 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     }
 
     /**
+     * A `shorthand` for `form.errorsDeepMap[path]` that ensures an array is returned.
+     */
+    public getControlErrors(path: string): FormError[] {
+        return ensureArray(this.viewData.form.errorsDeepMap[path]);
+    }
+
+    /**
      * Load default values into the form and reset it.
      */
-    public load = debounce((() => {
+    public load = (() => {
         let firstLoad = true;
         let queued = false;
         let current = 0;
@@ -255,14 +289,14 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             firstLoad = false;
             this.form.disable();
             this.updateState(Action.Load, Status.Working);
-            const dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeLoad);
+            const dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeLoad, new BeforeLoadEventArg(this));
             if (dispatchResult.promise) {
                 dispatchResult.promise.then(loadNext);
             } else {
                 loadNext();
             }
         };
-    })(), 0, false);
+    })();
 
     /**
      * Force the validation of the form and submit it if everything is valid.
@@ -276,22 +310,21 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                 return;
             }
             const payload: any = this.modelInstance ? this.modelInstance : this.form.value;
-            const persistEvent = new FormBeforePersistEventArg(payload);
-            let dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforePersist, persistEvent);
+            let dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforePersist, new BeforePersistEventArg(payload));
             if (dispatchResult.promise) {
                 await dispatchResult.promise;
             }
-            if (dispatchResult.error) {
+            if (dispatchResult.error || dispatchResult.defaultPrevented) {
                 return ;
             }
-            if (this.persistRemote.isApplicable && !persistEvent.defaultPrevented) {
+            if (this.persistRemote.isApplicable) {
                 this.form.disable();
                 this.updateState(Action.Persist, Status.Working);
                 const response: HttpResponse<any> = this.persistRemote.send(this.modelInstance ? this.modelInstance : this.form.value, {}, {}, [FormTag, FormPersistTag]);
                 try {
                     await response.promise;
                     this.updateState(Action.Persist, Status.Success);
-                    this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new FormAfterRemotePersistEventArg(response, payload));
+                    this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new AfterRemotePersistEventArg(response, payload));
                 } catch (e) {
                     if (response.isError) {
                         const maybeValidationException = RemoteValidationException.CreateFromUnknownInput(response.result);
@@ -307,7 +340,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     }
                 }
             } else {
-                this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new FormAfterPersistEventArg(payload));
+                this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.PersistSuccess, new AfterPersistEventArg(payload));
             }
         };
         doSubmit().catch((reason: any) => {
@@ -327,15 +360,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     public async validate(): Promise<boolean> {
         this.updateState(Action.Validate, Status.Working);
-        const dispatchResult = this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeValidate);
-        if (dispatchResult.promise) {
-            await dispatchResult.promise;
-        }
-        if (dispatchResult.error) {
-            this.updateState(Action.Validate, Status.Failure);
-            this.setError(ErrorType.Internal, dispatchResult.errorDetail);
-            return false;
-        }
         if (!(await this.form.validate())) {
             this.updateState(Action.Validate, Status.Failure);
             this.setError(ErrorType.Validate, null);
@@ -344,7 +368,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         this.updateState(Action.Validate, Status.Success);
         this.removeError(ErrorType.Validate);
         this.form.clearErrorsDeep();
-        this.eventDispatcher.dispatch(HeadlessFormViewModelEvents.ValidateSuccess);
         return true;
     }
 
@@ -399,7 +422,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     /**
      * By notified when the form starts loading.
      */
-    public onBeforeLoad(cb: (event: EventArg) => void): UnsubscribeFunction {
+    public onBeforeLoad(cb: (event: BeforeLoadEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforeLoad, cb);
     }
 
@@ -413,50 +436,43 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     /**
      * By notified when the form fails to load.
      */
-    public onLoadError(cb: (event: FormActionErrorEventArg) => void): UnsubscribeFunction {
+    public onLoadError(cb: (event: ActionErrorEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.LoadError, cb);
     }
 
     /**
      * Emitted each time submit() is called (even if no remote target is defined).
      */
-    public onBeforePersist(cb: (event: FormBeforePersistEventArg) => void): UnsubscribeFunction {
+    public onBeforePersist(cb: (event: BeforePersistEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforePersist, cb);
     }
 
     /**
      * Triggered after a remote persist succeeded.
      */
-    public onPersistSuccess(cb: (event: FormAfterPersistEventArg) => void): UnsubscribeFunction {
+    public onPersistSuccess(cb: (event: AfterPersistEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.PersistSuccess, cb);
     }
 
     /**
      * Triggered when a remote persist fails.
      */
-    public onPersistError(cb: (event: FormActionErrorEventArg) => void): UnsubscribeFunction {
+    public onPersistError(cb: (event: ActionErrorEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.PersistError, cb);
     }
 
     /**
      * Emitted each time the form validates a control.
      */
-    public onBeforeValidate(cb: (event: EventArg) => void): UnsubscribeFunction {
+    public onBeforeValidate(cb: (event: BeforeValidateEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.BeforeValidate, cb);
     }
 
     /**
      * Triggered after a validation succeeded.
      */
-    public onValidateSuccess(cb: (event: EventArg) => void): UnsubscribeFunction {
-        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.ValidateSuccess, cb);
-    }
-
-    /**
-     * Triggered when a validation fails.
-     */
-    public onValidateError(cb: (event: FormActionErrorEventArg) => void): UnsubscribeFunction {
-        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.ValidateError, cb);
+    public onAfterValidate(cb: (event: AfterValidateEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(HeadlessFormViewModelEvents.AfterValidate, cb);
     }
 
     /**
@@ -487,7 +503,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
 
         const eventType = ErrorTypeEventMap[errorType];
         if (eventType !== null) {
-            this.eventDispatcher.dispatch(eventType, new FormActionErrorEventArg(reason));
+            this.eventDispatcher.dispatch(eventType, new ActionErrorEventArg(reason));
         }
     }
 
@@ -560,20 +576,13 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             this.form.setDefaultValue(this.loadData);
             return ;
         }
-        const assignLoadData = async () => {
-            const assignModelData = async (model: object) => {
-                // If we don't have a model instance yet, simply set it.
-                if (!this.modelInstance) {
-                    (this as Writeable<HeadlessFormViewModel>).modelInstance = model;
-                    return ;
-                }
-                // Otherwise, if we already have a model defined, we can't create a new one.
-                // The easiest way to merge the two models is to convert it into a form,
-                // make it concrete and them merge the values of the form.
-                const formTransformResult = this.getTransformService().transform(model, FormTransformerSymbol);
-                if (formTransformResult.promise) {
-                    await formTransformResult.promise;
-                }
+        const assignModelData = (model: object): void|Promise<void> => {
+            // If we don't have a model instance yet, simply set it.
+            if (!this.modelInstance) {
+                (this as Writeable<HeadlessFormViewModel>).modelInstance = model;
+                return ;
+            }
+            const assignFormTransformResult = (formTransformResult: TransformResult) => {
                 if (formTransformResult.result instanceof FormObject) {
                     // Make the controls concrete the the root value is set.
                     formTransformResult.result.getByPattern('**').markAsConcrete();
@@ -585,23 +594,28 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     this.form.setDefaultValue(values);
                 }
             };
-            // If loadData is not an instance of the expected type of model
-            // we assume it's a POJO, so we need to convert back to a model.
-            if (!this.isValidModelInstance(this.loadData)) {
-                const pojoTransformResult = this.getTransformService().transformInverse(this.loadData, this._modelType as Constructor, PojoTransformerSymbol);
-                if (pojoTransformResult.promise) {
-                    await pojoTransformResult.promise;
-                }
-                await assignModelData(pojoTransformResult.result);
+            // Otherwise, if we already have a model defined, we can't create a new one.
+            // The easiest way to merge the two models is to convert the input model into a form,
+            // make it concrete and then merge the values of the form.
+            const formTransformResult = this.getTransformService().transform(model, FormTransformerSymbol);
+            if (formTransformResult.promise) {
+                return formTransformResult.promise.then(assignFormTransformResult);
             } else {
-                await assignModelData(this.loadData);
+                assignFormTransformResult(formTransformResult);
             }
         };
-
-        // If we have a model type, we always become async to make the code easier.
-        return new Promise<void>(async (resolve, reject) => {
-            assignLoadData().then(resolve).catch(reject);
-        });
+        // If loadData is not an instance of the expected type of model
+        // we assume it's a POJO, so we need to convert back to a model.
+        if (!this.isValidModelInstance(this.loadData)) {
+            const pojoTransformResult = this.getTransformService().transformInverse(this.loadData, this._modelType as Constructor, PojoTransformerSymbol);
+            if (pojoTransformResult.promise) {
+                return new Promise((resolve, reject) => {
+                    pojoTransformResult.promise!.then(() => resolve(), reject);
+                });
+            }
+            return assignModelData(pojoTransformResult.result);
+        }
+        return assignModelData(this.loadData);
     }
 
     /**

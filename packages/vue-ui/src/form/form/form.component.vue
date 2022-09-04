@@ -5,21 +5,26 @@ import { EventArg } from "@banquette/event/event-arg";
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { ContextualizedState } from "@banquette/form/constant";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
+import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
 import { HttpMethod } from "@banquette/http/constants";
 import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
 import { AfterBindModelEventArg } from "@banquette/ui/form/form/event/after-bind-model.event-arg";
+import { AfterValidateEventArg } from "@banquette/ui/form/form/event/after-validate.event-arg";
 import { BeforeBindModelEventArg } from "@banquette/ui/form/form/event/before-bind-model.event-arg";
+import { BeforeValidateEventArg } from "@banquette/ui/form/form/event/before-validate.event-arg";
 import { FormActionErrorEventArg } from "@banquette/ui/form/form/event/form-action-error.event-arg";
-import { FormAfterPersistEventArg } from "@banquette/ui/form/form/event/form-after-persist.event-arg";
-import { FormAfterRemotePersistEventArg } from "@banquette/ui/form/form/event/form-after-remote-persist.event-arg";
-import { FormBeforePersistEventArg } from "@banquette/ui/form/form/event/form-before-persist.event-arg";
+import { AfterPersistEventArg } from "@banquette/ui/form/form/event/after-persist.event-arg";
+import { AfterRemotePersistEventArg } from "@banquette/ui/form/form/event/after-remote-persist.event-arg";
+import { BeforePersistEventArg } from "@banquette/ui/form/form/event/before-persist.event-arg";
+import { BeforeLoadEventArg } from "@banquette/ui/form/form/event/before-load.event-arg";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { areEqual } from "@banquette/utils-misc/are-equal";
 import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
 import { ensureString } from "@banquette/utils-type/ensure-string";
-import { Writeable, Primitive } from "@banquette/utils-type/types";
+import { Writeable, Primitive, AnyObject } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
@@ -31,6 +36,7 @@ import { FormViewDataInterface } from "./form-view-data.interface";
 @Component({
     name: 'bt-form',
     emits: [
+        'change',
         'before-load',
         'load-success',
         'load-error',
@@ -38,14 +44,19 @@ import { FormViewDataInterface } from "./form-view-data.interface";
         'persist-success',
         'persist-error',
         'before-validate',
-        'validate-success',
-        'validate-error',
+        'after-validate',
         'before-bind-model',
         'after-bind-model',
+        'update:modelValue',
         'update:disabled'
     ]
 })
 export default class FormComponent<ModelType extends object = any, ViewData extends FormViewDataInterface<ModelType> = FormViewDataInterface<ModelType>> extends Vue {
+    /**
+     * "v-model" recipient.
+     */
+    @Prop({type: Object, default: {}}) public modelValue!: AnyObject;
+
     /**
      * Optional model to bind the form with.
      */
@@ -63,14 +74,6 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
     @Prop({name: 'loadEndpoint', type: String, default: null}) public loadEndpoint!: string|null;
     @Prop({name: 'loadUrlParams', type: Object, default: {}}) public loadUrlParams!: Record<string, Primitive>;
     @Prop({name: 'loadHeaders', type: Object, default: {}}) public loadHeaders!: Record<string, Primitive>;
-
-    /**
-     * An object holding the default values of the form.
-     * Can be a POJO or a model.
-     *
-     * The object will not be modified by the form.
-     */
-    @Prop({name: 'loadData', type: Object, default: null}) public loadData!: any;
 
     /**
      * Persisting.
@@ -135,18 +138,21 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
      */
     public beforeMount(): void {
         (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel<ViewData, ModelType>();
-        // this.vm.viewData.__version = 0;
-        this.vm.viewData.model = null;
         this.vm.viewData.persistResponse = null;
+        this.vm.loadData = this.modelValue;
         this.v = this.vm.viewData as ViewData;
 
         // So the proxy is used by the headless view model.
         this.vm.setViewData(this.v);
 
         // Form events
-        this.unsubscribeFunctions.push(this.vm.form.onValueChanged(this.forceUpdateOnce));
         this.unsubscribeFunctions.push(this.vm.form.onControlAdded(this.forceUpdateOnce, 0, false));
         this.unsubscribeFunctions.push(this.vm.form.onControlRemoved(this.forceUpdateOnce, 0, false));
+        this.unsubscribeFunctions.push(this.vm.form.onValueChanged((event: ValueChangedFormEvent) => {
+            this.$emit('change', event);
+            this.$emit('update:modelValue', this.modelType ? this.vm.modelInstance : event.newValue);
+            this.forceUpdateOnce();
+        }));
         this.unsubscribeFunctions.push(this.vm.form.onStateChanged((event: StateChangedFormEvent) => {
             if (event.state === ContextualizedState.Disabled) {
                 this.$emit('update:disabled', event.newValue);
@@ -154,7 +160,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         }));
 
         // Subclasses events
-        this.unsubscribeFunctions.push(this.vm.onBeforeLoad((event: EventArg) => {
+        this.unsubscribeFunctions.push(this.vm.onBeforeLoad((event: BeforeLoadEventArg) => {
             this.$emit('before-load', event);
             this.onBeforeLoad(event);
         }));
@@ -166,12 +172,12 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.$emit('load-error', event);
             this.onLoadError(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.onBeforePersist((event: FormBeforePersistEventArg) => {
+        this.unsubscribeFunctions.push(this.vm.onBeforePersist((event: BeforePersistEventArg) => {
             this.$emit('before-persist', event);
             this.onBeforePersist(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.onPersistSuccess((event: FormAfterPersistEventArg) => {
-            this.vm.viewData.persistResponse = event instanceof FormAfterRemotePersistEventArg ? event.response : null;
+        this.unsubscribeFunctions.push(this.vm.onPersistSuccess((event: AfterPersistEventArg) => {
+            this.vm.viewData.persistResponse = event instanceof AfterRemotePersistEventArg ? event.response : null;
             this.$emit('persist-success', event);
             this.onPersistSuccess(event);
         }));
@@ -179,17 +185,13 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.$emit('persist-error', event);
             this.onPersistError(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.onBeforeValidate((event: EventArg) => {
+        this.unsubscribeFunctions.push(this.vm.onBeforeValidate((event: BeforeValidateEventArg) => {
             this.$emit('before-validate', event);
             this.onBeforeValidate(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.onValidateSuccess((event: EventArg) => {
-            this.$emit('validate-success', event);
-            this.onValidateSuccess(event);
-        }));
-        this.unsubscribeFunctions.push(this.vm.onValidateError((event: FormActionErrorEventArg) => {
-            this.$emit('validate-error', event);
-            this.onValidateError(event);
+        this.unsubscribeFunctions.push(this.vm.onAfterValidate((event: AfterValidateEventArg) => {
+            this.$emit('after-validate', event);
+            this.onAfterValidate(event);
         }));
         this.unsubscribeFunctions.push(this.vm.onBeforeBindModel((event: BeforeBindModelEventArg) => {
             this.$emit('before-bind-model', event);
@@ -201,13 +203,6 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.v.model = event.model as ModelType;
             this.onAfterBindModel(event);
         }));
-    }
-
-    /**
-     * Vue lifecycle.
-     */
-    public mounted(): void {
-        this.vm.load();
     }
 
     /**
@@ -228,15 +223,14 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
      * Virtual functions that are bound to events of the form.
      * These are meant to be overridden by subclasses.
      */
-    /* virtual */ protected onBeforeLoad(event: EventArg): void {}
+    /* virtual */ protected onBeforeLoad(event: BeforeLoadEventArg): void {}
     /* virtual */ protected onLoadSuccess(event: EventArg): void {}
     /* virtual */ protected onLoadError(event: FormActionErrorEventArg): void {}
-    /* virtual */ protected onBeforePersist(event: FormBeforePersistEventArg): void {}
-    /* virtual */ protected onPersistSuccess(event: FormAfterPersistEventArg): void {}
+    /* virtual */ protected onBeforePersist(event: BeforePersistEventArg): void {}
+    /* virtual */ protected onPersistSuccess(event: AfterPersistEventArg): void {}
     /* virtual */ protected onPersistError(event: FormActionErrorEventArg): void {}
-    /* virtual */ protected onBeforeValidate(event: EventArg): void {}
-    /* virtual */ protected onValidateSuccess(event: EventArg): void {}
-    /* virtual */ protected onValidateError(event: FormActionErrorEventArg): void {}
+    /* virtual */ protected onBeforeValidate(event: BeforeValidateEventArg): void {}
+    /* virtual */ protected onAfterValidate(event: AfterValidateEventArg): void {}
     /* virtual */ protected onBeforeBindModel(event: BeforeBindModelEventArg): void {}
     /* virtual */ protected onAfterBindModel(event: AfterBindModelEventArg): void {}
 
@@ -262,23 +256,38 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.vm.form.enable();
         }
     }
+
     @Watch('validationGroup', {immediate: ImmediateStrategy.BeforeMount})
     private onValidationGroupChange(newValue: string|string[]|null): void {
         this.vm.form.setValidationGroups(newValue);
     }
 
-    @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadHeaders', 'loadData'], {immediate: ImmediateStrategy.BeforeMount})
-    private syncLoadConfigurationProps(): void {
-        this.vm.modelType = this.modelType;
-        this.vm.loadData = this.loadData;
-        this.vm.loadRemote.updateConfiguration({
-            model: this.modelType,
-            url: this.loadUrl,
-            endpoint: this.loadEndpoint,
-            urlParams: this.loadUrlParams,
-            headers: this.loadHeaders
-        });
+    @Watch('modelValue', {immediate: false, deep: true})
+    private onModelValueChange(newValue: AnyObject): void {
+        if (areEqual(this.vm.form.value, newValue)) {
+            return ;
+        }
+        this.vm.form.setValue(newValue);
     }
+
+    @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadHeaders'], {immediate: ImmediateStrategy.BeforeMount})
+    private syncLoadConfigurationProps = (() => {
+        let firstCall = true;
+        return (): void  => {
+            this.vm.modelType = this.modelType;
+            this.vm.loadRemote.updateConfiguration({
+                model: this.modelType,
+                url: this.loadUrl,
+                endpoint: this.loadEndpoint,
+                urlParams: this.loadUrlParams,
+                headers: this.loadHeaders
+            });
+            if (firstCall) {
+                firstCall = false;
+                this.vm.load();
+            }
+        }
+    })();
 
     @Watch(['modelType', 'persistUrl', 'persistEndpoint','persistUrlParams', 'persistHeaders', 'persistPayloadType'], {immediate: ImmediateStrategy.BeforeMount})
     private syncPersistConfigurationProps(): void {
