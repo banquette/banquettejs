@@ -1,6 +1,7 @@
 <div class="bt-overlay"
      :style="{position, zIndex}"
-     :data-is-disabled="disabled ? '' : null"
+     :data-is-disabled="!visible ? '' : null"
+     v-show="visible"
      v-bt-bind-theme
 >
     <div class="inner">
