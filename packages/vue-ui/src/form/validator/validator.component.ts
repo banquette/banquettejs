@@ -1,5 +1,4 @@
 import { AbstractFormGroup } from "@banquette/form/abstract-form-group";
-import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
 import { FormComponentInterface } from "@banquette/form/form-component.interface";
 import { trimArray } from "@banquette/utils-array/trim-array";
 import { proxy } from "@banquette/utils-misc/proxy";
@@ -8,6 +7,7 @@ import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isType } from "@banquette/utils-type/is-type";
+import { VoidCallback } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
@@ -62,7 +62,7 @@ export abstract class ValidatorComponent extends Vue {
     public autoDetectedParentFormGroup: AbstractFormGroup|null = null;
 
     /**
-     * Get the the custom error message either from the default slot or from the prop.
+     * Get the custom error message either from the default slot or from the prop.
      */
     public get message(): string|undefined {
         if (this.hasSlot('default')) {
@@ -90,10 +90,13 @@ export abstract class ValidatorComponent extends Vue {
         return this.autoDetectedParentFormGroup;
     }
 
+    private isMounted: boolean = false;
+
     /**
      * List of targets that have their validator set.
      */
     private assignedTargets: string[] = [];
+    private unsetValidatorCallbacks: VoidCallback[] = [];
 
     /**
      * Create the validator instance.
@@ -104,6 +107,34 @@ export abstract class ValidatorComponent extends Vue {
      * @inheritDoc
      */
     public mounted(): void {
+        this.isMounted = true;
+        this.rebuild();
+        const parent: any = this.getParent('bt-form');
+        if (parent && parent.vm.form instanceof AbstractFormGroup) {
+            const form = parent.vm.form as AbstractFormGroup;
+            this.autoDetectedParentFormGroup = form;
+            form.onControlAdded(proxy(this.updateFromTargets, this), 0, false);
+        }
+        this.updateFromTargets();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public unmounted(): void {
+        for (const fn of this.unsetValidatorCallbacks) {
+            fn();
+        }
+        this.unsetValidatorCallbacks = [];
+    }
+
+    /**
+     * Rebuild the validator.
+     */
+    public rebuild(): void {
+        if (!this.isMounted) {
+            return ;
+        }
         let $parent: any = this.$parent;
         while ($parent) {
             $parent = maybeResolveTsInst($parent);
@@ -116,21 +147,29 @@ export abstract class ValidatorComponent extends Vue {
             }
             $parent = $parent.$parent;
         }
-        const parent: any = this.getParent('bt-form');
-        if (parent && parent.form instanceof AbstractFormGroup) {
-            const form = parent.form as AbstractFormGroup;
-            this.autoDetectedParentFormGroup = form;
-            form.onControlAdded(proxy(this.updateFromTargets, this), 0, false);
-        }
-        this.updateFromTargets();
     }
 
     /**
      * Assign the validator to a parent validator component (must be a container).
      */
-    private assignToParentValidator(parent: ContainerValidatorInterface): void {
-        parent.registerChild(this.buildValidator());
-    }
+    protected assignToParentValidator = (() => {
+        let unsubscribe: VoidCallback|null = null;
+        return (parent: ContainerValidatorInterface): void => {
+            if (unsubscribe !== null) {
+                unsubscribe();
+                unsubscribe = null;
+            }
+            unsubscribe = parent.registerChild(this.buildValidator());
+            parent.rebuild();
+            this.unsetValidatorCallbacks.push(() => {
+                if (unsubscribe !== null) {
+                    unsubscribe();
+                    unsubscribe = null;
+                }
+                parent.rebuild();
+            });
+        };
+    })();
 
     @Watch('target', {immediate: ImmediateStrategy.NextTick})
     private updateFromTargets(): void {
@@ -141,32 +180,16 @@ export abstract class ValidatorComponent extends Vue {
         }
         const newTargets: string[] = [];
         for (const target of this.targetsPaths) {
-            const component = this.getFormComponent(target);
-            if (component === null) {
-                continue ;
-            }
-            if (this.assignedTargets.indexOf(target) < 0) {
-                component.setValidator(this.buildValidator());
-            }
-            newTargets.push(target);
+            this.parentFormGroup.getByPattern(target).forEach((component: FormComponentInterface) => {
+                if (this.assignedTargets.indexOf(target) < 0) {
+                    component.setValidator(this.buildValidator());
+                    this.unsetValidatorCallbacks.push(() => {
+                        component.setValidator(null);
+                    });
+                }
+                newTargets.push(target);
+            });
         }
         this.assignedTargets = newTargets;
-    }
-
-    /**
-     * Try to get a component from the parent form but returns null if the component is not found.
-     */
-    private getFormComponent(path: string): FormComponentInterface|null {
-        try {
-            const form = this.parentFormGroup;
-            if (form !== null) {
-                return form.get(path);
-            }
-        } catch (e) {
-            if (!(e instanceof ComponentNotFoundException)) {
-                throw e;
-            }
-        }
-        return null;
     }
 }
