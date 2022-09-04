@@ -19,6 +19,7 @@ export class DispatchResult<T = any> {
     public readonly errorDetail: Exception|null;
     public readonly waiting!: boolean;
     public readonly results!: T[];
+    public readonly defaultPrevented: boolean = false;
     private previousPromise: Promise<any>|null;
     private promiseResolve: ((result: DispatchResult<T>) => any)|null;
 
@@ -63,6 +64,17 @@ export class DispatchResult<T = any> {
             return this;
         }
         return this;
+    }
+
+    /**
+     * Mark the result as "default prevented", meaning the caller will know
+     * that if an optional action was to be performed after this event, it should not anymore.
+     */
+    public preventDefault(): void {
+        (this as Writeable<DispatchResult<T>>).defaultPrevented = true;
+        if (this.parent) {
+            this.parent.preventDefault();
+        }
     }
 
     /**

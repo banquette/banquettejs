@@ -74,7 +74,7 @@ export class EventDispatcher implements EventDispatcherInterface {
             delete (this.queue as any)[type];
             //
             // Then wait for an event loop cycle to have a better chance that all subscribers have time to register.
-            // If we would have triggered the event immediately only the first subscriber would have been notified.
+            // If we had triggered the event immediately only the first subscriber would have been notified.
             // This of course doesn't ensure all subscribers have time to register but still gives a better chance.
             //
             window.setTimeout(() => {
@@ -147,6 +147,9 @@ export class EventDispatcher implements EventDispatcherInterface {
         let cont = subscribers.length > 0;
         while (cont) {
             cont = next();
+        }
+        if (event && event.defaultPrevented) {
+            result.preventDefault();
         }
         return result;
     }
