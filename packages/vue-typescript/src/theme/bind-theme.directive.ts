@@ -49,7 +49,8 @@ export class BindThemeDirective extends Vue {
     /**
      * Centralize the unsubscribe functions of all subscribed events.
      */
-    private unsubscribeFns: UnsubscribeFunction[] = [];
+    private globalUnsubscribeFns: UnsubscribeFunction[] = [];
+    private computeChangesUnsubscribeFns: UnsubscribeFunction[] = [];
 
     /**
      * Vue lifecycle.
@@ -66,7 +67,7 @@ export class BindThemeDirective extends Vue {
         }
         this.metadata = metadata;
         this.configuration = configuration;
-        this.unsubscribeFns.push(VueThemes.OnChanged(() => {
+        this.globalUnsubscribeFns.push(VueThemes.OnChanged(() => {
             this.computeChanges(el);
         }));
     }
@@ -96,10 +97,14 @@ export class BindThemeDirective extends Vue {
      * Vue lifecycle.
      */
     public unmounted(): void {
-        for (const fn of this.unsubscribeFns) {
+        for (const fn of this.computeChangesUnsubscribeFns) {
             fn();
         }
-        this.unsubscribeFns = [];
+        for (const fn of this.globalUnsubscribeFns) {
+            fn();
+        }
+        this.computeChangesUnsubscribeFns = [];
+        this.globalUnsubscribeFns = [];
     }
 
     /**
@@ -154,7 +159,7 @@ export class BindThemeDirective extends Vue {
             // Reset previous state
             this.trackingThemes = [];
 
-            for (const unsubscribeFn of this.unsubscribeFns) {
+            for (const unsubscribeFn of this.computeChangesUnsubscribeFns) {
                 unsubscribeFn();
             }
 
@@ -168,12 +173,12 @@ export class BindThemeDirective extends Vue {
             // Apply changes to the DOM
             for (const item of this.instance[ACTIVE_VARIANTS]) {
                 el.setAttribute('data-' + item.uid, '');
-                this.unsubscribeFns.push(item.onChange(proxy(this.scheduleForceUpdate, this)));
+                this.computeChangesUnsubscribeFns.push(item.onChange(proxy(this.scheduleForceUpdate, this)));
             }
 
             for (const item of themesParentsTrackers) {
                 // Subscribe to changes of other components.
-                this.unsubscribeFns.push(item.theme.onComponentsChange(item.trackedParentComponents, () => {
+                this.computeChangesUnsubscribeFns.push(item.theme.onComponentsChange(item.trackedParentComponents, () => {
                     this.computeChanges(el);
                 }));
 
