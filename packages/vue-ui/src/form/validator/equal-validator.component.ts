@@ -13,6 +13,6 @@ export default class ValidateEqualComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Equal({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
+        return Equal(this.value, this.strict, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
