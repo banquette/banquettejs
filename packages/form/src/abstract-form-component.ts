@@ -816,8 +816,9 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
      * Do the actual validation, for the validator in parameter.
      */
     protected doValidate(validator: ValidatorInterface|null, isDeep: boolean = true): boolean|Promise<boolean> {
-        this.dispatch(FormEvents.ValidationStart, () => new FormEvent(this));
-        if (validator === null) {
+        let validationStartEvent = new FormEvent(this);
+        this.dispatch(FormEvents.ValidationStart, () => validationStartEvent);
+        if (validator === null || validationStartEvent.defaultPrevented) {
             // An empty validation result is always sync and valid.
             const result = new ValidationResult('/');
             this.handleValidationResult(result, isDeep);
