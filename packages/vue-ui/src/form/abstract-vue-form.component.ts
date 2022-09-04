@@ -119,6 +119,7 @@ export abstract class AbstractVueFormComponent<
         const parentFormGeneric: any = this.getParent('bt-form');
         if (parentFormGeneric !== null && parentFormGeneric instanceof FormComponent) {
             this.proxy.setFallbackForm(parentFormGeneric.vm.form);
+            this.proxy.setFallbackGetControl(proxy(parentFormGeneric.vm.getControl, parentFormGeneric.vm));
         }
     }
 

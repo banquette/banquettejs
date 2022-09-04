@@ -110,6 +110,11 @@ export class FormControlProxy implements FormViewControlInterface {
     private fallbackForm: FormGroupInterface|null = null;
 
     /**
+     * A fallback function that will be called if `resolveControl` fails to resolve the form control.
+     */
+    private fallbackGetControl: ((path: string) => FormComponentInterface|null)|null = null;
+
+    /**
      * The actual control instance, if available.
      *
      * This can be null at any time because the control can be destroyed or not yet created
@@ -302,7 +307,7 @@ export class FormControlProxy implements FormViewControlInterface {
     }
 
     /**
-     * Set the validator to use to the validate the value of the component.
+     * Set the validator to use to validate the value of the component.
      */
     public setValidator(validator: ValidatorInterface|null): void {
         this.callControlMethod('setValidator', true, true, validator);
@@ -313,6 +318,16 @@ export class FormControlProxy implements FormViewControlInterface {
      */
     public setFallbackForm(form: FormGroupInterface|null): void {
         this.fallbackForm = form;
+        if (!this._control) {
+            this.updateFormAndControl();
+        }
+    }
+
+    /**
+     * The a fallback form to use to resolve controls paths if none is defined by the prop.
+     */
+    public setFallbackGetControl(fallback: (path: string) => FormComponentInterface|null): void {
+        this.fallbackGetControl = fallback;
         if (!this._control) {
             this.updateFormAndControl();
         }
@@ -517,6 +532,13 @@ export class FormControlProxy implements FormViewControlInterface {
             return resolvedControl;
         } catch (e) {
             if (e instanceof ComponentNotFoundException) {
+                if (this.fallbackGetControl !== null) {
+                    const control = this.fallbackGetControl(controlPath);
+                    if (control instanceof FormControl) {
+                        return control;
+                    }
+                    console.warn(`"${controlPath}" does not resolve a FormControl.`);
+                }
                 return null;
             }
             throw e;
