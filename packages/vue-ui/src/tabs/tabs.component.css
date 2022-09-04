@@ -37,6 +37,7 @@
         color: var(--tabs-text-color);
         background: var(--tabs-background-color);
         padding: var(--tabs-toggles-padding);
+        overflow: hidden;
 
         & > .focus-indicator {
             position: absolute;
@@ -64,6 +65,8 @@
                 line-height: 3em;
                 transition: all var(--tabs-text-focus-transition-duration) var(--bt-ease-in-out-bezier);
                 box-sizing: border-box;
+                white-space: nowrap;
+                text-overflow: ellipsis;
 
                 & > svg {
                     width: 1.3em;

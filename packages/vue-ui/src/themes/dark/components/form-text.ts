@@ -6,9 +6,9 @@ VueThemes.Define('bt-form-text', {
         {
             match: VariantWildcard,
             cssVars: {
-                backgroundColor: 'var(--bt-color-gray-850)',
-                borderColor: 'var(--bt-color-gray-800)',
-                addonBackgroundColor: 'var(--bt-color-gray-800)'
+                backgroundColor: 'var(--bt-color-gray-750)',
+                borderColor: 'var(--bt-color-gray-600)',
+                addonBackgroundColor: 'var(--bt-color-gray-650)'
             }
         }
     ]

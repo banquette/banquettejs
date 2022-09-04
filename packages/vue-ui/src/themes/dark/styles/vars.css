@@ -123,25 +123,25 @@
     --bt-color-red-950: #180b0b;
 
     /* Gray variants */
-    --bt-color-gray-50: #f4f4f5;
-    --bt-color-gray-100: #e9e9eb;
-    --bt-color-gray-150: #dedfe0;
-    --bt-color-gray-200: #d3d4d6;
-    --bt-color-gray-250: #c8c9cc;
-    --bt-color-gray-300: #bcbec2;
-    --bt-color-gray-350: #b1b3b8;
-    --bt-color-gray-400: #a6a9ad;
-    --bt-color-gray-450: #9b9ea3;
-    --bt-color-gray-500: #909399;
-    --bt-color-gray-550: #82848a;
-    --bt-color-gray-600: #73767a;
-    --bt-color-gray-650: #65676b;
-    --bt-color-gray-700: #56585c;
-    --bt-color-gray-750: #484a4d;
-    --bt-color-gray-800: #3a3b3d;
-    --bt-color-gray-850: #2b2c2e;
-    --bt-color-gray-900: #1d1d1f;
-    --bt-color-gray-950: #0e0f0f;
+    --bt-color-gray-50: #f4f5f5;
+    --bt-color-gray-100: #eaebeb;
+    --bt-color-gray-150: #dfe0e2;
+    --bt-color-gray-200: #d5d6d8;
+    --bt-color-gray-250: #caccce;
+    --bt-color-gray-300: #bfc2c4;
+    --bt-color-gray-350: #b5b8ba;
+    --bt-color-gray-400: #aaadb1;
+    --bt-color-gray-450: #a0a3a7;
+    --bt-color-gray-500: var(--bt-color-gray);
+    --bt-color-gray-550: #6b7076;
+    --bt-color-gray-600: #39424e;
+    --bt-color-gray-650: #2b323b;
+    --bt-color-gray-700: #22282f;
+    --bt-color-gray-750: #1e2329;
+    --bt-color-gray-800: #1a1e23;
+    --bt-color-gray-850: #1a1e23;
+    --bt-color-gray-900: #111418;
+    --bt-color-gray-950: #090a0c;
 
     /* Primary colors */
     --bt-color-primary-50: var(--bt-color-blue-50);

@@ -6,19 +6,20 @@ VueThemes.Define('bt-form-select', {
         {
             match: VariantWildcard,
             cssVars: {
-                backgroundColor: 'var(--bt-color-gray-850)',
-                borderColor: 'var(--bt-color-gray-800)',
-                addonBackgroundColor: 'var(--bt-color-gray-800)',
+                backgroundColor: 'var(--bt-color-gray-750)',
+                borderColor: 'var(--bt-color-gray-600)',
+                addonBackgroundColor: 'var(--bt-color-gray-650)',
 
                 // Choice
-                choiceBackgroundFocusColor: 'var(--bt-color-gray-800)',
+                choiceBackgroundFocusColor: 'var(--bt-color-gray-650)',
 
                 // Group
-                groupSeparatorColor: 'var(--bt-color-gray-800)',
+                groupLabelTextColor: '#fff',
+                groupSeparatorColor: 'var(--bt-color-gray-600)',
 
                 // Tag
-                tagBackgroundColor: 'var(--bt-color-gray-900)',
-                tagBorderColor: 'var(--bt-color-gray-800)'
+                tagBackgroundColor: 'var(--bt-color-gray-700)',
+                tagBorderColor: 'var(--bt-color-gray-600)'
             }
         }
     ]

@@ -6,10 +6,10 @@ VueThemes.Define('bt-dropdown', {
         {
             match: VariantWildcard,
             cssVars: {
-                backgroundColor: 'var(--bt-color-gray-850)',
-                backgroundHoverColor: 'var(--bt-color-gray-800)',
-                borderColor: 'var(--bt-color-gray-750)',
-                dividerColor: 'var(--bt-color-gray-750)'
+                backgroundColor: 'var(--bt-color-gray-650)',
+                backgroundHoverColor: 'var(--bt-color-gray-650)',
+                borderColor: 'var(--bt-color-gray-600)',
+                dividerColor: 'var(--bt-color-gray-600)'
             }
         }
     ]

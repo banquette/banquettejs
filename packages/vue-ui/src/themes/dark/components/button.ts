@@ -64,6 +64,18 @@ VueThemes.Define('bt-button', {
                 backgroundFocusColor: 'rgba(var(--bt-color-gray-rgb), 0.5)',
                 backgroundActiveColor: 'rgba(var(--bt-color-gray-rgb), 0.5)'
             }
+        },
+
+        /**
+         * In form addon.
+         */
+        {
+            match: {variant: 'light'},
+            cssCode: `
+                :global([data-form-input-addon])  &.bt-button .inner {
+                    border-color: var(--bt-color-gray-600);
+                }
+            `
         }
     ]
 });

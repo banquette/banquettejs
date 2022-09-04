@@ -1,13 +1,13 @@
 import { VariantWildcard } from "@banquette/vue-typescript/theme/constant";
 import { VueThemes } from "@banquette/vue-typescript/theme/vue-themes";
 
-VueThemes.Define('bt-dialog', {
+VueThemes.Define('bt-form-checkbox', {
     dark: [
         {
             match: VariantWildcard,
             cssVars: {
-                background: 'var(--bt-color-gray-650)',
-                borderColor: 'var(--bt-color-gray-600)',
+                backgroundColor: 'var(--bt-color-gray-750)',
+                outlineColor: 'var(--bt-color-gray-600)',
             }
         }
     ]
