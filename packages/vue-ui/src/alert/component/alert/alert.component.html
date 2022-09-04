@@ -5,7 +5,10 @@
         </template>
         <div class="body">
             <div class="title" v-if="hasSlot('title') || title">
-                <slot name="title" :close="close">{{ title }}</slot>
+                <slot name="title" :close="close">
+                    <span v-if="allowHtml" v-html="title"></span>
+                    <template v-else>{{ title }}</template>
+                </slot>
             </div>
             <span class="message">
                 <slot :close="close"></slot>

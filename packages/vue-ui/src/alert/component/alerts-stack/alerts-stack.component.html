@@ -1,5 +1,5 @@
 <div class="bt-alerts-stack" :data-fixed="fixed">
-    <div v-for="(alerts, position) in stack" :class="'stack ' + position" v-if="true || alerts.length > 0">
+    <div v-for="(alerts, position) in stack" :class="'stack ' + position">
         <slot :name="position"></slot>
         <template v-for="item in alerts">
             <bt-alert
@@ -9,9 +9,11 @@
                    :icon="item.icon"
                    :ttl="item.ttl"
                    :closable="item.closable"
+                   :allow-html="item.allowHtml"
                    @close="remove(item.id)"
             >
-                {{ item.message }}
+                <span v-if="item.allowHtml" v-html="item.message"></span>
+                <template v-else>{{ item.message }}</template>
             </bt-alert>
         </template>
     </div>

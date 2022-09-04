@@ -47,6 +47,13 @@ export interface AlertOptionsInterface {
     stack?: string;
 
     /**
+     * If `true`, evaluate the HTML code present in the message and title.
+     *
+     * Disabled by default.
+     */
+    allowHtml?: boolean;
+
+    /**
      * Position of the alert in the stack's space.
      * Only applicable if the alert is in a stack.
      */

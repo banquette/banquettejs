@@ -87,6 +87,7 @@ export class AlertService {
             ttl: optionsOrMessage.ttl || null,
             closable: ensureBoolean(optionsOrMessage.closable),
             stack: optionsOrMessage.stack,
+            allowHtml: optionsOrMessage.allowHtml || false,
             position: optionsOrMessage.position
         }) as AlertOptionsInterface;
     }

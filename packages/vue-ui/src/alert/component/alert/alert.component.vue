@@ -52,6 +52,11 @@ export default class AlertComponent extends Vue {
     @Prop({type: Boolean, default: false}) public closable!: boolean;
 
     /**
+     * If `true`, evaluate the HTML code present in the message and title.
+     */
+    @Prop({type: Boolean, default: false}) public allowHtml!: boolean;
+
+    /**
      * Name of the transition to apply when an alert is shown / hidden.
      * If `false`, disable the transition.
      */
