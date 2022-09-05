@@ -8,7 +8,7 @@ import { ValidatorComponent } from "./validator.component";
 export default class ValidateMaxComponent extends ValidatorComponent {
     @Prop({type: Number, required: true}) public count!: number;
     @Prop({type: String, default: 'auto', transform: (value) => {
-        if (['string', 'number', 'auto'].indexOf(value)) {
+        if (['string', 'number', 'auto'].indexOf(value) < 0) {
             return 'auto';
         }
         return value;

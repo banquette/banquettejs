@@ -9,7 +9,7 @@ import { ValidatorComponent } from "./validator.component";
 export default class ValidateMinComponent extends ValidatorComponent {
     @Prop({type: [Number, String], required: true, transform: (input: string|number) => ensureNumber(input)}) public count!: number;
     @Prop({type: String, default: 'auto', transform: (value) => {
-            if (['string', 'number', 'auto'].indexOf(value)) {
+            if (['string', 'number', 'auto'].indexOf(value) < 0) {
                 return 'auto';
             }
             return value;
