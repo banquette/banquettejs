@@ -1,11 +1,12 @@
-import { AbstractFormGroup } from "@banquette/form/abstract-form-group";
 import { FormComponentInterface } from "@banquette/form/form-component.interface";
+import { FormGroupInterface } from "@banquette/form/form-group.interface";
 import { trimArray } from "@banquette/utils-array/trim-array";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { ensureString } from "@banquette/utils-type/ensure-string";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
+import { isObject } from "@banquette/utils-type/is-object";
 import { isType } from "@banquette/utils-type/is-type";
 import { VoidCallback } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
@@ -23,9 +24,7 @@ export abstract class ValidatorComponent extends Vue {
     /**
      * Form in which search for the controls defined by `targetsPaths`.
      */
-    @Prop({type: Object, default: null, transform: (input: any) => {
-        return input instanceof AbstractFormGroup ? input : null;
-    }}) public form!: AbstractFormGroup|null;
+    @Prop({type: Object, default: null}) public form!: FormGroupInterface|null;
 
     /**
      * Paths of target controls to apply the validator on.
@@ -59,7 +58,7 @@ export abstract class ValidatorComponent extends Vue {
     /**
      * The form automagically extracted from a parent "bt-form" component.
      */
-    public autoDetectedParentFormGroup: AbstractFormGroup|null = null;
+    public autoDetectedParentFormGroup: FormGroupInterface|null = null;
 
     /**
      * Get the custom error message either from the default slot or from the prop.
@@ -83,7 +82,7 @@ export abstract class ValidatorComponent extends Vue {
      * A getter returning either the parent form group given as prop or the one detected automatically,
      * depending on their availability.
      */
-    private get parentFormGroup(): AbstractFormGroup|null {
+    private get parentFormGroup(): FormGroupInterface|null {
         if (this.form !== null) {
             return this.form;
         }
@@ -110,8 +109,8 @@ export abstract class ValidatorComponent extends Vue {
         this.isMounted = true;
         this.rebuild();
         const parent: any = this.getParent('bt-form');
-        if (parent && parent.vm.form instanceof AbstractFormGroup) {
-            const form = parent.vm.form as AbstractFormGroup;
+        if (parent && this.isFormGroupInterface(parent.vm.form)) {
+            const form = parent.vm.form;
             this.autoDetectedParentFormGroup = form;
             form.onControlAdded(proxy(this.updateFromTargets, this), 0, false);
         }
@@ -191,5 +190,12 @@ export abstract class ValidatorComponent extends Vue {
             });
         }
         this.assignedTargets = newTargets;
+    }
+
+    /**
+     * Test if a value is an FormGroupInterface object.
+     */
+    private isFormGroupInterface(value: any): value is FormGroupInterface {
+        return isObject(value) && 'get' in value && 'getByPath' in value && 'getByPattern' in value;
     }
 }
