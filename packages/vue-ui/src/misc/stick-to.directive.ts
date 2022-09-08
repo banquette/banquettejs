@@ -3,6 +3,7 @@ import { proxy } from "@banquette/utils-misc/proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { trim } from "@banquette/utils-string/format/trim";
+import { isArray } from "@banquette/utils-type/is-array";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -18,6 +19,7 @@ interface OptionsInterface {
     enabled: boolean;
     target: Element|string;
     placement?: PositioningStrategy;
+    offset?: [number, number];
     popper?: Partial<OptionsGeneric<any>>;
     forceUpdate?: () => void;
 }
@@ -221,6 +223,17 @@ export class StickToDirective {
         options.forceUpdate = this.options ? this.options.forceUpdate : () => this.forceUpdate();
         if (isUndefined(options.popper.placement)) {
             options.popper.placement = options.placement;
+        }
+        if (!isUndefined(options.offset)) {
+            if (!isArray(options.popper.modifiers)) {
+                options.popper.modifiers = [];
+            }
+            options.popper.modifiers.push({
+                name: 'offset',
+                options: {
+                    offset: options.offset
+                }
+            });
         }
         if (isUndefined(options.enabled)) {
             options.enabled = this.options ? this.options.enabled : true;
