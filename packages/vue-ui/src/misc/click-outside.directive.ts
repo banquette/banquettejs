@@ -9,7 +9,7 @@ import { DirectiveBinding } from "vue";
 type EventType = 'click' | 'mousedown';
 
 /**
- * A click handler that will only trigger if an event is detected outside of the host element.
+ * A click handler that will only trigger if an event is detected outside the host element.
  */
 @Directive('bt-click-outside')
 export class ClickOutsideDirective {
@@ -30,8 +30,8 @@ export class ClickOutsideDirective {
         } else if (isFunction(bindings.value)) {
             this.callback = bindings.value;
         }
-        if (this.enabled && isFunction(this.callback)) {
-            this.bindHandler(this.el, this.resolveHandlerType(bindings));
+        if (this.enabled) {
+            this.bindHandler(this.resolveHandlerType(bindings));
         } else {
             this.unbind();
         }
@@ -41,7 +41,7 @@ export class ClickOutsideDirective {
         this.unbind();
     }
 
-    private bindHandler(el: HTMLElement, eventType: EventType): void {
+    private bindHandler(eventType: EventType): void {
         this.unbind();
         const handler = proxy(this.onTrigger, this);
         window.addEventListener(eventType, handler);
@@ -58,8 +58,11 @@ export class ClickOutsideDirective {
     private onTrigger(event: MouseEvent): void {
         let target: EventTarget|null = event.target;
 
-        if (this.callback !== null && ((!(target instanceof HTMLElement) && !(target instanceof SVGElement)) || this.isOutside(target))) {
-            this.callback();
+        if ((!(target instanceof HTMLElement) && !(target instanceof SVGElement)) || this.isOutside(target)) {
+            if (this.callback !== null) {
+                this.callback();
+            }
+            this.el.dispatchEvent(new CustomEvent('click-outside'));
         }
     }
 
