@@ -537,7 +537,6 @@ export class FormControlProxy implements FormViewControlInterface {
                     if (control instanceof FormControl) {
                         return control;
                     }
-                    console.warn(`"${controlPath}" does not resolve a FormControl.`);
                 }
                 return null;
             }

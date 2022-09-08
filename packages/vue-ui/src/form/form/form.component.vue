@@ -70,20 +70,20 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
     /**
      * Loading.
      */
-    @Prop({name: 'loadUrl', type: String, default: null}) public loadUrl!: string|null;
-    @Prop({name: 'loadEndpoint', type: String, default: null}) public loadEndpoint!: string|null;
-    @Prop({name: 'loadUrlParams', type: Object, default: {}}) public loadUrlParams!: Record<string, Primitive>;
-    @Prop({name: 'loadHeaders', type: Object, default: {}}) public loadHeaders!: Record<string, Primitive>;
+    @Prop({type: String, default: null}) public loadUrl!: string|null;
+    @Prop({type: String, default: null}) public loadEndpoint!: string|null;
+    @Prop({type: Object, default: {}}) public loadUrlParams!: Record<string, Primitive>;
+    @Prop({type: Object, default: {}}) public loadHeaders!: Record<string, Primitive>;
 
     /**
      * Persisting.
      */
-    @Prop({name: 'persistUrl', type: String, default: null}) public persistUrl!: string|null;
-    @Prop({name: 'persistMethod', type: String, transform: (value) => ensureInEnum(ensureString(value).toUpperCase(), HttpMethod, HttpMethod.POST)}) public persistMethod!: HttpMethod;
-    @Prop({name: 'persistEndpoint', type: String, default: null}) public persistEndpoint!: string|null;
-    @Prop({name: 'persistUrlParams', type: Object, default: {}}) public persistUrlParams!: Record<string, Primitive>;
-    @Prop({name: 'persistHeaders', type: Object, default: {}}) public persistHeaders!: Record<string, Primitive>;
-    @Prop({name: 'persistPayloadType', type: String, transform: (input: any) => {
+    @Prop({type: String, default: null}) public persistUrl!: string|null;
+    @Prop({type: String, transform: (value) => ensureInEnum(ensureString(value).toUpperCase(), HttpMethod, HttpMethod.POST)}) public persistMethod!: HttpMethod;
+    @Prop({type: String, default: null}) public persistEndpoint!: string|null;
+    @Prop({type: Object, default: {}}) public persistUrlParams!: Record<string, Primitive>;
+    @Prop({type: Object, default: {}}) public persistHeaders!: Record<string, Primitive>;
+    @Prop({type: String, transform: (input: any) => {
         if (input === 'form-data') {
             return PayloadTypeFormData;
         } else if (input === 'raw') {

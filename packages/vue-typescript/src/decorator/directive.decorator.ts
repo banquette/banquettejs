@@ -3,11 +3,10 @@ import { noop } from "@banquette/utils-misc/noop";
 import { kebabCase } from "@banquette/utils-string/case/kebab-case";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
-import { DirectiveBinding, DirectiveHook, VNode, watch, WatchStopHandle, ref } from "vue";
+import { DirectiveBinding, DirectiveHook, VNode } from "vue";
 import { VueBuilder } from "../vue-builder";
 
 export interface DirectiveDecoratorOptions {
