@@ -261,10 +261,10 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     this.load();
                     return ;
                 }
-                this.updateState(Action.Load, Status.Success);
                 this.form.enable();
                 this.form.reset();
                 this.bindModel();
+                this.updateState(Action.Load, Status.Success);
                 this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.LoadSuccess);
                 return ;
             }
