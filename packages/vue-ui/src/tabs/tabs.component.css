@@ -37,7 +37,6 @@
         color: var(--tabs-text-color);
         background: var(--tabs-background-color);
         padding: var(--tabs-toggles-padding);
-        overflow: hidden;
 
         & > .focus-indicator {
             position: absolute;
