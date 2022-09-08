@@ -19,7 +19,7 @@
     width: 100%;
 
     .bt-tree-item {
-        & > :deep(.bt-collapsable) > .title {
+        & > .title {
             display: flex;
             align-items: center;
             color: var(--tree-item-text-color);
@@ -50,12 +50,16 @@
             }
         }
 
+        .items-wrapper {
+            transition: height 200ms ease-in-out, width 3s ease-out;
+        }
+
         .unknown-text {
             color: var(--tree-item-icon-color);
         }
 
         &[data-expanded] {
-            & > :deep(.bt-collapsable) > .title > .addon svg {
+            & > .title > .addon svg {
                 transform: rotateZ(0);
             }
 
@@ -65,7 +69,7 @@
         }
 
         &[data-empty] {
-            & > :deep(.bt-collapsable) > .title > .addon svg {
+            & > .title > .addon svg {
                 opacity: 0;
             }
         }
@@ -73,7 +77,7 @@
         &[data-is-disabled] {
             opacity: var(--tree-item-disabled-opacity);
 
-            & > :deep(.bt-collapsable) > .title {
+            & > .title {
                 cursor: not-allowed;
             }
         }

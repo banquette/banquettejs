@@ -21,8 +21,7 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { h, resolveDirective, withDirectives, renderSlot, VNode, toRaw, resolveComponent } from "vue";
-import { CollapsableComponent } from "../collapsable";
+import { h, resolveDirective, withDirectives, renderSlot, VNode, toRaw, resolveComponent, Directive } from "vue";
 import { ProgressCircularComponent } from "../progress/progress-circular";
 import { ThemeConfiguration } from "./theme-configuration";
 
@@ -176,57 +175,50 @@ export default class TreeComponent extends Vue {
 
     private renderNode(context: any, node: Node, slotName: string = 'node', level = 0): VNode {
         const that = this;
-        const collapsable = h(CollapsableComponent, {
-            opened: node.expanded,
-            'onUpdate:opened': (value: boolean) => {
-                node.expanded = value;
+        const collapsableDirective = resolveDirective("bt-collapsable") as Directive;
+        const titleNodes = [
+            renderSlot(context.$slots, slotName, {
+                node: node,
+                toggle: () => this.vm.toggleNode(node),
+                expand: () => this.vm.expandNode(node),
+                collapse: () => this.vm.collapseNode(node),
+                remove: () => this.vm.removeNode(node)
+            }, () => {
+                return [node.label || '(missing label)'];
+            })
+        ];
+        let leftAddon: any;
+        if (node.remotePending) {
+            leftAddon = h(resolveComponent("bt-progress-circular"));
+        } else if (node.fetched) {
+            leftAddon = h(resolveComponent('i-material-arrow-drop-down'), {crop: true, width: '0.80em'});
+        } else {
+            leftAddon = h('div', {class: 'unknown-text'}, '?');
+        }
+        titleNodes.unshift(h('div', {class: 'addon'}, leftAddon));
+        const title = h('div', {
+            class: 'title',
+            style: {paddingLeft: (that.indent * level) + 'px'},
+            onClick: (event: Event) => {
+                event.stopPropagation();
+                this.vm.toggleNode(node)
             }
-        }, {
-            title: () => {
-                const titleNodes = [
-                    renderSlot(context.$slots, slotName, {
-                        node: node,
-                        toggle: () => this.vm.toggleNode(node),
-                        expand: () => this.vm.expandNode(node),
-                        collapse: () => this.vm.collapseNode(node),
-                        remove: () => this.vm.removeNode(node)
-                    }, () => {
-                        return [node.label || '(missing label)'];
-                    })
-                ];
-                let leftAddon: any;
-                if (node.remotePending) {
-                    leftAddon = h(resolveComponent("bt-progress-circular"));
-                } else if (node.fetched) {
-                    leftAddon = h(resolveComponent('i-material-arrow-drop-down'), {crop: true, width: '0.80em'});
-                } else {
-                    leftAddon = h('div', {class: 'unknown-text'}, '?');
-                }
-                titleNodes.unshift(h('div', {class: 'addon'}, leftAddon));
-                return h('div', {
-                    class: 'title',
-                    style: {paddingLeft: (that.indent * level) + 'px'},
-                    onClick: () => {
-                        this.vm.toggleNode(node)
-                    }
-                }, titleNodes);
-            },
-            default: () => {
-                const childNodes: VNode[] = [];
-                for (const child of node.children) {
-                    childNodes.push(this.renderNode(context, child, 'node', level + 1));
-                }
-                return h('div', {class: 'items-wrapper'}, childNodes);
-            }
-        });
+        }, titleNodes);
+
+        const childNodes: VNode[] = [];
+        for (const child of node.children) {
+            childNodes.push(this.renderNode(context, child, 'node', level + 1));
+        }
+        let content = withDirectives(
+            h('div', {class: 'items-wrapper'}, childNodes),
+            [[collapsableDirective, {opened: node.expanded}]]
+        );
         return h('div', {
             class: 'bt-tree-item',
             'data-expanded': node.expanded ? '' : null,
             'data-empty': node.fetched && !node.childrenVisibleCount ? '' : null,
             'data-is-disabled': node.disabled ? '' : null
-        }, [
-            collapsable
-        ]);
+        },[title, content]);
     }
 }
 </script>

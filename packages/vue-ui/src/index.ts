@@ -1,6 +1,5 @@
 export * from './alert';
 export * from './button';
-export * from './collapsable';
 export * from './debug';
 export * from './dialog';
 export * from './dropdown';
