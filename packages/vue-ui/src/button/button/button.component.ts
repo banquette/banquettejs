@@ -27,13 +27,13 @@ export default class ButtonComponent extends Vue {
      * The URL to redirect to when the button is clicked.
      * If defined, the root component will be a `<a>` instead of a `<button>`.
      */
-    @Prop({type: String, default: null}) public href!: string;
+    @Prop({type: String, default: null}) public href!: string|null;
 
     /**
      * Define the "target" attribute of the root element.
      * Only applicable if `href` is defined and thus the root element is a `<a>`.
      */
-    @Prop({type: String, default: null}) public target!: string;
+    @Prop({type: String, default: null}) public target!: string|null;
 
     /**
      * When `true`, the button is grayed out and non-interactive.
@@ -41,7 +41,7 @@ export default class ButtonComponent extends Vue {
     @Prop({type: Boolean, default: false}) public disabled!: true|null;
 
     /**
-     * When `true` the button is disabled and indicates that it's doing something by replacing its content by a loader.
+     * When `true` the button is disabled and indicates that it's doing something by replacing its content with a loader.
      */
     @Prop({type: Boolean, default: false}) public working!: boolean;
 

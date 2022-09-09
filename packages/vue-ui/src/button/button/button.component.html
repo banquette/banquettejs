@@ -26,7 +26,7 @@
                 <slot name="working-text">{{ workingText }}</slot>
             </span>
         </slot>
-        <slot v-else></slot>
+        <slot v-else :toggle="toggle"></slot>
     </component>
 
     <!-- Slot is shown conditionally and can be controlled via a prop or via the "toggle()" method -->
