@@ -124,7 +124,6 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
 
     /**
      * If `true`, the popover will remain visible while the mouse is over its content.
-     * This only
      */
     @Prop({type: Boolean, default: false}) public interactive!: boolean;
 
