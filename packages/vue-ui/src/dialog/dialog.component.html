@@ -1,7 +1,7 @@
 <bt-client-only>
     <Teleport :to="teleport" :disabled="!teleport">
         <div class="bt-dialog" v-bt-bind-theme v-bind="$attrs" :data-is-draggable="draggable ? '' : null" :data-is-dragging="dragging ? '' : null">
-            <bt-overlay ref="overlay" v-if="rendered" :visible="visible" :disabled="!modal" @mousedown="onOverlayMouseDown">
+            <bt-overlay ref="overlay" v-if="rendered" :visible="isVisible && modal" @mousedown="onOverlayMouseDown">
                 <div class="bt-dialog-inner" :style="dragTranslationStyle">
                     <div ref="header" class="header" v-if="hasHeader">
                         <div class="close-icon">

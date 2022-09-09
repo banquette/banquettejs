@@ -19,10 +19,19 @@
 }
 
 .bt-dialog {
+    pointer-events: none;
+
     :deep(.bt-overlay) {
+        pointer-events: none;
+
+        &:not([data-is-disabled]) {
+            pointer-events: all;
+        }
+
         & > .inner {
             min-width: var(--dialog-min-width);
             max-width: var(--dialog-max-width);
+            pointer-events: none;
 
             & .bt-dialog-inner {
                 display: flex;
@@ -35,6 +44,7 @@
                 border-width: var(--dialog-border-width);
                 border-style: var(--dialog-border-style);
                 border-color: var(--dialog-border-color);
+                pointer-events: all;
 
                 & > .header, & > .footer {
                     display: flex;

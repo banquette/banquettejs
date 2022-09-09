@@ -28,14 +28,16 @@ import { ThemeConfiguration } from "./theme-configuration";
     name: 'bt-dialog',
     components: [OverlayComponent, ClientOnlyComponent],
     directives: [BindThemeDirective],
-    emits: ['update:modelValue', 'close']
+    emits: ['update:visible', 'close']
 })
 export default class DialogComponent extends Vue {
     private static ScrollLockedCount: number = 0;
     private static UsedIds: string[] = [];
 
-    // "v-model" recipient
-    @Prop({type: Boolean, default: false}) public modelValue!: boolean;
+    /**
+     * Bidirectional control of the visibility.
+     */
+    @Prop({type: Boolean, default: false}) public visible!: boolean;
 
     /**
      * Unique id of the dialog, used to show/hide the dialog using the `DialogService`.
@@ -86,22 +88,22 @@ export default class DialogComponent extends Vue {
     @Prop({type: Boolean, default: false}) public draggable!: boolean;
 
     /**
-     * Bi-directional binding for the visibility so the dialog can be closed
-     * both from the inside and outside of the component.
+     * Bidirectional binding for the visibility so the dialog can be closed
+     * both from the inside and outside the component.
      */
     @Computed()
-    public get visible(): boolean {
-        return this.modelValue || this.internalVisible;
+    public get isVisible(): boolean {
+        return this.visible || this.internalVisible;
     }
-    public set visible(value: boolean) {
-        this.$emit('update:modelValue', value);
+    public set isVisible(value: boolean) {
+        this.$emit('update:visible', value);
     }
 
     /**
      * If `true`, the content is rendered.
      */
     @Computed() public get rendered(): boolean {
-        return this.visible || (this.shown && !this.destroyOnClose);
+        return this.isVisible || (this.shown && !this.destroyOnClose);
     }
 
     /**
@@ -199,7 +201,7 @@ export default class DialogComponent extends Vue {
         }
     }
 
-    @Watch('visible', {immediate: false})
+    @Watch('isVisible', {immediate: false})
     public onVisibleChange(newValue: boolean) {
         if (newValue) {
             if (this.lockScroll) {
@@ -212,6 +214,7 @@ export default class DialogComponent extends Vue {
                 });
             }
         } else {
+            this.shown = false;
             this.freeDraggable();
         }
     }
@@ -227,7 +230,7 @@ export default class DialogComponent extends Vue {
      * Close the dialog.
      */
     @Expose() public close(): void {
-        this.visible = false;
+        this.isVisible = false;
         this.internalVisible = false;
         if (this.lockScroll) {
             this.updateScrollLock(false);
