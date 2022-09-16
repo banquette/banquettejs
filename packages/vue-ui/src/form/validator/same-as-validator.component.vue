@@ -1,3 +1,4 @@
+<script lang="ts">
 import { SameAs } from "@banquette/validation/type/same-as";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -15,3 +16,4 @@ export default class ValidateSameAsComponent extends ValidatorComponent {
         return SameAs(this.path, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

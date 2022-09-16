@@ -1,3 +1,4 @@
+<script lang="ts">
 import { UsageException } from "@banquette/exception/usage.exception";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { ensureString } from "@banquette/utils-type/ensure-string";
@@ -43,3 +44,4 @@ export default class ValidateIsTypeComponent extends ValidatorComponent {
         return IsType(this.allowed, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

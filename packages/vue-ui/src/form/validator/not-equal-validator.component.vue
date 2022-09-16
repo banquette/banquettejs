@@ -1,18 +1,19 @@
-import { Equal } from "@banquette/validation/type/equal";
+<script lang="ts">
+import { NotEqual } from "@banquette/validation/type/not-equal";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { ValidatorComponent } from "./validator.component";
 
-@Component({name: 'bt-validate-equal', template: false})
-export default class ValidateEqualComponent extends ValidatorComponent {
+@Component({name: 'bt-validate-not-equal', template: false})
+export default class ValidateNotEqualComponent extends ValidatorComponent {
     @Prop({required: true}) public value!: any;
     @Prop({type: Boolean, default: true}) public strict!: boolean;
-
     /**
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Equal(this.value, this.strict, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
+        return NotEqual(this.value, this.strict, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

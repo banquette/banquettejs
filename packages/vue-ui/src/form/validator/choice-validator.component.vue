@@ -1,3 +1,4 @@
+<script lang="ts">
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { Choice } from "@banquette/validation/type/choice";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
@@ -16,3 +17,4 @@ export default class ValidateChoiceComponent extends ValidatorComponent {
         return Choice(this.choices, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

@@ -1,3 +1,4 @@
+<script lang="ts">
 import { ensureNumber } from "@banquette/utils-type/ensure-number";
 import { Min } from "@banquette/validation/type/min";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
@@ -22,3 +23,4 @@ export default class ValidateMinComponent extends ValidatorComponent {
         return Min(this.count, this.treatAs, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

@@ -1,3 +1,4 @@
+<script lang="ts">
 import { Pattern } from "@banquette/validation/type/pattern";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -16,3 +17,4 @@ export default class ValidatePatternComponent extends ValidatorComponent {
         return Pattern(new RegExp(this.pattern, this.flags), {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

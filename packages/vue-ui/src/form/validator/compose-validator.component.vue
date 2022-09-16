@@ -1,3 +1,4 @@
+<script lang="ts">
 import { Compose } from "@banquette/validation/type/compose";
 import { Valid } from "@banquette/validation/type/valid";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
@@ -24,3 +25,4 @@ export default class ValidateComposeComponent extends ContainerValidatorComponen
         return renderSlot(context.$slots, 'default');
     }
 }
+</script>

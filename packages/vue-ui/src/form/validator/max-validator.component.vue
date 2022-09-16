@@ -1,3 +1,4 @@
+<script lang="ts">
 import { Max } from "@banquette/validation/type/max";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -21,3 +22,4 @@ export default class ValidateMaxComponent extends ValidatorComponent {
         return Max(this.count, this.treatAs, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

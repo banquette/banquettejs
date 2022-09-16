@@ -1,3 +1,4 @@
+<script lang="ts">
 import { ApiEndpoint } from "@banquette/api/api-endpoint";
 import { ApiEndpointStorage } from "@banquette/api/api-endpoint-storage.service";
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
@@ -95,3 +96,4 @@ export default class ValidateAjaxComponent extends ValidatorComponent {
         }
     }
 }
+</script>

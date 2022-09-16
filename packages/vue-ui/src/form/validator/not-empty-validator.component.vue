@@ -1,3 +1,4 @@
+<script lang="ts">
 import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -12,3 +13,4 @@ export default class ValidateNotEmptyComponent extends ValidatorComponent {
         return NotEmpty({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

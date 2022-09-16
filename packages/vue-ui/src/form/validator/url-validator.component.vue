@@ -1,14 +1,16 @@
-import { Invalid } from "@banquette/validation/type/invalid";
+<script lang="ts">
+import { Url } from "@banquette/validation/type/url";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { ValidatorComponent } from "./validator.component";
 
-@Component({name: 'bt-validate-invalid', template: false})
-export default class ValidateInvalidComponent extends ValidatorComponent {
+@Component({name: 'bt-validate-url', template: false})
+export default class ValidateUrlComponent extends ValidatorComponent {
     /**
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Invalid({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
+        return Url({message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
+</script>

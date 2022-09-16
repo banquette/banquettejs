@@ -1,4 +1,5 @@
-import { And } from "@banquette/validation/type/and";
+<script lang="ts">
+import { Or } from "@banquette/validation/type/or";
 import { Valid } from "@banquette/validation/type/valid";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -7,15 +8,15 @@ import { VNodeChild } from "@vue/runtime-core";
 import { renderSlot } from "vue";
 import { ContainerValidatorComponent } from "./container-validator.component";
 
-@Component('bt-validate-and')
-export default class ValidateAndComponent extends ContainerValidatorComponent {
+@Component('bt-validate-or')
+export default class ValidateOrComponent extends ContainerValidatorComponent {
     /**
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
         const children: ValidatorInterface[] = this.children;
         if (children.length > 0) {
-            return And.apply(null, children);
+            return Or.apply(null, children);
         }
         return Valid();
     }
@@ -24,3 +25,4 @@ export default class ValidateAndComponent extends ContainerValidatorComponent {
         return renderSlot(context.$slots, 'default');
     }
 }
+</script>
