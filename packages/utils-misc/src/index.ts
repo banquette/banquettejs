@@ -2,6 +2,7 @@
 export * from './are-equal';
 export * from './debounce';
 export * from './do-and-retry';
+export * from './make-reassignable';
 export * from './noop';
 export * from './not';
 export * from './once-per-cycle-proxy';
