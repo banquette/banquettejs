@@ -16,7 +16,7 @@ export class Constants extends VarHolder {
      */
     public static Register(name: string, value: any): void {
         if (Constants.GetInstance().has(name)) {
-            throw new UsageException(`A constant named ${name} is already defined. Choose another name of use the shared configuration if the value must be overridden.`);
+            throw new UsageException(`A constant named ${name} is already defined.`);
         }
         Constants.GetInstance().set(name, value);
     }
