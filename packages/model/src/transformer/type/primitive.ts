@@ -26,7 +26,7 @@ export enum Type {
     Number = 2,
 
     /**
-     * Convert the input into a number an round it.
+     * Convert the input into a number and round it.
      */
     Integer = 4,
 
@@ -38,7 +38,7 @@ export enum Type {
     /**
      * Allow the "null" value as input.
      *
-     * Setting thins in conjunction with "Type.String" (Type.String | Type.Null) means that
+     * For example, setting this in conjunction with "Type.String" (Type.String | Type.Null) means that
      * if "null" is given as input, it will not be converted to an empty string.
      */
     Null = 16
