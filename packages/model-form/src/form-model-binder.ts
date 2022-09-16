@@ -69,15 +69,19 @@ export class FormModelBinder {
     private ignoreModelUpdate: boolean = false;
 
     private get currentContextCtor(): Constructor {
-        if (this.contextStack.length > 0) {
-            return this.contextStack[this.contextStack.length - 1].ctor;
+        for (let i = this.contextStack.length - 1; i >= 0; --i) {
+            if (this.contextStack[i].ctor !== Array) {
+                return this.contextStack[i].ctor;
+            }
         }
         return this.model.constructor;
     }
 
     private get currentContextProperty(): string|null {
-        if (this.contextStack.length > 0) {
-            return this.contextStack[this.contextStack.length - 1].property;
+        for (let i = this.contextStack.length - 1; i >= 0; --i) {
+            if (this.contextStack[i].ctor !== Array) {
+                return this.contextStack[i].property;
+            }
         }
         return null;
     }
