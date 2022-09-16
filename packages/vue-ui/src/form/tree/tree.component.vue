@@ -21,7 +21,7 @@ import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
 import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { TreeComponent } from "../../tree";
-import { BaseInputComponent } from "../base-input";
+import { BaseFormInputComponent } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { UndefinedValue } from "../constant";
@@ -33,7 +33,7 @@ import { TreeViewModel } from "./tree.view-model";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-tree',
-    components: [BaseInputComponent, TreeComponent],
+    components: [BaseFormInputComponent, TreeComponent],
     directives: [BindThemeDirective]
 })
 export default class FormTreeComponent extends AbstractVueFormComponent<TreeViewDataInterface, TreeViewModel> {

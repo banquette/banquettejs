@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { Injector } from "@banquette/dependency-injection/injector";
@@ -10,6 +10,7 @@ import { ExceptionFactory } from "@banquette/exception/exception.factory";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { ObservablePromise } from "@banquette/promise/observable-promise";
 import { RejectCallback, ResolveCallback, ProgressCallback } from "@banquette/promise/types";
+import { makeReassignable } from "@banquette/utils-misc/make-reassignable";
 import { noop } from "@banquette/utils-misc/noop";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
@@ -63,7 +64,7 @@ export class HttpService {
      */
     private adapterIdentifier!: Constructor<AdapterInterface>;
 
-    constructor(@Inject(SharedConfiguration) private config: SharedConfiguration,
+    constructor(@Inject(ConfigurationService) private config: ConfigurationService,
                 @Inject(EventDispatcherService) private eventDispatcher: EventDispatcherInterface,
                 @Inject(NetworkWatcherService) private networkWatcher: NetworkWatcherService) {
     }
@@ -148,11 +149,11 @@ export class HttpService {
         let promiseResolve: ResolveCallback<HttpResponse<T>>;
         let promiseReject: RejectCallback;
         let promiseProgress: ProgressCallback;
-        const response = new HttpResponse<T>(request, HttpResponseStatus.Pending, new ObservablePromise<HttpResponse<T>>((resolve, reject, progress) => {
+        const response = makeReassignable(new HttpResponse<T>(request, HttpResponseStatus.Pending, new ObservablePromise<HttpResponse<T>>((resolve, reject, progress) => {
             promiseResolve = resolve;
             promiseReject = reject;
             promiseProgress = progress;
-        }));
+        })));
         request.setResponse(response);
         this.queueRequest<T>(
             request,

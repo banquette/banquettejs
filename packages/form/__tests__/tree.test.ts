@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { Min } from "@banquette/validation/type/min";
@@ -137,11 +137,11 @@ describe('Create with factory', () => {
     for (const delimiters of [[null, '$'], ['$', null], ['PREFIX___', '__SUFFIX']]) {
         test(`Deep form with validators (${JSON.stringify(delimiters)}`, () => {
             // Ensure the conf is what the test expect.
-            const sharedConfiguration = Injector.Get(SharedConfiguration);
-            const formConfiguration: FormConfigurationInterface = sharedConfiguration.get(FormConfigurationSymbol);
+            const configuration = Injector.Get(ConfigurationService);
+            const formConfiguration: FormConfigurationInterface = configuration.get(FormConfigurationSymbol);
             const oldExtendedNamePrefix = formConfiguration.factory.extendedNamePrefix;
             const oldExtendedNameSuffix = formConfiguration.factory.extendedNameSuffix;
-            sharedConfiguration.modify<FormConfigurationInterface>(FormConfigurationSymbol, {
+            configuration.modify<FormConfigurationInterface>(FormConfigurationSymbol, {
                 factory: {
                     extendedNamePrefix: delimiters[0],
                     extendedNameSuffix: delimiters[1]
@@ -200,7 +200,7 @@ describe('Create with factory', () => {
             expect(form.get('category/name').validator).toBeNull(); // No validator
 
             // Restore the conf for the other tests
-            sharedConfiguration.modify<FormConfigurationInterface>(FormConfigurationSymbol, {
+            configuration.modify<FormConfigurationInterface>(FormConfigurationSymbol, {
                 factory: {
                     extendedNamePrefix: oldExtendedNamePrefix,
                     extendedNameSuffix: oldExtendedNameSuffix

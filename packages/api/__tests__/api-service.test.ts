@@ -7,7 +7,6 @@ import { Model } from "@banquette/model/transformer/type/model";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { Api } from "../src";
-import { Http } from "../src/decorator/http";
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
 import { ApiService } from "../src/api.service";
 import { Endpoint } from "../src/decorator/endpoint";

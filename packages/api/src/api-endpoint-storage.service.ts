@@ -11,7 +11,7 @@ import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "
 import { EndpointNotFoundException } from "./exception/endpoint-not-found.exception";
 
 @Service()
-export class ApiEndpointStorage {
+export class ApiEndpointStorageService {
     /**
      * Mapping between a constructor and a collection of endpoints.
      *
@@ -100,6 +100,6 @@ export class ApiEndpointStorage {
      * Ensure a value for ctor.
      */
     private resolveCtor(ctor?: Constructor|null): Constructor {
-        return isNullOrUndefined(ctor) ? ApiEndpointStorage : ctor;
+        return isNullOrUndefined(ctor) ? ApiEndpointStorageService : ctor;
     }
 }

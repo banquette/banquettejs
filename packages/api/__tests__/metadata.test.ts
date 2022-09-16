@@ -4,10 +4,10 @@ import { HttpMethod } from "@banquette/http/constants";
 import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { NotEmpty } from "@banquette/validation/type/not-empty";
-import { EndpointNotFoundException, ApiEndpointStorage, ApiEndpoint } from "../src";
+import { EndpointNotFoundException, ApiEndpointStorageService, ApiEndpoint } from "../src";
 import { endpointParameterDefaults } from "./endpoint.test";
 
-const metadata = Injector.Get(ApiEndpointStorage);
+const metadata = Injector.Get(ApiEndpointStorageService);
 
 beforeEach(() => {
     metadata.clear();

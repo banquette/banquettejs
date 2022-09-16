@@ -10,7 +10,7 @@ import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { ConfigurationInterface, ConfigurationValue } from "./configuration.interface";
 
 @Service()
-export class SharedConfiguration {
+export class ConfigurationService {
     /**
      * Configuration objects indexed symbol.
      */

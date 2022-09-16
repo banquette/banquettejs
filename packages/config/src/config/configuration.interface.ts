@@ -6,7 +6,7 @@ import { Constructor } from "@banquette/utils-type/types";
 export type ConfigurationValue = string | number | boolean | null | symbol | undefined | Constructor | ConfigurationInterface | Array<ConfigurationValue>;
 
 /**
- * Interface all configuration objects stored in the SharedConfiguration service must conform with.
+ * Interface all configuration objects stored in the ConfigurationService service must conform with.
  */
 export interface ConfigurationInterface {
     [member: string]: ConfigurationValue;

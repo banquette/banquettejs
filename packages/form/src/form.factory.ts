@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isArray } from "@banquette/utils-type/is-array";
@@ -110,7 +110,7 @@ export class FormFactory {
      */
     private static ResolveKey(key: string): {key: string, extended: boolean} {
         if (FormFactory.Configuration === null) {
-            FormFactory.Configuration = Injector.Get(SharedConfiguration).get<FormConfigurationInterface>(FormConfigurationSymbol);
+            FormFactory.Configuration = Injector.Get(ConfigurationService).get<FormConfigurationInterface>(FormConfigurationSymbol);
         }
         let extended: boolean = false;
         const prefix = FormFactory.Configuration.factory.extendedNamePrefix;

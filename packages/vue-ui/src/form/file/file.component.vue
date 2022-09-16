@@ -22,7 +22,7 @@ import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorat
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
 import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
 import { AbstractVueFormComponent } from "../abstract-vue-form.component";
-import { BaseInputComponent } from "../base-input";
+import { BaseFormInputComponent } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { FileViewDataInterface } from "./file-view-data.interface";
 import { FileViewModel } from "./file.view-model";
@@ -33,7 +33,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-file',
-    components: [BaseInputComponent, IconMaterialClose, IconMaterialDescription, IconMaterialDone, IconMaterialError, IconMaterialFileUpload, IconMaterialPlayArrow, IconMaterialStop],
+    components: [BaseFormInputComponent, IconMaterialClose, IconMaterialDescription, IconMaterialDone, IconMaterialError, IconMaterialFileUpload, IconMaterialPlayArrow, IconMaterialStop],
     directives: [BindThemeDirective]
 })
 export default class FormFileComponent extends AbstractVueFormComponent<FileViewDataInterface, FileViewModel> {

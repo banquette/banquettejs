@@ -1,4 +1,8 @@
-<template src="./dropdown-item.component.html"></template>
+<template>
+    <div class="bt-dropdown-item">
+        <slot></slot>
+    </div>
+</template>
 <script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 

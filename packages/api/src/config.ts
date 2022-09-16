@@ -1,9 +1,9 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { ApiConfigurationInterface } from "./api-configuration.interface";
 
 export const ApiConfigurationSymbol = Symbol('api');
-Injector.Get(SharedConfiguration).register<ApiConfigurationInterface>(ApiConfigurationSymbol, {
+Injector.Get(ConfigurationService).register<ApiConfigurationInterface>(ApiConfigurationSymbol, {
     eventsPriorities: {
         // Higher priority to be called before encoders.
         beforeRequest: 100,

@@ -17,7 +17,7 @@ import { DomModuleInterface } from "./dom-module.interface";
  * Manages modules created using [dom-*] attributes in the DOM.
  */
 @Service()
-export class DomModulesScanner {
+export class DomModulesScannerService {
     private static MODULES_HTML_ATTRIBUTES_PREFIX = "dom-";
 
     /**
@@ -108,7 +108,7 @@ export class DomModulesScanner {
             return acc;
         }, []);
         for (const ctor of ctors) {
-            const attrName: string = DomModulesScanner.MODULES_HTML_ATTRIBUTES_PREFIX + kebabCase(ctor[MODULE_NAME_CTOR_ATTR]);
+            const attrName: string = DomModulesScannerService.MODULES_HTML_ATTRIBUTES_PREFIX + kebabCase(ctor[MODULE_NAME_CTOR_ATTR]);
             output[attrName] = ctor;
         }
         return output;

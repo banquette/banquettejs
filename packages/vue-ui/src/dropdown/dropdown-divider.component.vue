@@ -1,4 +1,6 @@
-<template src="./dropdown-divider.component.html" ></template>
+<template>
+    <hr class="bt-dropdown-divider" />
+</template>
 <script lang="ts">
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 

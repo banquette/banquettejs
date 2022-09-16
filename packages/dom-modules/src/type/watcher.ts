@@ -2,14 +2,14 @@ import { Inject } from "@banquette/dependency-injection/decorator/inject.decorat
 import { throttle } from "@banquette/utils-misc/throttle";
 import { AbstractDomModule } from "../abstract.dom-module";
 import { DomModule } from "../decorator/dom-module.decorator";
-import { DomModulesScanner } from "../dom-modules-scanner";
+import { DomModulesScannerService } from "../dom-modules-scanner";
 
 @DomModule('watcher')
 export class Watcher extends AbstractDomModule {
-    private scanner: DomModulesScanner;
+    private scanner: DomModulesScannerService;
     private observer: MutationObserver|null ;
 
-    public constructor(@Inject(DomModulesScanner) scanner: DomModulesScanner) {
+    public constructor(@Inject(DomModulesScannerService) scanner: DomModulesScannerService) {
         super();
         this.scanner = scanner;
         this.observer = null;

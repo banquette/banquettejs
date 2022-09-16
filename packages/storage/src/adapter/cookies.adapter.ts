@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { InjectLazy } from "@banquette/dependency-injection/decorator/inject-lazy.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
@@ -13,7 +13,7 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      */
     private prefix: string;
 
-    public constructor(@InjectLazy(() => SharedConfiguration) configuration: SharedConfiguration) {
+    public constructor(@InjectLazy(() => ConfigurationService) configuration: ConfigurationService) {
         super();
         this.prefix = configuration.get<string>('storage.cookieAdapter.prefix');
     }

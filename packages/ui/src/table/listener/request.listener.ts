@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { flattenObject } from "@banquette/utils-object/flatten-object";
@@ -12,7 +12,7 @@ import { TableConfigurationInterface } from "../table-configuration.interface";
 let config: TableConfigurationInterface|null = null;
 function getConfig(): TableConfigurationInterface {
     if (config === null) {
-        config = Injector.Get(SharedConfiguration).get<UiConfigurationInterface>(UiConfigurationSymbol).table;
+        config = Injector.Get(ConfigurationService).get<UiConfigurationInterface>(UiConfigurationSymbol).table;
     }
     return config;
 }

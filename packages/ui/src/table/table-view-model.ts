@@ -1,7 +1,7 @@
 import { ApiEvents, ApiProcessorTag } from "@banquette/api/constant";
 import { ApiBeforeResponseEvent } from "@banquette/api/event/api-before-response.event";
 import { ApiRequestEvent } from "@banquette/api/event/api-request.event";
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
@@ -137,7 +137,7 @@ export class TableViewModel {
      */
     private serverResultsMap: Record<number, ServerResult> = {};
 
-    public constructor(@Inject(SharedConfiguration) private sharedConfiguration: SharedConfiguration,
+    public constructor(@Inject(ConfigurationService) private configuration: ConfigurationService,
                        @Inject(EventDispatcherService) private globalDispatcher: EventDispatcherService,
                        @Inject(PaginationModule) pagination: PaginationModule) {
         this.localDispatcher = new EventDispatcher();
@@ -284,7 +284,7 @@ export class TableViewModel {
      * Listen for api requests to trigger custom processing.
      */
     private bindApiListeners(): void {
-        const config = this.sharedConfiguration.get<UiConfigurationInterface>(UiConfigurationSymbol);
+        const config = this.configuration.get<UiConfigurationInterface>(UiConfigurationSymbol);
         this.globalDispatcher.subscribe(ApiEvents.BeforeRequest, (event: ApiRequestEvent) => {
             const serverResult = this.getServerResult(event.httpEvent.request.response);
             if (serverResult === null) {

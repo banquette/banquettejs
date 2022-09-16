@@ -1,10 +1,10 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { XhrAdapter } from "./adapter/xhr.adapter";
 import { HttpConfigurationInterface } from "./http-configuration.interface";
 
 export const HttpConfigurationSymbol = Symbol('http');
-Injector.Get(SharedConfiguration).register<HttpConfigurationInterface>(HttpConfigurationSymbol, {
+Injector.Get(ConfigurationService).register<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     adapter: XhrAdapter,
     maxSimultaneousRequests: 3,
     requestRetryDelay: 'auto',

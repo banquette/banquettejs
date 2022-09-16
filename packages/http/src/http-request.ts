@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
@@ -222,7 +222,7 @@ export class HttpRequest {
      */
     private static GetConfiguration(): HttpConfigurationInterface {
         if (Configuration === null) {
-            Configuration = Injector.Get(SharedConfiguration).get<HttpConfigurationInterface>(HttpConfigurationSymbol);
+            Configuration = Injector.Get(ConfigurationService).get<HttpConfigurationInterface>(HttpConfigurationSymbol);
         }
         return Configuration;
     }

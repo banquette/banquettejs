@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { XhrAdapter } from "@banquette/http/adapter/xhr.adapter";
@@ -25,7 +25,7 @@ import { ApiService, Endpoint } from "../src";
 const http: HttpService = Injector.Get(HttpService);
 const api = Injector.Get(ApiService);
 
-const config = Injector.Get(SharedConfiguration);
+const config = Injector.Get(ConfigurationService);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     maxSimultaneousRequests: 5,
     requestRetryCount: 5,

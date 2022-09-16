@@ -19,7 +19,6 @@ import { WeakObjectRef } from "@banquette/utils-misc/weak-object-map";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { GenericCallback, VoidCallback } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
@@ -27,7 +26,7 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { FormStorage } from "./form-storage";
+import { FormStorageService } from "./form-storage.service";
 import { ProxifiedCallInterface } from "./proxified-call.interface";
 
 /**
@@ -169,7 +168,7 @@ export class FormControlProxy implements FormViewControlInterface {
      */
     private isInternalControl: boolean = false;
 
-    public constructor(@Inject(FormStorage) private formStorage: FormStorage) {
+    public constructor(@Inject(FormStorageService) private formStorage: FormStorageService) {
     }
 
     @Lifecycle('unmounted')

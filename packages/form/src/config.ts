@@ -1,9 +1,9 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { FormConfigurationInterface } from "./form-configuration.interface";
 
 export const FormConfigurationSymbol = Symbol('form');
-Injector.Get(SharedConfiguration).register<FormConfigurationInterface>(FormConfigurationSymbol, {
+Injector.Get(ConfigurationService).register<FormConfigurationInterface>(FormConfigurationSymbol, {
     factory: {
         extendedNamePrefix: null,
         extendedNameSuffix: '$'

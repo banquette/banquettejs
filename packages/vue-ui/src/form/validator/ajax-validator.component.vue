@@ -1,6 +1,6 @@
 <script lang="ts">
 import { ApiEndpoint } from "@banquette/api/api-endpoint";
-import { ApiEndpointStorage } from "@banquette/api/api-endpoint-storage.service";
+import { ApiEndpointStorageService } from "@banquette/api/api-endpoint-storage.service";
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
 import { Injector } from "@banquette/dependency-injection/injector";
@@ -52,7 +52,7 @@ export default class ValidateAjaxComponent extends ValidatorComponent {
      */
     @Prop({type: String, default: null}) public responseProperty!: string|null;
 
-    public constructor(@Inject(ApiEndpointStorage) private api: ApiEndpointStorage) {
+    public constructor(@Inject(ApiEndpointStorageService) private api: ApiEndpointStorageService) {
         super();
     }
 

@@ -19,12 +19,12 @@ import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
-import { SelectComponent } from "../../form/select";
-import { TextComponent } from "../../form/text";
+import { FormSelectComponent } from "../../form/select";
+import { FormTextComponent } from "../../form/text";
 
 @Component({
     name: 'bt-table-pagination',
-    components: [TextComponent, SelectComponent, IconMaterialChevronRight, IconMaterialChevronLeft, IconMaterialKeyboardBackspace],
+    components: [FormTextComponent, FormSelectComponent, IconMaterialChevronRight, IconMaterialChevronLeft, IconMaterialKeyboardBackspace],
 })
 export default class PaginationComponent extends Vue {
     @Prop({type: Object, required: true}) public vm!: TableViewModel;

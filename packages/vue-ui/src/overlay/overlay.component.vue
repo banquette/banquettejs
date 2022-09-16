@@ -1,3 +1,56 @@
-<script lang="ts" src="./overlay.component.ts"></script>
 <style src="./overlay.component.css" scoped></style>
 <template src="./overlay.component.html" ></template>
+<script lang="ts">
+import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
+import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
+import { ThemeVar } from "@banquette/vue-typescript/decorator/theme-var.decorator";
+import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
+import { Vue } from "@banquette/vue-typescript/vue";
+import { ThemeConfiguration } from "./theme-configuration";
+
+@Themeable(ThemeConfiguration)
+@Component({
+    name: 'bt-overlay',
+    directives: [BindThemeDirective],
+    emits: ['update:visible']
+})
+export default class OverlayComponent extends Vue {
+    private static zIndexIncrement: number = 0;
+
+    @Prop({type: String, default: 'fixed', transform: (value: any) => value === 'absolute' ? value : 'fixed'})
+    public position!: 'absolute' | 'fixed';
+
+    /**
+     * Control the visibility of the overlay.
+     * If invisible, the events are not blocked anymore.
+     */
+    @Prop({type: Boolean, default: true}) public visible!: boolean;
+
+    /**
+     * Bridge to the `overlay-z-index` css variable.
+     */
+    @ThemeVar({name: 'overlay-z-index', defaultValue: 2000}) public zIndexCssVar!: number;
+
+    @Computed() public get zIndex(): number {
+        return this.zIndexCssVar + this.zIndexIncrement;
+    }
+
+    private zIndexIncrement: number = 0;
+
+    public unmounted(): void {
+        --OverlayComponent.zIndexIncrement;
+    }
+
+    @Watch('visible', {immediate: ImmediateStrategy.BeforeMount})
+    private onVisibilityChange(): void {
+        if (this.visible) {
+            this.zIndexIncrement = ++OverlayComponent.zIndexIncrement;
+        } else {
+            --OverlayComponent.zIndexIncrement;
+        }
+    }
+}
+</script>

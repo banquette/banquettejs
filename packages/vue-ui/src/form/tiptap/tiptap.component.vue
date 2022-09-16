@@ -24,7 +24,7 @@ import { Editor, EditorContent, Extensions } from '@tiptap/vue-3'
 import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { TiptapModuleInterface } from "./modules/tiptap-module.interface";
-import { TiptapConfigurationStorage } from "./tiptap-configuration-storage";
+import { TiptapConfigurationService } from "./tiptap-configuration.service";
 import { TiptapConfigurationInterface } from "./tiptap-configuration.interface";
 import { TiptapViewDataInterface } from "./tiptap-view-data.interface";
 import { TiptapViewModel } from "./tiptap.view-model";
@@ -55,7 +55,7 @@ interface InnerConfigurationInterface {
     directives: [BindThemeDirective],
     components: {'editor-content': EditorContent}
 })
-export default class TiptapComponent extends AbstractVueFormComponent<TiptapViewDataInterface, TiptapViewModel> {
+export default class FormTiptapComponent extends AbstractVueFormComponent<TiptapViewDataInterface, TiptapViewModel> {
     /**
      * Holds the props exposed by the base input.
      */
@@ -70,7 +70,7 @@ export default class TiptapComponent extends AbstractVueFormComponent<TiptapView
                 return {};
             }
             if (isString(v)) {
-                const resolved = Injector.Get(TiptapConfigurationStorage).get(v);
+                const resolved = Injector.Get(TiptapConfigurationService).get(v);
                 if (!resolved) {
                     throw new UsageException(`No configuration named "${v}" have been found.`);
                 }

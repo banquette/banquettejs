@@ -4,7 +4,7 @@ import { FormGroupInterface } from "@banquette/form/form-group.interface";
 import { WeakObjectMap } from "@banquette/utils-misc/weak-object-map";
 
 @Service()
-export class FormStorage extends WeakObjectMap<FormGroupInterface> {
+export class FormStorageService extends WeakObjectMap<FormGroupInterface> {
     /**
      * @inheritDoc
      */

@@ -8,7 +8,7 @@ import { AbstractVueFormComponent } from "../abstract-vue-form.component";
     name: 'bt-form-hidden',
     template: false
 })
-export default class HiddenComponent extends AbstractVueFormComponent<HeadlessControlViewDataInterface, HeadlessControlViewModel<HeadlessControlViewDataInterface>> {
+export default class FormHiddenComponent extends AbstractVueFormComponent<HeadlessControlViewDataInterface, HeadlessControlViewModel<HeadlessControlViewDataInterface>> {
     /**
      * @inheritDoc
      */

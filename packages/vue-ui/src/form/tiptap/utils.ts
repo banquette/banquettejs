@@ -1,5 +1,5 @@
 import { Injector } from "@banquette/dependency-injection/injector";
-import { TiptapConfigurationStorage } from "./tiptap-configuration-storage";
+import { TiptapConfigurationService } from "./tiptap-configuration.service";
 import { TiptapConfigurationInterface } from "./tiptap-configuration.interface";
 
 export const ModulesToolbarAliases: Record<string, string> = {};
@@ -15,5 +15,5 @@ export function registerModuleToolbarAlias(moduleName: string, alias: string): v
  * Utility function to easily register a tiptap configuration.
  */
 export function registerTiptapConfiguration(name: string, configuration: TiptapConfigurationInterface): void {
-    return Injector.Get(TiptapConfigurationStorage).set(name, configuration);
+    return Injector.Get(TiptapConfigurationService).set(name, configuration);
 }

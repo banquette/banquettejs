@@ -13,7 +13,7 @@ import {
     ApiEndpointParameterOptions,
     MissingRequiredParameterException,
     ApiEndpointParameterInterface,
-    InvalidParameterException, ApiEndpointStorage, EndpointNotFoundException
+    InvalidParameterException, ApiEndpointStorageService, EndpointNotFoundException
 } from "../src";
 import { Endpoint } from "../src/decorator/endpoint";
 
@@ -227,7 +227,7 @@ describe('Parameters handling', () => {
 });
 
 describe('@Endpoint()', () => {
-    const storage = Injector.Get(ApiEndpointStorage);
+    const storage = Injector.Get(ApiEndpointStorageService);
 
     beforeEach(() => {
         storage.clear();
@@ -260,6 +260,6 @@ describe('@Endpoint()', () => {
         class Foo { }
 
         expect(() => storage.getEndpoint('test')).toThrow(EndpointNotFoundException);
-        expect(() => storage.getEndpoint('test', ApiEndpointStorage)).toThrow(EndpointNotFoundException);
+        expect(() => storage.getEndpoint('test', ApiEndpointStorageService)).toThrow(EndpointNotFoundException);
     });
 });

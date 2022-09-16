@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { InjectLazy } from "@banquette/dependency-injection/decorator/inject-lazy.decorator";
 import { InjectMultiple } from "@banquette/dependency-injection/decorator/inject-multiple.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
@@ -24,7 +24,7 @@ export class StorageService {
     private readonly defaultAdapter: AdapterInterface;
 
     public constructor(@InjectMultiple(StorageAdapterTag) adapters: AdapterInterface[],
-                       @InjectLazy(() => SharedConfiguration) configuration: SharedConfiguration) {
+                       @InjectLazy(() => ConfigurationService) configuration: ConfigurationService) {
         this.availableAdaptersOrdered = [];
         this.availableAdaptersMap = {};
         for (const adapter of adapters) {

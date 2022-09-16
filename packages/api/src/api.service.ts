@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
@@ -23,7 +23,7 @@ import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive, Constructor } from "@banquette/utils-type/types";
 import { ApiConfigurationInterface } from "./api-configuration.interface";
 import { ApiEndpoint } from "./api-endpoint";
-import { ApiEndpointStorage } from "./api-endpoint-storage.service";
+import { ApiEndpointStorageService } from "./api-endpoint-storage.service";
 import { ApiRequest } from "./api-request";
 import { ApiRequestBuilder } from "./api-request.builder";
 import { ApiConfigurationSymbol } from "./config";
@@ -48,11 +48,11 @@ export class ApiService {
      */
     private knownRequests: Record<number, ApiRequest> = {};
 
-    public constructor(@Inject(SharedConfiguration) private configuration: SharedConfiguration,
+    public constructor(@Inject(ConfigurationService) private configuration: ConfigurationService,
                        @Inject(EventDispatcherService) private eventDispatcher: EventDispatcherService,
                        @Inject(HttpService) private http: HttpService,
                        @Inject(ModelMetadataService) private modelMetadata: ModelMetadataService,
-                       @Inject(ApiEndpointStorage) private endpointsStorage: ApiEndpointStorage) {
+                       @Inject(ApiEndpointStorageService) private endpointsStorage: ApiEndpointStorageService) {
         const config = this.configuration.get<ApiConfigurationInterface>(ApiConfigurationSymbol);
         this.eventDispatcher.subscribe(HttpEvents.BeforeRequest, proxy(this.onBeforeRequest, this), config.eventsPriorities.beforeRequest, [ApiTag]);
         this.eventDispatcher.subscribe(HttpEvents.BeforeResponse, proxy(this.onBeforeResponse, this), config.eventsPriorities.beforeResponse, [ApiTag]);

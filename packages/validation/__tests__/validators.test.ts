@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { Exception } from "@banquette/exception/exception";
 import { UsageException } from "@banquette/exception/usage.exception";
@@ -28,7 +28,7 @@ import { ValidationContextInterface } from "../src/validation-context.interface"
 import '../../http/__tests__/__mocks__/xml-http-request.mock';
 import { ValidateAfterDelay } from "./__mocks__/type/validate-after-delay.test-validator";
 
-const config: SharedConfiguration = Injector.Get(SharedConfiguration);
+const config: ConfigurationService = Injector.Get(ConfigurationService);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {requestRetryCount: 2});
 
 function expectViolationsArrayContaining(violations: Array<{path?: string, type?: string}>|{path?: string, type?: string}): any {

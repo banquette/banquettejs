@@ -1,4 +1,4 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { FingerprintService } from "@banquette/fingerprint/fingerprint.service";
@@ -61,7 +61,7 @@ export class LoggerService implements LoggerInterface {
     private fingerprint!: string|null;
 
     constructor(@Inject(StorageService) private storage: StorageService,
-                @Inject(SharedConfiguration) private config: SharedConfiguration,
+                @Inject(ConfigurationService) private config: ConfigurationService,
                 @Inject(FingerprintService) private fingerprintGenerator: FingerprintService) {
         this.listen(config.get('log.level'));
     }

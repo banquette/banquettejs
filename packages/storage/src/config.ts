@@ -1,9 +1,9 @@
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { StorageConfigurationInterface } from "./storage-configuration.interface";
 
 export const StorageConfigurationSymbol = Symbol('storage');
-Injector.Get(SharedConfiguration).register<StorageConfigurationInterface>(StorageConfigurationSymbol, {
+Injector.Get(ConfigurationService).register<StorageConfigurationInterface>(StorageConfigurationSymbol, {
     defaultAdapter: 'auto',
     cookieAdapter: {
         prefix: ''

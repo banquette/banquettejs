@@ -1,1 +1,1 @@
-export { default as BaseInputComponent } from './base-input.component.vue';
+export { default as BaseFormInputComponent } from './base-input.component.vue';

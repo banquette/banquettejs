@@ -4,7 +4,7 @@ import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
 import { Vue } from "@banquette/vue-typescript/vue";
 import { EditorEvents } from "@tiptap/core/dist/packages/core/src/types";
 import { Editor, Extensions } from "@tiptap/vue-3";
-import TiptapComponent from "../tiptap.component.vue";
+import FormTiptapComponent from "../tiptap.component.vue";
 import { TiptapModuleInterface } from "./tiptap-module.interface";
 
 export abstract class AbstractTiptapModule<Conf = any> extends Vue implements TiptapModuleInterface {
@@ -33,13 +33,13 @@ export abstract class AbstractTiptapModule<Conf = any> extends Vue implements Ti
     /**
      * Parent tiptap component instance.
      */
-    protected parent!: InstanceType<typeof TiptapComponent>;
+    protected parent!: InstanceType<typeof FormTiptapComponent>;
 
     /**
      * Vue lifecycle method.
      */
     public beforeMount(): void {
-        const $parent = (this.getParent('bt-form-tiptap') as InstanceType<typeof TiptapComponent>) || null;
+        const $parent = (this.getParent('bt-form-tiptap') as InstanceType<typeof FormTiptapComponent>) || null;
         if (!$parent) {
             throw new UsageException('A tiptap module must be child of a `bt-form-tiptap` component.');
         }

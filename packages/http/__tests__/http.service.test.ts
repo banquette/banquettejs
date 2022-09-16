@@ -1,9 +1,10 @@
 import 'reflect-metadata';
-import { SharedConfiguration } from "@banquette/config/config/shared-configuration";
+import { ConfigurationService } from "@banquette/config/config/configuration.service";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { UsageException } from "@banquette/exception/usage.exception";
 import { ObservablePromise } from "@banquette/promise/observable-promise";
+import { makeReassignable } from "@banquette/utils-misc/make-reassignable";
 import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc/timeout";
 import { removeFromObject } from "../../__tests__/utils";
 import {
@@ -37,7 +38,7 @@ import './__mocks__/network-watcher.mock';
 const eventDispatcher: EventDispatcherService = Injector.Get(EventDispatcherService);
 const http: HttpService = Injector.Get(HttpService);
 
-const config: SharedConfiguration = Injector.Get(SharedConfiguration);
+const config: ConfigurationService = Injector.Get(ConfigurationService);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {
     maxSimultaneousRequests: 5,
     requestRetryCount: 5,
@@ -279,14 +280,14 @@ describe('responses', () => {
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson'})
         }));
-        return expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
+        return expect(response.promise).resolves.toMatchObject(makeReassignable({result: JSON.parse(TestResponses.ValidJson.content)}));
     });
     test(`JSON response (with XSSI prefix and response type)`, async () => {
         expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ValidJson', responseType: 'json', XSSISafe: true})
         }));
-        return expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
+        return expect(response.promise).resolves.toMatchObject(makeReassignable({result: JSON.parse(TestResponses.ValidJson.content)}));
     });
     test(`JSON response (with XSSI prefix and Content-Type header)`, async () => {
         expect.assertions(2);
@@ -313,7 +314,7 @@ describe('responses', () => {
             url: '//test',
             responseType: ResponseTypeJson
         }));
-        await expect(response.promise).resolves.toMatchObject({result: {}});
+        await expect(response.promise).resolves.toMatchObject(makeReassignable({result: {}}));
     });
     test(`HTML response`, async () => {
         expect.assertions(1);
@@ -343,7 +344,7 @@ describe('failures', () => {
             url: buildTestUrl({responseKey: 'InvalidJson'}),
             responseType: ResponseTypeAutoDetect
         }));
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(InvalidResponseTypeException)});
+        await expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(InvalidResponseTypeException)}));
     });
     test(`success after 1 network failure`, async () => {
         expect.assertions(3);
@@ -361,24 +362,24 @@ describe('failures', () => {
             url: buildTestUrl({networkError: 6 /** The max number of tries is 5 */, responseKey: 'ValidJson'}),
             retryDelay: 0
         }));
-        return expect(response.promise).rejects.toMatchObject({error: expect.any(NetworkException)});
+        return expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(NetworkException)}));
     });
     test(`timeout reached`, () => {
         expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({delay: 1000, timeout: 500, responseKey: 'ValidJson'})
         }));
-        return expect(response.promise).rejects.toMatchObject({error: expect.any(RequestTimeoutException)});
+        return expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(RequestTimeoutException)}));
     });
     test(`error HTTP status code`, () => {
         expect.assertions(1);
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({responseKey: 'ServerError'})
         }));
-        return expect(response.promise).rejects.toMatchObject({
+        return expect(response.promise).rejects.toMatchObject(makeReassignable({
             error: expect.any(RequestException),
             result: {message: 'Test error.'}
-        });
+        }));
     });
     test(`cancel (immediate)`, () => {
         expect.assertions(1);
@@ -386,7 +387,7 @@ describe('failures', () => {
             url: buildTestUrl({delay: 500, responseKey: 'ServerError'})
         }));
         response.request.cancel();
-        return expect(response.promise).rejects.toMatchObject({error: expect.any(RequestCanceledException)});
+        return expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(RequestCanceledException)}));
     });
     test(`cancel (after delay)`, async () => {
         expect.assertions(1);
@@ -395,7 +396,7 @@ describe('failures', () => {
         }));
         await waitForDelay(200);
         response.request.cancel();
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestCanceledException)});
+        await expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(RequestCanceledException)}));
     });
     test(`invalid payload`,  () => {
         expect.assertions(1);
@@ -404,7 +405,7 @@ describe('failures', () => {
             payloadType: PayloadTypeJson,
             payload: '<p>Test</p>'
         }));
-        return expect(response.promise).rejects.toMatchObject({error: expect.any(UsageException)});
+        return expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(UsageException)}));
     });
     test(`timeout request doesn\'t retry`, async () => {
         expect.assertions(2);
@@ -412,7 +413,7 @@ describe('failures', () => {
         const response = http.send(HttpRequestFactory.Create({
             url: buildTestUrl({timeout: 100, delay: 1000})
         }));
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(RequestTimeoutException)});
+        await expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(RequestTimeoutException)}));
         expect((new Date()).getTime() - start).toBeLessThan(250 /* meaning 1 try */);
     });
     test(`no retry for this request`, async () => {
@@ -421,7 +422,7 @@ describe('failures', () => {
             url: buildTestUrl({networkError: 1, responseKey: 'ValidJson'}),
             retry: 0
         }));
-        await expect(response.promise).rejects.toMatchObject({error: expect.any(NetworkException)});
+        await expect(response.promise).rejects.toMatchObject(makeReassignable({error: expect.any(NetworkException)}));
     });
     test(`retry delay is respected`, async () => {
         expect.assertions(3);
@@ -431,7 +432,7 @@ describe('failures', () => {
             retry: 1,
             retryDelay: 300
         }));
-        await expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
+        await expect(response.promise).resolves.toMatchObject(makeReassignable({result: JSON.parse(TestResponses.ValidJson.content)}));
         const delta = (new Date()).getTime() - start;
         expect(delta).toBeGreaterThan(300);
         expect(delta).toBeLessThan(500);
@@ -444,7 +445,7 @@ describe('failures', () => {
             retry: 4,
             retryDelay: 'auto'
         }));
-        await expect(response.promise).resolves.toMatchObject({result: JSON.parse(TestResponses.ValidJson.content)});
+        await expect(response.promise).resolves.toMatchObject(makeReassignable({result: JSON.parse(TestResponses.ValidJson.content)}));
         const delta = (new Date()).getTime() - start;
         expect(delta).toBeGreaterThan(1110 /* 0 + 10 + 100 + 1000 */);
         expect(delta).toBeLessThan(1500);

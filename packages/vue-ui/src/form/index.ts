@@ -10,4 +10,4 @@ export * from './tiptap';
 
 export * from './constant';
 export * from './form-control.proxy';
-export * from './form-storage';
+export * from './form-storage.service';

@@ -16,7 +16,7 @@ import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { ApiEndpoint } from "../api-endpoint";
-import { ApiEndpointStorage } from "../api-endpoint-storage.service";
+import { ApiEndpointStorageService } from "../api-endpoint-storage.service";
 
 export const HttpTransformerSymbol = Symbol('http');
 
@@ -25,7 +25,7 @@ export class HttpTransformer extends PojoTransformer {
     public constructor(@Inject(ModelMetadataService) protected modelMetadata: ModelMetadataService,
                        @Inject(ModelTransformMetadataService) protected transformMetadata: ModelTransformMetadataService,
                        @Inject(ModelFactoryService) protected modelFactory: ModelFactoryService,
-                       @Inject(ApiEndpointStorage) private endpointStorage: ApiEndpointStorage,
+                       @Inject(ApiEndpointStorageService) private endpointStorage: ApiEndpointStorageService,
                        @InjectLazy(() => TransformService) private transformService: TransformService) {
         super(modelMetadata, transformMetadata, modelFactory);
     }

@@ -3,10 +3,10 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { HttpMethod } from "@banquette/http/constants";
 import { isConstructor } from "@banquette/utils-type/is-constructor";
 import { Constructor } from "@banquette/utils-type/types";
-import { ApiEndpointStorage } from "../api-endpoint-storage.service";
+import { ApiEndpointStorageService } from "../api-endpoint-storage.service";
 import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "../api-endpoint.options";
 
-const metadata = Injector.Get(ApiEndpointStorage);
+const metadata = Injector.Get(ApiEndpointStorageService);
 
 type EndpointDecoratorOptions = Omit<ApiEndpointOptionsWithIdentifiers, 'ctor'> & {group?: string|string[]};
 
