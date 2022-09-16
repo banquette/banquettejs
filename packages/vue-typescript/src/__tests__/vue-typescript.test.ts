@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-import { Constructor } from "@banquette/utils-type/types";
 import { mount } from '@vue/test-utils';
 import { nextTick } from "vue";
 import { Component } from "../decorator/component.decorator";

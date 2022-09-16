@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Exception } from "@banquette/exception/exception";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
 import { isArray } from "@banquette/utils-type/is-array";

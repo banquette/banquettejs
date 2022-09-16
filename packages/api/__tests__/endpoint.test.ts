@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
 import { Exception } from "@banquette/exception/exception";
 import { HttpMethod } from "@banquette/http/constants";

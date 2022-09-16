@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
 import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
 import { PaginationStrategy } from "../src/table/pagination/constant";

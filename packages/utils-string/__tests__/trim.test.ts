@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { ltrim, rtrim, trim } from "../src";
 import { createGenericTestSuite } from "../../__tests__/utils";
 

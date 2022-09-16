@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { ObservablePromise } from "@banquette/promise/observable-promise";
 import { isPojo, isPrimitive, isPromiseLike, isObject, isUndefined } from "../src";
 

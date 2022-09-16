@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
 import { SystemException } from "@banquette/exception/system.exception";
 import { UsageException } from "@banquette/exception/usage.exception";

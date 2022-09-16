@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";

@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { NotEmpty } from "@banquette/validation/type/not-empty";
 import {
     BasicState,

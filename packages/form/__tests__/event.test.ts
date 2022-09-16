@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { areEqual } from "@banquette/utils-misc/are-equal";
 import { NotEmpty } from "@banquette/validation/type/not-empty";
 import { NotEqual } from "@banquette/validation/type/not-equal";

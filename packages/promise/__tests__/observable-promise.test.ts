@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { CancelException, TimeoutException, ObservablePromise, RejectCallback, ResolveCallback } from "../src";
 
 describe('Basic implementation', () => {

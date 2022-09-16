@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { HttpResponse } from "@banquette/http/http-response";
 import { waitForDelay } from "@banquette/utils-misc/timeout";
 import { Ajax } from "@banquette/validation/type/ajax";

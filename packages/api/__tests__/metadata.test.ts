@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Injector } from "@banquette/dependency-injection/injector";
 import { HttpMethod } from "@banquette/http/constants";
 import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";

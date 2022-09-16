@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
 import { Relation } from "@banquette/model/decorator/relation";
 import { TransformService } from "@banquette/model/transformer/transform.service";
