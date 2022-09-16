@@ -233,6 +233,7 @@
         align-items: center;
         gap: 0.4em;
         pointer-events: none;
+        margin-left: calc(var(--form-base-input-placeholder-x) * -1);
 
         & > * {
             pointer-events: auto;
