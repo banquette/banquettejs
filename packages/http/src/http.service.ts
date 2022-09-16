@@ -139,7 +139,7 @@ export class HttpService {
     }
 
     /**
-     * Send an Http request.
+     * Send a Http request.
      *
      * @note Use `HttpService::build()` to create a request object easily.
      */
