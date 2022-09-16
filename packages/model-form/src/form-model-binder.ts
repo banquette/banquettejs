@@ -63,7 +63,7 @@ export class FormModelBinder {
      */
     private form!: FormObject;
 
-    private contextStack: Array<{ctor: Constructor, property: string}>;
+    private contextStack: Array<{ctor: Constructor, property: string, value: any}>;
     private canMutateForm: boolean = false;
     private ignoreFormUpdate: boolean = false;
     private ignoreModelUpdate: boolean = false;
@@ -112,7 +112,7 @@ export class FormModelBinder {
     private syncFormObjectWithModel(component: FormObject, model: any): void {
         const tree = this.getModelTransformersTree(model.constructor as Constructor);
         for (const property of Object.keys(tree.children)) {
-            this.pushContext(model.constructor as Constructor, property);
+            this.pushContext(model.constructor as Constructor, property, model);
             if (!isUndefined(tree.children[property])) {
                 this.syncFormWithModelPart(tree.children[property], component, model, property);
             }
@@ -165,7 +165,7 @@ export class FormModelBinder {
                 return ;
             }
             for (const childName of Object.keys(treeItem.children)) {
-                this.pushContext(treeItem.ctor, childName);
+                this.pushContext(treeItem.ctor, childName, modelContainer[property]);
                 this.syncFormWithModelPart(
                     treeItem.children[childName],
                     componentResult.component,
@@ -188,6 +188,7 @@ export class FormModelBinder {
         if (componentResult) {
             const modelValue = isObject(modelContainer) ? ensureArray(modelContainer[property]) : [];
             for (let i = 0; i < modelValue.length; ++i) {
+                this.pushContext(Array, String(i), modelContainer[property]);
                 this.syncFormWithModelPart(
                     treeItem.children['*'],
                     componentResult.component,
@@ -211,9 +212,7 @@ export class FormModelBinder {
             if (componentResult) {
                 let newValue: any = isObject(modelContainer) ? modelContainer[property] : undefined;
                 if (!isUndefined(treeItem.valueTransformer)) {
-                    newValue = this.handleTransformResult<any>(treeItem.valueTransformer.transform(new TransformContext(
-                        null,
-                        FormTransformerSymbol,
+                    newValue = this.handleTransformResult<any>(treeItem.valueTransformer.transform(this.buildTransformContext(
                         this.currentContextCtor,
                         newValue,
                         this.currentContextProperty
@@ -244,9 +243,7 @@ export class FormModelBinder {
             if (!(e instanceof ComponentNotFoundException)) {
                 throw e;
             }
-            const component = this.handleTransformResult<FormComponentInterface>(treeItem.transformer.transform(new TransformContext(
-                null,
-                FormTransformerSymbol,
+            const component = this.handleTransformResult<FormComponentInterface>(treeItem.transformer.transform(this.buildTransformContext(
                 this.currentContextCtor,
                 isObject(modelContainer) ? modelContainer[property] : null,
                 this.currentContextProperty
@@ -278,13 +275,13 @@ export class FormModelBinder {
             let formContainer: FormGroupInterface = this.form;
             let modelContainer = this.model;
             let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
-            const pushContext = (ctor: Constructor, property: string) => ++contextsDepth && this.pushContext(ctor, property);
+            const pushContext = (ctor: Constructor, property: string, value: any) => ++contextsDepth && this.pushContext(ctor, property, value);
             let i;
 
             for (i = 1; i < pathParts.length; ++i) {
                 let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
                 if (treeChildName === '*' && event.mutation.type === MutationType.Insert && isArray(event.mutation.target)) {
-                    pushContext(this.currentContextCtor, pathParts[i - 1]);
+                    pushContext(this.currentContextCtor, pathParts[i - 1], modelContainer);
                     continue;
                 }
                 treeContainer = treeContainer.children[treeChildName];
@@ -296,13 +293,13 @@ export class FormModelBinder {
                     modelContainer = modelContainer[pathParts[i - 1]];
                 }
                 if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                    pushContext(treeContainer.ctor, pathParts[i]);
+                    pushContext(treeContainer.ctor, pathParts[i], modelContainer);
                 }
                 // Required if a change is made to an object used as value in a FormControl.
                 // If we do nothing the "path" will lead the binder deep inside the value of the FormControl,
                 // which is not a valid form tree, so we must stop when a FormControl is reached.
                 if (treeContainer.transformer.type === FormControlTransformerSymbol) {
-                    pushContext(this.currentContextCtor, pathParts[i]);
+                    pushContext(this.currentContextCtor, pathParts[i], modelContainer);
                     break;
                 }
             }
@@ -314,7 +311,7 @@ export class FormModelBinder {
                 if (treeContainer.transformer.type === FormControlTransformerSymbol) {
                     this.syncFormControlWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
                 } else if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                    pushContext(modelContainer.constructor as Constructor, cp);
+                    pushContext(modelContainer.constructor as Constructor, cp, modelContainer);
                     this.syncFormObjectWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
                 } else if (treeContainer.transformer.type === FormArrayTransformerSymbol) {
                     this.syncFormArrayWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
@@ -465,8 +462,8 @@ export class FormModelBinder {
     /**
      * Push context data on the stack.
      */
-    private pushContext(ctor: Constructor, property: string): void {
-        this.contextStack.push({ctor, property});
+    private pushContext(ctor: Constructor, property: string, value: any): void {
+        this.contextStack.push({ctor, property, value});
     }
 
     /**
@@ -478,6 +475,29 @@ export class FormModelBinder {
         } else {
             this.contextStack = [];
         }
+    }
+
+    /**
+     * Build a new TransformContext while considering the contexts stack.
+     */
+    private buildTransformContext(ctor: Constructor, value: any, property?: string|null, extras?: Record<string, any>): TransformContext {
+        let parentContext: TransformContext|null = new TransformContext(
+            null,
+            FormTransformerSymbol,
+            this.model.constructor,
+            this.model,
+            null
+        );
+        for (let i = 0; i < this.contextStack.length - 1; ++i) {
+            parentContext = new TransformContext(
+                parentContext,
+                FormTransformerSymbol,
+                this.contextStack[i].ctor,
+                this.contextStack[i].value[this.contextStack[i].property],
+                this.contextStack[i].property
+            );
+        }
+        return new TransformContext(parentContext, FormTransformerSymbol, ctor, value, property, extras);
     }
 
     /**
