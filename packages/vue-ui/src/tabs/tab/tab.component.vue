@@ -35,14 +35,15 @@ export default class TabComponent extends Vue {
     @Computed() public get preRender(): boolean {
         return this.parent && this.parent.preRender;
     }
+
     @Expose() public focused: boolean = false;
 
     /**
      * A reference on the parent component instance.
      *
      * NOTE:
-     * There is no @Ref() here of Vue will proxify all properties of the parent, including "tabs" and we don't want that.
-     * Instead note the use of $forceUpdateComputed() to update the `preRender` computed after `mounted` has been called.
+     * There is no @Ref() here because Vue would proxify all properties of the parent component if we add it, and we don't want that.
+     * Instead, note the use of $forceUpdateComputed() to update the `preRender` computed after `mounted` has been called.
      */
     private parent!: any;
 

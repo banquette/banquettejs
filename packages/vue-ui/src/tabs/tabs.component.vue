@@ -15,19 +15,18 @@ import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.d
 import { Vue } from "@banquette/vue-typescript/vue";
 import { useResizeObserver } from "@vueuse/core";
 import { TeleportDirective } from "../misc/teleport.directive";
-import { FocusChangedEvent } from "./event/focus-changed.event";
-import { TabCreatedEvent } from "./event/tab-created.event";
-import { TabRemovedEvent } from "./event/tab-removed.event";
 import { TabsDirection } from "./tab/constant";
-import TabComponent from "./tab/tab.component.vue";
+import { TabComponent as TabComponentValue } from "./tab";
 import { ThemeConfiguration } from "./theme-configuration";
+
+type TabComponent = InstanceType<typeof TabComponentValue>;
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-tabs',
-    components: [TabComponent],
+    components: [TabComponentValue],
     directives: [TeleportDirective, BindThemeDirective],
-    emits: ['tabCreated', 'tabRemoved', 'focusChanged']
+    emits: ['update:focused']
 })
 export default class TabsComponent extends Vue {
     /**
@@ -44,8 +43,8 @@ export default class TabsComponent extends Vue {
     @Prop({type: Boolean, default: true}) public preRender!: boolean;
 
     /**
-     * Id of the tab to focus.
-     * If not defined, the first tab is selected at first, then the one the user selects using the toggles.
+     * Bidirectional binding holding the id of the tab currently focused.
+     * If not defined, the first tab is focused at first, then the one the user selects using the toggles.
      */
     @Prop({type: String, default: null}) public focused!: string;
 
@@ -54,9 +53,9 @@ export default class TabsComponent extends Vue {
 
     @TemplateRef('indicator') private indicatorEl!: HTMLElement;
 
-    private tabs: any/*TabComponent*/[] = [];
+    private tabs: TabComponent[] = [];
     private observer: MutationObserver|null = null;
-    private focusedTab: any/*TabComponent*/|null = null;
+    private focusedTab: TabComponent|null = null;
     private focusedTabResizeUnsubscribe: VoidCallback|null = null;
 
     /**
@@ -83,21 +82,20 @@ export default class TabsComponent extends Vue {
     /**
      * Called by child tabs to register themselves.
      */
-    public register(tab: any /* TabComponent */): void {
+    public register(tab: TabComponent): void {
         const domIdx = this.getTabToggleDomIndex(tab.$el);
         this.tabs.splice(domIdx, 0, tab);
         // Always focus the first tab so we have something in case the id provided by the user doesn't match any tab.
-        if (this.tabs.length === 1 || this.focusedTab === null || (this.focused !== null && tab.id === this.focused)) {
+        if (this.tabs.length === 1 || this.focusedTab === null || tab.id === this.focused) {
             this.focus(tab);
         }
         this.$forceUpdate();
-        this.$emit('tabCreated', new TabCreatedEvent(tab));
     }
 
     /**
      * Called by child tabs to unregister themselves.
      */
-    public unregister(tab: any /* TabComponent */): void {
+    public unregister(tab: TabComponent): void {
         const pos = this.tabs.indexOf(tab);
         if (pos > -1) {
             this.tabs.splice(pos, 1);
@@ -116,14 +114,14 @@ export default class TabsComponent extends Vue {
                     this.changeFocusIndicatorVisibility(false);
                 }
             }
-            this.$emit('tabRemoved', new TabRemovedEvent(tab));
+            this.$forceUpdate();
         }
     }
 
     /**
      * Focus a tab.
      */
-    public focus(tab: any /* TabComponent */): void {
+    public focus(tab: TabComponent): void {
         for (const candidate of this.tabs) {
             if (candidate === tab && !candidate.focused) {
                 if (candidate.disabled || candidate.fake) {
@@ -131,14 +129,13 @@ export default class TabsComponent extends Vue {
                 }
                 if (this.focusedTab !== null) {
                     this.focusedTab.onUnFocus();
-                    this.$emit('focusChanged', new FocusChangedEvent(this.focusedTab, false));
                 }
                 this.setFocusedTab(tab);
                 this.$nextTick(() => {
                     this.updateFocusIndicator();
                 });
                 candidate.onFocus();
-                this.$emit('focusChanged', new FocusChangedEvent(tab, true));
+                this.$emit('update:focused', candidate.id);
             }
         }
         if (this.focusedTab !== tab && !tab.disabled) {
@@ -150,10 +147,10 @@ export default class TabsComponent extends Vue {
     }
 
     /**
-     * Export the `tabs` array to the view without giving a direct access
-     * to prevent Vue to proxify the objects.
+     * Export the `tabs` array to the view without giving direct access
+     * to prevent Vue from proxifing the objects.
      */
-    @Expose() public getTabs(): any /* TabComponent */[] {
+    @Expose() public getTabs(): TabComponent[] {
         return this.tabs;
     }
 
@@ -231,7 +228,7 @@ export default class TabsComponent extends Vue {
     private observeDOMMutations(): void {
         this.observer = new MutationObserver(throttle(() => {
             // Sort the tabs by DOM index
-            this.tabs = this.tabs.sort((a: any /* TabComponent */, b: any /* TabComponent */) => {
+            this.tabs = this.tabs.sort((a: TabComponent, b: TabComponent) => {
                 return this.getTabToggleDomIndex(a.$el) - this.getTabToggleDomIndex(b.$el);
             });
             // Force update the view
