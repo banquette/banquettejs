@@ -98,11 +98,15 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
     @Import(BaseInputComposable, false) public baseComposable!: BaseInputComposable;
 
     /**
+     * Model type of the choices.
+     */
+    @Prop({type: String, default: null}) public model!: string|null;
+
+    /**
      * Remote related props.
      */
     @Prop({name: 'remoteUrl', type: String, default: null}) public url!: string|null;
     @Prop({name: 'remoteEndpoint', type: String, default: null}) public endpoint!: string|null;
-    @Prop({name: 'remoteModel', type: String, default: null}) public model!: string|null;
     @Prop({name: 'remoteMethod', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
     @Prop({name: 'remoteUrlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
     @Prop({name: 'remoteHeaders', type: Object, default: {}}) public headers!: Record<string, Primitive>;
@@ -287,6 +291,7 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
     }
 
     @Watch([
+        'model',
         'choicesLabel',
         'choicesIdentifier',
         'choicesValue',
@@ -297,6 +302,7 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
         'dropdownZIndex'
     ], {immediate: false})
     private onBasePropsChange(): void {
+        this.vm.modelType = this.model;
         this.vm.choicesLabel = this.choicesLabel;
         this.vm.choicesIdentifier = this.choicesIdentifier;
         this.vm.choicesValue = this.choicesValue;
@@ -355,7 +361,7 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
         this.v.isInputReadonly = this.vm.searchType === SearchType.None && !this.allowCreation;
     }
 
-    @Watch(['remoteUrl', 'remoteEndpoint', 'remoteMethod', 'remoteModel', 'remoteUrlParams', 'remoteHeaders'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['model', 'remoteUrl', 'remoteEndpoint', 'remoteMethod', 'remoteUrlParams', 'remoteHeaders'], {immediate: ImmediateStrategy.BeforeMount})
     private syncRemoteProps(): void {
         this.vm.remote.updateConfiguration({
             url: this.url,

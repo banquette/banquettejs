@@ -1,9 +1,15 @@
+import { Injector } from "@banquette/dependency-injection/injector";
 import { UnsubscribeFunction } from "@banquette/event/type";
 import { ExceptionFactory } from "@banquette/exception/exception.factory";
+import { UsageException } from "@banquette/exception/usage.exception";
 import { BasicState } from "@banquette/form/constant";
 import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
 import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
 import { HttpResponse } from "@banquette/http/http-response";
+import { ModelMetadataService } from "@banquette/model/model-metadata.service";
+import { TransformService } from "@banquette/model/transformer/transform.service";
+import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
+import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { recursionSafeSideEffectProxy } from "@banquette/utils-misc/recursion-safe-side-effect-proxy";
 import { throttle } from "@banquette/utils-misc/throttle";
@@ -20,7 +26,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isPrimitive } from "@banquette/utils-type/is-primitive";
 import { isScalar } from "@banquette/utils-type/is-scalar";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, Constructor } from "@banquette/utils-type/types";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { Choice } from "./choice";
@@ -83,6 +89,11 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
      * If `auto`: the dropdown is only closed when the select is not multiple.
      */
     public closeOnSelection: 'auto'|boolean = 'auto';
+
+    /**
+     * Model type of the choices.
+     */
+    public modelType: ModelExtendedIdentifier|null = null;
 
     /**
      * Modules.
@@ -491,6 +502,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         if (isUndefined(identifier)) {
             return null;
         }
+        choice = this.maybeEnsureModel(choice);
         const instance = new Choice(
             identifier,
             this.extractChoiceLabel(choice),
@@ -740,6 +752,44 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     }
 
     /**
+     * Ensure the input value is an instance of the model type, if one is defined.
+     * Otherwise, return the value unchanged.
+     */
+    private maybeEnsureModel(value: any): any {
+        if (!this.modelType) {
+            return value;
+        }
+        if (!this.isValidModelInstance(value)) {
+            if (isObject(value)) {
+                const transformResult = this.getTransformService().transformInverse(value, this.modelType as Constructor, PojoTransformerSymbol);
+                if (transformResult.promise) {
+                    throw new UsageException(
+                        'Async transformers are not supported in a select view model. ' +
+                        'You must transform it yourself before giving it to the select component.'
+                    );
+                }
+                return transformResult.result;
+            } else {
+                throw new UsageException(
+                    `An instance of "${String(this.modelType)}" or an object to transform is expected.`
+                );
+            }
+        }
+        return value;
+    }
+
+    /**
+     * Check if the input value matches the expected model type.
+     */
+    private isValidModelInstance(value: any): value is object {
+        if (!this.modelType) {
+            return true;
+        }
+        const ctor = this.getModelMetadata().resolveAlias(this.modelType);
+        return value instanceof ctor;
+    }
+
+    /**
      * Method to call when modifying the list of available choices.
      */
     private updateChoices = recursionSafeSideEffectProxy(() => {
@@ -835,4 +885,30 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         }
         return !choice.labelSlug.includes(this.searchBufferSlug);
     }
+
+    /**
+     * Only inject the service on demand.
+     */
+    private getModelMetadata = (() => {
+        let service: ModelMetadataService|null = null;
+        return (): ModelMetadataService => {
+            if (!service) {
+                service = Injector.Get(ModelMetadataService);
+            }
+            return service;
+        };
+    })();
+
+    /**
+     * Only inject the service on demand.
+     */
+    private getTransformService = (() => {
+        let service: TransformService|null = null;
+        return (): TransformService => {
+            if (!service) {
+                service = Injector.Get(TransformService);
+            }
+            return service;
+        };
+    })();
 }
