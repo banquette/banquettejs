@@ -1,4 +1,4 @@
-import { Transformable } from "@banquette/model/decorator/transformable";
+import { createTransformableDecorator } from "@banquette/model/decorator/utils";
 import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { FormRelatedTransformers } from "../contants";
@@ -9,5 +9,5 @@ export function Form(transformer: TransformerInterface = FormControl()): any {
     if (isUndefined(transformer.type) || FormRelatedTransformers.indexOf(transformer.type) < 0) {
         transformer = FormControl(transformer);
     }
-    return Transformable(FormTransformerSymbol, transformer);
+    return createTransformableDecorator(FormTransformerSymbol, transformer);
 }

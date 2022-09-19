@@ -1,13 +1,29 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { Constructor } from "@banquette/utils-type/types";
-import { ModelTransformMetadataService } from "../model-transform-metadata.service";
+import { isFunction } from "@banquette/utils-type/is-function";
+import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { TransformerInterface } from "../transformer/transformer.interface";
-import { propertyDecorator } from "./utils";
 
-const metadata = Injector.Get(ModelTransformMetadataService);
+export type TransformerDecorator = (transformer?: TransformerInterface) => any;
 
-export function Transformable(type: symbol, transformer: TransformerInterface): any {
-    return propertyDecorator((ctor: Constructor, propertyKey: string) => {
-        metadata.register(ctor, type, propertyKey, transformer);
-    }, 'You can only apply a transform decorator on properties.');
+/**
+ * A shorthand to apply multiple transform decorators in a single line.
+ *
+ * Usage:
+ *
+ * `@Transformable(Api, Pojo, Form)`
+ *
+ * or with a value transformer:
+ *
+ * `@Transformable(Model(), Api, Pojo)`
+ */
+export function Transformable(valueOrRootTransformer: TransformerInterface|TransformerDecorator, ...rootTransformers: TransformerDecorator[]): any {
+    let valueTransformer = !isFunction(valueOrRootTransformer) ? valueOrRootTransformer: undefined;
+    if (isUndefined(valueTransformer)) {
+        rootTransformers.push(valueOrRootTransformer as TransformerDecorator);
+    }
+    return (prototypeOrCtor: any, propertyKey?: string, index?: number) => {
+        for (const rootTransformer of rootTransformers) {
+            const transformer = rootTransformer(valueTransformer);
+            transformer(prototypeOrCtor, propertyKey, index);
+        }
+    };
 }
