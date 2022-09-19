@@ -1,4 +1,5 @@
 import { RemoteException } from "@banquette/api/exception/remote.exception";
+import { ApiTransformerSymbol } from "@banquette/api/transformer/api";
 import { Injector } from "@banquette/dependency-injection/injector";
 import { EventArg } from "@banquette/event/event-arg";
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
@@ -228,7 +229,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     return null;
                 }
                 if (isUndefined(this.createdControlsMap[path])) {
-                    const defaultValue = isObjectLiteral(this.loadData) ? getObjectValue(this.loadData, path.split('/')) : undefined;
+                    const defaultValue = isObjectLiteral(this._loadData) ? getObjectValue(this._loadData, path.split('/')) : undefined;
                     this.createdControlsMap[path] = new FormControl(defaultValue);
                 }
                 this.form.set(path, this.createdControlsMap[path]);
@@ -505,6 +506,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         if (eventType !== null) {
             this.eventDispatcher.dispatch(eventType, new ActionErrorEventArg(reason));
         }
+        console.error(reason);
     }
 
     /**
@@ -546,21 +548,35 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         if (!this.loadRemote.isApplicable) {
             return ;
         }
-        const response = this.loadRemote.send(null, {}, {}, [FormTag, FormLoadTag]);
-        return response.promise.then((response: HttpResponse<any>) => {
-            const baseError = `The ajax request didn't result with the expected value. ` +
-                `You can intercept the response by listening to a "HttpEvents.BeforeResponse" event with the "FormLoadTag" tag ` +
-                `to do some custom processing.`;
-            if (this._modelType) {
-                if (!this.isValidModelInstance(response.result)) {
-                    throw new UsageException(baseError + ` An instance of "${String(this.modelType)}" is expected.`);
+        return new Promise<void>((resolve, reject) => {
+            this.loadRemote.send(null, {}, {}, [FormTag, FormLoadTag]).promise.then((response: HttpResponse<any>) => {
+                const baseError = `The ajax request didn't result with the expected value. {detail}` +
+                    `You can intercept the response by listening to a "HttpEvents.BeforeResponse" event with the "FormLoadTag" tag ` +
+                    `to do some custom processing.`;
+                if (this._modelType) {
+                    if (!this.isValidModelInstance(response.result)) {
+                        if (isObject(response.result)) {
+                            this.getTransformService().transformInverse(response.result, this._modelType as Constructor, ApiTransformerSymbol).onReady().then((transformResult: TransformResult) => {
+                                (this as Writeable<HeadlessFormViewModel>).modelInstance = transformResult.result;
+                                resolve();
+                            }, reject);
+                        } else {
+                            reject(new UsageException(baseError.replace(
+                                '{detail}',
+                                `An instance of "${String(this.modelType)}" or an object to transform is expected.`)
+                            ));
+                        }
+                    } else {
+                        (this as Writeable<HeadlessFormViewModel>).modelInstance = response.result;
+                        resolve();
+                    }
+                } else if (isObject(response.result)) {
+                    this.form.setDefaultValue(response.result);
+                    resolve();
+                } else {
+                    reject(new UsageException(baseError.replace('{detail}', 'An object is expected.')));
                 }
-                (this as Writeable<HeadlessFormViewModel>).modelInstance = response.result;
-            } else if (isObject(response.result)) {
-                this.form.setDefaultValue(response.result);
-            } else {
-                throw new UsageException(baseError + ' An object is expected.');
-            }
+            });
         });
     }
 
@@ -568,12 +584,12 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      * Insert values defined in the "loadData" attribute into the form.
      */
     private loadLocally(): Promise<void>|void {
-        if (!isObject(this.loadData)) {
+        if (!isObject(this._loadData)) {
             return ;
         }
         if (!this._modelType) {
             // If we don't have a model, simply set the values in the form.
-            this.form.setDefaultValue(this.loadData);
+            this.form.setDefaultValue(this._loadData);
             return ;
         }
         const assignModelData = (model: object): void|Promise<void> => {
@@ -587,11 +603,13 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     // Make the controls concrete the the root value is set.
                     formTransformResult.result.getByPattern('**').markAsConcrete();
 
-                    // Ensure only the keys defined in `loadData` are kept from the output of the form.
-                    const values = filterWithMask(formTransformResult.result.value, this.loadData);
+                    if (isObject(formTransformResult.result)) {
+                        // Ensure only the keys defined in `loadData` are kept from the output of the form.
+                        const values = filterWithMask(formTransformResult.result.value, this._loadData);
 
-                    // Assign the result as default.
-                    this.form.setDefaultValue(values);
+                        // Assign the result as default.
+                        this.form.setDefaultValue(values);
+                    }
                 }
             };
             // Otherwise, if we already have a model defined, we can't create a new one.
@@ -606,8 +624,11 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         };
         // If loadData is not an instance of the expected type of model
         // we assume it's a POJO, so we need to convert back to a model.
-        if (!this.isValidModelInstance(this.loadData)) {
-            const pojoTransformResult = this.getTransformService().transformInverse(this.loadData, this._modelType as Constructor, PojoTransformerSymbol);
+        if (!this.isValidModelInstance(this._loadData)) {
+            if (!isObject(this._loadData) || !Object.keys(this._loadData).length) {
+                return ;
+            }
+            const pojoTransformResult = this.getTransformService().transformInverse(this._loadData, this._modelType as Constructor, PojoTransformerSymbol);
             if (pojoTransformResult.promise) {
                 return new Promise((resolve, reject) => {
                     pojoTransformResult.promise!.then(() => resolve(), reject);
@@ -615,7 +636,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             }
             return assignModelData(pojoTransformResult.result);
         }
-        return assignModelData(this.loadData);
+        return assignModelData(this._loadData);
     }
 
     /**
