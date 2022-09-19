@@ -182,17 +182,6 @@ export default class ChoiceComponent extends Vue {
         if (!this.choice) {
             return ;
         }
-        /**
-         * The test against "UndefinedValue" is required for all props because
-         * if the choice component is in a `v-for` and a previous item is removed, vue component
-         * of the choice will change, and all the props will be reassigned.
-         *
-         * So we need to differentiate between (for example) "selected" being `false` because the user changed it
-         * and "selected" being `false` because the vue component has changed.
-         */
-        if (this.value !== UndefinedValue) {
-            this.choice.value = this.value;
-        }
         if (!isUndefined(this.disabled)) {
             this.choice.disabled = this.disabled;
         }
