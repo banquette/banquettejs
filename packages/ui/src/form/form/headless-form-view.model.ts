@@ -25,6 +25,7 @@ import { TransformService } from "@banquette/model/transformer/transform.service
 import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { areEqual } from "@banquette/utils-misc/are-equal";
+import { makeReassignable } from "@banquette/utils-misc/make-reassignable";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { extend } from "@banquette/utils-object/extend";
 import { filterWithMask } from "@banquette/utils-object/filter-with-mask";
@@ -262,6 +263,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     this.load();
                     return ;
                 }
+                (this as Writeable<HeadlessFormViewModel>).modelInstance = makeReassignable(this.modelInstance);
                 this.form.enable();
                 this.form.reset();
                 this.bindModel();
@@ -625,7 +627,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         // If loadData is not an instance of the expected type of model
         // we assume it's a POJO, so we need to convert back to a model.
         if (!this.isValidModelInstance(this._loadData)) {
-            if (!isObject(this._loadData) || !Object.keys(this._loadData).length) {
+            if (!isObject(this._loadData)) {
                 return ;
             }
             const pojoTransformResult = this.getTransformService().transformInverse(this._loadData, this._modelType as Constructor, PojoTransformerSymbol);

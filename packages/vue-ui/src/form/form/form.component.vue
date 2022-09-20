@@ -11,17 +11,18 @@ import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
 import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
 import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
 import { AfterBindModelEventArg } from "@banquette/ui/form/form/event/after-bind-model.event-arg";
-import { AfterValidateEventArg } from "@banquette/ui/form/form/event/after-validate.event-arg";
-import { BeforeBindModelEventArg } from "@banquette/ui/form/form/event/before-bind-model.event-arg";
-import { BeforeValidateEventArg } from "@banquette/ui/form/form/event/before-validate.event-arg";
-import { FormActionErrorEventArg } from "@banquette/ui/form/form/event/form-action-error.event-arg";
 import { AfterPersistEventArg } from "@banquette/ui/form/form/event/after-persist.event-arg";
 import { AfterRemotePersistEventArg } from "@banquette/ui/form/form/event/after-remote-persist.event-arg";
-import { BeforePersistEventArg } from "@banquette/ui/form/form/event/before-persist.event-arg";
+import { AfterValidateEventArg } from "@banquette/ui/form/form/event/after-validate.event-arg";
+import { BeforeBindModelEventArg } from "@banquette/ui/form/form/event/before-bind-model.event-arg";
 import { BeforeLoadEventArg } from "@banquette/ui/form/form/event/before-load.event-arg";
+import { BeforePersistEventArg } from "@banquette/ui/form/form/event/before-persist.event-arg";
+import { BeforeValidateEventArg } from "@banquette/ui/form/form/event/before-validate.event-arg";
+import { FormActionErrorEventArg } from "@banquette/ui/form/form/event/form-action-error.event-arg";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { areEqual } from "@banquette/utils-misc/are-equal";
+import { reassign } from "@banquette/utils-misc/make-reassignable";
 import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
 import { ensureString } from "@banquette/utils-type/ensure-string";
 import { Writeable, Primitive, AnyObject } from "@banquette/utils-type/types";
@@ -200,7 +201,9 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         }));
         this.unsubscribeFunctions.push(this.vm.onAfterBindModel((event: AfterBindModelEventArg) => {
             this.$emit('after-bind-model', event);
-            this.v.model = event.model as ModelType;
+
+            // Reassign the model to the proxified one, so any change made by the binder will trigger a Vue update.
+            reassign(event.model, this.v.model);
             this.onAfterBindModel(event);
         }));
     }
