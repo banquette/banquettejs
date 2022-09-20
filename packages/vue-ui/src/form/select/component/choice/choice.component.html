@@ -5,7 +5,7 @@
     :class="{selected: choice.selected, focused: choice.focused, disabled: choice.disabled}"
     @click.stop="select()"
 >
-    <slot></slot>
+    <slot>{{ choice.label }}</slot>
     <div class="icons">
         <i-material-delete v-if="choice.origin === 'user'" class="trash-icon" @click.stop="remove()"></i-material-delete>
         <i-material-check v-if="choice.selected" class="check-icon"></i-material-check>
