@@ -3,7 +3,7 @@ import { HeadersBag } from "@banquette/http/headers-bag";
 import { UrlParameterInterface } from "@banquette/http/url-parameter.interface";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, StringEnum } from "@banquette/utils-type/types";
 import { ApiEndpointOverride } from "./api-endpoint-override";
 import { ModelBidirectionalExtendedIdentifier } from "./type";
 
@@ -40,7 +40,7 @@ export class ApiRequest {
     public constructor(public model: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null,
                        public endpoint: string|null,
                        public url: string|null,
-                       public method?: HttpMethod,
+                       public method?: StringEnum<HttpMethod>,
                        public params?: Record<string, UrlParameterInterface>,
                        public payload?: any,
                        public payloadType?: symbol,

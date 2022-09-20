@@ -4,7 +4,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { cloneDeep } from "@banquette/utils-object/clone-deep";
 import { extend } from "@banquette/utils-object/extend";
 import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { Writeable, Primitive, VoidCallback } from "@banquette/utils-type/types";
+import { Writeable, Primitive, VoidCallback, StringEnum } from "@banquette/utils-type/types";
 import { AdapterInterface } from "./adapter/adapter.interface";
 import { HttpConfigurationSymbol } from "./config";
 import { HttpMethod, UrlParameterType } from "./constants";
@@ -105,7 +105,7 @@ export class HttpRequest {
      * @param extras            Any additional data you want to associated with the request.
      *                          This object will not be sent with the request.
      */
-    public constructor(public method: HttpMethod,
+    public constructor(public method: StringEnum<HttpMethod>,
                        public url: string,
                        public params: Record<string, UrlParameterInterface>,
                        public payload: any,

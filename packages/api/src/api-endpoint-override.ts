@@ -1,6 +1,6 @@
 import { HttpMethod } from "@banquette/http/constants";
 import { HeadersBag } from "@banquette/http/headers-bag";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, StringEnum } from "@banquette/utils-type/types";
 
 /**
  * Allow to override part of the configuration of an endpoint, on use.
@@ -25,7 +25,7 @@ export class ApiEndpointOverride {
      * @param extras            Any additional data you want to associated with the request.
      *                          This object will not be sent with the request.
      */
-    public constructor(public method?: HttpMethod,
+    public constructor(public method?: StringEnum<HttpMethod>,
                        public params?: Record<string, Primitive>,
                        public headers?: HeadersBag|Record<string, Primitive>,
                        public timeout?: number|null,

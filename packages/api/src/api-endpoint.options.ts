@@ -1,5 +1,5 @@
 import { HttpMethod } from "@banquette/http/constants";
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor, StringEnum } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
 
@@ -19,7 +19,7 @@ export interface ApiEndpointOptions {
      *
      * Default method is GET.
      */
-    method?: HttpMethod;
+    method?: StringEnum<HttpMethod>;
 
     /**
      * Allowed url parameters.

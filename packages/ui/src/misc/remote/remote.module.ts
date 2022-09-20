@@ -12,7 +12,7 @@ import { extend } from "@banquette/utils-object/extend";
 import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, StringEnum } from "@banquette/utils-type/types";
 import { RemoteModuleEvents } from "./constant";
 import { RemoteConfigurationInterface } from "./remote-configuration.interface";
 
@@ -38,7 +38,7 @@ export class RemoteModule {
      * The HTTP method to use when doing the request.
      * Will be overridden by the endpoint is you're using one.
      */
-    public readonly method: HttpMethod = HttpMethod.GET;
+    public readonly method: StringEnum<HttpMethod> = HttpMethod.GET;
 
     /**
      * A model identifier that will define two things:

@@ -2,7 +2,7 @@ import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { isValidNumber } from "@banquette/utils-type/is-valid-number";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, StringEnum } from "@banquette/utils-type/types";
 import { HttpMethod, UrlParameterType } from "./constants";
 import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
 import { PayloadTypeFormData } from "./encoder/form-data.encoder";
@@ -10,7 +10,7 @@ import { HttpRequest } from "./http-request";
 import { UrlParameterInterface } from "./url-parameter.interface";
 
 export interface HttpRequestFactoryConfig {
-    method?: HttpMethod;
+    method?: StringEnum<HttpMethod>;
     url: string;
     params?: Record<string, UrlParameterInterface|Primitive>;
     payload?: any;

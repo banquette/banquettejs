@@ -1,6 +1,6 @@
 import { HttpMethod } from "@banquette/http/constants";
 import { ModelExtendedIdentifier } from "@banquette/model/type";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, StringEnum } from "@banquette/utils-type/types";
 
 export interface RemoteConfigurationInterface {
     /**
@@ -17,7 +17,7 @@ export interface RemoteConfigurationInterface {
      * The HTTP method to use when doing the request.
      * Will be overridden by the endpoint is you're using one.
      */
-    method: HttpMethod;
+    method: StringEnum<HttpMethod>;
 
     /**
      * A model identifier that will define two things:

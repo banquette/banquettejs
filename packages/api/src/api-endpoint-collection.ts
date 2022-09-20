@@ -2,6 +2,7 @@ import { UsageException } from "@banquette/exception/usage.exception";
 import { HttpMethod } from "@banquette/http/constants";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { StringEnum } from "@banquette/utils-type/types";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointParameterOptions, ApiEndpointOptionsWithIdentifiers } from "./api-endpoint.options";
 import { EndpointNotFoundException } from "./exception/endpoint-not-found.exception";
@@ -20,7 +21,7 @@ export class ApiEndpointCollection {
     public registerEndpoint(name: string, url: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>): void;
     public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string,
                             urlOrEndpoint?: string|ApiEndpoint,
-                            method?: HttpMethod,
+                            method?: StringEnum<HttpMethod>,
                             params?: Record<string, ApiEndpointParameterOptions>): void {
         let endpointName: string;
         let endpoint: ApiEndpoint|null = null;

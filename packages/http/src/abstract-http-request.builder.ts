@@ -1,11 +1,11 @@
 import { isArray } from "@banquette/utils-type/is-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, StringEnum } from "@banquette/utils-type/types";
 import { HttpMethod, UrlParameterType } from "./constants";
 import { UrlParameterInterface } from "./url-parameter.interface";
 
 export abstract class AbstractRequestBuilder<ResultType> {
-    protected _method?: HttpMethod;
+    protected _method?: StringEnum<HttpMethod>;
     protected _url?: string|null;
     protected _payload?: any;
     protected _payloadType?: symbol;
@@ -56,7 +56,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Set the HTTP method to use.
      */
-    public method(method: HttpMethod): this {
+    public method(method: StringEnum<HttpMethod>): this {
         this._method = method;
         return this;
     }

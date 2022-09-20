@@ -13,7 +13,7 @@ import { isObject } from "@banquette/utils-type/is-object";
 import { isString } from "@banquette/utils-type/is-string";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive, StringEnum } from "@banquette/utils-type/types";
 import { ValidatorInterface } from "@banquette/validation/validator.interface";
 import { ApiEndpointOverride } from "./api-endpoint-override";
 import { ApiEndpointParameterInterface } from "./api-endpoint-parameter.interface";
@@ -40,7 +40,7 @@ export class ApiEndpoint {
      *
      * Default method is GET.
      */
-    public readonly method: HttpMethod;
+    public readonly method: StringEnum<HttpMethod>;
 
     /**
      * Allowed url parameters.

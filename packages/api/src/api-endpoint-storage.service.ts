@@ -4,7 +4,7 @@ import { isFunction } from "@banquette/utils-type/is-function";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isString } from "@banquette/utils-type/is-string";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor, StringEnum } from "@banquette/utils-type/types";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointCollection } from "./api-endpoint-collection";
 import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "./api-endpoint.options";
@@ -31,10 +31,10 @@ export class ApiEndpointStorageService {
      */
     public registerEndpoint(endpoint: ApiEndpointOptionsWithIdentifiers): void;
     public registerEndpoint(name: string, endpoint: ApiEndpoint, ctor?: Constructor|null): void;
-    public registerEndpoint(name: string, url: string, method?: HttpMethod, params?: Record<string, ApiEndpointParameterOptions>, ctor?: Constructor|null): void;
+    public registerEndpoint(name: string, url: string, method?: StringEnum<HttpMethod>, params?: Record<string, ApiEndpointParameterOptions>, ctor?: Constructor|null): void;
     public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string,
                             urlOrEndpoint?: string|ApiEndpoint,
-                            methodOrCtor?: HttpMethod|Constructor|null,
+                            methodOrCtor?: StringEnum<HttpMethod>|Constructor|null,
                             params?: Record<string, ApiEndpointParameterOptions>,
                             ctor?: Constructor|null): void {
         ctor = this.resolveCtor(!isString(optionsOrName) ? optionsOrName.ctor : (isFunction(methodOrCtor) ? methodOrCtor : ctor));
