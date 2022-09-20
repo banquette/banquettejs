@@ -33,7 +33,7 @@ export function makeReassignable<T = any>(obj: T): T {
     const wrapped: any = {_value: obj};
     Object.defineProperty(wrapped, '_value', {
         enumerable: false,
-        configurable: false,
+        configurable: true,
         writable: true,
         value: obj
     });
@@ -54,6 +54,15 @@ export function makeReassignable<T = any>(obj: T): T {
         },
         getPrototypeOf(target: any): object | null {
             return Object.getPrototypeOf(target._value);
+        },
+        ownKeys(target: any) {
+            return Reflect.ownKeys(target._value);
+        },
+        has(target: any, key: string | symbol) {
+            return key in target._value;
+        },
+        getOwnPropertyDescriptor(target: any, key: string | symbol) {
+            return Object.getOwnPropertyDescriptor(target._value, key);
         }
     });
 }
