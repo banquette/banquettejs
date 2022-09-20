@@ -94,3 +94,9 @@ export type ArgumentTypes<T> = T extends (... args: infer U ) => infer R ? U: ne
  * Replace the return type of a function by another while keeping its arguments intact.
  */
 export type ReplaceReturnType<T, TNewReturn> = (...a: ArgumentTypes<T>) => TNewReturn;
+
+/**
+ * Alias an enum type to allow string literal that is part of the enum.
+ * All values of the enum must be strings.
+ */
+export type StringEnum<T extends string> = T | `${T}`;
