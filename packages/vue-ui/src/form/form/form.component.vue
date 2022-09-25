@@ -196,11 +196,14 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         }));
         this.unsubscribeFunctions.push(this.vm.onBeforeBindModel((event: BeforeBindModelEventArg) => {
             this.$emit('before-bind-model', event);
-            this.v.model = event.model as ModelType;
             this.onBeforeBindModel(event);
         }));
         this.unsubscribeFunctions.push(this.vm.onAfterBindModel((event: AfterBindModelEventArg) => {
             this.$emit('after-bind-model', event);
+
+            // It's important to assign the model here, because the binder creates a proxy
+            // and we want the changes performed through the viewData object to be detected.
+            this.v.model = event.model as ModelType;
 
             // Reassign the model to the proxified one, so any change made by the binder will trigger a Vue update.
             reassign(event.model, this.v.model);

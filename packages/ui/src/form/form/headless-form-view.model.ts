@@ -263,7 +263,9 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     this.load();
                     return ;
                 }
-                (this as Writeable<HeadlessFormViewModel>).modelInstance = makeReassignable(this.modelInstance);
+                if (this.modelInstance !== null) {
+                    (this as Writeable<HeadlessFormViewModel>).modelInstance = makeReassignable(this.modelInstance);
+                }
                 this.form.enable();
                 this.form.reset();
                 this.bindModel();
