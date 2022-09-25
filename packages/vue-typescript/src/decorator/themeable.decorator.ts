@@ -1,5 +1,4 @@
 import { flattenObject } from "@banquette/utils-object/flatten-object";
-import { ensureObject } from "@banquette/utils-type/ensure-object";
 import { Constructor, Primitive } from "@banquette/utils-type/types";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
@@ -33,17 +32,34 @@ export type ThemeableMetadata = {
     prop: string;
     css: {
         vars: Record<string, string>;
-        selectors: Record<string, string>;
+        selectors: {
+            static: Record<string, string>,
+            dynamic: Array<{pattern: RegExp, selector: string}>
+        };
     }
 };
 
 export function Themeable(options: ThemeableDecoratorOptions = {}): any {
     return (ctor: Constructor) => {
         const data: ComponentMetadataInterface = getOrCreateComponentMetadata(ctor.prototype) as ComponentMetadataInterface;
-        options.css = ensureObject(options.css) as {};
-        options.css.vars = flattenObject(options.css.vars || {});
-        options.css.selectors = flattenObject(options.css.selectors || {});
-        options.prop = options.prop || 'variant';
-        data.themeable = Object.assign(options, {componentName: data.component.name, activeVariants: []}) as ThemeableMetadata;
+        const flattenedSelectors = flattenObject(options.css?.selectors || {});
+        data.themeable = {
+            componentName: data.component.name,
+            prop: options.prop || 'variant',
+            css: {
+                vars: flattenObject(options.css?.vars || {}),
+                selectors: {static: {}, dynamic: []}
+            }
+        };
+        for (const key of Object.keys(flattenedSelectors)) {
+            if (key.indexOf('(') > -1) {
+                data.themeable.css.selectors.dynamic.push({
+                    pattern: new RegExp(key, 'g'),
+                    selector: flattenedSelectors[key]
+                })
+            } else {
+                data.themeable.css.selectors.static[key] = flattenedSelectors[key];
+            }
+        }
     };
 }

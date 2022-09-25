@@ -167,14 +167,37 @@ export class VueTheme {
                     continue;
                 }
                 let variantStyles = trim(variant.rawCss);
-                for (const selectorKey of Object.keys(variant.cssSelectorsMap)) {
-                    const selectorAttributes = Object.keys(variant.cssSelectorsMap[selectorKey]);
-                    if (!isUndefined(variant.configuration.css.selectors[selectorKey]) && selectorAttributes.length > 0) {
-                        variantStyles += variant.configuration.css.selectors[selectorKey] + " {\n";
-                        for (const rule of selectorAttributes) {
-                            variantStyles += `${rule}: ${variant.cssSelectorsMap[selectorKey][rule]};\n`;
+                for (const rawSelectorKey of Object.keys(variant.cssSelectorsMap)) {
+                    const selectorsKeys = rawSelectorKey.split(',');
+                    for (const selectorKey of selectorsKeys) {
+                        let finalSelector = '';
+                        const selectorKeyParts = selectorKey.split(' ');
+                        const selectorAttributes = Object.keys(variant.cssSelectorsMap[rawSelectorKey]);
+                        for (const selectorPart of selectorKeyParts) {
+                            let matchingSelector: string | null = variant.configuration.css.selectors.static[selectorPart];
+                            if (isUndefined(matchingSelector)) {
+                                matchingSelector = null;
+                                for (const candidateSelector of variant.configuration.css.selectors.dynamic) {
+                                    const matches = Array.from(selectorPart.matchAll(candidateSelector.pattern));
+                                    if (matches.length > 0) {
+                                        finalSelector += (finalSelector ? ' ' : '') + candidateSelector.selector;
+                                        matches.forEach((match: RegExpMatchArray, index: number) => {
+                                            finalSelector = finalSelector!.replace(`$${index + 1}`, match[1]);
+                                        });
+                                        break;
+                                    }
+                                }
+                            } else {
+                                finalSelector += (finalSelector ? ' ' : '') + matchingSelector;
+                            }
                         }
-                        variantStyles += "}\n";
+                        if (finalSelector && finalSelector.length > 0) {
+                            variantStyles += finalSelector + " {\n";
+                            for (const rule of selectorAttributes) {
+                                variantStyles += `${rule}: ${variant.cssSelectorsMap[rawSelectorKey][rule]};\n`;
+                            }
+                            variantStyles += "}\n";
+                        }
                     }
                 }
                 if (variantStyles.length > 0) {
