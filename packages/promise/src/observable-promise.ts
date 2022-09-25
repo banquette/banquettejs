@@ -1,12 +1,10 @@
 import { UsageException } from "@banquette/exception/usage.exception";
-import { noop } from "@banquette/utils-misc/noop";
-import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor, GenericCallback } from "@banquette/utils-type/types";
 import { CancelException } from "./exception/cancel.exception";
 import { TimeoutException } from "./exception/timeout.exception";
 import { ObservablePromiseInterface } from "./observable-promise.interface";
@@ -63,7 +61,11 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
 
     public constructor(executor: ExecutorFunction<CompleteT>, private parent?: ObservablePromise) {
         try {
-            executor(proxy(this.resolve, this), proxy(this.reject, this), proxy(this.notify, this));
+            executor(
+                ObservablePromise.Proxy(this.resolve, this),
+                ObservablePromise.Proxy(this.reject, this),
+                ObservablePromise.Proxy(this.notify, this)
+            );
         } catch (e) {
             this.reject(e);
         }
@@ -265,7 +267,7 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
         onProgress?: ProgressObserverInterface<ProgressT>}): void {
         this.observers.push({
             onResolve: handlers.onResolve || ((value: CompleteT) => value),
-            onReject: handlers.onReject || noop,
+            onReject: handlers.onReject || (() => {}),
             onProgress: handlers.onProgress || {
                 callback: () => {},
                 types: []
@@ -291,10 +293,17 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
                 return ;
             }
             if (result instanceof ObservablePromise) {
-                return void result.then(proxy(this.resolve, this), proxy(this.reject, this), proxy(this.notify, this));
+                return void result.then(
+                    ObservablePromise.Proxy(this.resolve, this),
+                    ObservablePromise.Proxy(this.reject, this),
+                    ObservablePromise.Proxy(this.notify, this)
+                );
             }
             if (isType<Promise<any>>(result, isPromiseLike)) {
-                return void result.then(proxy(this.resolve, this), proxy(this.reject, this));
+                return void result.then(
+                    ObservablePromise.Proxy(this.resolve, this),
+                    ObservablePromise.Proxy(this.reject, this)
+                );
             }
             this.result = result;
             this.status = status;
@@ -492,5 +501,16 @@ export class ObservablePromise<CompleteT = any> implements ObservablePromiseInte
             case PromiseStatus.Rejected: return PromiseEventType.reject;
             default: return PromiseEventType.progress;
         }
+    }
+
+    /**
+     * Bind a function to a context, optionally partially applying any arguments.
+     */
+    private static Proxy(fn: GenericCallback, context: any): GenericCallback {
+        const args: any = Array.prototype.slice.call(arguments, 2);
+        return function() {
+            // @ts-ignore
+            return fn.apply(context || this, args.concat(Array.prototype.slice.call(arguments)));
+        };
     }
 }
