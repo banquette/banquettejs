@@ -23,7 +23,7 @@ export interface RetryOptionsInterface {
 }
 
 /**
- * Execute a callback repeatedly until it either succeeds of reach a maximum number of tries.
+ * Execute a callback repeatedly until it either succeeds or reaches a maximum number of tries.
  */
 export function doAndRetry<T>(options: RetryOptionsInterface, cb: () => T|Promise<T>): ObservablePromise<T> {
     const maxRetryDelay = isValidNumber(options.maxRetryDelay) ? options.maxRetryDelay : 10000;
