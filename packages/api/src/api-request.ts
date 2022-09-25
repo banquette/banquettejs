@@ -1,11 +1,10 @@
 import { HttpMethod } from "@banquette/http/constants";
 import { HeadersBag } from "@banquette/http/headers-bag";
 import { UrlParameterInterface } from "@banquette/http/url-parameter.interface";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
+import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model/type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Primitive, StringEnum } from "@banquette/utils-type/types";
 import { ApiEndpointOverride } from "./api-endpoint-override";
-import { ModelBidirectionalExtendedIdentifier } from "./type";
 
 export class ApiRequest {
     private static MaxId: number = 0;

@@ -1,9 +1,8 @@
 import { HttpMethod } from "@banquette/http/constants";
 import { UrlParameterInterface } from "@banquette/http/url-parameter.interface";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
+import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model/type";
 import { StringEnum } from "@banquette/utils-type/types";
 import { ApiRequest } from "./api-request";
-import { ModelBidirectionalExtendedIdentifier } from "./type";
 
 export interface ApiRequestConfig {
     model?: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null;
