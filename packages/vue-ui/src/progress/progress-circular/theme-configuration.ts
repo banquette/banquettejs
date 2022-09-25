@@ -11,9 +11,9 @@ export const ThemeConfiguration = {
             size        : '@-size'
         },
         selectors: {
-            root: '&.bt-progress-circular',
+            root: '&',
             text: '.inner > .progress',
-            circle: 'svg'
+            circle: 'svg .path'
         }
     }
 };

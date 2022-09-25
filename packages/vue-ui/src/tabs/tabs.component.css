@@ -1,26 +1,21 @@
 .bt-tabs {
-    --tabs-text-color: var(--bt-tabs-text-color, var(--bt-text-color-base));
-    --tabs-font-family: var(--bt-tabs-font-family, var(--bt-font-family-base));
-    --tabs-font-size: var(--bt-tabs-font-size, var(--bt-font-size-sm));
-    --tabs-font-weight: var(--bt-tabs-font-weight, var(--bt-font-weight-medium));
+    --tabs-toggles-font-family: var(--bt-tabs-toggles-font-family, var(--bt-font-family-base));
+    --tabs-toggles-font-size: var(--bt-tabs-toggles-font-size, var(--bt-font-size-sm));
+    --tabs-toggles-font-weight: var(--bt-tabs-toggles-font-weight, var(--bt-font-weight-medium));
+    --tabs-toggles-text-color: var(--bt-tabs-toggles-text-color, var(--bt-text-color-base));
+    --tabs-toggles-text-focus-color: var(--bt-tabs-toggles-text-focus-color, var(--bt-color-primary));
+    --tabs-toggles-text-hover-color: var(--bt-tabs-toggles-text-hover-color, var(--bt-color-primary));
+    --tabs-toggles-border-width: var(--bt-tabs-toggles-border-width, 2px);
+    --tabs-toggles-border-style: var(--bt-tabs-toggles-border-style, solid);
+    --tabs-toggles-border-color: var(--bt-tabs-toggles-border-color, var(--bt-color-gray-100));
+    --tabs-toggles-background-color: var(--bt-tabs-toggles-background-color, transparent);
+    --tabs-toggles-padding: var(--bt-tabs-toggles-padding, 0 1em);
 
-    --tabs-separator-border-width: var(--bt-tabs-separator-border-width, 2px);
-    --tabs-separator-border-style: var(--bt-tabs-separator-border-style, solid);
-    --tabs-separator-border-color: var(--bt-tabs-separator-border-color, var(--bt-color-gray-100));
-
-    --tabs-text-focus-color: var(--bt-tabs-text-focus-color, var(--bt-color-primary));
-    --tabs-indicator-focus-color: var(--bt-tabs-indicator-focus-color, var(--tabs-text-focus-color));
-
-    --tabs-text-hover-color: var(--bt-tabs-text-hover-color, var(--bt-color-primary));
-
-    --tabs-background-color: var(--bt-tabs-background-color, transparent);
-
-    --tabs-text-focus-transition-duration: var(--bt-tabs-text-focus-transition-duration, 0.3s);
-    --tabs-indicator-focus-transition-duration: var(--bt-tabs-indicator-focus-transition-duration, 0.3s);
+    --tabs-focus-indicator-color: var(--bt-tabs-focus-indicator-color, var(--tabs-toggles-text-focus-color));
+    --tabs-focus-transition-duration: var(--bt-tabs-focus-transition-duration, 0.3s);
 
     --tabs-content-background: var(--bt-tabs-content-background, none);
     --tabs-content-padding: var(--bt-tabs-content-padding, 1em);
-    --tabs-toggles-padding: var(--bt-tabs-toggles-padding, 0 1em);
 }
 
 .bt-tabs {
@@ -30,22 +25,22 @@
 
     & > .toggles-wrapper {
         position: relative;
-        border-bottom: var(--tabs-separator-border-width) var(--tabs-separator-border-style) var(--tabs-separator-border-color);
-        font-family: var(--tabs-font-family);
-        font-size: var(--tabs-font-size);
-        font-weight: var(--tabs-font-weight);
-        color: var(--tabs-text-color);
-        background: var(--tabs-background-color);
+        border-bottom: var(--tabs-toggles-border-width) var(--tabs-toggles-border-style) var(--tabs-toggles-border-color);
+        font-family: var(--tabs-toggles-font-family);
+        font-size: var(--tabs-toggles-font-size);
+        font-weight: var(--tabs-toggles-font-weight);
+        color: var(--tabs-toggles-text-color);
+        background: var(--tabs-toggles-background-color);
         padding: var(--tabs-toggles-padding);
 
         & > .focus-indicator {
             position: absolute;
-            height: var(--tabs-separator-border-width);
+            height: var(--tabs-toggles-border-width);
             bottom: 0;
             width: 0;
-            transition: all var(--tabs-indicator-focus-transition-duration) var(--bt-ease-in-out-bezier);
-            background-color: var(--tabs-indicator-focus-color);
-            transform: translateY(var(--tabs-separator-border-width));
+            transition: all var(--tabs-focus-transition-duration) var(--bt-ease-in-out-bezier);
+            background-color: var(--tabs-focus-indicator-color);
+            transform: translateY(var(--tabs-toggles-border-width));
         }
 
         & > .toggles {
@@ -62,7 +57,7 @@
                 gap: 0.5em;
                 cursor: pointer;
                 line-height: 3em;
-                transition: all var(--tabs-text-focus-transition-duration) var(--bt-ease-in-out-bezier);
+                transition: all var(--tabs-focus-transition-duration) var(--bt-ease-in-out-bezier);
                 box-sizing: border-box;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -72,8 +67,8 @@
                     height: 1.3em;
 
                     path {
-                        fill: var(--tabs-text-color);
-                        transition: fill var(--tabs-text-focus-transition-duration) var(--bt-ease-in-out-bezier);
+                        fill: var(--tabs-toggles-text-color);
+                        transition: fill var(--tabs-focus-transition-duration) var(--bt-ease-in-out-bezier);
                     }
                 }
 
@@ -82,18 +77,18 @@
                 }
 
                 &:hover {
-                    color: var(--tabs-text-hover-color);
+                    color: var(--tabs-toggles-text-hover-color);
 
                     & > svg path {
-                        fill: var(--tabs-text-hover-color);
+                        fill: var(--tabs-toggles-text-hover-color);
                     }
                 }
 
                 &.focused {
-                    color: var(--tabs-text-focus-color);
+                    color: var(--tabs-toggles-text-focus-color);
 
                     & > svg path {
-                        fill: var(--tabs-text-focus-color);
+                        fill: var(--tabs-toggles-text-focus-color);
                     }
                 }
 
@@ -131,7 +126,7 @@
             }
 
             & > .focus-indicator {
-                width: var(--tabs-separator-border-width);
+                width: var(--tabs-toggles-border-width);
                 height: auto;
                 bottom: auto;
             }
@@ -140,7 +135,7 @@
 
     &[data-direction="left"] {
         & > .toggles-wrapper {
-            border-right: var(--tabs-separator-border-width) var(--tabs-separator-border-style) var(--tabs-separator-border-color);
+            border-right: var(--tabs-toggles-border-width) var(--tabs-toggles-border-style) var(--tabs-toggles-border-color);
 
             & > .toggles {
                 padding-right: 1em;
@@ -152,7 +147,7 @@
 
             & > .focus-indicator {
                 right: 0;
-                transform: translateX(var(--tabs-separator-border-width));
+                transform: translateX(var(--tabs-toggles-border-width));
             }
         }
     }
@@ -160,7 +155,7 @@
     &[data-direction="right"] {
         & > .toggles-wrapper {
             order: 2;
-            border-left: var(--tabs-separator-border-width) var(--tabs-separator-border-style) var(--tabs-separator-border-color);
+            border-left: var(--tabs-toggles-border-width) var(--tabs-toggles-border-style) var(--tabs-toggles-border-color);
 
             & > .toggles {
                 padding-left: 1em;
@@ -172,7 +167,7 @@
 
             & > .focus-indicator {
                 left: 0;
-                transform: translateX(calc(var(--tabs-separator-border-width) * -1));
+                transform: translateX(calc(var(--tabs-toggles-border-width) * -1));
             }
         }
     }

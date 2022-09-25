@@ -49,16 +49,16 @@ export default class FormTextComponent extends AbstractVueFormComponent<TextView
     @Prop({type: Boolean, default: false}) public autoSize!: boolean;
 
     /**
-     * Control the manual resizing of the textarea.
-     * Only applicable if type === "textarea".
-     * If `autoSize` is `true`, the resize is automatically disabled.
-     */
-    @Prop({type: Boolean, default: null}) public resizable!: boolean;
-
-    /**
      * If `true`, the user can clear the value of the input via an icon.
      */
     @Prop({type: Boolean, default: false}) public clearable!: boolean;
+
+    /**
+     * Control the manual resizing of the textarea.
+     * If `autoSize` is `true`, the resize is automatically disabled.
+     * Only applicable if type === "textarea".
+     */
+    @Prop({type: Boolean, default: false}) public resizable!: boolean;
 
     /**
      * Define a specific number of rows.

@@ -2,7 +2,9 @@
     <div class="value" :style="{width}">
         <span class="text" v-if="showProgressText && !isIndeterminate()">
             <span class="inner">
-                <slot><template v-if="!isIndeterminate()">{{ animatedProgressText }}%</template></slot>
+                <slot :indeterminate="isIndeterminate" :progressText="animatedProgressText">
+                    <template v-if="!isIndeterminate()">{{ animatedProgressText }}%</template>
+                </slot>
             </span>
         </span>
     </div>

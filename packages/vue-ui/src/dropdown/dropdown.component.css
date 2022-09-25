@@ -14,7 +14,6 @@
 
     --dropdown-min-width: var(--bt-dropdown-min-width, 12rem);
     --dropdown-max-height: var(--bt-dropdown-max-height, 25vh);
-    --dropdown-animation-duration: var(--bt-dropdown-animation-duration, 0.3s);
     --dropdown-shadow: var(--bt-dropdown-shadow, var(--bt-shadow-popover));
     --dropdown-z-index: var(--bt-dropdown-z-index, var(--bt-z-index-popover));
 }
@@ -25,12 +24,14 @@
     .bt-popover, &.bt-popover {
         min-width: var(--dropdown-min-width);
 
-        --bt-popover-text-color: var(--dropdown-text-color);
-        --bt-popover-font-family: var(--dropdown-font-family);
-        --bt-popover-font-size: var(--dropdown-font-size);
-        --bt-popover-font-weight: var(--dropdown-font-weight);
-        --bt-popover-background-color: var(--dropdown-background-color);
-        --bt-popover-border-color: var(--dropdown-border-color);
+        --bt-popover-text-color: var(--dropdown-text-color) !important;
+        --bt-popover-font-family: var(--dropdown-font-family) !important;
+        --bt-popover-font-size: var(--dropdown-font-size) !important;
+        --bt-popover-font-weight: var(--dropdown-font-weight) !important;
+        --bt-popover-background-color: var(--dropdown-background-color) !important;
+        --bt-popover-border-color: var(--dropdown-border-color) !important;
+        --bt-popover-border-radius: var(--dropdown-border-radius) !important;
+        --bt-popover-shadow: var(--dropdown-shadow) !important;
 
         .inner-wrapper .content {
             display: block;
@@ -47,15 +48,6 @@
         height: 1px;
         margin: 0.5rem 0;
         background-color: var(--dropdown-divider-color);
-
-        svg {
-            width: 1.3em;
-            height: 1.3em;
-
-            path {
-                fill: var(--dropdown-text-color);
-            }
-        }
     }
 
     .bt-dropdown-item {
@@ -70,15 +62,6 @@
         box-sizing: border-box;
         color: var(--dropdown-text-color);
         padding: .475rem 1rem;
-
-        svg {
-            width: 1.3em;
-            height: 1.3em;
-
-            path {
-                fill: var(--dropdown-text-color);
-            }
-        }
 
         &:hover {
             background-color: var(--dropdown-background-hover-color);

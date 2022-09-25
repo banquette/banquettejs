@@ -58,7 +58,7 @@
             color: var(--tree-item-icon-color);
         }
 
-        &[data-expanded] {
+        &[data-is-expanded] {
             & > .title > .addon svg {
                 transform: rotateZ(0);
             }
@@ -68,7 +68,7 @@
             }
         }
 
-        &[data-empty] {
+        &[data-is-empty] {
             & > .title > .addon svg {
                 opacity: 0;
             }

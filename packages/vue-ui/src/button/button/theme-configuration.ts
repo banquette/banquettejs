@@ -1,4 +1,3 @@
-
 export const ThemeConfiguration = {
     css: {
         vars: {
@@ -37,13 +36,10 @@ export const ThemeConfiguration = {
             }
         },
         selectors: {
-            root: {
-                base: '.inner',
-                hover: '&:hover .inner',
-                active: '&:active .inner',
-                focus: '&:focus .inner',
-            },
-            svg: ':deep(svg)'
+            root: '.inner',
+            'root((?:\\:|\\[)[\\w\[\\]-]+)': '&$1 .inner',
+            'root[disabled]': '&[data-is-disabled] .inner',
+            icon: ':deep(svg)'
         }
     }
 };

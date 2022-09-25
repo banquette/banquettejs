@@ -8,10 +8,12 @@
             />
         </svg>
         <!-- To override the whole content -->
-        <slot name="content">
+        <slot name="content" :indeterminate="isIndeterminate" :progressText="animatedProgressText">
             <span class="progress" v-if="showProgressText">
                 <!-- To only override the text -->
-                <slot><span v-if="!isIndeterminate()">{{ animatedProgressText }}%</span></slot>
+                <slot :indeterminate="isIndeterminate" :progressText="animatedProgressText">
+                    <span v-if="!isIndeterminate()">{{ animatedProgressText }}%</span>
+                </slot>
             </span>
         </slot>
     </div>

@@ -21,6 +21,13 @@ export const ThemeConfiguration = {
             minHeight: '@-min-height',
             maxWidth: '@-max-width',
             maxHeight: '@-max-height'
+        },
+        selectors: {
+            root: '.bt-dialog-inner',
+            header: '.bt-dialog-inner > .header',
+            body: '.bt-dialog-inner > .body',
+            footer: '.bt-dialog-inner > .footer',
+            closeIcon: '.bt-dialog-inner > .header > .close-icon svg',
         }
     }
 };

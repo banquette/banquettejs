@@ -11,7 +11,7 @@ export const ThemeConfiguration = {
             determinateAnimationDuration    : '@-determinate-animation-duration'
         },
         selectors: {
-            root: '&.bt-progress-horizontal',
+            root: '&',
             progressBar: '& > .value',
             progressText: '& > .value > .text'
         }

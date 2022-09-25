@@ -1,4 +1,3 @@
-
 export const ThemeConfiguration = {
     css: {
         vars: {
@@ -15,17 +14,12 @@ export const ThemeConfiguration = {
             shadow                  : '@-shadow',
             zIndex                  : '@-z-index',
             minWidth                : '@-min-width',
-            maxHeight               : '@-max-height',
-            animationDuration       : '@-animation-duration'
+            maxHeight               : '@-max-height'
         },
         selectors: {
-            root: {
-                base: '.inner',
-                hover: '.inner:hover'
-            },
-            svg: ':deep(svg)',
-            divider: ':deep(.bt-dropdown-divider)',
-            item: ':deep(.bt-dropdown-item)'
+            root: '.bt-dropdown > .inner-wrapper > .content',
+            divider: '.bt-dropdown-divider',
+            item: '.bt-dropdown-item'
         }
     }
 };

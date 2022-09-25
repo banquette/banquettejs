@@ -31,6 +31,15 @@ export const ThemeConfiguration = {
             // Addons
             clearIconColor: '@-clear-icon-color'
         }},
-        selectors: {}
+        selectors: {
+            root: '&',
+            label: '&:deep(.bt-form-select > .bt-form-base-input > label)',
+            help: '&:deep(.bt-form-select > .bt-form-base-input > .extras > .help)',
+            inputGroup: '&:deep(.bt-form-select > .bt-form-base-input > .input-group)',
+            before: '&:deep(.bt-form-select > .bt-form-base-input > .input-group > .before > .addon)',
+            after: '&:deep(.bt-form-select > .bt-form-base-input > .input-group > .after > .addon)',
+            floatingExtras: '&:deep(.bt-form-select > .bt-form-base-input > .input-group > .input > .floating-extras)',
+            input: '&:deep(.bt-form-select > .bt-form-base-input > .input-group > .input)'
+        }
     }
 };

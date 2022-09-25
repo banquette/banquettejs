@@ -41,17 +41,6 @@ export const BaseVars = {
 
 export const ThemeConfiguration = {
     css: {
-        vars: BaseVars,
-        selectors: {
-            root: {
-                base: '&',
-                focus: '&[data-has-focus]',
-            },
-            inputGroup: '.input-group',
-            input: '.input-group .input',
-            before: '.input-group .before',
-            after: '.input-group .after',
-            help: '.help'
-        }
+        vars: BaseVars
     }
 };

@@ -21,13 +21,16 @@ export const ThemeConfiguration = {
             itemActionButtonActiveBackground: '@-item-action-button-active-background',
         }},
         selectors: {
-            root: {
-                base: '&',
-                hover: '&:hover',
-                active: '&:active',
-                focus: '&:focus',
-            },
-            svg: ':deep(svg)'
+            root: '&',
+            label: '&:deep(.bt-form-file > .bt-form-base-input > label)',
+            help: '&:deep(.bt-form-file > .bt-form-base-input > .extras > .help)',
+            inputGroup: '&:deep(.bt-form-file > .bt-form-base-input > .input-group)',
+            input: '&:deep(.bt-form-file > .bt-form-base-input > .input-group > .input)',
+            fileItem: '&:deep(.bt-form-file .file-item)',
+            fileName: '&:deep(.bt-form-file .file-item  .file-name)',
+            fileSize: '&:deep(.bt-form-file .file-item .file-size)',
+            fileIcon: '&:deep(.bt-form-file .file-item .file-details svg)',
+            fileButtons: '&:deep(.bt-form-file .file-item > .buttons)',
         }
     }
 };

@@ -215,8 +215,8 @@ export default class TreeComponent extends Vue {
         );
         return h('div', {
             class: 'bt-tree-item',
-            'data-expanded': node.expanded ? '' : null,
-            'data-empty': node.fetched && !node.childrenVisibleCount ? '' : null,
+            'data-is-expanded': node.expanded ? '' : null,
+            'data-is-empty': node.fetched && !node.childrenVisibleCount ? '' : null,
             'data-is-disabled': node.disabled ? '' : null
         },[title, content]);
     }

@@ -2,28 +2,39 @@
 export const ThemeConfiguration = {
     css: {
         vars: {
-            fontFamily: '@-font-family',
-            fontSize: '@-font-size',
-            fontWeight: '@-font-weight',
-            textColor: '@-text-color',
-            textFocusColor: '@-text-focus-color',
-            textHoverColor: '@-text-hover-color',
-            backgroundColor: '@-background-color',
+            // Toggles
+            togglesFontFamily       : '@-toggles-font-family',
+            togglesFontSize         : '@-toggles-font-size',
+            togglesFontWeight       : '@-toggles-font-weight',
+            togglesTextColor        : '@-toggles-text-color',
+            togglesTextFocusColor   : '@-toggles-text-focus-color',
+            togglesTextHoverColor   : '@-toggles-text-hover-color',
+            togglesBackgroundColor  : '@-toggles-background-color',
+            togglesBorderWidth      : '@-toggles-border-width',
+            togglesBorderStyle      : '@-toggles-border-style',
+            togglesBorderColor      : '@-toggles-border-color',
+            togglesPadding          : '@-toggles-padding',
 
-            separatorBorderWidth: '@-separator-border-width',
-            separatorBorderStyle: '@-separator-border-style',
-            separatorBorderColor: '@-separator-border-color',
-            indicatorFocusColor: '@-indicator-focus-color',
+            // Focus indicator
+            focusIndicatorColor     : '@-focus-indicator-color',
+            focusTransitionDuration : '@-focus-transition-duration',
 
-            contentBackground: '@-content-background',
-            contentPadding: '@-content-padding',
-            togglesPadding: '@-toggles-padding',
-
-            textFocusTransitionDuration: '@-text-focus-transition-duration',
-            indicatorFocusTransitionDuration: '@-indicator-focus-transition-duration'
+            // Content
+            contentBackground       : '@-content-background',
+            contentPadding          : '@-content-padding'
         },
         selectors: {
-
+            root: '&',
+            togglesWrapper: '& > .toggles-wrapper',
+            togglesWrapperLeft: '&[data-direction="left"] > .toggles-wrapper',
+            togglesWrapperRight: '&[data-direction="right"] > .toggles-wrapper',
+            toggles: '& > .toggles-wrapper > .toggles',
+            toggle: ':deep(.bt-tab-toggle)',
+            toggleFocused: ':deep(.bt-tab-toggle.focused)',
+            'toggle((?:\\:|\\[)[\\w\[\\]-]+)': ':deep(.bt-tab-toggle)$1',
+            toggleIcon: ':deep(.bt-tab-toggle) svg',
+            content: '& > .content',
+            focusIndicator: '& > .toggles-wrapper > .focus-indicator'
         }
     }
 };

@@ -14,6 +14,12 @@ export const ThemeConfiguration = {
             closeFillHoverColor         : '@-close-fill-hover-color',
             closeBackgroundHoverColor   : '@-close-background-hover-color'
         },
-        selectors: {}
+        selectors: {
+            root: '&',
+            'root((?:\\:|\\[)[\\w\[\\]-]+)': '&$1',
+            body: '.body',
+            closeIcon: '.close-icon',
+            icon: '& > svg'
+        }
     }
 };
