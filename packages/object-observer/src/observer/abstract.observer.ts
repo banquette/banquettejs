@@ -14,6 +14,8 @@ import { Mutation } from "../mutation";
 import { ObserverFactory } from "../observer.factory";
 import { extractObserver } from "../utils";
 
+let maxId = 0;
+
 /**
  * Because an observed value can be assigned to multiple observed objects,
  * any observer can have multiple parents.
@@ -33,6 +35,8 @@ interface ParentInterface {
 }
 
 export abstract class AbstractObserver<T extends object> {
+    public id = ++maxId;
+
     /**
      * The proxified target.
      */
@@ -65,12 +69,6 @@ export abstract class AbstractObserver<T extends object> {
             get: proxy(this.get, this),
             set: proxy(this.set, this),
             deleteProperty: proxy(this.deleteProperty, this)
-        });
-        Object.defineProperty(this.proxy, ObserverInstance, {
-            configurable: true,
-            enumerable: false,
-            writable: false,
-            value: this
         });
         this.observe(target);
     }
@@ -126,6 +124,9 @@ export abstract class AbstractObserver<T extends object> {
      * Generic `get` handler doing nothing special.
      */
     protected get(target: any, key: string): any {
+        if (key === ObserverInstance) {
+            return this;
+        }
         return target[key];
     }
 
@@ -232,7 +233,7 @@ export abstract class AbstractObserver<T extends object> {
         if (isObject(value)) {
             const existingObserver = extractObserver(value);
             if (existingObserver instanceof AbstractObserver) {
-                if (existingObserver !== this) {
+                if (existingObserver.id !== this.id) {
                     existingObserver.addParent(this, key);
                 }
                 return value;
