@@ -11,5 +11,6 @@ export * from './form-select';
 export * from './form-text';
 export * from './popover';
 export * from './progress-horizontal';
+export * from './tabs';
 export * from './tag';
 export * from './tree';

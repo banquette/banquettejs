@@ -6,7 +6,7 @@ VueThemes.Define('bt-dropdown', {
         {
             match: VariantWildcard,
             cssVars: {
-                backgroundColor: 'var(--bt-color-gray-650)',
+                backgroundColor: 'var(--bt-color-gray-750)',
                 backgroundHoverColor: 'var(--bt-color-gray-650)',
                 borderColor: 'var(--bt-color-gray-600)',
                 dividerColor: 'var(--bt-color-gray-600)'
