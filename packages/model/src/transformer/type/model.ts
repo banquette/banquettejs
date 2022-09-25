@@ -28,27 +28,15 @@ export function Model(): TransformerInterface {
         if (identifier !== null) {
             return identifier;
         }
-        // Get the highest context with a property for this model
-        let highestProperty: string|null = context.property;
-        while (context.parent !== null && context.ctor === context.parent.ctor) {
-            if (context.property) {
-                highestProperty = context.property;
-            } else {
-                break ;
-            }
-            context = context.parent;
-        }
-        if (context.property) {
-            highestProperty = context.property;
-        }
-        if (highestProperty === null) {
+        context = context.getHighestContextWithProperty();
+        if (!context.property) {
             throw new UsageException('Unable to resolve the relation. The "Model" transformer can only be applied on properties.');
         }
-        const ctor = metadata.getRelation(context.ctor, highestProperty);
+        const ctor = metadata.getRelation(context.ctor, context.property);
         if (ctor === null) {
             throw new UsageException(
-                `No relation has been defined for "${context.ctor.name}::${highestProperty}".
-                Please define a "@Relation()" decorator on "${highestProperty}".`
+                `No relation has been defined for "${context.ctor.name}::${context.property}".
+                Please define a "@Relation()" decorator on "${context.property}".`
             );
         }
         return ctor;

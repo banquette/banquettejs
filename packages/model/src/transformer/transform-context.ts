@@ -70,6 +70,26 @@ export class TransformContext {
     }
 
     /**
+     * Get the highest context of the hierarchy that has the same constructor and a property name./
+     */
+    public getHighestContextWithProperty(): TransformContext {
+        let result: TransformContext = this;
+        let currentContext: TransformContext = this;
+        while (currentContext.parent !== null && currentContext.ctor === currentContext.parent.ctor) {
+            if (currentContext.property) {
+                result = currentContext;
+            } else {
+                break ;
+            }
+            currentContext = currentContext.parent;
+        }
+        if (currentContext.property) {
+            result = currentContext;
+        }
+        return result;
+    }
+
+    /**
      * Get one or multiple extra value with an additional validation check.
      */
     public getValidatedExtra(targets: Record<string, [ValidatorInterface|null, any]>): Record<string, any> {

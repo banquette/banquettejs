@@ -7,10 +7,13 @@ import { isNumber } from "@banquette/utils-type/is-number";
 import { isType } from "@banquette/utils-type/is-type";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { Constructor } from "@banquette/utils-type/types";
+import { ModelMetadataService } from "../model-metadata.service";
 import { ModelTransformMetadataService } from "../model-transform-metadata.service";
 import { TransformerInterface } from "../transformer/transformer.interface";
+import { Model } from "../transformer/type/model";
 
-const metadata = Injector.Get(ModelTransformMetadataService);
+const transformMetadata = Injector.Get(ModelTransformMetadataService);
+const modelMetadata = Injector.Get(ModelMetadataService);
 
 /**
  * Utility function that ensures the decorator has been set on a property and which
@@ -35,6 +38,26 @@ export function propertyDecorator(cb: (ctor: Constructor, propertyKey: string) =
 
 export function createTransformableDecorator(type: symbol, transformer: TransformerInterface): any {
     return propertyDecorator((ctor: Constructor, propertyKey: string) => {
-        metadata.register(ctor, type, propertyKey, transformer);
+        transformMetadata.register(ctor, type, propertyKey, transformer);
     }, 'You can only apply a transform decorator on properties.');
+}
+
+
+export function createRelationAwareTransformableDecorator(type: symbol, transformer: TransformerInterface|undefined, defaultTransformer: TransformerInterface): any {
+    const apply = (prototype: any, propertyKey: string, transformer: TransformerInterface) => {
+        const transformable = createTransformableDecorator(type, transformer);
+        transformable(prototype, propertyKey);
+    };
+    return (prototype: any, propertyKey: string) => {
+        if (isUndefined(transformer)) {
+            // Schedule a microtask to let time for all decorators to execute.
+            // We'll search for the `@Relation()` decorator.
+            queueMicrotask(() => {
+                transformer = modelMetadata.getRelation(prototype.constructor, propertyKey) ? Model() : defaultTransformer;
+                apply(prototype, propertyKey, transformer);
+            });
+        } else {
+            apply(prototype, propertyKey, transformer);
+        }
+    };
 }
