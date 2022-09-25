@@ -23,13 +23,13 @@ export default class TagComponent extends Vue {
      * The URL to redirect to when the tag is clicked.
      * If defined, the root component will be a `<a>` instead of a `<span>`.
      */
-    @Prop({type: String, default: null}) public href!: string;
+    @Prop({type: String, default: null}) public href!: string|null;
 
     /**
      * Define the "target" attribute of the root element.
      * Only applicable if `href` is defined and thus the root element is a `<a>`.
      */
-    @Prop({type: String, default: null}) public target!: string;
+    @Prop({type: String, default: null}) public target!: string|null;
 
     /**
      * If `true`, a close icon is added that emits a `close` event when clicked.
