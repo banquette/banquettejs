@@ -75,14 +75,6 @@ for (const target of targets) {
         }
     }
 
-    console.log(`Copy ${chalk.blue('object-observer')}.`);
-    const localObjectObserverPath = path.resolve(__dirname, '../node_modules/object-observer');
-    const targetObjectObserverPath = path.resolve(target.path, 'node_modules/object-observer');
-    if (fs.existsSync(targetObjectObserverPath)) {
-        fs.rmdirSync(targetObjectObserverPath, {recursive: true});
-    }
-    fse.copySync(localObjectObserverPath, targetObjectObserverPath);
-
     // Update the package.json
     const packageJsonPath = path.resolve(target.path, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
