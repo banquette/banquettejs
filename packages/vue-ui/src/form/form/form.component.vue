@@ -18,7 +18,7 @@ import { BeforeBindModelEventArg } from "@banquette/ui/form/form/event/before-bi
 import { BeforeLoadEventArg } from "@banquette/ui/form/form/event/before-load.event-arg";
 import { BeforePersistEventArg } from "@banquette/ui/form/form/event/before-persist.event-arg";
 import { BeforeValidateEventArg } from "@banquette/ui/form/form/event/before-validate.event-arg";
-import { FormActionErrorEventArg } from "@banquette/ui/form/form/event/form-action-error.event-arg";
+import { ActionErrorEventArg } from "@banquette/ui/form/form/event/action-error.event-arg";
 import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
 import { areEqual } from "@banquette/utils-misc/are-equal";
@@ -169,7 +169,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.$emit('load-success', event);
             this.onLoadSuccess(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.onLoadError((event: FormActionErrorEventArg) => {
+        this.unsubscribeFunctions.push(this.vm.onLoadError((event: ActionErrorEventArg) => {
             this.$emit('load-error', event);
             this.onLoadError(event);
         }));
@@ -182,7 +182,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
             this.$emit('persist-success', event);
             this.onPersistSuccess(event);
         }));
-        this.unsubscribeFunctions.push(this.vm.onPersistError((event: FormActionErrorEventArg) => {
+        this.unsubscribeFunctions.push(this.vm.onPersistError((event: ActionErrorEventArg) => {
             this.$emit('persist-error', event);
             this.onPersistError(event);
         }));
@@ -231,10 +231,10 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
      */
     /* virtual */ protected onBeforeLoad(event: BeforeLoadEventArg): void {}
     /* virtual */ protected onLoadSuccess(event: EventArg): void {}
-    /* virtual */ protected onLoadError(event: FormActionErrorEventArg): void {}
+    /* virtual */ protected onLoadError(event: ActionErrorEventArg): void {}
     /* virtual */ protected onBeforePersist(event: BeforePersistEventArg): void {}
     /* virtual */ protected onPersistSuccess(event: AfterPersistEventArg): void {}
-    /* virtual */ protected onPersistError(event: FormActionErrorEventArg): void {}
+    /* virtual */ protected onPersistError(event: ActionErrorEventArg): void {}
     /* virtual */ protected onBeforeValidate(event: BeforeValidateEventArg): void {}
     /* virtual */ protected onAfterValidate(event: AfterValidateEventArg): void {}
     /* virtual */ protected onBeforeBindModel(event: BeforeBindModelEventArg): void {}
