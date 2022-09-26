@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconMaterialExposureNeg2 } from './exposure-neg-2.component.vue';
 
 VueBuilder.RegisterComponent('i-material-exposure-neg-2', IconMaterialExposureNeg2);

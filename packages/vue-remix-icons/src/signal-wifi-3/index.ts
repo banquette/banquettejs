@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconRemixSignalWifi3 } from './signal-wifi-3.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-signal-wifi-3', IconRemixSignalWifi3);

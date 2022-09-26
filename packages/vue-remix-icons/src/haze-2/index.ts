@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconRemixHaze2 } from './haze-2.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-haze-2', IconRemixHaze2);

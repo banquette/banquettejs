@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconMaterialRotate90DegreesCcw } from './rotate-90-degrees-ccw.component.vue';
 
 VueBuilder.RegisterComponent('i-material-rotate-90-degrees-ccw', IconMaterialRotate90DegreesCcw);

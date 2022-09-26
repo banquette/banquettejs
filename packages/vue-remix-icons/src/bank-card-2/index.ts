@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconRemixBankCard2 } from './bank-card-2.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-bank-card-2', IconRemixBankCard2);

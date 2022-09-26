@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconRemixPictureInPicture } from './picture-in-picture.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-picture-in-picture', IconRemixPictureInPicture);

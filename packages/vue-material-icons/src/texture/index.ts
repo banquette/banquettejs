@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconMaterialTexture } from './texture.component.vue';
 
 VueBuilder.RegisterComponent('i-material-texture', IconMaterialTexture);

@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconRemixBrush3 } from './brush-3.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-brush-3', IconRemixBrush3);

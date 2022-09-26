@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconRemixCreativeCommonsZero } from './creative-commons-zero.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-creative-commons-zero', IconRemixCreativeCommonsZero);

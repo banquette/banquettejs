@@ -325,7 +325,7 @@ export default {
         fs.writeFileSync(componentPath, src);
         const indexPath = path.join(componentDir, 'index.ts');
         fs.writeFileSync(indexPath, `
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as ${className} } from './${componentName + '.component.vue'}';
 
 VueBuilder.RegisterComponent('i-${configuration.libName}-${componentName}', ${className});
@@ -376,11 +376,11 @@ export { createCommentVNode } from "vue";
 /**
  * Write a file for each set of icons.
  */
-for (let i = 0; i < globalIndex[1].length; ++i) {
-    let globalIndexBuffer = `export const Icons = {\n`;
-    for (let j = 0, k = Object.keys(globalIndex[1][i]); j < k.length; ++j) {
-        globalIndexBuffer += ' '.repeat(4) + `'${k[j]}':` + JSON.stringify(globalIndex[1][i][k[j]]) + ',\n';
-    }
-    globalIndexBuffer += '};';
-    fs.writeFileSync(path.join(__dirname, `${globalIndex[0][i]}-icons.ts`), globalIndexBuffer);
-}
+// for (let i = 0; i < globalIndex[1].length; ++i) {
+//     let globalIndexBuffer = `export const Icons = {\n`;
+//     for (let j = 0, k = Object.keys(globalIndex[1][i]); j < k.length; ++j) {
+//         globalIndexBuffer += ' '.repeat(4) + `'${k[j]}':` + JSON.stringify(globalIndex[1][i][k[j]]) + ',\n';
+//     }
+//     globalIndexBuffer += '};';
+//     fs.writeFileSync(path.join(__dirname, `${globalIndex[0][i]}-icons.ts`), globalIndexBuffer);
+// }

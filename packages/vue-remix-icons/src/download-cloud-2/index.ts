@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconRemixDownloadCloud2 } from './download-cloud-2.component.vue';
 
 VueBuilder.RegisterComponent('i-remix-download-cloud-2', IconRemixDownloadCloud2);

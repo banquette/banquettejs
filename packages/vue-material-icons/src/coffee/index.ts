@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconMaterialCoffee } from './coffee.component.vue';
 
 VueBuilder.RegisterComponent('i-material-coffee', IconMaterialCoffee);

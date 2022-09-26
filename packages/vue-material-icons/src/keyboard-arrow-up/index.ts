@@ -1,5 +1,5 @@
 
-import { VueBuilder } from "@banquette/vue-typescript";
+import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
 import { default as IconMaterialKeyboardArrowUp } from './keyboard-arrow-up.component.vue';
 
 VueBuilder.RegisterComponent('i-material-keyboard-arrow-up', IconMaterialKeyboardArrowUp);
