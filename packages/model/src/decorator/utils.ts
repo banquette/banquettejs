@@ -38,7 +38,7 @@ export function propertyDecorator(cb: (ctor: Constructor, propertyKey: string) =
 
 export function createTransformableDecorator(type: symbol, transformer: TransformerInterface): any {
     return propertyDecorator((ctor: Constructor, propertyKey: string) => {
-        transformMetadata.register(ctor, type, propertyKey, transformer);
+        transformMetadata.replace(ctor, type, propertyKey, transformer);
     }, 'You can only apply a transform decorator on properties.');
 }
 
@@ -49,12 +49,17 @@ export function createRelationAwareTransformableDecorator(type: symbol, transfor
         transformable(prototype, propertyKey);
     };
     return (prototype: any, propertyKey: string) => {
+        // Register the property once synchronously.
+        apply(prototype, propertyKey, transformer || defaultTransformer);
+
         if (isUndefined(transformer)) {
-            // Schedule a microtask to let time for all decorators to execute.
-            // We'll search for the `@Relation()` decorator.
+            // If no transformer has been given, schedule a microtask to let time for all decorators to execute.
             queueMicrotask(() => {
-                transformer = modelMetadata.getRelation(prototype.constructor, propertyKey) ? Model() : defaultTransformer;
-                apply(prototype, propertyKey, transformer);
+                // We can then search for the `@Relation()` decorator.
+                // If a relation is found, force a `Model()` transformer.
+                if (modelMetadata.getRelation(prototype.constructor, propertyKey) !== null) {
+                    apply(prototype, propertyKey, Model());
+                }
             });
         } else {
             apply(prototype, propertyKey, transformer);
