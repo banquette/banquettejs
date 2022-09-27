@@ -67,6 +67,8 @@ export class FormFactory {
      *  To define validators for sub levels please:
      *  @see FormConfigurationInterface.factory
      */
+    public static Create(input: FactoryObject|FormArray, validator?: ValidatorInterface): FormGroupInterface;
+    public static Create(input: FactoryControl, validator?: ValidatorInterface): FormComponentInterface;
     public static Create(input: FactoryValue, validator?: ValidatorInterface): FormComponentInterface {
         ++FormFactory.InnerCount;
         try {
