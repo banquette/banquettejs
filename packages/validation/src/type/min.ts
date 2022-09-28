@@ -12,6 +12,8 @@ import { ValidationResult } from "../validation-result";
 import { ValidatorOptionsInterface } from "../validator-options.interface";
 import { ValidatorInterface } from "../validator.interface";
 
+type MinValidatorOptionsInterface = ValidatorOptionsInterface & {treatAs?: 'string'|'number'|'auto'};
+
 /**
  * Check that the value's "count value" is greater or equal to a number.
  *
@@ -21,10 +23,9 @@ import { ValidatorInterface } from "../validator.interface";
  * To distinguish between a string containing only a number (e.g. '12')
  * and a number (e.g. 12) you can use the "treatAs" argument to force a cast.
  */
-export function Min(count: number,
-                    treatAs: 'string'|'number'|'auto' = 'auto',
-                    options: ValidatorOptionsInterface|string = {}): ValidatorInterface {
+export function Min(count: number, options: MinValidatorOptionsInterface|string = {}): ValidatorInterface {
     const finalOptions = assignOptionsDefaults(options, 'auto', 'min');
+    const treatAs = !isString(options) ? (options.treatAs || 'auto') : 'auto';
     return createValidator({
         validate: (context: ValidationContextInterface): ValidationResult => {
             let valid: boolean = true;
