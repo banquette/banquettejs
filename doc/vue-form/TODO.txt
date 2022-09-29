@@ -1,5 +1,0 @@
-
-SelectComponent:
-
- - chore: make the view scroll to the first select choice when the dropdown becomes visible.
- - chore: make the view scroll as the selection change (using the keyboard with multiple = "false").

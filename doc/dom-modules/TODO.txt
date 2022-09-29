@@ -1,3 +1,0 @@
-
-- Make the "dom-" prefix configurable in the shared configuration.
-- Allow for an alternative notation to define modules' options: `<div dom-my-module:option-name="option value">`
