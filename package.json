@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "private": true,
     "workspaces": [
-        "dist/*"
+        "packages/*"
     ],
     "scripts": {
         "build": "node --max-old-space-size=8192 scripts/build/build.mjs",
@@ -75,7 +75,7 @@
         "jest-extended": "^3.1.0",
         "jsdom": "^20.0.0",
         "json-stringify-pretty-compact": "^4.0.0",
-        "lerna": "^5.5.2",
+        "lerna": "^5.5.4",
         "npm": ">=8.11.0",
         "postcss-nested": "^5.0.6",
         "regenerator-runtime": "^0.13.9",

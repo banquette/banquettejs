@@ -1,9 +1,10 @@
 {
     "name": "@banquette/utils-type",
     "version": "0.1.0",
+    "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "url": "https://github.com/banquette/banquettejs.git",
         "directory": "packages/utils-type"
     },
     "license": "Apache-2.0",

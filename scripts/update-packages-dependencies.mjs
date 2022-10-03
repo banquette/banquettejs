@@ -42,7 +42,7 @@ for (const packageName of Object.keys(dependencies)) {
         if (!subPackageJson.version) {
             throw `Missing version for package "${dependency}".`;
         }
-        newDependencies[`@banquette/${dependency}`] = `^${subPackageJson.version}`;
+        newDependencies[`@banquette/${dependency}`] = `workspace:^`;
     }
     packageJson.dependencies = newDependencies;
     fs.writeFileSync(packageJsonPath, stringify(packageJson, {indent: 4}) + "\n");

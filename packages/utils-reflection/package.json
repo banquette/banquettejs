@@ -1,9 +1,10 @@
 {
     "name": "@banquette/utils-reflection",
     "version": "0.1.0",
+    "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "url": "https://github.com/banquette/banquettejs.git",
         "directory": "packages/utils-reflection"
     },
     "license": "Apache-2.0",
@@ -12,9 +13,9 @@
     "types": "index.d.ts",
     "dependencies": {
         "reflect-metadata": "^0.1.13",
-        "@banquette/exception": "^0.1.0",
-        "@banquette/utils-string": "^0.1.0",
-        "@banquette/utils-type": "^0.1.0"
+        "@banquette/exception": "workspace:^",
+        "@banquette/utils-string": "workspace:^",
+        "@banquette/utils-type": "workspace:^"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

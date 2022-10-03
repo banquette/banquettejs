@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/@banquette/core/banquettejs.git",
+        "url": "https://github.com/banquette/banquettejs.git",
         "directory": "packages/api"
     },
     "license": "Apache-2.0",
@@ -11,17 +11,17 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/config": "^0.1.0",
-        "@banquette/dependency-injection": "^0.1.0",
-        "@banquette/event": "^0.1.0",
-        "@banquette/exception": "^0.1.0",
-        "@banquette/http": "^0.1.0",
-        "@banquette/model": "^0.1.0",
-        "@banquette/utils-misc": "^0.1.0",
-        "@banquette/utils-object": "^0.1.0",
-        "@banquette/utils-string": "^0.1.0",
-        "@banquette/utils-type": "^0.1.0",
-        "@banquette/validation": "^0.1.0"
+        "@banquette/config": "workspace:^",
+        "@banquette/dependency-injection": "workspace:^",
+        "@banquette/event": "workspace:^",
+        "@banquette/exception": "workspace:^",
+        "@banquette/http": "workspace:^",
+        "@banquette/model": "workspace:^",
+        "@banquette/utils-misc": "workspace:^",
+        "@banquette/utils-object": "workspace:^",
+        "@banquette/utils-string": "workspace:^",
+        "@banquette/utils-type": "workspace:^",
+        "@banquette/validation": "workspace:^"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
