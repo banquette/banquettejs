@@ -19,7 +19,7 @@ export default class ValidateMaxComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Max(this.count, this.treatAs, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
+        return Max(this.count, {treatAs: this.treatAs, message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
 </script>

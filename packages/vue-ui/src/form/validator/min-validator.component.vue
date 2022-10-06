@@ -20,7 +20,7 @@ export default class ValidateMinComponent extends ValidatorComponent {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Min(this.count, this.treatAs, {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
+        return Min(this.count, {treatAs: this.treatAs, message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
 </script>
