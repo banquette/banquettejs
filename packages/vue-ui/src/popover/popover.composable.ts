@@ -120,7 +120,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * Calling `hide()` manually will make the popover visible immediately.
      * The delay only applies to DOM events.
      */
-    @Prop({default: {mouseleave: 200}, transform: (v) => !isObject(v) ? parseInt(v, 10) : v}) public hideDelay!: number|Record<string, number>;
+    @Prop({default: {mouseleave: 0}, transform: (v) => !isObject(v) ? parseInt(v, 10) : v}) public hideDelay!: number|Record<string, number>;
 
     /**
      * If `true`, the popover will remain visible while the mouse is over its content.
