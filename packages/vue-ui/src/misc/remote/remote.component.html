@@ -13,5 +13,5 @@
     </slot>
 
     <!-- The default slot is shown when remote data have been fetched successfully and are ready to consume -->
-    <slot v-else-if="ready" :response="response" :result="response.result" :bag="bag"></slot>
+    <slot v-else-if="ready" :response="response" :result="response.result" :refresh="update" :bag="bag"></slot>
 </div>

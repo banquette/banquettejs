@@ -38,7 +38,7 @@ export default class RemoteComponent extends Vue {
     /**
      * Try to fetch remote data if available.
      */
-    public update(): void {
+    @Expose() public update(): void {
         if (!this.remote.isApplicable) {
             this.response = null;
         } else {
