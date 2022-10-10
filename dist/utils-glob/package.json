@@ -1,0 +1,17 @@
+{
+    "name": "@banquette/utils-glob",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/banquette/banquettejs.git",
+        "directory": "packages/utils-glob"
+    },
+    "license": "Apache-2.0",
+    "main": "_cjs/prod/index.js",
+    "module": "index.js",
+    "types": "index.d.ts",
+    "dependencies": {
+        "@banquette/utils-array": "0.0.0",
+        "@banquette/utils-string": "0.0.0"
+    }
+}

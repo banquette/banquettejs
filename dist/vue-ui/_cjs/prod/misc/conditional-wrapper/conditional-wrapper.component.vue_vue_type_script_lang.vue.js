@@ -1,0 +1,6 @@
+/*!
+ * Banquette VueUi v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";var e=require("../../_virtual/_tslib.js"),t=require("@banquette/vue-typescript/_cjs/prod/decorator/component.decorator"),r=require("@banquette/vue-typescript/_cjs/prod/decorator/prop.decorator"),o=require("@banquette/vue-typescript/_cjs/prod/decorator/render.decorator"),n=require("@banquette/vue-typescript/_cjs/prod/vue"),p=require("vue"),a=function(n){function ConditionalWrapperComponent(){return null!==n&&n.apply(this,arguments)||this}return e.__extends(ConditionalWrapperComponent,n),ConditionalWrapperComponent.prototype.render=function(e){return this.enabled?p.h(this.type):p.renderSlot(e.$slots,"default")},e.__decorate([r.Prop({type:String,default:"div"}),e.__metadata("design:type",String)],ConditionalWrapperComponent.prototype,"type",void 0),e.__decorate([r.Prop({type:Boolean,required:!0}),e.__metadata("design:type",Boolean)],ConditionalWrapperComponent.prototype,"enabled",void 0),e.__decorate([o.Render(),e.__metadata("design:type",Function),e.__metadata("design:paramtypes",[Object]),e.__metadata("design:returntype",Object)],ConditionalWrapperComponent.prototype,"render",null),ConditionalWrapperComponent=e.__decorate([t.Component("bt-conditional-wrapper")],ConditionalWrapperComponent)}(n.Vue);module.exports=a;

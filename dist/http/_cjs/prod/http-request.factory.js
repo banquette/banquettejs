@@ -1,0 +1,6 @@
+/*!
+ * Banquette Http v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("@banquette/utils-type/_cjs/prod/ensure-array"),t=require("@banquette/utils-type/_cjs/prod/is-object"),r=require("@banquette/utils-type/_cjs/prod/is-undefined"),u=require("@banquette/utils-type/_cjs/prod/is-valid-number"),a=require("./constants.js"),i=require("./decoder/auto-detect.decoder.js"),s=require("./encoder/form-data.encoder.js"),n=require("./http-request.js"),o=function(){function HttpRequestFactory(){}return HttpRequestFactory.Create=function(o){for(var y=o.params||{},d=0,l=Object.keys(y);d<l.length;d++){var p=l[d];y[p]=t.isObject(y[p])?y[p]:{type:a.UrlParameterType.Auto,value:String(y[p])}}return new n.HttpRequest(o.method||a.HttpMethod.GET,o.url,y,r.isUndefined(o.payload)?null:o.payload,o.payloadType||s.PayloadTypeFormData,o.responseType||i.ResponseTypeAutoDetect,o.headers||{},r.isUndefined(o.timeout)?null:o.timeout,r.isUndefined(o.retry)?null:o.retry,r.isUndefined(o.retryDelay)?null:o.retryDelay,u.isValidNumber(o.priority)?o.priority:0,o.withCredentials||!1,o.mimeType||null,e.ensureArray(o.tags||[]),o.extras||{})},HttpRequestFactory}();exports.HttpRequestFactory=o;

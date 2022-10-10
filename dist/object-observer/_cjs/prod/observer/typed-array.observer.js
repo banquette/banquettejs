@@ -1,0 +1,6 @@
+/*!
+ * Banquette ObjectObserver v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var r=require("../_virtual/_tslib.js"),e=require("@banquette/utils-type/_cjs/prod/is-undefined"),t=require("../constant.js"),i=require("../mutation.js"),s=function(s){function TypedArrayObserver(){var r=null!==s&&s.apply(this,arguments)||this;return r.proxifiedSet=function(e,s){var y=e.length,a=r.target.slice(0);s=s||0,r.target.set(e,s);for(var n=s;n<y+s;n++)a[n]!==r.target[n]&&r.notify(new i.Mutation(t.MutationType.Update,[String(n)],a[n],r.target[n],r.target));return!0},r}return r.__extends(TypedArrayObserver,s),TypedArrayObserver.Supports=function(r){return ArrayBuffer.isView(r)},TypedArrayObserver.prototype.get=function(r,t){return e.isUndefined(TypedArrayObserver.TypedArrayOverrides[t])?r[t]:this[TypedArrayObserver.TypedArrayOverrides[t]]},TypedArrayObserver.TypedArrayOverrides={reverse:"proxifiedReverse",sort:"proxifiedSort",fill:"proxifiedFill",copyWithin:"proxifiedCopyWithin",set:"proxifiedSet"},TypedArrayObserver}(require("./array.observer.js").ArrayObserver);exports.TypedArrayObserver=s;

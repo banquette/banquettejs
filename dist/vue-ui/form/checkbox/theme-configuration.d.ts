@@ -1,0 +1,52 @@
+export declare const ThemeConfiguration: {
+    css: {
+        vars: {
+            size: string;
+            borderRadius: string;
+            backgroundColor: string;
+            backgroundCheckedColor: string;
+            outlineColor: string;
+            outlineHoverColor: string;
+            outlineFocusedColor: string;
+            outlineCheckedColor: string;
+            outlineWidth: string;
+            outlineHoverWidth: string;
+            outlineFocusedWidth: string;
+            outlineCheckedWidth: string;
+            iconColor: string;
+            errorColor: string;
+            fontFamily: string;
+            fontSize: string;
+            fontWeight: string;
+            textColor: string;
+            backgroundDisabledColor: string;
+            borderColor: string;
+            borderWidth: string;
+            borderStyle: string;
+            borderFocusWidth: string;
+            borderFocusColor: string;
+            borderErrorWidth: string;
+            borderErrorColor: string;
+            placeholderX: string;
+            placeholderY: string;
+            labelTextColor: string;
+            labelTransitionDuration: string;
+            helpTextColor: string;
+            helpFontSize: string;
+            errorTextColor: string;
+            errorFontSize: string;
+            disabledColor: string;
+            disabledOpacity: string;
+            addonBackgroundColor: string;
+            addonBorderColor: string;
+            addonTextColor: string;
+        };
+        selectors: {
+            root: string;
+            label: string;
+            help: string;
+            inputGroup: string;
+            input: string;
+        };
+    };
+};

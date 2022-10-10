@@ -1,0 +1,6 @@
+/*!
+ * Banquette Http v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("./_virtual/_tslib.js"),t=require("@banquette/exception/_cjs/prod/usage.exception"),r=require("./abstract-http-request.builder.js"),s=require("./decoder/auto-detect.decoder.js"),i=require("./encoder/form-data.encoder.js"),u=require("./http-request.factory.js"),a=function(r){function HttpRequestBuilder(){return null!==r&&r.apply(this,arguments)||this}return e.__extends(HttpRequestBuilder,r),HttpRequestBuilder.prototype.getRequest=function(){if(!this._url)throw new t.UsageException("You must define an URL.");return u.HttpRequestFactory.Create({method:this._method,url:this._url,params:this._params,payload:this._payload,payloadType:this._payloadType||i.PayloadTypeFormData,responseType:this._responseType||s.ResponseTypeAutoDetect,headers:this._headers,timeout:this._timeout,retry:this._retry,retryDelay:this._retryDelay,priority:this._priority,withCredentials:this._withCredentials,mimeType:this._mimeType,tags:this._tags,extras:this._extras})},HttpRequestBuilder.Create=function(){return new HttpRequestBuilder},HttpRequestBuilder}(r.AbstractRequestBuilder);exports.HttpRequestBuilder=a;

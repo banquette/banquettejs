@@ -1,0 +1,6 @@
+/*!
+ * Banquette VueUi v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";var e=require("../../../../_virtual/_tslib.js"),t=require("@banquette/vue-typescript/_cjs/prod/decorator/component.decorator"),o=require("@banquette/vue-typescript/_cjs/prod/decorator/expose.decorator"),r=require("@banquette/vue-typescript/_cjs/prod/decorator/prop.decorator"),i=function(i){function GroupComponent(){var e=null!==i&&i.apply(this,arguments)||this;return e.visibleChoices=[],e}return e.__extends(GroupComponent,i),GroupComponent.prototype.updateChoice=function(e){for(var t=0;t<this.visibleChoices.length;++t)if(this.visibleChoices[t].identifier===e.identifier){if(e.visible)return;return void this.visibleChoices.splice(t,1)}e.visible&&this.visibleChoices.push(e)},e.__decorate([r.Prop({type:String,default:null}),e.__metadata("design:type",Object)],GroupComponent.prototype,"label",void 0),e.__decorate([o.Expose(),e.__metadata("design:type",Array)],GroupComponent.prototype,"visibleChoices",void 0),GroupComponent=e.__decorate([t.Component("bt-form-select-group")],GroupComponent)}(require("@banquette/vue-typescript/_cjs/prod/vue").Vue);module.exports=i;

@@ -1,0 +1,20 @@
+/*!
+ * Banquette Ui v0.0.0 (ESM)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+var SelectedChoice = /** @class */ (function () {
+    function SelectedChoice(label, identifier, rawValue) {
+        /**
+         * Unique id of the selected item.
+         */
+        this.id = ++SelectedChoice.MaxId;
+        this.identifier = identifier;
+        this.label = label;
+        this.rawValue = rawValue;
+    }
+    SelectedChoice.MaxId = 0;
+    return SelectedChoice;
+}());
+
+export { SelectedChoice };

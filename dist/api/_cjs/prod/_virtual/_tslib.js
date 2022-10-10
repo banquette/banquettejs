@@ -1,0 +1,6 @@
+/*!
+ * Banquette Api v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var extendStatics=function(t,e){return extendStatics=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var o in e)Object.prototype.hasOwnProperty.call(e,o)&&(t[o]=e[o])},extendStatics(t,e)};exports.__decorate=function __decorate(t,e,o,r){var n,c=arguments.length,a=c<3?e:null===r?r=Object.getOwnPropertyDescriptor(e,o):r;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(t,e,o,r);else for(var f=t.length-1;f>=0;f--)(n=t[f])&&(a=(c<3?n(a):c>3?n(e,o,a):n(e,o))||a);return c>3&&a&&Object.defineProperty(e,o,a),a},exports.__extends=function __extends(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Class extends value "+String(e)+" is not a constructor or null");function __(){this.constructor=t}extendStatics(t,e),t.prototype=null===e?Object.create(e):(__.prototype=e.prototype,new __)},exports.__metadata=function __metadata(t,e){if("object"==typeof Reflect&&"function"==typeof Reflect.metadata)return Reflect.metadata(t,e)},exports.__param=function __param(t,e){return function(o,r){e(o,r,t)}};

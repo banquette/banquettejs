@@ -1,0 +1,25 @@
+export declare const V: {
+    Model: (identifier: import("@banquette/model/type").ModelExtendedIdentifier) => import("@banquette/validation/validator.interface").ValidatorInterface;
+    Ajax: typeof import("@banquette/validation/type/ajax").Ajax;
+    And: (...validators: import("@banquette/validation/validator.interface").ValidatorInterface[]) => import("@banquette/validation/validator.interface").ValidatorInterface;
+    Callback: (callback: (context: import("@banquette/validation/validation-context.interface").ValidationContextInterface) => void | Promise<void>, tags?: string | string[] | undefined, groups?: string | string[] | undefined) => import("@banquette/validation/validator.interface").ValidatorInterface;
+    Choice: typeof import("@banquette/validation/type/choice").Choice;
+    Compose: (...validators: import("@banquette/validation/validator.interface").ValidatorInterface[]) => import("@banquette/validation/validator.interface").ValidatorInterface;
+    Container: (validators: import("@banquette/validation/type/container").ValidatorsCollection) => import("@banquette/validation/validator-container.interface").ValidatorContainerInterface;
+    Email: typeof import("@banquette/validation/type/email").Email;
+    Empty: typeof import("@banquette/validation/type/empty").Empty;
+    Equal: typeof import("@banquette/validation/type/equal").Equal;
+    Foreach: typeof import("@banquette/validation/type/foreach").Foreach;
+    If: typeof import("@banquette/validation/type/if").If;
+    Invalid: typeof import("@banquette/validation/type/invalid").Invalid;
+    Max: typeof import("@banquette/validation/type/max").Max;
+    Min: typeof import("@banquette/validation/type/min").Min;
+    NotEmpty: typeof import("@banquette/validation/type/not-empty").NotEmpty;
+    Or: typeof import("@banquette/validation/type/or").Or;
+    Pattern: typeof import("@banquette/validation/type/pattern").Pattern;
+    Phone: typeof import("@banquette/validation/type/phone").Phone;
+    SameAs: typeof import("@banquette/validation/type/same-as").SameAs;
+    IsType: typeof import("@banquette/validation/type/is-type").IsType;
+    Url: (options?: string | import("@banquette/validation/validator-options.interface").ValidatorOptionsInterface) => import("@banquette/validation/validator.interface").ValidatorInterface;
+    Valid: (tags?: string[]) => import("@banquette/validation/validator.interface").ValidatorInterface;
+};

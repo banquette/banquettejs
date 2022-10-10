@@ -1,0 +1,6 @@
+/*!
+ * Banquette VueUi v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";var e=require("../../_virtual/_tslib.js"),t=require("@banquette/validation/_cjs/prod/type/compose"),o=require("@banquette/validation/_cjs/prod/type/valid"),n=require("@banquette/vue-typescript/_cjs/prod/decorator/component.decorator"),r=require("@banquette/vue-typescript/_cjs/prod/decorator/render.decorator"),a=require("vue"),i=function(i){function ValidateComposeComponent(){return null!==i&&i.apply(this,arguments)||this}return e.__extends(ValidateComposeComponent,i),ValidateComposeComponent.prototype.buildValidator=function(){var e=this.children;return e.length>0?t.Compose.apply(null,e):o.Valid()},ValidateComposeComponent.prototype.render=function(e){return a.renderSlot(e.$slots,"default")},e.__decorate([r.Render(),e.__metadata("design:type",Function),e.__metadata("design:paramtypes",[Object]),e.__metadata("design:returntype",Object)],ValidateComposeComponent.prototype,"render",null),ValidateComposeComponent=e.__decorate([n.Component("bt-validate-compose")],ValidateComposeComponent)}(require("./container-validator.component.js").ContainerValidatorComponent);module.exports=i;

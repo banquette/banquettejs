@@ -1,0 +1,6 @@
+/*!
+ * Banquette Api v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";var e=require("@banquette/dependency-injection/_cjs/prod/injector"),t=require("@banquette/event/_cjs/prod/event-dispatcher.service"),r=require("@banquette/http/_cjs/prod/constants"),s=require("@banquette/model/_cjs/prod/model-metadata.service"),n=require("@banquette/model/_cjs/prod/transformer/transform.service"),i=require("@banquette/utils-type/_cjs/prod/is-array"),o=require("@banquette/utils-type/_cjs/prod/is-object"),a=require("../constant.js"),u=require("../transformer/api.js"),c=e.Injector.Get(n.TransformService),p=e.Injector.Get(s.ModelMetadataService);e.Injector.Get(t.EventDispatcherService).subscribe(a.ApiEvents.RequestSuccess,(function onRequestSuccess(e){var t=e.httpEvent.response.result;if(null!==e.apiRequest.model&&o.isObject(t)&&Object.keys(t).length){var handleResult=function(){n.error?(e.httpEvent.response.setStatus(r.HttpResponseStatus.Error),e.httpEvent.response.error=n.errorDetail):e.httpEvent.response.result=n.result},s=p.resolveAlias(i.isArray(e.apiRequest.model)?e.apiRequest.model[1]:e.apiRequest.model),n=c.transformInverse(t,s,u.ApiTransformerSymbol);if(null!==n.promise)return n.promise.then(handleResult);handleResult()}}),0,null,[a.ApiProcessorTag]);

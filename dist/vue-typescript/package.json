@@ -1,0 +1,25 @@
+{
+    "name": "@banquette/vue-typescript",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/banquette/banquettejs.git",
+        "directory": "packages/vue-typescript"
+    },
+    "license": "Apache-2.0",
+    "main": "_cjs/prod/index.js",
+    "module": "index.js",
+    "types": "index.d.ts",
+    "dependencies": {
+        "@banquette/event": "0.0.0",
+        "@banquette/exception": "0.0.0",
+        "@banquette/utils-array": "0.0.0",
+        "@banquette/utils-dom": "0.0.0",
+        "@banquette/utils-misc": "0.0.0",
+        "@banquette/utils-object": "0.0.0",
+        "@banquette/utils-random": "0.0.0",
+        "@banquette/utils-string": "0.0.0",
+        "@banquette/utils-type": "0.0.0",
+        "@banquette/validation": "0.0.0"
+    }
+}

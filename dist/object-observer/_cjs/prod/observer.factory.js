@@ -1,0 +1,6 @@
+/*!
+ * Banquette ObjectObserver v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("@banquette/exception/_cjs/prod/usage.exception"),r=require("@banquette/utils-type/_cjs/prod/is-undefined"),t=require("./utils.js"),s=function(){function ObserverFactory(){}return ObserverFactory.Supports=function(e){for(var r=0,t=ObserverFactory.Observers;r<t.length;r++){if(t[r].Supports(e))return!0}return!1},ObserverFactory.Create=function(s,o,n){var i=t.extractObserver(s);if(i)return i;for(var u=0,a=ObserverFactory.Observers;u<a.length;u++){var v=a[u];if(v.Supports(s)){if(!r.isUndefined(o)&&r.isUndefined(n))throw new e.UsageException("You must define a property name if the observer is not the root observer.");return new v(n||"/",s,o||null)}}throw new e.UsageException("Unsupported input to observe. Please call `ObserverFactory::Supports()` to ensure the data you want to observe is supported.")},ObserverFactory.RegisterObserver=function(e){ObserverFactory.Observers.push(e),ObserverFactory.Observers.sort((function(e,r){return r.GetPriority()-e.GetPriority()}))},ObserverFactory.Observers=[],ObserverFactory}();exports.ObserverFactory=s;

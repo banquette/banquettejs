@@ -1,0 +1,18 @@
+{
+    "name": "@banquette/dependency-injection",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/banquette/banquettejs.git",
+        "directory": "packages/dependency-injection"
+    },
+    "license": "Apache-2.0",
+    "main": "_cjs/prod/index.js",
+    "module": "index.js",
+    "types": "index.d.ts",
+    "dependencies": {
+        "@banquette/exception": "0.0.0",
+        "@banquette/utils-reflection": "0.0.0",
+        "@banquette/utils-type": "0.0.0"
+    }
+}

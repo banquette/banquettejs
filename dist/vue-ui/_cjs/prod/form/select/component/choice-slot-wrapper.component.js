@@ -1,0 +1,6 @@
+/*!
+ * Banquette VueUi v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";var e=require("../../../_virtual/_tslib.js"),t=require("@banquette/vue-typescript/_cjs/prod/decorator/component.decorator"),r=require("@banquette/vue-typescript/_cjs/prod/decorator/prop.decorator"),o=require("@banquette/vue-typescript/_cjs/prod/decorator/provide.decorator"),p=require("@banquette/vue-typescript/_cjs/prod/decorator/render.decorator"),n=require("@banquette/vue-typescript/_cjs/prod/vue"),a=require("vue"),i=function(n){function ChoiceSlotWrapperComponent(){return null!==n&&n.apply(this,arguments)||this}return e.__extends(ChoiceSlotWrapperComponent,n),ChoiceSlotWrapperComponent.prototype.render=function(e){return a.renderSlot(e.$slots,"default")},e.__decorate([o.Provide(),r.Prop({type:String,required:!0}),e.__metadata("design:type",String)],ChoiceSlotWrapperComponent.prototype,"position",void 0),e.__decorate([p.Render(),e.__metadata("design:type",Function),e.__metadata("design:paramtypes",[Object]),e.__metadata("design:returntype",Object)],ChoiceSlotWrapperComponent.prototype,"render",null),ChoiceSlotWrapperComponent=e.__decorate([t.Component({name:"choice-slot-wrapper",group:null})],ChoiceSlotWrapperComponent)}(n.Vue);module.exports=i;

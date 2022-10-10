@@ -1,0 +1,6 @@
+/*!
+ * Banquette Ui v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";var e=require("@banquette/config/_cjs/prod/config/configuration.service"),t=require("@banquette/dependency-injection/_cjs/prod/injector"),a=require("@banquette/event/_cjs/prod/event-dispatcher.service"),n=require("@banquette/utils-object/_cjs/prod/flatten-object"),r=require("../../config.js"),i=require("../constant.js"),o=null;function getConfig(){return null===o&&(o=t.Injector.Get(e.ConfigurationService).get(r.UiConfigurationSymbol).table),o}t.Injector.Get(a.EventDispatcherService).subscribe(i.TableApiEvents.BeforeRequest,(function onBeforeRequest(e){var t=getConfig(),a=e.httpEvent.request;e.state.pagination.enabled&&(a.setParam(t.pagination.pageParameterName,e.state.pagination.page),a.setParam(t.pagination.itemsPerPageParameterName,e.state.pagination.itemsPerPage),null!==t.pagination.strategyParameterName&&a.setParam(t.pagination.strategyParameterName,e.state.pagination.strategy)),null!==e.state.ordering.columnName&&null!==e.state.ordering.direction&&a.setParam("order[".concat(e.state.ordering.columnName,"]"),e.state.ordering.direction);for(var r=n.flattenObject(e.state.filters,t.filtering.flattenConcatenator),i=0,o=Object.keys(r);i<o.length;i++){var s=o[i];a.setParam(s,r[s])}}),0,null,[i.TableProcessorTag]);

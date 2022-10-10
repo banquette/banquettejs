@@ -1,0 +1,19 @@
+/*!
+ * Banquette VueRemixIcons v0.0.0 (ESM)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+import { h } from 'vue';
+
+var script = {
+    name: 'i-remix-hotspot',
+    props: ['width', 'height', 'color', 'crop', 'version'],
+    render: function render() {
+        var w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+        if (v === 'line')
+    { return h('svg',{"viewBox":c ? '5 1 16 21' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M11 2v2H7v16h10v-9h2v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5zm2 5a2 2 0 0 1 2 2h-2V7zm0-3a5 5 0 0 1 5 5h-2a3 3 0 0 0-3-3V4zm0-3a8 8 0 0 1 8 8h-2a6 6 0 0 0-6-6V1z"},[])]); }
+return h('svg',{"viewBox":c ? '4 1 17 21' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M11 2v9h7v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h6zm2 5a2 2 0 0 1 2 2h-2V7zm0-3a5 5 0 0 1 5 5h-2a3 3 0 0 0-3-3V4zm0-3a8 8 0 0 1 8 8h-2a6 6 0 0 0-6-6V1z"},[])]);
+    }
+};
+
+export { script as default };

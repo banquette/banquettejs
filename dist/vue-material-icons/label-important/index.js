@@ -1,0 +1,11 @@
+/*!
+ * Banquette VueMaterialIcons v0.0.0 (ESM)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+import { VueBuilder } from '@banquette/vue-typescript/vue-builder';
+import './label-important.component.vue.js';
+import script from './label-important.component.vue_vue_type_script_lang.vue.js';
+export { default as IconMaterialLabelImportant } from './label-important.component.vue_vue_type_script_lang.vue.js';
+
+VueBuilder.RegisterComponent('i-material-label-important', script);

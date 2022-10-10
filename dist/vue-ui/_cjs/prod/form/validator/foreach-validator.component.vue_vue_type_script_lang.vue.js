@@ -1,0 +1,6 @@
+/*!
+ * Banquette VueUi v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";var e=require("../../_virtual/_tslib.js"),t=require("@banquette/exception/_cjs/prod/usage.exception"),a=require("@banquette/validation/_cjs/prod/type/foreach"),r=require("@banquette/validation/_cjs/prod/type/valid"),o=require("@banquette/vue-typescript/_cjs/prod/decorator/component.decorator"),n=require("@banquette/vue-typescript/_cjs/prod/decorator/render.decorator"),i=require("vue"),d=function(d){function ValidateForeachComponent(){return null!==d&&d.apply(this,arguments)||this}return e.__extends(ValidateForeachComponent,d),ValidateForeachComponent.prototype.buildValidator=function(){var e=this.children;if(e.length>1)throw new t.UsageException('"validate-foreach" can only have 1 child.');return e.length>0?a.Foreach(e[0]):r.Valid()},ValidateForeachComponent.prototype.render=function(e){return i.renderSlot(e.$slots,"default")},e.__decorate([n.Render(),e.__metadata("design:type",Function),e.__metadata("design:paramtypes",[Object]),e.__metadata("design:returntype",Object)],ValidateForeachComponent.prototype,"render",null),ValidateForeachComponent=e.__decorate([o.Component("bt-validate-foreach")],ValidateForeachComponent)}(require("./container-validator.component.js").ContainerValidatorComponent);module.exports=d;

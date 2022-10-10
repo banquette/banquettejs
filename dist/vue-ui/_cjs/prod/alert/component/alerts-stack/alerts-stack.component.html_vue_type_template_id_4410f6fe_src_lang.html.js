@@ -1,0 +1,6 @@
+/*!
+ * Banquette VueUi v0.0.0 (CommonJS)
+ * (c) 2022-2022 Julien Pinto
+ * Released under Apache License, Version 2.0
+ */
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("vue"),t=["data-fixed"],l=["innerHTML"];exports.render=function render(n,o,r,a,c,i){var s=e.resolveComponent("bt-alert");return e.openBlock(),e.createElementBlock("div",{class:"bt-alerts-stack","data-fixed":n.fixed},[(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(n.stack,(function(t,o){return e.openBlock(),e.createElementBlock("div",{class:e.normalizeClass("stack "+o)},[e.renderSlot(n.$slots,o),(e.openBlock(!0),e.createElementBlock(e.Fragment,null,e.renderList(t,(function(t){return e.openBlock(),e.createBlock(s,{ref_for:!0,ref:"a"+t.id,variant:t.variant,title:t.title,icon:t.icon,ttl:t.ttl,closable:t.closable,"allow-html":t.allowHtml,onClose:function(e){return n.remove(t.id)}},{default:e.withCtx((function(){return[t.allowHtml?(e.openBlock(),e.createElementBlock("span",{key:0,innerHTML:t.message},null,8,l)):(e.openBlock(),e.createElementBlock(e.Fragment,{key:1},[e.createTextVNode(e.toDisplayString(t.message),1)],64))]})),_:2},1032,["variant","title","icon","ttl","closable","allow-html","onClose"])})),256))],2)})),256))],8,t)};

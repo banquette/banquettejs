@@ -1,0 +1,17 @@
+{
+    "name": "@banquette/inversify",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/banquette/banquettejs.git",
+        "directory": "packages/inversify"
+    },
+    "license": "Apache-2.0",
+    "main": "_cjs/prod/index.js",
+    "module": "index.js",
+    "types": "index.d.ts",
+    "dependencies": {
+        "@banquette/dependency-injection": "0.0.0",
+        "@banquette/utils-type": "0.0.0"
+    }
+}
