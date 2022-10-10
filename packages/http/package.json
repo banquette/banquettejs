@@ -1,6 +1,6 @@
 {
     "name": "@banquette/http",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -12,15 +12,15 @@
     "types": "index.d.ts",
     "dependencies": {
         "qs": "^6.10.1",
-        "@banquette/config": "workspace:^",
-        "@banquette/dependency-injection": "workspace:^",
-        "@banquette/event": "workspace:^",
-        "@banquette/exception": "workspace:^",
-        "@banquette/promise": "workspace:^",
-        "@banquette/utils-misc": "workspace:^",
-        "@banquette/utils-object": "workspace:^",
-        "@banquette/utils-string": "workspace:^",
-        "@banquette/utils-type": "workspace:^"
+        "@banquette/config": "0.0.0",
+        "@banquette/dependency-injection": "0.0.0",
+        "@banquette/event": "0.0.0",
+        "@banquette/exception": "0.0.0",
+        "@banquette/promise": "0.0.0",
+        "@banquette/utils-misc": "0.0.0",
+        "@banquette/utils-object": "0.0.0",
+        "@banquette/utils-string": "0.0.0",
+        "@banquette/utils-type": "0.0.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

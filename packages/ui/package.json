@@ -1,6 +1,6 @@
 {
     "name": "@banquette/ui",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -12,21 +12,21 @@
     "types": "index.d.ts",
     "dependencies": {
         "style-inject": "^0.3.0",
-        "@banquette/api": "workspace:^",
-        "@banquette/config": "workspace:^",
-        "@banquette/dependency-injection": "workspace:^",
-        "@banquette/event": "workspace:^",
-        "@banquette/exception": "workspace:^",
-        "@banquette/form": "workspace:^",
-        "@banquette/http": "workspace:^",
-        "@banquette/model": "workspace:^",
-        "@banquette/model-form": "workspace:^",
-        "@banquette/utils-misc": "workspace:^",
-        "@banquette/utils-object": "workspace:^",
-        "@banquette/utils-random": "workspace:^",
-        "@banquette/utils-string": "workspace:^",
-        "@banquette/utils-type": "workspace:^",
-        "@banquette/validation": "workspace:^"
+        "@banquette/api": "0.0.0",
+        "@banquette/config": "0.0.0",
+        "@banquette/dependency-injection": "0.0.0",
+        "@banquette/event": "0.0.0",
+        "@banquette/exception": "0.0.0",
+        "@banquette/form": "0.0.0",
+        "@banquette/http": "0.0.0",
+        "@banquette/model": "0.0.0",
+        "@banquette/model-form": "0.0.0",
+        "@banquette/utils-misc": "0.0.0",
+        "@banquette/utils-object": "0.0.0",
+        "@banquette/utils-random": "0.0.0",
+        "@banquette/utils-string": "0.0.0",
+        "@banquette/utils-type": "0.0.0",
+        "@banquette/validation": "0.0.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }

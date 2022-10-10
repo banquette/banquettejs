@@ -1,6 +1,6 @@
 {
     "name": "@banquette/dependency-injection",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -11,8 +11,8 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/exception": "workspace:^",
-        "@banquette/utils-reflection": "workspace:^",
-        "@banquette/utils-type": "workspace:^"
+        "@banquette/exception": "0.0.0",
+        "@banquette/utils-reflection": "0.0.0",
+        "@banquette/utils-type": "0.0.0"
     }
 }

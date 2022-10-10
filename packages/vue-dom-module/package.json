@@ -1,6 +1,6 @@
 {
     "name": "@banquette/vue-dom-module",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -11,7 +11,7 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/dom-modules": "workspace:^",
-        "@banquette/vue-typescript": "workspace:^"
+        "@banquette/dom-modules": "0.0.0",
+        "@banquette/vue-typescript": "0.0.0"
     }
 }

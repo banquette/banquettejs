@@ -1,6 +1,6 @@
 {
     "name": "@banquette/model-validation",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -11,11 +11,11 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/dependency-injection": "workspace:^",
-        "@banquette/exception": "workspace:^",
-        "@banquette/model": "workspace:^",
-        "@banquette/utils-type": "workspace:^",
-        "@banquette/validation": "workspace:^"
+        "@banquette/dependency-injection": "0.0.0",
+        "@banquette/exception": "0.0.0",
+        "@banquette/model": "0.0.0",
+        "@banquette/utils-type": "0.0.0",
+        "@banquette/validation": "0.0.0"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
