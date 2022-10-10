@@ -2,9 +2,8 @@
     "name": "@banquette/monorepo",
     "license": "Apache-2.0",
     "version": "0.0.0",
-    "private": true,
     "workspaces": [
-        "packages/*"
+        "dist/*"
     ],
     "scripts": {
         "build": "node --max-old-space-size=8192 scripts/build/build.mjs",

@@ -1,12 +1,6 @@
 {
     "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-    "packages": [
-        "packages/*"
-    ],
-    "command": {
-        "version": {
-            "syncWorkspaceLock": true
-        }
-    },
+    "useNx": true,
+    "useWorkspaces": true,
     "version": "0.0.0"
 }
