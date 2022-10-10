@@ -63,25 +63,8 @@ function finalCleanup() {
     });
 }
 
-function rewriteVueUiIndexes() {
-    for (const currentPath of [
-        path.join(baseDir, 'vue-ui/_cjs/dev/index.js'),
-        path.join(baseDir, 'vue-ui/_cjs/prod/index.js'),
-        path.join(baseDir, 'vue-ui/index.js')
-    ]) {
-        if (fs.existsSync(currentPath)) {
-            console.log(`Rewrite "${chalk.blue(currentPath)}."`);
-            fs.writeFileSync(currentPath, `console.error('Do not import components by doing "import {...} from \\'@banquette/vue-ui\\';", use specific imports instead, for example: "import { ButtonComponent } from \\'@vue-ui/button\\'".');`);
-        }
-    }
-    if (fs.existsSync(path.join(baseDir, 'vue-ui/index.d.ts'))) {
-        fs.rmSync(path.join(baseDir, 'vue-ui/index.d.ts'));
-    }
-}
-
 function postBuild() {
     patchReflectMetadata();
-    rewriteVueUiIndexes();
     finalCleanup();
 }
 
