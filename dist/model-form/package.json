@@ -1,6 +1,6 @@
 {
     "name": "@banquette/model-form",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -11,14 +11,14 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/dependency-injection": "0.0.0",
-        "@banquette/exception": "0.0.0",
-        "@banquette/form": "0.0.0",
-        "@banquette/model": "0.0.0",
-        "@banquette/model-validation": "0.0.0",
-        "@banquette/object-observer": "0.0.0",
-        "@banquette/utils-misc": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
+        "@banquette/dependency-injection": "^0.0.1",
+        "@banquette/exception": "^0.0.1",
+        "@banquette/form": "^0.0.1",
+        "@banquette/model": "^0.0.1",
+        "@banquette/model-validation": "^0.0.1",
+        "@banquette/object-observer": "^0.0.1",
+        "@banquette/utils-misc": "^0.0.1",
+        "@banquette/utils-type": "^0.0.1"
     },
     "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
 }
