@@ -26,12 +26,12 @@ function getPackageJsonContent(packageName) {
 for (const packageName of Object.keys(dependencies)) {
     const packageJson = getPackageJsonContent(packageName);
     const packageJsonPath = getPackageJsonPath(packageName);
-    const newDependencies = Object.assign({}, Object.keys(packageJson.dependencies || {})
+    const newDependencies = {dependencies: Object.assign({}, Object.keys(packageJson.dependencies || {})
         .filter(k =>  k.indexOf('@banquette/') < 0)
         .reduce((obj, i) => {
             obj[i] = packageJson.dependencies[i];
             return obj;
-        }, {}));
+        }, {})), devDependencies: {}};
 
     console.log(`Update ${chalk.blue(packageName)} dependencies.`);
     for (const dependency of dependencies[packageName]) {
@@ -42,8 +42,18 @@ for (const packageName of Object.keys(dependencies)) {
         if (!subPackageJson.version) {
             throw `Missing version for package "${dependency}".`;
         }
-        newDependencies[`@banquette/${dependency}`] = `workspace:^`;
+        const container = 'dependencies';//dependency.startsWith('utils-') || dependency === 'ui' ? 'devDependencies' : 'dependencies';
+        newDependencies[container][`@banquette/${dependency}`] = `^${subPackageJson.version}`;
     }
-    packageJson.dependencies = newDependencies;
+    if (Object.keys(newDependencies.dependencies).length > 0) {
+        packageJson.dependencies = newDependencies.dependencies;
+    } else {
+        delete packageJson.dependencies;
+    }
+    if (Object.keys(newDependencies.devDependencies).length > 0) {
+        packageJson.devDependencies = newDependencies.devDependencies;
+    } else {
+        delete packageJson.devDependencies;
+    }
     fs.writeFileSync(packageJsonPath, stringify(packageJson, {indent: 4}) + "\n");
 }

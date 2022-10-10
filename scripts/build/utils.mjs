@@ -146,14 +146,6 @@ export function getRollupConfig(buildConfig) {
 
 function writeOutput(config, output) {
     if (config.output.format === 'es') {
-        const baseDir = output.dir || path.dirname(output.file);
-        const typesDir = path.join(baseDir, 'src');
-        const testsDir = path.join(baseDir, '__tests__');
-        fs.copySync(typesDir, baseDir);
-        fs.rm(typesDir, {recursive: true});
-        if (fs.pathExistsSync(testsDir)) {
-            fs.rm(testsDir, {recursive: true});
-        }
         const files = getAllFiles(path.resolve(__dirname, '../../', output.dir));
         for (let i = 0; i < files.length; ++i) {
             let fcontent = fs.readFileSync(files[i]).toString();
@@ -167,7 +159,7 @@ function writeOutput(config, output) {
         // Copy package.json and tsconfig.json files
         const packageDir = path.resolve(__dirname, `../../packages/${config._name}`);
         const distDir = path.resolve(__dirname, `../../dist/${config._name}`);
-        for (const file of ['package.json', 'tsconfig.json']) {
+        for (const file of ['package.json'/*, 'tsconfig.json'*/]) {
             fs.copySync(path.join(packageDir, file), path.join(distDir, file));
         }
     } else if (config.output.format === 'cjs') {
@@ -237,9 +229,9 @@ export function cleanupBuilds(configs) {
         const packageName = config.package;
         if (packageName && cleaned.indexOf(packageName) < 0) {
             console.log(`${chalk.red('Cleaning')} builds of package ${chalk.blue(packageName)}.`);
-            const target = path.resolve(__dirname, `../../dist/${packageName}/esm`);
+            const target = path.resolve(__dirname, `../../dist/${packageName}`);
             if (fs.existsSync(target)) {
-                fs.rm(target, {recursive: true});
+                fs.emptyDirSync(target);
             }
             cleaned.push(packageName);
         }
