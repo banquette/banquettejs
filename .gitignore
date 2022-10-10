@@ -3,12 +3,8 @@
 .DS_Store
 node_modules
 TODO.md
-dist
 coverage
-dist/*.js
 scripts-local
-packages/**/dist
-packages/**/build
 .copy-local-targets
 scripts/release-local.sh
 /.run/
