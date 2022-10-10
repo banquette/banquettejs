@@ -1,0 +1,44 @@
+.bt-form-tiptap-color-dropdown {
+    --form-tiptap-color-border-radius: var(--bt-form-tiptap-color-border-radius, var(--bt-border-radius-base));
+}
+
+.bt-form-tiptap-color-dropdown {
+    .wrapper {
+        padding: 0.3em 1em;
+        display: flex;
+        gap: 1em;
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4em;
+
+        & + .column {
+            border-left: 1px solid var(--bt-color-gray-100);
+            padding-left: 1em;
+        }
+    }
+
+    .palette {
+        display: flex;
+        gap: 0.4em;
+    }
+
+    .color {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        border-radius: var(--form-tiptap-color-border-radius);
+
+        &:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+
+        &[data-active] {
+            border: 2px solid #fff;
+            outline: 1px solid #000;
+        }
+    }
+}

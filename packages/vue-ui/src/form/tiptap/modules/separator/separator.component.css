@@ -1,0 +1,8 @@
+.bt-form-tiptap-separator {
+    --form-tiptap-separator-color: var(--bt-form-tiptap-separator-color, var(--bt-color-gray-200));
+}
+
+.bt-form-tiptap-separator {
+    border-left: 1px solid var(--form-tiptap-separator-color);
+    margin: 0 0.5em;
+}

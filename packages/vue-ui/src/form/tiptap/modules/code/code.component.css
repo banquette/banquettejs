@@ -1,0 +1,9 @@
+.ProseMirror {
+    code {
+        padding: 0.3em 0.5em;
+        border-radius: var(--bt-border-radius-base);
+        background-color: var(--bt-color-gray-100);
+        color: #616161;
+        box-decoration-break: clone;
+    }
+}

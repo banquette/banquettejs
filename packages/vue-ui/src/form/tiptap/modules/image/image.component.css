@@ -1,0 +1,27 @@
+.bt-form-tiptap {
+    --form-tiptap-image-selection-outline-width: var(--bt-form-tiptap-image-selection-outline-width, 2px);
+    --form-tiptap-image-selection-outline-style: var(--bt-form-tiptap-image-selection-outline-style, dashed);
+    --form-tiptap-image-selection-outline-color: var(--bt-form-tiptap-image-selection-outline-color, var(--bt-color-primary));
+}
+
+.bt-form-tiptap-image {
+    .form-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2em;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 0.5em;
+    }
+
+    :deep(.bt-dialog .footer) {
+        width: 100%;
+        justify-content: space-between !important;
+    }
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+    outline: var(--form-tiptap-image-selection-outline-width) var(--form-tiptap-image-selection-outline-style) var(--form-tiptap-image-selection-outline-color);
+}
