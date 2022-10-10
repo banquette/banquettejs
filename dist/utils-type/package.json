@@ -1,6 +1,6 @@
 {
     "name": "@banquette/utils-type",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -10,5 +10,6 @@
     "main": "_cjs/prod/index.js",
     "module": "index.js",
     "types": "index.d.ts",
-    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c",
+    "dependencies": {}
 }
