@@ -112,7 +112,7 @@ export default class TableComponent extends Vue {
         // It's important to only fetch on mounted to let the columns register.
         // And we let a tick pass to let time for the watchers to trigger.
         this.$nextTick(() => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 this.filteringForm = this.watchFilteringForm();
                 if (!Object.keys(this.filters).length) {
                     this.vm.fetch();

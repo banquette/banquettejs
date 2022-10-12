@@ -3,6 +3,7 @@ import { Service } from "@banquette/dependency-injection/decorator/service.decor
 import { Injector } from "@banquette/dependency-injection/injector";
 import { DispatchResult } from "@banquette/event/dispatch-result";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
+import { isServer } from "@banquette/utils-misc/is-server";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
 import { isString } from "@banquette/utils-type/is-string";
@@ -42,6 +43,9 @@ export class AlertService {
      * Show an alert.
      */
     private showAlert(options: AlertOptionsInterface): void {
+        if (isServer()) {
+            return ;
+        }
         this.flushQueue();
         const result: DispatchResult = this.eventDispatcher.dispatch(AlertEvents.Show, new ShowAlertEvent(options));
         if (!result.error && result.results.indexOf(true) < 0) {

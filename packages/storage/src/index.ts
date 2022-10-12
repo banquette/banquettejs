@@ -4,6 +4,7 @@ export * from './adapter/adapter.interface';
 export * from './adapter/synchronous-adapter.interface';
 export * from './adapter/cookies.adapter';
 export * from './adapter/local-storage.adapter';
+export * from './adapter/memory.adapter';
 
 // Exceptions
 export * from './exception/no-adapter-available.exception';

@@ -194,14 +194,14 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     private targets: Element[] = [];
     private activeTarget: Element|null = null;
     private unsubscribeFunctions: Record<string, VoidCallback[]> = {};
-    private scheduledVisibilityChange: {timerId: number|null, delay: number}|null = null;
+    private scheduledVisibilityChange: {timerId: number|NodeJS.Timeout|null, delay: number}|null = null;
     private popoverEl: Element|null = null;
 
     @Lifecycle('beforeUnmount')
     public beforeUnmount(): void {
         this.clearEventsListeners();
-        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId) {
-            window.clearTimeout(this.scheduledVisibilityChange.timerId);
+        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId !== null) {
+            clearTimeout(this.scheduledVisibilityChange.timerId);
         }
     }
 
@@ -345,14 +345,14 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         this.addEventListener(this.popoverEl, 'mousedown', noop, 'retainers'); // noop because we only want the preventPropagation
         this.addEventListener(this.popoverEl, 'click', noop, 'retainers'); // noop because we only want the preventPropagation
         this.addEventListener(this.popoverEl, 'mouseenter', () => {
-            if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId) {
-                window.clearTimeout(this.scheduledVisibilityChange.timerId);
+            if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId !== null) {
+                clearTimeout(this.scheduledVisibilityChange.timerId);
                 this.scheduledVisibilityChange.timerId = null;
             }
         }, 'retainers');
         this.addEventListener(this.popoverEl, 'mouseleave', () => {
             if (this.scheduledVisibilityChange !== null) {
-                this.scheduledVisibilityChange.timerId = window.setTimeout(() => {
+                this.scheduledVisibilityChange.timerId = setTimeout(() => {
                     this.hide();
                     this.scheduledVisibilityChange = null;
                 }, this.scheduledVisibilityChange.delay);
@@ -464,8 +464,8 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * If `delay` is `0`, the call is made immediately and synchronously.
      */
     private scheduleVisibilityChange(visible: boolean, originEventType: string): void {
-        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId) {
-            window.clearTimeout(this.scheduledVisibilityChange.timerId);
+        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId !== null) {
+            clearTimeout(this.scheduledVisibilityChange.timerId);
         }
         const apply = () => {
             if (visible) {
@@ -479,7 +479,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         const delay = isNumber(delayHolder) ? delayHolder : (delayHolder[originEventType] || 0);
         if (delay > 0) {
             this.scheduledVisibilityChange = {
-                timerId: window.setTimeout(apply, delay),
+                timerId: setTimeout(apply, delay),
                 delay
             };
         } else {

@@ -5,6 +5,7 @@ import { Injector } from "@banquette/dependency-injection/injector";
 import { EventArg } from "@banquette/event/event-arg";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
 import { addEventListener } from "@banquette/utils-dom/add-event-listener";
+import { isServer } from "@banquette/utils-misc/is-server";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { VoidCallback } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -212,7 +213,7 @@ export default class DialogComponent extends Vue {
             }
             this.shown = true;
             if (this.draggable) {
-                window.setTimeout(() => {
+                setTimeout(() => {
                     this.makeDraggable();
                 });
             }
@@ -286,6 +287,9 @@ export default class DialogComponent extends Vue {
      * and on the other visible dialogs.
      */
     private updateScrollLock(newValue: boolean): void {
+        if (isServer()) {
+            return ;
+        }
         if (newValue) {
             if ((++DialogComponent.ScrollLockedCount) === 1) {
                 this.oldBodyOverflow = document.body.style.overflow;

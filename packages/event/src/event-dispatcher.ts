@@ -77,7 +77,7 @@ export class EventDispatcher implements EventDispatcherInterface {
             // If we had triggered the event immediately only the first subscriber would have been notified.
             // This of course doesn't ensure all subscribers have time to register but still gives a better chance.
             //
-            window.setTimeout(() => {
+            setTimeout(() => {
                 for (const event of events) {
                     this.dispatchWithErrorHandling(type, event.arg);
                 }

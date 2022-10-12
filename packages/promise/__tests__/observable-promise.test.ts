@@ -3,7 +3,7 @@ import { CancelException, TimeoutException, ObservablePromise, RejectCallback, R
 describe('Basic implementation', () => {
     test('simple resolution after delay', () => {
         return new ObservablePromise<string>((resolve: ResolveCallback<string>) => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 resolve('result');
             }, 50);
         }).then((result: string) => {
@@ -14,7 +14,7 @@ describe('Basic implementation', () => {
     test('support of async/await syntax', async () => {
         const waitForDelay = (delay: number) => {
             return new ObservablePromise((resolve) => {
-                window.setTimeout(resolve, delay);
+                setTimeout(resolve, delay);
             });
         };
         const startTime = (new Date()).getTime();
@@ -67,9 +67,9 @@ describe('Basic implementation', () => {
     test('can be canceled', () => {
         const onResolve = jest.fn();
         const promise = new ObservablePromise<number>((resolve: ResolveCallback<number>, reject) => {
-            window.setTimeout(resolve, 100);
+            setTimeout(resolve, 100);
         }).then(onResolve);
-        window.setTimeout(() => {
+        setTimeout(() => {
             promise.cancel();
         }, 30);
         return promise.catch((reason) => {
@@ -85,7 +85,7 @@ describe('Basic implementation', () => {
             const promise = ObservablePromise.Resolve(10);
             promise.then(onResolve).catch(onReject);
             promise.cancel();
-            window.setTimeout(() => {
+            setTimeout(() => {
                 expect(onReject).not.toBeCalled();
                 expect(onResolve).toBeCalledTimes(1);
                 resolve();
@@ -267,7 +267,7 @@ describe('Progression events', () => {
                     return void resolve('Done.');
                 }
                 progress(acc);
-                window.setTimeout(next, step);
+                setTimeout(next, step);
             };
             progress('Starting.');
             next();
@@ -330,11 +330,11 @@ describe('Progression events', () => {
         return new Promise<void>((resolve) => {
             const promise = wait(60, 30);
             promise.then(register('t1')).progress(register('p1'));
-            window.setTimeout(() => {
+            setTimeout(() => {
                 promise.progress(register('p2')).then(register('t2'));
-                window.setTimeout(() => {
+                setTimeout(() => {
                     promise.then(register('t3'));
-                    window.setTimeout(() => {
+                    setTimeout(() => {
                         expect(stack).toStrictEqual(expected);
                         resolve();
                     });
@@ -391,7 +391,7 @@ describe('ObservablePromise.Any', () => {
     test('resolves the first value', () => {
         return ObservablePromise.Any<number>([
             new ObservablePromise((resolve: ResolveCallback<number>) => {
-                window.setTimeout(resolve, 15);
+                setTimeout(resolve, 15);
             }),
             ObservablePromise.Resolve(1),
         ]).then((result: number) => {
@@ -402,7 +402,7 @@ describe('ObservablePromise.Any', () => {
     test('rejects if the first value rejects', () => {
         return ObservablePromise.Any([
             new ObservablePromise((resolve: ResolveCallback<number>) => {
-                window.setTimeout(resolve, 15);
+                setTimeout(resolve, 15);
             }),
             ObservablePromise.Reject(1),
         ]).catch((reason: any) => {
@@ -428,7 +428,7 @@ describe('ObservablePromise.MinDelay', () => {
     test('waits the min delay when the processing is shorter', async () => {
         const startTime = (new Date()).getTime();
         await ObservablePromise.MinDelay<void>(200, (resolve) => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 resolve();
             }, 50);
         });
@@ -438,7 +438,7 @@ describe('ObservablePromise.MinDelay', () => {
     test('do not wait if the processing is longer', async () => {
         const startTime = (new Date()).getTime();
         await ObservablePromise.MinDelay(100, (resolve) => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 resolve(0);
             }, 200);
         });
@@ -450,7 +450,7 @@ describe('ObservablePromise.MinDelay', () => {
 describe('ObservablePromise.Timeout', () => {
     test('rejects after given timeout', () => {
         return new ObservablePromise<number>((resolve: ResolveCallback<number>) => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 resolve(0);
             }, 50);
         }).timeout(40)
@@ -461,7 +461,7 @@ describe('ObservablePromise.Timeout', () => {
 
     test('resolves before given timeout', () => {
         return new ObservablePromise<number>((resolve) => {
-            window.setTimeout(() => {
+            setTimeout(() => {
                 resolve(500);
             }, 500);
         }).timeout(600)

@@ -1,6 +1,7 @@
 <style src="./popover.component.css" scoped></style>
 <template src="./popover.component.html" ></template>
 <script lang="ts">
+import { isServer } from "@banquette/utils-misc/is-server";
 import { isNumeric } from "@banquette/utils-type/is-numeric";
 import { Primitive } from "@banquette/utils-type/types";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
@@ -121,7 +122,7 @@ export default class PopoverComponent extends Vue {
             this.$forceUpdate();
 
             // Then wait a frame for the stick-to to update, so the popover is never out of position.
-            window.setTimeout(() => {
+            setTimeout(() => {
                 this.isVisible = true;
             });
         } else {
@@ -134,6 +135,9 @@ export default class PopoverComponent extends Vue {
      * Test if the floating element should be teleported in the body to be displayed properly.
      */
     private shouldTeleportToBody(): boolean {
+        if (isServer()) {
+            return false;
+        }
         let el = this.$el;
         while (el instanceof Element) {
             const styles = window.getComputedStyle(el);
@@ -149,6 +153,9 @@ export default class PopoverComponent extends Vue {
      * Try to determine the best z-index based on parent elements z-indexes.
      */
     private findHighestZIndex(): number|null {
+        if (isServer()) {
+            return null;
+        }
         let el = this.$el;
         let max: number | null = null;
         while (el instanceof Element) {

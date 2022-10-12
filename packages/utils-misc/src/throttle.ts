@@ -11,17 +11,17 @@ import { GenericCallback } from "@banquette/utils-type/types";
  */
 export function throttle(func: GenericCallback, threshold: number, scope: any = null): GenericCallback {
     let lastCallTime: number = 0;
-    let timerId: number|null = null;
+    let timerId: number|NodeJS.Timeout|null = null;
     let args: any = [];
     return function(this: any) {
         const context = scope || this;
         const now = (new Date()).getTime();
         args = arguments;
-        if (timerId) {
-            window.clearTimeout(timerId);
+        if (timerId !== null) {
+            clearTimeout(timerId);
         }
         if (lastCallTime && now < lastCallTime + threshold) {
-            timerId = window.setTimeout(() => {
+            timerId = setTimeout(() => {
                 timerId = null;
                 lastCallTime = (new Date()).getTime();
                 func.apply(context, args);

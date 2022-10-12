@@ -1,3 +1,4 @@
+import { isServer } from "@banquette/utils-misc/is-server";
 import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
 import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
 import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
@@ -56,7 +57,7 @@ export class AbstractProgressComponent extends Vue {
 
     @Watch('progress')
     public onProgressChange(newValue: number): void {
-        if (newValue === null) {
+        if (newValue === null || isServer()) {
             this.animatedProgressText = null;
             return ;
         }

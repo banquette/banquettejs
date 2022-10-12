@@ -1,5 +1,3 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { InjectLazy } from "@banquette/dependency-injection/decorator/inject-lazy.decorator";
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { isServer } from "@banquette/utils-misc/is-server";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
@@ -8,29 +6,21 @@ import { AbstractAdapter } from "./abstract.adapter";
 import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";
 
 @Service(StorageAdapterTag)
-export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapterInterface {
-    /**
-     * Prefix to be able to differentiate between cookies managed by the storage and cookies who don't.
-     */
-    private prefix: string;
-
-    public constructor(@InjectLazy(() => ConfigurationService) configuration: ConfigurationService) {
-        super();
-        this.prefix = configuration.get<string>('storage.cookieAdapter.prefix');
-    }
+export class MemoryAdapter extends AbstractAdapter implements SynchronousAdapterInterface {
+    private store: Record<string, string> = {};
 
     /**
      * Test if the adapter is available in the current configuration.
      */
     public isAvailable(): boolean {
-        return !isServer() && !isUndefined(document.cookie);
+        return isServer();
     }
 
     /**
      * Get the priority of the adapter.
      */
     public getPriority(): number {
-        return 0;
+        return 1;
     }
 
     /**
@@ -44,17 +34,8 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      * Get the value associated with the given key synchronously.
      */
     public getSync<T, D = null>(key: string, defaultValue?: D): T|D {
-        const value = '; ' + document.cookie;
-        const parts: string[] = value.split('; ' + this.prefix + key + '=');
-        if (parts.length === 2) {
-            // @ts-ignore
-            return this.decode(parts.pop().split(';').shift());
-        }
-        const virtualValue = this.getVirtual(key);
-        if (!isUndefined(virtualValue)) {
-            return this.decode(virtualValue);
-        }
-        return !isUndefined(defaultValue) ? defaultValue : (null as any);
+        const value: string|null = !isUndefined(this.store[key]) ? this.store[key] : null;
+        return value !== null ? this.decode(value) : (!isUndefined(defaultValue) ? defaultValue : (null as any));
     }
 
     /**
@@ -69,12 +50,7 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      */
     public setSync(key: string, value: any): void {
         const oldValue = this.getSync(key);
-        const date = new Date();
-        date.setTime(date.getTime() + (4 * 365 * 24 * 60 * 60 * 1000));
-        const expires = '; expires=' + date.toUTCString();
-        const encoded = this.encode(value);
-        document.cookie = (this.prefix ? this.prefix : '') + key + '=' + this.encode(value)  + expires + '; path=/';
-        this.setVirtual(key, encoded);
+        this.store[key] = this.encode(value);
         this.notifyKeyChange(key, value, oldValue);
     }
 
@@ -90,8 +66,9 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      */
     public removeSync(key: string): void {
         const oldValue = this.getSync(key);
-        document.cookie = this.prefix + key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        this.markAsRemoved(key);
+        if (!isUndefined(this.store[key])) {
+            delete this.store[key];
+        }
         this.notifyKeyChange(key, undefined, oldValue);
     }
 
@@ -106,10 +83,7 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      * Clear the entire key value store synchronously.
      */
     public clearSync(): void {
-        const keys: string[] = this.keysSync();
-        for (const key of keys) {
-            this.removeSync(key);
-        }
+        this.store = {};
         this.notifyClear();
     }
 
@@ -117,14 +91,14 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      * Gets how many keys are stored in the storage.
      */
     public async length(): Promise<number> {
-        return this.keysSync().length;
+        return this.lengthSync();
     }
 
     /**
      * Gets how many keys are stored in the storage synchronously.
      */
     public lengthSync(): number {
-        return this.keysSync().length;
+        return Object.keys(this.store).length;
     }
 
     /**
@@ -138,15 +112,6 @@ export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapte
      * Gets the list of all keys stored in the storage synchronously.
      */
     public keysSync(): string[] {
-        const keys: string[] = [];
-        const cookies = document.cookie.split(';');
-        // tslint:disable-next-line:prefer-for-of
-        for (let i = 0; i < cookies.length; i++) {
-            const key = cookies[i].split('=')[0];
-            if (key !== '' && this.getVirtual(key)) {
-                keys.push(key);
-            }
-        }
-        return keys;
+        return Object.keys(this.store);
     }
 }

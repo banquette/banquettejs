@@ -141,7 +141,7 @@ export abstract class AbstractAdapter implements AdapterInterface {
     protected setVirtual(key: string, value: string): void {
         key = key.trim();
         this.virtualValues[key] = value;
-        window.setTimeout(() => {
+        setTimeout(() => {
             delete this.virtualValues[key];
         });
     }
@@ -153,7 +153,7 @@ export abstract class AbstractAdapter implements AdapterInterface {
     protected markAsRemoved(key: string): void {
         key = key.trim();
         this.virtualValues[key] = UndefinedSymbol;
-        window.setTimeout(() => {
+        setTimeout(() => {
             if (this.virtualValues[key] === UndefinedSymbol) {
                 delete this.virtualValues[key];
             }

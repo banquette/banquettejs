@@ -318,7 +318,7 @@ describe('validators', () => {
             }, V.NotEmpty()).validate(''), {valid: true})],
             [8, null, () => expectResultAsync(1000, V.If(() => {
                 return new Promise((resolve) => {
-                    window.setTimeout(() => void resolve(true), 1000);
+                    setTimeout(() => void resolve(true), 1000);
                 });
             }, V.NotEmpty()).validate(''), {valid: false})]
         ])

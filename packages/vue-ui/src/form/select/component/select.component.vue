@@ -329,7 +329,7 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
         }
         this.updateInput();
         this.updateSelected();
-        window.setTimeout(() => {
+        setTimeout(() => {
             this.updateTagsVisibility();
         });
         this.$emit('change', this.v.control.value);
@@ -480,7 +480,7 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
             //
             // TODO: Investigate this issue for a proper fix.
             //
-            window.setTimeout(this.$forceUpdate);
+            setTimeout(this.$forceUpdate);
         }
     }
 

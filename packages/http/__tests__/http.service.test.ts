@@ -476,7 +476,7 @@ describe('request queue', () => {
                 url: buildTestUrl({delay: 200, responseKey: 'ValidJson'})
             })).promise);
         }
-        window.setTimeout(() => {
+        setTimeout(() => {
             expect(runningRequests.length).toEqual(config.get('http.maxSimultaneousRequests'));
         }, 50);
         return ObservablePromise.All(promises);
@@ -492,7 +492,7 @@ describe('request queue', () => {
                 extras: {i}
             })).promise);
         }
-        window.setTimeout(() => {
+        setTimeout(() => {
             expect(runningRequests.reduce((acc: string[], i) => {
                 acc.push(i.extras.i);
                 return acc;

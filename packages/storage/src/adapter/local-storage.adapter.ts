@@ -1,4 +1,5 @@
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
+import { isServer } from "@banquette/utils-misc/is-server";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
@@ -12,7 +13,7 @@ export class LocalStorageAdapter extends AbstractAdapter implements SynchronousA
      * Test if the adapter is available in the current configuration.
      */
     public isAvailable(): boolean {
-        return isObject(window.localStorage) && isFunction(window.localStorage.getItem);
+        return !isServer() && isObject(window.localStorage) && isFunction(window.localStorage.getItem);
     }
 
     /**

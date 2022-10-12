@@ -9,7 +9,7 @@ export class NetworkWatcherMock {
     }
 
     public isOnline(): boolean {
-        window.setTimeout(() => {
+        setTimeout(() => {
             // Simulate that the network came back on the next frame to the request is re-queued.
             this.eventDispatcher.dispatch(NetworkEvents.AvailabilityChange, new NetworkAvailabilityChangeEvent(true));
         });

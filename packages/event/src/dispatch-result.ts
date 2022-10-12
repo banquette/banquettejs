@@ -102,7 +102,7 @@ export class DispatchResult<T = any> {
             // The timeout is required so the dispatcher can execute the next subscriber if the execution is sequential.
             // Otherwise, "localPromise" will always be equal to "previousPromise".
             // If it is still equal on the next cycle, we have reached the end.
-            window.setTimeout(() => {
+            setTimeout(() => {
                 if (localPromise === this.previousPromise && this.promiseResolve) {
                     if (this.promiseResolve) {
                         this.promiseResolve(this);

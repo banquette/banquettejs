@@ -1,4 +1,5 @@
 import { areEqual } from "@banquette/utils-misc/are-equal";
+import { isServer } from "@banquette/utils-misc/is-server";
 import { throttle } from "@banquette/utils-misc/throttle";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
 import { VoidCallback } from "@banquette/utils-type/types";
@@ -23,17 +24,23 @@ class VueDebugOverlay {
     private pressedKeys: string[] = [];
     private allHighlighted: boolean = false;
     private observer: MutationObserver|null = null;
-    private menuElement: HTMLElement = this.createMenu();
+    private menuElement!: HTMLElement;
     private enabled: boolean = false;
 
     public constructor() {
-        this.listenKeyboardEvents();
+        if (!isServer()) {
+            this.menuElement = this.createMenu();
+            this.listenKeyboardEvents();
+        }
     }
 
     /**
      * Scan the whole DOM to find Vue components.
      */
     public scan(): void {
+        if (isServer()) {
+            return ;
+        }
         const elements: Record<number, DebugElementInterface> = {};
         document.querySelectorAll('*').forEach((node: Element & {__vueParentComponent?: {uid: number}}) => {
             if (VueDebugOverlay.IsVueComponent(node)) {
@@ -74,6 +81,9 @@ class VueDebugOverlay {
      * Scan and observe the DOM for changes.
      */
     public observe(): void {
+        if (isServer()) {
+            return ;
+        }
         this.observer = new MutationObserver(throttle(() => {
             this.scan();
         }, 500));

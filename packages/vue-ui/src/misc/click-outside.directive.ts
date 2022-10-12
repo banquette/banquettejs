@@ -1,3 +1,4 @@
+import { isServer } from "@banquette/utils-misc/is-server";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { isFunction } from "@banquette/utils-type/is-function";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -71,7 +72,7 @@ export class ClickOutsideDirective {
     }
 
     private isOutside(target: HTMLElement|SVGElement): boolean {
-        if (this.el === target || this.el.contains(target)) {
+        if (this.el === target || this.el.contains(target) || isServer()) {
             return false;
         }
         while (target) {

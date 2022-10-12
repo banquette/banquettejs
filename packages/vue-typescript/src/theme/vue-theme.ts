@@ -1,6 +1,6 @@
 import { EventDispatcher } from "@banquette/event/event-dispatcher";
 import { UnsubscribeFunction } from "@banquette/event/type";
-import { isBrowser } from "@banquette/utils-dom/is-browser";
+import { isServer } from "@banquette/utils-misc/is-server";
 import { trim } from "@banquette/utils-string/format/trim";
 import { ensureArray } from "@banquette/utils-type/ensure-array";
 import { isUndefined } from "@banquette/utils-type/is-undefined";
@@ -155,7 +155,7 @@ export class VueTheme {
      * Inject the <style> element containing all the active styles of the theme.
      */
     private injectInDOM(): void {
-        if (!isBrowser()) {
+        if (isServer()) {
             return ;
         }
         let tmpIdentifier = [];

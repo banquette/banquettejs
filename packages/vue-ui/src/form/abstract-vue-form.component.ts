@@ -335,7 +335,7 @@ export abstract class AbstractVueFormComponent<
             if (!this.v.control.focused) {
                 this.focus();
             }
-            window.setTimeout(() => {
+            setTimeout(() => {
                 elapsedTime += (new Date()).getTime() - startTime;
                 if (elapsedTime < 500) {
                     tryToFocus();

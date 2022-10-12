@@ -98,7 +98,7 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
             }
             changeState.apply(this, [4]);
             const startTime = (new Date()).getTime();
-            window.setTimeout(() => {
+            setTimeout(() => {
                 if (aborted) {
                     return ;
                 }

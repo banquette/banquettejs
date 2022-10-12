@@ -1,6 +1,7 @@
 <style src="./alert.component.css" scoped></style>
 <template src="./alert.component.html" ></template>
 <script lang="ts">
+import { isServer } from "@banquette/utils-misc/is-server";
 import { IconMaterialClose } from "@banquette/vue-material-icons/close";
 import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
 import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
@@ -151,7 +152,7 @@ export default class AlertComponent extends Vue {
      * Animate the ttl.
      */
     private updateTimeLeft(): void {
-        if (this.ttlTimeoutId !== null) {
+        if (this.ttlTimeoutId !== null || isServer()) {
             return ;
         }
         this.ttlTimeoutId = window.requestAnimationFrame(() => {

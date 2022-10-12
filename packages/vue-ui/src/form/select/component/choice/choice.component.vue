@@ -200,7 +200,7 @@ export default class ChoiceComponent extends Vue {
      */
     private scrollIntoView = (() => {
         let tries = 0;
-        let timer: number|null = null;
+        let timer: number|NodeJS.Timeout|null = null;
         const tryToScroll = () => {
             // Test if the element or one of its parent has a display: none
             // @see https://stackoverflow.com/a/53068496
@@ -208,12 +208,12 @@ export default class ChoiceComponent extends Vue {
                 const ph = this.$el.parentNode.offsetHeight;
                 const ch = this.$el.offsetHeight;
                 this.$el.parentNode.scrollTop = this.$el.offsetTop - ((ph / 2) - (ch / 2));
-                if (timer) {
-                    window.clearTimeout(timer);
+                if (timer !== null) {
+                    clearTimeout(timer);
                 }
                 timer = null;
             } else if (tries < 20) {
-                timer = window.setTimeout(tryToScroll);
+                timer = setTimeout(tryToScroll);
                 ++tries;
             }
         };

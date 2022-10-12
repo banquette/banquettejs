@@ -2,6 +2,7 @@ import { Inject } from "@banquette/dependency-injection/decorator/inject.decorat
 import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
 import { EventDispatcherInterface } from "@banquette/event/event-dispatcher.interface";
 import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
+import { isServer } from "@banquette/utils-misc/is-server";
 import { proxy } from "@banquette/utils-misc/proxy";
 import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
 import { isObject } from "@banquette/utils-type/is-object";
@@ -27,7 +28,7 @@ export class NetworkWatcherService {
     private onConnectionLostFn!: () => void;
 
     public constructor(@Inject(EventDispatcherService) private eventDispatcher: EventDispatcherInterface) {
-        this.isSupported = isObject(window.navigator);
+        this.isSupported = !isServer() && isObject(window.navigator);
         this.isOnlineAttr = this.isSupported ? window.navigator.onLine : true;
     }
 

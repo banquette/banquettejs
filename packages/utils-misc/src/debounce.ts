@@ -10,7 +10,7 @@ import { GenericCallback } from "@banquette/utils-type/types";
  * @returns function
  */
 export function debounce(func: GenericCallback, wait: number, immediate: boolean = true): GenericCallback {
-    let timeout: number|null = null;
+    let timeout: number|NodeJS.Timeout|null = null;
     return function() {
         // @ts-ignore
         const context = this;
@@ -20,10 +20,10 @@ export function debounce(func: GenericCallback, wait: number, immediate: boolean
             func.apply(context, args);
         };
         const callNow = immediate && !timeout;
-        if (timeout) {
-            window.clearTimeout(timeout);
+        if (timeout !== null) {
+            clearTimeout(timeout);
         }
-        timeout = window.setTimeout(later, wait);
+        timeout = setTimeout(later, wait);
         if (callNow) {
             func.apply(context, args);
         }

@@ -169,7 +169,7 @@ export default class TabsComponent extends Vue {
         this.indicatorEl.removeAttribute('style');
         this.updateFocusIndicator();
         // Wait the end of the transition.
-        window.setTimeout(() => {
+        setTimeout(() => {
             this.updateFocusIndicator();
         }, 300);
     }

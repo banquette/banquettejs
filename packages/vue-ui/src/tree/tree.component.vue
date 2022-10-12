@@ -8,6 +8,7 @@ import { HeadlessTreeViewDataInterface } from "@banquette/ui/tree/headless-tree-
 import { HeadlessTreeViewModel } from "@banquette/ui/tree/headless-tree.view-model";
 import { Node } from '@banquette/ui/tree/node';
 import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
+import { isServer } from "@banquette/utils-misc/is-server";
 import { isArray } from "@banquette/utils-type/is-array";
 import { isObject } from "@banquette/utils-type/is-object";
 import { Primitive, AnyObject } from "@banquette/utils-type/types";
@@ -158,6 +159,9 @@ export default class TreeComponent extends Vue {
 
     @Render()
     public render(context: any) {
+        if (isServer()) {
+            this.beforeMount();
+        }
         const theme = resolveDirective("bt-bind-theme") as any;
         const childNodes: VNode[] = [];
         if (this.showRoot) {
