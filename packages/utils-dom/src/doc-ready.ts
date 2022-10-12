@@ -1,7 +1,7 @@
 import { GenericCallback } from "@banquette/utils-type/types";
 
 /**
- * Slightly modified versin of:
+ * Slightly modified version of:
  * https://github.com/jfriend00/docReady
  */
 let readyList: Array<{fn: GenericCallback, ctx: any}> = [];
@@ -29,7 +29,7 @@ function ready() {
 }
 
 function readyStateChange() {
-    if ( document.readyState === "complete" ) {
+    if (document.readyState === "complete") {
         ready();
     }
 }
