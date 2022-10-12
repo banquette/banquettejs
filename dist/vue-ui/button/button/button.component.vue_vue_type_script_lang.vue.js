@@ -114,7 +114,7 @@ var ButtonComponent = /** @class */ (function (_super) {
             if (this.hasToggleSlot) {
                 this.toggle(event);
             }
-            window.setTimeout(function () {
+            setTimeout(function () {
                 _this.active = false;
             }, this.clickDuration * 2);
         }

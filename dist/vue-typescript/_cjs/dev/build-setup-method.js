@@ -525,6 +525,7 @@ function buildSetupMethod(ctor, data, rootProps, parentInst, importName, prefixO
                     var haveTriggeredImmediately = false;
                     var initialCallConsumed = _watchData.options.immediate !== false;
                     var shouldDelayTrigger = _watchData.options.immediate !== watch_decorator.ImmediateStrategy.Sync && _watchData.options.immediate !== false;
+                    var delayedTriggerRegistered = false;
                     var deepWatcherPreviousValues = {};
                     var onWatchTrigger = function () {
                         var arguments$1 = arguments;
@@ -567,19 +568,22 @@ function buildSetupMethod(ctor, data, rootProps, parentInst, importName, prefixO
                             }
                         };
                         if (shouldDelayTrigger) {
-                            var initialProcess = function () {
-                                shouldDelayTrigger = false;
-                                process();
-                            };
-                            initialCallConsumed = false;
-                            if (_watchData.options.immediate === watch_decorator.ImmediateStrategy.BeforeMount) {
-                                vue.onBeforeMount(initialProcess);
-                            }
-                            else if (_watchData.options.immediate === watch_decorator.ImmediateStrategy.Mounted) {
-                                vue.onMounted(initialProcess);
-                            }
-                            else {
-                                vue.nextTick().then(initialProcess);
+                            if (!delayedTriggerRegistered) {
+                                var initialProcess = function () {
+                                    shouldDelayTrigger = false;
+                                    process();
+                                };
+                                initialCallConsumed = false;
+                                if (_watchData.options.immediate === watch_decorator.ImmediateStrategy.BeforeMount) {
+                                    vue.onBeforeMount(initialProcess);
+                                }
+                                else if (_watchData.options.immediate === watch_decorator.ImmediateStrategy.Mounted) {
+                                    vue.onMounted(initialProcess);
+                                }
+                                else {
+                                    vue.nextTick().then(initialProcess);
+                                }
+                                delayedTriggerRegistered = true;
                             }
                         }
                         else if (initialCallConsumed) {

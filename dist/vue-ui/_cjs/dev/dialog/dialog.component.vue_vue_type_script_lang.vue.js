@@ -9,6 +9,7 @@ var _tslib = require('../_virtual/_tslib.js');
 var injector = require('@banquette/dependency-injection/_cjs/dev/injector');
 var eventDispatcher_service = require('@banquette/event/_cjs/dev/event-dispatcher.service');
 var addEventListener = require('@banquette/utils-dom/_cjs/dev/add-event-listener');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var proxy = require('@banquette/utils-misc/_cjs/dev/proxy');
 var component_decorator = require('@banquette/vue-typescript/_cjs/dev/decorator/component.decorator');
 var computed_decorator = require('@banquette/vue-typescript/_cjs/dev/decorator/computed.decorator');
@@ -173,7 +174,7 @@ var DialogComponent = /** @class */ (function (_super) {
             }
             this.shown = true;
             if (this.draggable) {
-                window.setTimeout(function () {
+                setTimeout(function () {
                     _this.makeDraggable();
                 });
             }
@@ -238,6 +239,9 @@ var DialogComponent = /** @class */ (function (_super) {
      * and on the other visible dialogs.
      */
     DialogComponent.prototype.updateScrollLock = function (newValue) {
+        if (isServer.isServer()) {
+            return;
+        }
         if (newValue) {
             if ((++DialogComponent_1.ScrollLockedCount) === 1) {
                 this.oldBodyOverflow = document.body.style.overflow;

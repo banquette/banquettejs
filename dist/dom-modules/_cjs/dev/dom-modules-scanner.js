@@ -13,6 +13,7 @@ var injector = require('@banquette/dependency-injection/_cjs/dev/injector');
 var metadata_container = require('@banquette/dependency-injection/_cjs/dev/metadata.container');
 var exception_factory = require('@banquette/exception/_cjs/dev/exception.factory');
 var usage_exception = require('@banquette/exception/_cjs/dev/usage.exception');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var camelCase = require('@banquette/utils-string/_cjs/dev/case/camel-case');
 var kebabCase = require('@banquette/utils-string/_cjs/dev/case/kebab-case');
 var trim = require('@banquette/utils-string/_cjs/dev/format/trim');
@@ -39,6 +40,9 @@ var DomModulesScannerService = /** @class */ (function () {
      * Scan the DOM in the search of [dom-*] attributes and create the corresponding modules.
      */
     DomModulesScannerService.prototype.scan = function () {
+        if (isServer.isServer()) {
+            return;
+        }
         var that = this;
         if (this.modulesAttributeSelectors === null) {
             this.modulesAttributeSelectors = this.computeModulesAttributeSelectors();

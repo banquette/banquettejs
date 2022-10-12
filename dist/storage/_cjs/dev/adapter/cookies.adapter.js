@@ -11,6 +11,7 @@ var _tslib = require('../_virtual/_tslib.js');
 var configuration_service = require('@banquette/config/_cjs/dev/config/configuration.service');
 var injectLazy_decorator = require('@banquette/dependency-injection/_cjs/dev/decorator/inject-lazy.decorator');
 var service_decorator = require('@banquette/dependency-injection/_cjs/dev/decorator/service.decorator');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var isUndefined = require('@banquette/utils-type/_cjs/dev/is-undefined');
 var constant = require('../constant.js');
 var abstract_adapter = require('./abstract.adapter.js');
@@ -26,7 +27,7 @@ var CookiesAdapter = /** @class */ (function (_super) {
      * Test if the adapter is available in the current configuration.
      */
     CookiesAdapter.prototype.isAvailable = function () {
-        return !isUndefined.isUndefined(document.cookie);
+        return !isServer.isServer() && !isUndefined.isUndefined(document.cookie);
     };
     /**
      * Get the priority of the adapter.

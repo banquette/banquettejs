@@ -7,6 +7,7 @@ import { __extends, __decorate, __metadata } from '../_virtual/_tslib.js';
 import { HttpMethod } from '@banquette/http/constants';
 import { HeadlessTreeViewModel } from '@banquette/ui/tree/headless-tree.view-model';
 import { ensureInEnum } from '@banquette/utils-array/ensure-in-enum';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { isArray } from '@banquette/utils-type/is-array';
 import { isObject } from '@banquette/utils-type/is-object';
 import { IconMaterialArrowDropDown } from '@banquette/vue-material-icons/arrow-drop-down';
@@ -98,6 +99,9 @@ var TreeComponent = /** @class */ (function (_super) {
         });
     };
     TreeComponent.prototype.render = function (context) {
+        if (isServer()) {
+            this.beforeMount();
+        }
         var theme = resolveDirective("bt-bind-theme");
         var childNodes = [];
         if (this.showRoot) {

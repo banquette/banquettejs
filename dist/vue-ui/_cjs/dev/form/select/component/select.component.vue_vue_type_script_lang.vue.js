@@ -224,7 +224,7 @@ var FormSelectComponent = /** @class */ (function (_super) {
         }
         this.updateInput();
         this.updateSelected();
-        window.setTimeout(function () {
+        setTimeout(function () {
             _this.updateTagsVisibility();
         });
         this.$emit('change', this.v.control.value);
@@ -370,7 +370,7 @@ var FormSelectComponent = /** @class */ (function (_super) {
             //
             // TODO: Investigate this issue for a proper fix.
             //
-            window.setTimeout(this.$forceUpdate);
+            setTimeout(this.$forceUpdate);
         }
     };
     /**

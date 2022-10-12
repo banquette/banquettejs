@@ -8,6 +8,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var _tslib = require('../_virtual/_tslib.js');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var proxy = require('@banquette/utils-misc/_cjs/dev/proxy');
 var isFunction = require('@banquette/utils-type/_cjs/dev/is-function');
 var isObject = require('@banquette/utils-type/_cjs/dev/is-object');
@@ -70,7 +71,7 @@ var ClickOutsideDirective = /** @class */ (function () {
         return isObject.isObject(bindings.value) && bindings.value.eventType || 'mousedown';
     };
     ClickOutsideDirective.prototype.isOutside = function (target) {
-        if (this.el === target || this.el.contains(target)) {
+        if (this.el === target || this.el.contains(target) || isServer.isServer()) {
             return false;
         }
         while (target) {

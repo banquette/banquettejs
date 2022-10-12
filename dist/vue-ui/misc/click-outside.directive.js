@@ -4,6 +4,7 @@
  * Released under Apache License, Version 2.0
  */
 import { __decorate } from '../_virtual/_tslib.js';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { proxy } from '@banquette/utils-misc/proxy';
 import { isFunction } from '@banquette/utils-type/is-function';
 import { isObject } from '@banquette/utils-type/is-object';
@@ -66,7 +67,7 @@ var ClickOutsideDirective = /** @class */ (function () {
         return isObject(bindings.value) && bindings.value.eventType || 'mousedown';
     };
     ClickOutsideDirective.prototype.isOutside = function (target) {
-        if (this.el === target || this.el.contains(target)) {
+        if (this.el === target || this.el.contains(target) || isServer()) {
             return false;
         }
         while (target) {

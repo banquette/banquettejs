@@ -6,6 +6,7 @@
 'use strict';
 
 var _tslib = require('../../../_virtual/_tslib.js');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var close = require('@banquette/vue-material-icons/_cjs/dev/close');
 var component_decorator = require('@banquette/vue-typescript/_cjs/dev/decorator/component.decorator');
 var computed_decorator = require('@banquette/vue-typescript/_cjs/dev/decorator/computed.decorator');
@@ -108,7 +109,7 @@ var AlertComponent = /** @class */ (function (_super) {
      */
     AlertComponent.prototype.updateTimeLeft = function () {
         var _this = this;
-        if (this.ttlTimeoutId !== null) {
+        if (this.ttlTimeoutId !== null || isServer.isServer()) {
             return;
         }
         this.ttlTimeoutId = window.requestAnimationFrame(function () {

@@ -7,6 +7,7 @@ import { __decorate, __param, __metadata } from './_virtual/_tslib.js';
 import { Inject } from '@banquette/dependency-injection/decorator/inject.decorator';
 import { Service } from '@banquette/dependency-injection/decorator/service.decorator';
 import { EventDispatcherService } from '@banquette/event/event-dispatcher.service';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { proxy } from '@banquette/utils-misc/proxy';
 import { isNullOrUndefined } from '@banquette/utils-type/is-null-or-undefined';
 import { isObject } from '@banquette/utils-type/is-object';
@@ -16,7 +17,7 @@ import { NetworkAvailabilityChangeEvent } from './event/network-availability-cha
 var NetworkWatcherService = /** @class */ (function () {
     function NetworkWatcherService(eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
-        this.isSupported = isObject(window.navigator);
+        this.isSupported = !isServer() && isObject(window.navigator);
         this.isOnlineAttr = this.isSupported ? window.navigator.onLine : true;
     }
     /**

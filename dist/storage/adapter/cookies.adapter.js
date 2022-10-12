@@ -7,6 +7,7 @@ import { __extends, __awaiter, __decorate, __param, __metadata, __generator } fr
 import { ConfigurationService } from '@banquette/config/config/configuration.service';
 import { InjectLazy } from '@banquette/dependency-injection/decorator/inject-lazy.decorator';
 import { Service } from '@banquette/dependency-injection/decorator/service.decorator';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { isUndefined } from '@banquette/utils-type/is-undefined';
 import { StorageAdapterTag } from '../constant.js';
 import { AbstractAdapter } from './abstract.adapter.js';
@@ -22,7 +23,7 @@ var CookiesAdapter = /** @class */ (function (_super) {
      * Test if the adapter is available in the current configuration.
      */
     CookiesAdapter.prototype.isAvailable = function () {
-        return !isUndefined(document.cookie);
+        return !isServer() && !isUndefined(document.cookie);
     };
     /**
      * Get the priority of the adapter.

@@ -6,7 +6,6 @@
 export { addEventListener } from './add-event-listener.js';
 export { docReady } from './doc-ready.js';
 export { getElementOffset } from './get-element-offset.js';
-export { isBrowser } from './is-browser.js';
 export { parseCssDuration } from './parse-css-duration.js';
 export { parseUrlFragment } from './parse-url-fragment.js';
 export { updateUrlFragment } from './update-url-fragment.js';

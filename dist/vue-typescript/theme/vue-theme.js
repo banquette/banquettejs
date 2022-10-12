@@ -3,7 +3,7 @@
  * (c) 2022-2022 Julien Pinto
  * Released under Apache License, Version 2.0
  */
-import { isBrowser } from '@banquette/utils-dom/is-browser';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { trim } from '@banquette/utils-string/format/trim';
 import { ensureArray } from '@banquette/utils-type/ensure-array';
 import { isUndefined } from '@banquette/utils-type/is-undefined';
@@ -133,7 +133,7 @@ var VueTheme = /** @class */ (function () {
      * Inject the <style> element containing all the active styles of the theme.
      */
     VueTheme.prototype.injectInDOM = function () {
-        if (!isBrowser()) {
+        if (isServer()) {
             return;
         }
         var tmpIdentifier = [];

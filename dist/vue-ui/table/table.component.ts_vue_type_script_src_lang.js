@@ -93,7 +93,7 @@ var TableComponent = /** @class */ (function (_super) {
         // It's important to only fetch on mounted to let the columns register.
         // And we let a tick pass to let time for the watchers to trigger.
         this.$nextTick(function () {
-            window.setTimeout(function () {
+            setTimeout(function () {
                 _this.filteringForm = _this.watchFilteringForm();
                 if (!Object.keys(_this.filters).length) {
                     _this.vm.fetch();

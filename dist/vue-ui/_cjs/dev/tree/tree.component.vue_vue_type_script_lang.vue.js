@@ -9,6 +9,7 @@ var _tslib = require('../_virtual/_tslib.js');
 var constants = require('@banquette/http/_cjs/dev/constants');
 var headlessTree_viewModel = require('@banquette/ui/_cjs/dev/tree/headless-tree.view-model');
 var ensureInEnum = require('@banquette/utils-array/_cjs/dev/ensure-in-enum');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var isArray = require('@banquette/utils-type/_cjs/dev/is-array');
 var isObject = require('@banquette/utils-type/_cjs/dev/is-object');
 var arrowDropDown = require('@banquette/vue-material-icons/_cjs/dev/arrow-drop-down');
@@ -100,6 +101,9 @@ var TreeComponent = /** @class */ (function (_super) {
         });
     };
     TreeComponent.prototype.render = function (context) {
+        if (isServer.isServer()) {
+            this.beforeMount();
+        }
         var theme = vue.resolveDirective("bt-bind-theme");
         var childNodes = [];
         if (this.showRoot) {

@@ -71,7 +71,7 @@ var StickToDirective = /** @class */ (function () {
          * @see https://github.com/vuejs/core/issues/5685
          * @see https://github.com/vuejs/core/issues/994
          */
-        window.setTimeout(function () {
+        setTimeout(function () {
             _this.destroyPopper();
         }, 2000);
     };
@@ -126,7 +126,7 @@ var StickToDirective = /** @class */ (function () {
         else {
             this.popper.setOptions(popperOptions).catch(console.error);
         }
-        window.setTimeout(function () {
+        setTimeout(function () {
             if (_this.popper) {
                 _this.popper.forceUpdate();
             }

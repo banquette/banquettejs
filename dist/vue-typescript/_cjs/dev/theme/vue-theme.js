@@ -7,7 +7,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var isBrowser = require('@banquette/utils-dom/_cjs/dev/is-browser');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var trim = require('@banquette/utils-string/_cjs/dev/format/trim');
 var ensureArray = require('@banquette/utils-type/_cjs/dev/ensure-array');
 var isUndefined = require('@banquette/utils-type/_cjs/dev/is-undefined');
@@ -137,7 +137,7 @@ var VueTheme = /** @class */ (function () {
      * Inject the <style> element containing all the active styles of the theme.
      */
     VueTheme.prototype.injectInDOM = function () {
-        if (!isBrowser.isBrowser()) {
+        if (isServer.isServer()) {
             return;
         }
         var tmpIdentifier = [];

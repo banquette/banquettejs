@@ -25,11 +25,11 @@ function throttle(func, threshold, scope) {
         var context = scope || this;
         var now = (new Date()).getTime();
         args = arguments;
-        if (timerId) {
-            window.clearTimeout(timerId);
+        if (timerId !== null) {
+            clearTimeout(timerId);
         }
         if (lastCallTime && now < lastCallTime + threshold) {
-            timerId = window.setTimeout(function () {
+            timerId = setTimeout(function () {
                 timerId = null;
                 lastCallTime = (new Date()).getTime();
                 func.apply(context, args);

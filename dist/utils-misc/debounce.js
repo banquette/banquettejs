@@ -24,10 +24,10 @@ function debounce(func, wait, immediate) {
             func.apply(context, args);
         };
         var callNow = immediate && !timeout;
-        if (timeout) {
-            window.clearTimeout(timeout);
+        if (timeout !== null) {
+            clearTimeout(timeout);
         }
-        timeout = window.setTimeout(later, wait);
+        timeout = setTimeout(later, wait);
         if (callNow) {
             func.apply(context, args);
         }

@@ -6,6 +6,7 @@
 export { AbstractAdapter } from './adapter/abstract.adapter.js';
 export { CookiesAdapter } from './adapter/cookies.adapter.js';
 export { LocalStorageAdapter } from './adapter/local-storage.adapter.js';
+export { MemoryAdapter } from './adapter/memory.adapter.js';
 export { NoAdapterAvailableException } from './exception/no-adapter-available.exception.js';
 export { StorageClearEvent } from './event/storage-clear.event.js';
 export { StorageKeyChangeEvent } from './event/storage-key-change.event.js';

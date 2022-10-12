@@ -4,6 +4,7 @@
  * Released under Apache License, Version 2.0
  */
 import { __extends, __decorate, __metadata } from '../_virtual/_tslib.js';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { Composable } from '@banquette/vue-typescript/decorator/composable.decorator';
 import { Expose } from '@banquette/vue-typescript/decorator/expose.decorator';
 import { Prop } from '@banquette/vue-typescript/decorator/prop.decorator';
@@ -32,7 +33,7 @@ var AbstractProgressComponent = /** @class */ (function (_super) {
     };
     AbstractProgressComponent.prototype.onProgressChange = function (newValue) {
         var _this = this;
-        if (newValue === null) {
+        if (newValue === null || isServer()) {
             this.animatedProgressText = null;
             return;
         }

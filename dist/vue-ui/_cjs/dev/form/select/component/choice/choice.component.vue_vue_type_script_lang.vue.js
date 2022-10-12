@@ -42,13 +42,13 @@ var ChoiceComponent = /** @class */ (function (_super) {
                     var ph = _this.$el.parentNode.offsetHeight;
                     var ch = _this.$el.offsetHeight;
                     _this.$el.parentNode.scrollTop = _this.$el.offsetTop - ((ph / 2) - (ch / 2));
-                    if (timer) {
-                        window.clearTimeout(timer);
+                    if (timer !== null) {
+                        clearTimeout(timer);
                     }
                     timer = null;
                 }
                 else if (tries < 20) {
-                    timer = window.setTimeout(tryToScroll);
+                    timer = setTimeout(tryToScroll);
                     ++tries;
                 }
             };

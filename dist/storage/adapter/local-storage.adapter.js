@@ -5,6 +5,7 @@
  */
 import { __extends, __awaiter, __decorate, __generator } from '../_virtual/_tslib.js';
 import { Service } from '@banquette/dependency-injection/decorator/service.decorator';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { isFunction } from '@banquette/utils-type/is-function';
 import { isObject } from '@banquette/utils-type/is-object';
 import { isUndefined } from '@banquette/utils-type/is-undefined';
@@ -20,7 +21,7 @@ var LocalStorageAdapter = /** @class */ (function (_super) {
      * Test if the adapter is available in the current configuration.
      */
     LocalStorageAdapter.prototype.isAvailable = function () {
-        return isObject(window.localStorage) && isFunction(window.localStorage.getItem);
+        return !isServer() && isObject(window.localStorage) && isFunction(window.localStorage.getItem);
     };
     /**
      * Get the priority of the adapter.

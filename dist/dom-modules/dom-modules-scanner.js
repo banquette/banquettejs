@@ -9,6 +9,7 @@ import { Injector } from '@banquette/dependency-injection/injector';
 import { MetadataContainer } from '@banquette/dependency-injection/metadata.container';
 import { ExceptionFactory } from '@banquette/exception/exception.factory';
 import { UsageException } from '@banquette/exception/usage.exception';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { camelCase } from '@banquette/utils-string/case/camel-case';
 import { kebabCase } from '@banquette/utils-string/case/kebab-case';
 import { trim } from '@banquette/utils-string/format/trim';
@@ -35,6 +36,9 @@ var DomModulesScannerService = /** @class */ (function () {
      * Scan the DOM in the search of [dom-*] attributes and create the corresponding modules.
      */
     DomModulesScannerService.prototype.scan = function () {
+        if (isServer()) {
+            return;
+        }
         var that = this;
         if (this.modulesAttributeSelectors === null) {
             this.modulesAttributeSelectors = this.computeModulesAttributeSelectors();

@@ -4,6 +4,7 @@
  * Released under Apache License, Version 2.0
  */
 import { __extends, __decorate, __metadata } from '../_virtual/_tslib.js';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { isNumeric } from '@banquette/utils-type/is-numeric';
 import { Component } from '@banquette/vue-typescript/decorator/component.decorator';
 import { Computed } from '@banquette/vue-typescript/decorator/computed.decorator';
@@ -117,7 +118,7 @@ var PopoverComponent = /** @class */ (function (_super) {
             // Force update is required so the `v-bt-stick-to` directive updates.
             this.$forceUpdate();
             // Then wait a frame for the stick-to to update, so the popover is never out of position.
-            window.setTimeout(function () {
+            setTimeout(function () {
                 _this.isVisible = true;
             });
         }
@@ -130,6 +131,9 @@ var PopoverComponent = /** @class */ (function (_super) {
      * Test if the floating element should be teleported in the body to be displayed properly.
      */
     PopoverComponent.prototype.shouldTeleportToBody = function () {
+        if (isServer()) {
+            return false;
+        }
         var el = this.$el;
         while (el instanceof Element) {
             var styles = window.getComputedStyle(el);
@@ -144,6 +148,9 @@ var PopoverComponent = /** @class */ (function (_super) {
      * Try to determine the best z-index based on parent elements z-indexes.
      */
     PopoverComponent.prototype.findHighestZIndex = function () {
+        if (isServer()) {
+            return null;
+        }
         var el = this.$el;
         var max = null;
         while (el instanceof Element) {

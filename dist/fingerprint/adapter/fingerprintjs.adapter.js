@@ -5,6 +5,7 @@
  */
 import { __decorate } from '../_virtual/_tslib.js';
 import { Service } from '@banquette/dependency-injection/decorator/service.decorator';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { isUndefined } from '@banquette/utils-type/is-undefined';
 import { FingerprintGeneratorInvalidScriptException } from '../exception/fingerprint-generator-invalid-script.exception.js';
 import { FingerprintGeneratorScriptTimeoutException } from '../exception/fingerprint-generator-script-timeout.exception.js';
@@ -19,10 +20,16 @@ var FingerprintjsAdapter = /** @class */ (function () {
      */
     FingerprintjsAdapter.prototype.generateFingerprint = function () {
         return new Promise(function (resolve, reject) {
-            var timeoutId = -1;
+            if (isServer()) {
+                resolve('sever');
+                return;
+            }
+            var timeoutId = null;
             var script = document.createElement('script');
             var onLoad = function () {
-                window.clearTimeout(timeoutId);
+                if (timeoutId !== null) {
+                    clearTimeout(timeoutId);
+                }
                 if (isUndefined(window.FingerprintJS)) {
                     return void reject(new FingerprintGeneratorInvalidScriptException('FingerprintJS not found after importing the script.'));
                 }
@@ -33,7 +40,7 @@ var FingerprintjsAdapter = /** @class */ (function () {
                     }).catch(reject);
                 }).catch(reject);
             };
-            timeoutId = window.setTimeout(function () {
+            timeoutId = setTimeout(function () {
                 script.removeEventListener('load', onLoad);
                 reject(new FingerprintGeneratorScriptTimeoutException('Failed to load FingerprintJS (timeout reached).'));
             }, FingerprintjsAdapter_1.ScriptLoadTimeout);

@@ -4,7 +4,7 @@
  * Released under Apache License, Version 2.0
  */
 /**
- * Slightly modified versin of:
+ * Slightly modified version of:
  * https://github.com/jfriend00/docReady
  */
 var readyList = [];

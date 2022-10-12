@@ -45,8 +45,8 @@ var PopoverComposable = /** @class */ (function (_super) {
     PopoverComposable_1 = PopoverComposable;
     PopoverComposable.prototype.beforeUnmount = function () {
         this.clearEventsListeners();
-        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId) {
-            window.clearTimeout(this.scheduledVisibilityChange.timerId);
+        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId !== null) {
+            clearTimeout(this.scheduledVisibilityChange.timerId);
         }
     };
     /**
@@ -187,14 +187,14 @@ var PopoverComposable = /** @class */ (function (_super) {
         this.addEventListener(this.popoverEl, 'mousedown', noop, 'retainers'); // noop because we only want the preventPropagation
         this.addEventListener(this.popoverEl, 'click', noop, 'retainers'); // noop because we only want the preventPropagation
         this.addEventListener(this.popoverEl, 'mouseenter', function () {
-            if (_this.scheduledVisibilityChange !== null && _this.scheduledVisibilityChange.timerId) {
-                window.clearTimeout(_this.scheduledVisibilityChange.timerId);
+            if (_this.scheduledVisibilityChange !== null && _this.scheduledVisibilityChange.timerId !== null) {
+                clearTimeout(_this.scheduledVisibilityChange.timerId);
                 _this.scheduledVisibilityChange.timerId = null;
             }
         }, 'retainers');
         this.addEventListener(this.popoverEl, 'mouseleave', function () {
             if (_this.scheduledVisibilityChange !== null) {
-                _this.scheduledVisibilityChange.timerId = window.setTimeout(function () {
+                _this.scheduledVisibilityChange.timerId = setTimeout(function () {
                     _this.hide();
                     _this.scheduledVisibilityChange = null;
                 }, _this.scheduledVisibilityChange.delay);
@@ -306,8 +306,8 @@ var PopoverComposable = /** @class */ (function (_super) {
      */
     PopoverComposable.prototype.scheduleVisibilityChange = function (visible, originEventType) {
         var _this = this;
-        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId) {
-            window.clearTimeout(this.scheduledVisibilityChange.timerId);
+        if (this.scheduledVisibilityChange !== null && this.scheduledVisibilityChange.timerId !== null) {
+            clearTimeout(this.scheduledVisibilityChange.timerId);
         }
         var apply = function () {
             if (visible) {
@@ -322,7 +322,7 @@ var PopoverComposable = /** @class */ (function (_super) {
         var delay = isNumber(delayHolder) ? delayHolder : (delayHolder[originEventType] || 0);
         if (delay > 0) {
             this.scheduledVisibilityChange = {
-                timerId: window.setTimeout(apply, delay),
+                timerId: setTimeout(apply, delay),
                 delay: delay
             };
         }

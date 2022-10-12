@@ -254,7 +254,7 @@ var AbstractVueFormComponent = /** @class */ (function (_super) {
             if (!_this.v.control.focused) {
                 _this.focus();
             }
-            window.setTimeout(function () {
+            setTimeout(function () {
                 elapsedTime += (new Date()).getTime() - startTime;
                 if (elapsedTime < 500) {
                     tryToFocus();

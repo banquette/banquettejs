@@ -521,6 +521,7 @@ function buildSetupMethod(ctor, data, rootProps, parentInst, importName, prefixO
                     var haveTriggeredImmediately = false;
                     var initialCallConsumed = _watchData.options.immediate !== false;
                     var shouldDelayTrigger = _watchData.options.immediate !== ImmediateStrategy.Sync && _watchData.options.immediate !== false;
+                    var delayedTriggerRegistered = false;
                     var deepWatcherPreviousValues = {};
                     var onWatchTrigger = function () {
                         var arguments$1 = arguments;
@@ -563,19 +564,22 @@ function buildSetupMethod(ctor, data, rootProps, parentInst, importName, prefixO
                             }
                         };
                         if (shouldDelayTrigger) {
-                            var initialProcess = function () {
-                                shouldDelayTrigger = false;
-                                process();
-                            };
-                            initialCallConsumed = false;
-                            if (_watchData.options.immediate === ImmediateStrategy.BeforeMount) {
-                                onBeforeMount(initialProcess);
-                            }
-                            else if (_watchData.options.immediate === ImmediateStrategy.Mounted) {
-                                onMounted(initialProcess);
-                            }
-                            else {
-                                nextTick().then(initialProcess);
+                            if (!delayedTriggerRegistered) {
+                                var initialProcess = function () {
+                                    shouldDelayTrigger = false;
+                                    process();
+                                };
+                                initialCallConsumed = false;
+                                if (_watchData.options.immediate === ImmediateStrategy.BeforeMount) {
+                                    onBeforeMount(initialProcess);
+                                }
+                                else if (_watchData.options.immediate === ImmediateStrategy.Mounted) {
+                                    onMounted(initialProcess);
+                                }
+                                else {
+                                    nextTick().then(initialProcess);
+                                }
+                                delayedTriggerRegistered = true;
                             }
                         }
                         else if (initialCallConsumed) {

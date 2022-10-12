@@ -141,7 +141,7 @@ var TabsComponent = /** @class */ (function (_super) {
         this.indicatorEl.removeAttribute('style');
         this.updateFocusIndicator();
         // Wait the end of the transition.
-        window.setTimeout(function () {
+        setTimeout(function () {
             _this.updateFocusIndicator();
         }, 300);
     };

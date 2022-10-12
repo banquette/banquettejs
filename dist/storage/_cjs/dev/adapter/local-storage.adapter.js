@@ -9,6 +9,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var _tslib = require('../_virtual/_tslib.js');
 var service_decorator = require('@banquette/dependency-injection/_cjs/dev/decorator/service.decorator');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var isFunction = require('@banquette/utils-type/_cjs/dev/is-function');
 var isObject = require('@banquette/utils-type/_cjs/dev/is-object');
 var isUndefined = require('@banquette/utils-type/_cjs/dev/is-undefined');
@@ -24,7 +25,7 @@ var LocalStorageAdapter = /** @class */ (function (_super) {
      * Test if the adapter is available in the current configuration.
      */
     LocalStorageAdapter.prototype.isAvailable = function () {
-        return isObject.isObject(window.localStorage) && isFunction.isFunction(window.localStorage.getItem);
+        return !isServer.isServer() && isObject.isObject(window.localStorage) && isFunction.isFunction(window.localStorage.getItem);
     };
     /**
      * Get the priority of the adapter.

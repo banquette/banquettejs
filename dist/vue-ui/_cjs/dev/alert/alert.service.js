@@ -12,6 +12,7 @@ var inject_decorator = require('@banquette/dependency-injection/_cjs/dev/decorat
 var service_decorator = require('@banquette/dependency-injection/_cjs/dev/decorator/service.decorator');
 var injector = require('@banquette/dependency-injection/_cjs/dev/injector');
 var eventDispatcher_service = require('@banquette/event/_cjs/dev/event-dispatcher.service');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var proxy = require('@banquette/utils-misc/_cjs/dev/proxy');
 var ensureBoolean = require('@banquette/utils-type/_cjs/dev/ensure-boolean');
 var isString = require('@banquette/utils-type/_cjs/dev/is-string');
@@ -40,6 +41,9 @@ var AlertService = /** @class */ (function () {
      * Show an alert.
      */
     AlertService.prototype.showAlert = function (options) {
+        if (isServer.isServer()) {
+            return;
+        }
         this.flushQueue();
         var result = this.eventDispatcher.dispatch(constant.AlertEvents.Show, new showAlert_event.ShowAlertEvent(options));
         if (!result.error && result.results.indexOf(true) < 0) {

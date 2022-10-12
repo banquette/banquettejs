@@ -8,6 +8,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var _tslib = require('../_virtual/_tslib.js');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var composable_decorator = require('@banquette/vue-typescript/_cjs/dev/decorator/composable.decorator');
 var expose_decorator = require('@banquette/vue-typescript/_cjs/dev/decorator/expose.decorator');
 var prop_decorator = require('@banquette/vue-typescript/_cjs/dev/decorator/prop.decorator');
@@ -36,7 +37,7 @@ var AbstractProgressComponent = /** @class */ (function (_super) {
     };
     AbstractProgressComponent.prototype.onProgressChange = function (newValue) {
         var _this = this;
-        if (newValue === null) {
+        if (newValue === null || isServer.isServer()) {
             this.animatedProgressText = null;
             return;
         }

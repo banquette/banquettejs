@@ -101,7 +101,7 @@ var DispatchResult = /** @class */ (function () {
             // The timeout is required so the dispatcher can execute the next subscriber if the execution is sequential.
             // Otherwise, "localPromise" will always be equal to "previousPromise".
             // If it is still equal on the next cycle, we have reached the end.
-            window.setTimeout(function () {
+            setTimeout(function () {
                 if (localPromise === _this.previousPromise && _this.promiseResolve) {
                     if (_this.promiseResolve) {
                         _this.promiseResolve(_this);

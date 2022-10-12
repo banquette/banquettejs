@@ -1,6 +1,6 @@
 {
     "name": "@banquette/vue-material-icons",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -9,7 +9,5 @@
     "module": "index.js",
     "types": "index.d.ts",
     "license": "Apache-2.0",
-    "dependencies": {
-        "@banquette/vue-typescript": "^0.0.1"
-    }
+    "dependencies": {"@banquette/vue-typescript": "0.0.0"}
 }

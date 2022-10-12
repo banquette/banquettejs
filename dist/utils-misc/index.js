@@ -6,6 +6,7 @@
 export { areEqual } from './are-equal.js';
 export { debounce } from './debounce.js';
 export { doAndRetry, doAndRetryFactory } from './do-and-retry.js';
+export { isServer } from './is-server.js';
 export { isReassignable, makeReassignable, reassign, unmakeReassignable } from './make-reassignable.js';
 export { noop } from './noop.js';
 export { Not } from './not.js';

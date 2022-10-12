@@ -8,7 +8,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 /**
- * Slightly modified versin of:
+ * Slightly modified version of:
  * https://github.com/jfriend00/docReady
  */
 var readyList = [];

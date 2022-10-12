@@ -106,7 +106,7 @@ var AbstractAdapter = /** @class */ (function () {
         var _this = this;
         key = key.trim();
         this.virtualValues[key] = value;
-        window.setTimeout(function () {
+        setTimeout(function () {
             delete _this.virtualValues[key];
         });
     };
@@ -118,7 +118,7 @@ var AbstractAdapter = /** @class */ (function () {
         var _this = this;
         key = key.trim();
         this.virtualValues[key] = UndefinedSymbol;
-        window.setTimeout(function () {
+        setTimeout(function () {
             if (_this.virtualValues[key] === UndefinedSymbol) {
                 delete _this.virtualValues[key];
             }

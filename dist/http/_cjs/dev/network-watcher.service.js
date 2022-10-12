@@ -11,6 +11,7 @@ var _tslib = require('./_virtual/_tslib.js');
 var inject_decorator = require('@banquette/dependency-injection/_cjs/dev/decorator/inject.decorator');
 var service_decorator = require('@banquette/dependency-injection/_cjs/dev/decorator/service.decorator');
 var eventDispatcher_service = require('@banquette/event/_cjs/dev/event-dispatcher.service');
+var isServer = require('@banquette/utils-misc/_cjs/dev/is-server');
 var proxy = require('@banquette/utils-misc/_cjs/dev/proxy');
 var isNullOrUndefined = require('@banquette/utils-type/_cjs/dev/is-null-or-undefined');
 var isObject = require('@banquette/utils-type/_cjs/dev/is-object');
@@ -20,7 +21,7 @@ var networkAvailabilityChange_event = require('./event/network-availability-chan
 var NetworkWatcherService = /** @class */ (function () {
     function NetworkWatcherService(eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
-        this.isSupported = isObject.isObject(window.navigator);
+        this.isSupported = !isServer.isServer() && isObject.isObject(window.navigator);
         this.isOnlineAttr = this.isSupported ? window.navigator.onLine : true;
     }
     /**

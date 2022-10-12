@@ -3,6 +3,7 @@ export * from './adapter/adapter.interface';
 export * from './adapter/synchronous-adapter.interface';
 export * from './adapter/cookies.adapter';
 export * from './adapter/local-storage.adapter';
+export * from './adapter/memory.adapter';
 export * from './exception/no-adapter-available.exception';
 export * from './event/storage-clear.event';
 export * from './event/storage-key-change.event';

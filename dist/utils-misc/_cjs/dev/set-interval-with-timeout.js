@@ -8,12 +8,12 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 /**
- * Call setInterval but removes it after a certain amount of time (the timeout).
+ * Call setInterval but removes it after a certain amount of time.
  */
 function setIntervalWithTimeout(callback, interval, timeout) {
-    var timerId = window.setInterval(callback, interval);
-    window.setTimeout(function () {
-        window.clearInterval(timerId);
+    var timerId = setInterval(callback, interval);
+    setTimeout(function () {
+        clearInterval(timerId);
     }, timeout);
     return timerId;
 }

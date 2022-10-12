@@ -69,7 +69,7 @@ var EventDispatcher = /** @class */ (function () {
             // If we had triggered the event immediately only the first subscriber would have been notified.
             // This of course doesn't ensure all subscribers have time to register but still gives a better chance.
             //
-            window.setTimeout(function () {
+            setTimeout(function () {
                 for (var _i = 0, events_1 = events; _i < events_1.length; _i++) {
                     var event_1 = events_1[_i];
                     _this.dispatchWithErrorHandling(type, event_1.arg);

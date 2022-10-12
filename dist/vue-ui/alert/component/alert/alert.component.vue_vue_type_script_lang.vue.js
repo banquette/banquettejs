@@ -4,6 +4,7 @@
  * Released under Apache License, Version 2.0
  */
 import { __extends, __decorate, __metadata } from '../../../_virtual/_tslib.js';
+import { isServer } from '@banquette/utils-misc/is-server';
 import { IconMaterialClose } from '@banquette/vue-material-icons/close';
 import { Component } from '@banquette/vue-typescript/decorator/component.decorator';
 import { Computed } from '@banquette/vue-typescript/decorator/computed.decorator';
@@ -106,7 +107,7 @@ var AlertComponent = /** @class */ (function (_super) {
      */
     AlertComponent.prototype.updateTimeLeft = function () {
         var _this = this;
-        if (this.ttlTimeoutId !== null) {
+        if (this.ttlTimeoutId !== null || isServer()) {
             return;
         }
         this.ttlTimeoutId = window.requestAnimationFrame(function () {
