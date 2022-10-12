@@ -1,6 +1,6 @@
 {
     "name": "@banquette/promise",
-    "version": "0.0.0",
+    "version": "0.0.2",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
@@ -11,7 +11,7 @@
     "module": "index.js",
     "types": "index.d.ts",
     "dependencies": {
-        "@banquette/exception": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
+        "@banquette/exception": "^0.0.2",
+        "@banquette/utils-type": "^0.0.2"
     }
 }
