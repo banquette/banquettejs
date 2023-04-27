@@ -1,4 +1,4 @@
-import { EventArg } from "@banquette/event/event-arg";
+import { EventArg } from "@banquette/event";
 import { Node } from '../node';
 
 export class NodeRemovedEventArg extends EventArg {

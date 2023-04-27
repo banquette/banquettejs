@@ -1,4 +1,4 @@
-import { trim } from "@banquette/utils-string/format/trim";
+import { trim } from '@banquette/utils-string';
 
 /**
  * Trim each element of a string array.

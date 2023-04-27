@@ -7,20 +7,39 @@
         "directory": "packages/http"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
-    "dependencies": {
-        "qs": "^6.10.1",
-        "@banquette/config": "0.0.0",
-        "@banquette/dependency-injection": "0.0.0",
-        "@banquette/event": "0.0.0",
-        "@banquette/exception": "0.0.0",
-        "@banquette/promise": "0.0.0",
-        "@banquette/utils-misc": "0.0.0",
-        "@banquette/utils-object": "0.0.0",
-        "@banquette/utils-string": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/http.umd.cjs",
+    "module": "./dist/http.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/http.js",
+            "require": "./dist/http.umd.cjs"
+        }
     },
-    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@banquette/utils-random": "workspace:^",
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
+    "dependencies": {
+        "@banquette/config": "workspace:^",
+        "@banquette/dependency-injection": "workspace:^",
+        "@banquette/event": "workspace:^",
+        "@banquette/exception": "workspace:^",
+        "@banquette/promise": "workspace:^",
+        "@banquette/utils-misc": "workspace:^",
+        "@banquette/utils-object": "workspace:^",
+        "@banquette/utils-string": "workspace:^",
+        "@banquette/utils-type": "workspace:^"
+    }
 }

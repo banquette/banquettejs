@@ -1,4 +1,4 @@
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { ValidatorInterface } from "@banquette/validation";
 import { BasicState, CallContext, ContextualizedState, InverseState, ValidationStrategy } from "./constant";
 import { FormError } from "./form-error";
 

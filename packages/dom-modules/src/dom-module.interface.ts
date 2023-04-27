@@ -1,4 +1,4 @@
-import { Pojo } from "@banquette/utils-type/types";
+import { Pojo } from '@banquette/utils-type';
 
 export interface DomModuleInterface {
     /**
@@ -15,5 +15,5 @@ export interface DomModuleInterface {
      * Get the name of the option to use when a scalar value is passed
      * to the html attribute, like: dom-my-module="2".
      */
-    getDefaultOptionName(): string|null;
+    getDefaultOptionName(): string | null;
 }

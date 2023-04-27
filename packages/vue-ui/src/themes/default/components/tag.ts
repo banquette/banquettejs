@@ -1,5 +1,4 @@
-import { ThemeWildcard, VariantWildcard } from "@banquette/vue-typescript/theme/constant";
-import { VueThemes } from "@banquette/vue-typescript/theme/vue-themes";
+import { ThemeWildcard, VariantWildcard, VueThemes } from "@banquette/vue-typescript";
 
 VueThemes.Define('bt-tag', {
     [ThemeWildcard]: [

@@ -1,39 +1,28 @@
-import { noop } from "@banquette/utils-misc/noop";
-import { trim } from "@banquette/utils-string/format/trim";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isNumber } from "@banquette/utils-type/is-number";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { VoidCallback } from "@banquette/utils-type/types";
-import { ComponentAwareComposable } from "@banquette/vue-typescript/component-aware.composable";
-import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { noop } from "@banquette/utils-misc";
+import { trim } from "@banquette/utils-string";
+import { ensureArray, isArray, isNumber, isObject, isString, isUndefined, VoidCallback } from "@banquette/utils-type";
+import { ComponentAwareComposable, Composable, Expose, Lifecycle, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 import { PopoverConfigurationInterface } from "./popover-configuration.interface";
+
+const SHOW_EVENTS_MAP: Record<string, {show: string, hide: string}> = {
+    'mouseenter': {show: 'mouseenter', hide: 'mouseleave'},
+    'mousedown': {show: 'mousedown', hide: 'mousedown-outside'},
+    'click': {show: 'click', hide: 'click-outside'},
+    'focus': {show: 'focus', hide: 'blur'}
+};
 
 @Composable()
 export class PopoverComposable extends ComponentAwareComposable<Vue> {
-    private static SHOW_EVENTS_MAP: Record<string, {show: string, hide: string}> = {
-        'mouseenter': {show: 'mouseenter', hide: 'mouseleave'},
-        'mousedown': {show: 'mousedown', hide: 'mousedown-outside'},
-        'click': {show: 'click', hide: 'click-outside'},
-        'focus': {show: 'focus', hide: 'blur'}
-    };
-
     /**
      * Custom target element.
      */
-    @Prop({type: [String, Object], default: null}) public target!: Element|string;
+    @Prop({type: [String, Object] as PropType<Element|string>, default: null}) public target!: Element|string;
 
     /**
      * Content of the popover.
      */
-    @Prop({type: String, default: null}) public content!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public content!: string|null;
 
     /**
      * If `true`, the HTML containing in the `content` prop will be interpreted.
@@ -58,7 +47,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      * Note that this prop takes priority over every other way to show/hide the popover.
      * Meaning that if visible is `true` for example, calling hide() will do nothing.
      */
-    @Prop({type: Boolean, default: null}) public visible!: boolean|null;
+    @Prop({type: Boolean as PropType<boolean|null>, default: null}) public visible!: boolean|null;
 
     /**
      * Defines the type of event listeners to add on the targets to make the popover visible.
@@ -76,7 +65,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      *   - click: will toggle the popover and hide the popover when clicking outside of it
      *   - focus: will set `blur` event as well
      */
-    @Prop({type: [Array, String], default: 'mouseenter', transform: (v: any) => {
+    @Prop({type: [Array, String] as PropType<string|string[]>, default: 'mouseenter', transform: (v: any) => {
         if (isString(v)) {
             return v.split(',').map((i) => trim(i))
         }
@@ -94,7 +83,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      *   - mousedown-outside: hide the popover when a mousedown event is triggered outside of any of its targets
      *   - blur: hide the popover on the `blur` event of the focused target
      */
-    @Prop({type: [Array, String], default: null, transform: (v: any) => {
+    @Prop({type: [Array, String] as PropType<string|string[]|null>, default: null, transform: (v: any) => {
         if (v === null) {
             return null;
         }
@@ -145,12 +134,12 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     /**
      * An HTML element or selector to teleport the popover into.
      */
-    @Prop({type: [Object, String], default: 'auto'}) public teleport!: Element|string|'auto'|null;
+    @Prop({type: [Object, String] as PropType<Element|string|'auto'|null>, default: 'auto'}) public teleport!: Element|string|'auto'|null;
 
     /**
      * The z-index to apply on the floating element.
      */
-    @Prop({type: [Number, String], default: 'auto'}) public zIndex!: number|'auto'|null;
+    @Prop({type: [Number, String] as PropType<number|'auto'|null>, default: 'auto'}) public zIndex!: number|'auto'|null;
 
     /**
      * To translate the popover from its original position.
@@ -160,7 +149,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
      *   - [0, 20]: The popper is offset 20px away from the reference.
      *   - 20: translates to [0, 20].
      */
-    @Prop({type: [Array, Number], default: [0, 10], transform: (v: any) => {
+    @Prop({type: [Array, Number] as PropType<number|[number,number]|null>, default: [0, 10], transform: (v: any) => {
         if (v === null) {
             return null;
         }
@@ -194,7 +183,7 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
     private targets: Element[] = [];
     private activeTarget: Element|null = null;
     private unsubscribeFunctions: Record<string, VoidCallback[]> = {};
-    private scheduledVisibilityChange: {timerId: number|NodeJS.Timeout|null, delay: number}|null = null;
+    private scheduledVisibilityChange: {timerId: any|null, delay: number}|null = null;
     private popoverEl: Element|null = null;
 
     @Lifecycle('beforeUnmount')
@@ -319,10 +308,10 @@ export class PopoverComposable extends ComponentAwareComposable<Vue> {
         if (this.visible === null) {
             for (const target of this.targets) {
                 for (const eventType of this.showOn) {
-                    if (!isUndefined(PopoverComposable.SHOW_EVENTS_MAP[eventType])) {
-                        this.registerShowEvent(target, PopoverComposable.SHOW_EVENTS_MAP[eventType].show);
+                    if (!isUndefined(SHOW_EVENTS_MAP[eventType])) {
+                        this.registerShowEvent(target, SHOW_EVENTS_MAP[eventType].show);
                         if (this.hideOn === null) {
-                            this.registerHideEvent(target, PopoverComposable.SHOW_EVENTS_MAP[eventType].hide);
+                            this.registerHideEvent(target, SHOW_EVENTS_MAP[eventType].hide);
                         }
                     }
                 }

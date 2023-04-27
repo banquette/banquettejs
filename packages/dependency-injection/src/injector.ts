@@ -1,8 +1,8 @@
-import { BuiltInAdapter } from "./adatper/built-in.adapter";
-import { InjectableMetadataInterface } from "./injectable-metadata.interface";
-import { InjectorAdapterInterface } from "./injector.interface";
-import { MetadataContainer } from "./metadata.container";
-import { InjectableIdentifier } from "./type/injectable-identifier.type";
+import { BuiltInAdapter } from './adatper/built-in.adapter';
+import { InjectableMetadataInterface } from './injectable-metadata.interface';
+import { InjectorAdapterInterface } from './injector.interface';
+import { MetadataContainer } from './metadata.container';
+import { InjectableIdentifier } from './type/injectable-identifier.type';
 
 export class Injector {
     /**
@@ -39,7 +39,7 @@ export class Injector {
     /**
      * Gets any number of elements matching at least on of the tags given as input.
      */
-    public static GetMultiple<T>(tag: symbol|symbol[]): T[] {
+    public static GetMultiple<T>(tag: symbol | symbol[]): T[] {
         return Injector.Adapter.getMultiple(tag);
     }
 

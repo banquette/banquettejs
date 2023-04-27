@@ -1,36 +1,27 @@
 <style src="./select.component.css" scoped></style>
 <template src="./select.component.html" ></template>
 <script lang="ts">
-import { HttpMethod } from "@banquette/http/constants";
-import { SearchType, ChoicesPropResolver, SearchParamName, ChoiceOrigin } from "@banquette/ui/form/select/constant";
-import { SelectedChoice } from "@banquette/ui/form/select/selected-choice";
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { debounce } from "@banquette/utils-misc/debounce";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { VoidCallback, Primitive } from "@banquette/utils-type/types";
-import { IconRemixCloseCircle } from "@banquette/vue-remix-icons/close-circle";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
+import { HttpMethod } from "@banquette/http";
+import { SearchType, ChoicesPropResolver, SearchParamName, ChoiceOrigin, SelectedChoice } from "@banquette/ui";
+import { ensureInEnum } from "@banquette/utils-array";
+import { debounce } from "@banquette/utils-misc";
+import { getObjectKeys } from "@banquette/utils-object";
+import { isArray, isUndefined, VoidCallback, Primitive } from "@banquette/utils-type";
+import { IRemixCloseCircle } from "@banquette/vue-remix-icons";
+import { Component, Expose, Import, Prop, TemplateRef, Themeable, Watch, ImmediateStrategy, BindThemeDirective } from "@banquette/vue-typescript";
 import { useResizeObserver, ResizeObserverEntry } from "@vueuse/core";
-import { DropdownComponent } from "../../../dropdown";
+import { PropType } from "vue";
+import { BtDropdown } from "../../../dropdown";
 import { ClickOutsideDirective } from "../../../misc";
-import { ProgressCircularComponent } from "../../../progress/progress-circular";
-import { TagComponent } from "../../../tag";
-import { AbstractVueFormComponent } from "../../abstract-vue-form.component";
-import { BaseFormInputComponent } from "../../base-input";
+import { BtProgressCircular } from "../../../progress/progress-circular";
+import { BtTag } from "../../../tag";
+import { BtAbstractVueForm } from "../../abstract-vue-form.component";
+import { BtFormBaseInput } from "../../base-input";
 import { BaseInputComposable } from "../../base-input/base-input.composable";
 import { ViewModelEvents } from "../../constant";
 import { BeforeSlotOrigin, AfterSlotOrigin, PropOrigin } from "../constant";
-import ChoiceSlotWrapperComponent from "./choice-slot-wrapper.component";
-import ChoiceComponent from "./choice/choice.component.vue";
+import BtChoiceSlotWrapper from "./choice-slot-wrapper.component";
+import BtChoice from "./choice/choice.component.vue";
 import { I18nDefaults } from "./i18n-defaults";
 import { I18nInterface } from "./i18n.interface";
 import { SelectViewDataInterface } from "./select-view-data.interface";
@@ -41,16 +32,19 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [BaseFormInputComponent, ChoiceComponent, ChoiceSlotWrapperComponent, TagComponent, DropdownComponent, ProgressCircularComponent, IconRemixCloseCircle],
+    components: [BtFormBaseInput, BtChoice, BtChoiceSlotWrapper, BtTag, BtDropdown, BtProgressCircular, IRemixCloseCircle],
     directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['focus', 'blur', 'change']
 })
-export default class FormSelectComponent extends AbstractVueFormComponent<SelectViewDataInterface, SelectViewModel> {
+export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterface, SelectViewModel> {
+    // To get autocompletion in the view.
+    declare v: SelectViewDataInterface;
+
     /**
      * Array of elements to use as choices.
      * They are cumulative with other sources (like the "choices" slot or an ajax request).
      */
-    @Prop({type: Array, default: null}) public choices!: any[]|null;
+    @Prop({type: Array as PropType<any[]|null>, default: null}) public choices!: any[]|null;
 
     /**
      * Defines how to resolve the choices' labels, identifiers, values, disabled status and groups.
@@ -58,11 +52,11 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
      *   - the name of the property to use when the input is an object.
      *   - a function that takes the raw input and returns the value to use.
      */
-    @Prop({type: [String, Function], default: 'label'}) public choicesLabel!: ChoicesPropResolver<string>;
-    @Prop({type: [String, Function], default: 'id'}) public choicesIdentifier!: ChoicesPropResolver<Primitive>;
-    @Prop({type: [String, Function], default: null}) public choicesValue!: ChoicesPropResolver<any>;
-    @Prop({type: [String, Function], default: 'disabled'}) public choicesDisabled!: ChoicesPropResolver<boolean>;
-    @Prop({type: [String, Function], default: 'group'}) public choicesGroup!: ChoicesPropResolver<string>;
+    @Prop({type: [String, Function] as PropType<ChoicesPropResolver<string>>, default: 'label'}) public choicesLabel!: ChoicesPropResolver<string>;
+    @Prop({type: [String, Function] as PropType<ChoicesPropResolver<Primitive>>, default: 'id'}) public choicesIdentifier!: ChoicesPropResolver<Primitive>;
+    @Prop({type: [String, Function] as PropType<ChoicesPropResolver<any>>, default: null}) public choicesValue!: ChoicesPropResolver<any>;
+    @Prop({type: [String, Function] as PropType<ChoicesPropResolver<boolean>>, default: 'disabled'}) public choicesDisabled!: ChoicesPropResolver<boolean>;
+    @Prop({type: [String, Function] as PropType<ChoicesPropResolver<string>>, default: 'group'}) public choicesGroup!: ChoicesPropResolver<string>;
 
     /**
      * If `true` the select allow for multiple values.
@@ -90,7 +84,7 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
      * If `false`: the dropdown is never closed when a selection is made.
      * If `auto`: the dropdown is only closed when the select is not multiple.
      */
-    @Prop({type: [String, Boolean], default: 'auto'}) public closeOnSelection!: 'auto'|boolean;
+    @Prop({type: [String, Boolean] as PropType<boolean|'auto'>, default: 'auto'}) public closeOnSelection!: 'auto'|boolean;
 
     /**
      * Holds the props exposed by the base input.
@@ -100,7 +94,7 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
     /**
      * Model type of the choices.
      */
-    @Prop({type: String, default: null}) public model!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public model!: string|null;
 
     /**
      * Remote related props.
@@ -129,8 +123,6 @@ export default class FormSelectComponent extends AbstractVueFormComponent<Select
      */
     @Prop({type: Object, default: I18nDefaults}) public i18n!: I18nInterface;
 
-    // Override the type to get autocompletion in the view.
-    @Expose() public v!: SelectViewDataInterface;
     @Expose() public dropdownWidth: number = 0;
     @Expose() public dropdownTarget!: HTMLElement;
 

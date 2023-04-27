@@ -1,5 +1,5 @@
-import { isScalar } from "./is-scalar";
 import { ensureString } from "./ensure-string";
+import { isScalar } from "./is-scalar";
 
 /**
  * Ensure the input is a scalar value.

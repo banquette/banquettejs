@@ -1,10 +1,9 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ObservablePromise } from "@banquette/promise/observable-promise";
-import { makeReassignable } from "@banquette/utils-misc/make-reassignable";
-import { waitForDelay, waitForNextCycle } from "@banquette/utils-misc/timeout";
+import { ConfigurationService } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
+import { EventDispatcherService } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { ObservablePromise } from "@banquette/promise";
+import { makeReassignable, waitForDelay, waitForNextCycle } from "@banquette/utils-misc";
 import { removeFromObject } from "../../__tests__/utils";
 import {
     XhrAdapter,
@@ -28,11 +27,11 @@ import {
     HttpService,
     UrlParameterType
 } from "../src";
+import './__mocks__/network-watcher.mock';
 
 import { TestResponses } from "./__mocks__/test-responses";
 import { buildTestUrl } from "./__mocks__/utils";
 import './__mocks__/xml-http-request.mock';
-import './__mocks__/network-watcher.mock';
 
 const eventDispatcher: EventDispatcherService = Injector.Get(EventDispatcherService);
 const http: HttpService = Injector.Get(HttpService);
@@ -132,13 +131,13 @@ describe('check the HttpRequest objects created by shortcut methods', () => {
             return async () => {
                 const unsubscribe = eventDispatcher.subscribe(HttpEvents.RequestQueued, (event: RequestEvent) => {
                     unsubscribe();
-                    expect(removeFromObject(event.request, ['id', 'cancelCallback'])).toMatchObject(removeFromObject(HttpRequestFactory.Create({
+                    expect(removeFromObject(event.request, ['id', 'cancelCallback', 'response'])).toMatchObject(removeFromObject(HttpRequestFactory.Create({
                         method: method.toUpperCase() as HttpMethod,
                         url: '//test',
                         payload: null,
                         responseType: ResponseTypeAutoDetect,
                         params: {'foo': 'bar'}
-                    }), ['id', 'cancelCallback']));
+                    }), ['id', 'cancelCallback', 'response']));
                 });
                 await (http as any)[_method]('//test', {'foo': 'bar'}).promise;
             };
@@ -507,8 +506,6 @@ describe('request queue', () => {
  */
 describe('events dispatching', () => {
     beforeEach(() => {
-        // Remove existing spies.
-        jest.restoreAllMocks();
         jest.spyOn(eventDispatcher, 'dispatch');
     });
 

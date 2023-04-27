@@ -1,29 +1,24 @@
 <template src="./remote.component.html" ></template>
 <script lang="ts">
-import { HttpMethod, HttpResponseStatus } from "@banquette/http/constants";
-import { HttpResponse } from "@banquette/http/http-response";
-import { RemoteModule } from "@banquette/ui/misc/remote/remote.module";
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { Primitive } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
-import { ProgressCircularComponent } from "../../progress/progress-circular";
+import { HttpMethod, HttpResponseStatus, HttpResponse } from "@banquette/http";
+import { RemoteModule } from "@banquette/ui";
+import { ensureInEnum } from "@banquette/utils-array";
+import { Primitive } from "@banquette/utils-type";
+import { Component, Computed, Expose, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { BtProgressCircular } from "../../progress/progress-circular";
 
 @Component({
     name: 'bt-remote',
-    components: [ProgressCircularComponent]
+    components: [BtProgressCircular]
 })
-export default class RemoteComponent extends Vue {
-    @Prop({type: String, default: null}) public url!: string|null;
-    @Prop({type: String, default: null}) public endpoint!: string|null;
-    @Prop({type: String, default: null}) public model!: string|null;
-    @Prop({type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
-    @Prop({type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
-    @Prop({type: Object, default: {}}) public headers!: Record<string, Primitive>;
+export default class BtRemote extends Vue {
+    @Prop({type: String as PropType<string|null>, default: null}) public url!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public endpoint!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public model!: string|null;
+    @Prop({type: String as PropType<HttpMethod>, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public headers!: Record<string, Primitive>;
 
     @Expose() public response: HttpResponse<any>|null = null;
     @Expose() public bag: any = {};
@@ -39,6 +34,7 @@ export default class RemoteComponent extends Vue {
      * Try to fetch remote data if available.
      */
     @Expose() public update(): void {
+        console.log('#BtRemote');
         if (!this.remote.isApplicable) {
             this.response = null;
         } else {

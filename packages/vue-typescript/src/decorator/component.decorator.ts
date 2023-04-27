@@ -1,6 +1,4 @@
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { isString, isUndefined, Constructor } from "@banquette/utils-type";
 import { Component as VueComponent } from "@vue/runtime-core";
 import { Directive, EmitsOptions } from "vue";
 import { VUE_CLASS_COMPONENT_OPTIONS } from "../constants";

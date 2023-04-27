@@ -1,4 +1,4 @@
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
+import { isPromiseLike } from "@banquette/utils-type";
 import { createValidator } from "../create-validator";
 import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";

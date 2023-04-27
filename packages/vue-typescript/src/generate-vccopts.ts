@@ -1,25 +1,9 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { extend } from "@banquette/utils-object/extend";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isConstructor } from "@banquette/utils-type/is-constructor";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isNumeric } from "@banquette/utils-type/is-numeric";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { UsageException } from "@banquette/exception";
+import { extend, getObjectKeys } from "@banquette/utils-object";
+import { isArray, isConstructor, isFunction, isNumeric, isObject, isString, isUndefined, Constructor } from "@banquette/utils-type";
 import { Component } from "@vue/runtime-core";
 import { buildSetupMethod } from "./build-setup-method";
-import {
-    DECORATORS_METADATA_CACHE,
-    DECORATORS_METADATA,
-    PRE_CONSTRUCTION_HOOKS,
-    HOOKS_MAP,
-    COMPONENT_CTOR,
-    COMPONENT_TS_INSTANCE,
-    COMPONENT_VUE_INSTANCE
-} from "./constants";
+import { DECORATORS_METADATA_CACHE, DECORATORS_METADATA, PRE_CONSTRUCTION_HOOKS, HOOKS_MAP, COMPONENT_CTOR, COMPONENT_TS_INSTANCE, COMPONENT_VUE_INSTANCE } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
@@ -142,7 +126,9 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     // Bind pre-construction hooks as is.
     for (const hook of PRE_CONSTRUCTION_HOOKS) {
         if (isFunction(ctor.prototype[hook])) {
-            options[hook] = ctor.prototype[hook];
+            options[hook] = function() {
+                ctor.prototype[hook].apply(this.$[COMPONENT_TS_INSTANCE]);
+            };
         }
     }
 

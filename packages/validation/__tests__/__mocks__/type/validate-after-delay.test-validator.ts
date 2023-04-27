@@ -1,8 +1,6 @@
-import { waitForDelay } from "@banquette/utils-misc/timeout";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isType } from "@banquette/utils-type/is-type";
-import { ASYNC_TAG, createValidator, Valid, ValidationResult, ValidatorInterface } from "../../../src";
-import { ValidationContextInterface } from "../../../src/validation-context.interface";
+import { waitForDelay } from "@banquette/utils-misc";
+import { isObject, isType } from "@banquette/utils-type";
+import { ASYNC_TAG, createValidator, Valid, ValidationResult, ValidatorInterface, ValidationContextInterface } from "@banquette/validation";
 
 /**
  * Make a normally sync validator execute after a delay, meant for testing only.

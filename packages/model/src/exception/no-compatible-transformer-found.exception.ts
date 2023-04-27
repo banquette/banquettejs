@@ -1,5 +1,4 @@
-import { Exception } from "@banquette/exception/exception";
-import { SystemException } from "@banquette/exception/system.exception";
+import { Exception, SystemException } from "@banquette/exception";
 import { TransformContext } from "../transformer/transform-context";
 
 /**

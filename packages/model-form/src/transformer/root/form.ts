@@ -1,19 +1,18 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
-import { FormObject } from "@banquette/form/form-object";
-import { ModelTransformerTag } from "@banquette/model/constants";
-import { ModelMetadataService } from "@banquette/model/model-metadata.service";
-import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
-import { ModelFactoryService } from "@banquette/model/model.factory.service";
-import { TransformResult } from "@banquette/model/transform-result";
-import { TransformContext } from "@banquette/model/transformer/transform-context";
-import { TransformPipeline } from "@banquette/model/transformer/transform-pipeline";
-import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
-import { AbstractRootTransformer } from "@banquette/model/transformer/type/root/abstract-root-transformer";
-import { isObject } from "@banquette/utils-type/is-object";
-import { Complete } from "@banquette/utils-type/types";
+import { Inject, Module } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { FormComponentInterface, FormObject } from "@banquette/form";
+import {
+    ModelTransformerTag,
+    ModelMetadataService,
+    ModelTransformMetadataService,
+    ModelFactoryService,
+    TransformResult,
+    TransformContext,
+    TransformPipeline,
+    TransformerInterface,
+    AbstractRootTransformer
+} from "@banquette/model";
+import { isObject, Complete } from "@banquette/utils-type";
 import { FormComponentFactory } from "../../form-component.factory";
 
 export const FormTransformerSymbol = Symbol('form-component');
@@ -25,6 +24,7 @@ export class FormTransformer extends AbstractRootTransformer {
                        @Inject(ModelFactoryService) protected modelFactory: ModelFactoryService,
                        @Inject(FormComponentFactory) private formFactory: FormComponentFactory) {
         super(modelMetadata, transformMetadata, modelFactory);
+        console.warn("#FormTransformer");
     }
 
     /**

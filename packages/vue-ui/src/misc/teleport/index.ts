@@ -1,2 +1,2 @@
 
-export { default as TeleportComponent } from './teleport.component.vue';
+export { default as BtTeleport } from './teleport.component.vue';

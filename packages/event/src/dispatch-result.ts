@@ -1,29 +1,27 @@
-import { Exception } from "@banquette/exception/exception";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { Writeable } from "@banquette/utils-type/types";
-import { DispatchCallInterface } from "./dispatch-call.interface";
+import { Exception, ExceptionFactory } from '@banquette/exception';
+import { isPromiseLike, Writeable } from '@banquette/utils-type';
+import { DispatchCallInterface } from './dispatch-call.interface';
 
 export enum DispatchResultStatus {
     Waiting,
     Error,
-    Ready
+    Ready,
 }
 
 export class DispatchResult<T = any> {
-    public readonly promise: Promise<DispatchResult<T>>|null;
-    public readonly localPromise: Promise<any>|null;
+    public readonly promise: Promise<DispatchResult<T>> | null;
+    public readonly localPromise: Promise<any> | null;
     public readonly status!: DispatchResultStatus;
     public readonly ready!: boolean;
     public readonly error!: boolean;
-    public readonly errorDetail: Exception|null;
+    public readonly errorDetail: Exception | null;
     public readonly waiting!: boolean;
     public readonly results!: T[];
     public readonly defaultPrevented: boolean = false;
-    private previousPromise: Promise<any>|null;
-    private promiseResolve: ((result: DispatchResult<T>) => any)|null;
+    private previousPromise: Promise<any> | null;
+    private promiseResolve: ((result: DispatchResult<T>) => any) | null;
 
-    public constructor(public readonly parent: DispatchResult|null = null) {
+    public constructor(public readonly parent: DispatchResult | null = null) {
         this.results = [];
         this.promise = null;
         this.localPromise = null;
@@ -71,7 +69,7 @@ export class DispatchResult<T = any> {
      * that if an optional action was to be performed after this event, it should not anymore.
      */
     public preventDefault(): void {
-        (this as Writeable<DispatchResult<T>>).defaultPrevented = true;
+        (this as any /* Writeable<DispatchResult<T>> */).defaultPrevented = true;
         if (this.parent) {
             this.parent.preventDefault();
         }
@@ -83,38 +81,50 @@ export class DispatchResult<T = any> {
     public delayResponse(promise: Promise<DispatchResult>): void {
         this.setStatus(DispatchResultStatus.Waiting);
         if (this.promise === null) {
-            (this as Writeable<DispatchResult<T>>).promise = new Promise<DispatchResult<T>>((resolve) => {
+            (this as any /* Writeable<DispatchResult<T>> */).promise = new Promise<
+                DispatchResult<T>
+            >((resolve) => {
                 this.promiseResolve = resolve;
-            }).then(() => {
-                if (this.status === DispatchResultStatus.Waiting) {
-                    this.setStatus(DispatchResultStatus.Ready);
-                }
-                this.promiseResolve = null;
-                this.cleanupAsync();
-                return this;
-            }).catch((reason: any) => {
-                this.fail(reason);
-                return this;
-            });
-        }
-        let localPromise: Promise<any> = (this.localPromise === null ? promise : Promise.all([this.localPromise, promise]))
-        .then(() => {
-            // The timeout is required so the dispatcher can execute the next subscriber if the execution is sequential.
-            // Otherwise, "localPromise" will always be equal to "previousPromise".
-            // If it is still equal on the next cycle, we have reached the end.
-            setTimeout(() => {
-                if (localPromise === this.previousPromise && this.promiseResolve) {
-                    if (this.promiseResolve) {
-                        this.promiseResolve(this);
+            })
+                .then(() => {
+                    if (this.status === DispatchResultStatus.Waiting) {
+                        this.setStatus(DispatchResultStatus.Ready);
                     }
-                }
-                (this as Writeable<DispatchResult<T>>).localPromise = null;
+                    this.promiseResolve = null;
+                    this.cleanupAsync();
+                    return this;
+                })
+                .catch((reason: any) => {
+                    this.fail(reason);
+                    return this;
+                });
+        }
+        let localPromise: Promise<any> = (
+            this.localPromise === null
+                ? promise
+                : Promise.all([this.localPromise, promise])
+        )
+            .then(() => {
+                // The timeout is required so the dispatcher can execute the next subscriber if the execution is sequential.
+                // Otherwise, "localPromise" will always be equal to "previousPromise".
+                // If it is still equal on the next cycle, we have reached the end.
+                setTimeout(() => {
+                    if (
+                        localPromise === this.previousPromise &&
+                        this.promiseResolve
+                    ) {
+                        if (this.promiseResolve) {
+                            this.promiseResolve(this);
+                        }
+                    }
+                    (this as any /* Writeable<DispatchResult<T>> */).localPromise = null;
+                });
+                return this;
+            })
+            .catch((reason: any) => {
+                this.fail(reason);
             });
-            return this;
-        }).catch((reason: any) => {
-            this.fail(reason);
-        });
-        (this as Writeable<DispatchResult<T>>).localPromise = localPromise;
+        (this as any /* Writeable<DispatchResult<T>> */).localPromise = localPromise;
         this.previousPromise = localPromise;
     }
 
@@ -122,7 +132,8 @@ export class DispatchResult<T = any> {
      * Make the result on error and store the reason.
      */
     public fail(reason: any): void {
-        (this as Writeable<DispatchResult<T>>).errorDetail = ExceptionFactory.EnsureException(reason);
+        (this as any /* Writeable<DispatchResult<T>> */).errorDetail =
+            ExceptionFactory.EnsureException(reason);
         this.results.splice(0, this.results.length);
         this.setStatus(DispatchResultStatus.Error);
 
@@ -140,14 +151,17 @@ export class DispatchResult<T = any> {
      * Shorthand to update the status and the corresponding flags.
      */
     public setStatus(status: DispatchResultStatus): void {
-        (this as Writeable<DispatchResult<T>>).status = status;
-        (this as Writeable<DispatchResult<T>>).ready = this.status === DispatchResultStatus.Ready;
-        (this as Writeable<DispatchResult<T>>).error = this.status === DispatchResultStatus.Error;
-        (this as Writeable<DispatchResult<T>>).waiting = this.status === DispatchResultStatus.Waiting;
+        (this as any /* Writeable<DispatchResult<T>> */).status = status;
+        (this as any /* Writeable<DispatchResult<T>> */).ready =
+            this.status === DispatchResultStatus.Ready;
+        (this as any /* Writeable<DispatchResult<T>> */).error =
+            this.status === DispatchResultStatus.Error;
+        (this as any /* Writeable<DispatchResult<T>> */).waiting =
+            this.status === DispatchResultStatus.Waiting;
     }
 
     private cleanupAsync(): void {
         this.promiseResolve = null;
-        (this as Writeable<DispatchResult<T>>).promise = null;
+        (this as any /* Writeable<DispatchResult<T>> */).promise = null;
     }
 }

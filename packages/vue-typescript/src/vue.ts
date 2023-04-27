@@ -1,19 +1,6 @@
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isType } from "@banquette/utils-type/is-type";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { AbstractConstructor } from "@banquette/utils-type/types";
+import { isArray, isObject, isString, isType, isUndefined, AbstractConstructor } from "@banquette/utils-type";
 import { ComponentCustomProperties, WatchOptions } from "@vue/runtime-core";
-import {
-    VNode,
-    Comment,
-    Fragment,
-    createElementBlock,
-    ComponentPublicInstance,
-    ComponentInternalInstance,
-    Slots, WatchStopHandle
-} from "vue";
+import { VNode, Comment, Fragment, createElementBlock, ComponentPublicInstance, ComponentInternalInstance, Slots, WatchStopHandle } from "vue";
 import { COMPONENT_CTOR } from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { vccOptsToMetadata, maybeResolveTsInst, anyToComponentMetadata, anyToComponentCtor } from "./utils/converters";
@@ -22,7 +9,7 @@ import { isInstanceOf } from "./utils/is-instance-of";
 /**
  * Base class components can inherit from the access Vue's public properties and methods.
  */
-export abstract class Vue implements ComponentPublicInstance, ComponentCustomProperties {
+export abstract class Vue { // implements Partial<ComponentPublicInstance>, ComponentCustomProperties {
     static [COMPONENT_CTOR]: any;
 
     declare public $: ComponentInternalInstance & { type: any };

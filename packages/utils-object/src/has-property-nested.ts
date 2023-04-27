@@ -1,4 +1,4 @@
-import { isObject } from "@banquette/utils-type/is-object";
+import { isObject } from '@banquette/utils-type';
 
 /**
  * Test if an object contains a nested set of properties.

@@ -1,9 +1,6 @@
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { Complete } from "@banquette/utils-type/types";
+import { Module } from "@banquette/dependency-injection";
+import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { isObject, isString, Complete } from "@banquette/utils-type";
 import { ModelTransformerTag } from "../../../constants";
 import { InvalidJsonException } from "../../../exception/invalid-json.exception";
 import { TransformResult } from "../../../transform-result";
@@ -27,6 +24,7 @@ export class JsonTransformer extends AbstractRootTransformer {
      * @inheritDoc
      */
     protected doTransform(context: TransformContext, pipeline: TransformPipeline): TransformResult {
+        console.warn('#Json (decorator)');
         const result: any = {};
         pipeline.forEach((property: string, transformer: Complete<TransformerInterface>) => {
             const subContext = new TransformContext(

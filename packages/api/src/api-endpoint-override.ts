@@ -1,6 +1,5 @@
-import { HttpMethod } from "@banquette/http/constants";
-import { HeadersBag } from "@banquette/http/headers-bag";
-import { Primitive, StringEnum } from "@banquette/utils-type/types";
+import { HttpMethod, HeadersBag } from "@banquette/http";
+import { Primitive, StringEnum } from "@banquette/utils-type";
 
 /**
  * Allow to override part of the configuration of an endpoint, on use.

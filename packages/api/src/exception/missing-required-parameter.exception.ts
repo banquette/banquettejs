@@ -1,5 +1,4 @@
-import { Exception } from "@banquette/exception/exception";
-import { SystemException } from "@banquette/exception/system.exception";
+import { Exception, SystemException } from "@banquette/exception";
 
 /**
  * Exception thrown an api endpoint fails to generate an url because a required parameter is missing.

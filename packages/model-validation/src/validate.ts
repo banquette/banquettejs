@@ -1,5 +1,4 @@
-import { ValidateOptionsInterface } from "@banquette/validation/validate-options.interface";
-import { ValidationResult } from "@banquette/validation/validation-result";
+import { ValidateOptionsInterface, ValidationResult } from "@banquette/validation";
 import { V } from "./v";
 
 /**

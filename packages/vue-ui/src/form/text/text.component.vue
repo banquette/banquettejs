@@ -1,21 +1,13 @@
 <style src="./text.component.css" scoped></style>
 <template src="./text.component.html"></template>
 <script lang="ts">
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { IconRemixCloseCircle } from "@banquette/vue-remix-icons/close-circle";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { BaseFormInputComponent } from "../base-input";
+import { isNullOrUndefined, isUndefined } from "@banquette/utils-type";
+import { IRemixCloseCircle } from "@banquette/vue-remix-icons";
+import { Component, Computed, Import, Prop, TemplateRef, Themeable, Watch, ImmediateStrategy, BindThemeDirective } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { BtAbstractVueForm } from "../abstract-vue-form.component";
+import { BtFormBaseInput } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { TextViewDataInterface } from "./text-view-data.interface";
 import { TextViewModel } from "./text.view-model";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -23,10 +15,13 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-text',
-    components: [BaseFormInputComponent, IconRemixCloseCircle],
+    components: [BtFormBaseInput, IRemixCloseCircle],
     directives: [BindThemeDirective]
 })
-export default class FormTextComponent extends AbstractVueFormComponent<TextViewDataInterface, TextViewModel> {
+export default class BtFormText extends BtAbstractVueForm<TextViewDataInterface, TextViewModel> {
+    // To get autocompletion in the view.
+    declare v: TextViewDataInterface;
+
     /**
      * Holds the props exposed by the base input.
      */
@@ -64,27 +59,24 @@ export default class FormTextComponent extends AbstractVueFormComponent<TextView
      * Define a specific number of rows.
      * Only applicable if type === "textarea".
      */
-    @Prop({type: Number, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public rows!: number|null;
+    @Prop({type: [String, Number] as PropType<string|number|null>, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public rows!: number|null;
 
     /**
      * Define the minimum number of rows of the textarea.
      * Only applicable if type === "textarea".
      */
-    @Prop({type: Number, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public minRows!: number|null;
+    @Prop({type: [String, Number] as PropType<string|number|null>, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public minRows!: number|null;
 
     /**
      * Define the maximum number of rows of the textarea.
      * Only applicable if type === "textarea".
      */
-    @Prop({type: Number, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public maxRows!: number|null;
+    @Prop({type: [String, Number] as PropType<string|number|null>, default: null, transform: (v: any) => v !== null ? parseInt(v, 10) : null}) public maxRows!: number|null;
 
     // Template refs
     @TemplateRef('inputWrapper') public inputWrapper!: HTMLElement|null;
     @TemplateRef('input') private input!: HTMLElement|null;
     @TemplateRef('textarea') private textarea!: HTMLElement|null;
-
-    // Override the type to get autocompletion in the view.
-    @Expose() public v!: TextViewDataInterface;
 
     @Computed() public get activeElement(): HTMLElement {
         if (!isNullOrUndefined(this.input)) {
@@ -96,7 +88,7 @@ export default class FormTextComponent extends AbstractVueFormComponent<TextView
         // There should always be one of the references defined.
         // This is for the rare cases where there is a type switch and the getter is called before the new ref is set.
         // So we don't have to check if there is an active element everytime we need to access it.
-        const that: FormTextComponent & {__fakeInput?: HTMLInputElement} = this;
+        const that: BtFormText & {__fakeInput?: HTMLInputElement} = this;
         if (isUndefined(that.__fakeInput)) {
             that.__fakeInput = document.createElement('input') as HTMLInputElement;
         }

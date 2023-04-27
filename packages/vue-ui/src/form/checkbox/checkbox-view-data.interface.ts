@@ -1,5 +1,5 @@
-import { HeadlessCheckboxViewDataInterface } from "@banquette/ui/form/checkbox/headless-checkbox-view-data.interface";
-import { HeadlessControlViewDataInterface } from "@banquette/ui/form/headless-control-view-data.interface";
+import { HeadlessCheckboxViewDataInterface } from "@banquette/ui";
+import { HeadlessControlViewDataInterface } from "@banquette/ui";
 import { BaseInputViewDataInterface } from "../base-input/base-input-view-data.interface";
 
 export interface CheckboxViewDataInterface extends HeadlessCheckboxViewDataInterface, HeadlessControlViewDataInterface {

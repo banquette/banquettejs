@@ -1,6 +1,0 @@
-/*!
- * Banquette UtilsMisc v0.0.0 (CommonJS)
- * (c) 2022-2022 Julien Pinto
- * Released under Apache License, Version 2.0
- */
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("@banquette/utils-type/_cjs/prod/is-undefined"),t=require("./proxy.js"),i=function(){function WeakObjectMap(){this.map={},this.removeTimers={}}return WeakObjectMap.prototype.register=function(e,t){this.map[t]={obj:e,refsCount:0},this.clearTimer(t)},WeakObjectMap.prototype.has=function(t){return!e.isUndefined(this.map[t])},WeakObjectMap.prototype.getRef=function(t){var i=this;if(e.isUndefined(this.map[t]))return null;this.clearTimer(t);var r=!1;return{obj:this.map[t].obj,release:function(){r||e.isUndefined(i.map[t])||(r=!0,--i.map[t].refsCount<=0&&i.scheduleMapRemoval(t))}}},WeakObjectMap.prototype.remove=function(t){e.isUndefined(this.map[t])||(delete this.map[t],this.clearTimer(t))},WeakObjectMap.prototype.scheduleMapRemoval=function(i){e.isUndefined(this.removeTimers[i])&&setTimeout(t.proxy(this.remove,this),3e4)},WeakObjectMap.prototype.clearTimer=function(t){e.isUndefined(this.removeTimers[t])||(clearTimeout(this.removeTimers[t]),delete this.removeTimers[t])},WeakObjectMap}();exports.WeakObjectMap=i;

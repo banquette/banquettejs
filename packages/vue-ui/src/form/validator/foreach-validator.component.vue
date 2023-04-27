@@ -1,16 +1,16 @@
 <script lang="ts">
-import { UsageException } from "@banquette/exception/usage.exception";
-import { Foreach } from "@banquette/validation/type/foreach";
-import { Valid } from "@banquette/validation/type/valid";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
+import { UsageException } from "@banquette/exception";
+import { Foreach } from "@banquette/validation";
+import { Valid } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Render } from "@banquette/vue-typescript";
 import { VNodeChild } from "@vue/runtime-core";
 import { renderSlot } from "vue";
-import { ContainerValidatorComponent } from "./container-validator.component";
+import { BtContainerValidator } from "./container-validator.component";
 
 @Component('bt-validate-foreach')
-export default class ValidateForeachComponent extends ContainerValidatorComponent {
+export default class BtValidateForeach extends BtContainerValidator {
     /**
      * @inheritDoc
      */
@@ -30,3 +30,4 @@ export default class ValidateForeachComponent extends ContainerValidatorComponen
     }
 }
 </script>
+<template></template>

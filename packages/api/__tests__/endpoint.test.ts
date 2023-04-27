@@ -1,18 +1,16 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { Exception } from "@banquette/exception/exception";
-import { HttpMethod } from "@banquette/http/constants";
-import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
-import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
-import { isString } from "@banquette/utils-type/is-string";
-import { Constructor } from "@banquette/utils-type/types";
-import { Min } from "@banquette/validation/type/min";
-import { NotEmpty } from "@banquette/validation/type/not-empty";
+import { Injector } from "@banquette/dependency-injection";
+import { Exception } from "@banquette/exception";
+import { HttpMethod, ResponseTypeJson, PayloadTypeJson } from "@banquette/http";
+import { isString, Constructor } from "@banquette/utils-type";
+import { Min, NotEmpty } from "@banquette/validation";
 import {
     ApiEndpoint,
     ApiEndpointParameterOptions,
     MissingRequiredParameterException,
     ApiEndpointParameterInterface,
-    InvalidParameterException, ApiEndpointStorageService, EndpointNotFoundException
+    InvalidParameterException,
+    ApiEndpointStorageService,
+    EndpointNotFoundException
 } from "../src";
 import { Endpoint } from "../src/decorator/endpoint";
 

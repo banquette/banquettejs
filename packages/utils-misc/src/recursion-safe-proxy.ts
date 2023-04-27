@@ -1,11 +1,11 @@
-import { GenericCallback } from "@banquette/utils-type/types";
+import { GenericCallback } from '@banquette/utils-type';
 
 const defaultGroup = Symbol('default');
 
 /**
  * The stack of groups for which a callback is still executing.
  */
-let callstack: Array<string|symbol> = [];
+let callstack: Array<string | symbol> = [];
 
 /**
  * Utility function allowing you to execute a function while blocking subsequent recursive calls
@@ -35,8 +35,11 @@ let callstack: Array<string|symbol> = [];
  * By setting a different group for the subscribe method of `event2` for example,
  * we would have both subscribers called once.
  */
-export function recursionSafeProxy(cb: GenericCallback, group: string|symbol = defaultGroup): GenericCallback {
-    return function(this: any, ...args: any[]): any {
+export function recursionSafeProxy(
+    cb: GenericCallback,
+    group: string | symbol = defaultGroup
+): GenericCallback {
+    return function (this: any, ...args: any[]): any {
         if (callstack.indexOf(group) < 0) {
             callstack.push(group);
             try {

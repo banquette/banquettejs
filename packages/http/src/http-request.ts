@@ -1,28 +1,25 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { cloneDeep } from "@banquette/utils-object/clone-deep";
-import { extend } from "@banquette/utils-object/extend";
-import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { Writeable, Primitive, VoidCallback, StringEnum } from "@banquette/utils-type/types";
-import { AdapterInterface } from "./adapter/adapter.interface";
-import { HttpConfigurationSymbol } from "./config";
-import { HttpMethod, UrlParameterType } from "./constants";
-import { HeadersBag } from "./headers-bag";
-import { HttpConfigurationInterface } from "./http-configuration.interface";
-import { HttpResponse } from "./http-response";
-import { UrlParameterInterface } from "./url-parameter.interface";
-import qs from 'qs';
+import { ConfigurationService } from '@banquette/config';
+import { Injector } from '@banquette/dependency-injection';
+import { UsageException } from '@banquette/exception';
+import { cloneDeep, extend } from '@banquette/utils-object';
+import { replaceStringVariables } from '@banquette/utils-string';
+import { Primitive, VoidCallback, StringEnum, } from '@banquette/utils-type';
+import { AdapterInterface } from './adapter/adapter.interface';
+import { HttpConfigurationSymbol } from './config';
+import { HttpMethod, UrlParameterType } from './constants';
+import { HeadersBag } from './headers-bag';
+import { HttpConfigurationInterface } from './http-configuration.interface';
+import { HttpResponse } from './http-response';
+import { UrlParameterInterface } from './url-parameter.interface';
 
-let Configuration: HttpConfigurationInterface|null = null;
+let MaxId = 0;
+let Configuration: HttpConfigurationInterface | null = null;
 
 export class HttpRequest {
-    private static MaxId = 0;
-
     /**
      * Unique id of the response.
      */
-    public readonly id =  ++HttpRequest.MaxId;
+    public readonly id = ++MaxId;
 
     /**
      * The adapter in use to make the actual HTTP call.
@@ -59,7 +56,10 @@ export class HttpRequest {
         for (const paramName of paramsNames) {
             const param = this.params[paramName];
             if (param.type === UrlParameterType.Auto) {
-                param.type = urlVars.indexOf(paramName) > -1 ? UrlParameterType.Url : UrlParameterType.Query;
+                param.type =
+                    urlVars.indexOf(paramName) > -1
+                        ? UrlParameterType.Url
+                        : UrlParameterType.Query;
             }
             if (param.type === UrlParameterType.Url) {
                 urlParams[paramName] = param.value;
@@ -70,11 +70,11 @@ export class HttpRequest {
         let url = replaceStringVariables(this.url, urlParams, '{', '}');
         if (Object.keys(queryParams).length > 0) {
             if (url.indexOf('?') > -1) {
-                const existingParams = qs.parse(url.substring(url.indexOf('?') + 1));
+                const existingParams = Object.fromEntries(new URLSearchParams(url.substring(url.indexOf('?'))) as any);
                 queryParams = extend({}, [existingParams, queryParams]);
                 url = url.substring(0, url.indexOf('?'));
             }
-            url += '?' + qs.stringify(queryParams, HttpRequest.GetConfiguration().queryString);
+            url += '?' + (new URLSearchParams(queryParams)).toString();
         }
         return url;
     }
@@ -83,7 +83,7 @@ export class HttpRequest {
      * Track if the request has been canceled BEFORE the adapter is set.
      */
     private canceled: boolean = false;
-    private cancelCallback: VoidCallback|null = null;
+    private cancelCallback: VoidCallback | null = null;
 
     /**
      * Create a Request object.
@@ -105,26 +105,31 @@ export class HttpRequest {
      * @param extras            Any additional data you want to associated with the request.
      *                          This object will not be sent with the request.
      */
-    public constructor(public method: StringEnum<HttpMethod>,
-                       public url: string,
-                       public params: Record<string, UrlParameterInterface>,
-                       public payload: any,
-                       public payloadType: symbol,
-                       public responseType: symbol,
-                       headers: HeadersBag|Record<string, Primitive>,
-                       public timeout: number|null,
-                       public retry: number|null,
-                       public retryDelay: number|'auto'|null,
-                       public priority: number,
-                       public withCredentials: boolean,
-                       public mimeType: string|null,
-                       public tags: symbol[],
-                       public extras: Record<string, any>) {
-        this.headers = headers instanceof HeadersBag ? headers : HeadersBag.FromMap(headers);
+    public constructor(
+        public method: StringEnum<HttpMethod>,
+        public url: string,
+        public params: Record<string, UrlParameterInterface>,
+        public payload: any,
+        public payloadType: symbol,
+        public responseType: symbol,
+        headers: HeadersBag | Record<string, Primitive>,
+        public timeout: number | null,
+        public retry: number | null,
+        public retryDelay: number | 'auto' | null,
+        public priority: number,
+        public withCredentials: boolean,
+        public mimeType: string | null,
+        public tags: symbol[],
+        public extras: Record<string, any>
+    ) {
+        this.headers =
+            headers instanceof HeadersBag
+                ? headers
+                : HeadersBag.FromMap(headers);
     }
 
     public incrementTryCount(): void {
-        (this as Writeable<HttpRequest>).tryCount = this.tryCount + 1;
+        (this as any /* Writeable<HttpRequest> */).tryCount = this.tryCount + 1;
     }
 
     /**
@@ -134,7 +139,7 @@ export class HttpRequest {
         if (this.adapter) {
             throw new UsageException('An adapter has already been set.');
         }
-        (this as Writeable<HttpRequest>).adapter = adapter;
+        (this as any /* Writeable<HttpRequest> */).adapter = adapter;
         if (this.canceled) {
             adapter.cancel();
         }
@@ -147,14 +152,18 @@ export class HttpRequest {
         if (this.response) {
             throw new UsageException('A response has already been set.');
         }
-        (this as Writeable<HttpRequest>).response = response;
+        (this as any /* Writeable<HttpRequest> */).response = response;
     }
 
     /**
      * Set an url parameter.
      */
-    public setParam(name: string, value: Primitive, type: UrlParameterType = UrlParameterType.Auto): void {
-        this.params[name] = {type, value: String(value)};
+    public setParam(
+        name: string,
+        value: Primitive,
+        type: UrlParameterType = UrlParameterType.Auto
+    ): void {
+        this.params[name] = { type, value: String(value) };
     }
 
     /**
@@ -173,7 +182,7 @@ export class HttpRequest {
                 this.cancelCallback();
             }
             this.canceled = true;
-            return ;
+            return;
         }
         this.adapter.cancel();
     }
@@ -208,7 +217,8 @@ export class HttpRequest {
      * Extract variables names from a url.
      */
     private extractUrlVariables(url: string): string[] {
-        let output: string[] = [], matches;
+        let output: string[] = [],
+            matches;
         const reg = new RegExp('{([a-z0-9*._-]+)}', 'gi');
         while ((matches = reg.exec(url)) !== null) {
             output.push(matches[1]);
@@ -222,7 +232,9 @@ export class HttpRequest {
      */
     private static GetConfiguration(): HttpConfigurationInterface {
         if (Configuration === null) {
-            Configuration = Injector.Get(ConfigurationService).get<HttpConfigurationInterface>(HttpConfigurationSymbol);
+            Configuration = Injector.Get(
+                ConfigurationService
+            ).get<HttpConfigurationInterface>(HttpConfigurationSymbol);
         }
         return Configuration;
     }

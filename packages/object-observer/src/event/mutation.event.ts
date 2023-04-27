@@ -1,4 +1,4 @@
-import { EventArg } from "@banquette/event/event-arg";
+import { EventArg } from "@banquette/event";
 import { Mutation } from "../mutation";
 
 export class MutationEvent extends EventArg {

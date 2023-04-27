@@ -1,5 +1,5 @@
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { proxy } from "./proxy";
+import { isUndefined } from '@banquette/utils-type';
+import { proxy } from './proxy';
 
 export interface WeakObjectRef<T> {
     obj: T;
@@ -13,7 +13,7 @@ export interface WeakObjectRef<T> {
  * @see https://tc39.es/proposal-weakrefs/#sec-weak-ref-objects
  */
 export class WeakObjectMap<T = Object> {
-    private map: Record<string, {obj: T, refsCount: number}> = {};
+    private map: Record<string, { obj: T; refsCount: number }> = {};
 
     /**
      * A map of timers ids, indexed by alias name.
@@ -24,7 +24,7 @@ export class WeakObjectMap<T = Object> {
      * Register a string alias for an object.
      */
     public register(obj: T, alias: string): void {
-        this.map[alias] = {obj, refsCount: 0};
+        this.map[alias] = { obj, refsCount: 0 };
         this.clearTimer(alias);
     }
 
@@ -41,7 +41,7 @@ export class WeakObjectMap<T = Object> {
      * Don't forget to call "release()" when the object is not used anymore
      * so the object can (maybe) be removed from the map.
      */
-    public getRef(alias: string): WeakObjectRef<T>|null {
+    public getRef(alias: string): WeakObjectRef<T> | null {
         if (isUndefined(this.map[alias])) {
             return null;
         }
@@ -56,7 +56,7 @@ export class WeakObjectMap<T = Object> {
                         this.scheduleMapRemoval(alias);
                     }
                 }
-            }
+            },
         };
     }
 

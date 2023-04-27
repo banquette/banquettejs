@@ -1,4 +1,4 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
+import { UnsubscribeFunction } from "@banquette/event";
 import { MutationType } from "../constant";
 import { MutationEvent } from "../event/mutation.event";
 import { MutationsCollectionEvent } from "../event/mutations-collection.event";

@@ -1,1 +1,1 @@
-export { default as FormFileComponent } from './file.component.vue';
+export { default as BtFormFile } from './file.component.vue';

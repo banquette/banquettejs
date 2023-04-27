@@ -1,4 +1,4 @@
-import { EventArg } from "@banquette/event/event-arg";
+import { EventArg } from '@banquette/event';
 
 export class NetworkAvailabilityChangeEvent extends EventArg {
     public constructor(public available: boolean) {

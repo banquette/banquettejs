@@ -1,17 +1,14 @@
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { randomInt } from "@banquette/utils-random/random-int";
-import { ensureSameType } from "@banquette/utils-type/ensure-same-type";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { XSSIPrefix, httpStatusToText } from "../../src";
-import { TestResponses } from "./test-responses";
-import { XhrConfig } from "./xhr-config.type";
+import { EventDispatcher } from '@banquette/event';
+import { UsageException } from '@banquette/exception';
+import { randomInt } from '@banquette/utils-random';
+import { ensureSameType, isFunction, isObject, isString, isUndefined, } from '@banquette/utils-type';
+import { XSSIPrefix } from '../../src/decoder/json.decoder';
+import { httpStatusToText } from '../../src/utils';
+import { TestResponses } from './test-responses';
+import { XhrConfig } from './xhr-config.type';
 
 type ConfigState = {
-    networkErrorsLeft: number
+    networkErrorsLeft: number;
 };
 const configStates: Record<number, ConfigState> = {};
 
@@ -44,23 +41,33 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
         XSSISafe: false,
         responseKey: '',
         serverResponse: null,
-        networkError: 0
+        networkError: 0,
     };
-    const changeState = function(this: XMLHttpRequest, value: number): void {
+    const changeState = function (this: XMLHttpRequest, value: number): void {
         (this as any).readyState = value;
-        if (this.onreadystatechange !== null && isFunction(this.onreadystatechange)) {
+        if (
+            this.onreadystatechange !== null &&
+            isFunction(this.onreadystatechange)
+        ) {
             this.onreadystatechange(new Event('statechange'));
         }
     };
     const saveConfigState = (id: number, state: ConfigState): void => {
         if (id < 0) {
-            throw new UsageException('An id MUST be defined to use stateful behaviors.');
+            throw new UsageException(
+                'An id MUST be defined to use stateful behaviors.'
+            );
         }
         configStates[id] = state;
     };
-    const getConfigState = (id: number, defaultState: ConfigState): ConfigState => {
+    const getConfigState = (
+        id: number,
+        defaultState: ConfigState
+    ): ConfigState => {
         if (id < 0) {
-            throw new UsageException('An id MUST be defined to use stateful behaviors.');
+            throw new UsageException(
+                'An id MUST be defined to use stateful behaviors.'
+            );
         }
         return configStates[id] || defaultState;
     };
@@ -70,11 +77,13 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
         },
         upload: {
             addEventListener: (eventName: string, callback: any) => {
-                subscribe('upload.'+eventName, callback);
-            }
+                subscribe('upload.' + eventName, callback);
+            },
         },
-        open: function(method: string, url: string) {
-            const urlParams = new URLSearchParams(url.indexOf('?') > -1 ? url.substring(url.indexOf('?') + 1) : '');
+        open: function (method: string, url: string) {
+            const urlParams = new URLSearchParams(
+                url.indexOf('?') > -1 ? url.substring(url.indexOf('?') + 1) : ''
+            );
             for (const key of Object.keys(config)) {
                 if (urlParams.has(key)) {
                     // @ts-ignore
@@ -83,7 +92,10 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                         value = JSON.parse(window.atob(value.substring(5)));
                         (config as any)[key] = value;
                     } else {
-                        (config as any)[key] = ensureSameType(value, (config as any)[key]);
+                        (config as any)[key] = ensureSameType(
+                            value,
+                            (config as any)[key]
+                        );
                     }
                 }
             }
@@ -91,24 +103,26 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
             this.timeout = config.timeout;
             changeState.apply(this, [1]);
         },
-        send: function(payload: any) {
+        send: function (payload: any) {
             const that = this;
             if (aborted) {
-                return ;
+                return;
             }
             changeState.apply(this, [4]);
-            const startTime = (new Date()).getTime();
+            const startTime = new Date().getTime();
             setTimeout(() => {
                 if (aborted) {
-                    return ;
+                    return;
                 }
                 // If we've reached the timeout.
-                if ((new Date()).getTime() - startTime >= config.timeout) {
+                if (new Date().getTime() - startTime >= config.timeout) {
                     dispatch('timeout', null);
-                    return ;
+                    return;
                 }
                 if (config.networkError > 0) {
-                    const configState = getConfigState(config.id, {networkErrorsLeft: config.networkError});
+                    const configState = getConfigState(config.id, {
+                        networkErrorsLeft: config.networkError,
+                    });
                     if (configState.networkErrorsLeft > 0) {
                         configState.networkErrorsLeft--;
                         saveConfigState(config.id, configState);
@@ -119,31 +133,38 @@ window.XMLHttpRequest = jest.fn().mockImplementation(() => {
                 that.status = 200;
                 that.responseURL = config.url;
                 if (config.serverResponse !== null) {
-                    (that as any).responseText = (config.XSSISafe ? XSSIPrefix : '') + config.serverResponse;
+                    (that as any).responseText =
+                        (config.XSSISafe ? XSSIPrefix : '') +
+                        config.serverResponse;
                 } else if (config.responseKey) {
                     const response = TestResponses[config.responseKey as any];
                     that.status = response.status;
-                    (that as any).responseText = (config.XSSISafe ? XSSIPrefix : '') + response.content;
+                    (that as any).responseText =
+                        (config.XSSISafe ? XSSIPrefix : '') + response.content;
                 }
                 that.statusText = httpStatusToText(that.status);
                 dispatch('load', null);
             }, Math.min(config.timeout * 1.1 /* To ensure the timeout isn't called too soon when we want to reach the timeout. */, config.delay));
         },
-        abort: function() {
+        abort: function () {
             aborted = true;
             dispatch('abort', null);
         },
         getAllResponseHeaders: () => {
-            const headersObj = isObject(config.headers) ? config.headers : ((config.responseKey) ? (TestResponses[config.responseKey as any].headers || {}) : {}) as any;
+            const headersObj = isObject(config.headers)
+                ? config.headers
+                : ((config.responseKey
+                      ? TestResponses[config.responseKey as any].headers || {}
+                      : {}) as any);
             const lines: string[] = [];
             for (const name of Object.keys(headersObj)) {
                 lines.push(name + ': ' + headersObj[name]);
             }
-            return lines.join("\\r\\n");
+            return lines.join('\\r\\n');
         },
         setRequestHeader: jest.fn(),
         readyState: 0,
         status: 0,
-        response: null
+        response: null,
     };
 });

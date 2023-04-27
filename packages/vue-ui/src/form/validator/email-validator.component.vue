@@ -1,11 +1,11 @@
 <script lang="ts">
-import { Email } from "@banquette/validation/type/email";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { Email } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
-@Component({name: 'bt-validate-email', template: false})
-export default class ValidateEmailComponent extends ValidatorComponent {
+@Component('bt-validate-email')
+export default class BtValidateEmail extends BtValidator {
     /**
      * @inheritDoc
      */
@@ -14,3 +14,4 @@ export default class ValidateEmailComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

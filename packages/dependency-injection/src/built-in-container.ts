@@ -1,11 +1,10 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { InjectableMetadataInterface } from "./injectable-metadata.interface";
-import { MetadataContainer } from "./metadata.container";
-import { InjectableIdentifier } from "./type/injectable-identifier.type";
-import { InjectableType } from "./type/injectable.type";
-import { LazyInjectableIdentifier } from "./type/lazy-injectable-identifier";
+import { UsageException } from '@banquette/exception';
+import { isArray, isUndefined } from '@banquette/utils-type';
+import { InjectableMetadataInterface } from './injectable-metadata.interface';
+import { MetadataContainer } from './metadata.container';
+import { InjectableIdentifier } from './type/injectable-identifier.type';
+import { InjectableType } from './type/injectable.type';
+import { LazyInjectableIdentifier } from './type/lazy-injectable-identifier';
 
 /**
  * A very basic container, only meant to cover the limited needs of the tools.
@@ -45,21 +44,24 @@ export class BuiltInContainer {
     /**
      * Gets any number of elements matching at least on of the tags given as input.
      */
-    public getMultiple<T>(tag: symbol|symbol[]): T[] {
+    public getMultiple<T>(tag: symbol | symbol[]): T[] {
         let output: T[] = [];
         let lastTagsVersion = 0;
         // Create a proxy to account for changes
         // because a tag can be injected before every dependency have time to register.
         return new Proxy(output, {
-            get: (target: T[], name: string|symbol) => {
+            get: (target: T[], name: string | symbol) => {
                 if (lastTagsVersion === MetadataContainer.TagsVersion) {
                     return !isUndefined(name) ? target[name as any] : target;
                 }
                 lastTagsVersion = MetadataContainer.TagsVersion;
                 target.splice(0, target.length);
-                const metadata: InjectableMetadataInterface[] = MetadataContainer.GetForTag(tag);
+                const metadata: InjectableMetadataInterface[] =
+                    MetadataContainer.GetForTag(tag);
                 for (const item of metadata) {
-                    const resolvedItems = this.resolveInjectable(item.identifier);
+                    const resolvedItems = this.resolveInjectable(
+                        item.identifier
+                    );
                     if (isArray(resolvedItems)) {
                         for (const resolvedItem of resolvedItems) {
                             target.push(resolvedItem);
@@ -70,7 +72,7 @@ export class BuiltInContainer {
                     this.assignResolutionInstancesPropertyDependencies();
                 }
                 return !isUndefined(name) ? target[name as any] : target;
-            }
+            },
         });
     }
 
@@ -85,7 +87,8 @@ export class BuiltInContainer {
      * Get/create the object corresponding to an indentifier.
      */
     private resolveInjectable(identifier: InjectableIdentifier): any {
-        const metadata: InjectableMetadataInterface = MetadataContainer.GetOrFail(identifier);
+        const metadata: InjectableMetadataInterface =
+            MetadataContainer.GetOrFail(identifier);
         if (metadata.singleton && this.singletons.has(identifier)) {
             return this.singletons.get(identifier);
         }
@@ -114,7 +117,10 @@ export class BuiltInContainer {
         if (type.tags !== null) {
             return this.getMultiple(type.tags);
         }
-        const identifier: InjectableIdentifier = type.eager !== null ? type.eager : (type.lazy as LazyInjectableIdentifier)();
+        const identifier: InjectableIdentifier =
+            type.eager !== null
+                ? type.eager
+                : (type.lazy as LazyInjectableIdentifier)();
         return this.resolveInjectable(identifier);
     }
 
@@ -125,9 +131,12 @@ export class BuiltInContainer {
         const instances: any[] = [...this.resolutionInstances];
         this.resolutionInstances = [];
         for (const inst of instances) {
-            const metadata: InjectableMetadataInterface = MetadataContainer.GetOrFail(inst.constructor);
+            const metadata: InjectableMetadataInterface =
+                MetadataContainer.GetOrFail(inst.constructor);
             for (const prop of Object.keys(metadata.propertiesDependencies)) {
-                inst[prop] = this.resolveDependency(metadata.propertiesDependencies[prop].type);
+                inst[prop] = this.resolveDependency(
+                    metadata.propertiesDependencies[prop].type
+                );
             }
         }
         if (this.resolutionInstances.length > 0) {
@@ -141,12 +150,17 @@ export class BuiltInContainer {
      */
     private pushToStack(identifier: InjectableIdentifier): void {
         if (this.resolutionStack.indexOf(identifier) >= 0) {
-            const stackNames = this.resolutionStack.concat([identifier]).reduce((acc: string[], cur: InjectableIdentifier) => {
-                acc.push(cur.name);
-                return acc;
-            }, []).join(' --> ');
+            const stackNames = this.resolutionStack
+                .concat([identifier])
+                .reduce((acc: string[], cur: InjectableIdentifier) => {
+                    acc.push(cur.name);
+                    return acc;
+                }, [])
+                .join(' --> ');
             this.resolutionStack = [];
-            throw new UsageException(`Circular dependency found: ${stackNames}`);
+            throw new UsageException(
+                `Circular dependency found: ${stackNames}`
+            );
         }
         this.resolutionStack.push(identifier);
     }

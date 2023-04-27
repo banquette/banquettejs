@@ -1,5 +1,5 @@
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { ExceptionInterface } from "./exception.interface";
+import { isNullOrUndefined } from '@banquette/utils-type';
+import { ExceptionInterface } from './exception.interface';
 
 /**
  * Base class for all exceptions of the Webeak dev tools.
@@ -79,9 +79,9 @@ export abstract class Exception implements ExceptionInterface {
         return [this.message];
     }
 
-    public constructor(public readonly message: string,
-                       public readonly previous?: Exception|null,
-                       public readonly extra?: any) {
-
-    }
+    public constructor(
+        public readonly message: string,
+        public readonly previous?: Exception | null,
+        public readonly extra?: any
+    ) {}
 }

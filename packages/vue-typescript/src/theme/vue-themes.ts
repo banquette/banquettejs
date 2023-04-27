@@ -1,12 +1,8 @@
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { trim } from "@banquette/utils-string/format/trim";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { getObjectKeys } from "@banquette/utils-object";
+import { trim } from "@banquette/utils-string";
+import { ensureArray, isArray, isObject, isUndefined } from "@banquette/utils-type";
 import { ThemeWildcard, ThemesEvents } from "./constant";
 import { ThemeEvent } from "./event/theme.event";
 import { ThemeDefinitionInterface } from "./theme-definition.interface";

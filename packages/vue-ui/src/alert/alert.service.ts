@@ -1,16 +1,16 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { DispatchResult } from "@banquette/event/dispatch-result";
-import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
-import { isString } from "@banquette/utils-type/is-string";
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { Inject } from "@banquette/dependency-injection";
+import { Service } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection";
+import { DispatchResult } from "@banquette/event";
+import { EventDispatcherService } from "@banquette/event";
+import { isServer } from "@banquette/utils-misc";
+import { proxy } from "@banquette/utils-misc";
+import { ensureBoolean } from "@banquette/utils-type";
+import { isString } from "@banquette/utils-type";
+import { VueBuilder } from "@banquette/vue-typescript";
 import { createApp } from "vue";
 import { AlertOptionsInterface } from "./alert-options.interface";
-import { AlertsStackComponent } from "./component/alerts-stack";
+import { BtAlertsStack } from "./component/alerts-stack";
 import { AlertEvents } from "./constant";
 import { ShowAlertEvent } from "./event/show-alert.event";
 import { ShortenedAlertOptions } from "./type";
@@ -51,7 +51,7 @@ export class AlertService {
         if (!result.error && result.results.indexOf(true) < 0) {
             if (!this.queue.length) {
                 const wrapper = document.createElement('div');
-                createApp(AlertsStackComponent).mount(wrapper);
+                createApp(BtAlertsStack).mount(wrapper);
                 document.body.appendChild(wrapper);
                 setTimeout(proxy(this.flushQueue, this));
             }
@@ -97,10 +97,15 @@ export class AlertService {
     }
 }
 
-VueBuilder.RegisterGlobalProperty('btShowAlert', (optionsOrMessage: (Partial<AlertOptionsInterface> & {message: string})|string, variant?: string, ttl?: number) => {
-    Injector.Get(AlertService).show(optionsOrMessage as any, variant, ttl);
-});
+// The assignation is so the /**!PURE*/ comment is kept when compiling.
+// It's then replace by "/* @__PURE__ */" at the end of the build.
+// If "/* @__PURE__ */" is set right here, it'll be striped out when building.
+const g = /**!PURE*/ ((_) => {
+    VueBuilder.RegisterGlobalProperty('btShowAlert', (optionsOrMessage: (Partial<AlertOptionsInterface> & { message: string }) | string, variant?: string, ttl?: number) => {
+        Injector.Get(_).show(optionsOrMessage as any, variant, ttl);
+    });
 
-VueBuilder.RegisterGlobalProperty('btHideAllAlerts', () => {
-    Injector.Get(AlertService).hideAll();
-});
+    VueBuilder.RegisterGlobalProperty('btHideAllAlerts', () => {
+        Injector.Get(_).hideAll();
+    });
+})(AlertService);

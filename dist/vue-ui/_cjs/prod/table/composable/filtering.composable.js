@@ -1,6 +1,0 @@
-/*!
- * Banquette VueUi v0.0.0 (CommonJS)
- * (c) 2022-2022 Julien Pinto
- * Released under Apache License, Version 2.0
- */
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("../../_virtual/_tslib.js"),t=require("@banquette/vue-typescript/_cjs/prod/decorator/composable.decorator"),o=require("@banquette/vue-typescript/_cjs/prod/decorator/prop.decorator"),r=require("@banquette/vue-typescript/_cjs/prod/decorator/watch.decorator"),i=function(){function FilteringComposable(){}return FilteringComposable.prototype.syncPaginationConfigurationProps=function(){this.module.updateFilters(this.filters),this.module.remote=this.remote},e.__decorate([o.Prop({type:Object,default:{}}),e.__metadata("design:type",Object)],FilteringComposable.prototype,"filters",void 0),e.__decorate([o.Prop({type:[Boolean,String],default:"auto"}),e.__metadata("design:type",Object)],FilteringComposable.prototype,"remote",void 0),e.__decorate([r.Watch(["filters","remote"],{immediate:r.ImmediateStrategy.NextTick}),e.__metadata("design:type",Function),e.__metadata("design:paramtypes",[]),e.__metadata("design:returntype",void 0)],FilteringComposable.prototype,"syncPaginationConfigurationProps",null),FilteringComposable=e.__decorate([t.Composable()],FilteringComposable)}();exports.FilteringComposable=i;

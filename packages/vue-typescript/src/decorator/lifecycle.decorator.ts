@@ -1,8 +1,6 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { UsageException } from "@banquette/exception";
+import { isNonEmptyString } from "@banquette/utils-string";
+import { ensureArray, isFunction, isUndefined } from "@banquette/utils-type";
 import { HOOKS } from "../constants";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";

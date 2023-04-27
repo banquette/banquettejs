@@ -1,4 +1,4 @@
-import { isObject } from "@banquette/utils-type/is-object";
+import { isObject } from "@banquette/utils-type";
 import { ObserverInstance } from "./constant";
 import { ObserverInterface } from "./observer/observer.interface";
 

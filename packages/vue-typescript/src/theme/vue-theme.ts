@@ -1,10 +1,7 @@
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { trim } from "@banquette/utils-string/format/trim";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { VoidCallback } from "@banquette/utils-type/types";
+import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { isServer } from "@banquette/utils-misc";
+import { trim } from "@banquette/utils-string";
+import { ensureArray, isUndefined, VoidCallback } from "@banquette/utils-type";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { ThemesEvents, VariantSelector, ThemeWildcard } from "./constant";
 import { ThemeComponentChangedEvent } from "./event/theme-component-changed.event";

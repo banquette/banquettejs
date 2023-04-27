@@ -1,5 +1,5 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
+import { ConfigurationService } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
 import { StorageConfigurationInterface } from "./storage-configuration.interface";
 
 export const StorageConfigurationSymbol = Symbol('storage');

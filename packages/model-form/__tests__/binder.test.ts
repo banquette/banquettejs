@@ -1,13 +1,9 @@
-import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
-import { Relation } from "@banquette/model/decorator/relation";
-import { TransformService } from "@banquette/model/transformer/transform.service";
-import { Form, FormModelBinder, FormObject, FormTransformerSymbol, FormArray } from "../src";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { FormObject as FormObjectObject } from '@banquette/form/form-object';
-import { FormControl as FormControlObject } from '@banquette/form/form-control';
-import { FormArray as FormArrayObject } from '@banquette/form/form-array';
+import { Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { ComponentNotFoundException, FormObject as FormObjectObject, FormControl as FormControlObject, FormArray as FormArrayObject } from "@banquette/form";
+import { Relation, TransformService } from "@banquette/model";
 import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
+import { Form, FormModelBinder, FormObject, FormTransformerSymbol, FormArray } from "../src";
 
 class A {
     @Form()

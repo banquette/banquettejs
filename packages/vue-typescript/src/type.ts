@@ -1,4 +1,4 @@
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor } from "@banquette/utils-type";
 import { ComponentCustomProperties } from "@vue/runtime-core";
 import { ComponentOptionsWithObjectProps, ComponentPublicInstance } from "vue";
 import { DECORATORS_METADATA, VUE_CLASS_COMPONENT_OPTIONS, COMPONENT_TS_INSTANCE, COMPONENT_CTOR } from "./constants";

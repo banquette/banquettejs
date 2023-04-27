@@ -24,6 +24,7 @@ export * from './decorator/endpoint';
  * Event
  */
 export * from './event/api-request.event';
+export * from './event/api-before-response.event';
 export * from './event/api-response.event';
 
 /**

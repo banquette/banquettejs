@@ -1,4 +1,4 @@
-import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureArray } from "@banquette/utils-type";
 
 /**
  * Ensure we always have an array of masks and each of its entries are relative to the root context.

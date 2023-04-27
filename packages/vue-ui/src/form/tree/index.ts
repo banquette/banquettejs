@@ -1,1 +1,1 @@
-export { default as FormTreeComponent } from './tree.component.vue';
+export { default as BtFormTree } from './tree.component.vue';

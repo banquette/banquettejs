@@ -1,21 +1,12 @@
-import { ApiEvents, ApiProcessorTag } from "@banquette/api/constant";
-import { ApiBeforeResponseEvent } from "@banquette/api/event/api-before-response.event";
-import { ApiRequestEvent } from "@banquette/api/event/api-request.event";
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { Exception } from "@banquette/exception/exception";
-import { HttpResponse } from "@banquette/http/http-response";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { uniqueId } from "@banquette/utils-random/unique-id";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isType } from "@banquette/utils-type/is-type";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Writeable } from "@banquette/utils-type/types";
+import { ApiEvents, ApiProcessorTag, ApiBeforeResponseEvent, ApiRequestEvent } from "@banquette/api";
+import { ConfigurationService } from "@banquette/config";
+import { Inject, Module } from "@banquette/dependency-injection";
+import { EventDispatcher, EventDispatcherService } from "@banquette/event";
+import { Exception } from "@banquette/exception";
+import { HttpResponse } from "@banquette/http";
+import { proxy } from "@banquette/utils-misc";
+import { uniqueId } from "@banquette/utils-random";
+import { isNullOrUndefined, isObject, isString, isType, isUndefined, Writeable } from "@banquette/utils-type";
 import { UiConfigurationSymbol } from "../config";
 import { RemoteModule } from "../misc/remote/remote.module";
 import { UiConfigurationInterface } from "../ui-configuration.interface";
@@ -32,9 +23,9 @@ import { PaginationModule } from "./pagination/pagination.module";
 import { ServerResult } from "./server-result";
 
 // Auto-register built-in listener
-import './listener/request.listener';
-import './listener/response.listener';
-import './listener/response-transformer.listener';
+import { useBuiltInRequestListener } from "./listener/request.listener";
+import { useBuiltInResponseTransformer } from "./listener/response-transformer.listener";
+import { useBuiltInResponseListener } from "./listener/response.listener";
 
 @Module()
 export class TableViewModel {
@@ -149,6 +140,10 @@ export class TableViewModel {
         this.ordering.onChange(proxy(this.onOrderingConfigurationChange, this));
         this.ordering.onInvalidate(proxy(this.onOrderingConfigurationChange, this));
         this.bindApiListeners();
+
+        useBuiltInResponseTransformer();
+        useBuiltInRequestListener();
+        useBuiltInResponseListener();
     }
 
     /**
@@ -228,7 +223,7 @@ export class TableViewModel {
      */
     public clearColumns(): void {
         this.updateColumns(() => {
-            (this as Writeable<TableViewModel>).columns = [];
+            (this as any /* Writeable<TableViewModel> */).columns = [];
         });
     }
 
@@ -413,9 +408,9 @@ export class TableViewModel {
     private onOrderingConfigurationChange(): void {
         for (const column of this.columns) {
             if (this.ordering.columnName !== null && column.orderingName === this.ordering.columnName) {
-                (column as Writeable<ColumnInterface>).orderingStatus = this.ordering.direction;
+                (column as any /* Writeable<ColumnInterface> */).orderingStatus = this.ordering.direction;
             } else {
-                (column as Writeable<ColumnInterface>).orderingStatus = null;
+                (column as any /* Writeable<ColumnInterface> */).orderingStatus = null;
             }
         }
         this.onModuleConfigurationChange();
@@ -433,7 +428,7 @@ export class TableViewModel {
                 }
                 columnOrId = column;
             }
-            (columnOrId as Writeable<ColumnInterface>).visible = visible;
+            (columnOrId as any /* Writeable<ColumnInterface> */).visible = visible;
         });
     }
 

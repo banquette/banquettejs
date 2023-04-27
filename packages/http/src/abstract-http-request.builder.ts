@@ -1,21 +1,19 @@
-import { isArray } from "@banquette/utils-type/is-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive, StringEnum } from "@banquette/utils-type/types";
-import { HttpMethod, UrlParameterType } from "./constants";
-import { UrlParameterInterface } from "./url-parameter.interface";
+import { isArray, isUndefined, Primitive, StringEnum, } from '@banquette/utils-type';
+import { HttpMethod, UrlParameterType } from './constants';
+import { UrlParameterInterface } from './url-parameter.interface';
 
 export abstract class AbstractRequestBuilder<ResultType> {
     protected _method?: StringEnum<HttpMethod>;
-    protected _url?: string|null;
+    protected _url?: string | null;
     protected _payload?: any;
     protected _payloadType?: symbol;
     protected _responseType?: symbol;
     protected _headers?: Record<string, Primitive>;
-    protected _timeout?: number|null;
+    protected _timeout?: number | null;
     protected _withCredentials?: boolean;
-    protected _mimeType?: string|null;
-    protected _retry?: number|null;
-    protected _retryDelay?: number|'auto'|null;
+    protected _mimeType?: string | null;
+    protected _retry?: number | null;
+    protected _retryDelay?: number | 'auto' | null;
     protected _priority?: number;
     protected _params?: Record<string, UrlParameterInterface>;
     protected _tags?: symbol[];
@@ -64,7 +62,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Set the url to call.
      */
-    public url(url: string|null): this {
+    public url(url: string | null): this {
         this._url = url;
         return this;
     }
@@ -72,7 +70,10 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Add multiple url parameters.
      */
-    public params(params: Record<string, Primitive>, type: UrlParameterType = UrlParameterType.Auto): this {
+    public params(
+        params: Record<string, Primitive>,
+        type: UrlParameterType = UrlParameterType.Auto
+    ): this {
         for (const name of Object.keys(params)) {
             this.param(name, params[name], type);
         }
@@ -82,11 +83,15 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Add a url parameter.
      */
-    public param(name: string, value: Primitive, type: UrlParameterType = UrlParameterType.Auto): this {
+    public param(
+        name: string,
+        value: Primitive,
+        type: UrlParameterType = UrlParameterType.Auto
+    ): this {
         if (isUndefined(this._params)) {
             this._params = {};
         }
-        this._params[name] = {type, value: String(value)};
+        this._params[name] = { type, value: String(value) };
         return this;
     }
 
@@ -149,7 +154,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Set the maximum number of time the request can be replayed in case of a network error.
      */
-    public retry(count: number|null): this {
+    public retry(count: number | null): this {
         this._retry = count;
         return this;
     }
@@ -158,7 +163,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
      * Time to wait (in ms) between each try.
      * If set to 'auto', an exponential backoff retry strategy is used.
      */
-    public retryDelay(delay: number|'auto'|null): this {
+    public retryDelay(delay: number | 'auto' | null): this {
         this._retryDelay = delay;
         return this;
     }
@@ -174,7 +179,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Set the maximum time the request can take.
      */
-    public timeout(timeout: number|null): this {
+    public timeout(timeout: number | null): this {
         this._timeout = timeout;
         return this;
     }
@@ -190,7 +195,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
     /**
      * Set the mime type of the payload.
      */
-    public mimeType(mimeType: string|null): this {
+    public mimeType(mimeType: string | null): this {
         this._mimeType = mimeType;
         return this;
     }

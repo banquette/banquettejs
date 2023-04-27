@@ -1,16 +1,16 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
-import { createValidator } from "@banquette/validation/create-validator";
-import { ValidationContextInterface } from "@banquette/validation/validation-context.interface";
-import { ValidationResult } from "@banquette/validation/validation-result";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { Injector } from "@banquette/dependency-injection";
+import { ModelExtendedIdentifier } from "@banquette/model";
+import { createValidator, ValidationContextInterface, ValidationResult, ValidatorInterface } from "@banquette/validation";
 import { ModelValidationMetadataService } from "../model-validation-metadata.service";
 
-const metadata = Injector.Get(ModelValidationMetadataService);
+let metadata: ModelValidationMetadataService|null = null;
 
 export const Model = (identifier: ModelExtendedIdentifier): ValidatorInterface => {
     return createValidator({
         validate: (context: ValidationContextInterface): ValidationResult => {
+            if (metadata === null) {
+                metadata = Injector.Get(ModelValidationMetadataService);
+            }
             const validator: ValidatorInterface|null = metadata.getValidator(identifier);
             if (validator !== null) {
                 validator.validate(context.value, context);

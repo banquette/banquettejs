@@ -1,19 +1,11 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isConstructor } from "@banquette/utils-type/is-constructor";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { UsageException } from "@banquette/exception";
+import { isConstructor, isObject, isUndefined, Constructor } from "@banquette/utils-type";
 import { ComponentPublicInstance } from "vue";
 import { VUE_CLASS_COMPONENT_OPTIONS, COMPONENT_TS_INSTANCE, COMPONENT_CTOR, DECORATORS_METADATA } from "../constants";
 import { ComponentMetadataInterface } from "../decorator/component-metadata.interface";
 import { VccOpts, DecoratedComponentInstance, DecoratedComponentConstructor } from "../type";
 import { Vue } from "../vue";
-import {
-    isDecoratedComponentConstructor,
-    isDecoratedComponentInstance,
-    isComponentInstance,
-    isVccOpts
-} from "./guards";
+import { isDecoratedComponentConstructor, isDecoratedComponentInstance, isComponentInstance, isVccOpts } from "./guards";
 
 /**
  * Try to get vcc options from a constructor function.

@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isUndefined } from "@banquette/utils-type";
 
 /**
  * These properties are set by the exportHelper of vue-loader after __vccOpts has been created.

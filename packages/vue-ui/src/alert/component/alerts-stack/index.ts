@@ -1,1 +1,1 @@
-export { default as AlertsStackComponent } from './alerts-stack.component.vue';
+export { default as BtAlertsStack } from './alerts-stack.component.vue';

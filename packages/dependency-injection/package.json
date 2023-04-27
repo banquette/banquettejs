@@ -7,12 +7,32 @@
         "directory": "packages/dependency-injection"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/dependency-injection.umd.cjs",
+    "module": "./dist/dependency-injection.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/dependency-injection.js",
+            "require": "./dist/dependency-injection.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
     "dependencies": {
-        "@banquette/exception": "0.0.0",
-        "@banquette/utils-reflection": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
+        "@banquette/exception": "workspace:^",
+        "@banquette/utils-reflection": "workspace:^",
+        "@banquette/utils-type": "workspace:^"
     }
 }

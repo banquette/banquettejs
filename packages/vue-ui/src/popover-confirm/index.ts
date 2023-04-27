@@ -1,1 +1,1 @@
-export { default as PopoverConfirmComponent } from './popover-confirm.component.vue';
+export { default as BtPopoverConfirm } from './popover-confirm.component.vue';

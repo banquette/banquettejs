@@ -1,4 +1,4 @@
-import { ViolationInterface } from "@banquette/validation/violation.interface";
+import { ViolationInterface } from "@banquette/validation";
 
 /**
  * The data expected from the server when validation errors are found.

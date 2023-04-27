@@ -1,6 +1,5 @@
-import { AbstractDomModule } from "@banquette/dom-modules/abstract.dom-module";
-import { DomModule } from "@banquette/dom-modules/decorator/dom-module.decorator";
-import { VueBuilder } from "@banquette/vue-typescript/vue-builder";
+import { AbstractDomModule, DomModule } from "@banquette/dom-modules";
+import { VueBuilder } from "@banquette/vue-typescript";
 
 @DomModule('vue')
 class Vue extends AbstractDomModule {

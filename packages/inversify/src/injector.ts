@@ -1,10 +1,5 @@
-import { InjectableMetadataInterface } from "@banquette/dependency-injection/injectable-metadata.interface";
-import { InjectorAdapterInterface } from "@banquette/dependency-injection/injector.interface";
-import { InjectableIdentifier } from "@banquette/dependency-injection/type/injectable-identifier.type";
-import { InjectableType } from "@banquette/dependency-injection/type/injectable.type";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { InjectableMetadataInterface, InjectorAdapterInterface, InjectableIdentifier, InjectableType } from "@banquette/dependency-injection";
+import { ensureArray, isObject, isUndefined } from "@banquette/utils-type";
 import { Container, inject, injectable, interfaces, LazyServiceIdentifer, multiInject } from "inversify";
 
 const PARAM_TYPES = "inversify:paramtypes";

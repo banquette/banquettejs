@@ -1,6 +1,5 @@
-import { Exception } from "@banquette/exception/exception";
-import { SystemException } from "@banquette/exception/system.exception";
-import { slugify } from "@banquette/utils-string/format/slugify";
+import { Exception, SystemException } from "@banquette/exception";
+import { slugify } from "@banquette/utils-string";
 
 /**
  * Generic exception thrown when something wrong happens with the http request.

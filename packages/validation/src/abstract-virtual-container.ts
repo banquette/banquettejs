@@ -1,9 +1,5 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isNumeric } from "@banquette/utils-type/is-numeric";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { isType } from "@banquette/utils-type/is-type";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Writeable } from "@banquette/utils-type/types";
+import { UsageException } from "@banquette/exception";
+import { isNumeric, isPromiseLike, isType, isUndefined, Writeable } from "@banquette/utils-type";
 import { Valid } from "./type/valid";
 import { isValidatorContainer, splitPath } from "./utils";
 import { ValidateOptionsInterface } from "./validate-options.interface";
@@ -115,7 +111,7 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
         let lastLocalPromise: any = null;
         let skipped: boolean = false;
 
-        (this as Writeable<AbstractVirtualContainer>).skipped = true;
+        (this as any /* Writeable<AbstractVirtualContainer> */).skipped = true;
         const context = ValidationContext.EnsureValidationContext(value, maskOrContext);
         const getOrCreateWrapper = () => {
             // Because we don't know how many validators will be asynchronous, we have to wrap the promise
@@ -140,7 +136,7 @@ export abstract class AbstractVirtualContainer implements ValidatorContainerInte
             skipped = true;
             if (context.shouldValidate(this.validators[index])) {
                 this.validators[index].validate(value, context);
-                (this as Writeable<AbstractVirtualContainer>).skipped = false;
+                (this as any /* Writeable<AbstractVirtualContainer> */).skipped = false;
                 skipped = false;
             }
             if (context.result.localPromise !== null && context.result.localPromise !== lastLocalPromise) {

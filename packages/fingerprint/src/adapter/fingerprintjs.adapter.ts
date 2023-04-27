@@ -1,10 +1,10 @@
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Service } from "@banquette/dependency-injection";
+import { isServer } from "@banquette/utils-misc";
+import { isUndefined } from "@banquette/utils-type";
+import { AdapterTag } from "../constant";
 import { FingerprintGeneratorInvalidScriptException } from "../exception/fingerprint-generator-invalid-script.exception";
 import { FingerprintGeneratorScriptTimeoutException } from "../exception/fingerprint-generator-script-timeout.exception";
 import { AdapterInterface } from "./adapter.interface";
-import { AdapterTag } from "../constant";
 
 @Service(AdapterTag)
 export class FingerprintjsAdapter implements AdapterInterface {

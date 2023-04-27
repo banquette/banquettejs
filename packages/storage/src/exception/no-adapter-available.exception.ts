@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/exception/system.exception";
+import { SystemException } from "@banquette/exception";
 
 /**
  * Exception thrown when the browser doesn't support any of the registered adapters.

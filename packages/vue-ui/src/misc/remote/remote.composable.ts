@@ -1,10 +1,11 @@
-import { HttpMethod } from "@banquette/http/constants";
-import { RemoteModule } from "@banquette/ui/misc/remote/remote.module";
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { Primitive } from "@banquette/utils-type/types";
-import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { HttpMethod } from "@banquette/http";
+import { RemoteModule } from "@banquette/ui";
+import { ensureInEnum } from "@banquette/utils-array";
+import { Primitive } from "@banquette/utils-type";
+import { Composable } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 
 /**
  * VueJS bridge to RemoteModule.
@@ -14,12 +15,12 @@ export class RemoteComposable {
     /**
      * @see RemoteComposable
      */
-    @Prop({type: String, default: null}) public url!: string|null;
-    @Prop({type: String, default: null}) public endpoint!: string|null;
-    @Prop({type: String, default: null}) public model!: string|null;
-    @Prop({type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
-    @Prop({type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
-    @Prop({type: Object, default: {}}) public headers!: Record<string, Primitive>;
+    @Prop({type: String as PropType<string|null>, default: null}) public url!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public endpoint!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public model!: string|null;
+    @Prop({type: String as PropType<HttpMethod>, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public headers!: Record<string, Primitive>;
 
     /**
      * The actual module instance.

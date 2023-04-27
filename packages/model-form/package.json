@@ -3,22 +3,43 @@
     "version": "0.0.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/banquette/banquettejs.git",
+        "url": "model-forms://github.com/banquette/banquettejs.git",
         "directory": "packages/model-form"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
-    "dependencies": {
-        "@banquette/dependency-injection": "0.0.0",
-        "@banquette/exception": "0.0.0",
-        "@banquette/form": "0.0.0",
-        "@banquette/model": "0.0.0",
-        "@banquette/model-validation": "0.0.0",
-        "@banquette/object-observer": "0.0.0",
-        "@banquette/utils-misc": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/model-form.umd.cjs",
+    "module": "./dist/model-form.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/model-form.js",
+            "require": "./dist/model-form.umd.cjs"
+        }
     },
-    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@banquette/model-form": "workspace:^",
+        "@banquette/validation": "workspace:^",
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
+    "dependencies": {
+        "@banquette/dependency-injection": "workspace:^",
+        "@banquette/exception": "workspace:^",
+        "@banquette/form": "workspace:^",
+        "@banquette/model": "workspace:^",
+        "@banquette/model-validation": "workspace:^",
+        "@banquette/object-observer": "workspace:^",
+        "@banquette/utils-misc": "workspace:^",
+        "@banquette/utils-type": "workspace:^"
+    }
 }

@@ -1,4 +1,4 @@
-import { ConfigurationInterface } from "@banquette/config/config/configuration.interface";
+import { ConfigurationInterface } from "@banquette/config";
 import { LogLevel } from "./constants";
 
 export interface LogConfigurationInterface extends ConfigurationInterface {

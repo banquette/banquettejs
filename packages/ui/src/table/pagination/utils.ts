@@ -1,4 +1,4 @@
-import { isArray } from "@banquette/utils-type/is-array";
+import { isArray } from "@banquette/utils-type";
 import { PaginatedServerResponseInterface } from "./paginated-server-response.interface";
 
 /**

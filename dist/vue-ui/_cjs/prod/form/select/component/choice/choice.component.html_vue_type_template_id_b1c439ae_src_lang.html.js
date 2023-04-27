@@ -1,6 +1,0 @@
-/*!
- * Banquette VueUi v0.0.0 (CommonJS)
- * (c) 2022-2022 Julien Pinto
- * Released under Apache License, Version 2.0
- */
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("vue"),o={class:"icons"};exports.render=function render(c,t,i,r,n,s){var l=e.resolveComponent("i-material-delete"),a=e.resolveComponent("i-material-check"),d=e.resolveComponent("bt-dropdown-item");return c.choice?e.withDirectives((e.openBlock(),e.createBlock(d,{key:0,class:e.normalizeClass(["bt-form-select-choice",{selected:c.choice.selected,focused:c.choice.focused,disabled:c.choice.disabled}]),onClick:t[1]||(t[1]=e.withModifiers((function(e){return c.select()}),["stop"]))},{default:e.withCtx((function(){return[e.renderSlot(c.$slots,"default",{},(function(){return[e.createTextVNode(e.toDisplayString(c.choice.label),1)]})),e.createElementVNode("div",o,["user"===c.choice.origin?(e.openBlock(),e.createBlock(l,{key:0,class:"trash-icon",onClick:t[0]||(t[0]=e.withModifiers((function(e){return c.remove()}),["stop"]))})):e.createCommentVNode("v-if",!0),c.choice.selected?(e.openBlock(),e.createBlock(a,{key:1,class:"check-icon"})):e.createCommentVNode("v-if",!0)])]})),_:3},8,["class"])),[[e.vShow,c.choice.visible]]):e.createCommentVNode("v-if",!0)};

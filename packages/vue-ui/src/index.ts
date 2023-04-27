@@ -1,3 +1,6 @@
+import './themes/default';
+import './themes/dark';
+
 export * from './alert';
 export * from './button';
 export * from './debug';
@@ -13,5 +16,3 @@ export * from './table';
 export * from './tabs';
 export * from './tag';
 export * from './tree';
-
-console.error(`Avoid importing components from the index of the package, use specific imports instead. For example, instead of doing "import { ButtonComponent } from '@banquette/vue-ui';", do "import { ButtonComponent } from '@banquette/vue-ui/button'".`);

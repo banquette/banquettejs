@@ -1,4 +1,4 @@
-import { reassign } from "@banquette/utils-misc/make-reassignable";
+import { reassign } from "@banquette/utils-misc";
 
 /**
  * Define a proxy making the wrapper object created by Vue invisible.

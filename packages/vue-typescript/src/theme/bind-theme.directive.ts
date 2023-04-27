@@ -1,6 +1,6 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { proxy } from "@banquette/utils-misc/proxy";
+import { UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { proxy } from "@banquette/utils-misc";
 import { DirectiveBinding } from "vue";
 import { ACTIVE_VARIANTS } from "../constants";
 import { ComponentMetadataInterface } from "../decorator/component-metadata.interface";

@@ -1,5 +1,4 @@
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isFunction, isUndefined } from "@banquette/utils-type";
 import { TransformerInterface } from "../transformer/transformer.interface";
 
 export type TransformerDecorator = (transformer?: TransformerInterface) => any;

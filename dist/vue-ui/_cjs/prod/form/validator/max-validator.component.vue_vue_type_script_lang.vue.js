@@ -1,6 +1,0 @@
-/*!
- * Banquette VueUi v0.0.0 (CommonJS)
- * (c) 2022-2022 Julien Pinto
- * Released under Apache License, Version 2.0
- */
-"use strict";var t=require("../../_virtual/_tslib.js"),e=require("@banquette/validation/_cjs/prod/type/max"),a=require("@banquette/vue-typescript/_cjs/prod/decorator/component.decorator"),o=require("@banquette/vue-typescript/_cjs/prod/decorator/prop.decorator"),r=function(r){function ValidateMaxComponent(){return null!==r&&r.apply(this,arguments)||this}return t.__extends(ValidateMaxComponent,r),ValidateMaxComponent.prototype.buildValidator=function(){return e.Max(this.count,{treatAs:this.treatAs,message:this.message,type:this.type,tags:this.tags,groups:this.groups})},t.__decorate([o.Prop({type:Number,required:!0}),t.__metadata("design:type",Number)],ValidateMaxComponent.prototype,"count",void 0),t.__decorate([o.Prop({type:String,default:"auto",transform:function(t){return["string","number","auto"].indexOf(t)<0?"auto":t}}),t.__metadata("design:type",String)],ValidateMaxComponent.prototype,"treatAs",void 0),ValidateMaxComponent=t.__decorate([a.Component({name:"bt-validate-max",template:!1})],ValidateMaxComponent)}(require("./validator.component.js").ValidatorComponent);module.exports=r;

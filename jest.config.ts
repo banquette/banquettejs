@@ -23,15 +23,13 @@ export default {
     // collectCoverageFrom: undefined,
 
     // The directory where Jest should output its coverage files
-    coverageDirectory: "coverage",
+    coverageDirectory: 'coverage',
 
     // An array of regexp pattern strings used to skip coverage collection
-    coveragePathIgnorePatterns: [
-        "/node_modules/"
-    ],
+    coveragePathIgnorePatterns: ['/node_modules/'],
 
     // Indicates which provider should be used to instrument code for coverage
-    coverageProvider: "v8",
+    coverageProvider: 'v8',
 
     // A list of reporter names that Jest uses when writing coverage reports
     // coverageReporters: [
@@ -76,53 +74,53 @@ export default {
     // ],
 
     // An array of file extensions your modules use
-    moduleFileExtensions: ["js", "jsx", "ts", "tsx", "vue"],
+    moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'vue'],
 
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
-        "@banquette/api/(.*)$": "<rootDir>/packages/api/src/$1",
-        "@banquette/config/(.*)$": "<rootDir>/packages/config/src/$1",
-        "@banquette/dependency-injection/(.*)$": "<rootDir>/packages/dependency-injection/src/$1",
-        "@banquette/dom-modules/(.*)$": "<rootDir>/packages/dom-modules/src/$1",
-        "@banquette/event/(.*)$": "<rootDir>/packages/event/src/$1",
-        "@banquette/exception/(.*)$": "<rootDir>/packages/exception/src/$1",
-        "@banquette/fingerprint/(.*)$": "<rootDir>/packages/fingerprint/src/$1",
-        "@banquette/form/(.*)$": "<rootDir>/packages/form/src/$1",
-        "@banquette/http/(.*)$": "<rootDir>/packages/http/src/$1",
-        "@banquette/inversify/(.*)$": "<rootDir>/packages/inversify/src/$1",
-        "@banquette/log/(.*)$": "<rootDir>/packages/log/src/$1",
-        "@banquette/model/(.*)$": "<rootDir>/packages/model/src/$1",
-        "@banquette/model-form/(.*)$": "<rootDir>/packages/model-form/src/$1",
-        "@banquette/model-validation/(.*)$": "<rootDir>/packages/model-validation/src/$1",
-        "@banquette/object-observer/(.*)$": "<rootDir>/packages/object-observer/src/$1",
-        "@banquette/promise/(.*)$": "<rootDir>/packages/promise/src/$1",
-        "@banquette/storage/(.*)$": "<rootDir>/packages/storage/src/$1",
-        "@banquette/ui/(.*)$": "<rootDir>/packages/ui/src/$1",
-        "@banquette/utils-array/(.*)$": "<rootDir>/packages/utils-array/src/$1",
-        "@banquette/utils-crypto/(.*)$": "<rootDir>/packages/utils-crypto/src/$1",
-        "@banquette/utils-date/(.*)$": "<rootDir>/packages/utils-date/src/$1",
-        "@banquette/utils-dom/(.*)$": "<rootDir>/packages/utils-dom/src/$1",
-        "@banquette/utils-easing/(.*)$": "<rootDir>/packages/utils-easing/src/$1",
-        "@banquette/utils-glob/(.*)$": "<rootDir>/packages/utils-glob/src/$1",
-        "@banquette/utils-misc/(.*)$": "<rootDir>/packages/utils-misc/src/$1",
-        "@banquette/utils-object/(.*)$": "<rootDir>/packages/utils-object/src/$1",
-        "@banquette/utils-random/(.*)$": "<rootDir>/packages/utils-random/src/$1",
-        "@banquette/utils-reflection/(.*)$": "<rootDir>/packages/utils-reflection/src/$1",
-        "@banquette/utils-string/(.*)$": "<rootDir>/packages/utils-string/src/$1",
-        "@banquette/utils-type/(.*)$": "<rootDir>/packages/utils-type/src/$1",
-        "@banquette/validation/(.*)$": "<rootDir>/packages/validation/src/$1",
-        "@banquette/vue-dom-module/(.*)$": "<rootDir>/packages/vue-dom-module/src/$1",
-        "@banquette/vue-material-icons/(.*)$": "<rootDir>/packages/vue-material-icons/src/$1",
-        "@banquette/vue-remix-icons/(.*)$": "<rootDir>/packages/vue-remix-icons/src/$1",
-        "@banquette/vue-typescript/(.*)$": "<rootDir>/packages/vue-typescript/src/$1",
-        "@banquette/vue-ui/(.*)$": "<rootDir>/packages/vue-ui/src/$1"
+        "@banquette/api$": "<rootDir>/packages/api/src",
+        "@banquette/config$": "<rootDir>/packages/config/src",
+        "@banquette/dependency-injection$": "<rootDir>/packages/dependency-injection/src",
+        "@banquette/dom-modules$": "<rootDir>/packages/dom-modules/src",
+        "@banquette/event$": "<rootDir>/packages/event/src",
+        "@banquette/exception$": "<rootDir>/packages/exception/src",
+        "@banquette/fingerprint$": "<rootDir>/packages/fingerprint/src",
+        "@banquette/form$": "<rootDir>/packages/form/src",
+        "@banquette/http$": "<rootDir>/packages/http/src",
+        "@banquette/inversify$": "<rootDir>/packages/inversify/src",
+        "@banquette/log$": "<rootDir>/packages/log/src",
+        "@banquette/model$": "<rootDir>/packages/model/src",
+        "@banquette/model-form$": "<rootDir>/packages/model-form/src",
+        "@banquette/model-validation$": "<rootDir>/packages/model-validation/src",
+        "@banquette/object-observer$": "<rootDir>/packages/object-observer/src",
+        "@banquette/promise$": "<rootDir>/packages/promise/src",
+        "@banquette/storage$": "<rootDir>/packages/storage/src",
+        "@banquette/ui$": "<rootDir>/packages/ui/src",
+        "@banquette/utils-array$": "<rootDir>/packages/utils-array/src",
+        "@banquette/utils-crypto$": "<rootDir>/packages/utils-crypto/src",
+        "@banquette/utils-date$": "<rootDir>/packages/utils-date/src",
+        "@banquette/utils-dom$": "<rootDir>/packages/utils-dom/src",
+        "@banquette/utils-easing$": "<rootDir>/packages/utils-easing/src",
+        "@banquette/utils-glob$": "<rootDir>/packages/utils-glob/src",
+        "@banquette/utils-misc$": "<rootDir>/packages/utils-misc/src",
+        "@banquette/utils-object$": "<rootDir>/packages/utils-object/src",
+        "@banquette/utils-random$": "<rootDir>/packages/utils-random/src",
+        "@banquette/utils-reflection$": "<rootDir>/packages/utils-reflection/src",
+        "@banquette/utils-string$": "<rootDir>/packages/utils-string/src",
+        "@banquette/utils-type$": "<rootDir>/packages/utils-type/src",
+        "@banquette/validation$": "<rootDir>/packages/validation/src",
+        "@banquette/vue-dom-module$": "<rootDir>/packages/vue-dom-module/src",
+        "@banquette/vue-material-icons$": "<rootDir>/packages/vue-material-icons/src",
+        "@banquette/vue-remix-icons$": "<rootDir>/packages/vue-remix-icons/src",
+        "@banquette/vue-typescript$": "<rootDir>/packages/vue-typescript/src",
+        "@banquette/vue-ui$": "<rootDir>/packages/vue-ui/src"
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
     modulePathIgnorePatterns: [
-        "__mocks__",
-        "unused-packages",
-        "^(?!.*\\.test\\.(?:t|j)s$).+$"
+        '__mocks__',
+        'unused-packages',
+        '^(?!.*\\.test\\.(?:t|j)s$).+$',
     ],
 
     // Activates notifications for test results
@@ -158,22 +156,22 @@ export default {
     // A list of paths to directories that Jest should use to search for files in
     roots: [
         "<rootDir>/packages/api/__tests__",
-        "<rootDir>/packages/event/__tests__",
+        '<rootDir>/packages/event/__tests__',
         "<rootDir>/packages/form/__tests__",
-        "<rootDir>/packages/http/__tests__",
+        '<rootDir>/packages/http/__tests__',
         "<rootDir>/packages/model/__tests__",
         "<rootDir>/packages/model-form/__tests__",
         "<rootDir>/packages/model-validation/__tests__",
         "<rootDir>/packages/object-observer/__tests__",
-        "<rootDir>/packages/promise/__tests__",
+        '<rootDir>/packages/promise/__tests__',
         "<rootDir>/packages/storage/__tests__",
         "<rootDir>/packages/ui/__tests__",
-        "<rootDir>/packages/utils-array/__tests__",
-        "<rootDir>/packages/utils-glob/__tests__",
-        "<rootDir>/packages/utils-object/__tests__",
-        "<rootDir>/packages/utils-random/__tests__",
-        "<rootDir>/packages/utils-string/__tests__",
-        "<rootDir>/packages/utils-type/__tests__",
+        '<rootDir>/packages/utils-array/__tests__',
+        '<rootDir>/packages/utils-glob/__tests__',
+        '<rootDir>/packages/utils-object/__tests__',
+        '<rootDir>/packages/utils-random/__tests__',
+        '<rootDir>/packages/utils-string/__tests__',
+        '<rootDir>/packages/utils-type/__tests__',
         "<rootDir>/packages/validation/__tests__"
     ],
 
@@ -184,7 +182,7 @@ export default {
     // setupFiles: [],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
-    setupFilesAfterEnv: ["jest-extended"],
+    setupFilesAfterEnv: ['jest-extended'],
 
     // The number of seconds after which a test is considered as slow and reported as such in the results.
     // slowTestThreshold: 5,
@@ -193,7 +191,7 @@ export default {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    testEnvironment: "jsdom",
+    testEnvironment: 'jsdom',
 
     // Options that will be passed to the testEnvironment
     // testEnvironmentOptions: {},
@@ -202,9 +200,7 @@ export default {
     // testLocationInResults: false,
 
     // The glob patterns Jest uses to detect test files
-    testMatch: [
-        "**/__tests__/**/*.ts"
-    ],
+    testMatch: ['**/__tests__/**/*.ts'],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
     // testPathIgnorePatterns: [
@@ -222,8 +218,8 @@ export default {
 
     // A map from regular expressions to paths to transformers
     transform: {
-        "^.+\\.[tj]sx?$": ["ts-jest", {"tsconfig": "tsconfig.test.json"}],
-        "^.+\\.vue$": "@vue/vue3-jest"
+        '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
+        '^.+\\.vue$': '@vue/vue3-jest',
     },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -233,7 +229,7 @@ export default {
     // ],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
-    unmockedModulePathPatterns: ["<rootDir>/node_modules/"],
+    unmockedModulePathPatterns: ['<rootDir>/node_modules/'],
 
     // Indicates whether each individual test should be reported during the run
     // verbose: undefined,

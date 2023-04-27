@@ -1,6 +1,6 @@
+import { DispatchResult } from "./dispatch-result";
 import { EventArg } from './event-arg';
 import { UnsubscribeFunction } from "./type";
-import { DispatchResult } from "./dispatch-result";
 
 export interface EventDispatcherInterface {
     /**

@@ -1,29 +1,16 @@
 <style src="./tree.component.css" scoped></style>
 <template src="./tree.component.html" ></template>
 <script lang="ts">
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { FormControl } from "@banquette/form/form-control";
-import { NodePropResolver } from "@banquette/ui/tree/constant";
-import { Node } from "@banquette/ui/tree/node";
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isPrimitive } from "@banquette/utils-type/is-primitive";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { TreeComponent } from "../../tree";
-import { BaseFormInputComponent } from "../base-input";
+import { UnsubscribeFunction } from "@banquette/event";
+import { ValueChangedFormEvent, FormControl } from "@banquette/form";
+import { NodePropResolver, Node } from "@banquette/ui";
+import { areEqual } from "@banquette/utils-misc";
+import { ensureArray, isFunction, isObject, isPrimitive, isUndefined, Primitive } from "@banquette/utils-type";
+import { Component, Expose, Import, Prop, Ref, Themeable, BindThemeDirective } from "@banquette/vue-typescript";
+import { BtTree } from "../../tree";
+import { BtAbstractVueForm } from "../abstract-vue-form.component";
+import { BtFormBaseInput } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
 import { UndefinedValue } from "../constant";
 import { CheckboxDataInterface } from "./checkbox-data.interface";
 import { ThemeConfiguration } from "./theme-configuration";
@@ -33,10 +20,13 @@ import { TreeViewModel } from "./tree.view-model";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-tree',
-    components: [BaseFormInputComponent, TreeComponent],
+    components: [BtFormBaseInput, BtTree],
     directives: [BindThemeDirective]
 })
-export default class FormTreeComponent extends AbstractVueFormComponent<TreeViewDataInterface, TreeViewModel> {
+export default class BtFormTree extends BtAbstractVueForm<TreeViewDataInterface, TreeViewModel> {
+    // To get autocompletion in the view.
+    declare v: TreeViewDataInterface;
+
     /**
      * Holds the props exposed by the base input.
      */
@@ -60,9 +50,6 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
      */
     @Prop({type: [String, Function], default: null}) public valueIdentifier!: NodePropResolver<Primitive>;
 
-    // Override the type to get autocompletion in the view.
-    @Expose() public v!: TreeViewDataInterface;
-
     /**
      * Map of checkboxes data, indexed by Node id.
      */
@@ -74,7 +61,6 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
      * Vue lifecycle.
      */
     public beforeMount() {
-        super.beforeMount();
         this.proxy.onReady(() => {
             this.v.control.value = !isUndefined(this.v.control.value) && this.v.control.value !== UndefinedValue ? ensureArray(this.v.control.value) : [];
         });
@@ -254,7 +240,7 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
      */
     private extractNodeValue(node: Node): any {
         if (isFunction(this.nodesValue)) {
-            return this.nodesValue(node.originalValue);
+            return this.nodesValue ? this.nodesValue(node.originalValue) : null;
         }
         if (!isObject(node.originalValue) || !this.nodesValue) {
             return node.originalValue;
@@ -282,7 +268,7 @@ export default class FormTreeComponent extends AbstractVueFormComponent<TreeView
      */
     private extractValueIdentifier(value: any): any {
         if (isFunction(this.valueIdentifier)) {
-            return this.valueIdentifier(value);
+            return this.valueIdentifier!(value);
         }
         if (!this.valueIdentifier || !isPrimitive(value[this.valueIdentifier])) {
             return null;

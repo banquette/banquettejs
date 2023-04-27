@@ -1,9 +1,9 @@
-import { PaginationStrategy, PaginationPosition } from "@banquette/ui/table/pagination/constant";
-import { PaginationModule } from "@banquette/ui/table/pagination/pagination.module";
-import { Primitive } from "@banquette/utils-type/types";
-import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { PaginationStrategy, PaginationPosition } from "@banquette/ui";
+import { PaginationModule } from "@banquette/ui";
+import { Primitive } from "@banquette/utils-type";
+import { Composable } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
 
 @Composable()
 export class PaginationComposable {

@@ -1,9 +1,13 @@
-import { VoidCallback } from "@banquette/utils-type/types";
+import { VoidCallback } from '@banquette/utils-type';
 
 /**
  * Wrapper to the native `addEventListener` that offers an unsubscribe function.
  */
-export function addEventListener(target: Document|HTMLElement, eventName: keyof DocumentEventMap, cb: EventListenerOrEventListenerObject): VoidCallback {
+export function addEventListener(
+    target: Document | HTMLElement,
+    eventName: keyof DocumentEventMap,
+    cb: EventListenerOrEventListenerObject
+): VoidCallback {
     let removed: boolean = false;
     target.addEventListener(eventName, cb);
     return () => {

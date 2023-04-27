@@ -1,34 +1,30 @@
 <style src="./checkbox.component.css" scoped></style>
 <template src="./checkbox.component.html" ></template>
 <script lang="ts">
-import { FormControl } from "@banquette/form/form-control";
-import { isObject } from "@banquette/utils-type/is-object";
-import { VoidCallback } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
-import { BaseFormInputComponent } from "../base-input";
+import { FormControl } from "@banquette/form";
+import { ValueIdentifierResolver } from "@banquette/ui";
+import { isObject, VoidCallback, Primitive } from "@banquette/utils-type";
+import { Component, Computed, Expose, Import, Prop, TemplateRef, Themeable, Watch, ImmediateStrategy, BindThemeDirective } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { BtAbstractVueForm } from "../abstract-vue-form.component";
+import { BtFormBaseInput } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { ViewModelEvents, UndefinedValue } from "../constant";
 import { CheckboxViewDataInterface } from "./checkbox-view-data.interface";
 import { CheckboxViewModel } from "./checkbox.view-model";
 import { ThemeConfiguration } from "./theme-configuration";
 
+const ModelValuesMap = new WeakMap<any, FormControl>();
+
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-checkbox',
-    components: [BaseFormInputComponent],
+    components: [BtFormBaseInput],
     directives: [BindThemeDirective]
 })
-export default class FormCheckboxComponent extends AbstractVueFormComponent<CheckboxViewDataInterface, CheckboxViewModel> {
-    private static ModelValuesMap = new WeakMap<any, FormControl>();
+export default class BtFormCheckbox extends BtAbstractVueForm<CheckboxViewDataInterface, CheckboxViewModel> {
+    // To get autocompletion in the view.
+    declare v: CheckboxViewDataInterface;
 
     /**
      * Holds the props exposed by the base input.
@@ -41,13 +37,13 @@ export default class FormCheckboxComponent extends AbstractVueFormComponent<Chec
      * The label of the composable is not used to voluntarily to keep it undefined
      * so the label can be shown in the checkbox component's template instead.
      */
-    @Prop({type: String, default: null}) public label!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public label!: string|null;
 
     /**
      * If `true` or `false` the checkbox will be checked or unchecked respectively
      * upon initialization or when a change is detected on the prop.
      */
-    @Prop({type: Boolean, default: null}) public checked!: boolean|null;
+    @Prop({type: Boolean as PropType<boolean|null>, default: null}) public checked!: boolean|null;
 
     /**
      * The value to set to the control when the checkbox is checked.
@@ -58,6 +54,14 @@ export default class FormCheckboxComponent extends AbstractVueFormComponent<Chec
      * The value to set to the control when the checkbox is unchecked.
      */
     @Prop() public uncheckedValue!: any;
+
+    /**
+     * Defines how to resolve the checked value identifier when it's an object.
+     * Can be:
+     *   - the name of a property in the object.
+     *   - a function that takes the object and returns the value to use.
+     */
+    @Prop({type: [String, Function] as PropType<ValueIdentifierResolver<Primitive>>, default: 'id'}) public valueIdentifier!: ValueIdentifierResolver<Primitive>;
 
     /**
      * If `true`, force the checkbox to be visually indeterminate.
@@ -78,7 +82,7 @@ export default class FormCheckboxComponent extends AbstractVueFormComponent<Chec
      *
      * If `null` the component will behave like a checkbox.
      */
-    @Prop({type: String, default: null}) public group!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public group!: string|null;
 
     @Computed() public get hasDefaultSlot(): boolean {
         return this.hasNonEmptySlot('default');
@@ -90,8 +94,6 @@ export default class FormCheckboxComponent extends AbstractVueFormComponent<Chec
 
     @TemplateRef('inputWrapper') public inputWrapper!: HTMLElement;
 
-    // Override the type to get autocompletion in the view.
-    public vm!: CheckboxViewModel;
     private unsubscribeMethods: VoidCallback[] = [];
 
     public constructor() {
@@ -148,10 +150,10 @@ export default class FormCheckboxComponent extends AbstractVueFormComponent<Chec
         }
         let control: FormControl;
         if (isObject(newValue)) {
-            if (!FormCheckboxComponent.ModelValuesMap.has(newValue)) {
-                FormCheckboxComponent.ModelValuesMap.set(newValue, this.proxy.getControl());
+            if (!ModelValuesMap.has(newValue)) {
+                ModelValuesMap.set(newValue, this.proxy.getControl());
             }
-            control = FormCheckboxComponent.ModelValuesMap.get(newValue) as FormControl;
+            control = ModelValuesMap.get(newValue) as FormControl;
         } else {
             control = this.proxy.getControl();
         }
@@ -162,9 +164,10 @@ export default class FormCheckboxComponent extends AbstractVueFormComponent<Chec
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable', 'valueIdentifier'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
         this.v.label = this.label;
+        this.vm.valueIdentifier = this.valueIdentifier;
         this.vm.checkedValue = this.checkedValue;
         this.vm.uncheckedValue = this.uncheckedValue;
         this.vm.uncheckable = this.uncheckable;

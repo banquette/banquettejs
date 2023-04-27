@@ -1,26 +1,12 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { AdapterRequest } from "@banquette/http/adapter/adapter-request";
-import { HttpMethod, HttpEvents } from "@banquette/http/constants";
-import { BeforeResponseEvent } from "@banquette/http/event/before-response.event";
-import { RequestEvent } from "@banquette/http/event/request.event";
-import { ResponseEvent } from "@banquette/http/event/response.event";
-import { HttpRequest } from "@banquette/http/http-request";
-import { HttpResponse } from "@banquette/http/http-response";
-import { HttpService } from "@banquette/http/http.service";
-import { ModelMetadataService } from "@banquette/model/model-metadata.service";
-import { AnyModelOptional } from "@banquette/model/type";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive, Constructor } from "@banquette/utils-type/types";
+import { ConfigurationService } from "@banquette/config";
+import { Inject, Service } from "@banquette/dependency-injection";
+import { EventDispatcherService } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { AdapterRequest, HttpMethod, HttpEvents, BeforeResponseEvent, RequestEvent, ResponseEvent, HttpRequest, HttpResponse, HttpService } from "@banquette/http";
+import { ModelMetadataService, AnyModelOptional } from "@banquette/model";
+import { proxy } from "@banquette/utils-misc";
+import { getObjectValue } from "@banquette/utils-object";
+import { isArray, isNullOrUndefined, isPromiseLike, isString, isUndefined, Primitive, Constructor } from "@banquette/utils-type";
 import { ApiConfigurationInterface } from "./api-configuration.interface";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointStorageService } from "./api-endpoint-storage.service";
@@ -33,8 +19,8 @@ import { ApiRequestEvent } from "./event/api-request.event";
 import { ApiResponseEvent } from "./event/api-response.event";
 
 // Import built-in listeners
-import './listener/request-model-transformer.listener';
-import './listener/response-model-transformer.listener';
+import { useBuiltInRequestModelTransformer } from "./listener/request-model-transformer.listener";
+import { useBuiltInResponseModelTransformer } from "./listener/response-model-transformer.listener";
 
 @Service()
 export class ApiService {
@@ -58,6 +44,10 @@ export class ApiService {
         this.eventDispatcher.subscribe(HttpEvents.BeforeResponse, proxy(this.onBeforeResponse, this), config.eventsPriorities.beforeResponse, [ApiTag]);
         this.eventDispatcher.subscribe(HttpEvents.RequestSuccess, proxy(this.onRequestSuccess, this), config.eventsPriorities.requestSuccess, [ApiTag]);
         this.eventDispatcher.subscribe(HttpEvents.RequestFailure, proxy(this.onRequestFailure, this), config.eventsPriorities.requestFailure, [ApiTag]);
+
+        console.warn("#ApiService");
+        useBuiltInRequestModelTransformer();
+        useBuiltInResponseModelTransformer();
     }
 
     /**

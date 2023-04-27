@@ -1,10 +1,10 @@
 <style src="./button-group.component.css" scoped></style>
 <template src="./button-group.component.html" ></template>
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Component } from "@banquette/vue-typescript";
 
 @Component('bt-button-group')
-export default class ButtonGroupComponent {
+export default class BtButtonGroup {
 
 }
 </script>

@@ -12,16 +12,7 @@
  * The @banquette version DOES mutate the objects being observed so its possible to observe complex objects (like classes)
  * while preserving their logic, inheritance, etc.
  */
-import { ArrayObserver } from "./observer/array.observer";
-import { ObjectObserver } from "./observer/object.observer";
-import { ObserverFactory } from "./observer.factory";
-import { TypedArrayObserver } from "./observer/typed-array.observer";
-
-ObserverFactory.RegisterObserver(ArrayObserver);
-ObserverFactory.RegisterObserver(TypedArrayObserver);
-ObserverFactory.RegisterObserver(ObjectObserver);
-
-export { ObserverFactory };
 export { MutationType } from './constant';
+export * from "./observer.factory";
 export * from './event/mutation.event';
 export * from './event/mutations-collection.event';

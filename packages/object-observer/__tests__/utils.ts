@@ -1,5 +1,5 @@
-import { cloneDeep } from "@banquette/utils-object/clone-deep";
-import { isObject } from "@banquette/utils-type/is-object";
+import { cloneDeep } from "@banquette/utils-object";
+import { isObject } from "@banquette/utils-type";
 import { MutationType } from "../src/constant";
 import { MutationEvent } from "../src/event/mutation.event";
 import { MutationsCollectionEvent } from "../src/event/mutations-collection.event";
@@ -133,8 +133,8 @@ export function expectMutations(actualMutations: Mutation[], expectedMutations: 
  */
 export function typedArrayToArray(input: any): any[] {
     const output = [];
-    for (const item of input) {
-        output.push(item);
+    for (let i = 0; i < input.length; ++i) {
+        output.push(input[i]);
     }
     return output;
 }

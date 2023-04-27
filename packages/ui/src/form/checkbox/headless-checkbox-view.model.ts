@@ -1,26 +1,56 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { BeforeValueChangeFormEvent } from "@banquette/form/event/before-value-change.form-event";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { UnsubscribeFunction } from "@banquette/event";
+import { BeforeValueChangeFormEvent, ValueChangedFormEvent } from "@banquette/form";
+import { waitForNextCycle } from "@banquette/utils-misc";
+import { isArray, isFunction, isObject, isPrimitive, isScalar, isString, isUndefined, Primitive } from "@banquette/utils-type";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { CheckboxGroupInterface } from "./checkbox-group.interface";
-import { NullGroup } from "./constant";
+import { NullGroup, ValueIdentifierResolver } from "./constant";
 import { HeadlessCheckboxViewDataInterface } from "./headless-checkbox-view-data.interface";
 
-export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxViewDataInterface = HeadlessCheckboxViewDataInterface> extends HeadlessControlViewModel<ViewDataType> {
-    private static GroupsMap: Record<number, Record<string|symbol, HeadlessCheckboxViewModel[]>> = {};
+const GroupsMap: Record<number, Record<string|symbol, HeadlessCheckboxViewModel[]>> = {};
 
+export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxViewDataInterface = HeadlessCheckboxViewDataInterface> extends HeadlessControlViewModel<ViewDataType> {
     /**
      * The value to set to the control when the checkbox is checked.
      */
-    public checkedValue: any = true;
+    private _checkedValue: any = true;
+    private _checkedValueNormalized?: Primitive;
+    public get checkedValue(): any {
+        return this._checkedValue;
+    }
+    public set checkedValue(value: any) {
+        this._checkedValue = value;
+        this._checkedValueNormalized = this.normalizeValue(value);
+    }
+    public get checkedValueNormalized(): Primitive|undefined {
+        return this._checkedValueNormalized;
+    }
 
     /**
      * The value to set to the control when the checkbox is unchecked.
      */
-    public uncheckedValue?: any;
+    private _uncheckedValue?: any;
+    private _uncheckedValueNormalized?: Primitive;
+    public get uncheckedValue(): any {
+        return this._uncheckedValue;
+    }
+    public set uncheckedValue(value: any) {
+        this._uncheckedValue = value;
+        this._uncheckedValueNormalized = this.normalizeValue(value);
+    }
+    public get uncheckedValueNormalized(): Primitive|undefined {
+        return this._uncheckedValueNormalized;
+    }
+
+    /**
+     * Defines how to convert the checked value to a primitive when it's an object.
+     * Needed for equality tests.
+     *
+     * Can be:
+     *   - the name of a property in the object.
+     *   - a function that takes the object and returns the value to use.
+     */
+    public valueIdentifier: ValueIdentifierResolver<Primitive> = null;
 
     /**
      * If `true`, put the visual state of the checkbox as indeterminate.
@@ -34,8 +64,6 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
      */
     public uncheckable: boolean = false;
 
-    private unsubscribeCallbacks: UnsubscribeFunction[] = [];
-
     /**
      * If the group is not `null`, the component will behave like a radio button.
      * Only one value can be selected for a given group.
@@ -45,7 +73,7 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
      * If multiple checkboxes are associated with the same control, an array
      * is automatically created to hold the selected values.
      */
-    public _group: CheckboxGroupInterface = {name: NullGroup, controlId: this.control.viewData.id};
+    private _group: CheckboxGroupInterface = {name: NullGroup, controlId: this.control.viewData.id};
     public get group(): string|null {
         return isString(this._group.name) ? this._group.name : null;
     }
@@ -57,17 +85,24 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
         };
         if (this._group.controlId > 0) {
             const key = name === null ? NullGroup : name;
-            if (isUndefined(HeadlessCheckboxViewModel.GroupsMap[this._group.controlId])) {
-                HeadlessCheckboxViewModel.GroupsMap[this._group.controlId] = {};
+            if (isUndefined(GroupsMap[this._group.controlId])) {
+                GroupsMap[this._group.controlId] = {};
             }
-            if (isUndefined(HeadlessCheckboxViewModel.GroupsMap[this._group.controlId][key])) {
-                HeadlessCheckboxViewModel.GroupsMap[this._group.controlId][key] = [];
+            if (isUndefined(GroupsMap[this._group.controlId][key])) {
+                GroupsMap[this._group.controlId][key] = [];
             }
-            HeadlessCheckboxViewModel.GroupsMap[this._group.controlId][key].push(this);
+            GroupsMap[this._group.controlId][key].push(this);
         }
         this.viewData.hasGroup = this._group.name !== NullGroup;
-        this.updateChecked(this.control.viewData.value);
+        // Wait a cycle so other checkboxes have time to initialize.
+        // If we update synchronously we may have a wrong value for `multiple` because
+        // other checkboxes have not yet registered their group.
+        waitForNextCycle().then(() => {
+            this.updateChecked(this.control.viewData.value);
+        });
     }
+
+    private unsubscribeCallbacks: UnsubscribeFunction[] = [];
 
     /**
      * `true` if the checkbox stores an array of values.
@@ -94,8 +129,9 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
                     const map = this.getGroupsMap();
                     const groupsWithValue: Array<string | symbol> = [];
                     event.newValue = event.newValue.filter((item: any) => {
+                        const itemNormalized = this.normalizeValue(item);
                         for (const inst of map[this._group.name]) {
-                            if (inst.checkedValue === item || (!isUndefined(inst.uncheckedValue) && inst.uncheckedValue === item)) {
+                            if (inst.checkedValueNormalized === itemNormalized || (!isUndefined(inst.uncheckedValueNormalized) && inst.uncheckedValueNormalized === itemNormalized)) {
                                 if (groupsWithValue.indexOf(this._group.name) < 0) {
                                     groupsWithValue.push(this._group.name);
                                     return true;
@@ -177,8 +213,9 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
             }
             const map = this.getGroupsMap();
             if (this.viewData.control.value.reduce((inc, i) => {
+                const iNormalized = this.normalizeValue(i);
                 for (const inst of map[this._group.name]) {
-                    if (inst.checkedValue === i) {
+                    if (inst.checkedValueNormalized === iNormalized) {
                         return inc + 1;
                     }
                 }
@@ -197,12 +234,12 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
     public removeGroup(): void {
         const gname = this._group.name;
         const gid = this._group.controlId;
-        if (gid > 0 && !isUndefined(HeadlessCheckboxViewModel.GroupsMap[gid]) && !isUndefined(HeadlessCheckboxViewModel.GroupsMap[gid][gname])) {
-            const pos = HeadlessCheckboxViewModel.GroupsMap[gid][gname].indexOf(this);
+        if (gid > 0 && !isUndefined(GroupsMap[gid]) && !isUndefined(GroupsMap[gid][gname])) {
+            const pos = GroupsMap[gid][gname].indexOf(this);
             if (pos > -1) {
-                HeadlessCheckboxViewModel.GroupsMap[this._group.controlId][gname].splice(pos, 1);
-                if (!HeadlessCheckboxViewModel.GroupsMap[this._group.controlId][gname].length) {
-                    delete HeadlessCheckboxViewModel.GroupsMap[this._group.controlId][gname];
+                GroupsMap[this._group.controlId][gname].splice(pos, 1);
+                if (!GroupsMap[this._group.controlId][gname].length) {
+                    delete GroupsMap[this._group.controlId][gname];
                 }
             }
         }
@@ -213,8 +250,8 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
      * Gets all the view models associated with the current control.
      */
     private getGroupsMap(): Record<string|symbol, HeadlessCheckboxViewModel[]> {
-        if (this._group.controlId > 0 && !isUndefined(HeadlessCheckboxViewModel.GroupsMap[this._group.controlId])) {
-            return HeadlessCheckboxViewModel.GroupsMap[this._group.controlId];
+        if (this._group.controlId > 0 && !isUndefined(GroupsMap[this._group.controlId])) {
+            return GroupsMap[this._group.controlId];
         }
         return {};
     }
@@ -226,12 +263,15 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
         let checked: boolean = false;
         if (this.multiple) {
             if (isArray(value)) {
-                if (value.indexOf(this.checkedValue) > -1) {
-                    checked = true;
+                for (const candidate of value) {
+                    if (this.checkedValueNormalized === this.normalizeValue(candidate)) {
+                        checked = true;
+                        break ;
+                    }
                 }
             }
-        } else if (value === this.checkedValue) {
-            checked = true;
+        } else {
+            checked = this.normalizeValue(value) === this.checkedValueNormalized;
         }
         this.viewData.checked = checked;
     }
@@ -250,8 +290,9 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
             // Remove old values of the same group.
             if (this._group.name !== NullGroup) {
                 newValue = newValue.filter((item: any) => {
+                    const itemNormalized = this.normalizeValue(item);
                     for (const inst of map[this._group.name]) {
-                        if (inst.checkedValue === item || (!isUndefined(inst.uncheckedValue) && inst.uncheckedValue === item)) {
+                        if (inst.checkedValueNormalized === itemNormalized || (!isUndefined(inst.uncheckedValueNormalized) && inst.uncheckedValueNormalized === itemNormalized)) {
                             return false;
                         }
                     }
@@ -260,11 +301,13 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
             }
 
             // Remove existing value
-            for (const candidate of [this.checkedValue, this.uncheckedValue]) {
+            for (const candidate of [this.checkedValueNormalized, this.uncheckedValueNormalized]) {
                 if (!isUndefined(candidate)) {
-                    const pos = newValue.indexOf(candidate);
-                    if (pos > -1) {
-                        newValue.splice(pos, 1);
+                    for (let i = 0; i < newValue.length; ++i) {
+                        if (this.normalizeValue(newValue[i]) === candidate) {
+                            newValue.splice(i, 1);
+                            break ;
+                        }
                     }
                 }
             }
@@ -281,5 +324,35 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
         } else {
             this.viewData.control.value = this.uncheckedValue;
         }
+    }
+
+    /**
+     * Ensure the input is normalized into a primitive or undefined value.
+     */
+    private normalizeValue(input: any): Primitive|undefined {
+        if (isFunction(this.valueIdentifier)) {
+            const value = this.valueIdentifier(input);
+            if (isPrimitive(value)) {
+                return value;
+            }
+        }
+        if (isUndefined(input) || isScalar(input)) {
+            return input;
+        }
+        if (!isObject(input)) {
+            console.warn(`Unsupported value of type "${typeof(input)}".`);
+            return undefined;
+        }
+        if (this.valueIdentifier !== null && !isFunction(this.valueIdentifier)) {
+            if (!isUndefined(input[this.valueIdentifier])) {
+                return input[this.valueIdentifier];
+            }
+        }
+        if (this.valueIdentifier) {
+            console.warn(`No property "${this.valueIdentifier}" to use as identifier has been found. You can control it using the "valueIdentifier" attribute, for:`, input);
+        } else {
+            console.warn('Please define what property to use as identifier using the "valueIdentifier" attribute, for:', input);
+        }
+        return undefined;
     }
 }

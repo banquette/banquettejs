@@ -1,11 +1,11 @@
 <script lang="ts">
-import { Invalid } from "@banquette/validation/type/invalid";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { Invalid } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
-@Component({name: 'bt-validate-invalid', template: false})
-export default class ValidateInvalidComponent extends ValidatorComponent {
+@Component('bt-validate-invalid')
+export default class BtValidateInvalid extends BtValidator {
     /**
      * @inheritDoc
      */
@@ -14,3 +14,4 @@ export default class ValidateInvalidComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

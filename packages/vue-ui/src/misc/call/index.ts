@@ -1,2 +1,2 @@
 
-export { default as CallComponent } from './call.component.vue';
+export { default as BtCall } from './call.component.vue';

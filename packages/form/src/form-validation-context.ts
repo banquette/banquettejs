@@ -1,5 +1,4 @@
-import { ValidationContext } from "@banquette/validation/validation-context";
-import { ValidationContextInterface } from "@banquette/validation/validation-context.interface";
+import { ValidationContext, ValidationContextInterface } from "@banquette/validation";
 import { FormComponentInterface } from "./form-component.interface";
 
 export class FormValidationContext extends ValidationContext {

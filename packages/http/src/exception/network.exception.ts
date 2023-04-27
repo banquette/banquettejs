@@ -1,5 +1,4 @@
-import { Exception } from "@banquette/exception/exception";
-import { SystemException } from "@banquette/exception/system.exception";
+import { Exception, SystemException } from '@banquette/exception';
 
 /**
  * Exception thrown when a request fails at the network level
@@ -10,10 +9,12 @@ import { SystemException } from "@banquette/exception/system.exception";
 export class NetworkException extends SystemException {
     public slug: string = 'network';
 
-    public constructor(public readonly retryable: boolean,
-                       message: string = 'An error occurred during the transaction.',
-                       previous?: Exception|null,
-                       extra?: any) {
+    public constructor(
+        public readonly retryable: boolean,
+        message: string = 'An error occurred during the transaction.',
+        previous?: Exception | null,
+        extra?: any
+    ) {
         super(message, previous, extra);
     }
 }

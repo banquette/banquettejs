@@ -1,4 +1,3 @@
-
 import { isArray } from "./is-array";
 import { isFunction } from "./is-function";
 import { isObject } from "./is-object";

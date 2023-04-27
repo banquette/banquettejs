@@ -1,20 +1,9 @@
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { HttpResponse } from "@banquette/http/http-response";
-import { debounce } from "@banquette/utils-misc/debounce";
-import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isPrimitive } from "@banquette/utils-type/is-primitive";
-import { isScalar } from "@banquette/utils-type/is-scalar";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive, Writeable, AnyObject } from "@banquette/utils-type/types";
+import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { HttpResponse } from "@banquette/http";
+import { debounce } from "@banquette/utils-misc";
+import { replaceStringVariables } from "@banquette/utils-string";
+import { ensureArray, ensureBoolean, ensureString, isArray, isFunction, isObject, isPrimitive, isScalar, isUndefined, Primitive, Writeable, AnyObject } from "@banquette/utils-type";
 import { HeadlessInterface } from "../headless.interface";
 import { RemoteModule } from "../misc/remote/remote.module";
 import { NodePropResolver, HeadlessTreeViewModelEvents, NodeRemoteFetchStatus } from "./constant";
@@ -87,7 +76,7 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
      * @inheritDoc
      */
     public setViewData(viewData: ViewDataType): void {
-        (this as Writeable<HeadlessTreeViewModel>).viewData = viewData;
+        (this as any /* Writeable<HeadlessTreeViewModel> */).viewData = viewData;
         if (!this.viewData.root) {
             this.viewData.root = this.createNode({}, null);
         }
@@ -169,7 +158,6 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
         if (parent === null) {
             parent = this.viewData.root;
         }
-        out:
         for (const item of data) {
             const node = this.normalizeNode(item, parent);
             if (node !== null) {
@@ -177,10 +165,15 @@ export class HeadlessTreeViewModel<ViewDataType extends HeadlessTreeViewDataInte
                 if (children.length) {
                     this.synchronize(children, node);
                 }
+                let found = false;
                 for (const child of parent.children) {
                     if (child.id === node.id) {
-                        continue out;
+                        found = true;
+                        break ;
                     }
+                }
+                if (found) {
+                    continue;
                 }
                 parent.children.push(node);
                 parent.childrenVisibleCount++;

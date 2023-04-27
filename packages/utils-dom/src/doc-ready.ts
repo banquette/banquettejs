@@ -1,10 +1,10 @@
-import { GenericCallback } from "@banquette/utils-type/types";
+import { GenericCallback } from '@banquette/utils-type';
 
 /**
  * Slightly modified version of:
  * https://github.com/jfriend00/docReady
  */
-let readyList: Array<{fn: GenericCallback, ctx: any}> = [];
+let readyList: Array<{ fn: GenericCallback; ctx: any }> = [];
 let readyFired = false;
 let readyEventHandlersInstalled = false;
 
@@ -29,39 +29,44 @@ function ready() {
 }
 
 function readyStateChange() {
-    if (document.readyState === "complete") {
+    if (document.readyState === 'complete') {
         ready();
     }
 }
 
 export function docReady(callback: GenericCallback, context?: any) {
-    if (typeof callback !== "function") {
-        throw new TypeError("callback for docReady(fn) must be a function");
+    if (typeof callback !== 'function') {
+        throw new TypeError('callback for docReady(fn) must be a function');
     }
     // if ready has already fired, then just schedule the callback
     // to fire asynchronously, but right away
     if (readyFired) {
-        setTimeout(function() {callback(context);}, 1);
+        setTimeout(function () {
+            callback(context);
+        }, 1);
         return;
     } else {
         // add the function and context to the list
-        readyList.push({fn: callback, ctx: context});
+        readyList.push({ fn: callback, ctx: context });
     }
     // if document already ready to go, schedule the ready function to run
     // IE only safe when readyState is "complete", others safe when readyState is "interactive"
-    if (document.readyState === "complete" || (!(<any>document).attachEvent && document.readyState === "interactive")) {
+    if (
+        document.readyState === 'complete' ||
+        (!(<any>document).attachEvent && document.readyState === 'interactive')
+    ) {
         setTimeout(ready, 1);
     } else if (!readyEventHandlersInstalled) {
         // otherwise if we don't have event handlers installed, install them
         if (document.addEventListener) {
             // first choice is DOMContentLoaded event
-            document.addEventListener("DOMContentLoaded", ready, false);
+            document.addEventListener('DOMContentLoaded', ready, false);
             // backup is window load event
-            window.addEventListener("load", ready, false);
+            window.addEventListener('load', ready, false);
         } else {
             // must be IE
-            (<any>document).attachEvent("onreadystatechange", readyStateChange);
-            (<any>window).attachEvent("onload", ready);
+            (<any>document).attachEvent('onreadystatechange', readyStateChange);
+            (<any>window).attachEvent('onload', ready);
         }
         readyEventHandlersInstalled = true;
     }

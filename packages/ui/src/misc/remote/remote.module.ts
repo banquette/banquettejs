@@ -1,18 +1,12 @@
-import { ApiService } from "@banquette/api/api.service";
-import { RemoteException } from "@banquette/api/exception/remote.exception";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { EventArg } from "@banquette/event/event-arg";
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { HttpMethod } from "@banquette/http/constants";
-import { HttpResponse } from "@banquette/http/http-response";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { extend } from "@banquette/utils-object/extend";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive, StringEnum } from "@banquette/utils-type/types";
+import { ApiService, RemoteException } from "@banquette/api";
+import { Injector } from "@banquette/dependency-injection";
+import { EventArg, EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { HttpMethod, HttpResponse } from "@banquette/http";
+import { ModelExtendedIdentifier } from "@banquette/model";
+import { areEqual } from "@banquette/utils-misc";
+import { extend } from "@banquette/utils-object";
+import { isNonEmptyString } from "@banquette/utils-string";
+import { isObject, isUndefined, Primitive, StringEnum } from "@banquette/utils-type";
 import { RemoteModuleEvents } from "./constant";
 import { RemoteConfigurationInterface } from "./remote-configuration.interface";
 
@@ -85,6 +79,7 @@ export class RemoteModule {
      * Check if the module is usable in the current configuration.
      */
     public get isApplicable(): boolean {
+        console.warn('#RemoteModule');
         return this.endpoint !== null || this.url !== null;
     }
 

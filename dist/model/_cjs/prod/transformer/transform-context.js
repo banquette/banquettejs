@@ -1,6 +1,0 @@
-/*!
- * Banquette Model v0.0.0 (CommonJS)
- * (c) 2022-2022 Julien Pinto
- * Released under Apache License, Version 2.0
- */
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var t=require("@banquette/exception/_cjs/prod/usage.exception"),e=require("@banquette/utils-type/_cjs/prod/is-undefined"),r=require("../transform-result.js"),n=function(){function TransformContext(t,e,n,o,i,a){this.parent=t,this.type=e,this.ctor=n,this.value=o,this.property=i||null,this.extra=a||{},this.result=new r.TransformResult(null!==t?t.result:null)}return TransformContext.prototype.getExtra=function(t,r){return e.isUndefined(this.extra[t])?null!==this.parent?this.parent.getExtra(t,r):r:this.extra[t]},TransformContext.prototype.getHighestContextWithProperty=function(){for(var t=this,e=this;null!==e.parent&&e.ctor===e.parent.ctor&&e.property;)t=e,e=e.parent;return e.property&&(t=e),t},TransformContext.prototype.getValidatedExtra=function(e){for(var r={},n=0,o=Object.keys(e);n<o.length;n++){var i=o[n],a=e[i],s=this.getExtra(i,a[1]),u=a[0];if(null!==u){var p=u.validate(s);if(p.waiting)throw new t.UsageException('Asynchronous validators are not supported in "TransformContext::getValidatedExtra".');if(p.invalid)throw new t.UsageException(p.getViolationsStringsArray().join(", "))}r[i]=s}return r},TransformContext}();exports.TransformContext=n;

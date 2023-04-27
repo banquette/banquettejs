@@ -1,6 +1,6 @@
-import { HttpMethod } from "@banquette/http/constants";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
-import { Primitive, StringEnum } from "@banquette/utils-type/types";
+import { HttpMethod } from "@banquette/http";
+import { ModelExtendedIdentifier } from "@banquette/model";
+import { Primitive, StringEnum } from "@banquette/utils-type";
 import { FiltersInterface } from "../filtering/filters.interface";
 import { OrderingDirection } from "../ordering/constant";
 import { PaginationStrategy } from "../pagination/constant";

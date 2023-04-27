@@ -1,8 +1,5 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Complete } from "@banquette/utils-type/types";
+import { Injector } from "@banquette/dependency-injection";
+import { isArray, isNullOrUndefined, isUndefined, Complete } from "@banquette/utils-type";
 import { ModelMetadataService } from "../../model-metadata.service";
 import { TransformResult } from "../../transform-result";
 import { ensureCompleteTransformer } from "../../utils";
@@ -18,10 +15,11 @@ let modelMetadata: ModelMetadataService|null = null;
  * Apply a transformer to a collection of values.
  */
 export function Collection(transformer?: TransformerInterface): TransformerInterface {
+    console.warn('#Collection (decorator)');
     const apply = (fnName: keyof Omit<TransformerInterface, 'type'>, context: TransformContext): void => {
         if (isUndefined(transformer)) {
             if (modelMetadata === null) {
-                modelMetadata = Injector.Get(ModelMetadataService);
+                modelMetadata = /**!PURE*/ Injector.Get(ModelMetadataService);
             }
             context = context.getHighestContextWithProperty();
             transformer = context.property !== null && modelMetadata.getRelation(context.ctor, context.property) ? Model() : Raw();

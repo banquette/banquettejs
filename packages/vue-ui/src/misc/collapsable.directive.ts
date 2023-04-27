@@ -1,5 +1,5 @@
-import { parseCssDuration } from "@banquette/utils-dom/parse-css-duration";
-import { Directive } from "@banquette/vue-typescript/decorator/directive.decorator";
+import { parseCssDuration } from "@banquette/utils-dom";
+import { Directive } from "@banquette/vue-typescript";
 import { DirectiveBinding } from "vue";
 
 interface TransitionDuration {

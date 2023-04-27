@@ -1,8 +1,6 @@
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { Service } from "@banquette/dependency-injection";
+import { isServer } from "@banquette/utils-misc";
+import { isFunction, isObject, isUndefined } from "@banquette/utils-type";
 import { StorageAdapterTag } from "../constant";
 import { AbstractAdapter } from "./abstract.adapter";
 import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";

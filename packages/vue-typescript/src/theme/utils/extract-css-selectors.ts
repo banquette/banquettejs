@@ -1,6 +1,4 @@
-import { ltrim } from "@banquette/utils-string/format/ltrim";
-import { rtrim } from "@banquette/utils-string/format/rtrim";
-import { trim } from "@banquette/utils-string/format/trim";
+import { ltrim, rtrim, trim } from "@banquette/utils-string";
 
 /**
  * Parse a css source with no comments and extract the list of selectors and their position in the source.

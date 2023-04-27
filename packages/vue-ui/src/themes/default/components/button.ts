@@ -1,5 +1,4 @@
-import { ThemeWildcard } from "@banquette/vue-typescript/theme/constant";
-import { VueThemes } from "@banquette/vue-typescript/theme/vue-themes";
+import { ThemeWildcard, VueThemes } from "@banquette/vue-typescript";
 
 VueThemes.Define('bt-button', {
     [ThemeWildcard]: [

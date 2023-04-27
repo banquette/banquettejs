@@ -1,5 +1,5 @@
-import { EventArg } from "@banquette/event/event-arg";
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
+import { EventArg } from "@banquette/event";
+import { FormComponentInterface } from "@banquette/form";
 
 export class BeforeValidateEventArg extends EventArg {
     public constructor(public readonly source: FormComponentInterface) {

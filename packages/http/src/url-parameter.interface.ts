@@ -1,4 +1,4 @@
-import { UrlParameterType } from "./constants";
+import { UrlParameterType } from './constants';
 
 export interface UrlParameterInterface {
     /**

@@ -1,25 +1,22 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
-import { isCompound } from "@banquette/utils-type/is-compound";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isScalar } from "@banquette/utils-type/is-scalar";
-import { Complete } from "@banquette/utils-type/types";
+import { Inject } from "@banquette/dependency-injection";
+import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { getSymbolDescription } from "@banquette/utils-object";
+import { isCompound, isObject, isScalar, Complete } from "@banquette/utils-type";
 import { ModelMetadataService } from "../../../model-metadata.service";
 import { ModelTransformMetadataService } from "../../../model-transform-metadata.service";
 import { ModelFactoryService } from "../../../model.factory.service";
-import { TransformContext } from "../../transform-context";
-import { TransformerInterface } from "../../transformer.interface";
-import { RootTransformerInterface } from "../../root-transformer.interface";
 import { TransformResult } from "../../../transform-result";
-import { TransformPipeline } from "../../transform-pipeline";
 import { ensureCompleteTransformer } from "../../../utils";
+import { RootTransformerInterface } from "../../root-transformer.interface";
+import { TransformContext } from "../../transform-context";
+import { TransformPipeline } from "../../transform-pipeline";
+import { TransformerInterface } from "../../transformer.interface";
 
 export abstract class AbstractRootTransformer implements RootTransformerInterface {
     public constructor(@Inject(ModelMetadataService) protected modelMetadata: ModelMetadataService,
                        @Inject(ModelTransformMetadataService) protected transformMetadata: ModelTransformMetadataService,
                        @Inject(ModelFactoryService) protected modelFactory: ModelFactoryService) {
+        console.warn("#AbstractRootTransformer");
     }
 
     /**

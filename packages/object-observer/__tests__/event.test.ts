@@ -1,5 +1,5 @@
-import { MutationType } from "../src/constant";
 import { ObserverFactory } from "../src";
+import { MutationType } from "../src/constant";
 import { wrapObserver, SubscriptionType } from "./utils";
 
 test('No sync events are emitted when subscribed to async events', async () => {

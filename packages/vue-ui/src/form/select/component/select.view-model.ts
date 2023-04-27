@@ -1,6 +1,6 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { HeadlessSelectViewModel } from "@banquette/ui/form/select/headless-select.view-model";
-import { extend } from "@banquette/utils-object/extend";
+import { FormViewControlInterface } from "@banquette/form";
+import { HeadlessSelectViewModel } from "@banquette/ui";
+import { extend } from "@banquette/utils-object";
 import { BaseInputComposable } from "../../base-input/base-input.composable";
 import { SelectViewDataInterface } from "./select-view-data.interface";
 

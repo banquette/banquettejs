@@ -1,6 +1,7 @@
 export * from './vue-builder';
 export * from './vue';
 export * from './component-aware.composable';
+export * from './type';
 
 /**
  * Decorators

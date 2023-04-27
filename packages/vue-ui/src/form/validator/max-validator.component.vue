@@ -1,12 +1,12 @@
 <script lang="ts">
-import { Max } from "@banquette/validation/type/max";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { Max } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
-@Component({name: 'bt-validate-max', template: false})
-export default class ValidateMaxComponent extends ValidatorComponent {
+@Component('bt-validate-max')
+export default class BtValidateMax extends BtValidator {
     @Prop({type: Number, required: true}) public count!: number;
     @Prop({type: String, default: 'auto', transform: (value) => {
         if (['string', 'number', 'auto'].indexOf(value) < 0) {
@@ -23,3 +23,4 @@ export default class ValidateMaxComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

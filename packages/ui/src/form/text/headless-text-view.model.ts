@@ -1,4 +1,4 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
+import { FormViewControlInterface } from "@banquette/form";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { HeadlessTextViewDataInterface } from "./headless-text-view-data.interface";
 
@@ -18,6 +18,7 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
         } else {
             this.viewData.resizable = this.resizable;
         }
+        this.updateSize(this.viewData.control.value);
     }
 
     /**
@@ -30,9 +31,23 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
     /**
      * Height limit if the type of input is "textarea" and "autoSize" is `true`.
      */
-    public minRows: number|null = null;
-    public maxRows: number|null = null;
+    private _minRows: number|null = null;
+    public get minRows(): number|null {
+        return this._minRows;
+    }
+    public set minRows(value: number|null) {
+        this._minRows = value;
+        this.updateSize(this.viewData.control.value);
+    }
 
+    private _maxRows: number|null = null;
+    public get maxRows(): number|null {
+        return this._maxRows;
+    }
+    public set maxRows(value: number|null) {
+        this._maxRows = value;
+        this.updateSize(this.viewData.control.value);
+    }
 
     /**
      * @inheritDoc
@@ -68,15 +83,16 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
     }
 
     private updateSize(value: string): void {
-        if (!this.autoSize) {
-            return ;
+        if (this.autoSize) {
+            this.viewData.rows = value.split(/\r\n|\r|\n/).length;
         }
-        this.viewData.rows = value.split(/\r\n|\r|\n/).length;
-        if (this.minRows !== null) {
-            this.viewData.rows = Math.max(this.minRows, this.viewData.rows);
-        }
-        if (this.maxRows !== null) {
-            this.viewData.rows = Math.min(this.maxRows, this.viewData.rows);
+        if (this.viewData.rows !== null) {
+            if (this.minRows !== null) {
+                this.viewData.rows = Math.max(this.minRows, this.viewData.rows);
+            }
+            if (this.maxRows !== null) {
+                this.viewData.rows = Math.min(this.maxRows, this.viewData.rows);
+            }
         }
     }
 }

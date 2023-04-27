@@ -1,16 +1,16 @@
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { throttle } from "@banquette/utils-misc/throttle";
-import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
-import { trim } from "@banquette/utils-string/format/trim";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { GenericCallback, VoidCallback } from "@banquette/utils-type/types";
-import { Directive } from "@banquette/vue-typescript/decorator/directive.decorator";
+import { areEqual } from "@banquette/utils-misc";
+import { proxy } from "@banquette/utils-misc";
+import { throttle } from "@banquette/utils-misc";
+import { cloneDeepPrimitive } from "@banquette/utils-object";
+import { trim } from "@banquette/utils-string";
+import { isArray } from "@banquette/utils-type";
+import { isFunction } from "@banquette/utils-type";
+import { isNullOrUndefined } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type";
+import { isString } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type";
+import { GenericCallback, VoidCallback } from "@banquette/utils-type";
+import { Directive } from "@banquette/vue-typescript";
 import { createPopper, PositioningStrategy, Instance, OptionsGeneric } from "@popperjs/core";
 import { useResizeObserver } from "@vueuse/core";
 import { DirectiveBinding } from "vue";
@@ -25,16 +25,16 @@ interface OptionsInterface {
 }
 
 /**
+ * A unique mutation observer common to all instances.
+ */
+let Observer: MutationObserver|null = null;
+const ObserverListeners: GenericCallback[] = [];
+
+/**
  * A directive to make an element float around another.
  */
 @Directive('bt-stick-to')
 export class StickToDirective {
-    /**
-     * A unique mutation observer common to all instances.
-     */
-    private static Observer: MutationObserver|null = null;
-    private static ObserverListeners: GenericCallback[] = [];
-
     private el!: HTMLElement & {__vueParentComponent?: any};
     private bindings!: DirectiveBinding;
     private options!: OptionsInterface;
@@ -262,13 +262,13 @@ export class StickToDirective {
      * The observer is automatically destroyed when not needed anymore.
      */
     private static Observe(callback: VoidCallback): VoidCallback {
-        if (StickToDirective.Observer === null) {
-            StickToDirective.Observer = new MutationObserver(() => {
-                for (const listener of StickToDirective.ObserverListeners) {
+        if (Observer === null) {
+            Observer = new MutationObserver(() => {
+                for (const listener of ObserverListeners) {
                     listener();
                 }
             });
-            StickToDirective.Observer.observe(window.document.documentElement, {
+            Observer.observe(window.document.documentElement, {
                 childList: true,
                 attributes: false,
                 characterData: false,
@@ -277,16 +277,16 @@ export class StickToDirective {
                 characterDataOldValue: false
             });
         }
-        StickToDirective.ObserverListeners.push(callback);
+        ObserverListeners.push(callback);
         return () => {
-            const pos = StickToDirective.ObserverListeners.indexOf(callback);
+            const pos = ObserverListeners.indexOf(callback);
             if (pos > -1) {
-                StickToDirective.ObserverListeners.splice(pos, 1);
-                if (!StickToDirective.ObserverListeners.length) {
-                    if (StickToDirective.Observer !== null) {
-                        StickToDirective.Observer.disconnect();
+                ObserverListeners.splice(pos, 1);
+                if (!ObserverListeners.length) {
+                    if (Observer !== null) {
+                        Observer.disconnect();
                     }
-                    StickToDirective.Observer = null;
+                    Observer = null;
                 }
             }
         };

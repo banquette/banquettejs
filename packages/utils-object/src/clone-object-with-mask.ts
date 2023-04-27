@@ -1,7 +1,5 @@
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { cloneDeep } from "./clone-deep";
+import { isArray, isObject, isUndefined } from '@banquette/utils-type';
+import { cloneDeep } from './clone-deep';
 
 /**
  * Make a clone of an object based on mask that describes what properties to clone or to ignore.
@@ -101,7 +99,7 @@ export function cloneObjectWithMask(source: any, mask: any): object {
                     } else if (mask !== false) {
                         res = source[key];
                     } else {
-                        continue ;
+                        continue;
                     }
                     if (!sourceIsArray) {
                         clone[key] = res;
@@ -112,7 +110,10 @@ export function cloneObjectWithMask(source: any, mask: any): object {
             } else {
                 for (const key of Object.keys(mask)) {
                     if (isObject(source[key])) {
-                        clone[key] = cloneObjectWithMask(source[key], mask[key]);
+                        clone[key] = cloneObjectWithMask(
+                            source[key],
+                            mask[key]
+                        );
                     } else if (mask !== false && !isUndefined(source[key])) {
                         clone[key] = source[key];
                     }
@@ -122,7 +123,7 @@ export function cloneObjectWithMask(source: any, mask: any): object {
             return cloneDeep(source);
         }
     } else {
-        return source
+        return source;
     }
     return clone;
 }

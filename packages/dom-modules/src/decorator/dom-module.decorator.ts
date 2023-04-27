@@ -1,6 +1,6 @@
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { Constructor } from "@banquette/utils-type/types";
-import { ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from "../constant";
+import { Module } from '@banquette/dependency-injection';
+import { Constructor } from '@banquette/utils-type';
+import { ModuleInjectorTag, MODULE_NAME_CTOR_ATTR } from '../constant';
 
 /**
  * Register a module into the container.
@@ -11,7 +11,7 @@ export function DomModule(name: string): Function {
             configurable: false,
             enumerable: false,
             writable: false,
-            value: name
+            value: name,
         });
         Module(ModuleInjectorTag)(ctor);
     };

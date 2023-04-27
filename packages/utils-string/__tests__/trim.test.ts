@@ -1,5 +1,5 @@
-import { ltrim, rtrim, trim } from "../src";
 import { createGenericTestSuite } from "../../__tests__/utils";
+import { ltrim, rtrim, trim } from "../src";
 
 describe('trim', () => {
     createGenericTestSuite(trim, [

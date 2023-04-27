@@ -1,6 +1,5 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { SystemException } from "@banquette/exception/system.exception";
-import { UsageException } from "@banquette/exception/usage.exception";
+import { Injector } from "@banquette/dependency-injection";
+import { SystemException, UsageException } from "@banquette/exception";
 import {
     Pojo,
     TransformService,
@@ -16,11 +15,11 @@ import {
     TransformFailedException,
     Relation
 } from "../src";
+import { GenericTransformerTest } from "./__mocks__/generic-transformer-test";
+import { TransformInverseOnlyTransformerTest } from "./__mocks__/transform-inverse-only-transformer-test";
 
 import { TransformOnlyTransformerTest } from "./__mocks__/transform-only-transformer-test";
-import { TransformInverseOnlyTransformerTest } from "./__mocks__/transform-inverse-only-transformer-test";
 import { transformAndCheck, checkTransformResult, transformAndCheckAsync } from "./utils";
-import { GenericTransformerTest } from "./__mocks__/generic-transformer-test";
 
 const transformService = Injector.Get(TransformService);
 

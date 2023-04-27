@@ -1,9 +1,9 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { AbstractRequestBuilder } from "./abstract-http-request.builder";
-import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
-import { PayloadTypeFormData } from "./encoder/form-data.encoder";
-import { HttpRequest } from "./http-request";
-import { HttpRequestFactory } from "./http-request.factory";
+import { UsageException } from '@banquette/exception';
+import { AbstractRequestBuilder } from './abstract-http-request.builder';
+import { ResponseTypeAutoDetect } from './decoder/auto-detect.decoder';
+import { PayloadTypeFormData } from './encoder/form-data.encoder';
+import { HttpRequest } from './http-request';
+import { HttpRequestFactory } from './http-request.factory';
 
 export class HttpRequestBuilder extends AbstractRequestBuilder<HttpRequest> {
     /**
@@ -28,7 +28,7 @@ export class HttpRequestBuilder extends AbstractRequestBuilder<HttpRequest> {
             withCredentials: this._withCredentials,
             mimeType: this._mimeType,
             tags: this._tags,
-            extras: this._extras
+            extras: this._extras,
         });
     }
 

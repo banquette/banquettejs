@@ -1,13 +1,9 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { EventDispatcherInterface } from "@banquette/event/event-dispatcher.interface";
-import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isObject } from "@banquette/utils-type/is-object";
-import { NetworkEvents } from "./constants";
-import { NetworkAvailabilityChangeEvent } from "./event/network-availability-change.event";
+import { Inject, Service } from '@banquette/dependency-injection';
+import { EventDispatcherInterface, EventDispatcherService, } from '@banquette/event';
+import { isServer, proxy } from '@banquette/utils-misc';
+import { isNullOrUndefined, isObject } from '@banquette/utils-type';
+import { NetworkEvents } from './constants';
+import { NetworkAvailabilityChangeEvent } from './event/network-availability-change.event';
 
 @Service()
 export class NetworkWatcherService {
@@ -27,7 +23,10 @@ export class NetworkWatcherService {
     private onConnectionRetrievedFn!: () => void;
     private onConnectionLostFn!: () => void;
 
-    public constructor(@Inject(EventDispatcherService) private eventDispatcher: EventDispatcherInterface) {
+    public constructor(
+        @Inject(EventDispatcherService)
+        private eventDispatcher: EventDispatcherInterface
+    ) {
         this.isSupported = !isServer() && isObject(window.navigator);
         this.isOnlineAttr = this.isSupported ? window.navigator.onLine : true;
     }
@@ -44,7 +43,10 @@ export class NetworkWatcherService {
      */
     public watch(): void {
         if (this.isSupported && isNullOrUndefined(this.onConnectionLostFn)) {
-            this.onConnectionRetrievedFn = proxy(this.onConnectionRetrieved, this);
+            this.onConnectionRetrievedFn = proxy(
+                this.onConnectionRetrieved,
+                this
+            );
             this.onConnectionLostFn = proxy(this.onConnectionLost, this);
             window.addEventListener('online', this.onConnectionRetrievedFn);
             window.addEventListener('offline', this.onConnectionLostFn);
@@ -56,10 +58,10 @@ export class NetworkWatcherService {
      */
     public unwatch(): void {
         if (isNullOrUndefined(this.onConnectionLostFn)) {
-            return ;
+            return;
         }
-        window.addEventListener('online',  this.onConnectionRetrievedFn);
-        window.addEventListener('offline',  this.onConnectionLostFn);
+        window.addEventListener('online', this.onConnectionRetrievedFn);
+        window.addEventListener('offline', this.onConnectionLostFn);
     }
 
     /**
@@ -82,7 +84,12 @@ export class NetworkWatcherService {
      * Dispatch the connectivity change events.
      */
     private dispatchEvents(): void {
-        this.eventDispatcher.dispatch(this.isOnlineAttr ? NetworkEvents.Online : NetworkEvents.Offline);
-        this.eventDispatcher.dispatch(NetworkEvents.AvailabilityChange, new NetworkAvailabilityChangeEvent(this.isOnlineAttr));
+        this.eventDispatcher.dispatch(
+            this.isOnlineAttr ? NetworkEvents.Online : NetworkEvents.Offline
+        );
+        this.eventDispatcher.dispatch(
+            NetworkEvents.AvailabilityChange,
+            new NetworkAvailabilityChangeEvent(this.isOnlineAttr)
+        );
     }
 }

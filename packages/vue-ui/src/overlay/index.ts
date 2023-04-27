@@ -1,2 +1,2 @@
 
-export { default as OverlayComponent } from './overlay.component.vue';
+export { default as BtOverlay } from './overlay.component.vue';

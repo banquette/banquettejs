@@ -1,40 +1,41 @@
 <style src="./alert.component.css" scoped></style>
 <template src="./alert.component.html" ></template>
 <script lang="ts">
-import { isServer } from "@banquette/utils-misc/is-server";
-import { IconMaterialClose } from "@banquette/vue-material-icons/close";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
-import { ButtonComponent } from "../../../button";
-import { IconComponent } from "../../../icon";
-import { ProgressHorizontalComponent } from "../../../progress/progress-horizontal";
+import { isServer } from "@banquette/utils-misc";
+import { IMaterialClose } from "@banquette/vue-material-icons";
+import { Component } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Ref } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { BindThemeDirective } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { BtButton } from "../../../button";
+import { BtIcon } from "../../../icon";
+import { BtProgressHorizontal } from "../../../progress/progress-horizontal";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-alert',
-    components: [IconComponent, ButtonComponent, ProgressHorizontalComponent, IconMaterialClose],
+    components: [BtIcon, BtButton, BtProgressHorizontal, IMaterialClose],
     directives: [BindThemeDirective],
     emits: ['update:visible', 'close'],
 })
-export default class AlertComponent extends Vue {
+export default class BtAlert extends Vue {
     /**
      * An optional title to show above the content.
      * You can also override the "title" slot.
      */
-    @Prop({type: String, default: null}) public title!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public title!: string|null;
 
     /**
      * The name of the icon to show, or `null` to show none.
      */
-    @Prop({type: String, default: null}) public icon!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public icon!: string|null;
 
     /**
      * The name of set of icon to get the icon from.
@@ -45,7 +46,7 @@ export default class AlertComponent extends Vue {
      * Time to live.
      * If > 0, defines the number of milliseconds the alert will stay alive.
      */
-    @Prop({type: Number, default: null, transform: (v: any) => parseInt(String(v), 10) || null}) public ttl!: number|null;
+    @Prop({type: Number as PropType<number|null>, default: null, transform: (v: any) => parseInt(String(v), 10) || null}) public ttl!: number|null;
 
     /**
      * If `true` the end-user can close the alert by themselves.
@@ -61,12 +62,12 @@ export default class AlertComponent extends Vue {
      * Name of the transition to apply when an alert is shown / hidden.
      * If `false`, disable the transition.
      */
-    @Prop({type: [String, Boolean], default: undefined}) public transition!: string|false|undefined;
+    @Prop({type: [String, Boolean] as PropType<string|false>, default: undefined}) public transition!: string|false|undefined;
 
     /**
      * Bi-directional visibility control.
      */
-    @Prop({type: Boolean, default: null}) public visible!: boolean|null;
+    @Prop({type: Boolean as PropType<boolean|null>, default: null}) public visible!: boolean|null;
 
     /**
      * Bidirectional binding for the visibility so the dialog can be closed

@@ -1,9 +1,6 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { trim } from "@banquette/utils-string/format/trim";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isType } from "@banquette/utils-type/is-type";
+import { UsageException } from "@banquette/exception";
+import { trim, isNonEmptyString } from "@banquette/utils-string";
+import { isFunction, isObject, isType } from "@banquette/utils-type";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
 

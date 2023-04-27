@@ -1,32 +1,12 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { BasicState } from "@banquette/form/constant";
-import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { HttpResponse } from "@banquette/http/http-response";
-import { ModelMetadataService } from "@banquette/model/model-metadata.service";
-import { TransformService } from "@banquette/model/transformer/transform.service";
-import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { recursionSafeSideEffectProxy } from "@banquette/utils-misc/recursion-safe-side-effect-proxy";
-import { throttle } from "@banquette/utils-misc/throttle";
-import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { slugify } from "@banquette/utils-string/format/slugify";
-import { trim } from "@banquette/utils-string/format/trim";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isPrimitive } from "@banquette/utils-type/is-primitive";
-import { isScalar } from "@banquette/utils-type/is-scalar";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive, Constructor } from "@banquette/utils-type/types";
+import { Injector } from "@banquette/dependency-injection";
+import { UnsubscribeFunction } from "@banquette/event";
+import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { BasicState, StateChangedFormEvent, FormViewControlInterface } from "@banquette/form";
+import { HttpResponse } from "@banquette/http";
+import { ModelMetadataService, TransformService, PojoTransformerSymbol, ModelExtendedIdentifier } from "@banquette/model";
+import { proxy, recursionSafeSideEffectProxy, throttle } from "@banquette/utils-misc";
+import { replaceStringVariables, slugify, trim } from "@banquette/utils-string";
+import { ensureArray, ensureBoolean, ensureString, isArray, isFunction, isNullOrUndefined, isObject, isPrimitive, isScalar, isUndefined, Primitive, Constructor } from "@banquette/utils-type";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { Choice } from "./choice";
@@ -114,6 +94,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     private searchBufferSlug: string = '';
 
     public constructor(control: FormViewControlInterface) {
+        console.warn("#HeadlessSelectViewModel");
         super(control);
         this.remote = new RemoteModule();
 
@@ -893,7 +874,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
         let service: ModelMetadataService|null = null;
         return (): ModelMetadataService => {
             if (!service) {
-                service = Injector.Get(ModelMetadataService);
+                service = /**!PURE*/ Injector.Get(ModelMetadataService);
             }
             return service;
         };

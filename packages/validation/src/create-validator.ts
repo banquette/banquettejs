@@ -1,4 +1,4 @@
-import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureArray } from "@banquette/utils-type";
 import { SimplifiedValidatorInterface } from "./simplified-validator.interface";
 import { ValidateOptionsInterface } from "./validate-options.interface";
 import { ValidationContext } from "./validation-context";

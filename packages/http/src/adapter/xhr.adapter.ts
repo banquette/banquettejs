@@ -1,20 +1,19 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ObservablePromise } from "@banquette/promise/observable-promise";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { HttpRequestProgressStatus } from "../constants";
-import { StatusChangeEvent } from "../event/status-change.event";
-import { TransferProgressEvent } from "../event/transfer-progress.event";
-import { NetworkException } from "../exception/network.exception";
-import { RequestCanceledException } from "../exception/request-canceled.exception";
-import { RequestTimeoutException } from "../exception/request-timeout.exception";
-import { HttpRequest } from "../http-request";
-import { NetworkWatcherService } from "../network-watcher.service";
-import { AdapterRequest } from "./adapter-request";
-import { AdapterResponse } from "./adapter-response";
-import { AdapterInterface } from "./adapter.interface";
+import { Inject, Module } from '@banquette/dependency-injection';
+import { UsageException } from '@banquette/exception';
+import { ObservablePromise } from '@banquette/promise';
+import { proxy } from '@banquette/utils-misc';
+import { isUndefined } from '@banquette/utils-type';
+import { HttpRequestProgressStatus } from '../constants';
+import { StatusChangeEvent } from '../event/status-change.event';
+import { TransferProgressEvent } from '../event/transfer-progress.event';
+import { NetworkException } from '../exception/network.exception';
+import { RequestCanceledException } from '../exception/request-canceled.exception';
+import { RequestTimeoutException } from '../exception/request-timeout.exception';
+import { HttpRequest } from '../http-request';
+import { NetworkWatcherService } from '../network-watcher.service';
+import { AdapterRequest } from './adapter-request';
+import { AdapterResponse } from './adapter-response';
+import { AdapterInterface } from './adapter.interface';
 
 @Module()
 export class XhrAdapter implements AdapterInterface {
@@ -26,19 +25,25 @@ export class XhrAdapter implements AdapterInterface {
     private requestProgressStatus!: HttpRequestProgressStatus;
     private canceled: boolean = false;
 
-    public constructor(@Inject(NetworkWatcherService) private networkWatcher: NetworkWatcherService) {
-    }
+    public constructor(
+        @Inject(NetworkWatcherService)
+        private networkWatcher: NetworkWatcherService
+    ) {}
 
     /**
      * @inheritDoc
      */
-    public execute(request: AdapterRequest): ObservablePromise<AdapterResponse> {
+    public execute(
+        request: AdapterRequest
+    ): ObservablePromise<AdapterResponse> {
         return new ObservablePromise<any>((resolve, reject, progress) => {
             if (this.xhr) {
-                return void reject(new UsageException(
-                    'An XHR object is already defined.' +
-                    'You must create a new instance of the adapter for each request.'
-                ));
+                return void reject(
+                    new UsageException(
+                        'An XHR object is already defined.' +
+                            'You must create a new instance of the adapter for each request.'
+                    )
+                );
             }
             // Init
             this.request = request as HttpRequest;
@@ -57,9 +62,18 @@ export class XhrAdapter implements AdapterInterface {
             this.xhr.addEventListener('timeout', proxy(this.onTimeout, this));
             this.xhr.addEventListener('progress', proxy(this.onProgress, this));
 
-            this.xhr.upload.addEventListener('loadstart', proxy(this.onProgress, this));
-            this.xhr.upload.addEventListener('progress', proxy(this.onProgress, this));
-            this.xhr.upload.addEventListener('load', proxy(this.onProgress, this));
+            this.xhr.upload.addEventListener(
+                'loadstart',
+                proxy(this.onProgress, this)
+            );
+            this.xhr.upload.addEventListener(
+                'progress',
+                proxy(this.onProgress, this)
+            );
+            this.xhr.upload.addEventListener(
+                'load',
+                proxy(this.onProgress, this)
+            );
 
             // Configure
             this.xhr.open(request.method, request.staticUrl, true);
@@ -100,13 +114,17 @@ export class XhrAdapter implements AdapterInterface {
      */
     private onComplete(): void {
         this.updateProgressStatus(HttpRequestProgressStatus.Closed);
-        this.promiseResolve(new AdapterResponse(
-            this.xhr.status,
-            this.xhr.responseURL,
-            this.xhr.responseText || null,
-            this.xhr.responseType,
-            this.convertHeadersStringToObject(this.xhr.getAllResponseHeaders())
-        ));
+        this.promiseResolve(
+            new AdapterResponse(
+                this.xhr.status,
+                this.xhr.responseURL,
+                this.xhr.responseText || null,
+                this.xhr.responseType,
+                this.convertHeadersStringToObject(
+                    this.xhr.getAllResponseHeaders()
+                )
+            )
+        );
     }
 
     /**
@@ -114,7 +132,9 @@ export class XhrAdapter implements AdapterInterface {
      */
     private onError(): void {
         this.updateProgressStatus(HttpRequestProgressStatus.Closed);
-        this.promiseReject(new NetworkException(!this.networkWatcher.isOnline()));
+        this.promiseReject(
+            new NetworkException(!this.networkWatcher.isOnline())
+        );
     }
 
     /**
@@ -132,7 +152,7 @@ export class XhrAdapter implements AdapterInterface {
                 this.requestProgressStatus,
                 event.loaded,
                 event.total,
-                Math.round(event.loaded / event.total * 10000) * 0.01
+                Math.round((event.loaded / event.total) * 10000) * 0.01
             );
             this.promiseProgress(transferEvent);
         }
@@ -157,12 +177,17 @@ export class XhrAdapter implements AdapterInterface {
     /**
      * Convert the raw string of headers returned by the server into a map.
      */
-    private convertHeadersStringToObject(rawHeaders: string): Record<string, string> {
+    private convertHeadersStringToObject(
+        rawHeaders: string
+    ): Record<string, string> {
         const map: Record<string, string> = {};
-        rawHeaders.trim().split(/[\r\n]+/).forEach(function (line) {
-            const parts = line.split(': ');
-            map[parts.shift() as string] = parts.join(': ');
-        });
+        rawHeaders
+            .trim()
+            .split(/[\r\n]+/)
+            .forEach(function (line) {
+                const parts = line.split(': ');
+                map[parts.shift() as string] = parts.join(': ');
+            });
         return map;
     }
 
@@ -170,7 +195,10 @@ export class XhrAdapter implements AdapterInterface {
      * Notify the promise of a status change.
      */
     private updateProgressStatus(status: HttpRequestProgressStatus): void {
-        if (isUndefined(this.requestProgressStatus) || status > this.requestProgressStatus) {
+        if (
+            isUndefined(this.requestProgressStatus) ||
+            status > this.requestProgressStatus
+        ) {
             this.promiseProgress(new StatusChangeEvent(this.request, status));
             this.requestProgressStatus = status;
         }

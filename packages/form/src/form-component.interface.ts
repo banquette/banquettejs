@@ -1,7 +1,7 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { MatchResult } from "@banquette/utils-glob/match-result";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { ValidationStrategy, FormEvents } from "./constant";
+import { UnsubscribeFunction } from "@banquette/event";
+import { MatchResult } from "@banquette/utils-glob";
+import { ValidatorInterface } from "@banquette/validation";
+import { ValidationStrategy } from "./constant";
 import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";

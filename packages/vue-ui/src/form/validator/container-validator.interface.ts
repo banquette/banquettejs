@@ -1,5 +1,5 @@
-import { VoidCallback } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { VoidCallback } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
 
 export interface ContainerValidatorInterface {
     /**

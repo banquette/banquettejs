@@ -1,14 +1,8 @@
-import { Exception } from "@banquette/exception/exception";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { MatchType } from "@banquette/utils-glob/constant";
-import { matchBest } from "@banquette/utils-glob/match-best";
-import { MatchResult } from "@banquette/utils-glob/match-result";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { replaceStringVariables } from "@banquette/utils-string/format/replace-string-variables";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { GenericCallback, Writeable } from "@banquette/utils-type/types";
+import { Exception, ExceptionFactory, UsageException } from "@banquette/exception";
+import { MatchType, matchBest, MatchResult } from "@banquette/utils-glob";
+import { proxy } from "@banquette/utils-misc";
+import { replaceStringVariables } from "@banquette/utils-string";
+import { ensureArray, isUndefined, GenericCallback, Writeable } from "@banquette/utils-type";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { Violation } from "./violation";
 import { ViolationInterface } from "./violation.interface";
@@ -135,7 +129,7 @@ export class ValidationResult {
      * Remove all registered violations.
      */
     public clearViolations(recursive: boolean = true): void {
-        (this as Writeable<ValidationResult>).violations = [];
+        (this as any /* Writeable<ValidationResult> */).violations = [];
         if (recursive) {
             for (const child of this.children) {
                 child.clearViolations(true);
@@ -210,7 +204,7 @@ export class ValidationResult {
     public delayResponse(promise: Promise<any>, cancelCallback: GenericCallback|null = null): void {
         this.setStatus(ValidationResultStatus.Waiting);
         if (this.promise === null) {
-            (this as Writeable<ValidationResult>).promise = new Promise<ValidationResult>((resolve, reject) => {
+            (this as any /* Writeable<ValidationResult> */).promise = new Promise<ValidationResult>((resolve, reject) => {
                 this.promiseResolve = resolve;
                 this.promiseReject = reject;
             }).then(() => {
@@ -245,11 +239,11 @@ export class ValidationResult {
                     (this.promiseResolve as Function)(this);
                 }
                 this.cancelCallback = null;
-                (this as Writeable<ValidationResult>).localPromise = null;
+                (this as any /* Writeable<ValidationResult> */).localPromise = null;
                 return this;
             }).catch(proxy(this.promiseReject as GenericCallback, this));
 
-        (this as Writeable<ValidationResult>).localPromise = localPromise;
+        (this as any /* Writeable<ValidationResult> */).localPromise = localPromise;
         this.previousPromise = localPromise;
     }
 
@@ -262,7 +256,7 @@ export class ValidationResult {
      */
     public fail(reason: any): void {
         if (this.status !== ValidationResultStatus.Canceled) {
-            (this as Writeable<ValidationResult>).errorDetail = ExceptionFactory.EnsureException(reason);
+            (this as any /* Writeable<ValidationResult> */).errorDetail = ExceptionFactory.EnsureException(reason);
             this.setStatus(ValidationResultStatus.Error);
         }
         if (this.promiseReject !== null) {
@@ -275,12 +269,12 @@ export class ValidationResult {
      * Shorthand to update the status and the corresponding flags.
      */
     private setStatus(status: ValidationResultStatus): void {
-        (this as Writeable<ValidationResult>).status = status;
-        (this as Writeable<ValidationResult>).valid = this.status === ValidationResultStatus.Valid;
-        (this as Writeable<ValidationResult>).invalid = this.status === ValidationResultStatus.Invalid;
-        (this as Writeable<ValidationResult>).error = this.status === ValidationResultStatus.Error;
-        (this as Writeable<ValidationResult>).waiting = this.status === ValidationResultStatus.Waiting;
-        (this as Writeable<ValidationResult>).canceled = this.status === ValidationResultStatus.Canceled;
+        (this as any /* Writeable<ValidationResult> */).status = status;
+        (this as any /* Writeable<ValidationResult> */).valid = this.status === ValidationResultStatus.Valid;
+        (this as any /* Writeable<ValidationResult> */).invalid = this.status === ValidationResultStatus.Invalid;
+        (this as any /* Writeable<ValidationResult> */).error = this.status === ValidationResultStatus.Error;
+        (this as any /* Writeable<ValidationResult> */).waiting = this.status === ValidationResultStatus.Waiting;
+        (this as any /* Writeable<ValidationResult> */).canceled = this.status === ValidationResultStatus.Canceled;
     }
 
     private cleanupAsync(): void {
@@ -288,7 +282,7 @@ export class ValidationResult {
         this.promiseResolve = null;
         this.promiseReject = null;
         this.previousPromise = null;
-        (this as Writeable<ValidationResult>).promise = null;
+        (this as any /* Writeable<ValidationResult> */).promise = null;
     }
 
     /**

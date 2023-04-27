@@ -1,5 +1,4 @@
-import { Exception } from "@banquette/exception/exception";
-import { SystemException } from "@banquette/exception/system.exception";
+import { Exception, SystemException } from "@banquette/exception";
 
 /**
  * Exception thrown when a form component is not found in a group.

@@ -1,5 +1,4 @@
-import { isArray } from "@banquette/utils-type/is-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isArray, isUndefined } from "@banquette/utils-type";
 import { MutationType } from "../constant";
 import { Mutation } from "../mutation";
 import { extractObserver } from "../utils";

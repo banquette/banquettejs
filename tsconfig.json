@@ -1,23 +1,26 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "lib": ["es6", "es5", "dom"],
-        "module": "es2015",
+        "target": "esnext",
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "module": "esnext",
         "strict": true,
+        "noEmit": true,
+        "resolveJsonModule": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
         // @see https://stackoverflow.com/a/56348146/1110635
         "esModuleInterop": true,
         "moduleResolution": "node",
-        "baseUrl" : ".",
-        "types": [
-            "reflect-metadata",
-            "jest",
-            "node"
-        ],
+        "baseUrl": ".",
         "typeRoots": [
             "node_modules/@types"
         ]
-    }
+    },
+    "references": [
+        {"path": "app/tsconfig.json"}
+    ]
 }

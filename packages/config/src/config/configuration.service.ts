@@ -1,13 +1,8 @@
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { extend } from "@banquette/utils-object/extend";
-import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isSymbol } from "@banquette/utils-type/is-symbol";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { ConfigurationInterface, ConfigurationValue } from "./configuration.interface";
+import { Service } from "@banquette/dependency-injection";
+import { UsageException } from '@banquette/exception';
+import { extend, getSymbolDescription } from '@banquette/utils-object';
+import { ensureArray, isObject, isString, isSymbol, isUndefined, } from '@banquette/utils-type';
+import { ConfigurationInterface, ConfigurationValue, } from './configuration.interface';
 
 @Service()
 export class ConfigurationService {
@@ -41,7 +36,10 @@ export class ConfigurationService {
      * The "defaultValue" parameter only applies to values of the configuration.
      * If the symbol or the first string key given doesn't match any configuration, a UsageException is thrown.
      */
-    public get<T extends ConfigurationInterface | ConfigurationValue>(key: symbol|string|string[], defaultValue: any = null): T {
+    public get<T extends ConfigurationInterface | ConfigurationValue>(
+        key: symbol | string | string[],
+        defaultValue: any = null
+    ): T {
         if (isSymbol(key)) {
             return extend({}, this.getBySymbol(key), true);
         }
@@ -69,7 +67,7 @@ export class ConfigurationService {
         if (availableAsString) {
             if (!description) {
                 throw new UsageException(
-                    'You must give a description to your symbol '+
+                    'You must give a description to your symbol ' +
                     'if you make the configuration available by string.'
                 );
             }
@@ -85,12 +83,25 @@ export class ConfigurationService {
     }
 
     /**
+     * Register a new configuration type if not defined yet.
+     */
+    public registerIfUndefined<T extends ConfigurationInterface>(symbol: symbol, config: T, availableAsString: boolean = false): void {
+        try {
+            this.get<T>(symbol);
+        } catch (e) {
+            this.register(symbol, config, availableAsString);
+        }
+    }
+
+    /**
      * Get the full configuration object associated with a symbol.
      */
     private getBySymbol<T extends ConfigurationInterface>(symbol: symbol): T {
         const config = (this.symbolMap[symbol] as T) || null;
         if (config === null) {
-            throw new UsageException(`No config found for "${symbol.toString()}".`);
+            throw new UsageException(
+                `No config found for "${symbol.toString()}".`
+            );
         }
         return extend({}, config);
     }
@@ -98,14 +109,22 @@ export class ConfigurationService {
     /**
      * Get the configuration object or value in the string index.
      */
-    private getByString<T>(key: symbol|string|string[], defaultValue: any = null): T {
+    private getByString<T>(
+        key: symbol | string | string[],
+        defaultValue: any = null
+    ): T {
         const keys = isString(key) ? key.split('.') : ensureArray(key);
         let currentValue: any = this.stringMap;
         let i = 0;
         for (; i < keys.length; ++i) {
-            if (isUndefined(currentValue[keys[i]]) || (!isObject(currentValue[keys[i]]) && i < keys.length - 1)) {
+            if (
+                isUndefined(currentValue[keys[i]]) ||
+                (!isObject(currentValue[keys[i]]) && i < keys.length - 1)
+            ) {
                 if (i === 0 && isUndefined(currentValue[keys[i]])) {
-                    throw new UsageException(`No config found for "${keys[i]}".`);
+                    throw new UsageException(
+                        `No config found for "${keys[i]}".`
+                    );
                 }
                 return defaultValue;
             }

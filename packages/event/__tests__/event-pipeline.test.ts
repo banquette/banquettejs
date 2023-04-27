@@ -1,15 +1,7 @@
-import { Exception } from "@banquette/exception/exception";
-import { waitForDelay } from "@banquette/utils-misc/timeout";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isSymbol } from "@banquette/utils-type/is-symbol";
-import {
-    PartialSequence,
-    SequenceErrorBasicBehavior,
-    DefaultSequenceName,
-    EventPipeline,
-    SequenceContext
-} from "../src";
+import { Exception } from '@banquette/exception';
+import { waitForDelay } from '@banquette/utils-misc';
+import { isArray, isNullOrUndefined, isSymbol } from '@banquette/utils-type';
+import { PartialSequence, SequenceErrorBasicBehavior, DefaultSequenceName, EventPipeline, SequenceContext, } from '../src';
 
 /**
  * A fake set of events for testing.
@@ -24,25 +16,31 @@ const TestEvents = {
     FetchMemory: Symbol('fetch-memory'),
     ProcessResult: Symbol('process-result'),
     HideLoader: Symbol('hide-loader'),
-    ShowError: Symbol('show-error')
+    ShowError: Symbol('show-error'),
 };
 
 const SequenceDefaults = {
     event: null,
     sequences: null,
     priority: 0,
-    onError: SequenceErrorBasicBehavior.StopAll
+    onError: SequenceErrorBasicBehavior.StopAll,
 };
 
-function checkSequence(pipeline: EventPipeline, name: string, expectations: any[]): void {
+function checkSequence(
+    pipeline: EventPipeline,
+    name: string,
+    expectations: any[]
+): void {
     const targetObject = [];
     for (const expectation of expectations) {
-        targetObject.push(expect.objectContaining({
-            event: isSymbol(expectation[0]) ? expectation[0] : null,
-            sequences: isArray(expectation[0]) ? expectation[0] : null,
-            priority: expectation[1] || SequenceDefaults.priority,
-            onError: expectation[2] || SequenceDefaults.onError
-        }));
+        targetObject.push(
+            expect.objectContaining({
+                event: isSymbol(expectation[0]) ? expectation[0] : null,
+                sequences: isArray(expectation[0]) ? expectation[0] : null,
+                priority: expectation[1] || SequenceDefaults.priority,
+                onError: expectation[2] || SequenceDefaults.onError,
+            })
+        );
     }
     expect(pipeline['sequences'][name].items).toMatchObject(targetObject);
 }
@@ -62,25 +60,37 @@ describe('Adding', () => {
             TestEvents.Creating, // Single event
             'Other', // Another sequence
             ['Other', 'Second'], // Multiple other sequences
-            {event: TestEvents.Initializing, priority: 0}, // With priority
-            {event: TestEvents.Ready, onError: SequenceErrorBasicBehavior.Ignore}, // With basic error behavior
-            {event: TestEvents.FetchAjax, onError: 'Other'}, // Calling another sequence on error
-            {event: TestEvents.FetchMemory, onError: ['Other', 'Second']} // Calling a sequence of sequences on error
+            { event: TestEvents.Initializing, priority: 0 }, // With priority
+            {
+                event: TestEvents.Ready,
+                onError: SequenceErrorBasicBehavior.Ignore,
+            }, // With basic error behavior
+            { event: TestEvents.FetchAjax, onError: 'Other' }, // Calling another sequence on error
+            { event: TestEvents.FetchMemory, onError: ['Other', 'Second'] }, // Calling a sequence of sequences on error
         ];
-        const pipeline = (new EventPipeline).add({
-            // Named sequences as a map
-            mapName: sequence
-        })
-        // Sequence with default name
-        .add(sequence)
-        // Single event to the default sequence
-        .add(TestEvents.HideLoader)
-        // Array of events with custom name
-        .add([TestEvents.Initializing, TestEvents.Ready], 'custom')
-        // Link to another sequence
-        .add({sequences: ['Other'], priority: 1}, 'custom')
-        // A sequence with a global error behavior
-        .add([TestEvents.Creating, TestEvents.Initializing, {event: TestEvents.Ready, onError: 'Error'}], 'last', SequenceErrorBasicBehavior.StopSequence)
+        const pipeline = new EventPipeline()
+            .add({
+                // Named sequences as a map
+                mapName: sequence,
+            })
+            // Sequence with default name
+            .add(sequence)
+            // Single event to the default sequence
+            .add(TestEvents.HideLoader)
+            // Array of events with custom name
+            .add([TestEvents.Initializing, TestEvents.Ready], 'custom')
+            // Link to another sequence
+            .add({ sequences: ['Other'], priority: 1 }, 'custom')
+            // A sequence with a global error behavior
+            .add(
+                [
+                    TestEvents.Creating,
+                    TestEvents.Initializing,
+                    { event: TestEvents.Ready, onError: 'Error' },
+                ],
+                'last',
+                SequenceErrorBasicBehavior.StopSequence
+            );
 
         checkSequence(pipeline, 'mapName', [
             [TestEvents.Creating],
@@ -89,7 +99,7 @@ describe('Adding', () => {
             [TestEvents.Initializing],
             [TestEvents.Ready, 0, SequenceErrorBasicBehavior.Ignore],
             [TestEvents.FetchAjax, 0, ['Other']],
-            [TestEvents.FetchMemory, 0, ['Other', 'Second']]
+            [TestEvents.FetchMemory, 0, ['Other', 'Second']],
         ]);
         checkSequence(pipeline, DefaultSequenceName, [
             [TestEvents.Creating],
@@ -99,40 +109,48 @@ describe('Adding', () => {
             [TestEvents.Ready, 0, SequenceErrorBasicBehavior.Ignore],
             [TestEvents.FetchAjax, 0, ['Other']],
             [TestEvents.FetchMemory, 0, ['Other', 'Second']],
-            [TestEvents.HideLoader]
+            [TestEvents.HideLoader],
         ]);
         checkSequence(pipeline, 'custom', [
             [['Other'], 1],
             [TestEvents.Initializing],
-            [TestEvents.Ready]
+            [TestEvents.Ready],
         ]);
         checkSequence(pipeline, 'last', [
             [TestEvents.Creating, 0, SequenceErrorBasicBehavior.StopSequence],
-            [TestEvents.Initializing, 0, SequenceErrorBasicBehavior.StopSequence],
-            [TestEvents.Ready, 0, ['Error']]
+            [
+                TestEvents.Initializing,
+                0,
+                SequenceErrorBasicBehavior.StopSequence,
+            ],
+            [TestEvents.Ready, 0, ['Error']],
         ]);
     });
 
     test('sequences are sorted by priority', () => {
         pipeline.add([TestEvents.FetchAjax, TestEvents.FetchMemory]);
-        pipeline.add({event: TestEvents.Ready, priority: -1});
-        pipeline.add({event: TestEvents.Initializing, priority: 1});
+        pipeline.add({ event: TestEvents.Ready, priority: -1 });
+        pipeline.add({ event: TestEvents.Initializing, priority: 1 });
 
         checkSequence(pipeline, DefaultSequenceName, [
             [TestEvents.Initializing, 1],
             [TestEvents.FetchAjax],
             [TestEvents.FetchMemory],
-            [TestEvents.Ready, -1]
+            [TestEvents.Ready, -1],
         ]);
     });
 
     test('adding the same event a second time will add it and not replace it', () => {
         pipeline.add(TestEvents.Initializing);
-        pipeline.add({event: TestEvents.Initializing, priority: 1, onError: SequenceErrorBasicBehavior.Ignore});
+        pipeline.add({
+            event: TestEvents.Initializing,
+            priority: 1,
+            onError: SequenceErrorBasicBehavior.Ignore,
+        });
 
         checkSequence(pipeline, DefaultSequenceName, [
             [TestEvents.Initializing, 1, SequenceErrorBasicBehavior.Ignore],
-            [TestEvents.Initializing]
+            [TestEvents.Initializing],
         ]);
     });
 });
@@ -145,31 +163,48 @@ describe('Removing', () => {
         pipeline.add([TestEvents.Initializing, TestEvents.Ready]);
         pipeline.remove(TestEvents.Initializing);
 
-        checkSequence(pipeline, DefaultSequenceName, [
-            [TestEvents.Ready]
-        ]);
+        checkSequence(pipeline, DefaultSequenceName, [[TestEvents.Ready]]);
     });
 
     test('all matching events are removed in a single call to `remove()`', () => {
-        pipeline.add([TestEvents.Initializing, TestEvents.Ready, TestEvents.Initializing, TestEvents.HideLoader, TestEvents.Initializing]);
+        pipeline.add([
+            TestEvents.Initializing,
+            TestEvents.Ready,
+            TestEvents.Initializing,
+            TestEvents.HideLoader,
+            TestEvents.Initializing,
+        ]);
         pipeline.remove(TestEvents.Initializing);
 
         checkSequence(pipeline, DefaultSequenceName, [
             [TestEvents.Ready],
-            [TestEvents.HideLoader]
+            [TestEvents.HideLoader],
         ]);
     });
 
     test('`remove()` can remove multiple types of events at once', () => {
-        pipeline.add([TestEvents.Initializing, TestEvents.Ready, TestEvents.Initializing, TestEvents.HideLoader, TestEvents.Initializing]);
-        pipeline.remove([TestEvents.Initializing, TestEvents.Ready]);
-        checkSequence(pipeline, DefaultSequenceName, [
-            [TestEvents.HideLoader]
+        pipeline.add([
+            TestEvents.Initializing,
+            TestEvents.Ready,
+            TestEvents.Initializing,
+            TestEvents.HideLoader,
+            TestEvents.Initializing,
         ]);
+        pipeline.remove([TestEvents.Initializing, TestEvents.Ready]);
+        checkSequence(pipeline, DefaultSequenceName, [[TestEvents.HideLoader]]);
     });
 
     test('remove events from a sequence with a custom name', () => {
-        pipeline.add([TestEvents.Initializing, TestEvents.Ready, TestEvents.Initializing, TestEvents.HideLoader, TestEvents.Initializing], 'custom');
+        pipeline.add(
+            [
+                TestEvents.Initializing,
+                TestEvents.Ready,
+                TestEvents.Initializing,
+                TestEvents.HideLoader,
+                TestEvents.Initializing,
+            ],
+            'custom'
+        );
 
         // Try to remove in the wrong sequence.
         pipeline.remove([TestEvents.Initializing, TestEvents.Ready]);
@@ -178,14 +213,12 @@ describe('Removing', () => {
             [TestEvents.Ready],
             [TestEvents.Initializing],
             [TestEvents.HideLoader],
-            [TestEvents.Initializing]
+            [TestEvents.Initializing],
         ]);
 
         // Now the valid call.
         pipeline.remove([TestEvents.Initializing, TestEvents.Ready], 'custom');
-        checkSequence(pipeline, 'custom', [
-            [TestEvents.HideLoader]
-        ]);
+        checkSequence(pipeline, 'custom', [[TestEvents.HideLoader]]);
     });
 
     test('remove a call to another sequence', () => {
@@ -193,7 +226,7 @@ describe('Removing', () => {
         pipeline.remove('Other');
         checkSequence(pipeline, DefaultSequenceName, [
             [TestEvents.Initializing],
-            [TestEvents.HideLoader]
+            [TestEvents.HideLoader],
         ]);
     });
 });
@@ -204,13 +237,16 @@ describe('Removing', () => {
 describe('Running', () => {
     let callstack: string[] = [];
 
-    function buildCallback(id: string, options: {
-        delay?: number,
-        error?: Exception|string|null,
-        stopEvent?: boolean
-        stopSequence?: boolean,
-        stopAll?: boolean,
-    } = {}): any {
+    function buildCallback(
+        id: string,
+        options: {
+            delay?: number;
+            error?: Exception | string | null;
+            stopEvent?: boolean;
+            stopSequence?: boolean;
+            stopAll?: boolean;
+        } = {}
+    ): any {
         return (context: SequenceContext) => {
             callstack.push(id);
             const delay = options.delay || 0;
@@ -234,7 +270,7 @@ describe('Running', () => {
                         } else {
                             resolve();
                         }
-                    })
+                    });
                 });
             }
             if (!isNullOrUndefined(options.error)) {
@@ -250,28 +286,31 @@ describe('Running', () => {
             [DefaultSequenceName]: [
                 TestEvents.Creating,
                 TestEvents.Initializing,
-                TestEvents.Ready
+                TestEvents.Ready,
             ],
-            Error: [
-                TestEvents.ShowError,
-                TestEvents.HideLoader
-            ],
+            Error: [TestEvents.ShowError, TestEvents.HideLoader],
             Fetch: [
                 TestEvents.ShowLoader,
                 TestEvents.Fetch,
                 TestEvents.ProcessResult,
-                TestEvents.HideLoader
+                TestEvents.HideLoader,
             ],
             AdaptiveFetch: [
                 TestEvents.ShowLoader,
                 'FetchAdapters',
                 TestEvents.ProcessResult,
-                TestEvents.HideLoader
+                TestEvents.HideLoader,
             ],
             FetchAdapters: [
-                {event: TestEvents.FetchAjax, onError: SequenceErrorBasicBehavior.Ignore},
-                {event: TestEvents.FetchMemory, onError: SequenceErrorBasicBehavior.Ignore}
-            ]
+                {
+                    event: TestEvents.FetchAjax,
+                    onError: SequenceErrorBasicBehavior.Ignore,
+                },
+                {
+                    event: TestEvents.FetchMemory,
+                    onError: SequenceErrorBasicBehavior.Ignore,
+                },
+            ],
         });
     });
 
@@ -287,8 +326,11 @@ describe('Running', () => {
 
     test('The pipeline is asynchronous if any of subscriber is asynchronous', async () => {
         pipeline
-            .subscribe(TestEvents.Initializing, buildCallback('a', {delay: 20}))
-            .subscribe(TestEvents.Creating, buildCallback('b', {delay: 50}))
+            .subscribe(
+                TestEvents.Initializing,
+                buildCallback('a', { delay: 20 })
+            )
+            .subscribe(TestEvents.Creating, buildCallback('b', { delay: 50 }))
             .subscribe(TestEvents.Ready, buildCallback('c'));
 
         const result = await pipeline.start();
@@ -302,30 +344,55 @@ describe('Running', () => {
         pipeline
             .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
             .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
-            .subscribe(TestEvents.FetchAjax, buildCallback('fetch-ajax', {delay: 50}))
-            .subscribe(TestEvents.ProcessResult, buildCallback('process-result', {delay: 50}))
-            .subscribe(TestEvents.FetchMemory, buildCallback('fetch-memory'))
+            .subscribe(
+                TestEvents.FetchAjax,
+                buildCallback('fetch-ajax', { delay: 50 })
+            )
+            .subscribe(
+                TestEvents.ProcessResult,
+                buildCallback('process-result', { delay: 50 })
+            )
+            .subscribe(TestEvents.FetchMemory, buildCallback('fetch-memory'));
 
         await pipeline.start('AdaptiveFetch').promise;
-        expect(callstack).toStrictEqual(['show-loader', 'fetch-ajax', 'fetch-memory', 'process-result', 'hide-loader']);
+        expect(callstack).toStrictEqual([
+            'show-loader',
+            'fetch-ajax',
+            'fetch-memory',
+            'process-result',
+            'hide-loader',
+        ]);
     });
 
     test('Propagation can be stopped in a asynchronous sub sequence', async () => {
         pipeline
             .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
             .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
-            .subscribe(TestEvents.FetchAjax, buildCallback('fetch-ajax', {delay: 50, stopSequence: true}))
-            .subscribe(TestEvents.FetchMemory, buildCallback('fetch-memory'))
+            .subscribe(
+                TestEvents.FetchAjax,
+                buildCallback('fetch-ajax', { delay: 50, stopSequence: true })
+            )
+            .subscribe(TestEvents.FetchMemory, buildCallback('fetch-memory'));
 
         await pipeline.start('AdaptiveFetch').promise;
-        expect(callstack).toStrictEqual(['show-loader', 'fetch-ajax', 'hide-loader']);
+        expect(callstack).toStrictEqual([
+            'show-loader',
+            'fetch-ajax',
+            'hide-loader',
+        ]);
     });
 
     test('Results are aggregated by event type', async () => {
         pipeline
             .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
             .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
-            .subscribe(TestEvents.Fetch, buildCallback('fetch-ajax', {delay: 50, error: 'Request failed.'}))
+            .subscribe(
+                TestEvents.Fetch,
+                buildCallback('fetch-ajax', {
+                    delay: 50,
+                    error: 'Request failed.',
+                })
+            );
 
         await pipeline.start('Fetch').promise;
         expect(callstack).toStrictEqual(['show-loader', 'fetch-ajax']);
@@ -335,7 +402,10 @@ describe('Running', () => {
         pipeline
             .subscribe(TestEvents.ShowLoader, buildCallback('show-loader'))
             .subscribe(TestEvents.HideLoader, buildCallback('hide-loader'))
-            .subscribe(TestEvents.Fetch, buildCallback('fetch', {delay: 50, error: 'Request failed.'}))
+            .subscribe(
+                TestEvents.Fetch,
+                buildCallback('fetch', { delay: 50, error: 'Request failed.' })
+            );
         const result = pipeline.start('Fetch');
         await result.promise;
         expect(result.error).toEqual(true);
@@ -350,7 +420,7 @@ describe('Running', () => {
             called.push('a');
             if (!added) {
                 added = true;
-                pipeline.add({event: customEvent, priority: 100}, 'Fetch');
+                pipeline.add({ event: customEvent, priority: 100 }, 'Fetch');
                 pipeline.subscribe(customEvent, () => {
                     called.push('b');
                 });

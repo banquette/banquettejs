@@ -7,11 +7,32 @@
         "directory": "packages/inversify"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/inversify.umd.cjs",
+    "module": "./dist/inversify.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/inversify.js",
+            "require": "./dist/inversify.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
     "dependencies": {
-        "@banquette/dependency-injection": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
+        "@banquette/dependency-injection": "workspace:^",
+        "@banquette/utils-type": "workspace:^",
+        "inversify": "^6.0.1"
     }
 }

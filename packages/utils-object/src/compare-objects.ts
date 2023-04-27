@@ -1,6 +1,4 @@
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObjectLiteral, isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isArray, isObjectLiteral, isObject, isUndefined, } from '@banquette/utils-type';
 
 /**
  * Compares two objects and returns the difference between them.
@@ -13,7 +11,11 @@ import { isUndefined } from "@banquette/utils-type/is-undefined";
  *
  * @return {object}
  */
-export function compareObjects(a: any, b: any, keepBothValues: boolean = false): object {
+export function compareObjects(
+    a: any,
+    b: any,
+    keepBothValues: boolean = false
+): object {
     const output: any = {};
 
     if (!isObject(a) || !isObject(b)) {
@@ -25,13 +27,15 @@ export function compareObjects(a: any, b: any, keepBothValues: boolean = false):
         }
         const value = a[key];
         if (!isUndefined(b[key])) {
-            if ((isObjectLiteral(value) || isArray(value)) && (isObjectLiteral(b[key]) || isArray(b[key])) ) {
-                const subOutput: object =
-                    compareObjects(
-                        value as object,
-                        b[key] as object,
-                        keepBothValues,
-                    );
+            if (
+                (isObjectLiteral(value) || isArray(value)) &&
+                (isObjectLiteral(b[key]) || isArray(b[key]))
+            ) {
+                const subOutput: object = compareObjects(
+                    value as object,
+                    b[key] as object,
+                    keepBothValues
+                );
                 if (Object.keys(subOutput).length > 0) {
                     output[key] = subOutput;
                 }
@@ -47,7 +51,7 @@ export function compareObjects(a: any, b: any, keepBothValues: boolean = false):
             }
         } else if (isUndefined(value)) {
             // In this case both a and b are "undefined", so there is no difference after all.
-            continue ;
+            continue;
         } else if (keepBothValues) {
             output[key] = {
                 a: value,
@@ -58,7 +62,11 @@ export function compareObjects(a: any, b: any, keepBothValues: boolean = false):
         }
     }
     for (const key in b) {
-        if (b.hasOwnProperty && !b.hasOwnProperty(key) || !isUndefined(a[key]) || isUndefined(b[key])) {
+        if (
+            (b.hasOwnProperty && !b.hasOwnProperty(key)) ||
+            !isUndefined(a[key]) ||
+            isUndefined(b[key])
+        ) {
             continue;
         }
         if (keepBothValues) {

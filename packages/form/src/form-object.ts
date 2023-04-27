@@ -1,10 +1,8 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { ltrim } from "@banquette/utils-string/format/ltrim";
-import { trim } from "@banquette/utils-string/format/trim";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { ValidatorContainerInterface } from "@banquette/validation/validator-container.interface";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { UsageException } from "@banquette/exception";
+import { getObjectKeys } from "@banquette/utils-object";
+import { ltrim, trim } from "@banquette/utils-string";
+import { isUndefined } from "@banquette/utils-type";
+import { ValidatorContainerInterface, ValidatorInterface } from "@banquette/validation";
 import { AbstractFormGroup } from "./abstract-form-group";
 import { CallContext, FilterGroup, FormEvents, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";
@@ -243,12 +241,16 @@ export class FormObject extends AbstractFormGroup<string, Record<string, any>, R
             filters = this.foreachFilters[FilterGroup.External];
         }
         const filtersKeys: State[] = getObjectKeys(filters);
-        ext:
         for (const name of Object.keys(this.children_)) {
+            let found = false;
             for (const state of filtersKeys) {
                 if (this.children_[name].decorated[state] !== filters[state]) {
-                    continue ext;
+                    found = true;
+                    break ;
                 }
+            }
+            if (found) {
+                continue ;
             }
             if (cb(this.children_[name].decorated, name) === false) {
                 break ;

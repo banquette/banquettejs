@@ -1,2 +1,2 @@
 
-export { default as TreeComponent } from './tree.component.vue';
+export { default as BtTree } from './tree.component.vue';

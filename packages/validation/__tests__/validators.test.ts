@@ -1,30 +1,14 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { Exception } from "@banquette/exception/exception";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { HttpConfigurationSymbol } from "@banquette/http/config";
-import { NetworkException } from "@banquette/http/exception/network.exception";
-import { RequestException } from "@banquette/http/exception/request.exception";
-import { HttpConfigurationInterface } from "@banquette/http/http-configuration.interface";
-import { HttpRequestFactory } from "@banquette/http/http-request.factory";
-import { waitForDelay } from "@banquette/utils-misc/timeout";
-import { extend } from "@banquette/utils-object/extend";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ConfigurationService } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
+import { Exception, UsageException } from "@banquette/exception";
+import { HttpConfigurationSymbol, NetworkException, RequestException, HttpConfigurationInterface, HttpRequestFactory } from "@banquette/http";
+import { waitForDelay } from "@banquette/utils-misc";
+import { extend } from "@banquette/utils-object";
+import { ensureArray, isArray, isUndefined } from "@banquette/utils-type";
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
-import {
-    ASYNC_TAG,
-    V,
-    ValidationResult,
-    ValidationResultStatus,
-    ValidatorContainerInterface,
-    ValidatorInterface,
-    ViolationInterface,
-    Type
-} from "../src";
-import { ValidationContextInterface } from "../src/validation-context.interface";
 import '../../http/__tests__/__mocks__/xml-http-request.mock';
+import { ASYNC_TAG, V, ValidationResult, ValidationResultStatus, ValidatorContainerInterface, ValidatorInterface, ViolationInterface, Type } from "../src";
+import { ValidationContextInterface } from "../src/validation-context.interface";
 import { ValidateAfterDelay } from "./__mocks__/type/validate-after-delay.test-validator";
 
 const config: ConfigurationService = Injector.Get(ConfigurationService);
@@ -100,7 +84,7 @@ async function expectResultAsync(expectedDelay: number|[number, number], res: Va
     } catch (e) {
         // We only wait to the promise to finish, the error here doesn't mean anything.
     }
-    if (expectedDelay > 0) {
+    if (isArray(expectedDelay) || expectedDelay > 0) {
         const delta = (new Date()).getTime() - startTime;
         expect(delta).toBeGreaterThan(Math.round(isArray(expectedDelay) ? expectedDelay[0] : (expectedDelay * 0.8)));
         expect(delta).toBeLessThan(Math.round(isArray(expectedDelay) ? expectedDelay[1] : (expectedDelay * 2 /* Be generous for slow machines..*/ )));
@@ -625,7 +609,7 @@ describe('validators', () => {
             [6, 'String request', () => expectResultAsync(0, V.Ajax(buildTestUrl({responseKey: 'ValidJson'})).validate('a'), {valid: true})],
             [6, 'Null value', () => expectResultAsync(0, V.Ajax({url: buildTestUrl({responseKey: 'ValidJson'})}).validate(null), {valid: true})],
             [6, 'Undefined value', () => expectResultAsync(0, V.Ajax({url: buildTestUrl({responseKey: 'ValidJson'})}).validate(undefined), {valid: true})],
-            [8, 'Server error', () => expectResultAsync([50, 80], V.Ajax({url: buildTestUrl({responseKey: 'ServerError', delay: 50})}).validate('a'), {error: true, errorDetail: expect.any(RequestException)})],
+            [10, 'Server error', () => expectResultAsync([50, 80], V.Ajax({url: buildTestUrl({responseKey: 'ServerError', delay: 50})}).validate('a'), {error: true, errorDetail: expect.any(RequestException)})],
             [8, 'Network error', () => expectResultAsync(0, V.Ajax({url: buildTestUrl({delay: 1, networkError: 5})}).validate('a'),  {error: true, errorDetail: expect.any(NetworkException)})],
             [8, 'Invalid request', () => expectResultAsync(0, V.Ajax({url: ''}).validate('a'), {error: true, errorDetail: expect.any(UsageException)})],
             [6, 'HttpRequest input', () => expectResultAsync(0, V.Ajax(HttpRequestFactory.Create({url: buildTestUrl({responseKey: 'ValidJson'})})).validate('a'), {valid: true})]

@@ -1,4 +1,4 @@
-import { VueThemes } from "@banquette/vue-typescript/theme/vue-themes";
+import { VueThemes } from "@banquette/vue-typescript";
 
 VueThemes.Define('bt-tag', {
     dark: [

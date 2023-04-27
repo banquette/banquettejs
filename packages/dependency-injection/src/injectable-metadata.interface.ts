@@ -1,6 +1,6 @@
-import { Constructor } from "@banquette/utils-type/types";
-import { InjectableIdentifier } from "./type/injectable-identifier.type";
-import { InjectableType } from "./type/injectable.type";
+import { Constructor } from '@banquette/utils-type';
+import { InjectableIdentifier } from './type/injectable-identifier.type';
+import { InjectableType } from './type/injectable.type';
 
 export interface InjectableMetadataInterface {
     /**
@@ -32,5 +32,8 @@ export interface InjectableMetadataInterface {
     /**
      * List of dependencies that must be set to properties of the created object.
      */
-    propertiesDependencies: Record<string, {type: InjectableType, propertyName?: string, parameterIndex?: number}>;
+    propertiesDependencies: Record<
+        string,
+        { type: InjectableType; propertyName?: string; parameterIndex?: number }
+    >;
 }

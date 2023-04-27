@@ -1,12 +1,8 @@
-import { isServer } from "@banquette/utils-misc/is-server";
-import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { isServer } from "@banquette/utils-misc";
+import { Composable, Expose, Prop, Watch, Vue } from "@banquette/vue-typescript";
 
 @Composable()
-export class AbstractProgressComponent extends Vue {
+export class BtAbstractProgress extends Vue {
     /**
      * Current progression value.
      * The percent or progression will depend on the min and max values (given by `progressMin` and `progressMax`).
@@ -14,7 +10,7 @@ export class AbstractProgressComponent extends Vue {
     @Prop({
         type: [Number, String],
         default: null,
-        transform: function(this: AbstractProgressComponent, v: any) {
+        transform: function(this:BtAbstractProgress, v: any) {
             if (v === null) {
                 return null;
             }

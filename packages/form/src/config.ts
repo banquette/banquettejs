@@ -1,5 +1,5 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
+import { ConfigurationService } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
 import { FormConfigurationInterface } from "./form-configuration.interface";
 
 export const FormConfigurationSymbol = Symbol('form');

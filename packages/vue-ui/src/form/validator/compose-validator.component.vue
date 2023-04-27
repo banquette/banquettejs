@@ -1,15 +1,15 @@
 <script lang="ts">
-import { Compose } from "@banquette/validation/type/compose";
-import { Valid } from "@banquette/validation/type/valid";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
+import { Compose } from "@banquette/validation";
+import { Valid } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Render } from "@banquette/vue-typescript";
 import { VNodeChild } from "@vue/runtime-core";
 import { renderSlot } from "vue";
-import { ContainerValidatorComponent } from "./container-validator.component";
+import { BtContainerValidator } from "./container-validator.component";
 
 @Component('bt-validate-compose')
-export default class ValidateComposeComponent extends ContainerValidatorComponent {
+export default class BtValidateCompose extends BtContainerValidator {
     /**
      * @inheritDoc
      */
@@ -26,3 +26,4 @@ export default class ValidateComposeComponent extends ContainerValidatorComponen
     }
 }
 </script>
+<template></template>

@@ -1,1 +1,1 @@
-export { default as FilterComponent } from './filter.component.vue';
+export { default as BtFilter } from './filter.component.vue';

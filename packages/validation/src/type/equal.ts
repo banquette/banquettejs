@@ -1,6 +1,5 @@
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { ensureSameType } from "@banquette/utils-type/ensure-same-type";
-import { isObject } from "@banquette/utils-type/is-object";
+import { areEqual } from "@banquette/utils-misc";
+import { ensureSameType, isObject } from "@banquette/utils-type";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { assignOptionsDefaults } from "../utils";

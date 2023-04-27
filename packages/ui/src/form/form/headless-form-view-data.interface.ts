@@ -1,5 +1,4 @@
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
-import { FormError } from "@banquette/form/form-error";
+import { FormComponentInterface, FormError } from "@banquette/form";
 import { Action } from "./constant";
 
 /**

@@ -1,6 +1,5 @@
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { XhrConfig } from "./xhr-config.type";
+import { isObject, isUndefined } from '@banquette/utils-type';
+import { XhrConfig } from './xhr-config.type';
 
 let idIncrement: number = 0;
 

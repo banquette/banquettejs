@@ -1,39 +1,39 @@
 <style src="./tree.component.css" scoped></style>
 <script lang="ts">
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { HttpMethod } from "@banquette/http/constants";
-import { NodePropResolver } from "@banquette/ui/tree/constant";
-import { NodeRemovedEventArg } from "@banquette/ui/tree/event/node-removed.event-arg";
-import { HeadlessTreeViewDataInterface } from "@banquette/ui/tree/headless-tree-view-data.interface";
-import { HeadlessTreeViewModel } from "@banquette/ui/tree/headless-tree.view-model";
-import { Node } from '@banquette/ui/tree/node';
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { Primitive, AnyObject } from "@banquette/utils-type/types";
-import { IconMaterialArrowDropDown } from "@banquette/vue-material-icons/arrow-drop-down";
-import { IconMaterialHelp } from "@banquette/vue-material-icons/help";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { UnsubscribeFunction } from "@banquette/event";
+import { HttpMethod } from "@banquette/http";
+import { NodePropResolver } from "@banquette/ui";
+import { NodeRemovedEventArg } from "@banquette/ui";
+import { HeadlessTreeViewDataInterface } from "@banquette/ui";
+import { HeadlessTreeViewModel } from "@banquette/ui";
+import { Node } from '@banquette/ui';
+import { ensureInEnum } from "@banquette/utils-array";
+import { isServer } from "@banquette/utils-misc";
+import { isArray } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type";
+import { Primitive, AnyObject } from "@banquette/utils-type";
+import { IMaterialArrowDropDown } from "@banquette/vue-material-icons";
+import { IMaterialHelp } from "@banquette/vue-material-icons";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Render } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { BindThemeDirective } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
 import { h, resolveDirective, withDirectives, renderSlot, VNode, toRaw, resolveComponent, Directive } from "vue";
-import { ProgressCircularComponent } from "../progress/progress-circular";
+import { BtProgressCircular } from "../progress/progress-circular";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-tree',
-    components: [ProgressCircularComponent, IconMaterialArrowDropDown, IconMaterialHelp],
+    components: [BtProgressCircular, IMaterialArrowDropDown, IMaterialHelp],
     directives: [BindThemeDirective],
     emits: ['update:data'],
 })
-export default class TreeComponent extends Vue {
+export default class BtTree extends Vue {
     /**
      * Local data to display in the tree.
      */
@@ -158,7 +158,7 @@ export default class TreeComponent extends Vue {
     }
 
     @Render()
-    public render(context: any) {
+    public render(context: any): any {
         if (isServer()) {
             this.beforeMount();
         }

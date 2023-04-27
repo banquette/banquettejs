@@ -1,41 +1,41 @@
 <style src="./choice.component.css" scoped></style>
 <template src="./choice.component.html"></template>
 <script lang="ts">
-import { UsageException } from "@banquette/exception/usage.exception";
-import { Choice } from "@banquette/ui/form/select/choice";
-import { trim } from "@banquette/utils-string/format/trim";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { IconMaterialCheck } from "@banquette/vue-material-icons/check";
-import { IconMaterialDelete } from "@banquette/vue-material-icons/delete";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { InjectProvided } from "@banquette/vue-typescript/decorator/inject-provided.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
-import { toRaw } from "vue";
+import { UsageException } from "@banquette/exception";
+import { Choice } from "@banquette/ui";
+import { trim } from "@banquette/utils-string";
+import { isUndefined } from "@banquette/utils-type";
+import { IMaterialCheck } from "@banquette/vue-material-icons";
+import { IMaterialDelete } from "@banquette/vue-material-icons";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { InjectProvided } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { toRaw, PropType } from "vue";
 import { UndefinedValue } from "../../../constant";
 import { BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
-import { SelectGroupComponent, FormSelectComponent } from "../../";
+import { BtSelectGroup, BtFormSelect } from "../../";
 
 @Component({
     name: 'bt-form-select-choice',
-    components: [IconMaterialCheck, IconMaterialDelete]
+    components: [IMaterialCheck, IMaterialDelete]
 })
-export default class ChoiceComponent extends Vue {
+export default class BtChoice extends Vue {
     /**
      * These props are only used when the prop `choice` is not set
      * (meaning the `bt-form-select-choice` has been created outside the `bt-form-select`).
      */
     @Prop({default: UndefinedValue}) public value!: any;
-    @Prop({type: String, default: null}) public label!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public label!: string|null;
     @Prop({type: Boolean, default: undefined}) public disabled?: boolean;
     @Prop({type: Boolean, default: undefined}) public selected?: boolean;
 
     /**
      * Only used when the component is created from the `form-select` component directly.
      */
-    @Prop({type: Object, default: null}) public internalChoice!: Choice|null;
+    @Prop({type: Object as PropType<Choice|null>, default: null}) public internalChoice!: Choice|null;
 
     /**
      * If created in a slot, contains the position of the slot relative to the internal list of choices.
@@ -47,19 +47,19 @@ export default class ChoiceComponent extends Vue {
      */
     @Expose() public choice: Choice|null = null;
 
-    private parent!: InstanceType<typeof FormSelectComponent>;
-    private parentGroup!: InstanceType<typeof SelectGroupComponent>|null;
+    private parent!: InstanceType<typeof BtFormSelect>;
+    private parentGroup!: InstanceType<typeof BtSelectGroup>|null;
 
     /**
      * Vue lifecycle hook.
      */
     public beforeMount(): void {
-        const $parent = this.getParent('bt-form-select');
+        const $parent = this.getParent('bt-form-select' as any);
         if ($parent === null) {
             throw new UsageException(`A "<bt-form-select-choice>" component must be placed inside a "<bt-form-select>".`);
         }
-        this.parent = $parent as InstanceType<typeof FormSelectComponent>;
-        this.parentGroup = this.getParent('bt-form-select-group') as InstanceType<typeof SelectGroupComponent>|null;
+        this.parent = $parent as InstanceType<typeof BtFormSelect>;
+        this.parentGroup = this.getParent('bt-form-select-group' as any) as InstanceType<typeof BtSelectGroup>|null;
     }
 
     /**
@@ -175,7 +175,7 @@ export default class ChoiceComponent extends Vue {
         this.parentGroup.updateChoice(this.choice);
     }
 
-    @Watch(function(this: ChoiceComponent) {
+    @Watch(function(this: BtChoice) {
         // Only watch the props if there is no choice given as prop.
         return this.internalChoice === null ? ['value', 'label', 'disabled', 'selected'] : [];
     }, {immediate: ImmediateStrategy.NextTick}) private onChoicePropsChange(): void {
@@ -200,7 +200,7 @@ export default class ChoiceComponent extends Vue {
      */
     private scrollIntoView = (() => {
         let tries = 0;
-        let timer: number|NodeJS.Timeout|null = null;
+        let timer: any|null = null;
         const tryToScroll = () => {
             // Test if the element or one of its parent has a display: none
             // @see https://stackoverflow.com/a/53068496

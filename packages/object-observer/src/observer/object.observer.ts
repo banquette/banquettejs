@@ -1,5 +1,4 @@
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isObject, isUndefined } from "@banquette/utils-type";
 import { AbstractObserver } from "./abstract.observer";
 
 export class ObjectObserver extends AbstractObserver<object> {

@@ -1,6 +1,6 @@
-import { HttpMethod } from "@banquette/http/constants";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
-import { Primitive, StringEnum } from "@banquette/utils-type/types";
+import { HttpMethod } from "@banquette/http";
+import { ModelExtendedIdentifier } from "@banquette/model";
+import { Primitive, StringEnum } from "@banquette/utils-type";
 
 export interface RemoteConfigurationInterface {
     /**

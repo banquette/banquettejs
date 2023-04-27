@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/exception/system.exception";
+import { SystemException } from "@banquette/exception";
 
 /**
  * Thrown when the response from the server doesn't match what is expected by the list in the current configuration.

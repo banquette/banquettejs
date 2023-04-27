@@ -1,4 +1,4 @@
-import { arrayUnique } from "@banquette/utils-array/array-unique";
+import { arrayUnique } from '@banquette/utils-array';
 import { uniqueId } from '../src';
 
 describe('uniqueId', () => {

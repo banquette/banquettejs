@@ -1,10 +1,10 @@
-import { isServer } from "@banquette/utils-misc/is-server";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { VoidCallback } from "@banquette/utils-type/types";
-import { Directive } from "@banquette/vue-typescript/decorator/directive.decorator";
+import { isServer } from "@banquette/utils-misc";
+import { proxy } from "@banquette/utils-misc";
+import { isFunction } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type";
+import { VoidCallback } from "@banquette/utils-type";
+import { Directive } from "@banquette/vue-typescript";
 import { DirectiveBinding } from "vue";
 
 type EventType = 'click' | 'mousedown';

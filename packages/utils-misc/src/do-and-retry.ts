@@ -1,8 +1,5 @@
-import { ObservablePromise } from "@banquette/promise/observable-promise";
-import { ProgressCallback, RejectCallback, ResolveCallback } from "@banquette/promise/types";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { isValidNumber } from "@banquette/utils-type/is-valid-number";
-import { GenericCallback, ReplaceReturnType } from "@banquette/utils-type/types";
+import { ObservablePromise, ProgressCallback, RejectCallback, ResolveCallback, } from '@banquette/promise';
+import { isPromiseLike, isValidNumber, GenericCallback, ReplaceReturnType, } from '@banquette/utils-type';
 
 export interface RetryOptionsInterface {
     /**
@@ -25,13 +22,24 @@ export interface RetryOptionsInterface {
 /**
  * Execute a callback repeatedly until it either succeeds or reaches a maximum number of tries.
  */
-export function doAndRetry<T>(options: RetryOptionsInterface, cb: () => T|Promise<T>): ObservablePromise<T> {
-    const maxRetryDelay = isValidNumber(options.maxRetryDelay) ? options.maxRetryDelay : 10000;
+export function doAndRetry<T>(
+    options: RetryOptionsInterface,
+    cb: () => T | Promise<T>
+): ObservablePromise<T> {
+    const maxRetryDelay = isValidNumber(options.maxRetryDelay)
+        ? options.maxRetryDelay
+        : 10000;
     const maxTry = isValidNumber(options.maxTry) ? options.maxTry : 3;
-    let retryDelay = isValidNumber(options.minRetryDelay) ? options.minRetryDelay : 500;
+    let retryDelay = isValidNumber(options.minRetryDelay)
+        ? options.minRetryDelay
+        : 500;
     let tries = 1;
 
-    const doTry = (resolve: ResolveCallback<any>, reject: RejectCallback, progress: ProgressCallback) => {
+    const doTry = (
+        resolve: ResolveCallback<any>,
+        reject: RejectCallback,
+        progress: ProgressCallback
+    ) => {
         const onFailure = (reason: any) => {
             progress(reason);
 
@@ -64,7 +72,11 @@ export function doAndRetry<T>(options: RetryOptionsInterface, cb: () => T|Promis
  * Creates a function that will call `doAndRetry()` when invoked but that hides it from the outside
  * so it can be used like any other function.
  */
-export function doAndRetryFactory<T, C extends Function = GenericCallback>(options: RetryOptionsInterface, context: any, cb: C): ReplaceReturnType<C, ObservablePromise<T>> {
+export function doAndRetryFactory<T, C extends Function = GenericCallback>(
+    options: RetryOptionsInterface,
+    context: any,
+    cb: C
+): ReplaceReturnType<C, ObservablePromise<T>> {
     return (...args: any[]): ObservablePromise<T> => {
         return doAndRetry(options, () => {
             return cb.apply(context, args);

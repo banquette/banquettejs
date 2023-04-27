@@ -1,1 +1,1 @@
-export { default as AlertComponent } from './alert.component.vue';
+export { default as BtAlert } from './alert.component.vue';

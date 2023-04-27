@@ -1,31 +1,32 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { BeforeValueChangeFormEvent } from "@banquette/form/event/before-value-change.form-event";
-import { ErrorsChangedFormEvent } from "@banquette/form/event/errors-changed.form-event";
-import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
-import { FormControl } from "@banquette/form/form-control";
-import { FormError } from "@banquette/form/form-error";
-import { FormGroupInterface } from "@banquette/form/form-group.interface";
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { FormViewModelInterface } from "@banquette/form/form-view-model.interface";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { WeakObjectRef } from "@banquette/utils-misc/weak-object-map";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { GenericCallback, VoidCallback } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { Inject } from "@banquette/dependency-injection";
+import { Module } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection";
+import { UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { BeforeValueChangeFormEvent } from "@banquette/form";
+import { ErrorsChangedFormEvent } from "@banquette/form";
+import { StateChangedFormEvent } from "@banquette/form";
+import { ValueChangedFormEvent } from "@banquette/form";
+import { ComponentNotFoundException } from "@banquette/form";
+import { FormComponentInterface } from "@banquette/form";
+import { FormControl } from "@banquette/form";
+import { FormError } from "@banquette/form";
+import { FormGroupInterface } from "@banquette/form";
+import { FormViewControlInterface } from "@banquette/form";
+import { FormViewModelInterface } from "@banquette/form";
+import { proxy } from "@banquette/utils-misc";
+import { WeakObjectRef } from "@banquette/utils-misc";
+import { isFunction } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type";
+import { isString } from "@banquette/utils-type";
+import { GenericCallback, VoidCallback } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
+import { Composable } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Lifecycle } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 import { FormStorageService } from "./form-storage.service";
 import { ProxifiedCallInterface } from "./proxified-call.interface";
 
@@ -41,12 +42,12 @@ export class FormControlProxy implements FormViewControlInterface {
     /**
      * A reference to the form the control can be found in.
      */
-    @Prop({type: [String, Object], default: null}) public form!: FormGroupInterface|string|null;
+    @Prop({type: [String, Object] as PropType<FormGroupInterface|string|null>, default: null}) public form!: FormGroupInterface|string|null;
 
     /**
      * A reference on the form control associated with the component.
      */
-    @Prop({type: [String, Object], default: null}) public control!: FormControl|string|null;
+    @Prop({type: [String, Object] as PropType<FormControl|string|null>, default: null}) public control!: FormControl|string|null;
 
     /**
      * Visual states.
@@ -79,7 +80,7 @@ export class FormControlProxy implements FormViewControlInterface {
 
     /**
      * Not a computed because Vue doesn't need to see it, that's for internal use only.
-     * And exposing it to vue will conflict with the `value` prop of `AbstractVueFormComponent` anyway.
+     * And exposing it to vue will conflict with the `value` prop of `BtAbstractVueForm` anyway.
      */
     public get value(): any { return this.getFromControl('value', null) }
 

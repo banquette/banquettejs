@@ -1,74 +1,76 @@
-<!-- v.control.value == false to test for empty arrays -->
-<!-- !v.control.value would resolve to `false` for `[]`, but v.control.value == false resolves to `true`. -->
-<div
-    class="bt-form-base-input"
-    :data-has-value="hasValue ? '' : null"
-    :data-has-help="hasLabelSlot ? '' : null"
-    :data-has-focus="v.control.focused ? '' : null"
-    :data-has-placeholder="v.base.placeholder ? '' : null"
-    :data-is-disabled="v.control.disabled ? '' : null"
-    :data-has-error="v.control.invalid && v.control.validated ? '' : null"
-    :data-has-before-addon="hasBeforeRawSlot || hasBeforeSlot ? '' : null"
-    :data-has-after-addon="hasAfterRawSlot || hasAfterSlot ? '' : null"
-    :data-has-floating-label="hasFloatingLabel ? '' : null"
-    :data-has-floating-errors="hasFloatingErrors ? '' : null"
-    :data-has-floating-help="hasFloatingHelp ? '' : null"
->
-    <label :for="v.control.fullId" v-if="hasLabelSlot"><slot name="label"></slot></label>
-    <label :for="v.control.fullId" v-else-if="v.base.label">{{ v.base.label }}</label>
+<bt-client-only>
+    <!-- v.control.value == false to test for empty arrays -->
+    <!-- !v.control.value would resolve to `false` for `[]`, but v.control.value == false resolves to `true`. -->
+    <div
+        class="bt-form-base-input"
+        :data-has-value="hasValue ? '' : null"
+        :data-has-help="hasLabelSlot ? '' : null"
+        :data-has-focus="v.control.focused ? '' : null"
+        :data-has-placeholder="v.base.placeholder ? '' : null"
+        :data-is-disabled="v.control.disabled ? '' : null"
+        :data-has-error="v.control.invalid && v.control.validated ? '' : null"
+        :data-has-before-addon="hasBeforeRawSlot || hasBeforeSlot ? '' : null"
+        :data-has-after-addon="hasAfterRawSlot || hasAfterSlot ? '' : null"
+        :data-has-floating-label="hasFloatingLabel ? '' : null"
+        :data-has-floating-errors="hasFloatingErrors ? '' : null"
+        :data-has-floating-help="hasFloatingHelp ? '' : null"
+    >
+        <label :for="v.control.fullId" v-if="hasLabelSlot"><slot name="label"></slot></label>
+        <label :for="v.control.fullId" v-else-if="v.base.label">{{ v.base.label }}</label>
 
-    <div class="input-group">
-        <div class="before" v-if="hasBeforeRawSlot || hasBeforeSlot" data-form-input-addon>
-            <slot name="before-raw" v-if="hasBeforeRawSlot"></slot>
-            <div class="addon" v-if="hasBeforeSlot"><slot name="before"></slot></div>
-        </div>
-        <div class="input">
-            <div v-if="v.base.placeholder && (!v.control.value || v.control.value == false)" class="placeholder">{{ v.base.placeholder }}</div>
-            <slot></slot>
-            <div class="floating-extras">
-                <slot name="extras-before"></slot>
-                <bt-progress-circular v-if="v.control.busy || v.control.validating"></bt-progress-circular>
-                <template v-if="hasFloatingErrors && v.control.invalid && v.control.validated">
-                    <div ref="error-icon" class="error-icon">
-                        <i-material-warning size="18" @click="v.control.focus()"></i-material-warning>
-                    </div>
-                </template>
-                <template v-if="hasFloatingHelp && hasHelpSlot">
-                    <div ref="help-icon" class="help-icon">
-                        <i-material-help size="18"></i-material-help>
-                    </div>
-                </template>
-                <bt-form-control-state-overlay :v="v" v-if="v.base.showDebug"></bt-form-control-state-overlay>
-                <slot name="extras-after"></slot>
-                <span class="asterisk" v-if="v.base.required">&lowast;</span>
+        <div class="input-group">
+            <div class="before" v-if="hasBeforeRawSlot || hasBeforeSlot" data-form-input-addon>
+                <slot name="before-raw" v-if="hasBeforeRawSlot"></slot>
+                <div class="addon" v-if="hasBeforeSlot"><slot name="before"></slot></div>
             </div>
-        </div>
-        <div class="after" v-if="hasAfterSlot || hasAfterRawSlot" data-form-input-addon>
-            <div class="addon" v-if="hasAfterSlot"><slot name="after"></slot></div>
-            <slot name="after-raw" v-if="hasAfterRawSlot"></slot>
-        </div>
-    </div>
-
-    <div class="extras" v-if="(!hasFloatingErrors && v.control.invalid && v.control.validated) || (!hasFloatingHelp && hasHelpSlot)">
-        <div class="error" v-for="error in v.control.errors" v-if="!hasFloatingErrors && v.control.invalid && v.control.validated">
-            {{ error.message }}
-        </div>
-        <div class="help" v-if="!hasFloatingHelp && hasHelpSlot">
-            <slot name="help"></slot>
-        </div>
-    </div>
-    <template v-if="hasFloatingErrors && v.control.invalid && v.control.validated">
-        <bt-popover target="error-icon" :visible="v.control.focused && (!$refs.helpPopover || !$refs.helpPopover.isVisible)" class="bt-form-base-input-errors-popover">
-            <div>
-                <div class="error" v-for="error in v.control.errors">
-                    {{ error.message }}
+            <div class="input">
+                <div v-if="v.base.placeholder && (!v.control.value || v.control.value == false)" class="placeholder">{{ v.base.placeholder }}</div>
+                <slot></slot>
+                <div class="floating-extras">
+                    <slot name="extras-before"></slot>
+                    <bt-progress-circular v-if="v.control.busy || v.control.validating"></bt-progress-circular>
+                    <template v-if="hasFloatingErrors && v.control.invalid && v.control.validated">
+                        <div ref="error-icon" class="error-icon">
+                            <i-material-warning size="18" @click="v.control.focus()"></i-material-warning>
+                        </div>
+                    </template>
+                    <template v-if="hasFloatingHelp && hasHelpSlot">
+                        <div ref="help-icon" class="help-icon">
+                            <i-material-help size="18"></i-material-help>
+                        </div>
+                    </template>
+                    <bt-form-control-state-overlay :v="v" v-if="v.base.showDebug"></bt-form-control-state-overlay>
+                    <slot name="extras-after"></slot>
+                    <span class="asterisk" v-if="v.base.required">&lowast;</span>
                 </div>
             </div>
-        </bt-popover>
-    </template>
-    <template v-if="hasFloatingHelp && hasHelpSlot">
-        <bt-popover ref="helpPopover" target="help-icon" class="bt-form-base-input-help-popover">
-            <slot name="help"></slot>
-        </bt-popover>
-    </template>
-</div>
+            <div class="after" v-if="hasAfterSlot || hasAfterRawSlot" data-form-input-addon>
+                <div class="addon" v-if="hasAfterSlot"><slot name="after"></slot></div>
+                <slot name="after-raw" v-if="hasAfterRawSlot"></slot>
+            </div>
+        </div>
+
+        <div class="extras" v-if="(!hasFloatingErrors && v.control.invalid && v.control.validated) || (!hasFloatingHelp && hasHelpSlot)">
+            <div class="error" v-for="error in v.control.errors" v-if="!hasFloatingErrors && v.control.invalid && v.control.validated">
+                {{ error.message }}
+            </div>
+            <div class="help" v-if="!hasFloatingHelp && hasHelpSlot">
+                <slot name="help"></slot>
+            </div>
+        </div>
+        <template v-if="hasFloatingErrors && v.control.invalid && v.control.validated">
+            <bt-popover target="error-icon" :visible="v.control.focused && (!$refs.helpPopover || !$refs.helpPopover.isVisible)" class="bt-form-base-input-errors-popover">
+                <div>
+                    <div class="error" v-for="error in v.control.errors">
+                        {{ error.message }}
+                    </div>
+                </div>
+            </bt-popover>
+        </template>
+        <template v-if="hasFloatingHelp && hasHelpSlot">
+            <bt-popover ref="helpPopover" target="help-icon" class="bt-form-base-input-help-popover">
+                <slot name="help"></slot>
+            </bt-popover>
+        </template>
+    </div>
+</bt-client-only>

@@ -1,37 +1,38 @@
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
-import { FormGroupInterface } from "@banquette/form/form-group.interface";
-import { trimArray } from "@banquette/utils-array/trim-array";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isType } from "@banquette/utils-type/is-type";
-import { VoidCallback } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { maybeResolveTsInst } from "@banquette/vue-typescript/utils/converters";
-import { Vue } from "@banquette/vue-typescript/vue";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
+import { FormComponentInterface } from "@banquette/form";
+import { FormGroupInterface } from "@banquette/form";
+import { trimArray } from "@banquette/utils-array";
+import { proxy } from "@banquette/utils-misc";
+import { ensureArray } from "@banquette/utils-type";
+import { ensureString } from "@banquette/utils-type";
+import { isArray } from "@banquette/utils-type";
+import { isFunction } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type";
+import { isType } from "@banquette/utils-type";
+import { VoidCallback } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { maybeResolveTsInst } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { BtAbstractVueForm } from "../abstract-vue-form.component";
 import { ContainerValidatorInterface } from "./container-validator.interface";
 
 /**
  * Base class for validator components.
  */
-export abstract class ValidatorComponent extends Vue {
+export abstract class BtValidator extends Vue {
     /**
      * Form in which search for the controls defined by `targetsPaths`.
      */
-    @Prop({type: Object, default: null}) public form!: FormGroupInterface|null;
+    @Prop({type: Object as PropType<FormGroupInterface|null>, default: null}) public form!: FormGroupInterface|null;
 
     /**
      * Paths of target controls to apply the validator on.
      *
      * For this to work, either the `form` prop must be set or the validator component must be inside a `bt-form`.
      */
-    @Prop({name: 'target', type: [String, Array], default: [], transform: (value) => {
+    @Prop({name: 'target', type: [String, Array] as PropType<string|string[]>, default: [], transform: (value: string|string[]) => {
         return trimArray(isArray(value) ? value : ensureString(value).split(',')).filter((i) => !!i);
     }}) public targetsPaths!: string[];
 
@@ -48,12 +49,12 @@ export abstract class ValidatorComponent extends Vue {
     /**
      * Tags to give to the validator.
      */
-    @Prop({type: [String, Array], default: [], transform: (value) => ensureArray(value)}) public tags?: string[];
+    @Prop({type: [String, Array] as PropType<string|string[]>, default: [], transform: (value: string|string[]) => ensureArray(value)}) public tags?: string[];
 
     /**
      * Groups to give to the validator.
      */
-    @Prop({type: [String, Array], default: [], transform: (value) => ensureArray(value)}) public groups?: string[];
+    @Prop({type: [String, Array] as PropType<string|string[]>, default: [], transform: (value: string|string[]) => ensureArray(value)}) public groups?: string[];
 
     /**
      * The form automagically extracted from a parent "bt-form" component.
@@ -137,7 +138,7 @@ export abstract class ValidatorComponent extends Vue {
         let $parent: any = this.$parent;
         while ($parent) {
             $parent = maybeResolveTsInst($parent);
-            if ($parent instanceof AbstractVueFormComponent) {
+            if ($parent instanceof BtAbstractVueForm) {
                 return $parent.proxy.setValidator(this.buildValidator());
             }
             if (isType<ContainerValidatorInterface>($parent, () => isFunction($parent.registerChild))) {

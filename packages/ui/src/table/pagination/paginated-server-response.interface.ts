@@ -1,4 +1,4 @@
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive } from "@banquette/utils-type";
 
 /**
  * The data structure expected from the server for a paginated collection.

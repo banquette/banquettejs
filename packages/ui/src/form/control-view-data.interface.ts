@@ -1,4 +1,4 @@
-import { FormError } from "@banquette/form/form-error";
+import { FormError } from "@banquette/form";
 
 /**
  * View data of the `ControlModule`.

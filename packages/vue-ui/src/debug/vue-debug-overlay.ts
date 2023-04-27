@@ -1,8 +1,8 @@
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { throttle } from "@banquette/utils-misc/throttle";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { VoidCallback } from "@banquette/utils-type/types";
+import { areEqual } from "@banquette/utils-misc";
+import { isServer } from "@banquette/utils-misc";
+import { throttle } from "@banquette/utils-misc";
+import { isUndefined } from "@banquette/utils-type";
+import { VoidCallback } from "@banquette/utils-type";
 
 interface DebugElementInterface {
     uid: number;

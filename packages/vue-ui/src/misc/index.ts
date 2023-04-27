@@ -9,4 +9,4 @@ export * from './stick-to.directive';
 export * from './teleport.directive';
 export * from './use-api-globals';
 
-export { default as ClientOnlyComponent } from './client-only.component.vue';
+export { default as BtClientOnly } from './client-only.component.vue';

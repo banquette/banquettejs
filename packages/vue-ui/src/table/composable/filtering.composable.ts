@@ -1,16 +1,17 @@
-import { FilteringModule } from "@banquette/ui/table/filtering/filtering.module";
-import { Primitive } from "@banquette/utils-type/types";
-import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { FilteringModule } from "@banquette/ui";
+import { Primitive } from "@banquette/utils-type";
+import { Composable } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 
 @Composable()
 export class FilteringComposable {
     /**
      * @see FilteringModule
      */
-    @Prop({type: Object, default: {}}) public filters!: Record<string, Primitive>;
-    @Prop({type: [Boolean, String], default: 'auto'}) public remote!: boolean|'auto';
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public filters!: Record<string, Primitive>;
+    @Prop({type: [Boolean, String] as PropType<boolean|'auto'>, default: 'auto'}) public remote!: boolean|'auto';
 
     /**
      * The actual module instance.

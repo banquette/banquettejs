@@ -1,10 +1,8 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { ConfigurationService } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
+import { isNonEmptyString } from "@banquette/utils-string";
+import { isArray, isObject, isUndefined } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
 import { FormConfigurationSymbol } from "./config";
 import { FormArray } from "./form-array";
 import { FormComponentInterface } from "./form-component.interface";
@@ -33,13 +31,13 @@ type FactoryControl = FormControl | any;
  */
 type FactoryValue = FactoryControl | FactoryObject | FactoryArray;
 
+let Configuration: FormConfigurationInterface|null = null;
+let InnerCount: number = 0;
+
 /**
  * Offer an easier way to create a form manually.
  */
 export class FormFactory {
-    private static Configuration: FormConfigurationInterface|null = null;
-    private static InnerCount: number = 0;
-
     /**
      * Create any type of form component by setting their value.
      *
@@ -70,7 +68,7 @@ export class FormFactory {
     public static Create(input: FactoryObject|FormArray, validator?: ValidatorInterface): FormGroupInterface;
     public static Create(input: FactoryControl, validator?: ValidatorInterface): FormComponentInterface;
     public static Create(input: FactoryValue, validator?: ValidatorInterface): FormComponentInterface {
-        ++FormFactory.InnerCount;
+        ++InnerCount;
         try {
             if (isObject(input)) {
                 if (input instanceof FormControl) {
@@ -99,9 +97,9 @@ export class FormFactory {
             // Little hack to know when we are out of the recursion so we can clear the configuration cache.
             // This is to avoid calling the injector multiple times for a single creation
             // while still reacting to changes in the configuration.
-            --FormFactory.InnerCount;
-            if (FormFactory.InnerCount === 0) {
-                FormFactory.Configuration = null;
+            --InnerCount;
+            if (InnerCount === 0) {
+                Configuration = null;
             }
         }
     }
@@ -111,12 +109,12 @@ export class FormFactory {
      * Meaning the value corresponding to the key is a couple value/validator instead of a normal value.
      */
     private static ResolveKey(key: string): {key: string, extended: boolean} {
-        if (FormFactory.Configuration === null) {
-            FormFactory.Configuration = Injector.Get(ConfigurationService).get<FormConfigurationInterface>(FormConfigurationSymbol);
+        if (Configuration === null) {
+            Configuration = Injector.Get(ConfigurationService).get<FormConfigurationInterface>(FormConfigurationSymbol);
         }
         let extended: boolean = false;
-        const prefix = FormFactory.Configuration.factory.extendedNamePrefix;
-        const suffix = FormFactory.Configuration.factory.extendedNameSuffix;
+        const prefix = Configuration.factory.extendedNamePrefix;
+        const suffix = Configuration.factory.extendedNameSuffix;
         if (isNonEmptyString(prefix) || isNonEmptyString(suffix)) {
             if (prefix && key.substring(0, prefix.length) === prefix) {
                 key = key.substring(prefix.length);

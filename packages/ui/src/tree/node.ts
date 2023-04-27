@@ -1,14 +1,14 @@
-import { slugify } from "@banquette/utils-string/format/slugify";
-import { Primitive, Writeable, AnyObject } from "@banquette/utils-type/types";
+import { slugify } from "@banquette/utils-string";
+import { Primitive, Writeable, AnyObject } from "@banquette/utils-type";
 import { NodeRemoteFetchStatus } from "./constant";
+
+let MaxId = 0;
 
 /**
  * The view representation of an item of the tree.
  */
 export class Node {
-    private static MaxId = 0;
-
-    public readonly id: number = ++Node.MaxId;
+    public readonly id: number = ++MaxId;
 
     /**
      * The text visible to the user.
@@ -17,7 +17,7 @@ export class Node {
     public get label(): string { return this._label }
     public set label(label: string) {
         this._label = label;
-        (this as Writeable<Node>).labelSlug = label !== '/' ? slugify(label) : null;
+        (this as any /* Writeable<Node> */).labelSlug = label !== '/' ? slugify(label) : null;
     }
 
     /**

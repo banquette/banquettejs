@@ -1,6 +1,5 @@
-import { noop } from "@banquette/utils-misc/noop";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { Complete, Modify } from "@banquette/utils-type/types";
+import { noop, proxy } from "@banquette/utils-misc";
+import { Complete, Modify } from "@banquette/utils-type";
 import { TransformResult } from "../transform-result";
 import { TransformerInterface } from "./transformer.interface";
 

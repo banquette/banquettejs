@@ -1,13 +1,16 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { propertyDecorator } from "@banquette/model/decorator/utils";
-import { Constructor } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { Injector } from "@banquette/dependency-injection";
+import { propertyDecorator } from "@banquette/model";
+import { Constructor } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
 import { ModelValidationMetadataService } from "../model-validation-metadata.service";
 
-const metadata = Injector.Get(ModelValidationMetadataService);
+let metadata: ModelValidationMetadataService|null = null;
 
 export function Assert(validator: ValidatorInterface): any {
     return propertyDecorator((ctor: Constructor, propertyKey: string) => {
+        if (metadata === null) {
+            metadata = Injector.Get(ModelValidationMetadataService);
+        }
         metadata.register(ctor, propertyKey, validator);
     }, 'You can only use @Assert() on properties.');
 }

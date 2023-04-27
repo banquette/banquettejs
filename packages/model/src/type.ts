@@ -1,4 +1,4 @@
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor } from "@banquette/utils-type";
 
 /**
  * Alternative way of identifying a model to access its metadata.

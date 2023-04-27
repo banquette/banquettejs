@@ -1,13 +1,13 @@
 <script lang="ts">
-import { ensureNumber } from "@banquette/utils-type/ensure-number";
-import { Min } from "@banquette/validation/type/min";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { ensureNumber } from "@banquette/utils-type";
+import { Min } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
-@Component({name: 'bt-validate-min', template: false})
-export default class ValidateMinComponent extends ValidatorComponent {
+@Component('bt-validate-min')
+export default class BtValidateMin extends BtValidator {
     @Prop({type: [Number, String], required: true, transform: (input: string|number) => ensureNumber(input)}) public count!: number;
     @Prop({type: String, default: 'auto', transform: (value) => {
             if (['string', 'number', 'auto'].indexOf(value) < 0) {
@@ -24,3 +24,4 @@ export default class ValidateMinComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

@@ -1,10 +1,8 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { Alias } from "@banquette/model/decorator/alias";
-import { ModelAliasNotFoundException } from "@banquette/model/exception/model-alias-not-found.exception";
-import { ModelMetadataService } from "@banquette/model/model-metadata.service";
-import { Constructor } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { Alias, ModelAliasNotFoundException, ModelMetadataService } from "@banquette/model";
+import { Constructor } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
 import { Assert, V, ModelValidationMetadataService, validate } from "../src";
 
 describe('Metadata storage', () => {
@@ -140,7 +138,7 @@ describe('Validation', () => {
             public name: string = '';
 
             @Assert(V.Model('User'))
-            public user!: User;
+            public user: User|null = null;
         }
 
         @Alias('User')
@@ -152,7 +150,7 @@ describe('Validation', () => {
             public email: string = '';
 
             @Assert(V.And(V.NotEmpty(), V.Model(Category)))
-            public category!: Category;
+            public category: Category|null = null;
         }
         userCtor = User;
         categoryCtor = Category;

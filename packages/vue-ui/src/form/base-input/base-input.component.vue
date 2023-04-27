@@ -1,28 +1,29 @@
 <style src="./base-input.component.css" scoped></style>
 <template src="./base-input.component.html" ></template>
 <script lang="ts">
-import { ControlViewDataInterface } from "@banquette/ui/form/control-view-data.interface";
-import { isArray } from "@banquette/utils-type/is-array";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
-import { IconMaterialHelp } from "@banquette/vue-material-icons/help";
-import { IconMaterialWarning } from "@banquette/vue-material-icons/warning";
-import { FormControlStateOverlayComponent } from "../../debug";
-import { PopoverDirective, PopoverComponent } from "../../popover";
-import { ProgressCircularComponent } from "../../progress/progress-circular";
+import { ControlViewDataInterface } from "@banquette/ui";
+import { isArray } from "@banquette/utils-type";
+import { Component } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { IMaterialHelp } from "@banquette/vue-material-icons";
+import { IMaterialWarning } from "@banquette/vue-material-icons";
+import { BtFormControlStateOverlay } from "../../debug";
+import { BtClientOnly } from "../../misc";
+import { PopoverDirective, BtPopover } from "../../popover";
+import { BtProgressCircular } from "../../progress/progress-circular";
 import { BaseInputViewDataInterface } from "./base-input-view-data.interface";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-base-input',
-    components: [ProgressCircularComponent, FormControlStateOverlayComponent, IconMaterialHelp, IconMaterialWarning, PopoverComponent],
+    components: [BtProgressCircular, BtFormControlStateOverlay, IMaterialHelp, IMaterialWarning, BtPopover, BtClientOnly],
     directives: [PopoverDirective]
 })
-export default class BaseFormInputComponent extends Vue {
+export default class BtFormBaseInput extends Vue {
     /**
      * The generic view data object.
      */

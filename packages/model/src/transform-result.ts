@@ -1,7 +1,6 @@
-import { Exception } from "@banquette/exception/exception";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { Writeable, Modify, GenericCallback } from "@banquette/utils-type/types";
+import { Exception, ExceptionFactory } from "@banquette/exception";
+import { proxy } from "@banquette/utils-misc";
+import { Writeable, Modify, GenericCallback } from "@banquette/utils-type";
 
 export enum TransformResultStatus {
     Waiting,
@@ -37,7 +36,7 @@ export class TransformResult<T = any> {
      */
     public setResult(result: T): boolean {
         if (this.status !== TransformResultStatus.Error) {
-            (this as Writeable<TransformResult<T>>).result = result;
+            (this as any /* Writeable<TransformResult<T>> */).result = result;
             return true;
         }
         return false;
@@ -48,7 +47,7 @@ export class TransformResult<T = any> {
      */
     public delayResponse(promise: Promise<any>): void {
         if (this.promise === null) {
-            (this as Writeable<TransformResult<T>>).promise = new Promise<TransformResult<T>>((resolve, reject) => {
+            (this as any /* Writeable<TransformResult<T>> */).promise = new Promise<TransformResult<T>>((resolve, reject) => {
                 this.promiseResolve = resolve;
                 this.promiseReject = reject;
             }).then(() => {
@@ -63,7 +62,7 @@ export class TransformResult<T = any> {
             });
         }
         const localPromise: Promise<any> = this.localPromise === null ? promise as Promise<any> : Promise.all([this.localPromise, promise]);
-        (this as Writeable<TransformResult<T>>).localPromise = localPromise;
+        (this as any /* Writeable<TransformResult<T>> */).localPromise = localPromise;
         this.previousPromise = localPromise;
 
         if (this.parent) {
@@ -75,7 +74,7 @@ export class TransformResult<T = any> {
             if (localPromise === this.previousPromise) {
                 (this.promiseResolve as Function)(this);
             }
-            (this as Writeable<TransformResult<T>>).localPromise = null;
+            (this as any /* Writeable<TransformResult<T>> */).localPromise = null;
             return this;
         }).catch(proxy(this.promiseReject as GenericCallback, this));
     }
@@ -95,8 +94,8 @@ export class TransformResult<T = any> {
      * Make the result on error and store the reason.
      */
     public fail(reason: any): void {
-        (this as Writeable<TransformResult<T>>).errorDetail = ExceptionFactory.EnsureException(reason);
-        (this as Writeable<TransformResult>).result = undefined;
+        (this as any /* Writeable<TransformResult<T>> */).errorDetail = ExceptionFactory.EnsureException(reason);
+        (this as any /* Writeable<TransformResult> */).result = undefined;
         this.setStatus(TransformResultStatus.Error);
         if (this.promiseReject !== null) {
             this.promiseReject(reason);
@@ -111,15 +110,15 @@ export class TransformResult<T = any> {
      * Shorthand to update the status and the corresponding flags.
      */
     private setStatus(status: TransformResultStatus): void {
-        (this as Writeable<TransformResult<T>>).status = status;
-        (this as Writeable<TransformResult<T>>).ready = this.status === TransformResultStatus.Ready;
-        (this as Writeable<TransformResult<T>>).error = this.status === TransformResultStatus.Error;
-        (this as Writeable<TransformResult<T>>).waiting = this.status === TransformResultStatus.Waiting;
+        (this as any /* Writeable<TransformResult<T>> */).status = status;
+        (this as any /* Writeable<TransformResult<T>> */).ready = this.status === TransformResultStatus.Ready;
+        (this as any /* Writeable<TransformResult<T>> */).error = this.status === TransformResultStatus.Error;
+        (this as any /* Writeable<TransformResult<T>> */).waiting = this.status === TransformResultStatus.Waiting;
     }
 
     private cleanupAsync(): void {
         this.promiseResolve = null;
         this.promiseReject = null;
-        (this as Writeable<TransformResult<T>>).promise = null;
+        (this as any /* Writeable<TransformResult<T>> */).promise = null;
     }
 }

@@ -1,7 +1,6 @@
-import { HttpMethod } from "@banquette/http/constants";
-import { UrlParameterInterface } from "@banquette/http/url-parameter.interface";
-import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model/type";
-import { StringEnum } from "@banquette/utils-type/types";
+import { HttpMethod, UrlParameterInterface } from "@banquette/http";
+import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model";
+import { StringEnum } from "@banquette/utils-type";
 import { ApiRequest } from "./api-request";
 
 export interface ApiRequestConfig {

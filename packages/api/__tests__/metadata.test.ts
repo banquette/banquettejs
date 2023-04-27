@@ -1,8 +1,6 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { HttpMethod } from "@banquette/http/constants";
-import { ResponseTypeJson } from "@banquette/http/decoder/json.decoder";
-import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
-import { NotEmpty } from "@banquette/validation/type/not-empty";
+import { Injector } from "@banquette/dependency-injection";
+import { HttpMethod, ResponseTypeJson, PayloadTypeJson } from "@banquette/http";
+import { NotEmpty } from "@banquette/validation";
 import { EndpointNotFoundException, ApiEndpointStorageService, ApiEndpoint } from "../src";
 import { endpointParameterDefaults } from "./endpoint.test";
 

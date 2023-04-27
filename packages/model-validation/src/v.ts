@@ -1,4 +1,4 @@
-import { V as Base, VExtend } from "@banquette/validation/v";
+import { V as Base, VExtend } from "@banquette/validation";
 import { Model } from './type/model';
 
 export const V = VExtend({

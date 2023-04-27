@@ -1,1 +1,1 @@
-export { default as FormHiddenComponent } from './hidden.component.vue';
+export { default as BtFormHidden } from './hidden.component.vue';

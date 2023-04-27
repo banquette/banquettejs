@@ -1,4 +1,4 @@
-import { EventArg } from "@banquette/event/event-arg";
+import { EventArg } from "@banquette/event";
 import { HeadlessFormViewModel } from "../headless-form-view.model";
 
 export class BeforeLoadEventArg extends EventArg {

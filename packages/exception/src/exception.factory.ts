@@ -1,7 +1,6 @@
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { Exception } from "./exception";
-import { UsageException } from "./usage.exception";
+import { isObject, isString } from '@banquette/utils-type';
+import { Exception } from './exception';
+import { UsageException } from './usage.exception';
 
 export class ExceptionFactory {
     /**
@@ -15,7 +14,11 @@ export class ExceptionFactory {
      * If the input is not an exception, we will consider it a UsageException by default
      * because Exception and SystemException are abstract.
      */
-    public static EnsureException(input: any, defaultMessage: string = 'Unknown error', previous?: Exception|null): Exception {
+    public static EnsureException(
+        input: any,
+        defaultMessage: string = 'Unknown error',
+        previous?: Exception | null
+    ): Exception {
         if (input instanceof Exception) {
             return input;
         }
@@ -23,10 +26,15 @@ export class ExceptionFactory {
             return new UsageException(input, previous);
         }
         if (input instanceof Error) {
-            return new UsageException(input.toString(), previous, {originalError: input, stack: input.stack});
+            return new UsageException(input.toString(), previous, {
+                originalError: input,
+                stack: input.stack,
+            });
         }
         if (isObject(input) && isString(input.message)) {
-            return new UsageException(input.message, previous, {originalError: input});
+            return new UsageException(input.message, previous, {
+                originalError: input,
+            });
         }
         return new UsageException(defaultMessage, previous);
     }

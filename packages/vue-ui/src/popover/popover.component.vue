@@ -1,30 +1,22 @@
 <style src="./popover.component.css" scoped></style>
 <template src="./popover.component.html" ></template>
 <script lang="ts">
-import { isServer } from "@banquette/utils-misc/is-server";
-import { isNumeric } from "@banquette/utils-type/is-numeric";
-import { Primitive } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
-import { StickToDirective, ClientOnlyComponent, TeleportComponent } from "../misc";
+import { isServer } from "@banquette/utils-misc";
+import { isNumeric, Primitive } from "@banquette/utils-type";
+import { Component, Computed, Expose, Import, Prop, Themeable, Watch, BindThemeDirective, Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { StickToDirective, BtClientOnly, BtTeleport } from "../misc";
 import { PopoverComposable } from "./popover.composable";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-popover',
-    components: [ClientOnlyComponent, TeleportComponent],
+    components: [BtClientOnly, BtTeleport],
     directives: [StickToDirective, BindThemeDirective],
     inheritAttrs: false
 })
-export default class PopoverComponent extends Vue {
+export default class BtPopover extends Vue {
     /**
      * Popover composable.
      */
@@ -35,7 +27,7 @@ export default class PopoverComponent extends Vue {
      * If a `string` is given, it will be used as the name of the transition to apply.
      * `undefined` will use the default transition.
      */
-    @Prop({type: [String, Boolean], default: undefined}) public transition!: string|false|undefined;
+    @Prop({type: [String, Boolean] as PropType<string|false|undefined>, default: undefined}) public transition!: string|false|undefined;
 
     /**
      * If `true` the dropdown content is always rendered, even when hidden.

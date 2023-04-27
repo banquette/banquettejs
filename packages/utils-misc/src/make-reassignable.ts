@@ -1,6 +1,4 @@
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { AnyObject } from "@banquette/utils-type/types";
+import { isObject, isUndefined, AnyObject } from '@banquette/utils-type';
 
 // An internal symbol to ensure no false positive.
 const ProxySymbol = Symbol();
@@ -38,7 +36,7 @@ export function makeReassignable<T extends object = any>(obj: T): T {
         enumerable: false,
         configurable: true,
         writable: true,
-        value: obj
+        value: obj,
     });
     return new Proxy(wrapped, {
         get(target: any, p: string | symbol, receiver: any): any {
@@ -54,7 +52,12 @@ export function makeReassignable<T extends object = any>(obj: T): T {
             if (p === ProxySymbol) {
                 wrapped.__bt_reassignable = value[ProxySymbol];
             } else {
-                Reflect.set(wrapped.__bt_reassignable, p, value, wrapped.__bt_reassignable);
+                Reflect.set(
+                    wrapped.__bt_reassignable,
+                    p,
+                    value,
+                    wrapped.__bt_reassignable
+                );
             }
             return true;
         },
@@ -68,8 +71,11 @@ export function makeReassignable<T extends object = any>(obj: T): T {
             return key in target.__bt_reassignable;
         },
         getOwnPropertyDescriptor(target: any, key: string | symbol) {
-            return Object.getOwnPropertyDescriptor(target.__bt_reassignable, key);
-        }
+            return Object.getOwnPropertyDescriptor(
+                target.__bt_reassignable,
+                key
+            );
+        },
     });
 }
 

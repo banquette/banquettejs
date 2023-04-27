@@ -7,14 +7,33 @@
         "directory": "packages/utils-reflection"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/utils-reflection.umd.cjs",
+    "module": "./dist/utils-reflection.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/utils-reflection.js",
+            "require": "./dist/utils-reflection.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
     "dependencies": {
         "reflect-metadata": "^0.1.13",
-        "@banquette/exception": "0.0.0",
-        "@banquette/utils-string": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
-    },
-    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+        "@banquette/exception": "workspace:^",
+        "@banquette/utils-string": "workspace:^",
+        "@banquette/utils-type": "workspace:^"
+    }
 }

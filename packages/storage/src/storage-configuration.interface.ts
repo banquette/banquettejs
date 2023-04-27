@@ -1,4 +1,4 @@
-import { ConfigurationInterface } from "@banquette/config/config/configuration.interface";
+import { ConfigurationInterface } from "@banquette/config";
 import { AdapterIdentifier } from "./types";
 
 export interface StorageConfigurationInterface extends ConfigurationInterface {

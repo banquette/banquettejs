@@ -1,32 +1,32 @@
-import { EventPipeline } from "@banquette/event/pipeline/event-pipeline";
-import { BasicState } from "@banquette/form/constant";
-import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { HeadlessControlViewDataInterface } from "@banquette/ui/form/headless-control-view-data.interface";
-import { HeadlessControlViewModel } from "@banquette/ui/form/headless-control.view-model";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { GenericCallback } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { EventPipeline } from "@banquette/event";
+import { BasicState } from "@banquette/form";
+import { StateChangedFormEvent } from "@banquette/form";
+import { ValueChangedFormEvent } from "@banquette/form";
+import { FormViewControlInterface } from "@banquette/form";
+import { HeadlessControlViewDataInterface } from "@banquette/ui";
+import { HeadlessControlViewModel } from "@banquette/ui";
+import { proxy } from "@banquette/utils-misc";
+import { isUndefined } from "@banquette/utils-type";
+import { GenericCallback } from "@banquette/utils-type";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Import } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
 import { ViewModelEvents, ViewModelSequence, UndefinedValue } from "./constant";
-import { FormComponent } from "./form";
+import { BtForm } from "./form";
 import { FormControlProxy } from "./form-control.proxy";
+
+let MaxId = 0;
 
 @Component({
     emits: ['change', 'focus', 'blur', 'update:modelValue']
 })
-export abstract class AbstractVueFormComponent<
+export abstract class BtAbstractVueForm<
     ViewDataType extends HeadlessControlViewDataInterface = HeadlessControlViewDataInterface,
     ViewModelType extends HeadlessControlViewModel<ViewDataType> = HeadlessControlViewModel<ViewDataType>
 > extends Vue {
-    private static MaxId: number = 0;
-
     // "v-model" recipient
     @Prop({default: UndefinedValue}) public modelValue!: any;
 
@@ -56,7 +56,7 @@ export abstract class AbstractVueFormComponent<
     @Prop({type: Boolean, default: false}) public autofocus!: boolean;
 
     /**
-     * A wrapper around the form control so we don't have to check if it is available or not.
+     * A wrapper around the form control, so we don't have to check if it is available or not.
      */
     @Import(FormControlProxy, false) public proxy!: FormControlProxy;
 
@@ -97,7 +97,7 @@ export abstract class AbstractVueFormComponent<
     /**
      * Vue lifecycle hook.
      */
-    public beforeMount() {
+    public created() {
         const result = this.eventPipeline.start(ViewModelSequence.Initialize);
         if (result.promise) {
             result.promise.catch(() => {
@@ -117,7 +117,7 @@ export abstract class AbstractVueFormComponent<
         }
         // Special shortcut if in bt-form-generic.
         const parentFormGeneric: any = this.getParent('bt-form');
-        if (parentFormGeneric !== null && parentFormGeneric instanceof FormComponent) {
+        if (parentFormGeneric !== null && parentFormGeneric instanceof BtForm) {
             this.proxy.setFallbackForm(parentFormGeneric.vm.form);
             this.proxy.setFallbackGetControl(proxy(parentFormGeneric.vm.getControl, parentFormGeneric.vm));
         }
@@ -243,7 +243,7 @@ export abstract class AbstractVueFormComponent<
      */
     private configureProxy(): void {
         this.proxy.setViewModel({
-            id: ++AbstractVueFormComponent.MaxId,
+            id: ++MaxId,
             setValue: (controlValue: any): void => {
                 this.vm.control.updateValueFromControl(controlValue);
             },

@@ -1,4 +1,4 @@
-import { HttpResponse } from "@banquette/http/http-response";
+import { HttpResponse } from "@banquette/http";
 import { AfterPersistEventArg } from "./after-persist.event-arg";
 
 export class AfterRemotePersistEventArg extends AfterPersistEventArg {

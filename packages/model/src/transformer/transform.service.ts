@@ -1,14 +1,8 @@
-import { InjectMultiple } from "@banquette/dependency-injection/decorator/inject-multiple.decorator";
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { ResolveCallback, RejectCallback } from "@banquette/promise/types";
-import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Complete, Constructor } from "@banquette/utils-type/types";
+import { InjectMultiple, Inject, Service } from "@banquette/dependency-injection";
+import { ExceptionFactory } from "@banquette/exception";
+import { ResolveCallback, RejectCallback } from "@banquette/promise";
+import { getSymbolDescription } from "@banquette/utils-object";
+import { isArray, isFunction, isNullOrUndefined, isUndefined, Complete, Constructor } from "@banquette/utils-type";
 import { ModelTransformerTag } from "../constants";
 import { NoCompatibleTransformerFoundException } from "../exception/no-compatible-transformer-found.exception";
 import { TransformFailedException } from "../exception/transform-failed.exception";
@@ -28,7 +22,7 @@ export class TransformService {
     public constructor(@Inject(ModelMetadataService) private modelMetadata: ModelMetadataService,
                        @Inject(ModelTransformMetadataService) private transformMetadata: ModelTransformMetadataService,
                        @InjectMultiple(ModelTransformerTag) private transformers: RootTransformerInterface[]) {
-
+        console.warn("#TransformService");
     }
 
     /**

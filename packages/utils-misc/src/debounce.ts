@@ -1,4 +1,4 @@
-import { GenericCallback } from "@banquette/utils-type/types";
+import { GenericCallback } from '@banquette/utils-type';
 
 /**
  * Ensure a function is only called after not being called for a certain amount of time.
@@ -9,9 +9,13 @@ import { GenericCallback } from "@banquette/utils-type/types";
  *
  * @returns function
  */
-export function debounce(func: GenericCallback, wait: number, immediate: boolean = true): GenericCallback {
-    let timeout: number|NodeJS.Timeout|null = null;
-    return function() {
+export function debounce(
+    func: GenericCallback,
+    wait: number,
+    immediate: boolean = true
+): GenericCallback {
+    let timeout: number | NodeJS.Timeout | null = null;
+    return function () {
         // @ts-ignore
         const context = this;
         const args: any = arguments;

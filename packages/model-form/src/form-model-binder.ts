@@ -1,31 +1,20 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
-import { FormArray } from "@banquette/form/form-array";
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
-import { FormControl } from "@banquette/form/form-control";
-import { FormGroupInterface } from "@banquette/form/form-group.interface";
-import { FormObject } from "@banquette/form/form-object";
-import { ModelMetadataService } from "@banquette/model/model-metadata.service";
-import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
-import { ModelWatcherService } from "@banquette/model/model-watcher.service";
-import { TransformResult } from "@banquette/model/transform-result";
-import { TransformContext } from "@banquette/model/transformer/transform-context";
-import { TransformService } from "@banquette/model/transformer/transform.service";
-import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
-import { ModelFactory } from "@banquette/model/type";
-import { ensureCompleteTransformer } from "@banquette/model/utils";
-import { MutationType, MutationEvent } from "@banquette/object-observer/index";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Complete, Constructor } from "@banquette/utils-type/types";
+import { Inject, Module } from "@banquette/dependency-injection";
+import { ExceptionFactory, UsageException } from "@banquette/exception";
+import { ValueChangedFormEvent, ComponentNotFoundException, FormArray, FormComponentInterface, FormControl, FormGroupInterface, FormObject } from "@banquette/form";
+import {
+    ModelMetadataService,
+    ModelTransformMetadataService,
+    ModelWatcherService,
+    TransformResult,
+    TransformContext,
+    TransformService,
+    TransformerInterface,
+    ModelFactory,
+    ensureCompleteTransformer
+} from "@banquette/model";
+import { MutationType, MutationEvent } from "@banquette/object-observer";
+import { proxy } from "@banquette/utils-misc";
+import { ensureArray, isObject, isUndefined, Complete, Constructor } from "@banquette/utils-type";
 import { FormControlTransformerSymbol, FormArrayTransformerSymbol, FormObjectTransformerSymbol } from "./contants";
 import { FormControl as FormControlTransformer } from "./transformer/form-control";
 import { FormObject as FormObjectTransformer } from "./transformer/form-object";
@@ -199,6 +188,7 @@ export class FormModelBinder {
                     modelValue,
                     i
                 );
+                this.popContext();
             }
         }
     }
@@ -255,6 +245,9 @@ export class FormModelBinder {
             if (!component) {
                 return null;
             }
+            if (formContainer instanceof FormArray) {
+                property = parseInt(property + '', 10);
+            }
             formContainer.set(property, component);
             return {component, isNew: true};
         }
@@ -274,51 +267,43 @@ export class FormModelBinder {
             return ;
         }
         let contextsDepth = 0;
+        const pathParts = event.mutation.pathParts;
+        const lastPathPart = pathParts[pathParts.length - 1];
+        const pushContext = (ctor: Constructor, property: string, value: any) => ++contextsDepth && this.pushContext(ctor, property, value);
         try {
-            const pathParts = event.mutation.path.split('/');
             let formContainer: FormGroupInterface = this.form;
             let modelContainer = this.model;
             let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
-            const pushContext = (ctor: Constructor, property: string, value: any) => ++contextsDepth && this.pushContext(ctor, property, value);
-            let i;
-
-            for (i = 1; i < pathParts.length; ++i) {
+            let lastCtor = this.model.constructor;
+            for (let i = 0; i < pathParts.length; ++i) {
                 let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
-                if (treeChildName === '*' && event.mutation.type === MutationType.Insert && isArray(event.mutation.target)) {
-                    pushContext(this.currentContextCtor, pathParts[i - 1], modelContainer);
-                    continue;
-                }
                 treeContainer = treeContainer.children[treeChildName];
                 if (isUndefined(treeContainer)) {
-                    return;
+                    return ;
                 }
-                if (i > 1) {
+                if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
+                    lastCtor = treeContainer.ctor;
+                }
+                if (i > 0) {
                     formContainer = (formContainer as FormGroupInterface).get<FormGroupInterface>(pathParts[i - 1]);
                     modelContainer = modelContainer[pathParts[i - 1]];
                 }
-                if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                    pushContext(treeContainer.ctor, pathParts[i], modelContainer);
-                }
+                pushContext(treeChildName === '*' ? Array : lastCtor, pathParts[i], modelContainer);
+
                 // Required if a change is made to an object used as value in a FormControl.
                 // If we do nothing the "path" will lead the binder deep inside the value of the FormControl,
                 // which is not a valid form tree, so we must stop when a FormControl is reached.
                 if (treeContainer.transformer.type === FormControlTransformerSymbol) {
-                    pushContext(this.currentContextCtor, pathParts[i], modelContainer);
                     break;
                 }
             }
-            if (!isString(this.currentContextProperty)) {
-                return;
-            }
             this.mutateForm(() => {
-                const cp = this.currentContextProperty as string;
                 if (treeContainer.transformer.type === FormControlTransformerSymbol) {
-                    this.syncFormControlWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
+                    this.syncFormControlWithModelAttribute(treeContainer, formContainer, modelContainer, lastPathPart);
                 } else if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                    pushContext(modelContainer.constructor as Constructor, cp, modelContainer);
-                    this.syncFormObjectWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
+                    this.syncFormObjectWithModelAttribute(treeContainer, formContainer, modelContainer, lastPathPart);
                 } else if (treeContainer.transformer.type === FormArrayTransformerSymbol) {
-                    this.syncFormArrayWithModelAttribute(treeContainer, formContainer, modelContainer, cp);
+                    this.syncFormArrayWithModelAttribute(treeContainer, formContainer, modelContainer, lastPathPart);
                 }
             });
         } finally {
@@ -383,7 +368,7 @@ export class FormModelBinder {
     }
 
     /**
-     * Take a raw Transform result and ensure it is synchronise and not in error.
+     * Take a raw Transform result and ensure it is synchronised and not in error.
      * Throw an exception otherwise.
      */
     private handleTransformResult<T>(result: TransformResult): T {
@@ -428,8 +413,6 @@ export class FormModelBinder {
             // So by iterating over whatever number of nested FormArray we have
             // we ensure that we will end up with another type of form transformer (so FormObject or FormControl).
             while (transformer.type === FormArrayTransformerSymbol) {
-                propertyTree.transformer = transformer;
-
                 // '*' is used as a wildcard to replace the numeric index of the array.
                 // Because the processing will always be the same for each item of a FormArray.
                 propertyTree.children = {'*': {}};
@@ -459,6 +442,9 @@ export class FormModelBinder {
                 // This type of transformer only allow a value transformer as child.
                 propertyTree.valueTransformer = transformer.getChild();
             }
+        }
+        if (!stack.length) {
+            this.transformersTrees.set(ctor, output);
         }
         return output;
     }

@@ -1,6 +1,5 @@
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive } from "@banquette/utils-type/types";
-import { HttpHeadersExceptionsMap } from "./constants";
+import { isUndefined, Primitive } from '@banquette/utils-type';
+import { HttpHeadersExceptionsMap } from './constants';
 
 export class HeadersBag {
     private bag: Record<string, string> = {};
@@ -15,7 +14,10 @@ export class HeadersBag {
     /**
      * Get a header by name.
      */
-    public get(name: string, defaultValue: string|null = null): string|null {
+    public get(
+        name: string,
+        defaultValue: string | null = null
+    ): string | null {
         name = this.normalizeName(name);
         return this.bag[name] || defaultValue;
     }
@@ -65,6 +67,6 @@ export class HeadersBag {
             .replace(/\s+/g, '-')
             .split('-')
             .map((text) => text[0].toUpperCase() + text.substr(1).toLowerCase())
-            .join('-')
+            .join('-');
     }
 }

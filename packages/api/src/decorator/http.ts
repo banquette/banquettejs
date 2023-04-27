@@ -1,6 +1,4 @@
-import { createTransformableDecorator } from "@banquette/model/decorator/utils";
-import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
-import { Raw } from "@banquette/model/transformer/type/raw";
+import { createTransformableDecorator, TransformerInterface, Raw } from "@banquette/model";
 import { HttpTransformerSymbol } from "../transformer/http";
 
 export function Http(transformer: TransformerInterface = Raw()): any {

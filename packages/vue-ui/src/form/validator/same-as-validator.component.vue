@@ -1,12 +1,12 @@
 <script lang="ts">
-import { SameAs } from "@banquette/validation/type/same-as";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { SameAs } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
-@Component({name: 'bt-validate-same-as', template: false})
-export default class ValidateSameAsComponent extends ValidatorComponent {
+@Component('bt-validate-same-as')
+export default class BtValidateSameAs extends BtValidator {
     @Prop({type: String, required: true}) public path!: string;
 
     /**
@@ -17,3 +17,4 @@ export default class ValidateSameAsComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

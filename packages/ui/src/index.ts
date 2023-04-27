@@ -2,7 +2,15 @@
 export * from './table/exception/fetch-failed.exception';
 export * from './table/exception/invalid-server-response.exception';
 export * from './table/constant';
+export * from './table/ordering/constant';
+export * from './table/ordering/ordering.module';
+export * from './table/filtering/filtering.module';
 export * from './table/table-view-model';
+export * from './table/pagination/constant';
+export * from './table/pagination/pagination.module';
+
+export * from './misc/remote/remote.module';
+
 
 // Tree
 export * from './tree/event/node-removed.event-arg';
@@ -36,6 +44,7 @@ export * from './form/text/headless-text-view.model';
 export * from './form/text/headless-text-view-data.interface';
 
 // Checkbox
+export * from './form/checkbox/constant';
 export * from './form/checkbox/headless-checkbox-view.model';
 export * from './form/checkbox/headless-checkbox-view-data.interface';
 

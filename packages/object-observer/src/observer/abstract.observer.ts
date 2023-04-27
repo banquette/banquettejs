@@ -1,12 +1,8 @@
-import { EventArg } from "@banquette/event/event-arg";
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { MatchType } from "@banquette/utils-glob/constant";
-import { match } from "@banquette/utils-glob/match";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { EventArg, EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { MatchType, match } from "@banquette/utils-glob";
+import { proxy } from "@banquette/utils-misc";
+import { isObject, isUndefined } from "@banquette/utils-type";
 import { ObserverEvents, MutationType, ObserverInstance } from "../constant";
 import { MutationEvent } from "../event/mutation.event";
 import { MutationsCollectionEvent } from "../event/mutations-collection.event";
@@ -43,7 +39,7 @@ export abstract class AbstractObserver<T extends object> {
     public readonly proxy: T;
 
     /**
-     * The dispatcher responsible of emitting the events to the outside.
+     * The dispatcher responsible for emitting the events to the outside.
      * Only created when `subscribe()` is called.
      */
     private eventDispatcher: EventDispatcher|null = null;
@@ -62,6 +58,7 @@ export abstract class AbstractObserver<T extends object> {
     public constructor(name: string,
                        protected target: T,
                        parent: AbstractObserver<any>|null = null) {
+        console.warn('#AbstractObserver');
         if (parent !== null) {
             this.parents.push({name, parent});
         }
@@ -239,10 +236,10 @@ export abstract class AbstractObserver<T extends object> {
                 return value;
             }
         }
-        if (ObserverFactory.Supports(value)) {
-            const observer = ObserverFactory.Create(value, this, key);
-            return observer.proxy;
-        }
+        // if (ObserverFactory.Supports(value)) {
+        //     const observer = ObserverFactory.Create(value, this, key);
+        //     return observer.proxy;
+        // }
         return value;
     }
 

@@ -1,4 +1,4 @@
-import { ensureArray } from "@banquette/utils-type/ensure-array";
+import { ensureArray } from "@banquette/utils-type";
 import { AbstractVirtualContainer } from "../abstract-virtual-container";
 import { ValidationContextInterface } from "../validation-context.interface";
 import { ValidationResult } from "../validation-result";

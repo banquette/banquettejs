@@ -1,47 +1,48 @@
 <style src="./button.component.css" scoped></style>
 <template src="./button.component.html" ></template>
 <script lang="ts">
-import { parseCssDuration } from "@banquette/utils-dom/parse-css-duration";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { VoidCallback } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Lifecycle } from "@banquette/vue-typescript/decorator/lifecycle.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
-import { ThemeVar } from "@banquette/vue-typescript/decorator/theme-var.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { parseCssDuration } from "@banquette/utils-dom";
+import { proxy } from "@banquette/utils-misc";
+import { VoidCallback } from "@banquette/utils-type";
+import { Component } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Lifecycle } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Ref } from "@banquette/vue-typescript";
+import { ThemeVar } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { BindThemeDirective } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 import { ClickOutsideDirective } from "../../misc/click-outside.directive";
-import { ProgressCircularComponent } from "../../progress/progress-circular";
+import { BtProgressCircular } from "../../progress/progress-circular";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-button',
-    components: [ProgressCircularComponent],
+    components: [BtProgressCircular],
     directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['click']
 })
-export default class ButtonComponent extends Vue {
+export default class BtButton extends Vue {
     /**
      * The URL to redirect to when the button is clicked.
      * If defined, the root component will be a `<a>` instead of a `<button>`.
      */
-    @Prop({type: String, default: null}) public href!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public href!: string|null;
 
     /**
      * Define the "target" attribute of the root element.
      * Only applicable if `href` is defined and thus the root element is a `<a>`.
      */
-    @Prop({type: String, default: null}) public target!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public target!: string|null;
 
     /**
      * When `true`, the button is grayed out and non-interactive.
      */
-    @Prop({type: Boolean, default: false}) public disabled!: true|null;
+    @Prop({type: Boolean, default: false}) public disabled!: boolean;
 
     /**
      * When `true` the button is disabled and indicates that it's doing something by replacing its content with a loader.
@@ -51,24 +52,24 @@ export default class ButtonComponent extends Vue {
     /**
      * A text to show next to the loader when the button is working.
      */
-    @Prop({type: String, default: null}) public workingText!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public workingText!: string|null;
 
     /**
      * Percentage of progress to pass to the loader when the button is working.
      * If `null` (the default value), the loader progress is undetermined.
      */
-    @Prop({type: Number, default: null}) public workingProgress!: number|null;
+    @Prop({type: Number as PropType<number|null>, default: null}) public workingProgress!: number|null;
 
     /**
      * External toggle status for the "toggle" slot.
      */
-    @Prop({name: 'toggled', type: Boolean, default: null}) public toggledProp!: boolean|null;
+    @Prop({name: 'toggled', type: Boolean as PropType<boolean|null>, default: null}) public toggledProp!: boolean|null;
 
     /**
      * Name of the transition to apply when the toggle slot is shown / hidden.
      * If `false`, disable the transition.
      */
-    @Prop({type: [String, Boolean], default: false}) public toggleTransition!: string|false|undefined;
+    @Prop({type: [String, Boolean] as PropType<string|false|undefined>, default: false}) public toggleTransition!: string|false|undefined;
 
     @ThemeVar({
         name: 'animation.clickDuration',

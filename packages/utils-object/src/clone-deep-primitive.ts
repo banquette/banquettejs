@@ -1,6 +1,4 @@
-import { isArray } from "@banquette/utils-type/is-array";
-import { isPojo } from "@banquette/utils-type/is-pojo";
-import { isPrimitive } from "@banquette/utils-type/is-primitive";
+import { isArray, isPojo, isPrimitive } from '@banquette/utils-type';
 
 let stack: any[] = [];
 

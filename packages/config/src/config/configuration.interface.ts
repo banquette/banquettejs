@@ -1,9 +1,18 @@
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor } from '@banquette/utils-type';
 
 /**
  * Represent a valid configuration value.
  */
-export type ConfigurationValue = string | number | boolean | null | symbol | undefined | Constructor | ConfigurationInterface | Array<ConfigurationValue>;
+export type ConfigurationValue =
+    | string
+    | number
+    | boolean
+    | null
+    | symbol
+    | undefined
+    | Constructor
+    | ConfigurationInterface
+    | Array<ConfigurationValue>;
 
 /**
  * Interface all configuration objects stored in the ConfigurationService service must conform with.

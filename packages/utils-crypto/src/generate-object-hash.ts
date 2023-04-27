@@ -1,5 +1,5 @@
-import { ensureSerializable } from "@banquette/utils-type/ensure-serializable";
-import { md5 } from "./md5";
+import { ensureSerializable } from '@banquette/utils-type';
+import { md5 } from './md5';
 
 /**
  * Generates a unique hash for an object.

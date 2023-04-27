@@ -1,4 +1,4 @@
-import { SelectedChoice } from "@banquette/ui/form/select/selected-choice";
+import { SelectedChoice } from "@banquette/ui";
 
 /**
  * Wrap a SelectedChoice to add a `visible` flag.

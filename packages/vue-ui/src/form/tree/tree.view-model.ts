@@ -1,5 +1,5 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { HeadlessControlViewModel } from "@banquette/ui/form/headless-control.view-model";
+import { FormViewControlInterface } from "@banquette/form";
+import { HeadlessControlViewModel } from "@banquette/ui";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { TreeViewDataInterface } from "./tree-view-data.interface";
 

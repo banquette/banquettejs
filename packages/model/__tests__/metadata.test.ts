@@ -1,16 +1,6 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import {
-    Alias,
-    ModelAliasNotFoundException,
-    Pojo,
-    ModelMetadataService,
-    ModelTransformMetadataService,
-    Factory,
-    PojoTransformerSymbol,
-    Primitive,
-    Type
-} from "../src";
-import { UsageException } from "@banquette/exception/usage.exception";
+import { Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { Alias, ModelAliasNotFoundException, Pojo, ModelMetadataService, ModelTransformMetadataService, Factory, PojoTransformerSymbol, Primitive, Type } from "../src";
 import { checkIfPropertyTransformer } from "./utils";
 
 describe('Create manually', () => {

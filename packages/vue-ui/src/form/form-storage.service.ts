@@ -1,7 +1,7 @@
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { FormGroupInterface } from "@banquette/form/form-group.interface";
-import { WeakObjectMap } from "@banquette/utils-misc/weak-object-map";
+import { Service } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { FormGroupInterface } from "@banquette/form";
+import { WeakObjectMap } from "@banquette/utils-misc";
 
 @Service()
 export class FormStorageService extends WeakObjectMap<FormGroupInterface> {

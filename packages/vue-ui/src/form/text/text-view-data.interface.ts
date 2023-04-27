@@ -1,4 +1,4 @@
-import { HeadlessTextViewDataInterface } from "@banquette/ui/form/text/headless-text-view-data.interface";
+import { HeadlessTextViewDataInterface } from "@banquette/ui";
 import { BaseInputViewDataInterface } from "../base-input/base-input-view-data.interface";
 
 export interface TextViewDataInterface extends HeadlessTextViewDataInterface {

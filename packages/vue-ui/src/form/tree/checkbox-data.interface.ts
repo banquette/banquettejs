@@ -1,4 +1,4 @@
-import { FormControl } from "@banquette/form/form-control";
+import { FormControl } from "@banquette/form";
 
 export interface CheckboxDataInterface {
     control: FormControl;

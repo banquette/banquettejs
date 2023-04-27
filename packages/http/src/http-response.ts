@@ -1,21 +1,21 @@
-import { ObservablePromise } from "@banquette/promise/observable-promise";
-import { HttpResponseStatus } from "./constants";
-import { NetworkException } from "./exception/network.exception";
-import { RequestException } from "./exception/request.exception";
-import { HttpRequest } from "./http-request";
+import { ObservablePromise } from '@banquette/promise';
+import { HttpResponseStatus } from './constants';
+import { NetworkException } from './exception/network.exception';
+import { RequestException } from './exception/request.exception';
+import { HttpRequest } from './http-request';
+
+let MaxId = 0;
 
 export class HttpResponse<T> {
-    private static MaxId = 0;
-
     /**
      * Unique id of the response.
      */
-    public readonly id =  ++HttpResponse.MaxId;
+    public readonly id = ++MaxId;
 
     /**
      * Final URL of the response, may be different from the request url in case of redirects.
      */
-    public url!: string|null;
+    public url!: string | null;
 
     /**
      * Holds the status of the request.
@@ -64,7 +64,7 @@ export class HttpResponse<T> {
     /**
      * Holds the error details in case the status becomes HttpResponseStatus.Error.
      */
-    public error: RequestException|NetworkException|null = null;
+    public error: RequestException | NetworkException | null = null;
 
     /**
      * The result of the request.
@@ -83,9 +83,11 @@ export class HttpResponse<T> {
      */
     public readonly request: HttpRequest;
 
-    public constructor(request: HttpRequest,
-                       status: HttpResponseStatus = HttpResponseStatus.Pending,
-                       promise: ObservablePromise<HttpResponse<T>>) {
+    public constructor(
+        request: HttpRequest,
+        status: HttpResponseStatus = HttpResponseStatus.Pending,
+        promise: ObservablePromise<HttpResponse<T>>
+    ) {
         this.request = request;
         this.promise = promise;
         this.setStatus(status);

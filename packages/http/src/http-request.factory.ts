@@ -1,29 +1,25 @@
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { isValidNumber } from "@banquette/utils-type/is-valid-number";
-import { Primitive, StringEnum } from "@banquette/utils-type/types";
-import { HttpMethod, UrlParameterType } from "./constants";
-import { ResponseTypeAutoDetect } from "./decoder/auto-detect.decoder";
-import { PayloadTypeFormData } from "./encoder/form-data.encoder";
-import { HttpRequest } from "./http-request";
-import { UrlParameterInterface } from "./url-parameter.interface";
+import { ensureArray, isObject, isUndefined, isValidNumber, Primitive, StringEnum, } from '@banquette/utils-type';
+import { HttpMethod, UrlParameterType } from './constants';
+import { ResponseTypeAutoDetect } from './decoder/auto-detect.decoder';
+import { PayloadTypeFormData } from './encoder/form-data.encoder';
+import { HttpRequest } from './http-request';
+import { UrlParameterInterface } from './url-parameter.interface';
 
 export interface HttpRequestFactoryConfig {
     method?: StringEnum<HttpMethod>;
     url: string;
-    params?: Record<string, UrlParameterInterface|Primitive>;
+    params?: Record<string, UrlParameterInterface | Primitive>;
     payload?: any;
     payloadType?: symbol;
     responseType?: symbol;
     headers?: any;
-    timeout?: number|null;
-    retry?: number|null;
-    retryDelay?: number|'auto'|null;
-    priority?: number|null;
-    withCredentials?: boolean|null;
-    mimeType?: string|null;
-    tags?: symbol|symbol[]|null;
+    timeout?: number | null;
+    retry?: number | null;
+    retryDelay?: number | 'auto' | null;
+    priority?: number | null;
+    withCredentials?: boolean | null;
+    mimeType?: string | null;
+    tags?: symbol | symbol[] | null;
     extras?: any;
 }
 
@@ -34,7 +30,9 @@ export class HttpRequestFactory {
     public static Create(input: HttpRequestFactoryConfig): HttpRequest {
         const params = input.params || {};
         for (const key of Object.keys(params)) {
-            params[key] = !isObject(params[key]) ? {type: UrlParameterType.Auto, value: String(params[key])} : params[key];
+            params[key] = !isObject(params[key])
+                ? { type: UrlParameterType.Auto, value: String(params[key]) }
+                : params[key];
         }
         return new HttpRequest(
             input.method || HttpMethod.GET,

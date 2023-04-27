@@ -1,62 +1,37 @@
-import { RemoteException } from "@banquette/api/exception/remote.exception";
-import { ApiTransformerSymbol } from "@banquette/api/transformer/api";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { EventArg } from "@banquette/event/event-arg";
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ExceptionFactory } from "@banquette/exception/exception.factory";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { BasicState } from "@banquette/form/constant";
-import { FormEvent } from "@banquette/form/event/form-event";
-import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
-import { ValidationEndFormEvent } from "@banquette/form/event/validation-end.form-event";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { ComponentNotFoundException } from "@banquette/form/exception/component-not-found.exception";
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
-import { FormControl } from "@banquette/form/form-control";
-import { FormError } from "@banquette/form/form-error";
-import { FormObject } from "@banquette/form/form-object";
-import { HttpResponse } from "@banquette/http/http-response";
-import { FormModelBinder } from "@banquette/model-form/form-model-binder";
-import { FormTransformerSymbol } from "@banquette/model-form/transformer/root/form";
-import { ModelMetadataService } from "@banquette/model/model-metadata.service";
-import { TransformResult } from "@banquette/model/transform-result";
-import { TransformService } from "@banquette/model/transformer/transform.service";
-import { PojoTransformerSymbol } from "@banquette/model/transformer/type/root/pojo";
-import { ModelExtendedIdentifier } from "@banquette/model/type";
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { makeReassignable } from "@banquette/utils-misc/make-reassignable";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { extend } from "@banquette/utils-object/extend";
-import { filterWithMask } from "@banquette/utils-object/filter-with-mask";
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isObject, isObjectLiteral } from "@banquette/utils-type/is-object";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Writeable, Constructor } from "@banquette/utils-type/types";
+import { RemoteException, ApiTransformerSymbol } from "@banquette/api";
+import { Injector } from "@banquette/dependency-injection";
+import { EventArg, EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { ExceptionFactory, UsageException } from "@banquette/exception";
+import {
+    BasicState,
+    FormEvent,
+    StateChangedFormEvent,
+    ValidationEndFormEvent,
+    ValueChangedFormEvent,
+    ComponentNotFoundException,
+    FormComponentInterface,
+    FormControl,
+    FormError,
+    FormObject
+} from "@banquette/form";
+import { HttpResponse } from "@banquette/http";
+import { ModelMetadataService, TransformResult, TransformService, PojoTransformerSymbol, ModelExtendedIdentifier } from "@banquette/model";
+import { FormModelBinder, FormTransformerSymbol } from "@banquette/model-form";
+import { areEqual, makeReassignable, proxy } from "@banquette/utils-misc";
+import { extend, filterWithMask, getObjectValue } from "@banquette/utils-object";
+import { ensureArray, isObject, isObjectLiteral, isPromiseLike, isUndefined, Writeable, Constructor } from "@banquette/utils-type";
 import { HeadlessInterface } from "../../headless.interface";
 import { RemoteModule } from "../../misc/remote/remote.module";
-import {
-    Action,
-    Status,
-    FormTag,
-    FormLoadTag,
-    ErrorType,
-    ErrorTypeStatusMap,
-    FormPersistTag,
-    HeadlessFormViewModelEvents,
-    ErrorTypeEventMap
-} from "./constant";
-import { AfterBindModelEventArg } from "./event/after-bind-model.event-arg";
-import { AfterValidateEventArg } from "./event/after-validate.event-arg";
-import { BeforeBindModelEventArg } from "./event/before-bind-model.event-arg";
-import { BeforeValidateEventArg } from "./event/before-validate.event-arg";
+import { Action, Status, FormTag, FormLoadTag, ErrorType, ErrorTypeStatusMap, FormPersistTag, HeadlessFormViewModelEvents, ErrorTypeEventMap } from "./constant";
 import { ActionErrorEventArg } from "./event/action-error.event-arg";
+import { AfterBindModelEventArg } from "./event/after-bind-model.event-arg";
 import { AfterPersistEventArg } from "./event/after-persist.event-arg";
 import { AfterRemotePersistEventArg } from "./event/after-remote-persist.event-arg";
-import { BeforePersistEventArg } from "./event/before-persist.event-arg";
+import { AfterValidateEventArg } from "./event/after-validate.event-arg";
+import { BeforeBindModelEventArg } from "./event/before-bind-model.event-arg";
 import { BeforeLoadEventArg } from "./event/before-load.event-arg";
+import { BeforePersistEventArg } from "./event/before-persist.event-arg";
+import { BeforeValidateEventArg } from "./event/before-validate.event-arg";
 import { RemoteValidationException } from "./exception/remote-validation.exception";
 import { HeadlessFormViewDataInterface } from "./headless-form-view-data.interface";
 
@@ -130,6 +105,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     private eventDispatcher = new EventDispatcher();
 
     public constructor() {
+        console.warn("#HeadlessFormViewModel");
         this.setViewData({
             errorsMap: {},
             getControl: proxy(this.getControl, this),
@@ -167,7 +143,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     public setViewData(viewData: ViewDataType): void {
         const that = this;
-        (this as Writeable<HeadlessFormViewModel>).viewData = extend(viewData, {
+        (this as any /* Writeable<HeadlessFormViewModel> */).viewData = extend(viewData, {
             form: {
                 invalid         : false,
                 notValidated    : true,
@@ -264,7 +240,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     return ;
                 }
                 if (this.modelInstance !== null) {
-                    (this as Writeable<HeadlessFormViewModel>).modelInstance = makeReassignable(this.modelInstance);
+                    (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = makeReassignable(this.modelInstance);
                 }
                 this.form.enable();
                 this.form.reset();
@@ -337,7 +313,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                             response.result = maybeValidationException;
                         }
                         if (response.result instanceof RemoteValidationException) {
-                            this.setError(ErrorType.Validate, null);
+                            this.setError(ErrorType.Persist, response.result);
                             this.bindPersistErrorsToForm(response.result);
                         } else {
                             throw e;
@@ -537,8 +513,8 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
             this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeBindModel, new BeforeBindModelEventArg(this.modelInstance));
 
             const binder = Injector.Get(FormModelBinder);
-            (this as Writeable<HeadlessFormViewModel>).modelInstance = binder.bind(this.modelInstance, this.form);
-            (this as Writeable<HeadlessFormViewModel>).binder = binder;
+            (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = binder.bind(this.modelInstance, this.form);
+            (this as any /* Writeable<HeadlessFormViewModel> */).binder = binder;
 
             this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.AfterBindModel, new AfterBindModelEventArg(this.modelInstance, binder));
         }
@@ -561,7 +537,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     if (!this.isValidModelInstance(response.result)) {
                         if (isObject(response.result)) {
                             this.getTransformService().transformInverse(response.result, this._modelType as Constructor, ApiTransformerSymbol).onReady().then((transformResult: TransformResult) => {
-                                (this as Writeable<HeadlessFormViewModel>).modelInstance = transformResult.result;
+                                (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = transformResult.result;
                                 resolve();
                             }, reject);
                         } else {
@@ -571,7 +547,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                             ));
                         }
                     } else {
-                        (this as Writeable<HeadlessFormViewModel>).modelInstance = response.result;
+                        (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = response.result;
                         resolve();
                     }
                 } else if (isObject(response.result)) {
@@ -599,7 +575,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         const assignModelData = (model: object): void|Promise<void> => {
             // If we don't have a model instance yet, simply set it.
             if (!this.modelInstance) {
-                (this as Writeable<HeadlessFormViewModel>).modelInstance = model;
+                (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = model;
                 return ;
             }
             const assignFormTransformResult = (formTransformResult: TransformResult) => {
@@ -676,7 +652,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         let service: ModelMetadataService|null = null;
         return (): ModelMetadataService => {
             if (!service) {
-                service = Injector.Get(ModelMetadataService);
+                service = /**!PURE*/ Injector.Get(ModelMetadataService);
             }
             return service;
         };
@@ -689,7 +665,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         let service: TransformService|null = null;
         return (): TransformService => {
             if (!service) {
-                service = Injector.Get(TransformService);
+                service = /**!PURE*/ Injector.Get(TransformService);
             }
             return service;
         };

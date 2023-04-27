@@ -7,19 +7,45 @@
         "directory": "packages/vue-typescript"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/vue-typescript.umd.cjs",
+    "module": "./dist/vue-typescript.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/vue-typescript.js",
+            "require": "./dist/vue-typescript.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
     "dependencies": {
-        "@banquette/event": "0.0.0",
-        "@banquette/exception": "0.0.0",
-        "@banquette/utils-array": "0.0.0",
-        "@banquette/utils-dom": "0.0.0",
-        "@banquette/utils-misc": "0.0.0",
-        "@banquette/utils-object": "0.0.0",
-        "@banquette/utils-random": "0.0.0",
-        "@banquette/utils-string": "0.0.0",
-        "@banquette/utils-type": "0.0.0",
-        "@banquette/validation": "0.0.0"
+        "@banquette/event": "workspace:^",
+        "@banquette/exception": "workspace:^",
+        "@banquette/utils-array": "workspace:^",
+        "@banquette/utils-dom": "workspace:^",
+        "@banquette/utils-misc": "workspace:^",
+        "@banquette/utils-object": "workspace:^",
+        "@banquette/utils-random": "workspace:^",
+        "@banquette/utils-string": "workspace:^",
+        "@banquette/utils-type": "workspace:^",
+        "@banquette/validation": "workspace:^",
+        "@vue/reactivity": "^3.2.47",
+        "@vue/runtime-core": "^3.2.47",
+        "reflect-metadata": "^0.1.13",
+        "vue": "^3.2.47"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "@vitejs/plugin-vue": "^4.1.0",
+        "@vue/test-utils": "^2.3.2",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
     }
 }

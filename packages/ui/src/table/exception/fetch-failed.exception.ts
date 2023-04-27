@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/exception/system.exception";
+import { SystemException } from "@banquette/exception";
 
 /**
  * Thrown whenever a fetch fails for another reason than a cancellation.

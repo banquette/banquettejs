@@ -1,29 +1,29 @@
 <style src="./form-control-state-overlay.component.css" scoped></style>
 <template src="./form-control-state-overlay.component.html" ></template>
 <script lang="ts">
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isBoolean } from "@banquette/utils-type/is-boolean";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { AnyObject } from "@banquette/utils-type/types";
-import { IconMaterialBugReport } from "@banquette/vue-material-icons/bug-report";
-import { IconMaterialClose } from "@banquette/vue-material-icons/close";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { areEqual } from "@banquette/utils-misc";
+import { isArray } from "@banquette/utils-type";
+import { isBoolean } from "@banquette/utils-type";
+import { isFunction } from "@banquette/utils-type";
+import { isObject } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type";
+import { AnyObject } from "@banquette/utils-type";
+import { IMaterialBugReport } from "@banquette/vue-material-icons";
+import { IMaterialClose } from "@banquette/vue-material-icons";
+import { Component } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { TemplateRef } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
 import { StickToDirective } from "../../misc";
 
 @Component({
     name: 'bt-form-control-state-overlay',
-    components: [IconMaterialBugReport, IconMaterialClose],
+    components: [IMaterialBugReport, IMaterialClose],
     directives: [StickToDirective]
 })
-export default class FormControlStateOverlayComponent extends Vue {
+export default class BtFormControlStateOverlay extends Vue {
     /**
      * View data of the control to observe states of.
      */

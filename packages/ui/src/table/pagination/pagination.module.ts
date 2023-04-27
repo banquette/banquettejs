@@ -1,10 +1,6 @@
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ensureInteger } from "@banquette/utils-type/ensure-integer";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { isValidNumber } from "@banquette/utils-type/is-valid-number";
-import { Pojo, Primitive } from "@banquette/utils-type/types";
+import { Module } from "@banquette/dependency-injection";
+import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { ensureInteger, isUndefined, isValidNumber, Pojo, Primitive } from "@banquette/utils-type";
 import { ItemInterface } from "../item.interface";
 import { ModuleInterface } from "../module.interface";
 import { PaginationEvents, PaginationPosition, PaginationStrategy } from "./constant";

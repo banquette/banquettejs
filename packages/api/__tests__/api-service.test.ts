@@ -1,16 +1,13 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { HttpMethod } from "@banquette/http/constants";
-import { HttpRequest } from "@banquette/http/http-request";
-import { Relation } from "@banquette/model/decorator/relation";
-import { Model } from "@banquette/model/transformer/type/model";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { Api } from "../src";
+import { Injector } from "@banquette/dependency-injection";
+import { HttpMethod, HttpRequest } from "@banquette/http";
+import { Relation, Model } from "@banquette/model";
+import { isArray, isPromiseLike } from "@banquette/utils-type";
 import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
+import '../../http/__tests__/__mocks__/xml-http-request.mock';
+import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
+import { Api } from "../src";
 import { ApiService } from "../src/api.service";
 import { Endpoint } from "../src/decorator/endpoint";
-import { GenericTransformerTest } from "../../model/__tests__/__mocks__/generic-transformer-test";
-import '../../http/__tests__/__mocks__/xml-http-request.mock';
 
 const api = Injector.Get(ApiService);
 

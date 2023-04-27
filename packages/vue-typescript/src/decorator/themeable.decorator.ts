@@ -1,5 +1,5 @@
-import { flattenObject } from "@banquette/utils-object/flatten-object";
-import { Constructor, Primitive } from "@banquette/utils-type/types";
+import { flattenObject } from "@banquette/utils-object";
+import { Constructor, Primitive } from "@banquette/utils-type";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
 

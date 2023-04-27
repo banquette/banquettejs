@@ -1,14 +1,13 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { HttpMethod } from "@banquette/http/constants";
-import { isConstructor } from "@banquette/utils-type/is-constructor";
-import { Constructor, StringEnum } from "@banquette/utils-type/types";
+import { Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { HttpMethod } from "@banquette/http";
+import { isConstructor, Constructor, StringEnum } from "@banquette/utils-type";
 import { ApiEndpointStorageService } from "../api-endpoint-storage.service";
 import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "../api-endpoint.options";
 
-const metadata = Injector.Get(ApiEndpointStorageService);
-
 type EndpointDecoratorOptions = Omit<ApiEndpointOptionsWithIdentifiers, 'ctor'> & {group?: string|string[]};
+
+let metadata: ApiEndpointStorageService|null = null;
 
 export function Endpoint(endpoint: EndpointDecoratorOptions): any;
 export function Endpoint(name: string, url: string, method?: StringEnum<HttpMethod>, params?: Record<string, ApiEndpointParameterOptions>): any;
@@ -16,6 +15,9 @@ export function Endpoint(optionsOrName: EndpointDecoratorOptions|string, url?: s
     return (ctor: Constructor) => {
         if (!isConstructor(ctor)) {
             throw new UsageException('You can only place "@Endpoint()" on a class.');
+        }
+        if (metadata === null) {
+            metadata = Injector.Get(ApiEndpointStorageService);
         }
         metadata.registerEndpoint(optionsOrName as any, url as any, method, params, ctor);
     };

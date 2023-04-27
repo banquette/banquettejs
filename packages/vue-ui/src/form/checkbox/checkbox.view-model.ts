@@ -1,5 +1,5 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { HeadlessCheckboxViewModel } from "@banquette/ui/form/checkbox/headless-checkbox-view.model";
+import { FormViewControlInterface } from "@banquette/form";
+import { HeadlessCheckboxViewModel } from "@banquette/ui";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { CheckboxViewDataInterface } from "./checkbox-view-data.interface";
 

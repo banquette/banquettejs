@@ -1,7 +1,7 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isObject } from "@banquette/utils-type/is-object";
+import { UsageException } from "@banquette/exception";
+import { getObjectValue } from "@banquette/utils-object";
+import { isNonEmptyString } from "@banquette/utils-string";
+import { isObject } from "@banquette/utils-type";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
 

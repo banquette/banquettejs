@@ -1,5 +1,5 @@
-import { TransformContext } from './transform-context';
 import { TransformResult } from "../transform-result";
+import { TransformContext } from './transform-context';
 
 export interface TransformerInterface {
     /**

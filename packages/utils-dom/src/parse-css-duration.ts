@@ -1,5 +1,4 @@
-import { ensureNumber } from "@banquette/utils-type/ensure-number";
-import { isString } from "@banquette/utils-type/is-string";
+import { ensureNumber, isString } from '@banquette/utils-type';
 
 /**
  * Parse a css duration into a number of milliseconds.

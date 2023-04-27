@@ -1,14 +1,14 @@
-import { VoidCallback } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { ValidatorComponent } from "./validator.component";
+import { VoidCallback } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
+import { BtValidator } from "./validator.component";
 import { ContainerValidatorInterface } from "./container-validator.interface";
+
+let maxId = 0;
 
 /**
  * Base class for container validator components.
  */
-export abstract class ContainerValidatorComponent extends ValidatorComponent implements ContainerValidatorInterface {
-    private static MaxId: number = 0;
-
+export abstract class BtContainerValidator extends BtValidator implements ContainerValidatorInterface {
     /**
      * A map of sub validators, indexed by id.
      */
@@ -25,7 +25,7 @@ export abstract class ContainerValidatorComponent extends ValidatorComponent imp
      * Add a sub validator and returns a function to call to remove it.
      */
     public registerChild(validator: ValidatorInterface): VoidCallback {
-        const nextId = ++ContainerValidatorComponent.MaxId;
+        const nextId = ++maxId;
         this.subValidators[nextId] = validator;
         if (this.parentValidator) {
             this.assignToParentValidator(this.parentValidator);

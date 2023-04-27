@@ -7,11 +7,31 @@
         "directory": "packages/vue-dom-module"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/vue-dom-module.umd.cjs",
+    "module": "./dist/vue-dom-module.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/vue-dom-module.js",
+            "require": "./dist/vue-dom-module.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
     "dependencies": {
-        "@banquette/dom-modules": "0.0.0",
-        "@banquette/vue-typescript": "0.0.0"
+        "@banquette/dom-modules": "workspace:^",
+        "@banquette/vue-typescript": "workspace:^"
     }
 }

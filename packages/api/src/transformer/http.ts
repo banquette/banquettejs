@@ -1,20 +1,19 @@
-import { InjectLazy } from "@banquette/dependency-injection/decorator/inject-lazy.decorator";
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { HttpResponse } from "@banquette/http/http-response";
-import { ModelTransformerTag } from "@banquette/model/constants";
-import { ModelMetadataService } from "@banquette/model/model-metadata.service";
-import { ModelTransformMetadataService } from "@banquette/model/model-transform-metadata.service";
-import { ModelFactoryService } from "@banquette/model/model.factory.service";
-import { TransformResult } from "@banquette/model/transform-result";
-import { TransformContext } from "@banquette/model/transformer/transform-context";
-import { TransformPipeline } from "@banquette/model/transformer/transform-pipeline";
-import { TransformService } from "@banquette/model/transformer/transform.service";
-import { PojoTransformer } from "@banquette/model/transformer/type/root/pojo";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { NotEmpty } from "@banquette/validation/type/not-empty";
+import { InjectLazy, Inject, Module } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { HttpResponse } from "@banquette/http";
+import {
+    ModelTransformerTag,
+    ModelMetadataService,
+    ModelTransformMetadataService,
+    ModelFactoryService,
+    TransformResult,
+    TransformContext,
+    TransformPipeline,
+    TransformService,
+    PojoTransformer
+} from "@banquette/model";
+import { isArray, isUndefined } from "@banquette/utils-type";
+import { NotEmpty } from "@banquette/validation";
 import { ApiEndpoint } from "../api-endpoint";
 import { ApiEndpointStorageService } from "../api-endpoint-storage.service";
 
@@ -28,6 +27,7 @@ export class HttpTransformer extends PojoTransformer {
                        @Inject(ApiEndpointStorageService) private endpointStorage: ApiEndpointStorageService,
                        @InjectLazy(() => TransformService) private transformService: TransformService) {
         super(modelMetadata, transformMetadata, modelFactory);
+        console.warn('#HttpTransformer');
     }
 
     /**

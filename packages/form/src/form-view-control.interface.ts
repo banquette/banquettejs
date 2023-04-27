@@ -1,5 +1,5 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { UnsubscribeFunction } from "@banquette/event";
+import { ValidatorInterface } from "@banquette/validation";
 import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";

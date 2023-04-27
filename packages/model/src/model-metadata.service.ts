@@ -1,16 +1,16 @@
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isString } from "@banquette/utils-type/is-string";
-import { isSymbol } from "@banquette/utils-type/is-symbol";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { Service } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { ensureArray, ensureString, isFunction, isNullOrUndefined, isString, isSymbol, isUndefined, Constructor } from "@banquette/utils-type";
 import { ObjectCtor } from "./constants";
 import { ModelAliasNotFoundException } from "./exception/model-alias-not-found.exception";
 import { ModelAlias, ModelExtendedIdentifier, ModelFactory } from "./type";
+
+/**
+ * Test if the input is a model alias.
+ */
+function IsAlias(identifier: ModelExtendedIdentifier): identifier is ModelAlias {
+    return isString(identifier) || isSymbol(identifier);
+}
 
 @Service()
 export class ModelMetadataService {
@@ -33,6 +33,7 @@ export class ModelMetadataService {
      * Define a custom factory that should be used any time a new instance of the model is created.
      */
     public registerFactory(ctor: Constructor, factory: ModelFactory<any>): void {
+        console.warn('#ModelMetadataService');
         this.factories.set(ctor, factory);
     }
 
@@ -64,7 +65,7 @@ export class ModelMetadataService {
      * Get the model constructor corresponding to an alias identifier.
      */
     public resolveAlias(identifier: ModelExtendedIdentifier): Constructor {
-        if (!ModelMetadataService.IsAlias(identifier)) {
+        if (!IsAlias(identifier)) {
             return identifier;
         }
         if (isUndefined(this.aliases[identifier])) {
@@ -136,12 +137,5 @@ export class ModelMetadataService {
      */
     public clearRelations(): void {
         this.relations = new WeakMap<Constructor, Record<string, ModelExtendedIdentifier>>();
-    }
-
-    /**
-     * Test if the input is a model alias.
-     */
-    private static IsAlias(identifier: ModelExtendedIdentifier): identifier is ModelAlias {
-        return isString(identifier) || isSymbol(identifier);
     }
 }

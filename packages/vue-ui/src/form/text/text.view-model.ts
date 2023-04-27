@@ -1,6 +1,6 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { HeadlessTextViewModel } from "@banquette/ui/form/text/headless-text-view.model";
-import { ensureString } from "@banquette/utils-type/ensure-string";
+import { FormViewControlInterface } from "@banquette/form";
+import { HeadlessTextViewModel } from "@banquette/ui";
+import { ensureString } from "@banquette/utils-type";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { TextViewDataInterface } from "./text-view-data.interface";
 

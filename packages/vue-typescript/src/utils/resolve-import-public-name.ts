@@ -1,9 +1,5 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isType } from "@banquette/utils-type/is-type";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { UsageException } from "@banquette/exception";
+import { isFunction, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
 import { PrefixOrAlias, AliasesMap, AliasResolver } from "../type";
 
 /**

@@ -1,4 +1,4 @@
-import { Injector } from "@banquette/dependency-injection/injector";
+import { Injector } from "@banquette/dependency-injection";
 import { TableViewModel } from "../src";
 
 describe('Columns', () => {

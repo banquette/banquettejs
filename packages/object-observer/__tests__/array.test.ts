@@ -1,4 +1,4 @@
-import { isArray } from "@banquette/utils-type/is-array";
+import { isArray } from "@banquette/utils-type";
 import { ObserverFactory } from "../src";
 import { MutationType } from "../src/constant";
 import { wrapObserver } from "./utils";

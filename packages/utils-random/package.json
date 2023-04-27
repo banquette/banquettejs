@@ -7,9 +7,31 @@
         "directory": "packages/utils-random"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
-    "dependencies": {"@banquette/utils-type": "0.0.0"},
-    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c"
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/utils-random.umd.cjs",
+    "module": "./dist/utils-random.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/utils-random.js",
+            "require": "./dist/utils-random.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
+    "dependencies": {
+        "@banquette/utils-array": "workspace:^",
+        "@banquette/utils-type": "workspace:^"
+    }
 }

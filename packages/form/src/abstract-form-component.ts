@@ -1,21 +1,12 @@
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { EventDispatcherInterface } from "@banquette/event/event-dispatcher.interface";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { removeFromArray } from "@banquette/utils-array/remove-from-array";
-import { matchBest } from "@banquette/utils-glob/match-best";
-import { MatchResult } from "@banquette/utils-glob/match-result";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { uniqueId } from "@banquette/utils-random/unique-id";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Writeable, GenericCallback } from "@banquette/utils-type/types";
-import { createValidator } from "@banquette/validation/create-validator";
-import { ValidationContextInterface } from "@banquette/validation/validation-context.interface";
-import { ValidationResult } from "@banquette/validation/validation-result";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { EventDispatcher, EventDispatcherInterface, UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { removeFromArray } from "@banquette/utils-array";
+import { matchBest, MatchResult } from "@banquette/utils-glob";
+import { proxy } from "@banquette/utils-misc";
+import { getObjectKeys } from "@banquette/utils-object";
+import { uniqueId } from "@banquette/utils-random";
+import { ensureArray, isFunction, isUndefined, Writeable, GenericCallback } from "@banquette/utils-type";
+import { createValidator, ValidationContextInterface, ValidationResult, ValidatorInterface } from "@banquette/validation";
 import {
     BasicState,
     BasicStates,
@@ -45,16 +36,16 @@ import { FormParentComponentInterface } from "./form-parent-component.interface"
 import { FormValidationContext } from "./form-validation-context";
 import { ConcreteValidationStrategy, ContextStackItem, State } from "./type";
 
-export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
-    /**
-     * Used to give a unique id to every new form component.
-     */
-    private static MaxId: number = 0;
+/**
+ * Used to give a unique id to every new form component.
+ */
+let MaxId: number = 0;
 
+export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unknown> implements FormComponentInterface<ValueType, ChildrenType> {
     /**
      * Unique numerical id of the component.
      */
-    public readonly id: number = ++AbstractFormComponent.MaxId;
+    public readonly id: number = ++MaxId;
 
     /**
      * Extended unique id for the whole form.
@@ -418,7 +409,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
     }
     protected set activeControl(control: FormControlInterface|null) {
         if (this.parent !== null) {
-            (this.parent as Writeable<FormParentComponentInterface>).activeControl = control;
+            (this.parent as any /* Writeable<FormParentComponentInterface> */).activeControl = control;
         } else {
             this.activeControl_ = control;
         }
@@ -444,7 +435,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
         if (this.parent !== null) {
             this.unsetParent();
         }
-        (this as Writeable<AbstractFormComponent>).parent = parent;
+        (this as any /* Writeable<AbstractFormComponent> */).parent = parent;
         return this.buildChildComponentDecorator();
     }
 
@@ -478,7 +469,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
                 }
                 this.currentValidationResult = null;
             };
-            (this as Writeable<AbstractFormComponent>).validator = createValidator({
+            (this as any /* Writeable<AbstractFormComponent> */).validator = createValidator({
                 validate(context: ValidationContextInterface): ValidationResult {
                     if (that.virtual) {
                         return context.result;
@@ -500,7 +491,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
                 }
             }, validator.tags, validator.groups);
         } else {
-            (this as Writeable<AbstractFormComponent>).validator = null;
+            (this as any /* Writeable<AbstractFormComponent> */).validator = null;
         }
         if (this.validator !== null && this.concrete) {
             this.markBasicState(BasicState.NotValidated, this.id);
@@ -518,7 +509,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
      * This means that by default, the only way to trigger a validation is to call `validate()` manually.
      */
     public setValidationStrategy(strategy: ValidationStrategy): void {
-        (this as Writeable<AbstractFormComponent>).validationStrategy = strategy;
+        (this as any /* Writeable<AbstractFormComponent> */).validationStrategy = strategy;
     }
 
     /**
@@ -526,7 +517,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
      * Custom groups can replace those if passed to the `validate()` method directly.
      */
     public setValidationGroups(groups: string|string[]|null): void {
-        (this as Writeable<AbstractFormComponent>).validationGroups = groups !== null ? ensureArray(groups) : null;
+        (this as any /* Writeable<AbstractFormComponent> */).validationGroups = groups !== null ? ensureArray(groups) : null;
     }
 
     /**
@@ -599,7 +590,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
      * Remove all errors from the component.
      */
     public clearErrors(silent: boolean = false): void {
-        (this as Writeable<AbstractFormComponent>).errors = [];
+        (this as any /* Writeable<AbstractFormComponent> */).errors = [];
         if (!silent) {
             this.unmarkBasicState(BasicState.Invalid, this.id);
             this.dispatch(FormEvents.ErrorsChanged, () => new ErrorsChangedFormEvent(this, []));
@@ -1109,7 +1100,7 @@ export abstract class AbstractFormComponent<ValueType = any, ChildrenType = unkn
         if (this.parent !== null && this.name !== null) {
             this.parent.decorated.remove(this.name);
         }
-        (this as Writeable<AbstractFormComponent>).parent = null;
+        (this as any /* Writeable<AbstractFormComponent> */).parent = null;
     }
 
     /**

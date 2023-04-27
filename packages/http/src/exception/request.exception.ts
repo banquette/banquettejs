@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/exception/system.exception";
+import { SystemException } from '@banquette/exception';
 
 /**
  * Exception thrown when a request doesn't respond with a 2xx HTTP status code.

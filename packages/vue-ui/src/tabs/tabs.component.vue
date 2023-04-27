@@ -1,34 +1,34 @@
 <style src="./tabs.component.css" scoped></style>
 <template src="./tabs.component.html" ></template>
 <script lang="ts">
-import { enumToArray } from "@banquette/utils-array/enum-to-array";
-import { getElementOffset } from "@banquette/utils-dom/get-element-offset";
-import { throttle } from "@banquette/utils-misc/throttle";
-import { VoidCallback } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { enumToArray } from "@banquette/utils-array";
+import { getElementOffset } from "@banquette/utils-dom";
+import { throttle } from "@banquette/utils-misc";
+import { VoidCallback } from "@banquette/utils-type";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { TemplateRef } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { Watch } from "@banquette/vue-typescript";
+import { BindThemeDirective } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
 import { useResizeObserver } from "@vueuse/core";
-import { TeleportDirective } from "../misc/teleport.directive";
+import { TeleportDirective } from "../misc";
 import { TabsDirection } from "./tab/constant";
-import { TabComponent as TabComponentValue } from "./tab";
+import { BtTab as BtTabValue } from "./tab";
 import { ThemeConfiguration } from "./theme-configuration";
 
-type TabComponent = InstanceType<typeof TabComponentValue>;
+type BtTab = InstanceType<typeof BtTabValue>;
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-tabs',
-    components: [TabComponentValue],
+    components: [BtTabValue],
     directives: [TeleportDirective, BindThemeDirective],
     emits: ['update:focused']
 })
-export default class TabsComponent extends Vue {
+export default class BtTabs extends Vue {
     /**
      * Type of positioning.
      */
@@ -53,9 +53,9 @@ export default class TabsComponent extends Vue {
 
     @TemplateRef('indicator') private indicatorEl!: HTMLElement;
 
-    private tabs: TabComponent[] = [];
+    private tabs: BtTab[] = [];
     private observer: MutationObserver|null = null;
-    private focusedTab: TabComponent|null = null;
+    private focusedTab: BtTab|null = null;
     private focusedTabResizeUnsubscribe: VoidCallback|null = null;
 
     /**
@@ -82,10 +82,10 @@ export default class TabsComponent extends Vue {
     /**
      * Called by child tabs to register themselves.
      */
-    public register(tab: TabComponent): void {
+    public register(tab: BtTab): void {
         const domIdx = this.getTabToggleDomIndex(tab.$el);
         this.tabs.splice(domIdx, 0, tab);
-        // Always focus the first tab so we have something in case the id provided by the user doesn't match any tab.
+        // Always focus the first tab, so we have something in case the id provided by the user doesn't match any tab.
         if (this.tabs.length === 1 || this.focusedTab === null || tab.id === this.focused) {
             this.focus(tab);
         }
@@ -95,7 +95,7 @@ export default class TabsComponent extends Vue {
     /**
      * Called by child tabs to unregister themselves.
      */
-    public unregister(tab: TabComponent): void {
+    public unregister(tab: BtTab): void {
         const pos = this.tabs.indexOf(tab);
         if (pos > -1) {
             this.tabs.splice(pos, 1);
@@ -121,7 +121,7 @@ export default class TabsComponent extends Vue {
     /**
      * Focus a tab.
      */
-    public focus(tab: TabComponent): void {
+    public focus(tab: BtTab): void {
         for (const candidate of this.tabs) {
             if (candidate === tab && !candidate.focused) {
                 if (candidate.disabled || candidate.fake) {
@@ -148,9 +148,9 @@ export default class TabsComponent extends Vue {
 
     /**
      * Export the `tabs` array to the view without giving direct access
-     * to prevent Vue from proxifing the objects.
+     * to prevent Vue from proxying the objects.
      */
-    @Expose() public getTabs(): TabComponent[] {
+    @Expose() public getTabs(): BtTab[] {
         return this.tabs;
     }
 
@@ -228,7 +228,7 @@ export default class TabsComponent extends Vue {
     private observeDOMMutations(): void {
         this.observer = new MutationObserver(throttle(() => {
             // Sort the tabs by DOM index
-            this.tabs = this.tabs.sort((a: TabComponent, b: TabComponent) => {
+            this.tabs = this.tabs.sort((a: BtTab, b: BtTab) => {
                 return this.getTabToggleDomIndex(a.$el) - this.getTabToggleDomIndex(b.$el);
             });
             // Force update the view

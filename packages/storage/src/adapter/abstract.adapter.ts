@@ -1,10 +1,5 @@
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ensureNumber } from "@banquette/utils-type/ensure-number";
-import { isBoolean } from "@banquette/utils-type/is-boolean";
-import { isNumber } from "@banquette/utils-type/is-number";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { ensureNumber, isBoolean, isNumber, isObject, isUndefined } from "@banquette/utils-type";
 import { StorageEvents } from "../constant";
 import { StorageClearEvent } from "../event/storage-clear.event";
 import { StorageKeyChangeEvent } from "../event/storage-key-change.event";

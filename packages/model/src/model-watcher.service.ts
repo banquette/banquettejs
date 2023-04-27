@@ -1,10 +1,6 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { MutationEvent } from "@banquette/object-observer/event/mutation.event";
-import { ObserverFactory } from "@banquette/object-observer/index";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isNumeric } from "@banquette/utils-type/is-numeric";
-import { Constructor } from "@banquette/utils-type/types";
+import { Inject, Service } from "@banquette/dependency-injection";
+import { MutationEvent, ObserverFactory } from "@banquette/object-observer";
+import { ensureArray, isNumeric, Constructor } from "@banquette/utils-type";
 import { ModelMetadataService } from "./model-metadata.service";
 import { ModelTransformMetadataService } from "./model-transform-metadata.service";
 
@@ -20,6 +16,7 @@ export class ModelWatcherService {
      * If `null` or an empty array is given, the whole model and all its children will be watched.
      */
     public watch<T extends object>(model: T, paths: string[]|null, cb: (event: MutationEvent) => void): T {
+        console.warn('#ModelWatcherService');
         let watchedPaths = paths !== null && paths.length > 0 ? paths : null;
         if (watchedPaths !== null) {
             watchedPaths = watchedPaths.map((item: string) => item[0] !== '/' ? ('/' + item) : item);

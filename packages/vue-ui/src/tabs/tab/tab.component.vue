@@ -1,14 +1,14 @@
 <template src="./tab.component.html" ></template>
 <script lang="ts">
-import { UsageException } from "@banquette/exception/usage.exception";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { UsageException } from "@banquette/exception";
+import { Component } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
 
 @Component('bt-tab')
-export default class TabComponent extends Vue {
+export default class BtTab extends Vue {
     /**
      * A unique identifier for the tab.
      * Used to focus the tab from the outside.
@@ -51,7 +51,7 @@ export default class TabComponent extends Vue {
      * Vue lifecycle method.
      */
     public mounted(): void {
-        const $parent = this.getParent('bt-tabs');
+        const $parent = this.getParent('bt-tabs' as any);
         if (!$parent) {
             throw new UsageException('A "<bt-tab>" must always be placed inside a <bt-tabs></bt-tabs> component.');
         }

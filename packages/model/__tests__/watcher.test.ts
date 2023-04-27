@@ -1,6 +1,6 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { MutationEvent } from "@banquette/object-observer/event/mutation.event";
-import { isString } from "@banquette/utils-type/is-string";
+import { Injector } from "@banquette/dependency-injection";
+import { MutationEvent } from "@banquette/object-observer";
+import { isString } from "@banquette/utils-type";
 import { ModelWatcherService, Json, JsonTransformerSymbol, T, Relation } from "../src";
 
 

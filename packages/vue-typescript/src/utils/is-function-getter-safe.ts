@@ -1,5 +1,4 @@
-import { isFunction } from "@banquette/utils-type/is-function";
-import { Constructor } from "@banquette/utils-type/types";
+import { isFunction, Constructor } from "@banquette/utils-type";
 import { getPropertyDescriptor } from "./get-property-descriptor";
 
 export function isFunctionGetterSafe(ctor: Constructor, property: string): boolean {

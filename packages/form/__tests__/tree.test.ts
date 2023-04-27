@@ -1,8 +1,7 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { Min } from "@banquette/validation/type/min";
-import { NotEmpty } from "@banquette/validation/type/not-empty";
+import { ConfigurationService } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { Min, NotEmpty } from "@banquette/validation";
 import {
     FormConfigurationSymbol,
     ValidationStrategy,

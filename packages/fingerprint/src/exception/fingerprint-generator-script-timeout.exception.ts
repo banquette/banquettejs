@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/exception/system.exception";
+import { SystemException } from "@banquette/exception";
 
 /**
  * Thrown when the generator script failed to load.

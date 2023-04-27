@@ -1,2 +1,2 @@
 
-export { default as ConditionalWrapperComponent } from './conditional-wrapper.component.vue';
+export { default as BtConditionalWrapper } from './conditional-wrapper.component.vue';

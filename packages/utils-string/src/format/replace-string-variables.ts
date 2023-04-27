@@ -1,7 +1,5 @@
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
+import { getObjectValue } from '@banquette/utils-object';
+import { isArray, isObject, isString } from '@banquette/utils-type';
 
 /**
  * Replace all variables corresponding to the syntax "%variableName% in the input with the corresponding
@@ -20,11 +18,19 @@ import { isString } from "@banquette/utils-type/is-string";
  *
  * You can also chose the starting and ending characters.
  */
-export function replaceStringVariables(input: any, replacements: object, startChar: string = '%', endChar: string = '%'): any {
+export function replaceStringVariables(
+    input: any,
+    replacements: object,
+    startChar: string = '%',
+    endChar: string = '%'
+): any {
     if (isString(input)) {
-        const reg: RegExp = new RegExp(startChar + '([a-z0-9*._-]+)' + endChar, 'gi');
-        const replacementsResults: {[key: string]: any} = {};
-        let matches: RegExpMatchArray|null;
+        const reg: RegExp = new RegExp(
+            startChar + '([a-z0-9*._-]+)' + endChar,
+            'gi'
+        );
+        const replacementsResults: { [key: string]: any } = {};
+        let matches: RegExpMatchArray | null;
         /* tslint:disable:no-conditional-assignment */
         while ((matches = reg.exec(input)) !== null) {
             if (isArray(matches) && matches.length > 1) {
@@ -40,7 +46,10 @@ export function replaceStringVariables(input: any, replacements: object, startCh
         // Now we can safely replace the results.
         for (const toReplace in replacementsResults) {
             if (replacementsResults.hasOwnProperty(toReplace)) {
-                input = input.replace(new RegExp(toReplace, 'g'), replacementsResults[toReplace]);
+                input = input.replace(
+                    new RegExp(toReplace, 'g'),
+                    replacementsResults[toReplace]
+                );
             }
         }
     }

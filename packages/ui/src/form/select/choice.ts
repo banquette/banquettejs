@@ -1,5 +1,5 @@
-import { slugify } from "@banquette/utils-string/format/slugify";
-import { Primitive, Writeable } from "@banquette/utils-type/types";
+import { slugify } from "@banquette/utils-string";
+import { Primitive, Writeable } from "@banquette/utils-type";
 import { ChoiceOrigin } from "./constant";
 
 /**
@@ -13,7 +13,7 @@ export class Choice {
     public get label(): string { return this._label }
     public set label(label: string) {
         this._label = label;
-        (this as Writeable<Choice>).labelSlug = slugify(label);
+        (this as any /* Writeable<Choice> */).labelSlug = slugify(label);
     }
 
     /**

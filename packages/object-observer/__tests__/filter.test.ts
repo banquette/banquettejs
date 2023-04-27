@@ -1,6 +1,6 @@
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { MutationType } from "../src/constant";
+import { ensureArray } from "@banquette/utils-type";
 import { ObserverFactory } from "../src";
+import { MutationType } from "../src/constant";
 import { wrapObserver } from "./utils";
 
 let obj: any = {};

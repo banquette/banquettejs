@@ -1,7 +1,7 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { Pojo } from "@banquette/utils-type/types";
-import { DomModuleInterface } from "./dom-module.interface";
+import { UsageException } from '@banquette/exception';
+import { areEqual } from '@banquette/utils-misc';
+import { Pojo } from '@banquette/utils-type';
+import { DomModuleInterface } from './dom-module.interface';
 
 export abstract class AbstractDomModule implements DomModuleInterface {
     /**
@@ -18,8 +18,8 @@ export abstract class AbstractDomModule implements DomModuleInterface {
      * Queue of deferred objects waiting for the component to be ready.
      */
     private ready: boolean = false;
-    private onReadyPromise: Promise<void>|null = null;
-    private onReadyPromiseResolve: (() => void)|null = null;
+    private onReadyPromise: Promise<void> | null = null;
+    private onReadyPromiseResolve: (() => void) | null = null;
 
     public constructor() {
         this.options = this.getDefaultOptions();
@@ -107,7 +107,10 @@ export abstract class AbstractDomModule implements DomModuleInterface {
      * @param {boolean} clearOther (optional, default: false) if true, the internal object is cleared before setting new options.
      *                  By default, new options are merged with existing ones.
      */
-    public setOptions(options: {[key: string]: any}, clearOther: boolean = false): void {
+    public setOptions(
+        options: { [key: string]: any },
+        clearOther: boolean = false
+    ): void {
         if (clearOther) {
             this.options = {};
         }
@@ -129,7 +132,7 @@ export abstract class AbstractDomModule implements DomModuleInterface {
      * Get the name of the option to use when a scalar value is passed
      * to the html attribute, like: dom-my-module="2".
      */
-    public getDefaultOptionName(): string|null {
+    public getDefaultOptionName(): string | null {
         return null;
     }
 
@@ -138,7 +141,9 @@ export abstract class AbstractDomModule implements DomModuleInterface {
      */
     protected doInit(): any {
         if (!this.element) {
-            throw new UsageException("You must set the root DOM element of a DOM plugin by calling setElement().");
+            throw new UsageException(
+                'You must set the root DOM element of a DOM plugin by calling setElement().'
+            );
         }
     }
 
@@ -174,7 +179,11 @@ export abstract class AbstractDomModule implements DomModuleInterface {
      * Called when the value of an option changes.
      * Note, this method is not called while the initialization is not finished.
      */
-    protected onOptionChange(optionName: string, oldValue: any, newValue: any): void {
+    protected onOptionChange(
+        optionName: string,
+        oldValue: any,
+        newValue: any
+    ): void {
         // Override me
     }
 

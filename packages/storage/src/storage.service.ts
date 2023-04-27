@@ -1,21 +1,15 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { InjectLazy } from "@banquette/dependency-injection/decorator/inject-lazy.decorator";
-import { InjectMultiple } from "@banquette/dependency-injection/decorator/inject-multiple.decorator";
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isConstructor } from "@banquette/utils-type/is-constructor";
-import { isString } from "@banquette/utils-type/is-string";
-import { isSymbol } from "@banquette/utils-type/is-symbol";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ConfigurationService } from "@banquette/config";
+import { InjectLazy, InjectMultiple, Service, Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { isConstructor, isString, isSymbol, isUndefined } from "@banquette/utils-type";
 import { AdapterInterface } from "./adapter/adapter.interface";
+import './adapter/cookies.adapter';
+import './adapter/local-storage.adapter';
 import { StorageConfigurationSymbol } from "./config";
 import { StorageAdapterTag } from "./constant";
 import { NoAdapterAvailableException } from "./exception/no-adapter-available.exception";
 import { StorageConfigurationInterface } from "./storage-configuration.interface";
 import { AdapterIdentifier } from "./types";
-import './adapter/cookies.adapter';
-import './adapter/local-storage.adapter';
 
 @Service()
 export class StorageService {

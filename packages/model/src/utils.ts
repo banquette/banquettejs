@@ -1,5 +1,4 @@
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Complete } from "@banquette/utils-type/types";
+import { isUndefined, Complete } from "@banquette/utils-type";
 import { TransformInverseNotSupportedException } from "./exception/transform-inverse-not-supported.exception";
 import { TransformNotSupportedException } from "./exception/transform-not-supported.exception";
 import { RootTransformerInterface } from "./transformer/root-transformer.interface";

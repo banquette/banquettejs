@@ -1,13 +1,12 @@
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { Component } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
 
 @Component({
     name: 'bt-call',
-    template: false,
     emits: ['call']
 })
-export default class CallComponent extends Vue {
+export default class BtCall extends Vue {
     /**
      * Vue lifecycle.
      */

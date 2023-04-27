@@ -1,5 +1,4 @@
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { isNullOrUndefined, Constructor } from "@banquette/utils-type";
 import { ComponentDecoratorOptions } from "../decorator/component.decorator";
 import { ComposableDecoratorOptions } from "../decorator/composable.decorator";
 

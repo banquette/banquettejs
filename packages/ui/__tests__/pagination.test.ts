@@ -1,5 +1,5 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
+import { Injector } from "@banquette/dependency-injection";
+import { getObjectKeys } from "@banquette/utils-object";
 import { PaginationStrategy } from "../src/table/pagination/constant";
 import { PaginationModule } from "../src/table/pagination/pagination.module";
 

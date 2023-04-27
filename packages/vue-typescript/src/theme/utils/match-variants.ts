@@ -1,6 +1,5 @@
-import { arrayIntersect } from "@banquette/utils-array/array-intersect";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { Primitive } from "@banquette/utils-type/types";
+import { arrayIntersect } from "@banquette/utils-array";
+import { isFunction, Primitive } from "@banquette/utils-type";
 import { ComponentMetadataInterface } from "../../decorator/component-metadata.interface";
 import { maybeResolveTsInst } from "../../utils/converters";
 import { getOrCreateComponentMetadata } from "../../utils/get-or-create-component-metadata";

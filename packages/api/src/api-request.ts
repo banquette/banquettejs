@@ -1,18 +1,15 @@
-import { HttpMethod } from "@banquette/http/constants";
-import { HeadersBag } from "@banquette/http/headers-bag";
-import { UrlParameterInterface } from "@banquette/http/url-parameter.interface";
-import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model/type";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Primitive, StringEnum } from "@banquette/utils-type/types";
+import { HttpMethod, HeadersBag, UrlParameterInterface } from "@banquette/http";
+import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model";
+import { isUndefined, Primitive, StringEnum } from "@banquette/utils-type";
 import { ApiEndpointOverride } from "./api-endpoint-override";
 
-export class ApiRequest {
-    private static MaxId: number = 0;
+let MaxId: number = 0;
 
+export class ApiRequest {
     /**
      * Unique identifier of the request.
      */
-    public readonly id: number = ++ApiRequest.MaxId;
+    public readonly id: number = ++MaxId;
 
     /**
      * Create a ApiRequest object.

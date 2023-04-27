@@ -1,14 +1,11 @@
 <script lang="ts">
-import { HeadlessControlViewDataInterface } from "@banquette/ui/form/headless-control-view-data.interface";
-import { HeadlessControlViewModel } from "@banquette/ui/form/headless-control.view-model";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
+import { HeadlessControlViewDataInterface } from "@banquette/ui";
+import { HeadlessControlViewModel } from "@banquette/ui";
+import { Component } from "@banquette/vue-typescript";
+import { BtAbstractVueForm } from "../abstract-vue-form.component";
 
-@Component({
-    name: 'bt-form-hidden',
-    template: false
-})
-export default class FormHiddenComponent extends AbstractVueFormComponent<HeadlessControlViewDataInterface, HeadlessControlViewModel<HeadlessControlViewDataInterface>> {
+@Component('bt-form-hidden')
+export default class BtFormHidden extends BtAbstractVueForm<HeadlessControlViewDataInterface, HeadlessControlViewModel<HeadlessControlViewDataInterface>> {
     /**
      * @inheritDoc
      */

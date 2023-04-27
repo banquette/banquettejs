@@ -1,7 +1,7 @@
-import { VarHolder } from "@banquette/utils-misc/var-holder";
-import { Writeable } from "@banquette/utils-type/types";
-import { DispatchResult } from "../dispatch-result";
-import { EventArg } from "../event-arg";
+import { VarHolder } from '@banquette/utils-misc';
+import { Writeable } from '@banquette/utils-type';
+import { DispatchResult } from '../dispatch-result';
+import { EventArg } from '../event-arg';
 
 export class SequenceContext extends EventArg {
     /**
@@ -21,9 +21,11 @@ export class SequenceContext extends EventArg {
      */
     public readonly sequenceStopped: boolean = false;
 
-    public constructor(public sequence: string,
-                       public result: DispatchResult,
-                       public parent: SequenceContext|null = null) {
+    public constructor(
+        public sequence: string,
+        public result: DispatchResult,
+        public parent: SequenceContext | null = null
+    ) {
         super();
     }
 
@@ -36,7 +38,7 @@ export class SequenceContext extends EventArg {
         // Stopping the sequence also means stopping the propagation of the current event.
         this.stopPropagation();
 
-        (this as Writeable<SequenceContext>).sequenceStopped = true;
+        (this as any /* Writeable<SequenceContext> */).sequenceStopped = true;
         if (recursive && this.parent) {
             this.parent.stopSequence(true);
         }

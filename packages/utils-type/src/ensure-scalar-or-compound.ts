@@ -1,7 +1,7 @@
-import { isScalar } from "./is-scalar";
 import { ensureString } from "./ensure-string";
-import { isObjectLiteral } from "./is-object";
 import { isArray } from "./is-array";
+import { isObjectLiteral } from "./is-object";
+import { isScalar } from "./is-scalar";
 
 /**
  * Ensure the input is a scalar value.

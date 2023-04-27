@@ -1,4 +1,4 @@
-import { ValidationResult } from "@banquette/validation/validation-result";
+import { ValidationResult } from "@banquette/validation";
 import { FormComponentInterface } from "./form-component.interface";
 
 /**

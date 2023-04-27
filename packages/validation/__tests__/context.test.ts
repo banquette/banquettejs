@@ -1,6 +1,5 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
+import { UsageException } from "@banquette/exception";
+import { isArray, isObject } from "@banquette/utils-type";
 import { ValidationContext } from "../src";
 import { ValidationContextInterface } from "../src/validation-context.interface";
 

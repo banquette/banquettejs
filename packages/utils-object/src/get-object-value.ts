@@ -1,17 +1,14 @@
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
-import { ensureNumber } from "@banquette/utils-type/ensure-number";
-import { ensureObject } from "@banquette/utils-type/ensure-object";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ensureArray, ensureBoolean, ensureNumber, ensureObject, ensureString, isArray, isObject, isUndefined, } from '@banquette/utils-type';
 
 /**
  * Extract a value from an object and ensure it is a string.
  * If the key is not found, the default value is returned.
  */
-export function getObjectValueAsString(data: any, key: string, defaultValue?: string): string {
+export function getObjectValueAsString(
+    data: any,
+    key: string,
+    defaultValue?: string
+): string {
     return ensureString(getObjectValue(data, key, defaultValue));
 }
 
@@ -19,7 +16,11 @@ export function getObjectValueAsString(data: any, key: string, defaultValue?: st
  * Extract a value from an object and ensure it is a valid number.
  * If the key is not found, the default value is returned.
  */
-export function getObjectValueAsNumber(data: any, key: string, defaultValue?: number): number {
+export function getObjectValueAsNumber(
+    data: any,
+    key: string,
+    defaultValue?: number
+): number {
     return ensureNumber(getObjectValue(data, key, defaultValue));
 }
 
@@ -27,7 +28,11 @@ export function getObjectValueAsNumber(data: any, key: string, defaultValue?: nu
  * Extract a value from an object and ensure it is a boolean.
  * If the key is not found, the default value is returned.
  */
-export function getObjectValueAsBoolean(data: any, key: string, defaultValue: boolean = false): boolean {
+export function getObjectValueAsBoolean(
+    data: any,
+    key: string,
+    defaultValue: boolean = false
+): boolean {
     return ensureBoolean(getObjectValue(data, key, defaultValue));
 }
 
@@ -35,7 +40,11 @@ export function getObjectValueAsBoolean(data: any, key: string, defaultValue: bo
  * Extract a value from an object and ensure it is an array.
  * If the key is not found, the default value is returned.
  */
-export function getObjectValueAsArray<T>(data: any, key: string, defaultValue: any[] = []): any[] {
+export function getObjectValueAsArray<T>(
+    data: any,
+    key: string,
+    defaultValue: any[] = []
+): any[] {
     return ensureArray(getObjectValue(data, key, defaultValue));
 }
 
@@ -43,7 +52,11 @@ export function getObjectValueAsArray<T>(data: any, key: string, defaultValue: a
  * Extract a value from an object and ensure it is an object.
  * If the key is not found, the default value is returned.
  */
-export function getObjectValueAsObject(data: any, key: string, defaultValue: any = null): any {
+export function getObjectValueAsObject(
+    data: any,
+    key: string,
+    defaultValue: any = null
+): any {
     return ensureObject(getObjectValue(data, key, defaultValue));
 }
 
@@ -52,9 +65,13 @@ export function getObjectValueAsObject(data: any, key: string, defaultValue: any
  * The "key" parameter can be an array for multi-dimensional search.
  * You can also write it as a string separated with "->".
  */
-export function getObjectValue(data: any, key: string|number|Array<string|number>, defaultValue: any = null): any {
+export function getObjectValue(
+    data: any,
+    key: string | number | Array<string | number>,
+    defaultValue: any = null
+): any {
     if (!isArray(key)) {
-        key = String(key).split("->");
+        key = String(key).split('->');
     }
     let container = data;
     for (const item of key) {
@@ -71,6 +88,10 @@ export function getObjectValue(data: any, key: string|number|Array<string|number
  *
  * @deprecated Use getObjectValue instead.
  */
-export function getValueInObject(data: any, search: string[], defaultValue: any = null): any {
+export function getValueInObject(
+    data: any,
+    search: string[],
+    defaultValue: any = null
+): any {
     return getObjectValue(data, search, defaultValue);
 }

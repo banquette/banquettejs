@@ -1,21 +1,13 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-
-import { FormArray as FormArrayObject } from '@banquette/form/form-array';
-import { FormComponentInterface } from "@banquette/form/form-component.interface";
-import { TransformResult } from "@banquette/model/transform-result";
-import { TransformContext } from "@banquette/model/transformer/transform-context";
-import { TransformPipeline } from "@banquette/model/transformer/transform-pipeline";
-import { TransformerInterface } from "@banquette/model/transformer/transformer.interface";
-import { ensureCompleteTransformer } from "@banquette/model/utils";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Complete } from "@banquette/utils-type/types";
+import { Injector } from "@banquette/dependency-injection";
+import { FormArray as FormArrayObject, FormComponentInterface } from '@banquette/form';
+import { TransformResult, TransformContext, TransformPipeline, TransformerInterface, ensureCompleteTransformer } from "@banquette/model";
+import { isArray, isUndefined, Complete } from "@banquette/utils-type";
 import { FormRelatedTransformers, FormArrayTransformerSymbol } from "../contants";
 import { FormComponentFactory } from "../form-component.factory";
 import { FormControl } from "./form-control";
 import { FormTransformerInterface } from "./form-transformer.interface";
 
-const factory = Injector.Get(FormComponentFactory);
+let factory: FormComponentFactory|null = null;
 
 /**
  * Transform the input array into a FormArray.
@@ -39,6 +31,9 @@ export function FormArray(transformer: TransformerInterface = FormControl()): Fo
          * @inheritDoc
          */
         transform(context: TransformContext): TransformResult {
+            if (factory === null) {
+                factory = Injector.Get(FormComponentFactory);
+            }
             if (!isArray(context.value)) {
                 const formArray = factory.createFormArray(context.ctor, context.property as string);
                 context.result.setResult(formArray);
@@ -63,7 +58,7 @@ export function FormArray(transformer: TransformerInterface = FormControl()): Fo
                 results[property] = subResult.result as FormComponentInterface;
             });
             pipeline.onFinish(() => {
-                const output = factory.createFormArray(context.ctor, context.property as string);
+                const output = factory!.createFormArray(context.ctor, context.property as string);
                 const keys: string[] = Object.keys(results).sort();
                 for (const key of keys) {
                     output.append(results[key]);

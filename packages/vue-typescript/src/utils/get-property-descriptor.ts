@@ -1,5 +1,4 @@
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { isUndefined, Constructor } from "@banquette/utils-type";
 
 /**
  * Try to get a property descriptor in the whole prototype chain.

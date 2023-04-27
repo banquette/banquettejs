@@ -1,4 +1,4 @@
-import { AbstractConstructor } from "@banquette/utils-type/types";
+import { AbstractConstructor } from "@banquette/utils-type";
 import { Vue } from "../vue";
 import { anyToComponentCtor } from "./converters";
 

@@ -1,28 +1,29 @@
 <style src="./file.component.css" scoped></style>
 <template src="./file.component.html" ></template>
 <script lang="ts">
-import { HttpMethod } from "@banquette/http/constants";
-import { FormFile } from "@banquette/ui/form/file/form-file";
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { humanSizeToByteCount } from "@banquette/utils-string/format/human-size-to-byte-count";
-import { isString } from "@banquette/utils-type/is-string";
-import { Primitive } from "@banquette/utils-type/types";
-import { IconMaterialClose } from "@banquette/vue-material-icons/close";
-import { IconMaterialDescription } from "@banquette/vue-material-icons/description";
-import { IconMaterialDone } from "@banquette/vue-material-icons/done";
-import { IconMaterialError } from "@banquette/vue-material-icons/error";
-import { IconMaterialFileUpload } from "@banquette/vue-material-icons/file-upload";
-import { IconMaterialPlayArrow } from "@banquette/vue-material-icons/play-arrow";
-import { IconMaterialStop } from "@banquette/vue-material-icons/stop";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Import } from "@banquette/vue-typescript/decorator/import.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { AbstractVueFormComponent } from "../abstract-vue-form.component";
-import { BaseFormInputComponent } from "../base-input";
+import { HttpMethod } from "@banquette/http";
+import { FormFile } from "@banquette/ui";
+import { ensureInEnum } from "@banquette/utils-array";
+import { humanSizeToByteCount } from "@banquette/utils-string";
+import { isString } from "@banquette/utils-type";
+import { Primitive } from "@banquette/utils-type";
+import { IMaterialClose } from "@banquette/vue-material-icons";
+import { IMaterialDescription } from "@banquette/vue-material-icons";
+import { IMaterialDone } from "@banquette/vue-material-icons";
+import { IMaterialError } from "@banquette/vue-material-icons";
+import { IMaterialFileUpload } from "@banquette/vue-material-icons";
+import { IMaterialPlayArrow } from "@banquette/vue-material-icons";
+import { IMaterialStop } from "@banquette/vue-material-icons";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Import } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { BindThemeDirective } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { BtAbstractVueForm } from "../abstract-vue-form.component";
+import { BtFormBaseInput } from "../base-input";
 import { BaseInputComposable } from "../base-input/base-input.composable";
 import { FileViewDataInterface } from "./file-view-data.interface";
 import { FileViewModel } from "./file.view-model";
@@ -33,10 +34,13 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-file',
-    components: [BaseFormInputComponent, IconMaterialClose, IconMaterialDescription, IconMaterialDone, IconMaterialError, IconMaterialFileUpload, IconMaterialPlayArrow, IconMaterialStop],
+    components: [BtFormBaseInput, IMaterialClose, IMaterialDescription, IMaterialDone, IMaterialError, IMaterialFileUpload, IMaterialPlayArrow, IMaterialStop],
     directives: [BindThemeDirective]
 })
-export default class FormFileComponent extends AbstractVueFormComponent<FileViewDataInterface, FileViewModel> {
+export default class BtFormFile extends BtAbstractVueForm<FileViewDataInterface, FileViewModel> {
+    // To get autocompletion in the view.
+    declare v: FileViewDataInterface;
+
     /**
      * Holds the props exposed by the base input.
      */
@@ -62,12 +66,12 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
     /**
      * Validation pattern for file types.
      */
-    @Prop({type: String, default: null}) public accept!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public accept!: string|null;
 
     /**
      * Limit the size of individual files.
      */
-    @Prop({type: [String, Number], default: null, transform: (v) => isString(v) ? humanSizeToByteCount(v) : v})
+    @Prop({type: [String, Number] as PropType<number|null>, default: null, transform: (v) => isString(v) ? humanSizeToByteCount(v) : v})
     public maxIndividualSize!: number|null;
 
     /**
@@ -79,25 +83,21 @@ export default class FormFileComponent extends AbstractVueFormComponent<FileView
     /**
      * Remote module props.
      */
-    @Prop({type: String, default: null}) public url!: string|null;
-    @Prop({type: String, default: null}) public endpoint!: string|null;
-    @Prop({type: String, default: HttpMethod.POST, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: HttpMethod;
-    @Prop({type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
-    @Prop({type: Object, default: {}}) public headers!: Record<string, Primitive>;
+    @Prop({type: String as PropType<string|null>, default: null}) public url!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public endpoint!: string|null;
+    @Prop({type: String as PropType<HttpMethod>, default: HttpMethod.POST, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: HttpMethod;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public urlParams!: Record<string, Primitive>;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public headers!: Record<string, Primitive>;
 
     /**
      * i18n configuration.
      */
-    @Prop({type: Object, default: I18nDefaults}) public i18n!: I18nInterface;
-
-    // Override the type to get autocompletion in the view.
-    @Expose() public v!: FileViewDataInterface;
+    @Prop({type: Object as PropType<I18nInterface>, default: I18nDefaults}) public i18n!: I18nInterface;
 
     /**
      * @inheritDoc
      */
     public beforeMount(): void {
-        super.beforeMount();
         this.base.floatingLabel = false;
     }
 

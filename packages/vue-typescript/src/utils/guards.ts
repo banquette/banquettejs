@@ -1,14 +1,7 @@
-import { isConstructor } from "@banquette/utils-type/is-constructor";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
+import { isConstructor, isFunction, isObject } from "@banquette/utils-type";
 import { ComponentPublicInstance } from "vue";
 import { COMPONENT_TS_INSTANCE, DECORATORS_METADATA, COMPONENT_CTOR } from "../constants";
-import {
-    DecoratedComponentConstructor,
-    DecoratedComponentInstance,
-    VccOpts,
-    DecoratedComponentPrototype
-} from "../type";
+import { DecoratedComponentConstructor, DecoratedComponentInstance, VccOpts, DecoratedComponentPrototype } from "../type";
 
 /**
  * Test if the input is a `DecoratedComponentConstructor`.

@@ -1,8 +1,6 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { HttpMethod } from "@banquette/http/constants";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { StringEnum } from "@banquette/utils-type/types";
+import { UsageException } from "@banquette/exception";
+import { HttpMethod } from "@banquette/http";
+import { isString, isUndefined, StringEnum } from "@banquette/utils-type";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointParameterOptions, ApiEndpointOptionsWithIdentifiers } from "./api-endpoint.options";
 import { EndpointNotFoundException } from "./exception/endpoint-not-found.exception";

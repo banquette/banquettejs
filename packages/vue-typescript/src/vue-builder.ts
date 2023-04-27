@@ -1,9 +1,5 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { UsageException } from "@banquette/exception";
+import { ensureArray, isFunction, isObject, isUndefined, Constructor } from "@banquette/utils-type";
 import { AppConfig, Component } from "@vue/runtime-core";
 import { App, ComponentPublicInstance, createApp, Directive } from "vue";
 

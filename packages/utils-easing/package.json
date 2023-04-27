@@ -7,9 +7,28 @@
         "directory": "packages/utils-easing"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
-    "gitHead": "faa9a3c35de8a7be6d2b19fd59825ee3f705de7c",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/utils-easing.umd.cjs",
+    "module": "./dist/utils-easing.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/utils-easing.js",
+            "require": "./dist/utils-easing.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
     "dependencies": {}
 }

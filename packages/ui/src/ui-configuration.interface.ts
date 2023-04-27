@@ -1,4 +1,4 @@
-import { ConfigurationInterface } from "@banquette/config/config/configuration.interface";
+import { ConfigurationInterface } from "@banquette/config";
 import { TableConfigurationInterface } from "./table/table-configuration.interface";
 
 export interface UiConfigurationInterface extends ConfigurationInterface {

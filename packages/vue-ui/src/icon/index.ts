@@ -1,2 +1,2 @@
-export { default as IconComponent } from './icon.component.vue';
+export { default as BtIcon } from './icon.component.vue';
 export * from './icon.interface';

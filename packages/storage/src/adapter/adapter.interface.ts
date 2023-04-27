@@ -1,4 +1,4 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
+import { UnsubscribeFunction } from "@banquette/event";
 import { StorageClearEvent } from "../event/storage-clear.event";
 import { StorageKeyChangeEvent } from "../event/storage-key-change.event";
 

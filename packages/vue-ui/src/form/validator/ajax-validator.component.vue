@@ -1,56 +1,56 @@
 <script lang="ts">
-import { ApiEndpoint } from "@banquette/api/api-endpoint";
-import { ApiEndpointStorageService } from "@banquette/api/api-endpoint-storage.service";
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { HttpMethod } from "@banquette/http/constants";
-import { HttpRequestFactory } from "@banquette/http/http-request.factory";
-import { HttpResponse } from "@banquette/http/http-response";
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { isObject } from "@banquette/utils-type/is-object";
-import { AutoPayloadSymbol, Ajax } from "@banquette/validation/type/ajax";
-import { ValidationResult } from "@banquette/validation/validation-result";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { ApiEndpoint } from "@banquette/api";
+import { ApiEndpointStorageService } from "@banquette/api";
+import { Inject } from "@banquette/dependency-injection";
+import { Module } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { HttpMethod } from "@banquette/http";
+import { HttpRequestFactory } from "@banquette/http";
+import { HttpResponse } from "@banquette/http";
+import { ensureInEnum } from "@banquette/utils-array";
+import { proxy } from "@banquette/utils-misc";
+import { isObject } from "@banquette/utils-type";
+import { AutoPayloadSymbol, Ajax } from "@banquette/validation";
+import { ValidationResult } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { PropType } from "vue";
+import { BtValidator } from "./validator.component";
 
 @Module()
 @Component({
     name: 'bt-validate-ajax',
-    template: false,
-    factory: () => Injector.Get(ValidateAjaxComponent)
+    factory: () => Injector.Get(BtValidateAjax)
 })
-export default class ValidateAjaxComponent extends ValidatorComponent {
+export default class BtValidateAjax extends BtValidator {
     /**
      * A raw url to call.
      */
-    @Prop({type: String, default: null}) public url!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public url!: string|null;
 
     /**
      * An Api endpoint name.
      */
-    @Prop({type: String, default: null}) public endpoint!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public endpoint!: string|null;
 
     /**
      * Parameters to add to the url or query.
      */
-    @Prop({type: Object, default: {}}) public urlParams!: Record<string, any>;
+    @Prop({type: Object as PropType<Record<string, any>>, default: {}}) public urlParams!: Record<string, any>;
 
     /**
      * Http method to use.
      * Only used if no endpoint is defined.
      */
-    @Prop({type: String, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: HttpMethod;
+    @Prop({type: String as PropType<HttpMethod>, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.POST)}) public method!: HttpMethod;
 
     /**
      * Name of the property that contains the boolean response in the server's response.
      * If none is defined, the http status is used.
      */
-    @Prop({type: String, default: null}) public responseProperty!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public responseProperty!: string|null;
 
     public constructor(@Inject(ApiEndpointStorageService) private api: ApiEndpointStorageService) {
         super();
@@ -97,3 +97,4 @@ export default class ValidateAjaxComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

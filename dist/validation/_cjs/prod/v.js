@@ -1,6 +1,0 @@
-/*!
- * Banquette Validation v0.0.0 (CommonJS)
- * (c) 2022-2022 Julien Pinto
- * Released under Apache License, Version 2.0
- */
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("./type/ajax.js"),r=require("./type/and.js"),t=require("./type/callback.js"),i=require("./type/choice.js"),a=require("./type/compose.js"),p=require("./type/container.js"),s=require("./type/email.js"),y=require("./type/empty.js"),u=require("./type/equal.js"),n=require("./type/foreach.js"),o=require("./type/if.js"),j=require("./type/invalid.js"),q=require("./type/max.js"),l=require("./type/min.js"),m=require("./type/not-empty.js"),c=require("./type/or.js"),d=require("./type/pattern.js"),x=require("./type/phone.js"),E=require("./type/same-as.js"),h=require("./type/is-type.js"),C=require("./type/url.js"),v=require("./type/valid.js");function VExtend(e){return e}var f={Ajax:e.Ajax,And:r.And,Callback:t.Callback,Choice:i.Choice,Compose:a.Compose,Container:p.Container,Email:s.Email,Empty:y.Empty,Equal:u.Equal,Foreach:n.Foreach,If:o.If,Invalid:j.Invalid,Max:q.Max,Min:l.Min,NotEmpty:m.NotEmpty,Or:c.Or,Pattern:d.Pattern,Phone:x.Phone,SameAs:E.SameAs,IsType:h.IsType,Url:C.Url,Valid:v.Valid};exports.V=f,exports.VExtend=VExtend;

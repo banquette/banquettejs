@@ -1,12 +1,12 @@
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive } from "@banquette/utils-type";
+
+let MaxId: number = 0;
 
 export class SelectedChoice {
-    private static MaxId: number = 0;
-
     /**
      * Unique id of the selected item.
      */
-    public readonly id: number = ++SelectedChoice.MaxId;
+    public readonly id: number = ++MaxId;
 
     /**
      * The text visible to the user.

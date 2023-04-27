@@ -1,5 +1,5 @@
-import { MutationType } from "../src/constant";
 import { ObserverFactory } from "../src";
+import { MutationType } from "../src/constant";
 import { wrapObserver } from "./utils";
 
 describe('Base mechanics', () => {

@@ -1,9 +1,8 @@
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Directive } from "@banquette/vue-typescript/decorator/directive.decorator";
+import { getObjectValue } from "@banquette/utils-object";
+import { isObject, isUndefined } from "@banquette/utils-type";
+import { Directive } from "@banquette/vue-typescript";
 import { DirectiveBinding, createApp, App, reactive, h } from "vue";
-import { default as PopoverComponent } from "./popover.component.vue";
+import { default as BtPopover } from "./popover.component.vue";
 
 interface InstanceDescriptorInterface {
     el: HTMLElement;
@@ -22,10 +21,10 @@ interface OptionsInterface {
     props: Record<string, any>;
 }
 
+const Groups: Record<string, GroupInterface> = {};
+
 @Directive({name: 'bt-popover'})
 export class PopoverDirective {
-    private static Groups: Record<string, GroupInterface> = {};
-
     private instance: InstanceDescriptorInterface|null = null;
 
     public created(el: Element, bindings: DirectiveBinding) {
@@ -83,7 +82,7 @@ export class PopoverDirective {
              * Wrap the component into a root component so props can be reactive.
              * @see https://github.com/vuejs/core/issues/4874#issuecomment-959008724
              */
-            render: () => h(PopoverComponent, options.props)
+            render: () => h(BtPopover, options.props)
         });
         options.target.append(container);
         app.mount(container);
@@ -91,20 +90,20 @@ export class PopoverDirective {
     }
 
     private addToGroup(el: Element, group: string, factory: () => InstanceDescriptorInterface): InstanceDescriptorInterface {
-        if (!isUndefined(PopoverDirective.Groups[group])) {
-            PopoverDirective.Groups[group].count++;
-            PopoverDirective.Groups[group].instance.options.props.target.push(el);
-            return PopoverDirective.Groups[group].instance;
+        if (!isUndefined(Groups[group])) {
+            Groups[group].count++;
+            Groups[group].instance.options.props.target.push(el);
+            return Groups[group].instance;
         }
         const newInstance = factory();
-        PopoverDirective.Groups[group] = {count: 1, instance: newInstance};
+        Groups[group] = {count: 1, instance: newInstance};
         return newInstance;
     }
 
     private removeFromGroup(group: string): void {
-        if (!(--PopoverDirective.Groups[group].count)) {
-            PopoverDirective.Groups[group].instance.app.unmount();
-            delete PopoverDirective.Groups[group];
+        if (!(--Groups[group].count)) {
+            Groups[group].instance.app.unmount();
+            delete Groups[group];
         }
     }
 

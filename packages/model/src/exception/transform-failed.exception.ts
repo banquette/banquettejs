@@ -1,4 +1,4 @@
-import { SystemException } from "@banquette/exception/system.exception";
+import { SystemException } from "@banquette/exception";
 
 /**
  * Exception thrown when any type of transform failed as the transform service level.

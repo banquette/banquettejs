@@ -1,11 +1,7 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { ensureInteger } from "@banquette/utils-type/ensure-integer";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isNumeric } from "@banquette/utils-type/is-numeric";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { ValidatorContainerInterface } from "@banquette/validation/validator-container.interface";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { UsageException } from "@banquette/exception";
+import { getObjectKeys } from "@banquette/utils-object";
+import { ensureInteger, isNullOrUndefined, isNumeric, isUndefined } from "@banquette/utils-type";
+import { ValidatorContainerInterface, ValidatorInterface } from "@banquette/validation";
 import { AbstractFormGroup } from "./abstract-form-group";
 import { CallContext, FilterGroup, FormEvents, ValidationStrategy } from "./constant";
 import { ComponentAddedFormEvent } from "./event/component-added.form-event";
@@ -268,12 +264,16 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
         // Copy the array to allow the callback to alter the collection without messing up the loop.
         const copy = [...this.children_];
         const filtersKeys: State[] = getObjectKeys(filters);
-        ext:
         for (let i = 0; i < copy.length; ++i) {
+            let found = false;
             for (const state of filtersKeys) {
                 if (copy[i].decorated[state] !== filters[state]) {
-                    continue ext;
+                    found = true;
+                    break ;
                 }
+            }
+            if (found) {
+                continue ;
             }
             if (cb(copy[i].decorated, i) === false) {
                 break ;

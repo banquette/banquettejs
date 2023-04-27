@@ -4,10 +4,10 @@
     </div>
 </template>
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
+import { Component } from "@banquette/vue-typescript";
 
 @Component('bt-dropdown-item')
-export default class DropdownItemComponent {
+export default class BtDropdownItem {
 
 }
 </script>

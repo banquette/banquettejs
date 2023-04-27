@@ -1,23 +1,20 @@
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { Component, Prop, Render, Vue } from "@banquette/vue-typescript";
 import { VNodeChild } from "@vue/runtime-core";
-import { Teleport, openBlock, createElementBlock, createBlock, createElementVNode, renderSlot } from "vue";
+import { Teleport, openBlock, createElementBlock, createBlock, createElementVNode, renderSlot, PropType } from "vue";
+
+let MaxId: number = 0;
 
 @Component('bt-teleport')
-export default class TeleportComponent extends Vue {
-    static MaxId: number = 0;
-
+export default class BtTeleport extends Vue {
     /**
      * Required. Specify target container.
      * Can either be a selector or an actual element.
      */
-    @Prop({type: [Object, String], default: null}) public to!: string|HTMLElement|null;
+    @Prop({type: [Object, String] as PropType<HTMLElement|string|null>, default: null}) public to!: HTMLElement|string|null;
     @Prop({type: Boolean, default: false, required: true}) public disabled!: boolean;
 
-    private wrapperId: string = '__bt-teleport-' + TeleportComponent.MaxId++;
+    private wrapperId: string = '__bt-teleport-' + MaxId++;
 
     @Render() public render(context: any): VNodeChild {
         if (this.disabled || !this.to) {

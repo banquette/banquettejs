@@ -1,12 +1,12 @@
 <script lang="ts">
-import { Equal } from "@banquette/validation/type/equal";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { Equal } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
-@Component({name: 'bt-validate-equal', template: false})
-export default class ValidateEqualComponent extends ValidatorComponent {
+@Component('bt-validate-equal')
+export default class BtValidateEqual extends BtValidator {
     @Prop({required: true}) public value!: any;
     @Prop({type: Boolean, default: true}) public strict!: boolean;
 
@@ -18,3 +18,4 @@ export default class ValidateEqualComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

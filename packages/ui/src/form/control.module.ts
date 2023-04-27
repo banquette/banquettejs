@@ -1,16 +1,9 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { BeforeValueChangeFormEvent } from "@banquette/form/event/before-value-change.form-event";
-import { ErrorsChangedFormEvent } from "@banquette/form/event/errors-changed.form-event";
-import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { FormError } from "@banquette/form/form-error";
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { extend } from "@banquette/utils-object/extend";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { VoidCallback, Writeable } from "@banquette/utils-type/types";
+import { UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { BeforeValueChangeFormEvent, ErrorsChangedFormEvent, StateChangedFormEvent, ValueChangedFormEvent, FormError, FormViewControlInterface } from "@banquette/form";
+import { proxy } from "@banquette/utils-misc";
+import { extend, getObjectKeys } from "@banquette/utils-object";
+import { isUndefined, VoidCallback, Writeable } from "@banquette/utils-type";
 import { HeadlessInterface } from "../headless.interface";
 import { ControlViewDataInterface } from "./control-view-data.interface";
 import { NoopTransformer } from "./noop.value-transformer";
@@ -75,7 +68,7 @@ export class ControlModule<ControlValueType = any> implements HeadlessInterface<
      * @inheritDoc
      */
     public setViewData(viewData: ControlViewDataInterface): void {
-        (this as Writeable<ControlModule>).viewData = this.buildViewData(viewData);
+        (this as any /* Writeable<ControlModule> */).viewData = this.buildViewData(viewData);
     }
 
     /**

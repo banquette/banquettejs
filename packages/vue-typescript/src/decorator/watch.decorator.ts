@@ -1,4 +1,4 @@
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { isUndefined } from "@banquette/utils-type";
 import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";

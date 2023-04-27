@@ -1,5 +1,5 @@
-import { HttpResponse } from "@banquette/http/http-response";
-import { HeadlessFormViewDataInterface } from "@banquette/ui/form/form/headless-form-view-data.interface";
+import { HttpResponse } from "@banquette/http";
+import { HeadlessFormViewDataInterface } from "@banquette/ui";
 
 export interface FormViewDataInterface<ModelType extends object = any> extends HeadlessFormViewDataInterface {
     /**

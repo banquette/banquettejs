@@ -1,10 +1,7 @@
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getSymbolDescription } from "@banquette/utils-object/get-symbol-description";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor, Complete } from "@banquette/utils-type/types";
+import { Inject, Service } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { getSymbolDescription } from "@banquette/utils-object";
+import { isNullOrUndefined, isUndefined, Constructor, Complete } from "@banquette/utils-type";
 import { ObjectCtor, Wildcard } from "./constants";
 import { ModelMetadataService } from "./model-metadata.service";
 import { TransformerInterface } from "./transformer/transformer.interface";
@@ -15,11 +12,12 @@ import { ensureCompleteTransformer } from "./utils";
 export class ModelTransformMetadataService {
     /**
      * A map indexed by models' constructors and holding the type of transform and
-     * the respective transformers or each properties of the model.
+     * the respective transformers of each property of the model.
      */
     protected transformersMap: WeakMap<Constructor, Record<symbol, Record<string, Complete<TransformerInterface>>>>;
 
     public constructor(@Inject(ModelMetadataService) private modelMetadata: ModelMetadataService) {
+        console.warn('#ModelTransformMetadataService');
         this.transformersMap = new WeakMap<Constructor, Record<symbol, Record<string, Complete<TransformerInterface>>>>();
     }
 

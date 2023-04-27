@@ -1,11 +1,7 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { noop } from "@banquette/utils-misc/noop";
-import { kebabCase } from "@banquette/utils-string/case/kebab-case";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { UsageException } from "@banquette/exception";
+import { noop } from "@banquette/utils-misc";
+import { kebabCase, isNonEmptyString } from "@banquette/utils-string";
+import { isFunction, isString, isUndefined, Constructor } from "@banquette/utils-type";
 import { DirectiveBinding, DirectiveHook, VNode } from "vue";
 import { VueBuilder } from "../vue-builder";
 
@@ -109,6 +105,7 @@ export function Directive(optionsOrName: Partial<DirectiveDecoratorOptions>|stri
             beforeUpdate: defineProxy(ctor, options, 'beforeUpdate'),
             updated: defineProxy(ctor, options, 'updated'),
             beforeUnmount: defineProxy(ctor, options, 'beforeUnmount'),
+            getSSRProps: defineProxy(ctor, options, 'getSSRProps') as any,
             unmounted: (() => {
                 const userCallback = defineProxy(ctor, options, 'unmounted');
                 return (...args: [Element, DirectiveBinding, VNode, VNode | null]) => {

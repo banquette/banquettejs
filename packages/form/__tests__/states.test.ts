@@ -1,15 +1,5 @@
-import { NotEmpty } from "@banquette/validation/type/not-empty";
-import {
-    BasicState,
-    ContextualizedState,
-    InverseState,
-    FormArray,
-    FormComponentInterface,
-    FormControl,
-    FormGroupInterface,
-    FormObject,
-    FormFactory
-} from "../src";
+import { NotEmpty } from "@banquette/validation";
+import { BasicState, ContextualizedState, InverseState, FormArray, FormComponentInterface, FormControl, FormGroupInterface, FormObject, FormFactory } from "../src";
 import { checkStates, createTestForm } from "./__mocks__/utils";
 import { ViewModelMock } from "./__mocks__/view-model.mock";
 

@@ -1,12 +1,8 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { arrayIntersect } from "@banquette/utils-array/array-intersect";
-import { MatchType } from "@banquette/utils-glob/constant";
-import { matchBest } from "@banquette/utils-glob/match-best";
-import { MatchResult } from "@banquette/utils-glob/match-result";
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Writeable } from "@banquette/utils-type/types";
+import { UsageException } from "@banquette/exception";
+import { arrayIntersect } from "@banquette/utils-array";
+import { MatchType, matchBest, MatchResult } from "@banquette/utils-glob";
+import { getObjectValue } from "@banquette/utils-object";
+import { ensureArray, isUndefined, Writeable } from "@banquette/utils-type";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { isValidatorContainer, isValidationContext } from "./utils";
 import { ValidateOptionsInterface } from "./validate-options.interface";
@@ -91,7 +87,7 @@ export class ValidationContext implements ValidationContextInterface {
         if (this.parent) {
             return this.addMask(mask);
         }
-        (this as Writeable<ValidationContext>).masks = this.masks.concat(normalizeMasks(mask, this.path));
+        (this as any /* Writeable<ValidationContext> */).masks = this.masks.concat(normalizeMasks(mask, this.path));
     }
 
     /**
@@ -101,7 +97,7 @@ export class ValidationContext implements ValidationContextInterface {
         if (this.parent) {
             return this.setMasks(masks);
         }
-        (this as Writeable<ValidationContext>).masks = normalizeMasks(masks, this.path);
+        (this as any /* Writeable<ValidationContext> */).masks = normalizeMasks(masks, this.path);
     }
 
     /**

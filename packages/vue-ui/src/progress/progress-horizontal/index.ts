@@ -1,1 +1,1 @@
-export { default as ProgressHorizontalComponent } from './progress-horizontal.component.vue';
+export { default as BtProgressHorizontal } from './progress-horizontal.component.vue';

@@ -1,4 +1,4 @@
-import { isString } from "@banquette/utils-type/is-string";
+import { isString } from "@banquette/utils-type";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { assignOptionsDefaults } from "../utils";

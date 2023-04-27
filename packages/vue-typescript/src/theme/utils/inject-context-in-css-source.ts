@@ -1,5 +1,4 @@
-import { trim } from "@banquette/utils-string/format/trim";
-import { insertInString } from "@banquette/utils-string/insert-in-string";
+import { trim, insertInString } from "@banquette/utils-string";
 import { extractCssSelectors } from "./extract-css-selectors";
 
 /**

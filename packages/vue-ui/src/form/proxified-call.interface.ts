@@ -1,4 +1,4 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
+import { FormViewControlInterface } from "@banquette/form";
 
 /**
  * Represent a call to a form control.

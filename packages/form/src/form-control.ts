@@ -1,10 +1,9 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { Writeable, GenericCallback } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { areEqual } from "@banquette/utils-misc";
+import { cloneDeepPrimitive, getObjectKeys } from "@banquette/utils-object";
+import { Writeable, GenericCallback } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
 import { BasicState, CallContext, FormEvents, ValidationStrategy } from "./constant";
 import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
@@ -55,14 +54,13 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
 
     public constructor(value?: any, validator?: ValidatorInterface) {
         super();
-
         // Disable until a view model is set
         (this.proxifyWithContext(() => {
             this.disable();
         }, CallContext.ViewModel))();
 
         this.additionalPatternTags.push('control');
-        (this as Writeable<FormControl>).value = value;
+        (this as any /* Writeable<FormControl> */).value = value;
         this.lastValue = cloneDeepPrimitive(value);
         this.defaultValue = cloneDeepPrimitive(value);
         this.setValidator(validator || null);
@@ -94,7 +92,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
                 }
                 // The value may have been overridden in the event.
                 value = beforeValueChangeEvent.newValue;
-                (this as Writeable<FormControl>).value = value;
+                (this as any /* Writeable<FormControl> */).value = value;
                 this.dispatch(FormEvents.ValueChanged, () => new ValueChangedFormEvent(this, this.lastValue, this.value));
                 this.lastValue = cloneDeepPrimitive(this.value);
                 this.viewModels.forEach((vm) => {
@@ -127,7 +125,7 @@ export class FormControl<ValueType = unknown> extends AbstractFormComponent<Valu
      * Further reset of the control will set this value back into the "real" value of the control.
      */
     public setDefaultValue(value: any): void {
-        (this as Writeable<FormControl>).defaultValue = cloneDeepPrimitive(value);
+        (this as any /* Writeable<FormControl> */).defaultValue = cloneDeepPrimitive(value);
     }
 
     /**

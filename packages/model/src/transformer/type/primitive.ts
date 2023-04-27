@@ -1,9 +1,5 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ensureBoolean } from "@banquette/utils-type/ensure-boolean";
-import { ensureInteger } from "@banquette/utils-type/ensure-integer";
-import { ensureNumber } from "@banquette/utils-type/ensure-number";
-import { ensureScalarOrCompound } from "@banquette/utils-type/ensure-scalar-or-compound";
-import { ensureString } from "@banquette/utils-type/ensure-string";
+import { UsageException } from "@banquette/exception";
+import { ensureBoolean, ensureInteger, ensureNumber, ensureScalarOrCompound, ensureString } from "@banquette/utils-type";
 import { TransformResult } from "../../transform-result";
 import { TransformContext } from "../transform-context";
 import { TransformerInterface } from "../transformer.interface";
@@ -48,6 +44,7 @@ export enum Type {
  * Ensure the output type matches the ones given as parameters.
  */
 export function Primitive(transformType: Type = Type.Any, inverseType: Type = Type.Any): TransformerInterface {
+    console.warn('#Primitive (decorator)');
     const ensureType = (type: Type, value: any) => {
         if ((type & Type.Null) === Type.Null && value === null) {
             return null;

@@ -1,15 +1,15 @@
 <script lang="ts">
-import { Or } from "@banquette/validation/type/or";
-import { Valid } from "@banquette/validation/type/valid";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
+import { Or } from "@banquette/validation";
+import { Valid } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Render } from "@banquette/vue-typescript";
 import { VNodeChild } from "@vue/runtime-core";
 import { renderSlot } from "vue";
-import { ContainerValidatorComponent } from "./container-validator.component";
+import { BtContainerValidator } from "./container-validator.component";
 
 @Component('bt-validate-or')
-export default class ValidateOrComponent extends ContainerValidatorComponent {
+export default class BtValidateOr extends BtContainerValidator {
     /**
      * @inheritDoc
      */
@@ -26,3 +26,4 @@ export default class ValidateOrComponent extends ContainerValidatorComponent {
     }
 }
 </script>
+<template></template>

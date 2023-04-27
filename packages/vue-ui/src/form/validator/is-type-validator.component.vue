@@ -1,13 +1,13 @@
 <script lang="ts">
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { IsType, Type } from "@banquette/validation/type/is-type";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { UsageException } from "@banquette/exception";
+import { ensureArray } from "@banquette/utils-type";
+import { ensureString } from "@banquette/utils-type";
+import { isUndefined } from "@banquette/utils-type";
+import { IsType, Type } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
 const TypesMap: Record<string, Type> = {
     'string': Type.String,
@@ -21,8 +21,8 @@ const TypesMap: Record<string, Type> = {
     'null': Type.Null
 };
 
-@Component({name: 'bt-validate-is-type', template: false})
-export default class ValidateIsTypeComponent extends ValidatorComponent {
+@Component('bt-validate-is-type')
+export default class BtValidateIsType extends BtValidator {
     @Prop({type: [String, Array], required: true, transform: (value: any) => {
         let output: Type = 0;
         for (let type of ensureArray(value)) {
@@ -45,3 +45,4 @@ export default class ValidateIsTypeComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

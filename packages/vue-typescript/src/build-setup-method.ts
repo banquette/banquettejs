@@ -1,18 +1,8 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { noop } from "@banquette/utils-misc/noop";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { cloneDeepPrimitive } from "@banquette/utils-object/clone-deep-primitive";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { getObjectValue } from "@banquette/utils-object/get-object-value";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor, GenericCallback } from "@banquette/utils-type/types";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { UsageException } from "@banquette/exception";
+import { areEqual, noop, proxy } from "@banquette/utils-misc";
+import { cloneDeepPrimitive, getObjectKeys, getObjectValue } from "@banquette/utils-object";
+import { ensureString, isArray, isFunction, isNullOrUndefined, isString, isUndefined, Constructor, GenericCallback } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
 import { WritableComputedOptions, WritableComputedRef } from "@vue/reactivity";
 import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
 import {

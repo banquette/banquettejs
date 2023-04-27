@@ -1,7 +1,5 @@
-import { EventDispatcher } from "@banquette/event/event-dispatcher";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
+import { isString, isUndefined } from "@banquette/utils-type";
 import { ItemInterface } from "../item.interface";
 import { ModuleInterface } from "../module.interface";
 import { OrderingEvents, OrderingDirection, OrderingCycleMap } from "./constant";

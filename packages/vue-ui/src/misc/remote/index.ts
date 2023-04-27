@@ -1,2 +1,2 @@
 
-export { default as RemoteComponent } from './remote.component.vue';
+export { default as BtRemote } from './remote.component.vue';

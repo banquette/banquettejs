@@ -1,15 +1,4 @@
-import {
-    onActivated,
-    onBeforeMount,
-    onBeforeUnmount,
-    onBeforeUpdate,
-    onDeactivated,
-    onErrorCaptured,
-    onMounted,
-    onServerPrefetch,
-    onUnmounted,
-    onUpdated
-} from "vue";
+import { onActivated, onBeforeMount, onBeforeUnmount, onBeforeUpdate, onDeactivated, onErrorCaptured, onMounted, onServerPrefetch, onUnmounted, onUpdated } from "vue";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
 
 /**

@@ -1,4 +1,4 @@
-import { Constructor } from "@banquette/utils-type/types";
+import { Constructor } from '@banquette/utils-type';
 
 /**
  * Define the type of identifiers supported by the builtin container.

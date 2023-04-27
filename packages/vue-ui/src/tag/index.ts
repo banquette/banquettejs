@@ -1,2 +1,2 @@
 
-export { default as TagComponent } from './tag.component.vue';
+export { default as BtTag } from './tag.component.vue';

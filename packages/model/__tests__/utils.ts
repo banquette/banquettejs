@@ -1,8 +1,6 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { Exception } from "@banquette/exception/exception";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { Injector } from "@banquette/dependency-injection";
+import { Exception } from "@banquette/exception";
+import { isNullOrUndefined, isUndefined, Constructor } from "@banquette/utils-type";
 import { TransformService, TransformResultStatus, TransformResult } from "../src";
 
 const transformService = Injector.Get(TransformService);

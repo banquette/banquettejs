@@ -1,6 +1,5 @@
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { ModelTransformerTag } from "@banquette/model/constants";
-import { PojoTransformer } from "@banquette/model/transformer/type/root/pojo";
+import { Module } from "@banquette/dependency-injection";
+import { ModelTransformerTag, PojoTransformer } from "@banquette/model";
 
 export const ApiTransformerSymbol = Symbol('api');
 
@@ -10,6 +9,7 @@ export class ApiTransformer extends PojoTransformer {
      * @inheritDoc
      */
     public getTransformerSymbol(): symbol {
+        console.warn('#ApiTransformer');
         return ApiTransformerSymbol;
     }
 }

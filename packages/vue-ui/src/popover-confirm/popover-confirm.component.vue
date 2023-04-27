@@ -1,24 +1,24 @@
 <style lang="css" src="./popover-confirm.component.css" scoped></style>
 <template src="./popover-confirm.component.html" ></template>
 <script lang="ts">
-import { IconMaterialHelp } from "@banquette/vue-material-icons/help";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
-import { DropdownComponent } from "../dropdown";
+import { IMaterialHelp } from "@banquette/vue-material-icons";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { BindThemeDirective } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { BtDropdown } from "../dropdown";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-popover-confirm',
-    components: [DropdownComponent, IconMaterialHelp],
+    components: [BtDropdown, IMaterialHelp],
     directives: [BindThemeDirective],
     emits: ['confirm', 'cancel']
 })
-export default class PopoverConfirmComponent extends Vue {
+export default class BtPopoverConfirm extends Vue {
     /**
      * Name of the component to use as icon.
      * If `null`, no icon is shown.

@@ -1,6 +1,0 @@
-/*!
- * Banquette Ui v0.0.0 (CommonJS)
- * (c) 2022-2022 Julien Pinto
- * Released under Apache License, Version 2.0
- */
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var t=require("../../../_virtual/_tslib.js"),e=require("@banquette/exception/_cjs/prod/system.exception"),i=require("@banquette/utils-string/_cjs/prod/format/ltrim"),n=require("@banquette/utils-string/_cjs/prod/is-non-empty-string"),r=require("@banquette/utils-type/_cjs/prod/is-array"),o=require("@banquette/utils-type/_cjs/prod/is-object"),a=function(e){function RemoteValidationException(t,i,n,r){void 0===t&&(t=[]);var o=e.call(this,i,n,r)||this;return o.violations=t,o.slug="server-validation",o}return t.__extends(RemoteValidationException,e),RemoteValidationException.CreateFromUnknownInput=function(t){if(t instanceof RemoteValidationException)return t;if(o.isObject(t)&&r.isArray(t.violations)){for(var e=0,a=t.violations;e<a.length;e++){var s=a[e];if(!o.isObject(s)||!n.isNonEmptyString(s.type)||!n.isNonEmptyString(s.path))return null;s.path="/"+i.ltrim(s.path,"/")}return new RemoteValidationException(t.violations)}return null},RemoteValidationException}(e.SystemException);exports.RemoteValidationException=a;

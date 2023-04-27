@@ -1,8 +1,6 @@
-import { Exception } from "@banquette/exception/exception";
-import { ensureInteger } from "@banquette/utils-type/ensure-integer";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { TransformerInterface, TransformContext, TransformResult, TransformNotSupportedException } from "../../src";
+import { Exception } from "@banquette/exception";
+import { TransformNotSupportedException, TransformContext, TransformResult } from "@banquette/model";
+import { ensureInteger, isFunction, isUndefined } from "@banquette/utils-type";
 
 interface Config {
     /**
@@ -41,7 +39,7 @@ interface Config {
 /**
  * A configurable fake transformer meant to simulate most behaviors a leaf transformer can have.
  */
-export function GenericTransformerTest({transform, inverse, delay, transformError, inverseError}: Config): TransformerInterface {
+export function GenericTransformerTest({transform, inverse, delay, transformError, inverseError}: Config): any {
     const normalizedDelay = ensureInteger(delay, 0);
     const resolveValue = (context: TransformContext, value: any): any => {
         if (isFunction(value)) {

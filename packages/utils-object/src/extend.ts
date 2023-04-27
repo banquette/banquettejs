@@ -1,13 +1,4 @@
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isArray } from "@banquette/utils-type/is-array";
-import { isConstructor } from "@banquette/utils-type/is-constructor";
-import { isDate } from "@banquette/utils-type/is-date";
-import { isElement } from "@banquette/utils-type/is-element";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isPromiseLike } from "@banquette/utils-type/is-promise-like";
-import { isRegExp } from "@banquette/utils-type/is-reg-exp";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { ensureArray, isArray, isConstructor, isDate, isElement, isFunction, isObject, isPromiseLike, isRegExp, isUndefined, } from '@banquette/utils-type';
 
 /**
  * Copy values from objs into dst, optionally recursively.
@@ -24,9 +15,12 @@ export function extend(dst: any, objs: any, deep: boolean = true): any {
         for (let j = 0, jj = keys.length; j < jj; j++) {
             const key = keys[j];
             const descriptor = Object.getOwnPropertyDescriptor(obj, key);
-            if (!isUndefined(descriptor) && (!isUndefined(descriptor.get) || !isUndefined(descriptor.set))) {
+            if (
+                !isUndefined(descriptor) &&
+                (!isUndefined(descriptor.get) || !isUndefined(descriptor.set))
+            ) {
                 Object.defineProperty(dst, key, descriptor);
-                continue ;
+                continue;
             }
             const src = obj[key];
             if (deep && isObject(src)) {

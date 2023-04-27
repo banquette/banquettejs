@@ -1,14 +1,17 @@
-import { isString } from "@banquette/utils-type/is-string";
-import { randomInt } from "./random-int";
+import { isString } from '@banquette/utils-type';
+import { randomInt } from './random-int';
 
 export const ALPHABETS = {
-    ALPHA: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    ALPHANUMERIC: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-    ALPHANUMERIC_SIMPLIFIED: "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ123456789", // Alphanumeric without confusing letters/numbers like "O" and "0", "l" and "I", etc.
-    BASE_64: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/",
-    COMPLEX: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/$^-_.(){}:<>?,;|[]*%#+!@~=",
-    HEXADECIMAL: "abcdef0123456789",
-    NUMERIC: "0123456789",
+    ALPHA: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    ALPHANUMERIC:
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+    ALPHANUMERIC_SIMPLIFIED:
+        'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ123456789', // Alphanumeric without confusing letters/numbers like "O" and "0", "l" and "I", etc.
+    BASE_64: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/',
+    COMPLEX:
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/$^-_.(){}:<>?,;|[]*%#+!@~=',
+    HEXADECIMAL: 'abcdef0123456789',
+    NUMERIC: '0123456789',
 };
 
 /**
@@ -30,11 +33,14 @@ export const ALPHABETS = {
  *
  * @returns {string}
  */
-export function randomString(length: number, alphabet: string = ALPHABETS.ALPHANUMERIC): string {
+export function randomString(
+    length: number,
+    alphabet: string = ALPHABETS.ALPHANUMERIC
+): string {
     if (length < 1 || !isString(alphabet)) {
         return '';
     }
-    let output = "";
+    let output = '';
     for (let i = 0; i < length; i++) {
         output += alphabet[randomInt(0, alphabet.length - 1)];
     }

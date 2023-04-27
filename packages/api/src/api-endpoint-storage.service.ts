@@ -1,10 +1,6 @@
-import { Service } from "@banquette/dependency-injection/decorator/service.decorator";
-import { HttpMethod } from "@banquette/http/constants";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Constructor, StringEnum } from "@banquette/utils-type/types";
+import { Service } from "@banquette/dependency-injection";
+import { HttpMethod } from "@banquette/http";
+import { isFunction, isNullOrUndefined, isString, isUndefined, Constructor, StringEnum } from "@banquette/utils-type";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointCollection } from "./api-endpoint-collection";
 import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "./api-endpoint.options";
@@ -56,7 +52,7 @@ export class ApiEndpointStorageService {
         const collection = this.collectionsMap.get(ctor);
         if (isUndefined(collection) || !collection.hasEndpoint(name)) {
             const additionalMessage = ctor !== ApiEndpoint ? ` for constructor "${ctor.name}".` : '';
-            throw new EndpointNotFoundException(name, `No endpoint "${name}" has been defined found${additionalMessage}.`);
+            throw new EndpointNotFoundException(name, `No endpoint "${name}" has been found${additionalMessage}.`);
         }
         return collection.getEndpoint(name);
     }

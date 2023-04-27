@@ -1,1 +1,1 @@
-export { default as FormTextComponent } from './text.component.vue';
+export { default as BtFormText } from './text.component.vue';

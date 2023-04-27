@@ -1,12 +1,8 @@
 <style src="./progress-circular.component.css" scoped></style>
 <template src="./progress-circular.component.html" ></template>
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { AbstractProgressComponent } from "../abstract-progress.component";
+import { Component, Computed, Prop, Themeable, BindThemeDirective } from "@banquette/vue-typescript";
+import { BtAbstractProgress } from "../abstract-progress.component";
 import { ThemeConfiguration } from "./theme-configuration";
 
 @Themeable(ThemeConfiguration)
@@ -14,7 +10,7 @@ import { ThemeConfiguration } from "./theme-configuration";
     name: 'bt-progress-circular',
     directives: [BindThemeDirective]
 })
-export default class ProgressCircularComponent extends AbstractProgressComponent {
+export default class BtProgressCircular extends BtAbstractProgress {
     /**
      * Width of the stroke.
      */

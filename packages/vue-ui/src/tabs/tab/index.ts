@@ -1,1 +1,1 @@
-export { default as TabComponent } from './tab.component.vue';
+export { default as BtTab } from './tab.component.vue';

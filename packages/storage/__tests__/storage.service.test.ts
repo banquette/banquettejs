@@ -1,11 +1,5 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import {
-    AdapterInterface,
-    SynchronousAdapterInterface,
-    StorageService,
-    CookiesAdapter,
-    LocalStorageAdapter
-} from "../src";
+import { Injector } from "@banquette/dependency-injection";
+import { AdapterInterface, SynchronousAdapterInterface, StorageService, CookiesAdapter, LocalStorageAdapter } from "../src";
 
 test('default adapter (async)', async () => {
     const storage = Injector.Get(StorageService);

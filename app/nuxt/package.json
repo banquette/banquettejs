@@ -1,0 +1,26 @@
+{
+    "name": "@app/nuxt",
+    "private": true,
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare"
+    },
+    "devDependencies": {
+        "nuxt": "^3.3.3"
+    },
+    "dependencies": {
+        "@banquette/api": "workspace:^",
+        "@banquette/form": "workspace:^",
+        "@banquette/http": "workspace:^",
+        "@banquette/utils-misc": "workspace:^",
+        "@banquette/utils-type": "workspace:^",
+        "@banquette/vue-material-icons": "workspace:^",
+        "@banquette/vue-remix-icons": "workspace:^",
+        "@banquette/vue-typescript": "workspace:^",
+        "@banquette/vue-ui": "workspace:^",
+        "vue": "^3.2.47"
+    }
+}

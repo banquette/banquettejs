@@ -1,6 +1,6 @@
-import { RequestProgressEvent } from "./event/request-progress.event";
-import { HttpRequest } from "./http-request";
-import { HttpResponse } from "./http-response";
+import { RequestProgressEvent } from './event/request-progress.event';
+import { HttpRequest } from './http-request';
+import { HttpResponse } from './http-response';
 
 /**
  * Define a request that have failed to execute and that is queued for retry.
@@ -40,7 +40,7 @@ export interface QueuedRequestInterface<T> {
     /**
      * Time to wait between two tries.
      */
-    retryDelay: number|'auto';
+    retryDelay: number | 'auto';
 
     /**
      * Resolve callback of the original promise.

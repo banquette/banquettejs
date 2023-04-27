@@ -1,5 +1,4 @@
-import { isFunction } from "@banquette/utils-type/is-function";
-import { Constructor } from "@banquette/utils-type/types";
+import { isFunction, Constructor } from "@banquette/utils-type";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
 

@@ -1,4 +1,4 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
+import { FormViewControlInterface } from "@banquette/form";
 import { HeadlessTreeViewModel } from "../../tree/headless-tree.view-model";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { HeadlessFormTreeViewDataInterface } from "./headless-form-tree-view-data.interface";

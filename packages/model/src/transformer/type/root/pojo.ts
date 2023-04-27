@@ -1,6 +1,5 @@
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { isObject } from "@banquette/utils-type/is-object";
-import { Complete } from "@banquette/utils-type/types";
+import { Module } from "@banquette/dependency-injection";
+import { isObject, Complete } from "@banquette/utils-type";
 import { ModelTransformerTag } from "../../../constants";
 import { TransformResult } from "../../../transform-result";
 import { TransformContext } from "../../transform-context";
@@ -23,6 +22,7 @@ export class PojoTransformer extends AbstractRootTransformer {
      * @inheritDoc
      */
     protected doTransform(context: TransformContext, pipeline: TransformPipeline): TransformResult {
+        console.warn('#Pojo (decorator)');
         const result: any = {};
         pipeline.forEach((property: string, transformer: Complete<TransformerInterface>) => {
             const subContext = new TransformContext(

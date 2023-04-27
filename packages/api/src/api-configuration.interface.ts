@@ -1,4 +1,4 @@
-import { ConfigurationInterface } from "@banquette/config/config/configuration.interface";
+import { ConfigurationInterface } from "@banquette/config";
 
 export interface ApiConfigurationInterface extends ConfigurationInterface {
     /**

@@ -1,22 +1,36 @@
-import { isObject } from "@banquette/utils-type/is-object";
+import { isObject } from '@banquette/utils-type';
 
-function doFlatten(obj: any, concatenator: string, maxDepth: number, currentDepth: number): any {
-    return Object.keys(obj).reduce(
-        (acc, key) => {
-            if (!isObject(obj[key]) || (maxDepth !== 0 && currentDepth >= maxDepth)) {
-                return {...acc, [key]: obj[key]};
-            }
-            const flattenedChild = doFlatten(obj[key], concatenator, maxDepth, currentDepth + 1);
-            return {
-                ...acc,
-                ...Object.keys(flattenedChild).reduce((childAcc, childKey) => ({
+function doFlatten(
+    obj: any,
+    concatenator: string,
+    maxDepth: number,
+    currentDepth: number
+): any {
+    return Object.keys(obj).reduce((acc, key) => {
+        if (
+            !isObject(obj[key]) ||
+            (maxDepth !== 0 && currentDepth >= maxDepth)
+        ) {
+            return { ...acc, [key]: obj[key] };
+        }
+        const flattenedChild = doFlatten(
+            obj[key],
+            concatenator,
+            maxDepth,
+            currentDepth + 1
+        );
+        return {
+            ...acc,
+            ...Object.keys(flattenedChild).reduce(
+                (childAcc, childKey) => ({
                     ...childAcc,
-                    [`${key}${concatenator}${childKey}`]: flattenedChild[childKey]
-                }), {}),
-            };
-        },
-        {},
-    );
+                    [`${key}${concatenator}${childKey}`]:
+                        flattenedChild[childKey],
+                }),
+                {}
+            ),
+        };
+    }, {});
 }
 
 /**
@@ -60,7 +74,11 @@ function doFlatten(obj: any, concatenator: string, maxDepth: number, currentDept
  * `flatten(obj, '.', -2)` will produce an object with maximum 3 levels deep.
  * `flatten(obj, '.', 0)` will produce an object with maximum 1 level deep (the default behavior).
  */
-export function flattenObject(obj: any, concatenator: string = '.', maxDepth: number = 0): any {
+export function flattenObject(
+    obj: any,
+    concatenator: string = '.',
+    maxDepth: number = 0
+): any {
     const result = doFlatten(obj, concatenator, Math.max(0, maxDepth), 0);
     if (maxDepth < 0) {
         let clone: any = {};

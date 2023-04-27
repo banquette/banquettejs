@@ -1,15 +1,14 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isFunction } from "@banquette/utils-type/is-function";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { UsageException } from "@banquette/exception";
+import { getObjectKeys } from "@banquette/utils-object";
+import { isNonEmptyString } from "@banquette/utils-string";
+import { isFunction, isUndefined } from "@banquette/utils-type";
+import { ValidatorInterface } from "@banquette/validation";
 import { Prop as VueProp, PropType } from "vue";
 import { getOrCreateComponentMetadata } from "../utils/get-or-create-component-metadata";
 import { ComponentMetadataInterface } from "./component-metadata.interface";
 
 /* Hack to get to the PropOptions<T, D> which is not exported by Vue. */
-export type PropOptions = Exclude<VueProp<any>, PropType<any>> & {
+export type PropOptions<T = any> = Exclude<VueProp<any>, PropType<any>> & {
     validate?: ValidatorInterface|null,
     transform?: ((value: any) => any)|null,
     name?: string

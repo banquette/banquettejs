@@ -1,18 +1,22 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { Constructor } from "@banquette/utils-type/types";
-import { getConstructorArgumentsTypes } from "./get-constructor-arguments-types";
-import { getFunctionArguments } from "./get-function-arguments";
+import { UsageException } from '@banquette/exception';
+import { Constructor } from '@banquette/utils-type';
+import { getConstructorArgumentsTypes } from './get-constructor-arguments-types';
+import { getFunctionArguments } from './get-function-arguments';
 
 /**
  * Get a key/value pair containing an entry for each argument of a constructor function, where:
  *   - the index is the name of the argument
  *   - the value is its type
  */
-export function getConstructorArgumentsNameTypeMap(ctor: Constructor): Record<string, any> {
+export function getConstructorArgumentsNameTypeMap(
+    ctor: Constructor
+): Record<string, any> {
     const names: string[] = getFunctionArguments(ctor);
     const types: string[] = getConstructorArgumentsTypes(ctor);
     if (names.length !== types.length) {
-        throw new UsageException('Failed to create arguments map, names and types count doesn\'t match.');
+        throw new UsageException(
+            "Failed to create arguments map, names and types count doesn't match."
+        );
     }
     const output: Record<string, any> = {};
     for (let i = 0; i < names.length; ++i) {

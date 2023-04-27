@@ -1,5 +1,5 @@
-import { EventArg } from "@banquette/event/event-arg";
-import { RequestEvent as HttpRequestEvent } from "@banquette/http/event/request.event";
+import { EventArg } from "@banquette/event";
+import { RequestEvent as HttpRequestEvent } from "@banquette/http";
 import { ApiRequest } from "../api-request";
 
 export class ApiRequestEvent extends EventArg {

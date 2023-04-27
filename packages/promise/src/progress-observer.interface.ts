@@ -1,5 +1,5 @@
-import { Constructor } from "@banquette/utils-type/types";
-import { onProgressCallback } from "./types";
+import { Constructor } from '@banquette/utils-type';
+import { onProgressCallback } from './types';
 
 export interface ProgressObserverInterface<T> {
     /**

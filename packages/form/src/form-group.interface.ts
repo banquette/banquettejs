@@ -1,4 +1,4 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
+import { UnsubscribeFunction } from "@banquette/event";
 import { FilterGroup } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { FormComponentInterface } from "./form-component.interface";

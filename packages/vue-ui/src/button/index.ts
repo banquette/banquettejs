@@ -1,2 +1,2 @@
-export { default as ButtonComponent } from './button/button.component.vue';
-export { default as ButtonGroupComponent } from './button-group/button-group.component.vue';
+export { default as BtButton } from './button/button.component.vue';
+export { default as BtButtonGroup } from './button-group/button-group.component.vue';

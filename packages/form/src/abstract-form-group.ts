@@ -1,26 +1,12 @@
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { MatchType } from "@banquette/utils-glob/constant";
-import { MatchResult } from "@banquette/utils-glob/match-result";
-import { noop } from "@banquette/utils-misc/noop";
-import { ltrim } from "@banquette/utils-string/format/ltrim";
-import { trim } from "@banquette/utils-string/format/trim";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { Compose } from "@banquette/validation/type/compose";
-import { Container, ContainerValidator } from "@banquette/validation/type/container";
-import { ValidationResult } from "@banquette/validation/validation-result";
-import { ValidatorContainerInterface } from "@banquette/validation/validator-container.interface";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { UnsubscribeFunction } from "@banquette/event";
+import { UsageException } from "@banquette/exception";
+import { MatchType, MatchResult } from "@banquette/utils-glob";
+import { noop } from "@banquette/utils-misc";
+import { ltrim, trim } from "@banquette/utils-string";
+import { ensureArray, isUndefined } from "@banquette/utils-type";
+import { Compose, Container, ContainerValidator, ValidationResult, ValidatorContainerInterface, ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
-import {
-    BasicState,
-    CallContext,
-    FilterGroup,
-    ContextualizedState,
-    FormEvents,
-    EventsInheritanceMap
-} from "./constant";
+import { BasicState, CallContext, FilterGroup, ContextualizedState, FormEvents, EventsInheritanceMap } from "./constant";
 import { FormEvent } from "./event/form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
 import { ValidationEndFormEvent } from "./event/validation-end.form-event";

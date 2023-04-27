@@ -1,5 +1,5 @@
-import { ConfigurationService } from "@banquette/config/config/configuration.service";
-import { Injector } from "@banquette/dependency-injection/injector";
+import { ConfigurationService } from "@banquette/config";
+import { Injector } from "@banquette/dependency-injection";
 import { UiConfigurationInterface } from "./ui-configuration.interface";
 
 export const UiConfigurationSymbol = Symbol('ui');

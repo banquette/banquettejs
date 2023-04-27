@@ -1,1 +1,1 @@
-export { default as TableComponent } from './table.component.vue';
+export { default as BtTable } from './table.component.vue';

@@ -1,7 +1,5 @@
-import { trim } from "@banquette/utils-string/format/trim";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { trim } from "@banquette/utils-string";
+import { ensureArray, isString, isUndefined } from "@banquette/utils-type";
 import { VariantSelector, ParentSelector } from "../constant";
 import { NormalizedVariantSelectorInterface } from "../normalized-variant-selector.interface";
 import { VariantSelectorCandidateInterface } from "../variant-selector-candidate.interface";

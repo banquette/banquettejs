@@ -1,11 +1,11 @@
+import { UnsubscribeFunction } from "@banquette/event";
+import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
+import { StateChangedFormEvent } from "./event/state-changed.form-event";
+import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 import { FormComponentInterface } from "./form-component.interface";
 import { FormViewControlInterface } from "./form-view-control.interface";
 import { FormViewModelInterface } from "./form-view-model.interface";
-import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { StateChangedFormEvent } from "./event/state-changed.form-event";
-import { ValueChangedFormEvent } from "./event/value-changed.form-event";
 
 export interface FormControlInterface extends FormComponentInterface {
     /**

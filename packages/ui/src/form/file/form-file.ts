@@ -1,8 +1,5 @@
-import { byteCountToHumanSize } from "@banquette/utils-string/format/byte-count-to-human-size";
-import { isNonEmptyString } from "@banquette/utils-string/is-non-empty-string";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isValidNumber } from "@banquette/utils-type/is-valid-number";
-import { Writeable } from "@banquette/utils-type/types";
+import { byteCountToHumanSize, isNonEmptyString } from "@banquette/utils-string";
+import { isObject, isValidNumber, Writeable } from "@banquette/utils-type";
 import { UploadStatus } from "./constant";
 import { I18nInterface } from "./i18n.interface";
 
@@ -39,7 +36,7 @@ export class FormFile {
     }
     public set totalSize(value: number|null) {
         this._totalSize = value;
-        (this as Writeable<FormFile>).totalSizeText = value !== null ? byteCountToHumanSize(value) : null;
+        (this as any /* Writeable<FormFile> */).totalSizeText = value !== null ? byteCountToHumanSize(value) : null;
     }
 
     /**
@@ -56,7 +53,7 @@ export class FormFile {
     }
     public set uploadedSize(value: number|null) {
         this._uploadedSize = value;
-        (this as Writeable<FormFile>).uploadedSizeText = value !== null ? byteCountToHumanSize(value) : null;
+        (this as any /* Writeable<FormFile> */).uploadedSizeText = value !== null ? byteCountToHumanSize(value) : null;
     }
 
     /**

@@ -1,6 +1,6 @@
-import { FormViewControlInterface } from "@banquette/form/form-view-control.interface";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { Writeable } from "@banquette/utils-type/types";
+import { FormViewControlInterface } from "@banquette/form";
+import { proxy } from "@banquette/utils-misc";
+import { Writeable } from "@banquette/utils-type";
 import { HeadlessInterface } from "../headless.interface";
 import { ControlModule } from "./control.module";
 import { HeadlessControlViewDataInterface } from "./headless-control-view-data.interface";
@@ -43,7 +43,7 @@ export class HeadlessControlViewModel<ViewDataType extends HeadlessControlViewDa
      * @inheritDoc
      */
     public setViewData(viewData: ViewDataType): void {
-        (this as Writeable<HeadlessControlViewModel<ViewDataType>>).viewData = viewData;
+        (this as any /* Writeable<HeadlessControlViewModel<ViewDataType>> */).viewData = viewData;
         this.control.setViewData(this.viewData.control);
     }
 

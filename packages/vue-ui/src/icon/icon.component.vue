@@ -1,14 +1,14 @@
 <style src="./icon.component.css" scoped></style>
 <script lang="ts">
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { IconRemixQuestionMark } from "@banquette/vue-remix-icons/question-mark";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { isUndefined } from "@banquette/utils-type";
+import { IRemixQuestionMark } from "@banquette/vue-remix-icons";
+import { Component } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Render } from "@banquette/vue-typescript";
+import { Themeable } from "@banquette/vue-typescript";
+import { BindThemeDirective } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
 import {
     resolveDirective,
     withDirectives,
@@ -16,24 +16,24 @@ import {
     createBlock,
     resolveDynamicComponent,
     mergeProps,
-    Directive, h
+    Directive, h, PropType
 } from "vue";
 import { ThemeConfiguration } from "./theme-configuration";
+
+/**
+ * Elements' tags are stored by their index in this array to reduce the size of the data structure.
+ * Only used if icons are added via the `icons` prop.
+ */
+const TagsMap = ['g', 'path', 'polygon', 'rect', 'circle', 'ellipse', 'defs', 'use', 'clipPath'];
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-icon',
-    components: [IconRemixQuestionMark],
+    components: [IRemixQuestionMark],
     directives: [BindThemeDirective],
     inheritAttrs: false
 })
-export default class IconComponent extends Vue {
-    /**
-     * Elements' tags are stored by their index in this array to reduce the size of the data structure.
-     * Only used if icons are added via the `icons` prop.
-     */
-    private static TagsMap = ['g', 'path', 'polygon', 'rect', 'circle', 'ellipse', 'defs', 'use', 'clipPath'];
-
+export default class BtIcon extends Vue {
     /**
      * Name of the icon to display.
      */
@@ -59,8 +59,8 @@ export default class IconComponent extends Vue {
     /**
      * Width and height on which to render the icon.
      */
-    @Prop({type: String, default: null}) public width!: string|null;
-    @Prop({type: String, default: '1em'}) public height!: string|null;
+    @Prop({type: String as PropType<String | null>, default: null}) public width!: string|null;
+    @Prop({type: String as PropType<String | null>, default: '1em'}) public height!: string|null;
 
     /**
      * Color to use as fill for the svg.
@@ -110,7 +110,7 @@ export default class IconComponent extends Vue {
     /**
      * Try to render the icon's svg.
      */
-    @Render() public render(context: any) {
+    @Render() public render(context: any): any {
         const btBindTheme = resolveDirective("bt-bind-theme");
         if (this.isLocal) {
             let data = this.icons![1][this.localSetIndex][this.name];
@@ -124,7 +124,7 @@ export default class IconComponent extends Vue {
                         for (const prop of child[1]) {
                             props[prop[0]] = prop[1];
                         }
-                        output.push(h(IconComponent.TagsMap[child[0]], props, createChildren(child[2])));
+                        output.push(h(TagsMap[child[0]], props, createChildren(child[2])));
                     }
                     return output;
                 };

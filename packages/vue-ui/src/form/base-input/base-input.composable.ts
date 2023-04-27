@@ -1,8 +1,9 @@
-import { HeadlessInterface } from "@banquette/ui/headless.interface";
-import { Writeable } from "@banquette/utils-type/types";
-import { Composable } from "@banquette/vue-typescript/decorator/composable.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
+import { HeadlessInterface } from "@banquette/ui";
+import { Writeable } from "@banquette/utils-type";
+import { Composable } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 import { BaseInputViewDataInterface } from "./base-input-view-data.interface";
 
 @Composable()
@@ -10,17 +11,17 @@ export class BaseInputComposable implements HeadlessInterface<BaseInputViewDataI
     /**
      * The label of the field.
      */
-    @Prop({type: String, default: null}) public label!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public label!: string|null;
 
     /**
      * A placeholder value to show when there is no value selected.
      */
-    @Prop({type: String, default: null}) public placeholder!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public placeholder!: string|null;
 
     /**
      * A help text to show to the user.
      */
-    @Prop({type: String, default: null}) public help!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public help!: string|null;
 
     /**
      * If `true` the label will float above the control and act as a placeholder is there is none.
@@ -54,7 +55,7 @@ export class BaseInputComposable implements HeadlessInterface<BaseInputViewDataI
     public readonly viewData: BaseInputViewDataInterface = {} as any;
 
     public setViewData(viewData: BaseInputViewDataInterface): void {
-        (this as Writeable<BaseInputComposable>).viewData = viewData;
+        (this as any /* Writeable<BaseInputComposable> */).viewData = viewData;
         this.syncConfigurationProps();
     }
 

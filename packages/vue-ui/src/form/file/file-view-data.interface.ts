@@ -1,4 +1,4 @@
-import { HeadlessFormFileViewDataInterface } from "@banquette/ui/form/file/headless-form-file-view-data.interface";
+import { HeadlessFormFileViewDataInterface } from "@banquette/ui";
 import { BaseInputViewDataInterface } from "../base-input/base-input-view-data.interface";
 
 export interface FileViewDataInterface extends HeadlessFormFileViewDataInterface {

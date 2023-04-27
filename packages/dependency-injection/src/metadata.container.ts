@@ -1,8 +1,7 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { InjectableMetadataInterface } from "./injectable-metadata.interface";
-import { InjectableIdentifier } from "./type/injectable-identifier.type";
+import { UsageException } from '@banquette/exception';
+import { ensureArray, isUndefined } from '@banquette/utils-type';
+import { InjectableMetadataInterface } from './injectable-metadata.interface';
+import { InjectableIdentifier } from './type/injectable-identifier.type';
 
 export class MetadataContainer {
     /**
@@ -13,7 +12,10 @@ export class MetadataContainer {
     /**
      * Metadata objects indexed by identifier.
      */
-    private static IdentifierMap: WeakMap<InjectableIdentifier, InjectableMetadataInterface> = new WeakMap<InjectableIdentifier, InjectableMetadataInterface>();
+    private static IdentifierMap: WeakMap<
+        InjectableIdentifier,
+        InjectableMetadataInterface
+    > = new WeakMap<InjectableIdentifier, InjectableMetadataInterface>();
 
     /**
      * Metadata objects indexed by tag symbol.
@@ -37,14 +39,19 @@ export class MetadataContainer {
     /**
      * Get the metadata of an injectable from the container.
      */
-    public static Get(identifier: InjectableIdentifier): InjectableMetadataInterface|null {
+    public static Get(
+        identifier: InjectableIdentifier
+    ): InjectableMetadataInterface | null {
         const metadata = MetadataContainer.IdentifierMap.get(identifier);
         if (metadata) {
             return metadata;
         }
         for (const candidate of MetadataContainer.KnownMetadata) {
             if (candidate.ctor === identifier) {
-                return MetadataContainer.IdentifierMap.get(candidate.identifier) || null;
+                return (
+                    MetadataContainer.IdentifierMap.get(candidate.identifier) ||
+                    null
+                );
             }
         }
         return null;
@@ -53,10 +60,16 @@ export class MetadataContainer {
     /**
      * Try to get the metadata of an object but throw an exception on failure.
      */
-    public static GetOrFail(identifier: InjectableIdentifier): InjectableMetadataInterface {
-        const metadata: InjectableMetadataInterface|null = MetadataContainer.Get(identifier);
+    public static GetOrFail(
+        identifier: InjectableIdentifier
+    ): InjectableMetadataInterface {
+        const metadata: InjectableMetadataInterface | null =
+            MetadataContainer.Get(identifier);
         if (metadata === null) {
-            throw new UsageException(`No injectable found for "${identifier.name}".`);
+            console.error('No injectable found', identifier);
+            throw new UsageException(
+                `No injectable found for "${identifier.name}".`
+            );
         }
         return metadata;
     }
@@ -64,7 +77,9 @@ export class MetadataContainer {
     /**
      * Get metadata objects matching one or multiple tags.
      */
-    public static GetForTag(tag: symbol|symbol[]): InjectableMetadataInterface[] {
+    public static GetForTag(
+        tag: symbol | symbol[]
+    ): InjectableMetadataInterface[] {
         const output: InjectableMetadataInterface[] = [];
         const tags = ensureArray(tag);
         for (const item of tags) {
@@ -102,13 +117,18 @@ export class MetadataContainer {
                         if (isUndefined(MetadataContainer.TagsMap[newTag])) {
                             MetadataContainer.TagsMap[newTag] = [];
                         }
-                        if (MetadataContainer.TagsMap[newTag].indexOf(metadata) < 0) {
+                        if (
+                            MetadataContainer.TagsMap[newTag].indexOf(
+                                metadata
+                            ) < 0
+                        ) {
                             MetadataContainer.TagsMap[newTag].push(metadata);
-                            (MetadataContainer as any).TagsVersion = MetadataContainer.TagsVersion + 1;
+                            (MetadataContainer as any).TagsVersion =
+                                MetadataContainer.TagsVersion + 1;
                         }
                     }
                 }
-            }
-        })
+            },
+        });
     }
 }

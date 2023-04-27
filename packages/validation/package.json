@@ -7,18 +7,40 @@
         "directory": "packages/validation"
     },
     "license": "Apache-2.0",
-    "main": "_cjs/prod/index.js",
-    "module": "index.js",
-    "types": "index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/validation.umd.cjs",
+    "module": "./dist/validation.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/validation.js",
+            "require": "./dist/validation.umd.cjs"
+        }
+    },
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@banquette/config": "workspace:^",
+        "@banquette/validation": "workspace:^",
+        "@types/node": "^18.15.11",
+        "typescript": "^4.9.3",
+        "vite": "^4.2.0"
+    },
     "dependencies": {
-        "@banquette/dependency-injection": "0.0.0",
-        "@banquette/exception": "0.0.0",
-        "@banquette/http": "0.0.0",
-        "@banquette/utils-array": "0.0.0",
-        "@banquette/utils-glob": "0.0.0",
-        "@banquette/utils-misc": "0.0.0",
-        "@banquette/utils-object": "0.0.0",
-        "@banquette/utils-string": "0.0.0",
-        "@banquette/utils-type": "0.0.0"
+        "@banquette/dependency-injection": "workspace:^",
+        "@banquette/exception": "workspace:^",
+        "@banquette/http": "workspace:^",
+        "@banquette/utils-array": "workspace:^",
+        "@banquette/utils-glob": "workspace:^",
+        "@banquette/utils-misc": "workspace:^",
+        "@banquette/utils-object": "workspace:^",
+        "@banquette/utils-string": "workspace:^",
+        "@banquette/utils-type": "workspace:^"
     }
 }

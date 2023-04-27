@@ -1,6 +1,6 @@
-import { isUndefined } from "@banquette/utils-type/is-undefined";
-import { LazyInjectableIdentifier } from "../type/lazy-injectable-identifier";
-import { registerExplicitDependency } from "../utils";
+import { isUndefined } from '@banquette/utils-type';
+import { LazyInjectableIdentifier } from '../type/lazy-injectable-identifier';
+import { registerExplicitDependency } from '../utils';
 
 /**
  * Register a function that will be called to get the type of the object to import when
@@ -10,6 +10,12 @@ import { registerExplicitDependency } from "../utils";
  */
 export function InjectLazy(identifier: LazyInjectableIdentifier): Function {
     return (target: any, propertyKey: string, index?: number) => {
-        registerExplicitDependency(!isUndefined(propertyKey) ? target.constructor : target, identifier, true, propertyKey, index);
+        registerExplicitDependency(
+            !isUndefined(propertyKey) ? target.constructor : target,
+            identifier,
+            true,
+            propertyKey,
+            index
+        );
     };
 }

@@ -1,9 +1,6 @@
-import { UsageException } from "@banquette/exception/usage.exception";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { isObject } from "@banquette/utils-type/is-object";
-import { isString } from "@banquette/utils-type/is-string";
-import { isUndefined } from "@banquette/utils-type/is-undefined";
+import { UsageException } from '@banquette/exception';
+import { getObjectKeys } from '@banquette/utils-object';
+import { ensureArray, isObject, isString, isUndefined, } from '@banquette/utils-type';
 
 /**
  * A generic key/value pair storage you can use to store data in memory.
@@ -44,12 +41,15 @@ export class VarHolder<K extends keyof any = any, V = any> {
      *   - get('http.timeout', 2000) will get the "timeout" value of the "http" key
      *   - get(['http', 'timeout'], 2000) same as above
      */
-    public get(key: K|K[], defaultValue: V|null = null): any {
+    public get(key: K | K[], defaultValue: V | null = null): any {
         const keys = isString(key) ? key.split('.') : ensureArray(key);
         let bag: any = this.bag;
 
         for (let i = 0; i < keys.length; ++i) {
-            if (isUndefined(bag[keys[i]]) || (!isObject(bag[keys[i]]) && i < keys.length - 1)) {
+            if (
+                isUndefined(bag[keys[i]]) ||
+                (!isObject(bag[keys[i]]) && i < keys.length - 1)
+            ) {
                 return defaultValue;
             }
             bag = bag[keys[i]];
@@ -67,7 +67,7 @@ export class VarHolder<K extends keyof any = any, V = any> {
      *   - set('http.timeout', 2000) will set the "timeout" value of the "http" key
      *   - set(['http', 'timeout'], 2000) same as above
      */
-    public set(key: K|K[], value: V): void {
+    public set(key: K | K[], value: V): void {
         const keys = isString(key) ? key.split('.') : ensureArray(key);
         let bag: any = this.bag;
 
@@ -76,7 +76,11 @@ export class VarHolder<K extends keyof any = any, V = any> {
                 bag[keys[i]] = {};
             }
             if (!isObject(bag[keys[i]])) {
-                throw new UsageException('The key "' + keys[i] + '" is already used by a non object value.');
+                throw new UsageException(
+                    'The key "' +
+                        keys[i] +
+                        '" is already used by a non object value.'
+                );
             }
             bag = bag[keys[i]];
         }
@@ -102,7 +106,7 @@ export class VarHolder<K extends keyof any = any, V = any> {
     /**
      * Returns true if the value is defined in the container.
      */
-    public has(key: K|K[]) {
+    public has(key: K | K[]) {
         // We can't do:
         //   `this.get(key, undefined)`
         // because doing this will set the default value to `null` (the default value of the "defaultValue" parameter).
@@ -124,7 +128,7 @@ export class VarHolder<K extends keyof any = any, V = any> {
      * Removes a value from the container.
      */
     public remove(key: K) {
-        delete(this.bag[key]);
+        delete this.bag[key];
     }
 
     /**

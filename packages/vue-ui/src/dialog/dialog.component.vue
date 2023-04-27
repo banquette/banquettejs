@@ -1,43 +1,33 @@
 <style src="./dialog.component.css" scoped></style>
 <template src="./dialog.component.html" ></template>
 <script lang="ts">
-import { Injector } from "@banquette/dependency-injection/injector";
-import { EventArg } from "@banquette/event/event-arg";
-import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { addEventListener } from "@banquette/utils-dom/add-event-listener";
-import { isServer } from "@banquette/utils-misc/is-server";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { VoidCallback } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Ref } from "@banquette/vue-typescript/decorator/ref.decorator";
-import { TemplateRef } from "@banquette/vue-typescript/decorator/template-ref.decorator";
-import { Themeable } from "@banquette/vue-typescript/decorator/themeable.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { BindThemeDirective } from "@banquette/vue-typescript/theme/bind-theme.directive";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { Injector } from "@banquette/dependency-injection";
+import { EventArg, EventDispatcherService } from "@banquette/event";
+import { addEventListener } from "@banquette/utils-dom";
+import { isServer, proxy } from "@banquette/utils-misc";
+import { VoidCallback } from "@banquette/utils-type";
+import { Component, Computed, Expose, Prop, Ref, TemplateRef, Themeable, Watch, ImmediateStrategy, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { useDraggable, Position } from "@vueuse/core";
-import { watch } from "vue";
-import { ClientOnlyComponent } from "../misc";
-import { OverlayComponent } from "../overlay";
+import { watch, PropType } from "vue";
+import { BtClientOnly } from "../misc";
+import { BtOverlay } from "../overlay";
 import { DialogEvents } from "./constant";
 import { HideDialogEventArg } from "./event/hide-dialog.event-arg";
 import { ShowDialogEventArg } from "./event/show-dialog.event-arg";
+import { VisibilityChangeDialogEventArg } from "./event/visibility-change-dialog.event-arg";
 import { ThemeConfiguration } from "./theme-configuration";
+
+let ScrollLockedCount: number = 0;
+let UsedIds: string[] = [];
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-dialog',
-    components: [OverlayComponent, ClientOnlyComponent],
+    components: [BtOverlay, BtClientOnly],
     directives: [BindThemeDirective],
-    emits: ['update:visible', 'close']
+    emits: ['update:visible', 'open', 'close']
 })
-export default class DialogComponent extends Vue {
-    private static ScrollLockedCount: number = 0;
-    private static UsedIds: string[] = [];
-
+export default class BtDialog extends Vue {
     /**
      * Bidirectional control of the visibility.
      */
@@ -46,7 +36,7 @@ export default class DialogComponent extends Vue {
     /**
      * Unique id of the dialog, used to show/hide the dialog using the `DialogService`.
      */
-    @Prop({type: String, default: null}) public id!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public id!: string|null;
 
     /**
      * If `true`, the scroll on the body is disabled while the dialog is opened.
@@ -71,7 +61,7 @@ export default class DialogComponent extends Vue {
     /**
      * An HTML element or selector to teleport the dialog into.
      */
-    @Prop({type: String, default: 'body'}) public teleport!: string|null;
+    @Prop({type: String as PropType<string|null>, default: 'body'}) public teleport!: string|null;
 
     /**
      * If `true`, the content of the dialog is destroyed when the dialog is hidden.
@@ -191,17 +181,17 @@ export default class DialogComponent extends Vue {
     @Watch('id', {immediate: ImmediateStrategy.BeforeMount})
     public onIdChange(newValue: string|null, oldValue: string|null) {
         if (oldValue) {
-            const pos = DialogComponent.UsedIds.indexOf(oldValue);
+            const pos = UsedIds.indexOf(oldValue);
             if (pos > -1) {
-                DialogComponent.UsedIds.splice(pos, 1);
+                UsedIds.splice(pos, 1);
             }
         }
         if (newValue) {
-            if (DialogComponent.UsedIds.indexOf(newValue) > -1) {
+            if (UsedIds.indexOf(newValue) > -1) {
                 console.warn(`The id "${newValue}" is already used by another dialog.`);
                 return ;
             }
-            DialogComponent.UsedIds.push(newValue);
+            UsedIds.push(newValue);
         }
     }
 
@@ -217,9 +207,14 @@ export default class DialogComponent extends Vue {
                     this.makeDraggable();
                 });
             }
+            this.$emit('open', this.slotBag);
         } else {
             this.shown = false;
             this.freeDraggable();
+            this.$emit('close');
+        }
+        if (this.id !== null) {
+            this.eventDispatcher.dispatch(DialogEvents.VisibilityChange, new VisibilityChangeDialogEventArg(this.id, newValue));
         }
     }
 
@@ -239,7 +234,6 @@ export default class DialogComponent extends Vue {
         if (this.lockScroll) {
             this.updateScrollLock(false);
         }
-        this.$emit('close');
     }
 
     /**
@@ -291,12 +285,12 @@ export default class DialogComponent extends Vue {
             return ;
         }
         if (newValue) {
-            if ((++DialogComponent.ScrollLockedCount) === 1) {
+            if ((++ScrollLockedCount) === 1) {
                 this.oldBodyOverflow = document.body.style.overflow;
                 document.body.style.overflow = 'hidden';
             }
         } else {
-            if (!(--DialogComponent.ScrollLockedCount) && this.oldBodyOverflow !== null) {
+            if (!(--ScrollLockedCount) && this.oldBodyOverflow !== null) {
                 document.body.style.overflow = this.oldBodyOverflow;
                 this.oldBodyOverflow = null;
             }

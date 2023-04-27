@@ -1,7 +1,6 @@
-import { Injector } from "@banquette/dependency-injection/injector";
-import { UsageException } from "@banquette/exception/usage.exception";
-import { isNullOrUndefined } from "@banquette/utils-type/is-null-or-undefined";
-import { Constructor } from "@banquette/utils-type/types";
+import { Injector } from "@banquette/dependency-injection";
+import { UsageException } from "@banquette/exception";
+import { isNullOrUndefined, Constructor } from "@banquette/utils-type";
 import { ModelMetadataService } from "../../model-metadata.service";
 import { TransformResult } from "../../transform-result";
 import { ModelExtendedIdentifier } from "../../type";
@@ -9,12 +8,15 @@ import { TransformContext } from "../transform-context";
 import { TransformService } from "../transform.service";
 import { TransformerInterface } from "../transformer.interface";
 
-const metadata = Injector.Get(ModelMetadataService);
+let metadata: ModelMetadataService|null = null;
 
 /**
  * Create a new TransformContext that will be the root of the next transformation.
  */
 function createSubContext(context: TransformContext, identifier: ModelExtendedIdentifier): TransformContext {
+    if (metadata === null) {
+        metadata = /**!PURE*/ Injector.Get(ModelMetadataService);
+    }
     const ctor = metadata.resolveAlias(identifier);
     return new TransformContext(context, context.type, ctor, context.value, context.property);
 }
@@ -23,6 +25,7 @@ function createSubContext(context: TransformContext, identifier: ModelExtendedId
  * Call the transform service that will execute the appropriate root transformer for the context.
  */
 export function Model(): TransformerInterface {
+    console.warn('#Model (decorator)');
     let identifier: Constructor|null = null;
     const getIdentifier = (context: TransformContext): Constructor => {
         if (identifier !== null) {
@@ -31,6 +34,9 @@ export function Model(): TransformerInterface {
         context = context.getHighestContextWithProperty();
         if (!context.property) {
             throw new UsageException('Unable to resolve the relation. The "Model" transformer can only be applied on properties.');
+        }
+        if (metadata === null) {
+            metadata = /**!PURE*/ Injector.Get(ModelMetadataService);
         }
         const ctor = metadata.getRelation(context.ctor, context.property);
         if (ctor === null) {

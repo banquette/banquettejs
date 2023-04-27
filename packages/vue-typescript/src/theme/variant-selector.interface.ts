@@ -1,4 +1,4 @@
-import { Primitive } from "@banquette/utils-type/types";
+import { Primitive } from "@banquette/utils-type";
 import { ParentSelector, PropCallback, AttrCallback } from "./constant";
 
 /**

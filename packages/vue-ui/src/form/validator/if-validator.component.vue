@@ -1,17 +1,17 @@
 <script lang="ts">
-import { UsageException } from "@banquette/exception/usage.exception";
-import { If } from "@banquette/validation/type/if";
-import { Valid } from "@banquette/validation/type/valid";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Render } from "@banquette/vue-typescript/decorator/render.decorator";
+import { UsageException } from "@banquette/exception";
+import { If } from "@banquette/validation";
+import { Valid } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Render } from "@banquette/vue-typescript";
 import { VNodeChild } from "@vue/runtime-core";
 import { renderSlot } from "vue";
-import { ContainerValidatorComponent } from "./container-validator.component";
+import { BtContainerValidator } from "./container-validator.component";
 
 @Component('bt-validate-if')
-export default class ValidateIfComponent extends ContainerValidatorComponent {
+export default class BtValidateIf extends BtContainerValidator {
     @Prop({type: Function, required: true}) public condition!: () => boolean;
 
     /**
@@ -33,3 +33,4 @@ export default class ValidateIfComponent extends ContainerValidatorComponent {
     }
 }
 </script>
+<template></template>

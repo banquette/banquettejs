@@ -1,40 +1,41 @@
 <style src="./alerts-stack.component.css" scoped></style>
 <template src="./alerts-stack.component.html" ></template>
 <script lang="ts">
-import { Inject } from "@banquette/dependency-injection/decorator/inject.decorator";
-import { Module } from "@banquette/dependency-injection/decorator/module.decorator";
-import { Injector } from "@banquette/dependency-injection/injector";
-import { EventDispatcherService } from "@banquette/event/event-dispatcher.service";
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { enumToArray } from "@banquette/utils-array/enum-to-array";
-import { proxy } from "@banquette/utils-misc/proxy";
-import { getObjectKeys } from "@banquette/utils-object/get-object-keys";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { Inject } from "@banquette/dependency-injection";
+import { Module } from "@banquette/dependency-injection";
+import { Injector } from "@banquette/dependency-injection";
+import { EventDispatcherService } from "@banquette/event";
+import { ensureInEnum } from "@banquette/utils-array";
+import { enumToArray } from "@banquette/utils-array";
+import { proxy } from "@banquette/utils-misc";
+import { getObjectKeys } from "@banquette/utils-object";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 import { AlertOptionsInterface } from "../../alert-options.interface";
 import { StackPosition, AlertEvents } from "../../constant";
 import { ShowAlertEvent } from "../../event/show-alert.event";
-import { AlertComponent } from "../alert";
+import { BtAlert } from "../alert";
+
+/**
+ * Id increment for the alerts.
+ */
+let maxId: number = 0;
 
 @Module()
 @Component({
     name: 'bt-alerts-stack',
-    components: [AlertComponent],
-    factory: () => Injector.Get(AlertsStackComponent)
+    components: [BtAlert],
+    factory: () => Injector.Get(BtAlertsStack)
 })
-export default class AlertsStackComponent extends Vue {
-    /**
-     * Id increment for the alerts.
-     */
-    private static MaxId: number = 0;
-
+export default class BtAlertsStack extends Vue {
     /**
      * Optional identifier of the stack.
      * Only alerts matching the id will be added to the stack.
      */
-    @Prop({type: String, default: null}) public id!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public id!: string|null;
 
     /**
      * Css position of the stack.
@@ -80,7 +81,7 @@ export default class AlertsStackComponent extends Vue {
     private onShow(event: ShowAlertEvent): boolean {
         if ((!this.id && !event.options.stack) || this.id === event.options.stack) {
             const position = ensureInEnum(event.options.position, StackPosition, StackPosition.TopRight);
-            this.stack[position].push(Object.assign(event.options, {id: ++AlertsStackComponent.MaxId, visible: true}));
+            this.stack[position].push(Object.assign(event.options, {id: ++maxId, visible: true}));
             return true;
         }
         return false;

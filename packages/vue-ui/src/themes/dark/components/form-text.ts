@@ -1,5 +1,4 @@
-import { VariantWildcard } from "@banquette/vue-typescript/theme/constant";
-import { VueThemes } from "@banquette/vue-typescript/theme/vue-themes";
+import { VariantWildcard, VueThemes } from "@banquette/vue-typescript";
 
 VueThemes.Define('bt-form-text', {
     dark: [

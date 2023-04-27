@@ -1,13 +1,13 @@
 <script lang="ts">
-import { ensureArray } from "@banquette/utils-type/ensure-array";
-import { Choice } from "@banquette/validation/type/choice";
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { ValidatorComponent } from "./validator.component";
+import { ensureArray } from "@banquette/utils-type";
+import { Choice } from "@banquette/validation";
+import { ValidatorInterface } from "@banquette/validation";
+import { Component } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { BtValidator } from "./validator.component";
 
-@Component({name: 'bt-validate-choice', template: false})
-export default class ValidateChoiceComponent extends ValidatorComponent {
+@Component('bt-validate-choice')
+export default class BtValidateChoice extends BtValidator {
     @Prop({type: Array, required: true, transform: (value) => ensureArray(value)}) public choices!: any[];
 
     /**
@@ -18,3 +18,4 @@ export default class ValidateChoiceComponent extends ValidatorComponent {
     }
 }
 </script>
+<template></template>

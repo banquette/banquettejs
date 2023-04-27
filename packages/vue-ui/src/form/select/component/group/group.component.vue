@@ -1,15 +1,16 @@
 <style src="./group.component.css" scoped></style>
 <template src="./group.component.html"></template>
 <script lang="ts">
-import { Choice } from "@banquette/ui/form/select/choice";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { Choice } from "@banquette/ui";
+import { Component } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 
 @Component('bt-form-select-group')
-export default class GroupComponent extends Vue {
-    @Prop({type: String, default: null}) public label!: string|null;
+export default class BtGroup extends Vue {
+    @Prop({type: String as PropType<string|null>, default: null}) public label!: string|null;
     @Expose() public visibleChoices: Choice[] = [];
 
     public updateChoice(choice: Choice): void {

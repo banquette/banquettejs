@@ -1,4 +1,4 @@
-import { trim } from "@banquette/utils-string/format/trim";
+import { trim } from "@banquette/utils-string";
 
 export function splitVariantString(input: string): string[] {
     return input.split(' ').reduce((acc: string[], item: string) => {

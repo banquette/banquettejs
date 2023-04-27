@@ -1,4 +1,4 @@
-import { EventArg } from "@banquette/event/event-arg";
+import { EventArg } from "@banquette/event";
 
 /**
  * Event emitted when a value changes in a storage.

@@ -1,7 +1,7 @@
-import { Primitive } from "./transformer/type/primitive";
-import { Model } from "./transformer/type/model";
-import { Collection } from "./transformer/type/collection";
 import { TransformerFactory } from "./transformer/transformer.factory";
+import { Collection } from "./transformer/type/collection";
+import { Model } from "./transformer/type/model";
+import { Primitive } from "./transformer/type/primitive";
 
 /**
  * Used to keep the original type (inferred from the object properties)

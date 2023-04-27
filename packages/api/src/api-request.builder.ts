@@ -1,5 +1,5 @@
-import { AbstractRequestBuilder } from "@banquette/http/abstract-http-request.builder";
-import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model/type";
+import { AbstractRequestBuilder } from "@banquette/http";
+import { ModelExtendedIdentifier, ModelBidirectionalExtendedIdentifier } from "@banquette/model";
 import { ApiRequest } from "./api-request";
 import { ApiRequestFactory } from "./api-request.factory";
 

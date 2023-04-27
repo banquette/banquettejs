@@ -1,4 +1,4 @@
-import { ValidatorInterface } from "@banquette/validation/validator.interface";
+import { ValidatorInterface } from "@banquette/validation";
 
 export interface ApiEndpointParameterInterface {
     /**

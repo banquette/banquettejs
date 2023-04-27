@@ -1,37 +1,41 @@
 <style src="./form.component.css"></style>
 <template src="./form.component.html" ></template>
 <script lang="ts">
-import { EventArg } from "@banquette/event/event-arg";
-import { UnsubscribeFunction } from "@banquette/event/type";
-import { ContextualizedState } from "@banquette/form/constant";
-import { StateChangedFormEvent } from "@banquette/form/event/state-changed.form-event";
-import { ValueChangedFormEvent } from "@banquette/form/event/value-changed.form-event";
-import { HttpMethod } from "@banquette/http/constants";
-import { PayloadTypeFormData } from "@banquette/http/encoder/form-data.encoder";
-import { PayloadTypeJson } from "@banquette/http/encoder/json.encoder";
-import { PayloadTypeRaw } from "@banquette/http/encoder/raw.encoder";
-import { AfterBindModelEventArg } from "@banquette/ui/form/form/event/after-bind-model.event-arg";
-import { AfterPersistEventArg } from "@banquette/ui/form/form/event/after-persist.event-arg";
-import { AfterRemotePersistEventArg } from "@banquette/ui/form/form/event/after-remote-persist.event-arg";
-import { AfterValidateEventArg } from "@banquette/ui/form/form/event/after-validate.event-arg";
-import { BeforeBindModelEventArg } from "@banquette/ui/form/form/event/before-bind-model.event-arg";
-import { BeforeLoadEventArg } from "@banquette/ui/form/form/event/before-load.event-arg";
-import { BeforePersistEventArg } from "@banquette/ui/form/form/event/before-persist.event-arg";
-import { BeforeValidateEventArg } from "@banquette/ui/form/form/event/before-validate.event-arg";
-import { ActionErrorEventArg } from "@banquette/ui/form/form/event/action-error.event-arg";
-import { HeadlessFormViewModel } from "@banquette/ui/form/form/headless-form-view.model";
-import { ensureInEnum } from "@banquette/utils-array/ensure-in-enum";
-import { areEqual } from "@banquette/utils-misc/are-equal";
-import { reassign } from "@banquette/utils-misc/make-reassignable";
-import { oncePerCycleProxy } from "@banquette/utils-misc/once-per-cycle-proxy";
-import { ensureString } from "@banquette/utils-type/ensure-string";
-import { Writeable, Primitive, AnyObject } from "@banquette/utils-type/types";
-import { Component } from "@banquette/vue-typescript/decorator/component.decorator";
-import { Computed } from "@banquette/vue-typescript/decorator/computed.decorator";
-import { Expose } from "@banquette/vue-typescript/decorator/expose.decorator";
-import { Prop } from "@banquette/vue-typescript/decorator/prop.decorator";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript/decorator/watch.decorator";
-import { Vue } from "@banquette/vue-typescript/vue";
+import { Injector } from "@banquette/dependency-injection";
+import { EventArg } from "@banquette/event";
+import { UnsubscribeFunction } from "@banquette/event";
+import { ContextualizedState } from "@banquette/form";
+import { StateChangedFormEvent } from "@banquette/form";
+import { ValueChangedFormEvent } from "@banquette/form";
+import { HttpMethod } from "@banquette/http";
+import { PayloadTypeFormData } from "@banquette/http";
+import { PayloadTypeJson } from "@banquette/http";
+import { PayloadTypeRaw } from "@banquette/http";
+import { FormTransformerSymbol } from "@banquette/model-form";
+import { TransformService } from "@banquette/model";
+import { AfterBindModelEventArg } from "@banquette/ui";
+import { AfterPersistEventArg } from "@banquette/ui";
+import { AfterRemotePersistEventArg } from "@banquette/ui";
+import { AfterValidateEventArg } from "@banquette/ui";
+import { BeforeBindModelEventArg } from "@banquette/ui";
+import { BeforeLoadEventArg } from "@banquette/ui";
+import { BeforePersistEventArg } from "@banquette/ui";
+import { BeforeValidateEventArg } from "@banquette/ui";
+import { ActionErrorEventArg } from "@banquette/ui";
+import { HeadlessFormViewModel } from "@banquette/ui";
+import { ensureInEnum } from "@banquette/utils-array";
+import { areEqual } from "@banquette/utils-misc";
+import { reassign } from "@banquette/utils-misc";
+import { oncePerCycleProxy } from "@banquette/utils-misc";
+import { ensureString } from "@banquette/utils-type";
+import { Writeable, Primitive, AnyObject } from "@banquette/utils-type";
+import { Component } from "@banquette/vue-typescript";
+import { Computed } from "@banquette/vue-typescript";
+import { Expose } from "@banquette/vue-typescript";
+import { Prop } from "@banquette/vue-typescript";
+import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { Vue } from "@banquette/vue-typescript";
+import { PropType } from "vue";
 import { FormViewDataInterface } from "./form-view-data.interface";
 
 @Component({
@@ -52,7 +56,7 @@ import { FormViewDataInterface } from "./form-view-data.interface";
         'update:disabled'
     ]
 })
-export default class FormComponent<ModelType extends object = any, ViewData extends FormViewDataInterface<ModelType> = FormViewDataInterface<ModelType>> extends Vue {
+export default class BtForm<ModelType extends object = any, ViewData extends FormViewDataInterface<ModelType> = FormViewDataInterface<ModelType>> extends Vue {
     /**
      * "v-model" recipient.
      */
@@ -71,19 +75,19 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
     /**
      * Loading.
      */
-    @Prop({type: String, default: null}) public loadUrl!: string|null;
-    @Prop({type: String, default: null}) public loadEndpoint!: string|null;
-    @Prop({type: Object, default: {}}) public loadUrlParams!: Record<string, Primitive>;
-    @Prop({type: Object, default: {}}) public loadHeaders!: Record<string, Primitive>;
+    @Prop({type: String as PropType<string|null>, default: null}) public loadUrl!: string|null;
+    @Prop({type: String as PropType<string|null>, default: null}) public loadEndpoint!: string|null;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public loadUrlParams!: Record<string, Primitive>;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public loadHeaders!: Record<string, Primitive>;
 
     /**
      * Persisting.
      */
-    @Prop({type: String, default: null}) public persistUrl!: string|null;
-    @Prop({type: String, transform: (value) => ensureInEnum(ensureString(value).toUpperCase(), HttpMethod, HttpMethod.POST)}) public persistMethod!: HttpMethod;
-    @Prop({type: String, default: null}) public persistEndpoint!: string|null;
-    @Prop({type: Object, default: {}}) public persistUrlParams!: Record<string, Primitive>;
-    @Prop({type: Object, default: {}}) public persistHeaders!: Record<string, Primitive>;
+    @Prop({type: String as PropType<string|null>, default: null}) public persistUrl!: string|null;
+    @Prop({type: String as PropType<HttpMethod>, transform: (value) => ensureInEnum(ensureString(value).toUpperCase(), HttpMethod, HttpMethod.POST)}) public persistMethod!: HttpMethod;
+    @Prop({type: String as PropType<string|null>, default: null}) public persistEndpoint!: string|null;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public persistUrlParams!: Record<string, Primitive>;
+    @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public persistHeaders!: Record<string, Primitive>;
     @Prop({type: String, transform: (input: any) => {
         if (input === 'form-data') {
             return PayloadTypeFormData;
@@ -138,7 +142,7 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
      * Vue lifecycle.
      */
     public beforeMount(): void {
-        (this as Writeable<FormComponent>).vm = new HeadlessFormViewModel<ViewData, ModelType>();
+        (this as any /* Writeable<BtForm> */).vm = new HeadlessFormViewModel<ViewData, ModelType>();
         this.vm.viewData.persistResponse = null;
         this.vm.loadData = this.modelValue;
         this.v = this.vm.viewData as ViewData;
@@ -268,13 +272,21 @@ export default class FormComponent<ModelType extends object = any, ViewData exte
         this.vm.form.setValidationGroups(newValue);
     }
 
-    @Watch('modelValue', {immediate: false, deep: true})
-    private onModelValueChange(newValue: AnyObject): void {
-        if (areEqual(this.vm.form.value, newValue)) {
-            return ;
-        }
-        this.vm.form.setValue(newValue);
-    }
+    //
+    // TODO: This is incredibly inefficient.
+    // Find a way to handle the reactivity issues without reassigning the whole form for each change.
+    // Even watching the model deeply is unacceptable.
+    //
+    // @Watch('modelValue', {immediate: false, deep: true})
+    // private onModelValueChange(model: AnyObject): void {
+    //     const form: any = this.transformService.transform(model, FormTransformerSymbol).result;
+    //     form.getByPattern('**').markAsConcrete();
+    //     const newValue = form.value;
+    //     if (areEqual(this.vm.form.value, newValue)) {
+    //         return ;
+    //     }
+    //     this.vm.form.setValue(newValue);
+    // }
 
     @Watch(['modelType','loadUrl', 'loadEndpoint','loadUrlParams', 'loadHeaders'], {immediate: ImmediateStrategy.BeforeMount})
     private syncLoadConfigurationProps = (() => {

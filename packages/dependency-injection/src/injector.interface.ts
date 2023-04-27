@@ -1,5 +1,5 @@
-import { InjectableMetadataInterface } from "./injectable-metadata.interface";
-import { InjectableIdentifier } from "./type/injectable-identifier.type";
+import { InjectableMetadataInterface } from './injectable-metadata.interface';
+import { InjectableIdentifier } from './type/injectable-identifier.type';
 
 /**
  * Adapter interface doing the bridge between the userland and the concrete implementation in use.
@@ -18,7 +18,7 @@ export interface InjectorAdapterInterface<C> {
     /**
      * Gets any number of elements matching at least on of the tags given as input.
      */
-    getMultiple<T>(tag: symbol|symbol[]): T[];
+    getMultiple<T>(tag: symbol | symbol[]): T[];
 
     /**
      * Check if an identifier is known by the container.
