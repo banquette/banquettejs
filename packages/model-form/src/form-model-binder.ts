@@ -281,12 +281,12 @@ export class FormModelBinder {
                 if (isUndefined(treeContainer)) {
                     return ;
                 }
-                if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                    lastCtor = treeContainer.ctor;
-                }
                 if (i > 0) {
                     formContainer = (formContainer as FormGroupInterface).get<FormGroupInterface>(pathParts[i - 1]);
                     modelContainer = modelContainer[pathParts[i - 1]];
+                    if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
+                        lastCtor = treeContainer.ctor;
+                    }
                 }
                 pushContext(treeChildName === '*' ? Array : lastCtor, pathParts[i], modelContainer);
 
