@@ -38,5 +38,6 @@ export * from './validation-result';
 export * from './validator.factory';
 export * from './validator.interface';
 export * from './validator-container.interface';
+export * from './validator-options.interface';
 export * from './violation.interface';
 export * from './violation';
