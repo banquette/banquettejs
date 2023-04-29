@@ -21,10 +21,12 @@ import { reassign, oncePerCycleProxy } from "@banquette/utils-misc";
 import { ensureString, Primitive, AnyObject } from "@banquette/utils-type";
 import { Component, Computed, Expose, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
+import { BtClientOnly } from "../../misc";
 import { FormViewDataInterface } from "./form-view-data.interface";
 
 @Component({
     name: 'bt-form',
+    components: [BtClientOnly],
     emits: [
         'change',
         'before-load',
