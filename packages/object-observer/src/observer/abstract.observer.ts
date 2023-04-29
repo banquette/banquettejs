@@ -58,7 +58,6 @@ export abstract class AbstractObserver<T extends object> {
     public constructor(name: string,
                        protected target: T,
                        parent: AbstractObserver<any>|null = null) {
-        console.warn('#AbstractObserver');
         if (parent !== null) {
             this.parents.push({name, parent});
         }

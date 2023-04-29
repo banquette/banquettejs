@@ -17,7 +17,6 @@ export class ModelTransformMetadataService {
     protected transformersMap: WeakMap<Constructor, Record<symbol, Record<string, Complete<TransformerInterface>>>>;
 
     public constructor(@Inject(ModelMetadataService) private modelMetadata: ModelMetadataService) {
-        console.warn('#ModelTransformMetadataService');
         this.transformersMap = new WeakMap<Constructor, Record<symbol, Record<string, Complete<TransformerInterface>>>>();
     }
 

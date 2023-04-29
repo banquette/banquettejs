@@ -105,7 +105,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
     private eventDispatcher = new EventDispatcher();
 
     public constructor() {
-        console.warn("#HeadlessFormViewModel");
         this.setViewData({
             errorsMap: {},
             getControl: proxy(this.getControl, this),

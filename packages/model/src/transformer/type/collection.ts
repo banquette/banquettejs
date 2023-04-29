@@ -15,7 +15,6 @@ let modelMetadata: ModelMetadataService|null = null;
  * Apply a transformer to a collection of values.
  */
 export function Collection(transformer?: TransformerInterface): TransformerInterface {
-    console.warn('#Collection (decorator)');
     const apply = (fnName: keyof Omit<TransformerInterface, 'type'>, context: TransformContext): void => {
         if (isUndefined(transformer)) {
             if (modelMetadata === null) {

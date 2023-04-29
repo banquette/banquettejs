@@ -6,7 +6,6 @@ import { TransformerInterface } from "../transformer.interface";
  * Placeholder transformer doing nothing.
  */
 export function Raw(): TransformerInterface {
-    console.warn('#Raw (decorator)');
     return {
         /**
          * @inheritDoc

@@ -33,7 +33,6 @@ export class ModelMetadataService {
      * Define a custom factory that should be used any time a new instance of the model is created.
      */
     public registerFactory(ctor: Constructor, factory: ModelFactory<any>): void {
-        console.warn('#ModelMetadataService');
         this.factories.set(ctor, factory);
     }
 

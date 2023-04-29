@@ -44,7 +44,6 @@ export enum Type {
  * Ensure the output type matches the ones given as parameters.
  */
 export function Primitive(transformType: Type = Type.Any, inverseType: Type = Type.Any): TransformerInterface {
-    console.warn('#Primitive (decorator)');
     const ensureType = (type: Type, value: any) => {
         if ((type & Type.Null) === Type.Null && value === null) {
             return null;

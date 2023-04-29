@@ -7,7 +7,7 @@ import { ensureArray } from "@banquette/utils-type";
 @Service()
 export class FormComponentFactory {
     public constructor(@Inject(ModelValidationMetadataService) private validationMetadata: ModelValidationMetadataService) {
-        console.warn("#FormComponentFactory");
+
     }
 
     /**

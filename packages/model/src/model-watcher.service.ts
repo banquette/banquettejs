@@ -16,7 +16,6 @@ export class ModelWatcherService {
      * If `null` or an empty array is given, the whole model and all its children will be watched.
      */
     public watch<T extends object>(model: T, paths: string[]|null, cb: (event: MutationEvent) => void): T {
-        console.warn('#ModelWatcherService');
         let watchedPaths = paths !== null && paths.length > 0 ? paths : null;
         if (watchedPaths !== null) {
             watchedPaths = watchedPaths.map((item: string) => item[0] !== '/' ? ('/' + item) : item);

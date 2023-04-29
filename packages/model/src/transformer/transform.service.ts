@@ -22,7 +22,7 @@ export class TransformService {
     public constructor(@Inject(ModelMetadataService) private modelMetadata: ModelMetadataService,
                        @Inject(ModelTransformMetadataService) private transformMetadata: ModelTransformMetadataService,
                        @InjectMultiple(ModelTransformerTag) private transformers: RootTransformerInterface[]) {
-        console.warn("#TransformService");
+
     }
 
     /**

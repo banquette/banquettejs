@@ -24,7 +24,6 @@ export class JsonTransformer extends AbstractRootTransformer {
      * @inheritDoc
      */
     protected doTransform(context: TransformContext, pipeline: TransformPipeline): TransformResult {
-        console.warn('#Json (decorator)');
         const result: any = {};
         pipeline.forEach((property: string, transformer: Complete<TransformerInterface>) => {
             const subContext = new TransformContext(

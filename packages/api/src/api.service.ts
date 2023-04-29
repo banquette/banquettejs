@@ -45,7 +45,6 @@ export class ApiService {
         this.eventDispatcher.subscribe(HttpEvents.RequestSuccess, proxy(this.onRequestSuccess, this), config.eventsPriorities.requestSuccess, [ApiTag]);
         this.eventDispatcher.subscribe(HttpEvents.RequestFailure, proxy(this.onRequestFailure, this), config.eventsPriorities.requestFailure, [ApiTag]);
 
-        console.warn("#ApiService");
         useBuiltInRequestModelTransformer();
         useBuiltInResponseModelTransformer();
     }

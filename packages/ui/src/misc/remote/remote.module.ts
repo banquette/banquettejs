@@ -79,7 +79,6 @@ export class RemoteModule {
      * Check if the module is usable in the current configuration.
      */
     public get isApplicable(): boolean {
-        console.warn('#RemoteModule');
         return this.endpoint !== null || this.url !== null;
     }
 

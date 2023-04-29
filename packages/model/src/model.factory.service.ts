@@ -5,7 +5,7 @@ import { ModelExtendedIdentifier } from "./type";
 @Service()
 export class ModelFactoryService {
     public constructor(@Inject(ModelMetadataService) private metadata: ModelMetadataService) {
-        console.warn('#ModelFactoryService');
+
     }
 
     /**

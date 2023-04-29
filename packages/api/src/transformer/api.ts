@@ -9,7 +9,6 @@ export class ApiTransformer extends PojoTransformer {
      * @inheritDoc
      */
     public getTransformerSymbol(): symbol {
-        console.warn('#ApiTransformer');
         return ApiTransformerSymbol;
     }
 }

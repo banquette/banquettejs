@@ -6,8 +6,6 @@ import { VueBuilder } from "@banquette/vue-typescript";
 export const useApiGlobals = /**!PURE*/ ((_) => {
     return () => {
         const api = /**!PURE*/  Injector.Get(_);
-        console.warn('#useApiGlobals', api);
-
         /**
          * Global Vue functions for making Api requests.
          */

@@ -24,7 +24,6 @@ export class FormTransformer extends AbstractRootTransformer {
                        @Inject(ModelFactoryService) protected modelFactory: ModelFactoryService,
                        @Inject(FormComponentFactory) private formFactory: FormComponentFactory) {
         super(modelMetadata, transformMetadata, modelFactory);
-        console.warn("#FormTransformer");
     }
 
     /**

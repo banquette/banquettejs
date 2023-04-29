@@ -94,7 +94,6 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     private searchBufferSlug: string = '';
 
     public constructor(control: FormViewControlInterface) {
-        console.warn("#HeadlessSelectViewModel");
         super(control);
         this.remote = new RemoteModule();
 

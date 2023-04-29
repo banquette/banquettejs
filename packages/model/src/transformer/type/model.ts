@@ -25,7 +25,6 @@ function createSubContext(context: TransformContext, identifier: ModelExtendedId
  * Call the transform service that will execute the appropriate root transformer for the context.
  */
 export function Model(): TransformerInterface {
-    console.warn('#Model (decorator)');
     let identifier: Constructor|null = null;
     const getIdentifier = (context: TransformContext): Constructor => {
         if (identifier !== null) {

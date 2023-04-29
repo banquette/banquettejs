@@ -7,7 +7,6 @@ let metadata: ModelMetadataService|null = null;
 
 export function Factory(factory: ModelFactory<any>): any {
     return (ctor: Constructor) => {
-        console.warn("#Factory (decorator)");
         if (metadata === null) {
             metadata = /**!PURE*/ Injector.Get(ModelMetadataService);
         }

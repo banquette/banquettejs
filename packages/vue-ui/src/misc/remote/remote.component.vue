@@ -34,7 +34,6 @@ export default class BtRemote extends Vue {
      * Try to fetch remote data if available.
      */
     @Expose() public update(): void {
-        console.log('#BtRemote');
         if (!this.remote.isApplicable) {
             this.response = null;
         } else {

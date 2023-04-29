@@ -27,7 +27,6 @@ export class HttpTransformer extends PojoTransformer {
                        @Inject(ApiEndpointStorageService) private endpointStorage: ApiEndpointStorageService,
                        @InjectLazy(() => TransformService) private transformService: TransformService) {
         super(modelMetadata, transformMetadata, modelFactory);
-        console.warn('#HttpTransformer');
     }
 
     /**

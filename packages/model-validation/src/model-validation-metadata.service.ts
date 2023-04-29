@@ -10,7 +10,6 @@ export class ModelValidationMetadataService {
 
     public constructor(@Inject(ModelMetadataService) private aliasResolver: ModelMetadataService) {
         this.validatorsMap = new WeakMap<Constructor, Record<string, ValidatorInterface>>();
-        console.warn("#ModelValidationMetadataService");
     }
 
     /**

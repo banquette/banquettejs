@@ -22,7 +22,6 @@ export class PojoTransformer extends AbstractRootTransformer {
      * @inheritDoc
      */
     protected doTransform(context: TransformContext, pipeline: TransformPipeline): TransformResult {
-        console.warn('#Pojo (decorator)');
         const result: any = {};
         pipeline.forEach((property: string, transformer: Complete<TransformerInterface>) => {
             const subContext = new TransformContext(

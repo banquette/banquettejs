@@ -16,7 +16,7 @@ export abstract class AbstractRootTransformer implements RootTransformerInterfac
     public constructor(@Inject(ModelMetadataService) protected modelMetadata: ModelMetadataService,
                        @Inject(ModelTransformMetadataService) protected transformMetadata: ModelTransformMetadataService,
                        @Inject(ModelFactoryService) protected modelFactory: ModelFactoryService) {
-        console.warn("#AbstractRootTransformer");
+
     }
 
     /**
