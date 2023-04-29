@@ -1,19 +1,9 @@
-import { FormComponentInterface } from "@banquette/form";
-import { FormGroupInterface } from "@banquette/form";
+import { FormComponentInterface, FormGroupInterface } from "@banquette/form";
 import { trimArray } from "@banquette/utils-array";
 import { proxy } from "@banquette/utils-misc";
-import { ensureArray } from "@banquette/utils-type";
-import { ensureString } from "@banquette/utils-type";
-import { isArray } from "@banquette/utils-type";
-import { isFunction } from "@banquette/utils-type";
-import { isObject } from "@banquette/utils-type";
-import { isType } from "@banquette/utils-type";
-import { VoidCallback } from "@banquette/utils-type";
+import { ensureArray, ensureString, isArray, isFunction, isObject, isType, VoidCallback } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
-import { maybeResolveTsInst } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Prop, Watch, ImmediateStrategy, maybeResolveTsInst, Vue, c } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { BtAbstractVueForm } from "../abstract-vue-form.component";
 import { ContainerValidatorInterface } from "./container-validator.interface";
@@ -138,7 +128,7 @@ export abstract class BtValidator extends Vue {
         let $parent: any = this.$parent;
         while ($parent) {
             $parent = maybeResolveTsInst($parent);
-            if ($parent instanceof BtAbstractVueForm) {
+            if ($parent instanceof c(BtAbstractVueForm)) {
                 return $parent.proxy.setValidator(this.buildValidator());
             }
             if (isType<ContainerValidatorInterface>($parent, () => isFunction($parent.registerChild))) {

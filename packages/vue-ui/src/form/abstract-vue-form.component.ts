@@ -1,19 +1,9 @@
 import { EventPipeline } from "@banquette/event";
-import { BasicState } from "@banquette/form";
-import { StateChangedFormEvent } from "@banquette/form";
-import { ValueChangedFormEvent } from "@banquette/form";
-import { FormViewControlInterface } from "@banquette/form";
-import { HeadlessControlViewDataInterface } from "@banquette/ui";
-import { HeadlessControlViewModel } from "@banquette/ui";
+import { BasicState, StateChangedFormEvent, ValueChangedFormEvent, FormViewControlInterface } from "@banquette/form";
+import { HeadlessControlViewDataInterface, HeadlessControlViewModel } from "@banquette/ui";
 import { proxy } from "@banquette/utils-misc";
-import { isUndefined } from "@banquette/utils-type";
-import { GenericCallback } from "@banquette/utils-type";
-import { Component } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Import } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { isUndefined, GenericCallback } from "@banquette/utils-type";
+import { Component, Expose, Import, Prop, Watch, ImmediateStrategy, Vue, c } from "@banquette/vue-typescript";
 import { ViewModelEvents, ViewModelSequence, UndefinedValue } from "./constant";
 import { BtForm } from "./form";
 import { FormControlProxy } from "./form-control.proxy";
@@ -117,7 +107,7 @@ export abstract class BtAbstractVueForm<
         }
         // Special shortcut if in bt-form-generic.
         const parentFormGeneric: any = this.getParent('bt-form');
-        if (parentFormGeneric !== null && parentFormGeneric instanceof BtForm) {
+        if (parentFormGeneric !== null && parentFormGeneric instanceof c(BtForm)) {
             this.proxy.setFallbackForm(parentFormGeneric.vm.form);
             this.proxy.setFallbackGetControl(proxy(parentFormGeneric.vm.getControl, parentFormGeneric.vm));
         }
