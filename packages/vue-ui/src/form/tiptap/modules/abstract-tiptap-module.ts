@@ -1,7 +1,5 @@
 import { UsageException } from "@banquette/exception";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Expose, Prop, Vue } from "@banquette/vue-typescript";
 import { Editor, Extensions, EditorEvents } from "@tiptap/vue-3";
 import BtFormTiptap from "../tiptap.component.vue";
 import { TiptapModuleInterface } from "./tiptap-module.interface";

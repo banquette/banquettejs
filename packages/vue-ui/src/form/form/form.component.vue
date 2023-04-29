@@ -1,40 +1,25 @@
 <style src="./form.component.css"></style>
 <template src="./form.component.html" ></template>
 <script lang="ts">
-import { Injector } from "@banquette/dependency-injection";
-import { EventArg } from "@banquette/event";
-import { UnsubscribeFunction } from "@banquette/event";
-import { ContextualizedState } from "@banquette/form";
-import { StateChangedFormEvent } from "@banquette/form";
-import { ValueChangedFormEvent } from "@banquette/form";
-import { HttpMethod } from "@banquette/http";
-import { PayloadTypeFormData } from "@banquette/http";
-import { PayloadTypeJson } from "@banquette/http";
-import { PayloadTypeRaw } from "@banquette/http";
-import { FormTransformerSymbol } from "@banquette/model-form";
-import { TransformService } from "@banquette/model";
-import { AfterBindModelEventArg } from "@banquette/ui";
-import { AfterPersistEventArg } from "@banquette/ui";
-import { AfterRemotePersistEventArg } from "@banquette/ui";
-import { AfterValidateEventArg } from "@banquette/ui";
-import { BeforeBindModelEventArg } from "@banquette/ui";
-import { BeforeLoadEventArg } from "@banquette/ui";
-import { BeforePersistEventArg } from "@banquette/ui";
-import { BeforeValidateEventArg } from "@banquette/ui";
-import { ActionErrorEventArg } from "@banquette/ui";
-import { HeadlessFormViewModel } from "@banquette/ui";
+import { EventArg, UnsubscribeFunction } from "@banquette/event";
+import { ContextualizedState, StateChangedFormEvent, ValueChangedFormEvent } from "@banquette/form";
+import { HttpMethod, PayloadTypeFormData, PayloadTypeJson, PayloadTypeRaw } from "@banquette/http";
+import {
+    AfterBindModelEventArg,
+    AfterPersistEventArg,
+    AfterRemotePersistEventArg,
+    AfterValidateEventArg,
+    BeforeBindModelEventArg,
+    BeforeLoadEventArg,
+    BeforePersistEventArg,
+    BeforeValidateEventArg,
+    ActionErrorEventArg,
+    HeadlessFormViewModel
+} from "@banquette/ui";
 import { ensureInEnum } from "@banquette/utils-array";
-import { areEqual } from "@banquette/utils-misc";
-import { reassign } from "@banquette/utils-misc";
-import { oncePerCycleProxy } from "@banquette/utils-misc";
-import { ensureString } from "@banquette/utils-type";
-import { Writeable, Primitive, AnyObject } from "@banquette/utils-type";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { reassign, oncePerCycleProxy } from "@banquette/utils-misc";
+import { ensureString, Primitive, AnyObject } from "@banquette/utils-type";
+import { Component, Computed, Expose, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { FormViewDataInterface } from "./form-view-data.interface";
 

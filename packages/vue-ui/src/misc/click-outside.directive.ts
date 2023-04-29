@@ -1,9 +1,5 @@
-import { isServer } from "@banquette/utils-misc";
-import { proxy } from "@banquette/utils-misc";
-import { isFunction } from "@banquette/utils-type";
-import { isObject } from "@banquette/utils-type";
-import { isUndefined } from "@banquette/utils-type";
-import { VoidCallback } from "@banquette/utils-type";
+import { isServer, proxy } from "@banquette/utils-misc";
+import { isFunction, isObject, isUndefined, VoidCallback } from "@banquette/utils-type";
 import { Directive } from "@banquette/vue-typescript";
 import { DirectiveBinding } from "vue";
 

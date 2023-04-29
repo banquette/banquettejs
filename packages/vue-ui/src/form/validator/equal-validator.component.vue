@@ -1,8 +1,6 @@
 <script lang="ts">
-import { Equal } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
-import { Component } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
+import { Equal, ValidatorInterface } from "@banquette/validation";
+import { Component, Prop } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 
 @Component('bt-validate-equal')

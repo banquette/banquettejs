@@ -1,11 +1,7 @@
 <template src="./tab.component.html" ></template>
 <script lang="ts">
 import { UsageException } from "@banquette/exception";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Computed, Expose, Prop, Vue } from "@banquette/vue-typescript";
 
 @Component('bt-tab')
 export default class BtTab extends Vue {

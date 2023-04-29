@@ -1,5 +1,4 @@
-import { isArray } from "@banquette/utils-type";
-import { isObject } from "@banquette/utils-type";
+import { isArray, isObject } from "@banquette/utils-type";
 import { Component as VueComponent } from "@vue/runtime-core";
 import { TiptapConfigurationInterface } from "./tiptap-configuration.interface";
 

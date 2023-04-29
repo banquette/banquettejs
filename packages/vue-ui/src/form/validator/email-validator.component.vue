@@ -1,6 +1,5 @@
 <script lang="ts">
-import { Email } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
+import { Email, ValidatorInterface } from "@banquette/validation";
 import { Component } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 

@@ -2,7 +2,7 @@ import { UsageException } from "@banquette/exception";
 import { arrayIntersect } from "@banquette/utils-array";
 import { MatchType, matchBest, MatchResult } from "@banquette/utils-glob";
 import { getObjectValue } from "@banquette/utils-object";
-import { ensureArray, isUndefined, Writeable } from "@banquette/utils-type";
+import { ensureArray, isUndefined } from "@banquette/utils-type";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { isValidatorContainer, isValidationContext } from "./utils";
 import { ValidateOptionsInterface } from "./validate-options.interface";

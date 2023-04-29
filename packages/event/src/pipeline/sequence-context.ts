@@ -1,5 +1,4 @@
 import { VarHolder } from '@banquette/utils-misc';
-import { Writeable } from '@banquette/utils-type';
 import { DispatchResult } from '../dispatch-result';
 import { EventArg } from '../event-arg';
 

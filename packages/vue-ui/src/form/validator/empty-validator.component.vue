@@ -1,6 +1,5 @@
 <script lang="ts">
-import { Empty } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
+import { Empty, ValidatorInterface } from "@banquette/validation";
 import { Component } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 

@@ -1,7 +1,7 @@
 import { EventDispatcher, UnsubscribeFunction } from "@banquette/event";
 import { flattenObject } from "@banquette/utils-object";
 import { kebabCase } from "@banquette/utils-string";
-import { ensureArray, isObject, isUndefined, Primitive, Writeable } from "@banquette/utils-type";
+import { ensureArray, isObject, isUndefined, Primitive } from "@banquette/utils-type";
 import { VarsMapInterface, ThemeableMetadata } from "../decorator/themeable.decorator";
 import { getUniqueRandomId } from "../utils/get-unique-random-id";
 import { Vue } from "../vue";

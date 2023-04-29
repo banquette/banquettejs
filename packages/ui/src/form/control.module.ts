@@ -3,7 +3,7 @@ import { UsageException } from "@banquette/exception";
 import { BeforeValueChangeFormEvent, ErrorsChangedFormEvent, StateChangedFormEvent, ValueChangedFormEvent, FormError, FormViewControlInterface } from "@banquette/form";
 import { proxy } from "@banquette/utils-misc";
 import { extend, getObjectKeys } from "@banquette/utils-object";
-import { isUndefined, VoidCallback, Writeable } from "@banquette/utils-type";
+import { isUndefined, VoidCallback } from "@banquette/utils-type";
 import { HeadlessInterface } from "../headless.interface";
 import { ControlViewDataInterface } from "./control-view-data.interface";
 import { NoopTransformer } from "./noop.value-transformer";

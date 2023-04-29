@@ -1,18 +1,12 @@
 <style src="./alerts-stack.component.css" scoped></style>
 <template src="./alerts-stack.component.html" ></template>
 <script lang="ts">
-import { Inject } from "@banquette/dependency-injection";
-import { Module } from "@banquette/dependency-injection";
-import { Injector } from "@banquette/dependency-injection";
+import { Inject, Module, Injector } from "@banquette/dependency-injection";
 import { EventDispatcherService } from "@banquette/event";
-import { ensureInEnum } from "@banquette/utils-array";
-import { enumToArray } from "@banquette/utils-array";
+import { ensureInEnum, enumToArray } from "@banquette/utils-array";
 import { proxy } from "@banquette/utils-misc";
 import { getObjectKeys } from "@banquette/utils-object";
-import { Component } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Expose, Prop, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { AlertOptionsInterface } from "../../alert-options.interface";
 import { StackPosition, AlertEvents } from "../../constant";

@@ -1,8 +1,5 @@
-import { OrderingDirection } from "@banquette/ui";
-import { OrderingModule } from "@banquette/ui";
-import { Composable } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { OrderingDirection, OrderingModule } from "@banquette/ui";
+import { Composable, Prop, Watch, ImmediateStrategy } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 
 @Composable()

@@ -1,15 +1,7 @@
-import { areEqual } from "@banquette/utils-misc";
-import { proxy } from "@banquette/utils-misc";
-import { throttle } from "@banquette/utils-misc";
+import { areEqual, proxy, throttle } from "@banquette/utils-misc";
 import { cloneDeepPrimitive } from "@banquette/utils-object";
 import { trim } from "@banquette/utils-string";
-import { isArray } from "@banquette/utils-type";
-import { isFunction } from "@banquette/utils-type";
-import { isNullOrUndefined } from "@banquette/utils-type";
-import { isObject } from "@banquette/utils-type";
-import { isString } from "@banquette/utils-type";
-import { isUndefined } from "@banquette/utils-type";
-import { GenericCallback, VoidCallback } from "@banquette/utils-type";
+import { isArray, isFunction, isNullOrUndefined, isObject, isString, isUndefined, GenericCallback, VoidCallback } from "@banquette/utils-type";
 import { Directive } from "@banquette/vue-typescript";
 import { createPopper, PositioningStrategy, Instance, OptionsGeneric } from "@popperjs/core";
 import { useResizeObserver } from "@vueuse/core";

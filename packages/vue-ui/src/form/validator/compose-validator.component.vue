@@ -1,9 +1,6 @@
 <script lang="ts">
-import { Compose } from "@banquette/validation";
-import { Valid } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
-import { Component } from "@banquette/vue-typescript";
-import { Render } from "@banquette/vue-typescript";
+import { Compose, Valid, ValidatorInterface } from "@banquette/validation";
+import { Component, Render } from "@banquette/vue-typescript";
 import { VNodeChild } from "@vue/runtime-core";
 import { renderSlot } from "vue";
 import { BtContainerValidator } from "./container-validator.component";

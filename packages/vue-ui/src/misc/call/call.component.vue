@@ -1,6 +1,5 @@
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Vue } from "@banquette/vue-typescript";
 
 @Component({
     name: 'bt-call',

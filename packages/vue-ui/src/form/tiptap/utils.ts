@@ -1,6 +1,6 @@
 import { Injector } from "@banquette/dependency-injection";
-import { TiptapConfigurationService } from "./tiptap-configuration.service";
 import { TiptapConfigurationInterface } from "./tiptap-configuration.interface";
+import { TiptapConfigurationService } from "./tiptap-configuration.service";
 
 export const ModulesToolbarAliases: Record<string, string> = {};
 

@@ -1,6 +1,5 @@
 <script lang="ts">
-import { Invalid } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
+import { Invalid, ValidatorInterface } from "@banquette/validation";
 import { Component } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 

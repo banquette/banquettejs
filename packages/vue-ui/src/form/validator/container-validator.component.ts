@@ -1,7 +1,7 @@
 import { VoidCallback } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
-import { BtValidator } from "./validator.component";
 import { ContainerValidatorInterface } from "./container-validator.interface";
+import { BtValidator } from "./validator.component";
 
 let maxId = 0;
 

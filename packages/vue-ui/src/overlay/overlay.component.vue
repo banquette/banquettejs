@@ -1,14 +1,7 @@
 <style src="./overlay.component.css" scoped></style>
 <template src="./overlay.component.html" ></template>
 <script lang="ts">
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { ThemeVar } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
-import { BindThemeDirective } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Computed, Prop, ThemeVar, Themeable, Watch, ImmediateStrategy, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { ThemeConfiguration } from "./theme-configuration";
 
 let ZIndexIncrement: number = 0;

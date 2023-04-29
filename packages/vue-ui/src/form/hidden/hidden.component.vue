@@ -1,6 +1,5 @@
 <script lang="ts">
-import { HeadlessControlViewDataInterface } from "@banquette/ui";
-import { HeadlessControlViewModel } from "@banquette/ui";
+import { HeadlessControlViewDataInterface, HeadlessControlViewModel } from "@banquette/ui";
 import { Component } from "@banquette/vue-typescript";
 import { BtAbstractVueForm } from "../abstract-vue-form.component";
 

@@ -1,21 +1,13 @@
 <script lang="ts">
-import { ApiEndpoint } from "@banquette/api";
-import { ApiEndpointStorageService } from "@banquette/api";
-import { Inject } from "@banquette/dependency-injection";
-import { Module } from "@banquette/dependency-injection";
-import { Injector } from "@banquette/dependency-injection";
+import { ApiEndpoint, ApiEndpointStorageService } from "@banquette/api";
+import { Inject, Module, Injector } from "@banquette/dependency-injection";
 import { UsageException } from "@banquette/exception";
-import { HttpMethod } from "@banquette/http";
-import { HttpRequestFactory } from "@banquette/http";
-import { HttpResponse } from "@banquette/http";
+import { HttpMethod, HttpRequestFactory, HttpResponse } from "@banquette/http";
 import { ensureInEnum } from "@banquette/utils-array";
 import { proxy } from "@banquette/utils-misc";
 import { isObject } from "@banquette/utils-type";
-import { AutoPayloadSymbol, Ajax } from "@banquette/validation";
-import { ValidationResult } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
-import { Component } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
+import { AutoPayloadSymbol, Ajax, ValidationResult, ValidatorInterface } from "@banquette/validation";
+import { Component, Prop } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { BtValidator } from "./validator.component";
 

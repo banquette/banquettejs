@@ -2,9 +2,7 @@ import { HttpMethod } from "@banquette/http";
 import { RemoteModule } from "@banquette/ui";
 import { ensureInEnum } from "@banquette/utils-array";
 import { Primitive } from "@banquette/utils-type";
-import { Composable } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { Composable, Prop, Watch, ImmediateStrategy } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 
 /**

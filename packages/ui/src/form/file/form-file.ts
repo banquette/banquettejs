@@ -1,5 +1,5 @@
 import { byteCountToHumanSize, isNonEmptyString } from "@banquette/utils-string";
-import { isObject, isValidNumber, Writeable } from "@banquette/utils-type";
+import { isObject, isValidNumber } from "@banquette/utils-type";
 import { UploadStatus } from "./constant";
 import { I18nInterface } from "./i18n.interface";
 

@@ -2,12 +2,7 @@
 <template src="./popover-confirm.component.html" ></template>
 <script lang="ts">
 import { IMaterialHelp } from "@banquette/vue-material-icons";
-import { Component } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { BindThemeDirective } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Expose, Prop, Themeable, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { BtDropdown } from "../dropdown";
 import { ThemeConfiguration } from "./theme-configuration";
 

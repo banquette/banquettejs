@@ -3,7 +3,7 @@ import { ExceptionFactory, UsageException } from "@banquette/exception";
 import { HttpResponse } from "@banquette/http";
 import { debounce } from "@banquette/utils-misc";
 import { replaceStringVariables } from "@banquette/utils-string";
-import { ensureArray, ensureBoolean, ensureString, isArray, isFunction, isObject, isPrimitive, isScalar, isUndefined, Primitive, Writeable, AnyObject } from "@banquette/utils-type";
+import { ensureArray, ensureBoolean, ensureString, isArray, isFunction, isObject, isPrimitive, isScalar, isUndefined, Primitive, AnyObject } from "@banquette/utils-type";
 import { HeadlessInterface } from "../headless.interface";
 import { RemoteModule } from "../misc/remote/remote.module";
 import { NodePropResolver, HeadlessTreeViewModelEvents, NodeRemoteFetchStatus } from "./constant";

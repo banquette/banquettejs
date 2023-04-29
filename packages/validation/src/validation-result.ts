@@ -2,7 +2,7 @@ import { Exception, ExceptionFactory, UsageException } from "@banquette/exceptio
 import { MatchType, matchBest, MatchResult } from "@banquette/utils-glob";
 import { proxy } from "@banquette/utils-misc";
 import { replaceStringVariables } from "@banquette/utils-string";
-import { ensureArray, isUndefined, GenericCallback, Writeable } from "@banquette/utils-type";
+import { ensureArray, isUndefined, GenericCallback } from "@banquette/utils-type";
 import { normalizeMasks } from "./mask/normalize-mask";
 import { Violation } from "./violation";
 import { ViolationInterface } from "./violation.interface";

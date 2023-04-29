@@ -1,8 +1,6 @@
 <script lang="ts">
-import { SameAs } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
-import { Component } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
+import { SameAs, ValidatorInterface } from "@banquette/validation";
+import { Component, Prop } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 
 @Component('bt-validate-same-as')

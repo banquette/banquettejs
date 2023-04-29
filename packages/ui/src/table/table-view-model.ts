@@ -6,7 +6,7 @@ import { Exception } from "@banquette/exception";
 import { HttpResponse } from "@banquette/http";
 import { proxy } from "@banquette/utils-misc";
 import { uniqueId } from "@banquette/utils-random";
-import { isNullOrUndefined, isObject, isString, isType, isUndefined, Writeable } from "@banquette/utils-type";
+import { isNullOrUndefined, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
 import { UiConfigurationSymbol } from "../config";
 import { RemoteModule } from "../misc/remote/remote.module";
 import { UiConfigurationInterface } from "../ui-configuration.interface";
@@ -17,15 +17,15 @@ import { TableRequestEvent } from "./event/table-request.event";
 import { TableResponseEvent } from "./event/table-response.event";
 import { FilteringModule } from "./filtering/filtering.module";
 import { ItemInterface } from "./item.interface";
-import { ModuleInterface } from "./module.interface";
-import { OrderingModule } from "./ordering/ordering.module";
-import { PaginationModule } from "./pagination/pagination.module";
-import { ServerResult } from "./server-result";
 
 // Auto-register built-in listener
 import { useBuiltInRequestListener } from "./listener/request.listener";
 import { useBuiltInResponseTransformer } from "./listener/response-transformer.listener";
 import { useBuiltInResponseListener } from "./listener/response.listener";
+import { ModuleInterface } from "./module.interface";
+import { OrderingModule } from "./ordering/ordering.module";
+import { PaginationModule } from "./pagination/pagination.module";
+import { ServerResult } from "./server-result";
 
 @Module()
 export class TableViewModel {

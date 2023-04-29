@@ -1,9 +1,6 @@
 import { UsageException } from "@banquette/exception";
 import { isNonEmptyString } from "@banquette/utils-string";
-import { ensureArray } from "@banquette/utils-type";
-import { isFunction } from "@banquette/utils-type";
-import { isObject } from "@banquette/utils-type";
-import { isUndefined } from "@banquette/utils-type";
+import { ensureArray, isFunction, isObject, isUndefined } from "@banquette/utils-type";
 import { Directive } from "@banquette/vue-typescript";
 import { DirectiveBinding } from "vue";
 

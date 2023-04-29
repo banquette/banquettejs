@@ -3,15 +3,7 @@
 <script lang="ts">
 import { isServer } from "@banquette/utils-misc";
 import { IMaterialClose } from "@banquette/vue-material-icons";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Ref } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
-import { BindThemeDirective } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Computed, Expose, Prop, Ref, Themeable, Watch, ImmediateStrategy, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { BtButton } from "../../../button";
 import { BtIcon } from "../../../icon";

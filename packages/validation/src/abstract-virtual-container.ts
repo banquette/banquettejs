@@ -1,5 +1,5 @@
 import { UsageException } from "@banquette/exception";
-import { isNumeric, isPromiseLike, isType, isUndefined, Writeable } from "@banquette/utils-type";
+import { isNumeric, isPromiseLike, isType, isUndefined } from "@banquette/utils-type";
 import { Valid } from "./type/valid";
 import { isValidatorContainer, splitPath } from "./utils";
 import { ValidateOptionsInterface } from "./validate-options.interface";

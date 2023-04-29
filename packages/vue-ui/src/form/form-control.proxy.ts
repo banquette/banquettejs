@@ -1,31 +1,23 @@
-import { Inject } from "@banquette/dependency-injection";
-import { Module } from "@banquette/dependency-injection";
-import { Injector } from "@banquette/dependency-injection";
+import { Inject, Module, Injector } from "@banquette/dependency-injection";
 import { UnsubscribeFunction } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
-import { BeforeValueChangeFormEvent } from "@banquette/form";
-import { ErrorsChangedFormEvent } from "@banquette/form";
-import { StateChangedFormEvent } from "@banquette/form";
-import { ValueChangedFormEvent } from "@banquette/form";
-import { ComponentNotFoundException } from "@banquette/form";
-import { FormComponentInterface } from "@banquette/form";
-import { FormControl } from "@banquette/form";
-import { FormError } from "@banquette/form";
-import { FormGroupInterface } from "@banquette/form";
-import { FormViewControlInterface } from "@banquette/form";
-import { FormViewModelInterface } from "@banquette/form";
-import { proxy } from "@banquette/utils-misc";
-import { WeakObjectRef } from "@banquette/utils-misc";
-import { isFunction } from "@banquette/utils-type";
-import { isObject } from "@banquette/utils-type";
-import { isString } from "@banquette/utils-type";
-import { GenericCallback, VoidCallback } from "@banquette/utils-type";
+import {
+    BeforeValueChangeFormEvent,
+    ErrorsChangedFormEvent,
+    StateChangedFormEvent,
+    ValueChangedFormEvent,
+    ComponentNotFoundException,
+    FormComponentInterface,
+    FormControl,
+    FormError,
+    FormGroupInterface,
+    FormViewControlInterface,
+    FormViewModelInterface
+} from "@banquette/form";
+import { proxy, WeakObjectRef } from "@banquette/utils-misc";
+import { isFunction, isObject, isString, GenericCallback, VoidCallback } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
-import { Composable } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Lifecycle } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { Composable, Computed, Lifecycle, Prop, Watch, ImmediateStrategy } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { FormStorageService } from "./form-storage.service";
 import { ProxifiedCallInterface } from "./proxified-call.interface";

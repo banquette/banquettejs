@@ -1,8 +1,5 @@
 import { HeadlessInterface } from "@banquette/ui";
-import { Writeable } from "@banquette/utils-type";
-import { Composable } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { Composable, Prop, Watch, ImmediateStrategy } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { BaseInputViewDataInterface } from "./base-input-view-data.interface";
 

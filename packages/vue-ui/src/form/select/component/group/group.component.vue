@@ -2,10 +2,7 @@
 <template src="./group.component.html"></template>
 <script lang="ts">
 import { Choice } from "@banquette/ui";
-import { Component } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Expose, Prop, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 
 @Component('bt-form-select-group')

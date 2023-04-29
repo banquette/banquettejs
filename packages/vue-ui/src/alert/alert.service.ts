@@ -1,12 +1,7 @@
-import { Inject } from "@banquette/dependency-injection";
-import { Service } from "@banquette/dependency-injection";
-import { Injector } from "@banquette/dependency-injection";
-import { DispatchResult } from "@banquette/event";
-import { EventDispatcherService } from "@banquette/event";
-import { isServer } from "@banquette/utils-misc";
-import { proxy } from "@banquette/utils-misc";
-import { ensureBoolean } from "@banquette/utils-type";
-import { isString } from "@banquette/utils-type";
+import { Inject, Service, Injector } from "@banquette/dependency-injection";
+import { DispatchResult, EventDispatcherService } from "@banquette/event";
+import { isServer, proxy } from "@banquette/utils-misc";
+import { ensureBoolean, isString } from "@banquette/utils-type";
 import { VueBuilder } from "@banquette/vue-typescript";
 import { createApp } from "vue";
 import { AlertOptionsInterface } from "./alert-options.interface";

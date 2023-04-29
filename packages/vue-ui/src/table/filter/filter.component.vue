@@ -1,10 +1,7 @@
 <template src="./filter.component.html"></template>
 <script lang="ts">
 import { UsageException } from "@banquette/exception";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Computed, Prop, Vue } from "@banquette/vue-typescript";
 
 @Component('bt-table-filter')
 export default class BtFilter extends Vue {

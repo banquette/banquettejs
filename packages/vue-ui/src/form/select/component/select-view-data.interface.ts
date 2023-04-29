@@ -1,5 +1,4 @@
-import { HeadlessSelectViewDataInterface } from "@banquette/ui";
-import { SelectedChoice } from "@banquette/ui";
+import { HeadlessSelectViewDataInterface, SelectedChoice } from "@banquette/ui";
 import { BaseInputViewDataInterface } from "../../base-input/base-input-view-data.interface";
 import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 

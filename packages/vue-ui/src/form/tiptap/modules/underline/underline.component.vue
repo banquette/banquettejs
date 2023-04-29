@@ -1,15 +1,12 @@
 <script lang="ts">
 import { IMaterialFormatUnderlined } from "@banquette/vue-material-icons";
-import { Component } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { ModuleInterface } from "../module.interface";
+import { Component, Expose, Prop, Themeable } from "@banquette/vue-typescript";
 import { Underline, UnderlineOptions } from "@tiptap/extension-underline";
 import { Extensions } from "@tiptap/vue-3";
 import { BtButton } from "../../../../button";
 import { BtPopover } from "../../../../popover";
 import { AbstractTiptapModule } from "../abstract-tiptap-module";
+import { ModuleInterface } from "../module.interface";
 import { I18nDefaults } from "./i18n-defaults";
 import { I18nInterface } from "./i18n.interface";
 

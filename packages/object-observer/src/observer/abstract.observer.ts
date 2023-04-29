@@ -7,7 +7,6 @@ import { ObserverEvents, MutationType, ObserverInstance } from "../constant";
 import { MutationEvent } from "../event/mutation.event";
 import { MutationsCollectionEvent } from "../event/mutations-collection.event";
 import { Mutation } from "../mutation";
-import { ObserverFactory } from "../observer.factory";
 import { extractObserver } from "../utils";
 
 let maxId = 0;

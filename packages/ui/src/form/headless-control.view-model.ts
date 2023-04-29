@@ -1,6 +1,5 @@
 import { FormViewControlInterface } from "@banquette/form";
 import { proxy } from "@banquette/utils-misc";
-import { Writeable } from "@banquette/utils-type";
 import { HeadlessInterface } from "../headless.interface";
 import { ControlModule } from "./control.module";
 import { HeadlessControlViewDataInterface } from "./headless-control-view-data.interface";

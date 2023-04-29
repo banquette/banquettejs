@@ -1,9 +1,7 @@
 <script lang="ts">
 import { ensureArray } from "@banquette/utils-type";
-import { Choice } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
-import { Component } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
+import { Choice, ValidatorInterface } from "@banquette/validation";
+import { Component, Prop } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 
 @Component('bt-validate-choice')

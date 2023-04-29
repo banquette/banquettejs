@@ -3,11 +3,7 @@
 <script lang="ts">
 import { UsageException } from "@banquette/exception";
 import { isNumber } from "@banquette/utils-type";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Ref } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Computed, Prop, Ref, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 
 @Component('bt-table-column')

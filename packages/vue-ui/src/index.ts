@@ -1,5 +1,5 @@
-import './themes/default';
 import './themes/dark';
+import './themes/default';
 
 export * from './alert';
 export * from './button';

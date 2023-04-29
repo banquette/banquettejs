@@ -19,7 +19,7 @@ import { ModelMetadataService, TransformResult, TransformService, PojoTransforme
 import { FormModelBinder, FormTransformerSymbol } from "@banquette/model-form";
 import { areEqual, makeReassignable, proxy } from "@banquette/utils-misc";
 import { extend, filterWithMask, getObjectValue } from "@banquette/utils-object";
-import { ensureArray, isObject, isObjectLiteral, isPromiseLike, isUndefined, Writeable, Constructor } from "@banquette/utils-type";
+import { ensureArray, isObject, isObjectLiteral, isPromiseLike, isUndefined, Constructor } from "@banquette/utils-type";
 import { HeadlessInterface } from "../../headless.interface";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import { Action, Status, FormTag, FormLoadTag, ErrorType, ErrorTypeStatusMap, FormPersistTag, HeadlessFormViewModelEvents, ErrorTypeEventMap } from "./constant";

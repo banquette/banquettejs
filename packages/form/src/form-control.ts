@@ -2,7 +2,7 @@ import { UnsubscribeFunction } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import { areEqual } from "@banquette/utils-misc";
 import { cloneDeepPrimitive, getObjectKeys } from "@banquette/utils-object";
-import { Writeable, GenericCallback } from "@banquette/utils-type";
+import { GenericCallback } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
 import { AbstractFormComponent } from "./abstract-form-component";
 import { BasicState, CallContext, FormEvents, ValidationStrategy } from "./constant";

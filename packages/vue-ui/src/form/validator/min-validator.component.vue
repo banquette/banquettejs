@@ -1,9 +1,7 @@
 <script lang="ts">
 import { ensureNumber } from "@banquette/utils-type";
-import { Min } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
-import { Component } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
+import { Min, ValidatorInterface } from "@banquette/validation";
+import { Component, Prop } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 
 @Component('bt-validate-min')

@@ -3,13 +3,8 @@
 <script lang="ts">
 import { ControlViewDataInterface } from "@banquette/ui";
 import { isArray } from "@banquette/utils-type";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
-import { IMaterialHelp } from "@banquette/vue-material-icons";
-import { IMaterialWarning } from "@banquette/vue-material-icons";
+import { IMaterialHelp, IMaterialWarning } from "@banquette/vue-material-icons";
+import { Component, Computed, Prop, Themeable, Vue } from "@banquette/vue-typescript";
 import { BtFormControlStateOverlay } from "../../debug";
 import { BtClientOnly } from "../../misc";
 import { PopoverDirective, BtPopover } from "../../popover";

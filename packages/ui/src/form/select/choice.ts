@@ -1,5 +1,5 @@
 import { slugify } from "@banquette/utils-string";
-import { Primitive, Writeable } from "@banquette/utils-type";
+import { Primitive } from "@banquette/utils-type";
 import { ChoiceOrigin } from "./constant";
 
 /**

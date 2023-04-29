@@ -4,16 +4,7 @@
 import { parseCssDuration } from "@banquette/utils-dom";
 import { proxy } from "@banquette/utils-misc";
 import { VoidCallback } from "@banquette/utils-type";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Lifecycle } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Ref } from "@banquette/vue-typescript";
-import { ThemeVar } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { BindThemeDirective } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Computed, Expose, Lifecycle, Prop, Ref, ThemeVar, Themeable, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { ClickOutsideDirective } from "../../misc/click-outside.directive";
 import { BtProgressCircular } from "../../progress/progress-circular";

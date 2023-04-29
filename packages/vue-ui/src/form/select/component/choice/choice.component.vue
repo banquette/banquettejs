@@ -5,18 +5,12 @@ import { UsageException } from "@banquette/exception";
 import { Choice } from "@banquette/ui";
 import { trim } from "@banquette/utils-string";
 import { isUndefined } from "@banquette/utils-type";
-import { IMaterialCheck } from "@banquette/vue-material-icons";
-import { IMaterialDelete } from "@banquette/vue-material-icons";
-import { Component } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { InjectProvided } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Watch, ImmediateStrategy } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { IMaterialCheck, IMaterialDelete } from "@banquette/vue-material-icons";
+import { Component, Expose, InjectProvided, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
 import { toRaw, PropType } from "vue";
+import { BtSelectGroup, BtFormSelect } from "../../";
 import { UndefinedValue } from "../../../constant";
 import { BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
-import { BtSelectGroup, BtFormSelect } from "../../";
 
 @Component({
     name: 'bt-form-select-choice',

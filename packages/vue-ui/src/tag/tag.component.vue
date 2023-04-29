@@ -2,13 +2,7 @@
 <template src="./tag.component.html" ></template>
 <script lang="ts">
 import { IMaterialClose } from "@banquette/vue-material-icons";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { BindThemeDirective } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Computed, Expose, Prop, Themeable, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { ThemeConfiguration } from "./theme-configuration";
 

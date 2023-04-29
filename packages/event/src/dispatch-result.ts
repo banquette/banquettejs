@@ -1,5 +1,5 @@
 import { Exception, ExceptionFactory } from '@banquette/exception';
-import { isPromiseLike, Writeable } from '@banquette/utils-type';
+import { isPromiseLike } from '@banquette/utils-type';
 import { DispatchCallInterface } from './dispatch-call.interface';
 
 export enum DispatchResultStatus {

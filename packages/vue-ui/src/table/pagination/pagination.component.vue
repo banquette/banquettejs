@@ -2,27 +2,12 @@
 <style src="./pagination.component.css" scoped></style>
 <template src="./pagination.component.html" ></template>
 <script lang="ts">
-import { BasicState } from "@banquette/form";
-import { BeforeValueChangeFormEvent } from "@banquette/form";
-import { StateChangedFormEvent } from "@banquette/form";
-import { ValueChangedFormEvent } from "@banquette/form";
-import { FormControl } from "@banquette/form";
-import { FormObject } from "@banquette/form";
-import { FormFactory } from "@banquette/form";
-import { TableEvents } from "@banquette/ui";
-import { PaginationStrategy } from "@banquette/ui";
-import { TableViewModel } from "@banquette/ui";
+import { BasicState, BeforeValueChangeFormEvent, StateChangedFormEvent, ValueChangedFormEvent, FormControl, FormObject, FormFactory } from "@banquette/form";
+import { TableEvents, PaginationStrategy, TableViewModel } from "@banquette/ui";
 import { proxy } from "@banquette/utils-misc";
-import { ensureInteger } from "@banquette/utils-type";
-import { GenericCallback } from "@banquette/utils-type";
-import { IMaterialKeyboardBackspace } from "@banquette/vue-material-icons";
-import { IMaterialChevronLeft } from "@banquette/vue-material-icons";
-import { IMaterialChevronRight } from "@banquette/vue-material-icons";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Expose } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { ensureInteger, GenericCallback } from "@banquette/utils-type";
+import { IMaterialKeyboardBackspace, IMaterialChevronLeft, IMaterialChevronRight } from "@banquette/vue-material-icons";
+import { Component, Computed, Expose, Prop, Vue } from "@banquette/vue-typescript";
 import { BtFormSelect } from "../../form/select";
 import BtFormText from "../../form/text/text.component.vue";
 

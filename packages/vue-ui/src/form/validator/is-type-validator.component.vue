@@ -1,12 +1,8 @@
 <script lang="ts">
 import { UsageException } from "@banquette/exception";
-import { ensureArray } from "@banquette/utils-type";
-import { ensureString } from "@banquette/utils-type";
-import { isUndefined } from "@banquette/utils-type";
-import { IsType, Type } from "@banquette/validation";
-import { ValidatorInterface } from "@banquette/validation";
-import { Component } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
+import { ensureArray, ensureString, isUndefined } from "@banquette/utils-type";
+import { IsType, Type, ValidatorInterface } from "@banquette/validation";
+import { Component, Prop } from "@banquette/vue-typescript";
 import { BtValidator } from "./validator.component";
 
 const TypesMap: Record<string, Type> = {

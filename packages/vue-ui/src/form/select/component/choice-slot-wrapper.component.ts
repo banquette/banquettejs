@@ -1,8 +1,4 @@
-import { Component } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Provide } from "@banquette/vue-typescript";
-import { Render } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
+import { Component, Prop, Provide, Render, Vue } from "@banquette/vue-typescript";
 import { renderSlot } from "vue";
 
 @Component({

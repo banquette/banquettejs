@@ -5,7 +5,7 @@ import { matchBest, MatchResult } from "@banquette/utils-glob";
 import { proxy } from "@banquette/utils-misc";
 import { getObjectKeys } from "@banquette/utils-object";
 import { uniqueId } from "@banquette/utils-random";
-import { ensureArray, isFunction, isUndefined, Writeable, GenericCallback } from "@banquette/utils-type";
+import { ensureArray, isFunction, isUndefined, GenericCallback } from "@banquette/utils-type";
 import { createValidator, ValidationContextInterface, ValidationResult, ValidatorInterface } from "@banquette/validation";
 import {
     BasicState,

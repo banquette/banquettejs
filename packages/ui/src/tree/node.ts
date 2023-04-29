@@ -1,5 +1,5 @@
 import { slugify } from "@banquette/utils-string";
-import { Primitive, Writeable, AnyObject } from "@banquette/utils-type";
+import { Primitive, AnyObject } from "@banquette/utils-type";
 import { NodeRemoteFetchStatus } from "./constant";
 
 let MaxId = 0;

@@ -1,5 +1,3 @@
-import { Writeable } from '@banquette/utils-type';
-
 /**
  * Base class of all events.
  */

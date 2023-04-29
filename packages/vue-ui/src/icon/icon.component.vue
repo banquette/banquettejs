@@ -2,22 +2,8 @@
 <script lang="ts">
 import { isUndefined } from "@banquette/utils-type";
 import { IRemixQuestionMark } from "@banquette/vue-remix-icons";
-import { Component } from "@banquette/vue-typescript";
-import { Computed } from "@banquette/vue-typescript";
-import { Prop } from "@banquette/vue-typescript";
-import { Render } from "@banquette/vue-typescript";
-import { Themeable } from "@banquette/vue-typescript";
-import { BindThemeDirective } from "@banquette/vue-typescript";
-import { Vue } from "@banquette/vue-typescript";
-import {
-    resolveDirective,
-    withDirectives,
-    openBlock,
-    createBlock,
-    resolveDynamicComponent,
-    mergeProps,
-    Directive, h, PropType
-} from "vue";
+import { Component, Computed, Prop, Render, Themeable, BindThemeDirective, Vue } from "@banquette/vue-typescript";
+import { resolveDirective, withDirectives, openBlock, createBlock, resolveDynamicComponent, mergeProps, Directive, h, PropType } from "vue";
 import { ThemeConfiguration } from "./theme-configuration";
 
 /**
