@@ -316,7 +316,7 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
          * Ugly tricky to only blur the input when the value has been selected using the mouse.
          * Keep the field focus for keyboard input.
          */
-        if ((new Date()).getTime() - this.lastKeyStrokeTime > 50 && !this.v.multiple) {
+        if ((new Date()).getTime() - this.lastKeyStrokeTime > 50 && !this.v.multiple && this.inputEl) {
             this.inputEl.blur();
         }
         this.updateInput();
@@ -486,7 +486,9 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
         }
         let unsubscribe: VoidCallback;
         this.inputWrapperResizeUnsubscribe = () => {
-            unsubscribe();
+            if (!isUndefined(unsubscribe)) {
+                unsubscribe();
+            }
             this.inputWrapperResizeUnsubscribe = null;
         };
         if (this.inputWrapperEl) {
