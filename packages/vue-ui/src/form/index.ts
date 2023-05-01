@@ -1,7 +1,9 @@
 
+export * from './base-input';
 export * from './checkbox';
 export * from './file';
 export * from './form';
+export * from './hidden';
 export * from './select';
 export * from './text';
 export * from './tree';
