@@ -1,4 +1,5 @@
 import { FormViewControlInterface } from "@banquette/form";
+import { ensureString } from "@banquette/utils-type";
 import { HeadlessControlViewModel } from "../headless-control.view-model";
 import { HeadlessTextViewDataInterface } from "./headless-text-view-data.interface";
 
@@ -18,7 +19,7 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
         } else {
             this.viewData.resizable = this.resizable;
         }
-        this.updateSize(this.viewData.control.value);
+        this.updateSize(ensureString(this.viewData.control.value));
     }
 
     /**
@@ -37,7 +38,7 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
     }
     public set minRows(value: number|null) {
         this._minRows = value;
-        this.updateSize(this.viewData.control.value);
+        this.updateSize(ensureString(this.viewData.control.value));
     }
 
     private _maxRows: number|null = null;
@@ -46,7 +47,7 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
     }
     public set maxRows(value: number|null) {
         this._maxRows = value;
-        this.updateSize(this.viewData.control.value);
+        this.updateSize(ensureString(this.viewData.control.value));
     }
 
     /**
@@ -69,7 +70,7 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
      * No processing by default, override this method with your logic.
      */
     public controlValueToViewValue(controlValue: any): any {
-        this.updateSize(controlValue);
+        this.updateSize(ensureString(controlValue));
         return controlValue;
     }
 
@@ -78,7 +79,7 @@ export class HeadlessTextViewModel<ViewDataType extends HeadlessTextViewDataInte
      * No processing by default, override this method with your logic.
      */
     public viewValueToControlValue(viewValue: any): any {
-        this.updateSize(viewValue);
+        this.updateSize(ensureString(viewValue));
         return viewValue;
     }
 
