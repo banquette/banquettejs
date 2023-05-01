@@ -145,6 +145,7 @@ export default class BtTree extends Vue {
 
     @Render()
     public render(context: any): any {
+        /*! @__STYLES_INJECT__ */
         if (isServer()) {
             this.beforeMount();
         }
