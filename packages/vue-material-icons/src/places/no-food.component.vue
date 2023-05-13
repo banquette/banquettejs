@@ -1,12 +1,14 @@
 <script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-material-no-food',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        if (v === 'twotone')
+export default /* @__PURE__ */ ((_) => {
+    return r('no-food', {
+        name: 'i-material-no-food',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            if (v === 'twotone')
     return h('svg',{"viewBox":c ? '0.68 1 22.32 22.31' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M8.16 11c-1.43.07-3.52.57-4.54 2h6.55l-2.01-2z","opacity":"0.3"},[]),h('path',{d:"M1 21h15.01v.98c0 .56-.45 1.01-1.01 1.01H2.01c-.56 0-1.01-.45-1.01-1.01V21zm19.49 2.31L16 18.83V19H1v-2h13.17l-2-2H1c0-3.24 2.46-5.17 5.38-5.79l-5.7-5.7L2.1 2.1 13 13l2 2 6.9 6.9-1.41 1.41zM10.17 13l-2-2c-1.42.06-3.52.56-4.55 2h6.55zM23 5h-5V1h-2v4h-5l.23 2h9.56l-1 9.97 1.83 1.83L23 5z"},[])]);
 if (v === 'sharp')
     return h('svg',{"viewBox":c ? '0.69 1 22.31 22.32' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M11.35 8.52 11 5h5V1h2v4h5l-1.38 13.79L18 15.17l-6.65-6.65zM21.9 21.9 2.1 2.1.69 3.51l5.7 5.7C3.46 9.83 1 11.76 1 15h11.17l2 2H1v2h15v-.17l4.49 4.49 1.41-1.42zM1 23h15v-2H1v2z"},[])]);
@@ -15,6 +17,7 @@ if (v === 'round')
 if (v === 'outlined')
     return h('svg',{"viewBox":c ? '0.68 1 22.32 22.31' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M1 21h15.01v.98c0 .56-.45 1.01-1.01 1.01H2.01c-.56 0-1.01-.45-1.01-1.01V21zm19.49 2.31L16 18.83V19H1v-2h13.17l-2-2H1c0-3.24 2.46-5.17 5.38-5.79l-5.7-5.7L2.1 2.1 13 13l2 2 6.9 6.9-1.41 1.41zM10.17 13l-2-2c-1.42.06-3.52.56-4.55 2h6.55zM23 5h-5V1h-2v4h-5l.23 2h9.56l-1 9.97 1.83 1.83L23 5z"},[])]);
 return h('svg',{"viewBox":c ? '0.69 1 22.31 22.32' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M11.35 8.52 11 5h5V1h2v4h5l-1.38 13.79L11.35 8.52zM1 21v1c0 .55.45 1 1 1h13c.55 0 1-.45 1-1v-1H1zm20.9.9L2.1 2.1.69 3.51l5.7 5.7C3.28 9.87 1 11.99 1 15h11.17l2 2H1v2h15v-.17l4.49 4.49 1.41-1.42z"},[])]);
-    }
-}
+        }
+    });
+})();
 </script>

@@ -1,12 +1,14 @@
 <script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-material-ad-units',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        if (v === 'twotone')
+export default /* @__PURE__ */ ((_) => {
+    return r('ad-units', {
+        name: 'i-material-ad-units',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            if (v === 'twotone')
     return h('svg',{"viewBox":c ? '5 1 14 22' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M7 3h10v1H7zm0 17h10v1H7z","opacity":"0.3"},[]),h('path',{d:"M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zM7 4V3h10v1H7zm0 14V6h10v12H7zm0 3v-1h10v1H7z"},[]),h('path',{d:"M16 7H8v2h8V7z"},[])]);
 if (v === 'sharp')
     return h('svg',{"viewBox":c ? '5 1 14 22' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M19 1H5v22h14V1zm-2 18H7V5h10v14z"},[]),h('path',{d:"M8 6h8v2H8z"},[])]);
@@ -15,6 +17,7 @@ if (v === 'round')
 if (v === 'outlined')
     return h('svg',{"viewBox":c ? '5 1 14 22' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zM7 4V3h10v1H7zm0 14V6h10v12H7zm0 3v-1h10v1H7z"},[]),h('path',{d:"M16 7H8v2h8V7z"},[])]);
 return h('svg',{"viewBox":c ? '5 1 14 22' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M17 1H7c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 18H7V5h10v14zM8 6h8v2H8z"},[])]);
-    }
-}
+        }
+    });
+})();
 </script>

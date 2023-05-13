@@ -1,12 +1,14 @@
 <script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-material-thumb-down-off-alt',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        if (v === 'twotone')
+export default /* @__PURE__ */ ((_) => {
+    return r('thumb-down-off-alt', {
+        name: 'i-material-thumb-down-off-alt',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            if (v === 'twotone')
     return h('svg',{"viewBox":c ? '1 3 22 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M3 12v2h9l-1.34 5.34L15 15V5H6z","opacity":"0.3"},[]),h('path',{d:"M19 3h4v12h-4zm-4 0H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm0 12-4.34 4.34L12 14H3v-2l3-7h9v10z"},[])]);
 if (v === 'sharp')
     return h('svg',{"viewBox":c ? '1 3 22 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M19 3h4v12h-4zM1 11.6V16h8.31l-1.12 5.38L9.83 23 17 15.82V3H4.69L1 11.6zM15 5v9.99l-4.34 4.35.61-2.93.5-2.41H3v-1.99L6.01 5H15z"},[])]);
@@ -15,6 +17,7 @@ if (v === 'round')
 if (v === 'outlined')
     return h('svg',{"viewBox":c ? '1 3 22 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm0 12-4.34 4.34L12 14H3v-2l3-7h9v10zm4-12h4v12h-4V3z"},[])]);
 return h('svg',{"viewBox":c ? '2 4 20 18' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m10.89 18.28.57-2.89c.12-.59-.04-1.2-.42-1.66-.38-.46-.94-.73-1.54-.73H4v-1.08L6.57 6h8.09c.18 0 .34.16.34.34v7.84l-4.11 4.1M10 22l6.41-6.41c.38-.38.59-.89.59-1.42V6.34C17 5.05 15.95 4 14.66 4h-8.1c-.71 0-1.36.37-1.72.97l-2.67 6.15c-.11.25-.17.52-.17.8V13c0 1.1.9 2 2 2h5.5l-.92 4.65c-.05.22-.02.46.08.66.23.45.52.86.88 1.22L10 22zm10-7h2V4h-2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1z"},[])]);
-    }
-}
+        }
+    });
+})();
 </script>

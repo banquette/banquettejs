@@ -1,12 +1,14 @@
 <script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-material-type-specimen',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        if (v === 'twotone')
+export default /* @__PURE__ */ ((_) => {
+    return r('type-specimen', {
+        name: 'i-material-type-specimen',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            if (v === 'twotone')
     return h('svg',{"viewBox":c ? '2 2 20 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M14.04 7.17h-.08l-1.31 3.72h2.69z","opacity":"0.3"},[]),h('path',{d:"M8 16h12V4H8v12zm5.2-10.5h1.61l3.38 9h-1.56l-.8-2.3H12.2l-.82 2.3H9.81l3.39-9z","opacity":"0.3"},[]),h('path',{d:"M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"},[]),h('path',{d:"M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"},[]),h('path',{d:"M12.19 12.2h3.63l.8 2.3h1.56l-3.38-9h-1.6l-3.38 9h1.56l.81-2.3zm1.77-5.03h.08l1.31 3.72h-2.69l1.3-3.72z"},[])]);
 if (v === 'sharp')
     return h('svg',{"viewBox":c ? '2 2 20 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M4 6H2v16h16v-2H4z"},[]),h('path',{d:"M22 2H6v16h16V2zm-5.37 12.5-.8-2.3H12.2l-.82 2.3H9.81l3.38-9h1.61l3.38 9h-1.55z"},[]),h('path',{d:"m13.96 7.17-1.31 3.72h2.69l-1.3-3.72z"},[])]);
@@ -15,6 +17,7 @@ if (v === 'round')
 if (v === 'outlined')
     return h('svg',{"viewBox":c ? '2 2 20 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"},[]),h('path',{d:"M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"},[]),h('path',{d:"M12.19 12.2h3.63l.8 2.3h1.56l-3.38-9h-1.6l-3.38 9h1.56l.81-2.3zm1.77-5.03h.08l1.31 3.72h-2.69l1.3-3.72z"},[])]);
 return h('svg',{"viewBox":c ? '2 2 20 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"},[]),h('path',{d:"M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3.37 12.5-.8-2.3H12.2l-.82 2.3H9.81l3.38-9h1.61l3.38 9h-1.55z"},[]),h('path',{d:"m13.96 7.17-1.31 3.72h2.69l-1.3-3.72z"},[])]);
-    }
-}
+        }
+    });
+})();
 </script>

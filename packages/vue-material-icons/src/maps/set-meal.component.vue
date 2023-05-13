@@ -1,12 +1,14 @@
 <script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-material-set-meal',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        if (v === 'twotone')
+export default /* @__PURE__ */ ((_) => {
+    return r('set-meal', {
+        name: 'i-material-set-meal',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            if (v === 'twotone')
     return h('svg',{"viewBox":c ? '1 2 22 18.98' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M21 13H3V4h18v9zm-1-7c-1.68 0-3.04.98-3.21 2.23-.64-.73-2.73-2.73-6.54-2.73-4.67 0-6.75 3-6.75 3s2.08 3 6.75 3c3.81 0 5.9-2 6.54-2.73C16.96 10.02 18.32 11 20 11V6z","opacity":"0.3"},[]),h('path',{d:"m21.05 17.56-17.97.94L3 17l17.98-.94.07 1.5zM21 19.48H3v1.5h18v-1.5zM23 13V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 0H3V4h18v9zm-1-7c-1.68 0-3.04.98-3.21 2.23-.64-.73-2.73-2.73-6.54-2.73-4.67 0-6.75 3-6.75 3s2.08 3 6.75 3c3.81 0 5.9-2 6.54-2.73C16.96 10.02 18.32 11 20 11V6z"},[])]);
 if (v === 'sharp')
     return h('svg',{"viewBox":c ? '2 3 20 17.98' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m21.05 17.56-17.97.94L3 17l17.98-.94.07 1.5zM21 19.48H3v1.5h18v-1.5zM22 3v11H2V3h20zm-2 3c-1.68 0-3.04.98-3.21 2.23-.64-.73-2.73-2.73-6.54-2.73-4.67 0-6.75 3-6.75 3s2.08 3 6.75 3c3.81 0 5.9-2 6.54-2.73C16.96 10.02 18.32 11 20 11V6z"},[])]);
@@ -15,6 +17,7 @@ if (v === 'round')
 if (v === 'outlined')
     return h('svg',{"viewBox":c ? '1 2 22 18.98' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m21.05 17.56-17.97.94L3 17l17.98-.94.07 1.5zM21 19.48H3v1.5h18v-1.5zM23 13V4c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 0H3V4h18v9zm-1-7c-1.68 0-3.04.98-3.21 2.23-.64-.73-2.73-2.73-6.54-2.73-4.67 0-6.75 3-6.75 3s2.08 3 6.75 3c3.81 0 5.9-2 6.54-2.73C16.96 10.02 18.32 11 20 11V6z"},[])]);
 return h('svg',{"viewBox":c ? '2 3 20 17.98' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m21.05 17.56-17.97.94L3 17l17.98-.94.07 1.5zM21 19.48H3v1.5h18v-1.5zM22 5v7c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2zm-2 1c-1.68 0-3.04.98-3.21 2.23-.64-.73-2.73-2.73-6.54-2.73-4.67 0-6.75 3-6.75 3s2.08 3 6.75 3c3.81 0 5.9-2 6.54-2.73C16.96 10.02 18.32 11 20 11V6z"},[])]);
-    }
-}
+        }
+    });
+})();
 </script>

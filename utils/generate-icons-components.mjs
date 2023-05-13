@@ -308,15 +308,18 @@ for (let libIndex = 0; libIndex < configurations.length; ++libIndex) {
         }
         let src = `<script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-${configuration.libName}-${componentName}',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        ${renderLines.join("\n")}
-    }
-}
+export default /* @__PURE__ */ ((_) => {
+    return r('${componentName}', {
+        name: 'i-${configuration.libName}-${componentName}',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            ${renderLines.join("\n")}
+        }
+    });
+})();
 </script>`;
         if (src.indexOf('v-else') > -1 && src.indexOf('v-if') < 0) {
             console.log('found');
@@ -334,6 +337,13 @@ export default {
 
     const component: ReturnType<typeof defineComponent>;
     export default component;
+}
+`);
+    fs.writeFileSync(path.join(configuration.outputDir, 'utils.js'), `let g = typeof(window) !== 'undefined' ? window : global;
+g.__bt_icons__ = g.__bt_icons__ || {};
+g.__bt_icons__.${configuration.libName} = g.__bt_icons__.${configuration.libName} || {};
+export function r(name, icon) {
+    return g.__bt_icons__.${configuration.libName}[name] = icon;
 }
 `);
 }

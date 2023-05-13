@@ -1,12 +1,14 @@
 <script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-material-snowmobile',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        if (v === 'twotone')
+export default /* @__PURE__ */ ((_) => {
+    return r('snowmobile', {
+        name: 'i-material-snowmobile',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            if (v === 'twotone')
     return h('svg',{"viewBox":c ? '0 5 24 15' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M17 14h-6.7l-7.45-2.23.31-.62 8.44.85 3.93-2.94s3.77 3.44 4.27 4.14c0 0-1.1.8-2.8.8z","opacity":"0.3"},[]),h('path',{d:"M22 17c0 .55-.45 1-1 1h-.17l-2.2-2.2C20.58 15.37 22 14.4 22 13c0-1-8-8-8-8h-3v2h2.25l.8.72L11 10 2 9l-2 4 4.54 1.36-3.49 1.88C-.77 17.22-.07 20 2 20h6c2.21 0 4-1.79 4-4h4l2 2h-3v2h6c1.66 0 3-1.34 3-3h-2zM8 18H2l5.25-2.83L10 16a2 2 0 0 1-2 2zm9-4h-6.7l-7.45-2.23.31-.62 8.44.85 3.93-2.94s3.77 3.44 4.27 4.14c0 0-1.1.8-2.8.8z"},[])]);
 if (v === 'sharp')
     return h('svg',{"viewBox":c ? '0 5 24 15' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M22 17c0 .55-.45 1-1 1h-.17l-2.2-2.2C21.6 15.18 23 13 23 13l-9-8h-3v2h2.25l1.45 1.3L11 11l-9.5-1L0 13l4.54 1.36-3.49 1.88C-.77 17.22-.07 20 2 20h6c2.21 0 4-1.79 4-4h4l2 2h-3v2h6c1.66 0 3-1.34 3-3h-2zM8 18H2l5.25-2.83L10 16a2 2 0 0 1-2 2z"},[])]);
@@ -15,6 +17,7 @@ if (v === 'round')
 if (v === 'outlined')
     return h('svg',{"viewBox":c ? '0 5 24 15' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M22 17c0 .55-.45 1-1 1h-.17l-2.2-2.2C20.58 15.37 22 14.4 22 13c0-1-8-8-8-8h-3v2h2.25l.8.72L11 10 2 9l-2 4 4.54 1.36-3.49 1.88C-.77 17.22-.07 20 2 20h6c2.21 0 4-1.79 4-4h4l2 2h-3v2h6c1.66 0 3-1.34 3-3h-2zM8 18H2l5.25-2.83L10 16a2 2 0 0 1-2 2zm9-4h-6.7l-7.45-2.23.31-.62 8.44.85 3.93-2.94s3.77 3.44 4.27 4.14c0 0-1.1.8-2.8.8z"},[])]);
 return h('svg',{"viewBox":c ? '0 5 24 15' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M22 17c0 .55-.45 1-1 1h-.17l-2.2-2.2C20.58 15.37 22 14.4 22 13c0-1-8-8-8-8h-3v2h2.25l1.45 1.3L11 11l-9.5-1L0 13l4.54 1.36-3.49 1.88C-.77 17.22-.07 20 2 20h6c2.21 0 4-1.79 4-4h4l2 2h-3v2h6c1.66 0 3-1.34 3-3h-2zM8 18H2l5.25-2.83L10 16a2 2 0 0 1-2 2z"},[])]);
-    }
-}
+        }
+    });
+})();
 </script>

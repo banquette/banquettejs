@@ -1,12 +1,14 @@
 <script>
 import { h } from 'vue';
+import { r } from "../utils.js";
 
-export default {
-    name: 'i-material-wb-iridescent',
-    props: ['width', 'height', 'color', 'crop', 'version'],
-    render() {
-        let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
-        if (v === 'twotone')
+export default /* @__PURE__ */ ((_) => {
+    return r('wb-iridescent', {
+        name: 'i-material-wb-iridescent',
+        props: ['width', 'height', 'color', 'crop', 'version'],
+        render() {
+            let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
+            if (v === 'twotone')
     return h('svg',{"viewBox":c ? '3.55 1 16.91 22' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M7 11h10v2H7z","opacity":"0.3"},[]),h('path',{d:"M5 15h14V9H5v6zm2-4h10v2H7v-2zm4-10h2v3h-2zm6.25 4.39 1.41 1.41 1.8-1.79-1.42-1.41zM11 20h2v3h-2zm6.24-1.29 1.79 1.8 1.42-1.42-1.8-1.79zM5.34 6.805l-1.788-1.79L4.96 3.61l1.788 1.788zM3.55 19.08l1.41 1.42 1.79-1.8-1.41-1.41z"},[])]);
 if (v === 'sharp')
     return h('svg',{"viewBox":c ? '3.55 1 16.91 22' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M5 15h14V9.05H5V15zm6-14v3h2V1h-2zm8.04 2.6-1.79 1.79 1.41 1.41 1.8-1.79-1.42-1.41zM13 23v-2.95h-2V23h2zm7.45-3.91-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM3.55 5.01 5.34 6.8l1.41-1.41L4.96 3.6 3.55 5.01zM4.96 20.5l1.79-1.8-1.41-1.41-1.79 1.79 1.41 1.42z"},[])]);
@@ -15,6 +17,7 @@ if (v === 'round')
 if (v === 'outlined')
     return h('svg',{"viewBox":c ? '3.55 1 16.91 22' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M5 15h14V9H5v6zm2-4h10v2H7v-2zm4-10h2v3h-2zm9.46 4.01L19.04 3.6l-1.79 1.79 1.41 1.41zM11 20h2v3h-2zm6.24-1.29 1.79 1.8 1.42-1.42-1.8-1.79zM4.96 3.595l1.788 1.79L5.34 6.79 3.553 5.003zM3.55 19.08l1.41 1.42 1.79-1.8-1.41-1.41z"},[])]);
 return h('svg',{"viewBox":c ? '3.55 0.55 16.91 21.9' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M5 14.5h14v-6H5v6zM11 .55V3.5h2V.55h-2zm8.04 2.5-1.79 1.79 1.41 1.41 1.8-1.79-1.42-1.41zM13 22.45V19.5h-2v2.95h2zm7.45-3.91-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM3.55 4.46l1.79 1.79 1.41-1.41-1.79-1.79-1.41 1.41zm1.41 15.49 1.79-1.8-1.41-1.41-1.79 1.79 1.41 1.42z"},[])]);
-    }
-}
+        }
+    });
+})();
 </script>
