@@ -1,6 +1,5 @@
-import { Inject, Service, Injector } from "@banquette/dependency-injection";
+import { Inject, Service } from "@banquette/dependency-injection";
 import { EventDispatcherService } from "@banquette/event";
-import { VueBuilder } from "@banquette/vue-typescript";
 import { DialogEvents } from "./constant";
 import { HideDialogEventArg } from "./event/hide-dialog.event-arg";
 import { ShowDialogEventArg } from "./event/show-dialog.event-arg";
@@ -32,23 +31,3 @@ export class DialogService {
         this.eventDispatcher.dispatch(DialogEvents.HideAll);
     }
 }
-
-/**
- * Register global utilities.
- */
-// The assignation is so the /**!PURE*/ comment is kept when compiling.
-// It's then replace by "/* @__PURE__ */" at the end of the build.
-// If "/* @__PURE__ */" is set right here, it'll be striped out when building.
-const g = /**!PURE*/ ((_) => {
-    VueBuilder.RegisterGlobalProperty('btShowDialog', (id: string, args: Record<string, any> = {}) => {
-        Injector.Get(_).show(id, args);
-    });
-
-    VueBuilder.RegisterGlobalProperty('btHideDialog', (id: string) => {
-        Injector.Get(_).hide(id);
-    });
-
-    VueBuilder.RegisterGlobalProperty('btHideAllDialogs', () => {
-        Injector.Get(_).hideAll();
-    });
-})(DialogService);

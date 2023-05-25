@@ -1,8 +1,7 @@
-import { Inject, Service, Injector } from "@banquette/dependency-injection";
+import { Inject, Service } from "@banquette/dependency-injection";
 import { DispatchResult, EventDispatcherService } from "@banquette/event";
 import { isServer, proxy } from "@banquette/utils-misc";
 import { ensureBoolean, isString } from "@banquette/utils-type";
-import { VueBuilder } from "@banquette/vue-typescript";
 import { createApp } from "vue";
 import { AlertOptionsInterface } from "./alert-options.interface";
 import { BtAlertsStack } from "./component/alerts-stack";
@@ -91,16 +90,3 @@ export class AlertService {
         }) as AlertOptionsInterface;
     }
 }
-
-// The assignation is so the /**!PURE*/ comment is kept when compiling.
-// It's then replace by "/* @__PURE__ */" at the end of the build.
-// If "/* @__PURE__ */" is set right here, it'll be striped out when building.
-const g = /**!PURE*/ ((_) => {
-    VueBuilder.RegisterGlobalProperty('btShowAlert', (optionsOrMessage: (Partial<AlertOptionsInterface> & { message: string }) | string, variant?: string, ttl?: number) => {
-        Injector.Get(_).show(optionsOrMessage as any, variant, ttl);
-    });
-
-    VueBuilder.RegisterGlobalProperty('btHideAllAlerts', () => {
-        Injector.Get(_).hideAll();
-    });
-})(AlertService);
