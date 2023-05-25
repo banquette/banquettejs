@@ -9,6 +9,7 @@ import { isArray, isObject, Primitive, AnyObject } from "@banquette/utils-type";
 import { IMaterialArrowDropDown, IMaterialHelp } from "@banquette/vue-material-icons";
 import { Component, Expose, Prop, Render, Themeable, Watch, ImmediateStrategy, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { h, resolveDirective, withDirectives, renderSlot, VNode, toRaw, resolveComponent, Directive } from "vue";
+import { CollapsableDirective } from "../misc";
 import { BtProgressCircular } from "../progress/progress-circular";
 import { ThemeConfiguration } from "./theme-configuration";
 
@@ -16,7 +17,7 @@ import { ThemeConfiguration } from "./theme-configuration";
 @Component({
     name: 'bt-tree',
     components: [BtProgressCircular, IMaterialArrowDropDown, IMaterialHelp],
-    directives: [BindThemeDirective],
+    directives: [BindThemeDirective, CollapsableDirective],
     emits: ['update:data'],
 })
 export default class BtTree extends Vue {
