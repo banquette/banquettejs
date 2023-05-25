@@ -1,6 +1,6 @@
 {
     "name": "@banquette/model-form",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "repository": {
         "type": "git",
         "url": "model-forms://github.com/banquette/banquettejs.git",

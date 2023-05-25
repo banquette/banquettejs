@@ -1,4 +1,32 @@
-# [0.0.0](https://github.com/banquette/banquettejs/compare/v0.0.2...v0.0.0) (2023-04-28)
+# [0.1.2](https://github.com/banquette/banquettejs/compare/v0.1.1...v0.1.2) (2023-05-25)
+
+
+### Bug Fixes
+
+* `ApplyToExistingApp` doesn't override globalProperties of the input app anymore ([5e8dd36](https://github.com/banquette/banquettejs/commit/5e8dd36f4146c745caf52536f9903be361131150))
+* add checks for ssr ([8f4272c](https://github.com/banquette/banquettejs/commit/8f4272c39f66b0f7080923528f6802b4c50d20db))
+* ensure string when calling `updateSize` ([b906d9d](https://github.com/banquette/banquettejs/commit/b906d9d78aa6e09c40e94eaf9e2e41fcce8e493f))
+* fix several SSR related issues, add a new `SsrPrefetch` immediateStrategy for VueTypescript watchers ([a44c5ba](https://github.com/banquette/banquettejs/commit/a44c5ba26da3f86437668a36646182e675ebb787))
+* fix style injection issue on the tree component ([28fb724](https://github.com/banquette/banquettejs/commit/28fb72489c2b83dfc67057c70821a54860b6488b))
+
+
+### Features
+
+* icons from `vue-material-icons` and `vue-remix-icons` are now auto registered and usable with `bt-icon` as soon as they are imported + add a `IconSet` utility used to register new icons into `bt-icon`. ([57c8b7f](https://github.com/banquette/banquettejs/commit/57c8b7fb17a1a9694fbcd347e2d9f99c3a2d341e))
+
+
+
+## [0.1.1](https://github.com/banquette/banquettejs/compare/v0.1.0...v0.1.1) (2023-04-29)
+
+
+### Bug Fixes
+
+* ensure instanceof on a Vue component is made on the class constructor ([d7a2a4b](https://github.com/banquette/banquettejs/commit/d7a2a4b198e94d2a2d65726d592710c6a67bb760))
+* wrap the bt-form template into a bt-client-only to workaround ssr error ([d7ad9dd](https://github.com/banquette/banquettejs/commit/d7ad9dd3692e33517a2c265b47b2974f2d8fdeda))
+
+
+
+# [0.1.0](https://github.com/banquette/banquettejs/compare/v0.0.2...v0.1.0) (2023-04-28)
 
 
 ### Bug Fixes
@@ -534,6 +562,3 @@ the signature of `subscribe` has changed accordingly
 * The executor function now receive callbacks separately instead of an "observer" object.
 * SimpleObservable is now named ObservablePromise. The observer events also change to `resolve`, `reject` and `progress`.
 * all alternative dispatch methods have been removed (except "dispatchSafe"). `dispatch` now handle both sync and async calls and returns an observable so intermediate results are accessible.
-
-
-
