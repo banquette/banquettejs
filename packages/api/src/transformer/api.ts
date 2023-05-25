@@ -3,7 +3,7 @@ import { ModelTransformerTag, PojoTransformer } from "@banquette/model";
 
 export const ApiTransformerSymbol = Symbol('api');
 
-@Module(ModelTransformerTag)
+@Module(/** @notPure */ ModelTransformerTag)
 export class ApiTransformer extends PojoTransformer {
     /**
      * @inheritDoc

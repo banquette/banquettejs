@@ -9,7 +9,7 @@ import { AbstractRootTransformer } from "./abstract-root-transformer";
 
 export const PojoTransformerSymbol = Symbol('pojo');
 
-@Module(ModelTransformerTag)
+@Module(/** @notPure */ ModelTransformerTag)
 export class PojoTransformer extends AbstractRootTransformer {
     /**
      * @inheritDoc

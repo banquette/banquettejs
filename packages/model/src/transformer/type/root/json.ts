@@ -11,7 +11,7 @@ import { AbstractRootTransformer } from "./abstract-root-transformer";
 
 export const JsonTransformerSymbol = Symbol('json');
 
-@Module(ModelTransformerTag)
+@Module(/** @notPure */ ModelTransformerTag)
 export class JsonTransformer extends AbstractRootTransformer {
     /**
      * @inheritDoc

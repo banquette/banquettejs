@@ -19,7 +19,7 @@ import { ApiEndpointStorageService } from "../api-endpoint-storage.service";
 
 export const HttpTransformerSymbol = Symbol('http');
 
-@Module(ModelTransformerTag)
+@Module(/** @notPure */ ModelTransformerTag)
 export class HttpTransformer extends PojoTransformer {
     public constructor(@Inject(ModelMetadataService) protected modelMetadata: ModelMetadataService,
                        @Inject(ModelTransformMetadataService) protected transformMetadata: ModelTransformMetadataService,

@@ -95,8 +95,8 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       vite-plugin-tree-shakable-decorators:
-        specifier: ^0.1.1
-        version: 0.1.1(vite@4.2.1)
+        specifier: ^0.1.2
+        version: 0.1.2(vite@4.2.1)
 
   app/nuxt:
     dependencies:
@@ -10373,8 +10373,8 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-tree-shakable-decorators@0.1.1(vite@4.2.1):
-    resolution: {integrity: sha512-cRaWgndcLA+O2KXARdnewMVrho30eyCa04axjxaRVCeMUMYHu/jPmq/Itt75DCPuoaKhK7zP4WstmhxSmu8rxA==}
+  /vite-plugin-tree-shakable-decorators@0.1.2(vite@4.2.1):
+    resolution: {integrity: sha512-TCNV73yYjmL1U6DveWniWKP0Assp9Xlkncp3ogYtyoDVfawOEWxopFFci0podxVbTg3EI2XxyaTGpCgkVXsDKA==}
     peerDependencies:
       vite: ^4.2.0
     dependencies:

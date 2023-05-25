@@ -17,7 +17,7 @@ import { FormComponentFactory } from "../../form-component.factory";
 
 export const FormTransformerSymbol = Symbol('form-component');
 
-@Module(ModelTransformerTag)
+@Module(/** @notPure */ ModelTransformerTag)
 export class FormTransformer extends AbstractRootTransformer {
     public constructor(@Inject(ModelMetadataService) protected modelMetadata: ModelMetadataService,
                        @Inject(ModelTransformMetadataService) protected transformMetadata: ModelTransformMetadataService,
