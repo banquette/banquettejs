@@ -122,7 +122,7 @@ export class VueBuilder {
     }
 
     public static ApplyToExistingApp(app: App, group: string|string[] = VueBuilder.DEFAULT_GROUP, options: Partial<AppConfig> = {}): void {
-        const config = VueBuilder.MergeVueOptions({
+        VueBuilder.MergeVueOptions(app.config, {
             errorHandler: console.error,
             warnHandler: console.warn,
             globalProperties: VueBuilder.GlobalProperties,
@@ -135,9 +135,6 @@ export class VueBuilder {
                 comments: false
             }
         }, VueBuilder.Options, options);
-        for (const key of Object.keys(config)) {
-            (app.config as any)[key] = config[key];
-        }
         let groups = (group === '*' ? Object.keys(VueBuilder.Components).concat(Object.keys(VueBuilder.Directives)) : ensureArray(group));
         groups = groups.filter((item, index) => {
             return groups.indexOf(item) === index;
