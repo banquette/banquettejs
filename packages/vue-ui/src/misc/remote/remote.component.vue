@@ -44,7 +44,7 @@ export default class BtRemote extends Vue {
         }
     }
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.NextTick, deep: true})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch, deep: true})
     private syncConfigurationProps(): void {
         this.remote.updateConfiguration({
             url: this.url,

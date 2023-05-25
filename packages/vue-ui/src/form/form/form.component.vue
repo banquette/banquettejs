@@ -17,16 +17,14 @@ import {
     HeadlessFormViewModel
 } from "@banquette/ui";
 import { ensureInEnum } from "@banquette/utils-array";
-import { reassign, oncePerCycleProxy } from "@banquette/utils-misc";
+import { reassign, oncePerCycleProxy, isServer } from "@banquette/utils-misc";
 import { ensureString, Primitive, AnyObject } from "@banquette/utils-type";
 import { Component, Computed, Expose, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
-import { BtClientOnly } from "../../misc";
 import { FormViewDataInterface } from "./form-view-data.interface";
 
 @Component({
     name: 'bt-form',
-    components: [BtClientOnly],
     emits: [
         'change',
         'before-load',
@@ -128,7 +126,7 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
     /**
      * Vue lifecycle.
      */
-    public beforeMount(): void {
+    public created(): void {
         (this as any /* Writeable<BtForm> */).vm = new HeadlessFormViewModel<ViewData, ModelType>();
         this.vm.viewData.persistResponse = null;
         this.vm.loadData = this.modelValue;
@@ -235,7 +233,9 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
      * Force the update of the view.
      */
     protected forceUpdate(): void {
-        this.$forceUpdate();
+        if (!isServer()) {
+            this.$forceUpdate();
+        }
     }
 
     /**

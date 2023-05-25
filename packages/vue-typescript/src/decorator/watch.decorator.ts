@@ -11,22 +11,27 @@ export enum ImmediateStrategy {
     /**
      * The default behavior of VueJS, the callback is invoked immediately when the watcher is created.
      */
-    Sync = 'sync',
+    Sync = 1,
 
     /**
      * Invoke the callback when the "beforeMount" hook is fired.
      */
-    BeforeMount = 'beforeMount',
+    BeforeMount = 2,
 
     /**
      * Invoke the callback when the "mounted" hook is fired.
      */
-    Mounted = 'mounted',
+    Mounted = 4,
 
     /**
      * Wait the next tick to invoke the callback, this ensures the component is totally initialized and rendered.
      */
-    NextTick = 'nextTick'
+    NextTick = 8,
+
+    /**
+     * Invoke the callback when the "serverPrefetch" (SSR) hook is fired.
+     */
+    SsrPrefetch = 16
 }
 
 export interface WatchDecoratorOptions {

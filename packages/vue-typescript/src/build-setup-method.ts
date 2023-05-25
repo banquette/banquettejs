@@ -1,5 +1,5 @@
-import { UsageException } from "@banquette/exception";
-import { areEqual, noop, proxy } from "@banquette/utils-misc";
+import { UsageException, ExceptionFactory } from "@banquette/exception";
+import { areEqual, noop, proxy, isServer } from "@banquette/utils-misc";
 import { cloneDeepPrimitive, getObjectKeys, getObjectValue } from "@banquette/utils-object";
 import { ensureString, isArray, isFunction, isNullOrUndefined, isString, isUndefined, Constructor, GenericCallback } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
@@ -23,7 +23,8 @@ import {
     nextTick,
     onBeforeUnmount,
     toRaw,
-    ComponentInternalInstance
+    ComponentInternalInstance,
+    onServerPrefetch
 } from "vue";
 import { ComponentAwareComposable } from "./component-aware.composable";
 import { HOOKS_MAP, COMPONENT_TS_INSTANCE, ACTIVE_VARIANTS, COMPONENT_VUE_INSTANCE } from "./constants";
@@ -33,6 +34,7 @@ import { ImportDecoratorOptions } from "./decorator/import.decorator";
 import { LifecycleHook } from "./decorator/lifecycle.decorator";
 import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
 import { WatchFunction, ImmediateStrategy, PrivateWatchOptions } from "./decorator/watch.decorator";
+import { ErrorPlaceholderComponent } from "./error-placeholder-component";
 import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
 import { matchVariant } from "./theme/utils/match-variants";
 import { splitVariantString } from "./theme/utils/split-variant-string";
@@ -56,21 +58,25 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         let computedVersion: Ref = ref(1);
         const output: Record<any, any> = {};
         let vueInst: any = getCurrentInstance() as ComponentInternalInstance & {[COMPONENT_TS_INSTANCE]: any};
-
         if (inst === null) {
             // Trick so Vue doesn't stop and show a warning because there is no render function on the component.
             // noop is assigned because this is not the function that will be used in reality.
             if (isUndefined(ctor.prototype.render)) {
                 ctor.prototype.render = noop;
             }
-            inst = new Proxy(instantiate(ctor, data.component), {
-                get(target: any, p: string, receiver: any): any {
-                    if (p[0] === '$' && inst[COMPONENT_VUE_INSTANCE][p]) {
-                        return inst[COMPONENT_VUE_INSTANCE][p];
+            try {
+                inst = new Proxy(instantiate(ctor, data.component), {
+                    get(target: any, p: string, receiver: any): any {
+                        if (p[0] === '$' && inst[COMPONENT_VUE_INSTANCE][p]) {
+                            return inst[COMPONENT_VUE_INSTANCE][p];
+                        }
+                        return Reflect.get(target, p, receiver);
                     }
-                    return Reflect.get(target, p, receiver);
-                }
-            });
+                });
+            } catch (e) {
+                inst = new ErrorPlaceholderComponent('Failed to instantiate component\'s class. ' + ExceptionFactory.EnsureException(e, '').message);
+                data.renderMethod = 'render';
+            }
             // Set the Vue object we have to ensure an object is always available,
             // but make it writable, so it can be overridden by the `beforeCreate()` hook.
             Object.defineProperty(inst, COMPONENT_VUE_INSTANCE, {
@@ -567,16 +573,18 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                                 ].concat(args.slice(2)));
                             }
                         };
-                        if (shouldDelayTrigger) {
+                        if (shouldDelayTrigger && _watchData.options.immediate !== false) {
                             if (!delayedTriggerRegistered) {
                                 const initialProcess = () => {
                                     shouldDelayTrigger = false;
                                     process();
                                 };
                                 initialCallConsumed = false;
-                                if (_watchData.options.immediate === ImmediateStrategy.BeforeMount) {
+                                if (isServer() && (_watchData.options.immediate & ImmediateStrategy.SsrPrefetch) === ImmediateStrategy.SsrPrefetch) {
+                                    onServerPrefetch(initialProcess);
+                                } else if ((_watchData.options.immediate & ImmediateStrategy.BeforeMount) === ImmediateStrategy.BeforeMount) {
                                     onBeforeMount(initialProcess);
-                                } else if (_watchData.options.immediate === ImmediateStrategy.Mounted) {
+                                } else if ((_watchData.options.immediate & ImmediateStrategy.Mounted) === ImmediateStrategy.Mounted) {
                                     onMounted(initialProcess);
                                 } else {
                                     nextTick().then(initialProcess);

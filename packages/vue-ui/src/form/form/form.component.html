@@ -1,18 +1,16 @@
-<bt-client-only>
-    <form class="bt-form" action="" @submit.prevent="submitWithEnter && submit()" novalidate>
-        <slot name="loading" v-if="v.loading"></slot>
-        <slot name="persisting" v-if="v.persisting"></slot>
-        <slot name="load-error" v-if="v.loadError" :v="v" :error="v.errorsMap.load"></slot>
-        <slot name="persist-error" v-if="v.persistError" :v="v" :error="v.errorsMap.persist"></slot>
-        <slot name="persist-success" v-if="v.persistSuccess" :v="v"></slot>
+<form class="bt-form" action="" @submit.prevent="submitWithEnter && submit()" novalidate>
+    <slot name="loading" v-if="v.loading"></slot>
+    <slot name="persisting" v-if="v.persisting"></slot>
+    <slot name="load-error" v-if="v.loadError" :v="v" :error="v.errorsMap.load"></slot>
+    <slot name="persist-error" v-if="v.persistError" :v="v" :error="v.errorsMap.persist"></slot>
+    <slot name="persist-success" v-if="v.persistSuccess" :v="v"></slot>
 
-        <!-- Main slot, that's where the form should be defined -->
-        <slot v-if="visible" :v="v" :model="v.model" :control="v.getControl" :submit="submit" :errors="v.errorsMap"></slot>
+    <!-- Main slot, that's where the form should be defined -->
+    <slot v-if="visible" :v="v" :model="v.model" :control="v.getControl" :submit="submit" :errors="v.errorsMap"></slot>
 
-        <!-- This slot is only here to offer a way to organize the HTML markup. -->
-        <!-- This way the end-user can regroup all validators in it so the HTML is easier to read. -->
-        <!-- But validators can be put anywhere in the form, they don't have to be in here. -->
-        <slot name="validation"></slot>
-        <input type="submit" style="display: none" v-if="submitWithEnter" />
-    </form>
-</bt-client-only>
+    <!-- This slot is only here to offer a way to organize the HTML markup. -->
+    <!-- This way the end-user can regroup all validators in it so the HTML is easier to read. -->
+    <!-- But validators can be put anywhere in the form, they don't have to be in here. -->
+    <slot name="validation"></slot>
+    <input type="submit" style="display: none" v-if="submitWithEnter" />
+</form>
