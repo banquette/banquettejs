@@ -2,7 +2,7 @@
 <template src="./form.component.html" ></template>
 <script lang="ts">
 import { EventArg, UnsubscribeFunction } from "@banquette/event";
-import { ContextualizedState, StateChangedFormEvent, ValueChangedFormEvent } from "@banquette/form";
+import { ContextualizedState, StateChangedFormEvent, ValueChangedFormEvent, FormGroupInterface, ValidationStrategy } from "@banquette/form";
 import { HttpMethod, PayloadTypeFormData, PayloadTypeJson, PayloadTypeRaw } from "@banquette/http";
 import {
     AfterBindModelEventArg,
@@ -22,6 +22,8 @@ import { ensureString, Primitive, AnyObject } from "@banquette/utils-type";
 import { Component, Computed, Expose, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { FormViewDataInterface } from "./form-view-data.interface";
+
+type FormValidationStrategy = 'none' | 'change' | 'focus' | 'blur';
 
 @Component({
     name: 'bt-form',
@@ -86,6 +88,11 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
      * If `true` the form can be submitted by pressing the `Enter` key.
      */
     @Prop({type: Boolean, default: false}) public submitWithEnter!: boolean;
+
+    /**
+     * The strategy of validation to apply to the root of the form.
+     */
+    @Prop({type: String, default: null}) public validationStrategy!: FormValidationStrategy|null;
 
     /**
      * The group of validation to apply to the root of the form.
@@ -210,8 +217,16 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
         this.unsubscribeFunctions = [];
     }
 
+    @Expose() public validate(): Promise<boolean> {
+        return this.vm.validate();
+    }
+
     @Expose() public submit(): void {
         this.vm.submit();
+    }
+
+    @Expose() public getForm(): FormGroupInterface {
+        return this.vm.form;
     }
 
     /**
@@ -254,7 +269,18 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
         }
     }
 
-    @Watch('validationGroup', {immediate: ImmediateStrategy.BeforeMount})
+    @Watch('validationStrategy', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    private onValidationStrategyChange(newValue: FormValidationStrategy): void {
+        switch (newValue) {
+            case 'none' : this.vm.form.setValidationStrategy(ValidationStrategy.None); break ;
+            case 'change' : this.vm.form.setValidationStrategy(ValidationStrategy.OnChange); break ;
+            case 'focus' : this.vm.form.setValidationStrategy(ValidationStrategy.OnFocus); break ;
+            case 'blur' : this.vm.form.setValidationStrategy(ValidationStrategy.OnBlur); break ;
+            default: this.vm.form.setValidationStrategy(ValidationStrategy.Inherit); break ;
+        }
+    }
+
+    @Watch('validationGroup', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     private onValidationGroupChange(newValue: string|string[]|null): void {
         this.vm.form.setValidationGroups(newValue);
     }
