@@ -21,7 +21,7 @@ import { BaseInputComposable } from "../../base-input/base-input.composable";
 import { ViewModelEvents } from "../../constant";
 import { BeforeSlotOrigin, AfterSlotOrigin, PropOrigin } from "../constant";
 import BtChoiceSlotWrapper from "./choice-slot-wrapper.component";
-import BtChoice from "./choice/choice.component.vue";
+import BtFormSelectChoice from "./choice/choice.component.vue";
 import { I18nDefaults } from "./i18n-defaults";
 import { I18nInterface } from "./i18n.interface";
 import { SelectViewDataInterface } from "./select-view-data.interface";
@@ -32,7 +32,7 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [BtFormBaseInput, BtChoice, BtChoiceSlotWrapper, BtTag, BtDropdown, BtProgressCircular, IRemixCloseCircle],
+    components: [BtFormBaseInput, BtFormSelectChoice, BtChoiceSlotWrapper, BtTag, BtDropdown, BtProgressCircular, IRemixCloseCircle],
     directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['focus', 'blur', 'change']
 })
@@ -327,7 +327,7 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
         this.$emit('change', this.v.control.value);
     }
 
-    @Watch('v.choicesVisible', {immediate: ImmediateStrategy.BeforeMount})
+    @Watch('v.choicesVisible', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     private onChoiceVisibilityChange(newValue: boolean): void {
         if (newValue && !this.v.isInputReadonly) {
             this.v.inputValue = this.v.searchBuffer;

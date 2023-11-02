@@ -16,7 +16,7 @@ import { BeforeSlotOrigin, AfterSlotOrigin } from "../../constant";
     name: 'bt-form-select-choice',
     components: [IMaterialCheck, IMaterialDelete]
 })
-export default class BtChoice extends Vue {
+export default class BtFormSelectChoice extends Vue {
     /**
      * These props are only used when the prop `choice` is not set
      * (meaning the `bt-form-select-choice` has been created outside the `bt-form-select`).
@@ -169,7 +169,7 @@ export default class BtChoice extends Vue {
         this.parentGroup.updateChoice(this.choice);
     }
 
-    @Watch(function(this: BtChoice) {
+    @Watch(function(this: BtFormSelectChoice) {
         // Only watch the props if there is no choice given as prop.
         return this.internalChoice === null ? ['value', 'label', 'disabled', 'selected'] : [];
     }, {immediate: ImmediateStrategy.NextTick}) private onChoicePropsChange(): void {
