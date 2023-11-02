@@ -25,7 +25,7 @@ export const useJsonEncoder = /**!PURE*/ (() => {
                     throw new UsageException('Invalid payload for JSON encoding. An object or array is expected.');
                 }
                 try {
-                    event.request.payload = JSON.stringify(event.request.payload);
+                    event.request.payload = JSON.stringify(event.request.payload, (k, v) => v === undefined ? null : v);
                 } catch (e) {
                     throw new UsageException('Failed to encode request payload to JSON.', ExceptionFactory.EnsureException(e));
                 }
