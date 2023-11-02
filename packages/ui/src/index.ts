@@ -38,6 +38,7 @@ export * from './form/form/event/after-persist.event-arg';
 export * from './form/form/event/after-remote-persist.event-arg';
 export * from './form/form/event/after-validate.event-arg';
 export * from './form/form/event/action-error.event-arg';
+export * from './form/form/exception/remote-validation.exception';
 
 // Text
 export * from './form/text/headless-text-view.model';
