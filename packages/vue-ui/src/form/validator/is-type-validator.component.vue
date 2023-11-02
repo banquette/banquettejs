@@ -8,6 +8,7 @@ import { BtValidator } from "./validator.component";
 const TypesMap: Record<string, Type> = {
     'string': Type.String,
     'number': Type.Number,
+    'integer': Type.Integer,
     'numeric': Type.Numeric,
     'boolean': Type.Boolean,
     'object': Type.Object,

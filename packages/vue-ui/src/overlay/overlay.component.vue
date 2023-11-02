@@ -37,7 +37,7 @@ export default class BtOverlay extends Vue {
         --ZIndexIncrement;
     }
 
-    @Watch('visible', {immediate: ImmediateStrategy.BeforeMount})
+    @Watch('visible', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     private onVisibilityChange(): void {
         if (this.visible) {
             this.zIndexIncrement = ++ZIndexIncrement;

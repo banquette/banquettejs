@@ -119,7 +119,7 @@ export default class BtFormText extends BtAbstractVueForm<TextViewDataInterface,
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['type', 'rows', 'minRows', 'maxRows', 'autocomplete', 'autoSize', 'resizable'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['type', 'rows', 'minRows', 'maxRows', 'autocomplete', 'autoSize', 'resizable'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     protected syncConfigurationProps(): void {
         this.v.type = this.type;
         this.v.rows = this.rows;

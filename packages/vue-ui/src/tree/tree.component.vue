@@ -116,7 +116,7 @@ export default class BtTree extends Vue {
         }
     }
 
-    @Watch(['nodesIdentifier', 'nodesLabel', 'nodesChildren', 'nodesDisabled', 'nodeUrlParam'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['nodesIdentifier', 'nodesLabel', 'nodesChildren', 'nodesDisabled', 'nodeUrlParam'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     private onBasePropsChange(): void {
         this.vm.nodesIdentifier = this.nodesIdentifier;
         this.vm.nodesLabel = this.nodesLabel;
