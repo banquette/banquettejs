@@ -193,7 +193,7 @@ describe('Parameters handling', () => {
             '/test/{a}/{b}/test': ['/test/a/b/test?c=', {a: null, b: null, c: null}, {a: 'a', b: 'b', c: ''}],
             '/wildcard/{defined}': ['/wildcard/d?a=a&b=%F0%9F%98%8B', {defined: null, '*': null}, {defined: 'd', a: 'a', b: '😋'}],
             '/url-params-encoding/{a}': ['/url-params-encoding/%F0%9F%98%8B', {a: null}, {a: '😋'}],
-            'http://test.com/a?param=value&path=%2Fpath%2Ftest': ['http://test.com/a?param=value&path=%2Fpath%2Ftest&new=new%20value', {'*': null}, {new: 'new value'}],
+            'http://test.com/a?param=value&path=%2Fpath%2Ftest': ['http://test.com/a?param=value&path=%2Fpath%2Ftest&new=new+value', {'*': null}, {new: 'new value'}],
             'https://test.com/test?existing=a&other=2': ['https://test.com/test?existing=b&other=2', {existing: null}, {existing: 'b'}]
         },
         'Invalid cases': {
