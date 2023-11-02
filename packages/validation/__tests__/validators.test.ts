@@ -1,15 +1,18 @@
 import { ConfigurationService } from "@banquette/config";
 import { Injector } from "@banquette/dependency-injection";
 import { Exception, UsageException } from "@banquette/exception";
-import { HttpConfigurationSymbol, NetworkException, RequestException, HttpConfigurationInterface, HttpRequestFactory } from "@banquette/http";
+import {HttpConfigurationSymbol, NetworkException, RequestException, HttpConfigurationInterface, HttpRequestFactory, HttpService} from "@banquette/http";
 import { waitForDelay } from "@banquette/utils-misc";
 import { extend } from "@banquette/utils-object";
 import { ensureArray, isArray, isUndefined } from "@banquette/utils-type";
-import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
-import '../../http/__tests__/__mocks__/xml-http-request.mock';
 import { ASYNC_TAG, V, ValidationResult, ValidationResultStatus, ValidatorContainerInterface, ValidatorInterface, ViolationInterface, Type } from "../src";
 import { ValidationContextInterface } from "../src/validation-context.interface";
 import { ValidateAfterDelay } from "./__mocks__/type/validate-after-delay.test-validator";
+import '../../http/__tests__/__mocks__/xml-http-request.mock';
+import { buildTestUrl } from "../../http/__tests__/__mocks__/utils";
+
+// To force the Http service to setup its config.
+Injector.Get(HttpService);
 
 const config: ConfigurationService = Injector.Get(ConfigurationService);
 config.modify<HttpConfigurationInterface>(HttpConfigurationSymbol, {requestRetryCount: 2});
