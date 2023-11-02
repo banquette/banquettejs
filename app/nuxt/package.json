@@ -22,5 +22,6 @@
         "@banquette/vue-typescript": "workspace:^",
         "@banquette/vue-ui": "workspace:^",
         "vue": "^3.2.47"
-    }
+    },
+    "version": null
 }
