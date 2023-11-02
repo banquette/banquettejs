@@ -2,6 +2,9 @@ import { Injector } from "@banquette/dependency-injection";
 import { VueBuilder } from "@banquette/vue-typescript";
 import { DialogService } from "./dialog.service";
 
+/**
+ * @deprecated use "useDialog()" instead.
+ */
 export const useDialogGlobals = /**!PURE*/ ((_) => {
     return () => {
         const dialogServie = /**!PURE*/  Injector.Get(_);

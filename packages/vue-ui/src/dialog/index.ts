@@ -6,3 +6,4 @@ export * from './event/visibility-change-dialog.event-arg';
 export * from './dialog.service';
 export * from './constant';
 export * from './use-dialog-globals';
+export * from './use-dialog';

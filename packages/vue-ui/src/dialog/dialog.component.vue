@@ -147,6 +147,7 @@ export default class BtDialog extends Vue {
     private oldBodyOverflow: string|null = null;
     private shown: boolean = false;
     private eventDispatcher: EventDispatcherService;
+    private closeResult: any;
 
     public constructor() {
         super();
@@ -178,7 +179,7 @@ export default class BtDialog extends Vue {
         this.freeDraggable();
     }
 
-    @Watch('id', {immediate: ImmediateStrategy.BeforeMount})
+    @Watch('id', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     public onIdChange(newValue: string|null, oldValue: string|null) {
         if (oldValue) {
             const pos = UsedIds.indexOf(oldValue);
@@ -214,11 +215,11 @@ export default class BtDialog extends Vue {
             this.$emit('close');
         }
         if (this.id !== null) {
-            this.eventDispatcher.dispatch(DialogEvents.VisibilityChange, new VisibilityChangeDialogEventArg(this.id, newValue));
+            this.eventDispatcher.dispatch(DialogEvents.VisibilityChange, new VisibilityChangeDialogEventArg(this.id, newValue, !newValue ? this.closeResult : undefined));
         }
     }
 
-    @Watch('lockScroll', {immediate: ImmediateStrategy.BeforeMount})
+    @Watch('lockScroll', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     public onLockScrollChange(newValue: boolean) {
         if (this.visible) {
             this.updateScrollLock(newValue);
@@ -228,8 +229,9 @@ export default class BtDialog extends Vue {
     /**
      * Close the dialog.
      */
-    @Expose() public close(): void {
+    @Expose() public close(result?: any): void {
         this.isVisible = false;
+        this.closeResult = result;
         this.internalVisible = false;
         if (this.lockScroll) {
             this.updateScrollLock(false);
