@@ -8,6 +8,7 @@ import { MutationEvent } from "../event/mutation.event";
 import { MutationsCollectionEvent } from "../event/mutations-collection.event";
 import { Mutation } from "../mutation";
 import { extractObserver } from "../utils";
+import {ObserverFactory} from "../observer.factory";
 
 let maxId = 0;
 
@@ -234,10 +235,10 @@ export abstract class AbstractObserver<T extends object> {
                 return value;
             }
         }
-        // if (ObserverFactory.Supports(value)) {
-        //     const observer = ObserverFactory.Create(value, this, key);
-        //     return observer.proxy;
-        // }
+        if (ObserverFactory.Supports(value)) {
+            const observer = ObserverFactory.Create(value, this, key);
+            return observer.proxy;
+        }
         return value;
     }
 
