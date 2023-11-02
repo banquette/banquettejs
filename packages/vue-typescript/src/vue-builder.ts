@@ -1,6 +1,6 @@
 import { UsageException } from "@banquette/exception";
 import { ensureArray, isFunction, isObject, isUndefined, Constructor } from "@banquette/utils-type";
-import { AppConfig, Component } from "@vue/runtime-core";
+import { AppConfig, Component, isRuntimeOnly } from "@vue/runtime-core";
 import { App, ComponentPublicInstance, createApp, Directive } from "vue";
 
 export interface DirectiveDefinition {
@@ -122,19 +122,18 @@ export class VueBuilder {
     }
 
     public static ApplyToExistingApp(app: App, group: string|string[] = VueBuilder.DEFAULT_GROUP, options: Partial<AppConfig> = {}): void {
-        VueBuilder.MergeVueOptions(app.config, {
-            errorHandler: console.error,
-            warnHandler: console.warn,
+        const defaultConfig: any = {
             globalProperties: VueBuilder.GlobalProperties,
-            optionMergeStrategies: {},
-            performance: false,
-            compilerOptions: {
+        };
+        if (!isRuntimeOnly()) {
+            defaultConfig.compilerOptions = {
                 isCustomElement: () => false,
-                whitespace: 'condense',
-                delimiters: ['{{', '}}'],
-                comments: false
-            }
-        }, VueBuilder.Options, options);
+                    whitespace: 'condense',
+                    delimiters: ['{{', '}}'],
+                    comments: false
+            };
+        }
+        VueBuilder.MergeVueOptions(app.config, defaultConfig, VueBuilder.Options, options);
         let groups = (group === '*' ? Object.keys(VueBuilder.Components).concat(Object.keys(VueBuilder.Directives)) : ensureArray(group));
         groups = groups.filter((item, index) => {
             return groups.indexOf(item) === index;
