@@ -18,10 +18,10 @@
     --dropdown-z-index: var(--bt-dropdown-z-index, var(--bt-z-index-popover));
 }
 
-.bt-dropdown {
+div.bt-dropdown {
     z-index: var(--dropdown-z-index);
 
-    .bt-popover, &.bt-popover {
+    div.bt-popover, &.bt-popover {
         min-width: var(--dropdown-min-width);
 
         --bt-popover-text-color: var(--dropdown-text-color) !important;
