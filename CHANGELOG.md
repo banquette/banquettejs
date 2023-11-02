@@ -1,3 +1,20 @@
+# [0.1.3](https://github.com/banquette/banquettejs/compare/v0.1.2...v0.1.3) (2023-11-02)
+
+
+### Bug Fixes
+
+* fix SSR ([367bbc2](https://github.com/banquette/banquettejs/commit/367bbc2803fe4bf3316144e847277d3362ac93c8))
+* fix sub properties not being watched ([2cccd81](https://github.com/banquette/banquettejs/commit/2cccd81a3e3292449013e7c55b1812c5d51caf9d))
+* set `null` to `undefined` values in the decoded json ([1b40957](https://github.com/banquette/banquettejs/commit/1b40957d15172ed43ab84661e6ddc46ed1070fc5))
+* stop setting compiler options when only the vue runtime is present ([2213b9e](https://github.com/banquette/banquettejs/commit/2213b9e35574a030ce0d1051f9e6828f97e485c5))
+
+### Features
+
+* bt-form can not configure the validation strategy of the form ([afefcda](https://github.com/banquette/banquettejs/commit/afefcda788b1c27929a5f9b8c949a0c7f4c6f582))
+* dialogs now supports returning a result to their caller when closing ([3da11cf](https://github.com/banquette/banquettejs/commit/3da11cf2791925ad569ae509ac94faa8da4af2d9))
+* IsType() validator now differentiate integers from floats ([34be272](https://github.com/banquette/banquettejs/commit/34be272144777bf3984791169f26d2fe5c19e93a))
+
+
 # [0.1.2](https://github.com/banquette/banquettejs/compare/v0.1.1...v0.1.2) (2023-05-25)
 
 
@@ -13,7 +30,6 @@
 ### Features
 
 * icons from `vue-material-icons` and `vue-remix-icons` are now auto registered and usable with `bt-icon` as soon as they are imported + add a `IconSet` utility used to register new icons into `bt-icon`. ([57c8b7f](https://github.com/banquette/banquettejs/commit/57c8b7fb17a1a9694fbcd347e2d9f99c3a2d341e))
-
 
 
 ## [0.1.1](https://github.com/banquette/banquettejs/compare/v0.1.0...v0.1.1) (2023-04-29)
