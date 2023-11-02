@@ -1,5 +1,5 @@
 import { getObjectKeys } from "@banquette/utils-object";
-import { ensureNumber, isArray, isBoolean, isNumeric, isObject, isString, isSymbol, isUndefined, isValidNumber } from "@banquette/utils-type";
+import { ensureNumber, isArray, isBoolean, isNumeric, isObject, isString, isSymbol, isUndefined, isValidNumber, isInteger } from "@banquette/utils-type";
 import { SYNC_TAG } from "../constant";
 import { createValidator } from "../create-validator";
 import { assignOptionsDefaults } from "../utils";
@@ -11,13 +11,14 @@ import { ValidatorInterface } from "../validator.interface";
 export enum Type {
     String      = 1,
     Number      = 2,
-    Numeric     = 4,
-    Boolean     = 8,
-    Object      = 16,
-    Array       = 32,
-    Symbol      = 64,
-    Undefined   = 128,
-    Null        = 256
+    Integer     = 4,
+    Numeric     = 8,
+    Boolean     = 16,
+    Object      = 32,
+    Array       = 64,
+    Symbol      = 128,
+    Undefined   = 256,
+    Null        = 512
 }
 
 /**
@@ -28,6 +29,7 @@ export function IsType(target: Type, options: ValidatorOptionsInterface|string =
     const tests: Record<Type, [string, (value: any) => boolean]> = {
         [Type.String]: ['String', isString],
         [Type.Number]: ['Number', isValidNumber],
+        [Type.Integer]: ['Number', isInteger],
         [Type.Numeric]: ['Numeric', isNumeric],
         [Type.Boolean]: ['Boolean', isBoolean],
         [Type.Object]: ['Object', isObject],
