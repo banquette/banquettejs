@@ -1,5 +1,5 @@
 import { UsageException } from "@banquette/exception";
-import { ensureArray, isFunction, isObject, isUndefined, Constructor } from "@banquette/utils-type";
+import {ensureArray, isFunction, isObject, isUndefined, Constructor, isArray} from "@banquette/utils-type";
 import { AppConfig, Component, isRuntimeOnly } from "@vue/runtime-core";
 import { App, ComponentPublicInstance, createApp, Directive } from "vue";
 
@@ -162,6 +162,8 @@ export class VueBuilder {
             for (const key of Object.keys(obj)) {
                 if (isFunction(output[key])) {
                     output[key] = ((_f1: Function, _f2: Function) => (...args: any[]) => _f1.apply(this, args) || _f2.apply(this, args))(output[key], obj[key]);
+                } else if (isArray(obj[key])) {
+                    output[key] = obj[key];
                 } else if (isObject(obj[key])) {
                     output[key] = VueBuilder.MergeVueOptions(output[key] || {}, obj[key]);
                 } else {
