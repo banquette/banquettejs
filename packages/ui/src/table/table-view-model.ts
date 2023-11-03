@@ -11,7 +11,7 @@ import { UiConfigurationSymbol } from "../config";
 import { RemoteModule } from "../misc/remote/remote.module";
 import { UiConfigurationInterface } from "../ui-configuration.interface";
 import { ColumnInterface, ColumnOptions } from "./column.interface";
-import { TableApiEvents, TableEvents, Status, TableTag } from "./constant";
+import { TableApiEvents, TableEvents, TableStatus, TableTag } from "./constant";
 import { TableEventStateInterface } from "./event/table-event-state.interface";
 import { TableRequestEvent } from "./event/table-request.event";
 import { TableResponseEvent } from "./event/table-response.event";
@@ -73,7 +73,7 @@ export class TableViewModel {
                 });
             })(this._items.length);
         }
-        this.status = Status.Ready;
+        this.status = TableStatus.Ready;
         this.updateVisibleItems();
         this.updateView();
     }
@@ -95,15 +95,15 @@ export class TableViewModel {
     /**
      * Current state of the list.
      */
-    public status: Status = Status.Initializing;
+    public status: TableStatus = TableStatus.Initializing;
 
     /**
      * Status shortcut getters.
      */
-    public get initializing(): boolean { return this.status === Status.Initializing }
-    public get fetching(): boolean { return this.status === Status.Fetching }
-    public get error(): boolean { return this.status === Status.Error }
-    public get ready(): boolean { return this.status === Status.Ready }
+    public get initializing(): boolean { return this.status === TableStatus.Initializing }
+    public get fetching(): boolean { return this.status === TableStatus.Fetching }
+    public get error(): boolean { return this.status === TableStatus.Error }
+    public get ready(): boolean { return this.status === TableStatus.Ready }
 
     /**
      * Only defined if the status is Status.Error.
@@ -253,7 +253,7 @@ export class TableViewModel {
             }
             this.items = response.result.items;
         });
-        this.status = Status.Fetching;
+        this.status = TableStatus.Fetching;
         this.updateView();
     }
 

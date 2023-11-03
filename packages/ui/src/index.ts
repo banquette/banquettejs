@@ -27,6 +27,7 @@ export * from './headless.interface';
 /**
  * Form
  */
+export * from './form/form/constant';
 export * from './form/form/headless-form-view.model';
 export * from './form/form/headless-form-view-data.interface';
 export * from './form/form/event/before-bind-model.event-arg';

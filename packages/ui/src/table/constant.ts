@@ -1,7 +1,7 @@
 /**
  * Available status of the list.
  */
-export enum Status {
+export enum TableStatus {
     /**
      * The list is initializing. The meaning of this depends on the view implementation.
      * This step is necessary in a VueJS context to let time to the components to register their columns.
