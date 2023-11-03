@@ -1,5 +1,12 @@
-# [0.1.3](https://github.com/banquette/banquettejs/compare/v0.1.2...v0.1.3) (2023-11-02)
+# [0.1.4](https://github.com/banquette/banquettejs/compare/v0.1.3...v0.1.4) (2023-11-03)
 
+### Bug Fixes
+
+* export `BtAbstractVueForm` ([ce423df](https://github.com/banquette/banquettejs/commit/ce423df5d27b23fe0c35d6d21e017f1b4ee21f23))
+* export missing constants from the `ui` package ([b89db49](https://github.com/banquette/banquettejs/commit/b89db49c0203146616432a509ae536cf6004585c))
+* stop setting compiler options when only the vue runtime is present ([2213b9e](https://github.com/banquette/banquettejs/commit/2213b9e35574a030ce0d1051f9e6828f97e485c5))
+
+# [0.1.3](https://github.com/banquette/banquettejs/compare/v0.1.2...v0.1.3) (2023-11-02)
 
 ### Bug Fixes
 
