@@ -13,3 +13,4 @@ export * from './validator';
 export * from './constant';
 export * from './form-control.proxy';
 export * from './form-storage.service';
+export * from './abstract-vue-form.component';
