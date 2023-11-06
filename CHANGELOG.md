@@ -1,3 +1,10 @@
+# [0.1.5](https://github.com/banquette/banquettejs/compare/v0.1.4...v0.1.5) (2023-11-03)
+
+### Bug Fixes
+
+* fix model reactivity when passed to the form through v-model ([ce9079c](https://github.com/banquette/banquettejs/commit/ce9079c8dea153b4f054f2a2542e6c7331c38b38))
+
+
 # [0.1.4](https://github.com/banquette/banquettejs/compare/v0.1.3...v0.1.4) (2023-11-03)
 
 ### Bug Fixes
@@ -5,6 +12,7 @@
 * export `BtAbstractVueForm` ([ce423df](https://github.com/banquette/banquettejs/commit/ce423df5d27b23fe0c35d6d21e017f1b4ee21f23))
 * export missing constants from the `ui` package ([b89db49](https://github.com/banquette/banquettejs/commit/b89db49c0203146616432a509ae536cf6004585c))
 * stop setting compiler options when only the vue runtime is present ([2213b9e](https://github.com/banquette/banquettejs/commit/2213b9e35574a030ce0d1051f9e6828f97e485c5))
+
 
 # [0.1.3](https://github.com/banquette/banquettejs/compare/v0.1.2...v0.1.3) (2023-11-02)
 
@@ -491,20 +499,20 @@
 * `bt-collapsable` component is now `v-bt-collapsable` (directive)
 * `target` prop has been renamed `allowed`
 *  - `FormActionErrorEventArg` is now `ActionErrorEventArg`
- - `FormAfterPersistEventArg` is now `AfterPersistEventArg`
- - `FormAfterRemotePersistEventArg` is now `AfterRemotePersistEventArg`
- - `FormBeforePersistEventArg` is now `BeforePersistEventArg`
- - `ValidateSuccess` and `ValidateError` events have been replaced by `AfterValidate`
+- `FormAfterPersistEventArg` is now `AfterPersistEventArg`
+- `FormAfterRemotePersistEventArg` is now `AfterRemotePersistEventArg`
+- `FormBeforePersistEventArg` is now `BeforePersistEventArg`
+- `ValidateSuccess` and `ValidateError` events have been replaced by `AfterValidate`
 * `Remix` icons now have versions like `Material`. So `i-remix-home-fill` and `i-remix-home-line` are now both in `i-remix-home`, you can chose the version using the `version` prop: `<i-remix-home version="line"/>`.
 * `v-model` becomes `v-model:data` to control the content of the tree
 * `v-model` becomes `v-model:opened` to control the collapsed status
 * `v-model` becomes `v-model:visible` to control the visibility of the alert
 *  - `rawValue` has been renamed `originalValue`
- - the `root` slot has been removed, use the `node` slot instead with a test on `node.parent` to test for the root
+- the `root` slot has been removed, use the `node` slot instead with a test on `node.parent` to test for the root
 * `humanFileSize` is now named `byteCountToHumanSize`, the signature and functionalities stay the same
 * the popover's target is not resolved anymore, it will always be the parent DOM element.
 * base input css variables are not duplicated in the concrete component anymore.
-So to override a base input variable, instead of doing:
+  So to override a base input variable, instead of doing:
 
 ```
 body {
@@ -522,37 +530,37 @@ override the base input variables in the correct context:
 * `BindModel` is now `AfterBindModel`
 * Only primitive values are tested for equality. Objects are now always considered different to avoid recursively check the whole data structure.
 * An object literal with a `then()` function is not detected as a promise anymore.
-Only objects with `Promise` in their string representation are.
+  Only objects with `Promise` in their string representation are.
 * `twoDigits(4)` is now `fixedDigits(4, 2)`
 *  - `vue-icons` is now replaced by `vue-material-icons` and `vue-remix-icons`
- - the `icon` component is now in `vue-ui`
- - the `size` prop has been replaced by a `width` and `height` props
+- the `icon` component is now in `vue-ui`
+- the `size` prop has been replaced by a `width` and `height` props
 *  - all `icon-*` have been renamed `i-material-*`
- - all imports from `@banquette/vue-material-icons` are now from `@banquette/vue-icons/material`
+- all imports from `@banquette/vue-material-icons` are now from `@banquette/vue-icons/material`
 * the signature of almost all decorators have changed
 * validators' common options are now defined through an object (expect for `message`)
 * the `bindingUpdated` hook is removed
 * all props with `:` in their name have it replaced by `-`:
-examples:
-  - `remote:url` => `remote-url`
-  - `remote:node-url-param` => `remote-node-url-param`
+  examples:
+    - `remote:url` => `remote-url`
+    - `remote:node-url-param` => `remote-node-url-param`
 * - the default prefix doesn't use ':' anymore, but put the first letter of the prefixed attribute in uppercase instead
 - the alias map doesn't exclude missing elements anymore, but include them with their original name instead
 - the alias map accepts `false` as value to exclude the element
 * `validate` option of `@Prop` is renamed `transform`
 *  - `BeforeResponseEvent` is now used instead of `ResponseEvent` in `BeforeResponse` events,
- - `ResponseEvent` is now used instead of `RequestEvent` in `RequestSuccess` and `RequestFailure` events.
+- `ResponseEvent` is now used instead of `RequestEvent` in `RequestSuccess` and `RequestFailure` events.
 * `ModelChangeEvent` is now replaced with `MutationEvent`
 *  - merge `choicesLabelProperty` and `choicesLabelPropertyExpr` into a single `choicesLabel`
- - rename `choicesIdentifierProperty` into `choicesIdentifier`
- - rename `choicesValueProperty` into `choicesValue`
- - rename `choicesDisabledProperty` into `choicesDisabled`
- - rename `choicesGroupProperty` into `choicesGroup`
+- rename `choicesIdentifierProperty` into `choicesIdentifier`
+- rename `choicesValueProperty` into `choicesValue`
+- rename `choicesDisabledProperty` into `choicesDisabled`
+- rename `choicesGroupProperty` into `choicesGroup`
 * 'flatten' is now 'flattenObject'
 * `once` renamed `oncePerCycleProxy`
 * validators components have move out of the `bt-form` dir, because they are not related to it anymore
 * packages removed: `vue-form`, `vue-for-generic`, `model-api`
-packages created: `ui`
+  packages created: `ui`
 
 `ui` now centralizes the generic view models of all ui components
 `vue-ui` now contains all ui components (form included)
@@ -562,17 +570,17 @@ packages created: `ui`
 * `id` is now `slug`
 * all exceptions now require an `id` attribute to be defined
 * there are now two types of tags: `filtering tags` and `propagation tags`,
-the signature of `subscribe` has changed accordingly
+  the signature of `subscribe` has changed accordingly
 *   - `extra` is now the 3rd parameter
-  - `wildcardTransformer` is now the last parameter
+- `wildcardTransformer` is now the last parameter
 *   - `addError` now takes a type and message instead of a `FormError`
-  - rename `add` as `append` in `FormComponentsCollection`
-  - rename `merge` as `concat` in `FormComponentsCollection`
-  - rename `setChildrenFilters` as `setGroupFilters`
-  - rename `ConfigurableChildrenFilterType` as `FilterGroup`
+- rename `add` as `append` in `FormComponentsCollection`
+- rename `merge` as `concat` in `FormComponentsCollection`
+- rename `setChildrenFilters` as `setGroupFilters`
+- rename `ConfigurableChildrenFilterType` as `FilterGroup`
 *   - the dispatcher now responds with a DispatchResult
-  - progress is not tracked anymore
-  - it will never throw, the error in stored the result object instead
+- progress is not tracked anymore
+- it will never throw, the error in stored the result object instead
 * `simplifyValidator` doesn't exist anymore
 * replace the `core` injector, a specialisation of the one in `dependency-injection`
 * many utils have a different location/name
