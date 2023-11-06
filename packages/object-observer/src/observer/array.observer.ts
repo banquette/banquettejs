@@ -7,6 +7,7 @@ import { AbstractObserver } from "./abstract.observer";
 export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> {
     private static ArrayOverrides: Record<string, Partial<keyof ArrayObserver>> = {
         pop: 'proxifiedPop',
+        push: 'proxifiedPush',
         shift: 'proxifiedShift',
         unshift: 'proxifiedUnshift',
         reverse: 'proxifiedReverse',
@@ -59,6 +60,27 @@ export class ArrayObserver<T extends any[] = any[]> extends AbstractObserver<T> 
             this.target
         ));
         return removedItem;
+    };
+
+    /**
+     * `Array.push()` override.
+     */
+    public proxifiedPush = (...args: any[]): any => {
+        for (let i = 0; i < args.length; ++i) {
+            args[i] = this.observeProperty(String(i), args[i]);
+        }
+        const l = this.target.length;
+        const pushResult = Reflect.apply(this.target.push, this.target, args);
+        for (let i = 0; i < args.length; ++i) {
+            this.notify(new Mutation(
+                MutationType.Insert,
+                [String(l + i)],
+                undefined,
+                args[i],
+                this.target
+            ));
+        }
+        return pushResult;
     };
 
     /**
