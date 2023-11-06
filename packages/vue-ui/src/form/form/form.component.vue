@@ -17,10 +17,10 @@ import {
     HeadlessFormViewModel
 } from "@banquette/ui";
 import { ensureInEnum } from "@banquette/utils-array";
-import { reassign, oncePerCycleProxy, isServer } from "@banquette/utils-misc";
+import { oncePerCycleProxy, isServer } from "@banquette/utils-misc";
 import { ensureString, Primitive, AnyObject } from "@banquette/utils-type";
 import { Component, Computed, Expose, Prop, Watch, ImmediateStrategy, Vue } from "@banquette/vue-typescript";
-import { PropType } from "vue";
+import {PropType, toRaw} from "vue";
 import { FormViewDataInterface } from "./form-view-data.interface";
 
 type FormValidationStrategy = 'none' | 'change' | 'focus' | 'blur';
@@ -136,7 +136,17 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
     public created(): void {
         (this as any /* Writeable<BtForm> */).vm = new HeadlessFormViewModel<ViewData, ModelType>();
         this.vm.viewData.persistResponse = null;
-        this.vm.loadData = this.modelValue;
+
+        //
+        // toRaw very important here, to remove any Vue proxy from the input data.
+        // This is necessary so the proxy created by the form binder comes before the Vue's one.
+        // Otherwise, Vue will capture array functions (like push, pop, etc.) and prevent the object observer
+        // to see the mutations, and the model will get out of sync with the form.
+        //
+        // A vue proxy is reassigned in the "after-bind-model" event by being assigned to the "v" object (which is tracked by Vue)
+        // and reassigned in the calling code through the reassignable proxy.
+        //
+        this.vm.loadData = toRaw(this.modelValue);
         this.v = this.vm.viewData as ViewData;
 
         // So the proxy is used by the headless view model.
@@ -202,7 +212,7 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
             this.v.model = event.model as ModelType;
 
             // Reassign the model to the proxified one, so any change made by the binder will trigger a Vue update.
-            reassign(event.model, this.v.model);
+            //reassign(event.model, this.v.model);
             this.onAfterBindModel(event);
         }));
     }

@@ -19,7 +19,7 @@ import { ModelMetadataService, TransformResult, TransformService, PojoTransforme
 import { FormModelBinder, FormTransformerSymbol } from "@banquette/model-form";
 import { areEqual, makeReassignable, proxy } from "@banquette/utils-misc";
 import { extend, filterWithMask, getObjectValue } from "@banquette/utils-object";
-import { ensureArray, isObject, isObjectLiteral, isPromiseLike, isUndefined, Constructor } from "@banquette/utils-type";
+import {ensureArray, isObject, isObjectLiteral, isPromiseLike, isUndefined, Constructor, Writeable} from "@banquette/utils-type";
 import { HeadlessInterface } from "../../headless.interface";
 import { RemoteModule } from "../../misc/remote/remote.module";
 import { Action, Status, FormTag, FormLoadTag, ErrorType, ErrorTypeStatusMap, FormPersistTag, HeadlessFormViewModelEvents, ErrorTypeEventMap } from "./constant";
@@ -142,7 +142,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     public setViewData(viewData: ViewDataType): void {
         const that = this;
-        (this as any /* Writeable<HeadlessFormViewModel> */).viewData = extend(viewData, {
+        (this as Writeable<HeadlessFormViewModel>).viewData = extend(viewData, {
             form: {
                 invalid         : false,
                 notValidated    : true,
@@ -237,9 +237,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     queued = false;
                     this.load();
                     return ;
-                }
-                if (this.modelInstance !== null) {
-                    (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = makeReassignable(this.modelInstance);
                 }
                 this.form.enable();
                 this.form.reset();
@@ -509,11 +506,12 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     private bindModel(): void {
         if (this._modelType && !this.binder && this.modelInstance) {
+            (this as Writeable<HeadlessFormViewModel>).modelInstance = makeReassignable(this.modelInstance);
             this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.BeforeBindModel, new BeforeBindModelEventArg(this.modelInstance));
 
             const binder = Injector.Get(FormModelBinder);
-            (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = binder.bind(this.modelInstance, this.form);
-            (this as any /* Writeable<HeadlessFormViewModel> */).binder = binder;
+            (this as Writeable<HeadlessFormViewModel>).modelInstance = binder.bind(this.modelInstance, this.form);
+            (this as Writeable<HeadlessFormViewModel>).binder = binder;
 
             this.eventDispatcher.dispatchWithErrorHandling(HeadlessFormViewModelEvents.AfterBindModel, new AfterBindModelEventArg(this.modelInstance, binder));
         }
@@ -536,7 +534,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                     if (!this.isValidModelInstance(response.result)) {
                         if (isObject(response.result)) {
                             this.getTransformService().transformInverse(response.result, this._modelType as Constructor, ApiTransformerSymbol).onReady().then((transformResult: TransformResult) => {
-                                (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = transformResult.result;
+                                (this as Writeable<HeadlessFormViewModel>).modelInstance = transformResult.result;
                                 resolve();
                             }, reject);
                         } else {
@@ -546,7 +544,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
                             ));
                         }
                     } else {
-                        (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = response.result;
+                        (this as Writeable<HeadlessFormViewModel>).modelInstance = response.result;
                         resolve();
                     }
                 } else if (isObject(response.result)) {
@@ -574,7 +572,7 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         const assignModelData = (model: object): void|Promise<void> => {
             // If we don't have a model instance yet, simply set it.
             if (!this.modelInstance) {
-                (this as any /* Writeable<HeadlessFormViewModel> */).modelInstance = model;
+                (this as Writeable<HeadlessFormViewModel>).modelInstance = model;
                 return ;
             }
             const assignFormTransformResult = (formTransformResult: TransformResult) => {
