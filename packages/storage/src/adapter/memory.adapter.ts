@@ -7,6 +7,8 @@ import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";
 
 @Service(StorageAdapterTag)
 export class MemoryAdapter extends AbstractAdapter implements SynchronousAdapterInterface {
+    public readonly name: string = 'memory';
+
     private store: Record<string, string> = {};
 
     /**
