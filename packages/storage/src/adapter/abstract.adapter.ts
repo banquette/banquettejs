@@ -16,6 +16,8 @@ enum Types {
 }
 
 export abstract class AbstractAdapter implements AdapterInterface {
+    abstract readonly name: string;
+
     /**
      * Test if the adapter is available in the current configuration.
      */

@@ -8,6 +8,8 @@ import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";
 
 @Service(StorageAdapterTag)
 export class CookiesAdapter extends AbstractAdapter implements SynchronousAdapterInterface {
+    public readonly name: string = 'cookies';
+
     /**
      * Prefix to be able to differentiate between cookies managed by the storage and cookies who don't.
      */

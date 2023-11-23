@@ -7,6 +7,8 @@ import { SynchronousAdapterInterface } from "./synchronous-adapter.interface";
 
 @Service(StorageAdapterTag)
 export class LocalStorageAdapter extends AbstractAdapter implements SynchronousAdapterInterface {
+    public readonly name: string = 'local-storage';
+
     /**
      * Test if the adapter is available in the current configuration.
      */

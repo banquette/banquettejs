@@ -1,30 +1,36 @@
-import { ConfigurationService } from "@banquette/config";
-import { InjectLazy, InjectMultiple, Service, Injector } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { isConstructor, isString, isSymbol, isUndefined } from "@banquette/utils-type";
-import { AdapterInterface } from "./adapter/adapter.interface";
-import './adapter/cookies.adapter';
-import './adapter/local-storage.adapter';
-import { StorageConfigurationSymbol } from "./config";
-import { StorageAdapterTag } from "./constant";
-import { NoAdapterAvailableException } from "./exception/no-adapter-available.exception";
-import { StorageConfigurationInterface } from "./storage-configuration.interface";
-import { AdapterIdentifier } from "./types";
+import {ConfigurationService} from "@banquette/config";
+import {Inject, InjectLazy, InjectMultiple, Service} from "@banquette/dependency-injection";
+import {UsageException} from "@banquette/exception";
+import {Constructor, isConstructor, isObject, isString, isUndefined} from "@banquette/utils-type";
+import {AdapterInterface} from "./adapter/adapter.interface";
+import {StorageConfigurationSymbol} from "./config";
+import {StorageAdapterTag} from "./constant";
+import {NoAdapterAvailableException} from "./exception/no-adapter-available.exception";
+import {StorageConfigurationInterface} from "./storage-configuration.interface";
+import {AdapterIdentifier} from "./types";
+import {LocalStorageAdapter} from "./adapter/local-storage.adapter";
 
 @Service()
 export class StorageService {
     private readonly availableAdaptersOrdered: AdapterInterface[];
-    private readonly availableAdaptersMap: Record<string, AdapterInterface>;
+    private readonly availableAdaptersAliasMap: Record<string, AdapterInterface>;
+    private readonly availableAdaptersMap: Map<Constructor<AdapterInterface>, AdapterInterface>;
     private readonly defaultAdapter: AdapterInterface;
 
-    public constructor(@InjectMultiple(StorageAdapterTag) adapters: AdapterInterface[],
-                       @InjectLazy(() => ConfigurationService) configuration: ConfigurationService) {
+    public constructor(
+        @Inject(LocalStorageAdapter) localStorageAdapter: LocalStorageAdapter[],
+        @Inject(LocalStorageAdapter) cookieAdapter: LocalStorageAdapter[],
+        @InjectMultiple(StorageAdapterTag) adapters: AdapterInterface[],
+        @InjectLazy(() => ConfigurationService) configuration: ConfigurationService
+    ) {
         this.availableAdaptersOrdered = [];
-        this.availableAdaptersMap = {};
+        this.availableAdaptersAliasMap = {};
+        this.availableAdaptersMap = new Map<Constructor<AdapterInterface>, AdapterInterface>;
         for (const adapter of adapters) {
             if (adapter.isAvailable()) {
                 this.availableAdaptersOrdered.push(adapter);
-                this.availableAdaptersMap[adapter.constructor.name] = adapter;
+                this.availableAdaptersAliasMap[adapter.name] = adapter;
+                this.availableAdaptersMap.set(adapter.constructor as Constructor<AdapterInterface>, adapter);
             }
         }
         this.availableAdaptersOrdered.sort((a: AdapterInterface, b: AdapterInterface) => {
@@ -98,27 +104,28 @@ export class StorageService {
      * @throws NoAdapterAvailableException
      */
     private resolveAdapter<T extends AdapterInterface>(adapter: AdapterIdentifier<T>): T {
-        let adapterStr: string|null = null;
-        if (isString(adapter) || isUndefined(adapter)) {
-            if (!this.availableAdaptersOrdered.length) {
-                throw new NoAdapterAvailableException();
+        if (!this.availableAdaptersOrdered.length) {
+            throw new NoAdapterAvailableException();
+        }
+        if (isConstructor(adapter)) {
+            if (this.availableAdaptersMap.has(adapter)) {
+                return this.availableAdaptersMap.get(adapter) as T;
             }
-            // Only 'auto' is a valid string value
-            // so we can take the first one without checking the value of the string.
-            return this.availableAdaptersOrdered[0] as T;
+            throw new UsageException(`No adapter has been found for the constructor ${adapter}. Try using a string alias instead.`);
         }
-        if (isSymbol(adapter)) {
-            return Injector.Get(adapter) as T;
+        if (isString(adapter)) {
+            if (adapter === 'auto') {
+                return this.availableAdaptersOrdered[0] as T;
+            }
+            if (!isUndefined(this.availableAdaptersAliasMap[adapter])) {
+                return this.availableAdaptersAliasMap[adapter] as T;
+            }
+            throw new UsageException(`No adapter alias "${adapter}" has been found in the list of available adapters.`);
         }
-        if (isConstructor(adapter) && isString(adapter.name)) {
-            adapterStr = adapter.name;
+        // Suppose the adapter is already an instance of an adapter.
+        if (isObject(adapter)) {
+            return adapter as T;
         }
-        if (adapterStr === null) {
-            throw new UsageException(`Failed to resolve adapter ${String(adapter)}.`);
-        }
-        if (isUndefined(this.availableAdaptersMap[adapterStr])) {
-            throw new UsageException(`No adapter ${adapterStr} has been found in the list of available adapters.`);
-        }
-        return this.availableAdaptersMap[adapterStr] as T;
+        throw new UsageException(`Unable to resolve the adapter. Invalid input.`);
     }
 }

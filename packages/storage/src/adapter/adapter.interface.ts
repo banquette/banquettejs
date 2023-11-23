@@ -4,6 +4,11 @@ import { StorageKeyChangeEvent } from "../event/storage-key-change.event";
 
 export interface AdapterInterface {
     /**
+     * User-friendly name of the adapter.
+     */
+    readonly name: string;
+
+    /**
      * Test if the adapter is available in the current configuration.
      */
     isAvailable(): boolean;
