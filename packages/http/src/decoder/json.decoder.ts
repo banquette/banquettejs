@@ -33,7 +33,7 @@ export const useJsonDecoder = /**!PURE*/ (() => {
             if (event.request.responseType !== ResponseTypeAutoDetect || !isString(event.response.response)) {
                 return false;
             }
-            if (event.response.responseType === 'json' || event.response.headers['content-type'] === 'application/json') {
+            if (event.response.responseType === 'json' || event.response.headers['content-type'].includes('application/json')) {
                 return true;
             }
             // If we have no information on the type of body, try to detect if it looks like JSON.
