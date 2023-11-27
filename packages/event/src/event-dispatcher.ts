@@ -158,6 +158,7 @@ export class EventDispatcher implements EventDispatcherInterface {
                     // dispatch() must never throw, so if an exception is thrown,
                     // we capture it and set the result on error.
                     // The end user can then decide to throw the error stored in "errorDetails" if they want to.
+                    console.error(`Dispatch failed: ` + getSymbolDescription(type), event, e);
                     result.fail(e);
                     return false;
                 }
