@@ -12,10 +12,14 @@ export const PayloadTypeFormData = Symbol('form-data');
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useFormDataEncoder = /**!PURE*/ (() => {
     return () => {
-        function buildFormData(formData: FormData, data: any, parentKey?: string): void {
+        function buildFormData(formData: FormData, data: any, parentKey?: string, stack: any[] = []): void {
             if (isObject(data) && !(data instanceof Date) && !(data instanceof File)) {
+                if (stack.includes(data)) {
+                    return ;
+                }
+                stack.push(data);
                 for (const key of Object.keys(data)) {
-                    buildFormData(formData, data[key], parentKey ? `${parentKey}[${key}]` : key);
+                    buildFormData(formData, data[key], parentKey ? `${parentKey}[${key}]` : key, stack);
                 }
             } else if (parentKey && data instanceof File) {
                 formData.append(parentKey, data, data.name);

@@ -267,6 +267,20 @@ describe('payloads', () => {
         await response.promise;
         expect(lastPayload).toStrictEqual(JSON.stringify(payload));
     });
+
+    test(`circular reference in the payload`, async () => {
+        const group: any = {name: 'A', items: []};
+        const payload = {items: [{name: 'I1', group}, {name: 'I2', group}]};
+        group.items = payload.items;
+        const response = http.send(HttpRequestFactory.Create({
+            url: '//test',
+            payload,
+            payloadType: PayloadTypeFormData,
+            tags: [Symbol('custom-tag')]
+        }));
+        await response.promise;
+        expect(response.isSuccess).toEqual(true);
+    });
 });
 
 /**
