@@ -1,5 +1,6 @@
-import { ValidationContext, ValidationContextInterface } from "@banquette/validation";
-import { FormComponentInterface } from "./form-component.interface";
+import {ValidationContext, ValidationContextInterface} from "@banquette/validation";
+import {FormComponentInterface} from "./form-component.interface";
+import {isFormGroup} from "./utils";
 
 export class FormValidationContext extends ValidationContext {
     public constructor(public readonly form: FormComponentInterface,
@@ -13,8 +14,26 @@ export class FormValidationContext extends ValidationContext {
     }
 
     public getOtherValue(path: string, defaultValue: any = null): any {
-        // TODO
+        const component = this.getOtherFormComponent(path);
+        if (component !== null) {
+            return component.value;
+        }
         return defaultValue;
+    }
+
+    public getOtherFormComponent(path: string): FormComponentInterface|null {
+        if (!path) {
+            return null;
+        }
+        if (path[0] !== '/') {
+            path = this.formPath.split('/').slice(0, -1).join('/') + '/' + path;
+        }
+        try {
+            if (isFormGroup(this.form)) {
+                return this.form.getByPath(path);
+            }
+        } catch (e) { }
+        return null;
     }
 
     /**
