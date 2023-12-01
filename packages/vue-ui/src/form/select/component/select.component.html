@@ -8,7 +8,7 @@
     @blur="v.control.onBlur()"
 >
     <bt-form-base-input :v="v">
-        <div ref="inputWrapper" class="input-wrapper" @click.stop="onInputWrapperClick()">
+        <div ref="inputWrapper" class="input-wrapper"> <!--@click.stop="onInputWrapperClick()">-->
             <div class="control-wrapper">
                 <div>
                     <input
@@ -96,7 +96,7 @@
             {{ v.remoteFetchError }}
         </div>
         <div class="no-results" v-else-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'waiting-search'">
-            <span v-html="i18n.searchMinLength.replace('%minLength%', v.searchMinLength)"></span>
+            <span v-html="i18n.searchMinLength?.replace('%minLength%', v.searchMinLength)"></span>
         </div>
         <div class="no-results loading" v-else-if="!v.visibleChoicesCount && v.control.busy">
             <bt-progress-circular></bt-progress-circular>

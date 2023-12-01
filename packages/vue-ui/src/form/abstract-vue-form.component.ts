@@ -65,7 +65,7 @@ export abstract class BtAbstractVueForm<
      */
     protected eventPipeline = new EventPipeline();
 
-    private unsubscribeCallbacks: GenericCallback[] = [];
+    protected unsubscribeCallbacks: GenericCallback[] = [];
     private controlUnsubscribeCallbacks: GenericCallback[] = [];
 
     public constructor() {

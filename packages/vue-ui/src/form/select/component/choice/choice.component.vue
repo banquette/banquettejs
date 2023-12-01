@@ -72,14 +72,14 @@ export default class BtFormSelectChoice extends Vue {
         if (!this.choice) {
             return;
         }
-        this.parent.vm.selectChoice(this.choice);
+        this.parent.selectChoice(this.choice);
     }
 
     @Expose() public deselect(): void {
         if (!this.choice) {
             return;
         }
-        this.parent.vm.deselectChoice(this.choice.identifier);
+        this.parent.deselectChoice(this.choice.identifier);
     }
 
     @Expose() public remove(): void {

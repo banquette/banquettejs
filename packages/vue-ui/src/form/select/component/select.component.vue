@@ -2,7 +2,7 @@
 <template src="./select.component.html" ></template>
 <script lang="ts">
 import { HttpMethod } from "@banquette/http";
-import { SearchType, ChoicesPropResolver, SearchParamName, ChoiceOrigin, SelectedChoice } from "@banquette/ui";
+import {SearchType, ChoicesPropResolver, SearchParamName, ChoiceOrigin, SelectedChoice, RemoteModuleRequestEventArg, RemoteModuleResponseEventArg} from "@banquette/ui";
 import { ensureInEnum } from "@banquette/utils-array";
 import { debounce } from "@banquette/utils-misc";
 import { getObjectKeys } from "@banquette/utils-object";
@@ -34,7 +34,7 @@ import { WrappedSelectedChoice } from "./wrapped-selected-choice";
     name: 'bt-form-select',
     components: [BtFormBaseInput, BtFormSelectChoice, BtChoiceSlotWrapper, BtTag, BtDropdown, BtProgressCircular, IRemixCloseCircle],
     directives: [ClickOutsideDirective, BindThemeDirective],
-    emits: ['focus', 'blur', 'change']
+    emits: ['focus', 'blur', 'change', 'remote-request', 'remote-response']
 })
 export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterface, SelectViewModel> {
     // To get autocompletion in the view.
@@ -131,7 +131,7 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
     @TemplateRef('tagSelectionWrapper') private tagSelectionWrapperEl!: HTMLElement|null;
 
     private inputWrapperResizeUnsubscribe: VoidCallback|null = null;
-    private lastBlurTime: number = 0;
+    private lastSelectChoiceTime: number = 0;
     private lastKeyStrokeTime: number = 0;
 
     public constructor() {
@@ -179,6 +179,8 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
 
     @Expose() public selectChoice(choice: any): void {
         this.vm.selectChoice(choice);
+        this.lastSelectChoiceTime = (new Date()).getTime();
+        this.inputEl.blur();
     }
 
     @Expose() public deselectChoice(choice: SelectedChoice|Primitive): void {
@@ -207,9 +209,7 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
     }
 
     @Expose() public onInputWrapperClick(): void {
-        // TODO: Remove the timer
-        // Find a way to prevent the focus to be lost on the input when a click is made on the mask / input-wrapper.
-        if ((new Date()).getTime() - this.lastBlurTime < 150) {
+        if (this.v.isInputFocused) {
             return ;
         }
         this.inputEl.focus();
@@ -218,9 +218,12 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
     }
 
     @Expose() public onInputFocus(): void {
-        // TODO: Remove the timer
-        // Find a way to prevent the focus to be lost on the input when a click is made on the mask / input-wrapper.
-        if ((new Date()).getTime() - this.lastBlurTime < 150) {
+        // When clicking to select a choice, an onInputBlur is wrongly triggered on the mousedown.
+        // Then, when the mouse is released, the click event on the input trigger a focus.
+        // So the dropdown doesn't disappear when a selection is made.
+        // To avoid that, we check if a select choice has been done in the last 150ms, and if so, we blur the input again.
+        if ((new Date()).getTime() - this.lastSelectChoiceTime < 150) {
+            this.inputEl.blur();
             return ;
         }
         this.v.control.onFocus();
@@ -233,7 +236,6 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
         }
         this.v.control.onBlur();
         this.v.isInputFocused = false;
-        this.lastBlurTime = (new Date()).getTime();
 
         // Check that the vm is still defined because this event can occur
         // while the component is being unmounted in certain edge cases.
@@ -269,6 +271,12 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
             ChoiceOrigin.Remote,
             AfterSlotOrigin
         ];
+        this.unsubscribeCallbacks.push(vm.remote.onRequest((event: RemoteModuleRequestEventArg) => {
+            this.$emit('remote-request', event.request);
+        }));
+        this.unsubscribeCallbacks.push(vm.remote.onResponse((event: RemoteModuleResponseEventArg) => {
+            this.$emit('remote-response', event.response);
+        }));
         return vm;
     }
 
