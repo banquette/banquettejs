@@ -9,6 +9,8 @@ import { isNonEmptyString } from "@banquette/utils-string";
 import { isObject, isUndefined, Primitive, StringEnum } from "@banquette/utils-type";
 import { RemoteModuleEvents } from "./constant";
 import { RemoteConfigurationInterface } from "./remote-configuration.interface";
+import {RemoteModuleRequestEventArg} from "./event/remote-module-request.event-arg";
+import {RemoteModuleResponseEventArg} from "./event/remote-module-response.event-arg";
 
 /**
  * Offer an easy way for ui components to make http calls without having to worry about what parameters
@@ -113,7 +115,7 @@ export class RemoteModule {
         if (this.response !== null && this.response.isPending && !this.allowMultiple) {
             this.response.request.cancel();
         }
-        this.response = this.api.send(this.api.build()
+        const request = this.api.build()
             .url(this.url)
             .endpoint(this.endpoint)
             .model(this.model)
@@ -123,9 +125,15 @@ export class RemoteModule {
             .payload(payload, this.payloadType)
             .responseType(this.responseType)
             .tags(tags)
-            .getRequest()
-        );
+            .getRequest();
+        this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Request, new RemoteModuleRequestEventArg(request));
+        this.response = this.api.send(request);
+        this.response.promise.then((response: HttpResponse<any>) => {
+            this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Response, new RemoteModuleResponseEventArg(response));
+        });
         this.response.promise.catch((response: HttpResponse<any>) => {
+            this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Response, new RemoteModuleResponseEventArg(response));
+
             // Check `isError` to skip canceled requests.
             if (response.isError && !(response.result instanceof RemoteException)) {
                 if (isObject(response.result) && !isUndefined(response.result.exception) && isNonEmptyString(response.result.exception.message)) {
@@ -147,5 +155,19 @@ export class RemoteModule {
      */
     public onConfigurationChange(cb: (event: EventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(RemoteModuleEvents.ConfigurationChange, cb);
+    }
+
+    /**
+     * By notified when an HTTP request is made.
+     */
+    public onRequest(cb: (event: RemoteModuleRequestEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(RemoteModuleEvents.Request, cb);
+    }
+
+    /**
+     * By notified when an HTTP request has finished, with success or not.
+     */
+    public onResponse(cb: (event: RemoteModuleResponseEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(RemoteModuleEvents.Response, cb);
     }
 }

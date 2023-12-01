@@ -9,7 +9,10 @@ export * from './table/table-view-model';
 export * from './table/pagination/constant';
 export * from './table/pagination/pagination.module';
 
-export * from './misc/remote/remote.module';
+/**
+ * Misc
+ */
+export * from './misc';
 
 
 // Tree
