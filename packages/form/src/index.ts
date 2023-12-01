@@ -11,6 +11,7 @@ export * from './form-components-collection';
 export * from './form-validation-context';
 export * from './constant';
 export * from './config';
+export * from './utils';
 
 /**
  * Interfaces
