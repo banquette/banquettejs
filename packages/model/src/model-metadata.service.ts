@@ -53,9 +53,6 @@ export class ModelMetadataService {
     public registerAlias(ctor: Constructor, alias: ModelAlias|ModelAlias[]): void {
         const aliases = ensureArray(alias);
         for (const item of aliases) {
-            if (!isUndefined(this.aliases[item]) && this.aliases[item] !== ctor) {
-                throw new UsageException(`The alias "${item}" is already in used by "${this.aliases[item].name}".`);
-            }
             this.aliases[item] = ctor;
         }
     }
