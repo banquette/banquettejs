@@ -1,6 +1,7 @@
 import {ValidationContext, ValidationContextInterface} from "@banquette/validation";
 import {FormComponentInterface} from "./form-component.interface";
 import {isFormGroup} from "./utils";
+import {rtrim} from "@banquette/utils-string";
 
 export class FormValidationContext extends ValidationContext {
     public constructor(public readonly form: FormComponentInterface,
@@ -43,7 +44,7 @@ export class FormValidationContext extends ValidationContext {
                             value: any,
                             masks: string[] = [],
                             groups: string[] = []): ValidationContextInterface {
-        // TODO
-        return new FormValidationContext(this.form, this.formPath, this, name, value, masks, groups);
+
+        return new FormValidationContext(this.form, rtrim(this.formPath, '/') +  '/' + name, this, name, value, masks, groups);
     }
 }
