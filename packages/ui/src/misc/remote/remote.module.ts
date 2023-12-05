@@ -32,7 +32,7 @@ export class RemoteModule {
 
     /**
      * The HTTP method to use when doing the request.
-     * Will be overridden by the endpoint is you're using one.
+     * Will be overridden by the endpoint if you're using one.
      */
     public readonly method: StringEnum<HttpMethod> = HttpMethod.GET;
 
