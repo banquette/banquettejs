@@ -175,6 +175,7 @@ export default class BtDialog extends Vue {
         if (this.lockScroll) {
             this.updateScrollLock(false);
         }
+        this.shown = false;
         this.onIdChange(null, this.id);
         this.freeDraggable();
     }
@@ -210,6 +211,9 @@ export default class BtDialog extends Vue {
             }
             this.$emit('open', this.slotBag);
         } else {
+            if (this.lockScroll) {
+                this.updateScrollLock(false);
+            }
             this.shown = false;
             this.freeDraggable();
             this.$emit('close');
@@ -219,10 +223,10 @@ export default class BtDialog extends Vue {
         }
     }
 
-    @Watch('lockScroll', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('lockScroll', {immediate: false})
     public onLockScrollChange(newValue: boolean) {
-        if (this.visible) {
-            this.updateScrollLock(newValue);
+        if (this.isVisible) {
+            this.updateScrollLock(newValue, true);
         }
     }
 
@@ -233,9 +237,6 @@ export default class BtDialog extends Vue {
         this.isVisible = false;
         this.closeResult = result;
         this.internalVisible = false;
-        if (this.lockScroll) {
-            this.updateScrollLock(false);
-        }
     }
 
     /**
@@ -282,8 +283,8 @@ export default class BtDialog extends Vue {
      * Prevent or restore the overflow of the body depending on the input value
      * and on the other visible dialogs.
      */
-    private updateScrollLock(newValue: boolean): void {
-        if (isServer()) {
+    private updateScrollLock(newValue: boolean, force: boolean = false): void {
+        if (isServer() || (!force && newValue === this.shown)) {
             return ;
         }
         if (newValue) {
