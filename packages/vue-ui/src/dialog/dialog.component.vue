@@ -231,6 +231,17 @@ export default class BtDialog extends Vue {
     }
 
     /**
+     * Open the dialog.
+     */
+    @Expose() public open(): void {
+        if (this.isVisible) {
+            return ;
+        }
+        this.isVisible = true;
+        this.internalVisible = true;
+    }
+
+    /**
      * Close the dialog.
      */
     @Expose() public close(result?: any): void {
