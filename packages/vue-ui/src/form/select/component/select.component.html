@@ -8,7 +8,7 @@
     @blur="v.control.onBlur()"
 >
     <bt-form-base-input :v="v">
-        <div ref="inputWrapper" class="input-wrapper"> <!--@click.stop="onInputWrapperClick()">-->
+        <div ref="inputWrapper" class="input-wrapper" @click.stop="onInputWrapperClick()">
             <div class="control-wrapper">
                 <div>
                     <input
