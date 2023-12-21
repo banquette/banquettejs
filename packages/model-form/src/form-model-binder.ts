@@ -14,7 +14,7 @@ import {
 } from "@banquette/model";
 import { MutationType, MutationEvent } from "@banquette/object-observer";
 import { proxy } from "@banquette/utils-misc";
-import { ensureArray, isObject, isUndefined, Complete, Constructor } from "@banquette/utils-type";
+import {ensureArray, isObject, isUndefined, Complete, Constructor, isConstructor} from "@banquette/utils-type";
 import { FormControlTransformerSymbol, FormArrayTransformerSymbol, FormObjectTransformerSymbol } from "./contants";
 import { FormControl as FormControlTransformer } from "./transformer/form-control";
 import { FormObject as FormObjectTransformer } from "./transformer/form-object";
@@ -332,20 +332,24 @@ export class FormModelBinder {
             }
             const pathParts = event.source.path.split('/');
             let modelContainer = this.model;
+            let highestConstructor = this.model.constructor;
             for (let i = 1; i < pathParts.length - 1; ++i) {
                 if (!isObject(modelContainer[pathParts[i]])) {
                     return;
                 }
                 modelContainer = modelContainer[pathParts[i]];
+                if (isObject(modelContainer) && isConstructor(modelContainer.constructor)) {
+                    highestConstructor = modelContainer.constructor;
+                }
             }
             if (isObject(modelContainer)) {
                 const propName = pathParts[pathParts.length - 1];
-                const tree = this.getModelTransformersTree(modelContainer.constructor);
+                const tree = this.getModelTransformersTree(highestConstructor);
                 if (!isUndefined(tree.children[propName])) {
                     modelContainer[propName] = this.handleTransformResult<any>(tree.children[propName].transformer.transformInverse(new TransformContext(
                         null,
                         FormTransformerSymbol,
-                        modelContainer.constructor,
+                        highestConstructor,
                         event.source,
                         propName
                     )));
