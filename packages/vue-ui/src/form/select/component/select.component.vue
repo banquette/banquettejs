@@ -28,11 +28,12 @@ import { SelectViewDataInterface } from "./select-view-data.interface";
 import { SelectViewModel } from "./select.view-model";
 import { ThemeConfiguration } from "./theme-configuration";
 import { WrappedSelectedChoice } from "./wrapped-selected-choice";
+import BtFormSelectGroup from "./group/group.component.vue";
 
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-form-select',
-    components: [BtFormBaseInput, BtFormSelectChoice, BtChoiceSlotWrapper, BtTag, BtDropdown, BtProgressCircular, IRemixCloseCircle],
+    components: [BtFormBaseInput, BtFormSelectChoice, BtFormSelectGroup, BtChoiceSlotWrapper, BtTag, BtDropdown, BtProgressCircular, IRemixCloseCircle],
     directives: [ClickOutsideDirective, BindThemeDirective],
     emits: ['focus', 'blur', 'change', 'remote-request', 'remote-response']
 })

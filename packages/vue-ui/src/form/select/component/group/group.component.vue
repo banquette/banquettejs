@@ -6,7 +6,7 @@ import { Component, Expose, Prop, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 
 @Component('bt-form-select-group')
-export default class BtGroup extends Vue {
+export default class BtFormSelectGroup extends Vue {
     @Prop({type: String as PropType<string|null>, default: null}) public label!: string|null;
     @Expose() public visibleChoices: Choice[] = [];
 
