@@ -116,6 +116,14 @@ export default class BtTable extends Vue {
     }
 
     /**
+     * Vue lifecycle hook.
+     */
+    public beforeUnmount(): void {
+        this.vm.dispose();
+        (this as any).vm = undefined;
+    }
+
+    /**
      * Register a BtFilter instance, so it can be rendered by the table.
      */
     public addFilter(columnId: string, filter: any /* BtFilter */): void {

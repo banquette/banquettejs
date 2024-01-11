@@ -1,6 +1,6 @@
 import { ConfigurationService } from "@banquette/config";
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherService } from "@banquette/event";
+import {EventDispatcherService, UnsubscribeFunction} from "@banquette/event";
 import { flattenObject } from "@banquette/utils-object";
 import { UiConfigurationSymbol } from "../../config";
 import { UiConfigurationInterface } from "../../ui-configuration.interface";
@@ -21,7 +21,7 @@ function getConfig(): TableConfigurationInterface {
 // It's then replace by "/* @__PURE__ */" at the end of the build.
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useBuiltInRequestListener = /**!PURE*/ (() => {
-    return () => {
+    return (): UnsubscribeFunction => {
         /**
          * Add configuration parameters (pagination, filtering) to the request.
          */
@@ -45,7 +45,7 @@ export const useBuiltInRequestListener = /**!PURE*/ (() => {
             }
         }
 
-        Injector.Get(EventDispatcherService).subscribe<TableRequestEvent>(
+        return Injector.Get(EventDispatcherService).subscribe<TableRequestEvent>(
             TableApiEvents.BeforeRequest,
             onBeforeRequest,
             0,

@@ -1,6 +1,6 @@
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherService } from "@banquette/event";
-import { isArray } from "@banquette/utils-type";
+import {EventDispatcherService, UnsubscribeFunction} from "@banquette/event";
+import {isArray} from "@banquette/utils-type";
 import { TableProcessorTag, TableApiEvents } from "../constant";
 import { TableResponseEvent } from "../event/table-response.event";
 import { PaginatedServerResponseInterface } from "../pagination/paginated-server-response.interface";
@@ -10,7 +10,7 @@ import { isPaginatedServerResponseInterface } from "../pagination/utils";
 // It's then replace by "/* @__PURE__ */" at the end of the build.
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useBuiltInResponseListener = /**!PURE*/ (() => {
-    return () => {
+    return (): UnsubscribeFunction => {
         function onBeforeResponse(event: TableResponseEvent) {
             const responseBody: any = event.httpEvent.response.response;
             const isPaginatedResponse = event.state.pagination.enabled && isPaginatedServerResponseInterface(responseBody);
@@ -25,7 +25,7 @@ export const useBuiltInResponseListener = /**!PURE*/ (() => {
             event.httpEvent.response.response = event.result;
         }
 
-        Injector.Get(EventDispatcherService).subscribe<TableResponseEvent>(
+        return Injector.Get(EventDispatcherService).subscribe<TableResponseEvent>(
             TableApiEvents.BeforeResponse,
             onBeforeResponse,
             1,

@@ -8,7 +8,7 @@
  * yourself with a higher priority and stop the propagation.
  */
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherService } from "@banquette/event";
+import {EventDispatcherService, UnsubscribeFunction} from "@banquette/event";
 import { HttpResponseStatus } from "@banquette/http";
 import { ModelMetadataService, TransformService } from "@banquette/model";
 import { isArray, isObject } from "@banquette/utils-type";
@@ -20,7 +20,7 @@ import { ApiTransformerSymbol } from "../transformer/api";
 // It's then replace by "/* @__PURE__ */" at the end of the build.
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useBuiltInResponseModelTransformer = /**!PURE*/ (() => {
-    return () => {
+    return (): UnsubscribeFunction => {
         const transformService = /**!PURE*/ Injector.Get(TransformService);
         const modelMetadata = /**!PURE*/ Injector.Get(ModelMetadataService);
 
@@ -51,7 +51,7 @@ export const useBuiltInResponseModelTransformer = /**!PURE*/ (() => {
             }
         }
 
-        Injector.Get(EventDispatcherService).subscribe<ApiResponseEvent>(
+        return Injector.Get(EventDispatcherService).subscribe<ApiResponseEvent>(
             ApiEvents.RequestSuccess,
             onRequestSuccess,
             0,

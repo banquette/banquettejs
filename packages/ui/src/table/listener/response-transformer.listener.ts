@@ -1,7 +1,7 @@
 import { Injector } from "@banquette/dependency-injection";
-import { EventDispatcherService } from "@banquette/event";
+import {EventDispatcherService, UnsubscribeFunction} from "@banquette/event";
 import { ModelMetadataService, TransformService, PojoTransformerSymbol } from "@banquette/model";
-import { isArray } from "@banquette/utils-type";
+import {isArray} from "@banquette/utils-type";
 import { TableProcessorTag, TableApiEvents } from "../constant";
 import { TableResponseEvent } from "../event/table-response.event";
 
@@ -9,7 +9,7 @@ import { TableResponseEvent } from "../event/table-response.event";
 // It's then replace by "/* @__PURE__ */" at the end of the build.
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useBuiltInResponseTransformer = /**!PURE*/ (() => {
-    return () => {
+    return (): UnsubscribeFunction => {
         const transformService = /**!PURE*/ Injector.Get(TransformService);
         const modelMetadata = /**!PURE*/ Injector.Get(ModelMetadataService);
 
@@ -33,7 +33,7 @@ export const useBuiltInResponseTransformer = /**!PURE*/ (() => {
                 assignResult();
             }
         }
-        Injector.Get(EventDispatcherService).subscribe<TableResponseEvent>(
+        return Injector.Get(EventDispatcherService).subscribe<TableResponseEvent>(
             TableApiEvents.BeforeResponse,
             onBeforeResponse,
             0,

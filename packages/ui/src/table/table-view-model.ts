@@ -6,7 +6,7 @@ import { Exception } from "@banquette/exception";
 import { HttpResponse } from "@banquette/http";
 import { proxy } from "@banquette/utils-misc";
 import { uniqueId } from "@banquette/utils-random";
-import { isNullOrUndefined, isObject, isString, isType, isUndefined } from "@banquette/utils-type";
+import {isNullOrUndefined, isObject, isString, isType, isUndefined, VoidCallback} from "@banquette/utils-type";
 import { UiConfigurationSymbol } from "../config";
 import { RemoteModule } from "../misc/remote/remote.module";
 import { UiConfigurationInterface } from "../ui-configuration.interface";
@@ -128,6 +128,8 @@ export class TableViewModel {
      */
     private serverResultsMap: Record<number, ServerResult> = {};
 
+    private unsubscribeFunctions: VoidCallback[] = [];
+
     public constructor(@Inject(ConfigurationService) private configuration: ConfigurationService,
                        @Inject(EventDispatcherService) private globalDispatcher: EventDispatcherService,
                        @Inject(PaginationModule) pagination: PaginationModule) {
@@ -135,15 +137,22 @@ export class TableViewModel {
         this.pagination = pagination;
         this.filtering = new FilteringModule();
         this.ordering = new OrderingModule();
-        this.pagination.onChange(proxy(this.onModuleConfigurationChange, this));
-        this.filtering.onChange(proxy(this.onModuleConfigurationChange, this));
-        this.ordering.onChange(proxy(this.onOrderingConfigurationChange, this));
-        this.ordering.onInvalidate(proxy(this.onOrderingConfigurationChange, this));
+        this.unsubscribeFunctions.push(this.pagination.onChange(proxy(this.onModuleConfigurationChange, this)));
+        this.unsubscribeFunctions.push(this.filtering.onChange(proxy(this.onModuleConfigurationChange, this)));
+        this.unsubscribeFunctions.push(this.ordering.onChange(proxy(this.onOrderingConfigurationChange, this)));
+        this.unsubscribeFunctions.push(this.ordering.onInvalidate(proxy(this.onOrderingConfigurationChange, this)));
         this.bindApiListeners();
 
-        useBuiltInResponseTransformer();
-        useBuiltInRequestListener();
-        useBuiltInResponseListener();
+        this.unsubscribeFunctions.push(useBuiltInResponseTransformer());
+        this.unsubscribeFunctions.push(useBuiltInRequestListener());
+        this.unsubscribeFunctions.push(useBuiltInResponseListener());
+    }
+
+    public dispose(): void {
+        for (const unsubscribe of this.unsubscribeFunctions) {
+            unsubscribe();
+        }
+        this.unsubscribeFunctions = [];
     }
 
     /**
@@ -280,7 +289,7 @@ export class TableViewModel {
      */
     private bindApiListeners(): void {
         const config = this.configuration.get<UiConfigurationInterface>(UiConfigurationSymbol);
-        this.globalDispatcher.subscribe(ApiEvents.BeforeRequest, (event: ApiRequestEvent) => {
+        this.unsubscribeFunctions.push(this.globalDispatcher.subscribe(ApiEvents.BeforeRequest, (event: ApiRequestEvent) => {
             const serverResult = this.getServerResult(event.httpEvent.request.response);
             if (serverResult === null) {
                 return ;
@@ -295,10 +304,9 @@ export class TableViewModel {
             }
             // Stopping the propagation is cleaner but the Api would have ignored the query anyway as it's a GET request.
             event.stopPropagation();
-        }, config.table.apiEventsPriorities.beforeRequest, [TableTag], [ApiProcessorTag]);
+        }, config.table.apiEventsPriorities.beforeRequest, [TableTag], [ApiProcessorTag]));
 
-
-        this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiBeforeResponseEvent) => {
+        this.unsubscribeFunctions.push(this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiBeforeResponseEvent) => {
             const serverResult = this.getServerResult(event.httpEvent.request.response);
             if (serverResult === null) {
                 return ;
@@ -313,11 +321,11 @@ export class TableViewModel {
             }
             // Very important to stop the propagation so the built-in processor from the api package is not executed.
             event.stopPropagation();
-        }, config.table.apiEventsPriorities.beforeResponse, [TableTag], [ApiProcessorTag]);
+        }, config.table.apiEventsPriorities.beforeResponse, [TableTag], [ApiProcessorTag]));
 
-        this.globalDispatcher.subscribe(ApiEvents.RequestSuccess, (event: ApiBeforeResponseEvent) => {
+        this.unsubscribeFunctions.push(this.globalDispatcher.subscribe(ApiEvents.RequestSuccess, (event: ApiBeforeResponseEvent) => {
             event.stopPropagation();
-        }, 1, [TableTag], [ApiProcessorTag]);
+        }, 1, [TableTag], [ApiProcessorTag]));
     }
 
     /**
