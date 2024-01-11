@@ -36,10 +36,10 @@
         "@banquette/utils-string": "workspace:^",
         "@banquette/utils-type": "workspace:^",
         "@banquette/validation": "workspace:^",
-        "@vue/reactivity": "^3.2.47",
-        "@vue/runtime-core": "^3.2.47",
+        "@vue/reactivity": "~3.2.47",
+        "@vue/runtime-core": "~3.2.47",
         "reflect-metadata": "^0.1.13",
-        "vue": "^3.2.47"
+        "vue": "~3.2.47"
     },
     "devDependencies": {
         "@types/node": "^18.15.11",

@@ -54,9 +54,9 @@
         "@banquette/vue-remix-icons": "workspace:^",
         "@banquette/vue-typescript": "workspace:^",
         "@popperjs/core": "^2.11.6",
-        "@vue/runtime-core": "^3.2.47",
+        "@vue/runtime-core": "~3.2.47",
         "@vueuse/core": "^9.3.0",
-        "vue": "^3.2.47"
+        "vue": "~3.2.47"
     },
     "devDependencies": {
         "@types/estree": "^1.0.0",
