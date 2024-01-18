@@ -274,7 +274,7 @@ export class FormModelBinder {
             let formContainer: FormGroupInterface = this.form;
             let modelContainer = this.model;
             let treeContainer: any = this.getModelTransformersTree(this.model.constructor);
-            let lastCtor = this.model.constructor;
+            let currentCtor = this.model.constructor;
             for (let i = 0; i < pathParts.length; ++i) {
                 let treeChildName = treeContainer.transformer.type === FormArrayTransformerSymbol ? '*' : pathParts[i];
                 treeContainer = treeContainer.children[treeChildName];
@@ -284,17 +284,17 @@ export class FormModelBinder {
                 if (i > 0) {
                     formContainer = (formContainer as FormGroupInterface).get<FormGroupInterface>(pathParts[i - 1]);
                     modelContainer = modelContainer[pathParts[i - 1]];
-                    if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
-                        lastCtor = treeContainer.ctor;
-                    }
                 }
-                pushContext(treeChildName === '*' ? Array : lastCtor, pathParts[i], modelContainer);
+                pushContext(treeChildName === '*' ? Array : currentCtor, pathParts[i], modelContainer);
 
                 // Required if a change is made to an object used as value in a FormControl.
                 // If we do nothing the "path" will lead the binder deep inside the value of the FormControl,
                 // which is not a valid form tree, so we must stop when a FormControl is reached.
                 if (treeContainer.transformer.type === FormControlTransformerSymbol) {
                     break;
+                }
+                if (treeContainer.transformer.type === FormObjectTransformerSymbol) {
+                    currentCtor = treeContainer.ctor;
                 }
             }
             this.mutateForm(() => {
