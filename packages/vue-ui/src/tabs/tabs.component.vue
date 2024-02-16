@@ -1,5 +1,3 @@
-<style src="./tabs.component.css" scoped></style>
-<template src="./tabs.component.html" ></template>
 <script lang="ts">
 import { enumToArray } from "@banquette/utils-array";
 import { getElementOffset } from "@banquette/utils-dom";
@@ -8,9 +6,9 @@ import { VoidCallback } from "@banquette/utils-type";
 import { Component, Expose, Prop, TemplateRef, Themeable, Watch, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { useResizeObserver } from "@vueuse/core";
 import { TeleportDirective } from "../misc";
-import { BtTab as BtTabValue } from "./tab";
 import { TabsDirection } from "./tab/constant";
 import { ThemeConfiguration } from "./theme-configuration";
+import {BtTab as BtTabValue} from "./tab";
 
 type BtTab = InstanceType<typeof BtTabValue>;
 
@@ -260,3 +258,16 @@ export default class BtTabs extends Vue {
     }
 }
 </script>
+<style src="./tabs.component.css" scoped></style>
+<template>
+    <div class="bt-tabs" :data-direction="direction" v-bt-bind-theme>
+        <div class="toggles-wrapper">
+            <!-- <bt-tab> slots will be teleported here -->
+            <ul ref="toggles" class="toggles" v-bt-teleport="{ref: 'toggle', target: getTabs()}"></ul>
+            <div class="focus-indicator" ref="indicator"></div>
+        </div>
+        <div ref="content" class="content">
+            <slot></slot>
+        </div>
+    </div>
+</template>

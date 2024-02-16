@@ -1,6 +1,0 @@
-<div class="bt-tab" v-show="focused">
-    <li ref="toggle" class="bt-tab-toggle" :class="{focused, disabled}" @click="focus()">
-        <slot name="title">{{ title }}</slot>
-    </li>
-    <slot v-if="preRender || focused"></slot>
-</div>
