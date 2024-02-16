@@ -1,7 +1,7 @@
 import { EventArg } from "@banquette/event";
 
-export class ActionErrorEventArg extends EventArg {
-    public constructor(public readonly error: any) {
+export class ActionErrorEventArg<E = unknown> extends EventArg {
+    public constructor(public readonly error: E) {
         super();
     }
 }

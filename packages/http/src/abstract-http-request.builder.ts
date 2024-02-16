@@ -18,6 +18,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
     protected _params?: Record<string, UrlParameterInterface>;
     protected _tags?: symbol[];
     protected _extras?: Record<string, any>;
+    protected _cacheInMemory: boolean = false;
 
     /**
      * Set the method to GET (the default value).
@@ -257,6 +258,14 @@ export abstract class AbstractRequestBuilder<ResultType> {
      */
     public clearExtras(): this {
         this._extras = {};
+        return this;
+    }
+
+    /**
+     * Set the url to call.
+     */
+    public cacheInMemory(cache: boolean): this {
+        this._cacheInMemory = cache;
         return this;
     }
 

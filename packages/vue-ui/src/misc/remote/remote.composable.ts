@@ -19,13 +19,14 @@ export class RemoteComposable {
     @Prop({type: String as PropType<HttpMethod>, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
     @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public urlParams!: Record<string, Primitive>;
     @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public headers!: Record<string, Primitive>;
+    @Prop({type: Boolean, default: false}) public cacheInMemory!: boolean;
 
     /**
      * The actual module instance.
      */
     public module!: RemoteModule;
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'cacheInMemory'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
     private syncConfigurationProps(): void {
         this.module.updateConfiguration({
             url: this.url,
@@ -33,7 +34,8 @@ export class RemoteComposable {
             method: this.method,
             urlParams: this.urlParams,
             headers: this.headers,
-            model: this.model
+            model: this.model,
+            cacheInMemory: this.cacheInMemory
         });
     }
 }

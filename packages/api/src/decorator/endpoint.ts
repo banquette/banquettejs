@@ -1,9 +1,9 @@
-import { Injector } from "@banquette/dependency-injection";
-import { UsageException } from "@banquette/exception";
-import { HttpMethod } from "@banquette/http";
-import { isConstructor, Constructor, StringEnum } from "@banquette/utils-type";
-import { ApiEndpointStorageService } from "../api-endpoint-storage.service";
-import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "../api-endpoint.options";
+import {Injector} from "@banquette/dependency-injection";
+import {UsageException} from "@banquette/exception";
+import {HttpMethod} from "@banquette/http";
+import {Constructor, isConstructor, isString, StringEnum} from "@banquette/utils-type";
+import {ApiEndpointStorageService} from "../api-endpoint-storage.service";
+import {ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions} from "../api-endpoint.options";
 
 type EndpointDecoratorOptions = Omit<ApiEndpointOptionsWithIdentifiers, 'ctor'> & {group?: string|string[]};
 
@@ -19,6 +19,10 @@ export function Endpoint(optionsOrName: EndpointDecoratorOptions|string, url?: s
         if (metadata === null) {
             metadata = Injector.Get(ApiEndpointStorageService);
         }
-        metadata.registerEndpoint(optionsOrName as any, url as any, method, params, ctor);
+        if (isString(optionsOrName)) {
+            metadata.registerEndpoint(optionsOrName, url as string, method, params, ctor);
+            return;
+        }
+        metadata.registerEndpoint(optionsOrName, ctor);
     };
 }

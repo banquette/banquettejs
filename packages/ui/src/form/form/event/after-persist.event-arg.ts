@@ -1,7 +1,7 @@
 import { EventArg } from "@banquette/event";
 
-export class AfterPersistEventArg extends EventArg {
-    public constructor(public readonly payload: any) {
+export class AfterPersistEventArg<P = unknown> extends EventArg {
+    public constructor(public readonly payload: P) {
         super();
     }
 }

@@ -1,6 +1,6 @@
 import { Service } from "@banquette/dependency-injection";
 import { HttpMethod } from "@banquette/http";
-import { isFunction, isNullOrUndefined, isString, isUndefined, Constructor, StringEnum } from "@banquette/utils-type";
+import {isFunction, isNullOrUndefined, isString, isUndefined, Constructor, StringEnum, isObject, isType} from "@banquette/utils-type";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointCollection } from "./api-endpoint-collection";
 import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "./api-endpoint.options";
@@ -25,21 +25,36 @@ export class ApiEndpointStorageService {
     /**
      * Register an api endpoint.
      */
-    public registerEndpoint(endpoint: ApiEndpointOptionsWithIdentifiers): void;
+    public registerEndpoint(endpoint: ApiEndpointOptionsWithIdentifiers, ctor?: Constructor|null): void;
     public registerEndpoint(name: string, endpoint: ApiEndpoint, ctor?: Constructor|null): void;
     public registerEndpoint(name: string, url: string, method?: StringEnum<HttpMethod>, params?: Record<string, ApiEndpointParameterOptions>, ctor?: Constructor|null): void;
     public registerEndpoint(optionsOrName: ApiEndpointOptionsWithIdentifiers|string,
-                            urlOrEndpoint?: string|ApiEndpoint,
+                            urlOrEndpointOrCtor?: string|ApiEndpoint|Constructor|null,
                             methodOrCtor?: StringEnum<HttpMethod>|Constructor|null,
                             params?: Record<string, ApiEndpointParameterOptions>,
                             ctor?: Constructor|null): void {
-        ctor = this.resolveCtor(!isString(optionsOrName) ? optionsOrName.ctor : (isFunction(methodOrCtor) ? methodOrCtor : ctor));
+        if (isType<ApiEndpointOptionsWithIdentifiers>(optionsOrName, () => isObject(optionsOrName))) {
+            methodOrCtor = urlOrEndpointOrCtor as (Constructor|null);
+        } else if (urlOrEndpointOrCtor instanceof ApiEndpoint) {
+            optionsOrName = {
+                ...urlOrEndpointOrCtor,
+                name: optionsOrName as string
+            };
+        } else {
+            optionsOrName = {
+                name: optionsOrName as string,
+                url: urlOrEndpointOrCtor as string,
+                method: methodOrCtor as StringEnum<HttpMethod>,
+                params: params || {}
+            };
+        }
+        ctor = this.resolveCtor(isFunction(methodOrCtor) ? methodOrCtor : ctor);
         let collection = this.collectionsMap.get(ctor);
         if (isUndefined(collection)) {
             collection = new ApiEndpointCollection();
             this.collectionsMap.set(ctor, collection);
         }
-        collection.registerEndpoint(optionsOrName as any, urlOrEndpoint as any, methodOrCtor as any, params);
+        collection.registerEndpoint(optionsOrName);
     }
 
     /**

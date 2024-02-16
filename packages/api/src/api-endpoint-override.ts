@@ -21,8 +21,11 @@ export class ApiEndpointOverride {
      * @param responseType      Format of the response.
      * @param mimeType          MimeType of the payload.
      * @param tags              Tags that will be sent with emitted events.
-     * @param extras            Any additional data you want to associated with the request.
+     * @param extras            Any additional data you want to associate with the request.
      *                          This object will not be sent with the request.
+     * @param cacheInMemory     If `true`, and if the request is a GET request, it will only be called once.
+     *                          If a subsequent request is made to the exact same url, the cache version will be used.
+     *                          The response is only stored in memory, no persistence.
      */
     public constructor(public method?: StringEnum<HttpMethod>,
                        public params?: Record<string, Primitive>,
@@ -36,7 +39,8 @@ export class ApiEndpointOverride {
                        public payloadType?: symbol,
                        public responseType?: symbol,
                        public tags?: symbol|symbol[],
-                       public extras?: Record<string, any>) {
+                       public extras?: Record<string, any>,
+                       public cacheInMemory?: boolean) {
 
     }
 }

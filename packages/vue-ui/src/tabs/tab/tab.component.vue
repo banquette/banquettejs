@@ -1,4 +1,3 @@
-<template src="./tab.component.html" ></template>
 <script lang="ts">
 import { UsageException } from "@banquette/exception";
 import { Component, Computed, Expose, Prop, Vue } from "@banquette/vue-typescript";
@@ -85,3 +84,11 @@ export default class BtTab extends Vue {
     }
 }
 </script>
+<template>
+    <div class="bt-tab" v-show="focused">
+        <li ref="toggle" class="bt-tab-toggle" :class="{focused, disabled}" @click="focus()">
+            <slot name="title">{{ title }}</slot>
+        </li>
+        <slot v-if="preRender || focused"></slot>
+    </div>
+</template>

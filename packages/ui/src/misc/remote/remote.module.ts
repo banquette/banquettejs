@@ -70,6 +70,11 @@ export class RemoteModule {
     private allowMultiple: boolean = false;
 
     /**
+     * If `true`, and if a GET request, a given url will only be called once, and its response will be stored in memory.
+     */
+    private cacheInMemory: boolean = false;
+
+    /**
      * Last response generated from the send().
      */
     private response: HttpResponse<any>|null = null;
@@ -96,7 +101,7 @@ export class RemoteModule {
      */
     public updateConfiguration(configuration: Partial<RemoteConfigurationInterface>): void {
         let changed = false;
-        for (const prop of ['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'payloadType', 'responseType', 'allowMultiple']) {
+        for (const prop of ['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'payloadType', 'responseType', 'allowMultiple', 'cacheInMemory']) {
             const newValue = !isUndefined((configuration as any)[prop]) ? (configuration as any)[prop] : (this as any)[prop];
             if (!changed && !areEqual((this as any)[prop], newValue)) {
                 changed = true;
@@ -124,6 +129,7 @@ export class RemoteModule {
             .headers(extend({}, [this.headers, headers]))
             .payload(payload, this.payloadType)
             .responseType(this.responseType)
+            .cacheInMemory(this.cacheInMemory)
             .tags(tags)
             .getRequest();
         this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Request, new RemoteModuleRequestEventArg(request));

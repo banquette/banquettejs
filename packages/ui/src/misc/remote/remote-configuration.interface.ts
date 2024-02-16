@@ -51,4 +51,9 @@ export interface RemoteConfigurationInterface {
      * If `false`, cancel any running request when `send()` is called.
      */
     allowMultiple: boolean;
+
+    /**
+     * If `true`, a given url will only be called once, and its response will be stored in memory.
+     */
+    cacheInMemory: boolean;
 }

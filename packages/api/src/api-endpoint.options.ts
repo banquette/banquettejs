@@ -86,4 +86,9 @@ export interface ApiEndpointOptions {
      * Any additional data that will be added to the request.
      */
     extras?: Record<string, any>;
+
+    /**
+     * If `true`, and if a GET request, a given url will only be called once, and its response will be stored in memory.
+     */
+    cacheInMemory?: boolean;
 }

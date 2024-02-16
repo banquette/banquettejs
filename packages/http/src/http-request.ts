@@ -104,6 +104,9 @@ export class HttpRequest {
      * @param tags              Tags that will be sent with emitted events.
      * @param extras            Any additional data you want to associated with the request.
      *                          This object will not be sent with the request.
+     * @param cacheInMemory     If `true`, and if the request is a GET request, it will only be called once.
+     *                          If a subsequent request is made to the exact same url, the cache version will be used.
+     *                          The response is only stored in memory, no persistence.
      */
     public constructor(
         public method: StringEnum<HttpMethod>,
@@ -120,12 +123,17 @@ export class HttpRequest {
         public withCredentials: boolean,
         public mimeType: string | null,
         public tags: symbol[],
-        public extras: Record<string, any>
+        public extras: Record<string, any>,
+        public cacheInMemory: boolean
     ) {
         this.headers =
             headers instanceof HeadersBag
                 ? headers
                 : HeadersBag.FromMap(headers);
+        if (cacheInMemory && method !== HttpMethod.GET) {
+            console.warn('Only GET request can be cached.');
+            this.cacheInMemory = false;
+        }
     }
 
     public incrementTryCount(): void {
@@ -209,7 +217,8 @@ export class HttpRequest {
             this.withCredentials,
             this.mimeType,
             this.tags,
-            cloneDeep(this.extras)
+            cloneDeep(this.extras),
+            this.cacheInMemory
         );
     }
 
