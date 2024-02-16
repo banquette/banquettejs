@@ -96,9 +96,14 @@ export class ApiEndpoint {
      */
     public readonly extras: Record<string, any> = {};
 
+    /**
+     * If `true`, and if a GET request, a given url will only be called once, and its response will be stored in memory.
+     */
+    private readonly cacheInMemory: boolean = false;
+
     public constructor(options: ApiEndpointOptions|string) {
         if (isString(options)) {
-            options = {url: options};
+            options = {url: options} as ApiEndpointOptions
         }
         this.url = this.normalizeUrl(options.url);
         this.method = options.method || HttpMethod.GET;
@@ -106,6 +111,7 @@ export class ApiEndpoint {
         this.params = extend(this.buildParametersFromUrl(this.url), this.normalizeParameters(options.params), true);
         this.payloadType = options.payloadType || PayloadTypeJson;
         this.responseType = options.responseType || ResponseTypeJson;
+        this.cacheInMemory = options.cacheInMemory || false;
     }
 
     /**
@@ -149,6 +155,7 @@ export class ApiEndpoint {
             .headers(swap('headers', this.headers))
             .tags(swap('tags', this.tags))
             .extras(swap('extras', this.extras))
+            .cacheInMemory(swap('cacheInMemory', this.cacheInMemory))
             .getRequest();
     }
 

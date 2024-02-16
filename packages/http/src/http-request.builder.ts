@@ -29,6 +29,7 @@ export class HttpRequestBuilder extends AbstractRequestBuilder<HttpRequest> {
             mimeType: this._mimeType,
             tags: this._tags,
             extras: this._extras,
+            cacheInMemory: this._cacheInMemory
         });
     }
 

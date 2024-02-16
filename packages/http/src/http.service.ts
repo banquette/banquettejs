@@ -62,6 +62,11 @@ export class HttpService {
      */
     private adapterIdentifier!: Constructor<AdapterInterface>;
 
+    /**
+     * Local requests cache.
+     */
+    private cache: Record<string, AdapterResponse> = {};
+
     constructor(
         @Inject(ConfigurationService) private config: ConfigurationService,
         @Inject(EventDispatcherService)
@@ -244,37 +249,7 @@ export class HttpService {
             queuedRequest.triesLeft--;
             queuedRequest.isExecuting = true;
             this.runningRequestsCount++;
-
-            // Before request.
-            await this.ensureDispatchSucceeded(
-                this.eventDispatcher.dispatchWithErrorHandling(
-                    HttpEvents.BeforeRequest,
-                    new RequestEvent(queuedRequest.request),
-                    true,
-                    queuedRequest.request.tags
-                )
-            );
-            HttpService.EnsureValidRequest(queuedRequest.request);
-            queuedRequest.tryCount++;
-            queuedRequest.request.incrementTryCount();
-            const adapterPromise: ObservablePromise = adapter.execute(
-                queuedRequest.request as AdapterRequest
-            );
-            adapterPromise.progress(queuedRequest.progress);
-            const adapterResponse: AdapterResponse = await adapterPromise;
-
-            // Before response.
-            await this.ensureDispatchSucceeded(
-                this.eventDispatcher.dispatchWithErrorHandling(
-                    HttpEvents.BeforeResponse,
-                    new BeforeResponseEvent(
-                        adapterResponse,
-                        queuedRequest.request as AdapterRequest
-                    ),
-                    true,
-                    queuedRequest.request.tags
-                )
-            );
+            const adapterResponse: AdapterResponse = await this.executeRequestWithCache(queuedRequest, adapter);
             this.handleRequestResponse(adapterResponse, queuedRequest);
         } catch (e) {
             this.handleRequestFailure(
@@ -285,6 +260,51 @@ export class HttpService {
             queuedRequest.isExecuting = false;
             this.runningRequestsCount--;
         }
+    }
+
+    private async executeRequestWithCache(queuedRequest: QueuedRequestInterface<any>, adapter: AdapterInterface): Promise<AdapterResponse> {
+        if (queuedRequest.request.cacheInMemory) {
+            const cacheKey = queuedRequest.request.staticUrl;
+            if (this.cache[cacheKey]) {
+                return this.cache[cacheKey];
+            }
+        }
+        // Before request.
+        await this.ensureDispatchSucceeded(
+            this.eventDispatcher.dispatchWithErrorHandling(
+                HttpEvents.BeforeRequest,
+                new RequestEvent(queuedRequest.request),
+                true,
+                queuedRequest.request.tags
+            )
+        );
+        HttpService.EnsureValidRequest(queuedRequest.request);
+
+        queuedRequest.tryCount++;
+        queuedRequest.request.incrementTryCount();
+        const adapterPromise: ObservablePromise = adapter.execute(
+            queuedRequest.request as AdapterRequest
+        );
+        adapterPromise.progress(queuedRequest.progress);
+        const adapterResponse = await adapterPromise;
+
+        // Before response.
+        await this.ensureDispatchSucceeded(
+            this.eventDispatcher.dispatchWithErrorHandling(
+                HttpEvents.BeforeResponse,
+                new BeforeResponseEvent(
+                    adapterResponse,
+                    queuedRequest.request as AdapterRequest
+                ),
+                true,
+                queuedRequest.request.tags
+            )
+        );
+        if (queuedRequest.request.cacheInMemory) {
+            const cacheKey = queuedRequest.request.staticUrl;
+            this.cache[cacheKey] = adapterResponse;
+        }
+        return adapterResponse;
     }
 
     /**

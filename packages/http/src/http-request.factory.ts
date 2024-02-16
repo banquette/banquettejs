@@ -21,6 +21,7 @@ export interface HttpRequestFactoryConfig {
     mimeType?: string | null;
     tags?: symbol | symbol[] | null;
     extras?: any;
+    cacheInMemory?: boolean;
 }
 
 export class HttpRequestFactory {
@@ -49,7 +50,8 @@ export class HttpRequestFactory {
             input.withCredentials || false,
             input.mimeType || null,
             ensureArray(input.tags || []),
-            input.extras || {}
+            input.extras || {},
+            input.cacheInMemory || false
         );
     }
 }
