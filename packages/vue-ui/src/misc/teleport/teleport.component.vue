@@ -1,7 +1,6 @@
 <script lang="ts">
 import { Component, Prop, Render, Vue } from "@banquette/vue-typescript";
-import { VNodeChild } from "@vue/runtime-core";
-import { Teleport, openBlock, createElementBlock, createBlock, createElementVNode, renderSlot, PropType } from "vue";
+import {Teleport, openBlock, createElementBlock, createBlock, createElementVNode, renderSlot, PropType, VNode} from "vue";
 
 let MaxId: number = 0;
 
@@ -16,7 +15,7 @@ export default class BtTeleport extends Vue {
 
     private wrapperId: string = '__bt-teleport-' + MaxId++;
 
-    @Render() public render(context: any): VNodeChild {
+    @Render() public render(context: any): VNode {
         if (this.disabled || !this.to) {
             return renderSlot(context.$slots, 'default');
         }

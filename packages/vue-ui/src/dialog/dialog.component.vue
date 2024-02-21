@@ -180,7 +180,7 @@ export default class BtDialog extends Vue {
         this.freeDraggable();
     }
 
-    @Watch('id', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('id', {immediate: ImmediateStrategy.BeforeMount})
     public onIdChange(newValue: string|null, oldValue: string|null) {
         if (oldValue) {
             const pos = UsedIds.indexOf(oldValue);

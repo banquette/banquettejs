@@ -153,7 +153,7 @@ export default class BtFormFile extends BtAbstractVueForm<FileViewDataInterface,
         this.vm.start(file);
     }
 
-    @Watch(['multiple', 'autoStart', 'accept', 'maxIndividualSize', 'maxTotalSize', 'ignoreNonUploadedFiles'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch(['multiple', 'autoStart', 'accept', 'maxIndividualSize', 'maxTotalSize', 'ignoreNonUploadedFiles'], {immediate: ImmediateStrategy.BeforeMount})
     private syncConfigurationProps(): void {
         this.vm.maxIndividualSize = this.maxIndividualSize;
         this.vm.maxTotalSize = this.maxTotalSize;

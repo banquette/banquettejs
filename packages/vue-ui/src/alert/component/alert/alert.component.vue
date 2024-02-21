@@ -121,7 +121,7 @@ export default class BtAlert extends Vue {
         this.$emit('close');
     }
 
-    @Watch('ttl', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('ttl', {immediate: ImmediateStrategy.BeforeMount})
     public onTTLChange(newValue: number|null) {
         if (newValue === null) {
             this.timeLeft = null;

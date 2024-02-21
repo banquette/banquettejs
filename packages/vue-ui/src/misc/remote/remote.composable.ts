@@ -26,7 +26,7 @@ export class RemoteComposable {
      */
     public module!: RemoteModule;
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'cacheInMemory'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'cacheInMemory'], {immediate: ImmediateStrategy.BeforeMount})
     private syncConfigurationProps(): void {
         this.module.updateConfiguration({
             url: this.url,

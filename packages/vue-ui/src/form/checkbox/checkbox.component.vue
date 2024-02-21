@@ -164,7 +164,7 @@ export default class BtFormCheckbox extends BtAbstractVueForm<CheckboxViewDataIn
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable', 'valueIdentifier'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable', 'valueIdentifier'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
         this.v.label = this.label;
         this.vm.valueIdentifier = this.valueIdentifier;
@@ -173,7 +173,7 @@ export default class BtFormCheckbox extends BtAbstractVueForm<CheckboxViewDataIn
         this.vm.uncheckable = this.uncheckable;
     }
 
-    @Watch('checked', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('checked', {immediate: ImmediateStrategy.BeforeMount})
     private onCheckedChange(newValue: boolean|null): void {
         if (newValue) {
             this.vm.check();

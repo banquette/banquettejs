@@ -59,7 +59,7 @@ export class BaseInputComposable implements HeadlessInterface<BaseInputViewDataI
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['label', 'placeholder', 'help', 'floatingLabel', 'floatingErrors', 'floatingHelp', 'required', 'debug'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch(['label', 'placeholder', 'help', 'floatingLabel', 'floatingErrors', 'floatingHelp', 'required', 'debug'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
         this.viewData.label = this.label;
         this.viewData.placeholder = this.placeholder;
