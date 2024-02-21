@@ -4,7 +4,6 @@ import { getBaseConfig } from '../../vite.config';
 
 export default defineConfig(extend(getBaseConfig('vue-typescript'), {
     build: {
-        minifiy: false,
         rollupOptions: {
             external: ['vue'],
             output: {
