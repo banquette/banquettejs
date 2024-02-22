@@ -13,3 +13,4 @@ export default class BtFormHidden extends BtAbstractVueForm<HeadlessControlViewD
     }
 }
 </script>
+<template></template>
