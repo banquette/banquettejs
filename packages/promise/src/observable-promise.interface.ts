@@ -7,9 +7,9 @@ export interface ObservablePromiseInterface<CompleteT>
      * Attaches callbacks for the resolution, rejection and/or progress events of the promise.
      */
     then<ResultT = CompleteT, RejectT = never, ProgressT = never>(
-        onResolve?: onResolveCallback<CompleteT, ResultT> | null,
-        onReject?: onRejectCallback<RejectT> | null,
-        onProgress?: onProgressCallback<ProgressT> | null,
+        onResolve?: onResolveCallback<CompleteT, ResultT> | undefined | null,
+        onReject?: onRejectCallback<RejectT> | undefined | null,
+        onProgress?: onProgressCallback<ProgressT> | undefined | null,
         progressTypes?: Array<Constructor>
     ): ObservablePromiseInterface<ResultT | RejectT>;
 

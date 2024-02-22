@@ -7,7 +7,6 @@ import { ProgressObserverInterface } from './progress-observer.interface';
 import { PromiseEventType } from './promise-event-type';
 import { PromiseObserverInterface } from './promise-observer.interface';
 import { PromiseStatus } from './promise-status';
-import { ThenableInterface } from './thenable.interface';
 import { ExecutorFunction, onFinallyCallback, onRejectCallback, onResolveCallback, ProgressCallback, RejectCallback, ResolveCallback, } from './types';
 
 /**
@@ -414,7 +413,7 @@ export class ObservablePromise<CompleteT = any>
         }
         return this.then(
             (value: CompleteT) => value,
-            (reason: any): RejectT | ThenableInterface<RejectT> => {
+            (reason: any): RejectT | PromiseLike<RejectT> => {
                 const pos: number | null = isObject(reason)
                     ? types.indexOf(reason.constructor)
                     : null;
@@ -440,7 +439,7 @@ export class ObservablePromise<CompleteT = any>
      * Create a resolved promise.
      */
     public static Resolve<T>(
-        value?: T | ThenableInterface<T>
+        value?: T | PromiseLike<T>
     ): ObservablePromise<T> {
         return new ObservablePromise<T>((resolve: ResolveCallback<T>) => {
             resolve(value);
@@ -465,7 +464,7 @@ export class ObservablePromise<CompleteT = any>
      * All static methods normally start with an uppercase letter in Banquette.
      */
     public static resolve<T>(
-        value: T | ThenableInterface<T>
+        value: T | PromiseLike<T>
     ): ObservablePromise<T> {
         return ObservablePromise.Resolve(value);
     }
@@ -485,7 +484,7 @@ export class ObservablePromise<CompleteT = any>
      * The items of the collection are not forced to be promises, any value can be given.
      */
     public static All<T>(
-        collection: Array<T | ThenableInterface<T>>
+        collection: Array<T | PromiseLike<T>>
     ): ObservablePromiseInterface<T[]> {
         return new ObservablePromise<T[]>(
             (resolve: ResolveCallback<T[]>, reject: RejectCallback) => {
@@ -515,7 +514,7 @@ export class ObservablePromise<CompleteT = any>
      * The items of the collection are not forced to be promises, any value can be given, non promise items will resolve immediately.
      */
     public static Any<T = any>(
-        collection: Array<T | ThenableInterface<T>>
+        collection: Array<T | PromiseLike<T>>
     ): ObservablePromiseInterface<T> {
         return new ObservablePromise<T>(
             (resolve: ResolveCallback<T>, reject: RejectCallback) => {

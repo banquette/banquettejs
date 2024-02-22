@@ -1,17 +1,15 @@
-import { ThenableInterface } from "./thenable.interface";
-
 /**
  * Executor callbacks types.
  */
-export type ResolveCallback<T> = (value?: T | ThenableInterface<T>) => void;
+export type ResolveCallback<T> = (value?: T | PromiseLike<T>) => void;
 export type RejectCallback = (reason?: any) => void;
 export type ProgressCallback = (value: any) => void;
 
 /**
  * Promise callbacks types.
  */
-export type onResolveCallback<CompleteT, ResultT> = (value: CompleteT) => ResultT | ThenableInterface<ResultT>;
-export type onRejectCallback<RejectT> = (reason: any) => RejectT | ThenableInterface<RejectT>;
+export type onResolveCallback<CompleteT, ResultT> = (value: CompleteT) => ResultT | PromiseLike<ResultT>;
+export type onRejectCallback<RejectT> = (reason: any) => RejectT | PromiseLike<RejectT>;
 export type onProgressCallback<T> = (value: T) => void;
 export type onFinallyCallback<T> = () => void;
 
