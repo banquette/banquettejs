@@ -4,6 +4,7 @@
 export * from './type/ajax';
 export * from './type/and';
 export * from './type/callback';
+export * from './type/callback-boolean';
 export * from './type/choice';
 export * from './type/compose';
 export * from './type/container';
