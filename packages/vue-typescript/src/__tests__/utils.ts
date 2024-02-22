@@ -12,8 +12,8 @@ export function getChildComponentInstance<T extends Constructor & {[VUE_CLASS_CO
         throw `"${ctor.name}" is not a vue-typescript component.`;
     }
     const component: any = wrapper.findComponent(opts);
-    if (isObject(component) && isObject(component.vm) && isObject(component.vm.$) && isObject(component.vm.$[COMPONENT_TS_INSTANCE])) {
-        return component.vm.$[COMPONENT_TS_INSTANCE];
+    if (isObject(component) && isObject(component.vm) && isObject(component.vm.$) && isObject(component.vm[COMPONENT_TS_INSTANCE])) {
+        return component.vm[COMPONENT_TS_INSTANCE];
     }
     throw `Unable to get the instance of "${ctor.name}".`;
 }

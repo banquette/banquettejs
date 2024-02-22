@@ -28,7 +28,7 @@ export function isComponentInstance(input: any): input is ComponentPublicInstanc
  * Test if the input is a `DecoratedComponentInstance`.
  */
 export function isDecoratedComponentInstance(input: any): input is DecoratedComponentInstance {
-    return isComponentInstance(input) && COMPONENT_TS_INSTANCE in input.$ && COMPONENT_CTOR in input.$.type;
+    return isComponentInstance(input) && COMPONENT_TS_INSTANCE in input && COMPONENT_CTOR in input.$.type;
 }
 
 /**

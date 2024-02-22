@@ -38,7 +38,7 @@ export function vueInstToVccOpts(inst: DecoratedComponentInstance|Vue): VccOpts 
  * Get the Typescript class behind a component instance.
  */
 export function vueInstToTsInst(inst: DecoratedComponentInstance): DecoratedComponentInstance {
-    return inst.$[COMPONENT_TS_INSTANCE];
+    return inst[COMPONENT_TS_INSTANCE];
 }
 
 /**

@@ -3,7 +3,16 @@ import { extend, getObjectKeys } from "@banquette/utils-object";
 import { isArray, isConstructor, isFunction, isNumeric, isObject, isString, isUndefined, Constructor } from "@banquette/utils-type";
 import { Component } from "@vue/runtime-core";
 import { buildSetupMethod } from "./build-setup-method";
-import { DECORATORS_METADATA_CACHE, DECORATORS_METADATA, PRE_CONSTRUCTION_HOOKS, HOOKS_MAP, COMPONENT_CTOR, COMPONENT_TS_INSTANCE, COMPONENT_VUE_INSTANCE } from "./constants";
+import {
+    DECORATORS_METADATA_CACHE,
+    DECORATORS_METADATA,
+    PRE_CONSTRUCTION_HOOKS,
+    HOOKS_MAP,
+    COMPONENT_CTOR,
+    COMPONENT_TS_INSTANCE,
+    COMPONENT_VUE_INSTANCE,
+    VUE_CLASS_COMPONENT_OPTIONS
+} from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
@@ -150,7 +159,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     options.emits = data.component.emits;
 
     // Setup
-    options.setup = buildSetupMethod(ctor, data);
+    options.setup = buildSetupMethod(ctor as Constructor & {[VUE_CLASS_COMPONENT_OPTIONS]: any}, data);
 
     // Injections
     const fullOptionsMap = vccOptionsMap.get(ctor);

@@ -1,54 +1,34 @@
-import { UsageException, ExceptionFactory } from "@banquette/exception";
-import { areEqual, noop, proxy, isServer } from "@banquette/utils-misc";
-import { cloneDeepPrimitive, getObjectKeys, getObjectValue } from "@banquette/utils-object";
-import { ensureString, isArray, isFunction, isNullOrUndefined, isString, isUndefined, Constructor, GenericCallback } from "@banquette/utils-type";
-import { ValidatorInterface } from "@banquette/validation";
-import { WritableComputedOptions, WritableComputedRef } from "@vue/reactivity";
-import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
-import {
-    SetupContext,
-    toRef,
-    Ref,
-    ref,
-    computed,
-    watch,
-    getCurrentInstance,
-    provide,
-    readonly,
-    inject,
-    isRef,
-    watchEffect,
-    onBeforeMount,
-    onMounted,
-    nextTick,
-    onBeforeUnmount,
-    toRaw,
-    ComponentInternalInstance,
-    onServerPrefetch
-} from "vue";
-import { ComponentAwareComposable } from "./component-aware.composable";
-import {HOOKS_MAP, COMPONENT_TS_INSTANCE, ACTIVE_VARIANTS, COMPONENT_VUE_INSTANCE, VUE_CLASS_COMPONENT_OPTIONS} from "./constants";
-import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
-import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
-import { ImportDecoratorOptions } from "./decorator/import.decorator";
-import { LifecycleHook } from "./decorator/lifecycle.decorator";
-import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
-import { WatchFunction, ImmediateStrategy, PrivateWatchOptions } from "./decorator/watch.decorator";
-import { ErrorPlaceholderComponent } from "./error-placeholder-component";
-import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
-import { matchVariant } from "./theme/utils/match-variants";
-import { splitVariantString } from "./theme/utils/split-variant-string";
-import { VueThemeVariant } from "./theme/vue-theme-variant";
-import { PrefixOrAlias } from "./type";
-import { anyToTsInst } from "./utils/converters";
-import { defineGetter } from "./utils/define-getter";
-import { defineRefProxy } from "./utils/define-ref-proxy";
-import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-metadata";
-import { getPropertyDescriptor } from "./utils/get-property-descriptor";
-import { isDecoratedComponentConstructor } from "./utils/guards";
-import { instantiate } from "./utils/instantiate";
-import { isFunctionGetterSafe } from "./utils/is-function-getter-safe";
-import { resolveImportPublicName } from "./utils/resolve-import-public-name";
+import {ExceptionFactory, UsageException} from "@banquette/exception";
+import {areEqual, isServer, noop, proxy} from "@banquette/utils-misc";
+import {cloneDeepPrimitive, getObjectKeys, getObjectValue} from "@banquette/utils-object";
+import {Constructor, ensureString, GenericCallback, isArray, isFunction, isNullOrUndefined, isString, isUndefined} from "@banquette/utils-type";
+import {ValidatorInterface} from "@banquette/validation";
+import {WritableComputedOptions, WritableComputedRef} from "@vue/reactivity";
+import {WatchOptions as VueWatchOptions} from "@vue/runtime-core";
+import {computed, inject, isRef, nextTick, onBeforeMount, onMounted, provide, readonly, Ref, ref, SetupContext, toRaw, toRef, watch, watchEffect} from "vue";
+import {ComponentAwareComposable} from "./component-aware.composable";
+import {ACTIVE_VARIANTS, COMPONENT_TS_INSTANCE, COMPONENT_VUE_INSTANCE, HOOKS_MAP, VUE_CLASS_COMPONENT_OPTIONS} from "./constants";
+import {ComponentMetadataInterface} from "./decorator/component-metadata.interface";
+import {ComputedDecoratorOptions} from "./decorator/computed.decorator";
+import {ImportDecoratorOptions} from "./decorator/import.decorator";
+import {LifecycleHook} from "./decorator/lifecycle.decorator";
+import {ThemeVarDecoratorOptions} from "./decorator/theme-var.decorator";
+import {ImmediateStrategy, PrivateWatchOptions, WatchFunction} from "./decorator/watch.decorator";
+import {ErrorPlaceholderComponent} from "./error-placeholder-component";
+import {getThemesForComponent} from "./theme/utils/get-themes-for-component";
+import {matchVariant} from "./theme/utils/match-variants";
+import {splitVariantString} from "./theme/utils/split-variant-string";
+import {VueThemeVariant} from "./theme/vue-theme-variant";
+import {PrefixOrAlias} from "./type";
+import {anyToTsInst} from "./utils/converters";
+import {defineGetter} from "./utils/define-getter";
+import {defineRefProxy} from "./utils/define-ref-proxy";
+import {getOrCreateComponentMetadata} from "./utils/get-or-create-component-metadata";
+import {getPropertyDescriptor} from "./utils/get-property-descriptor";
+import {isDecoratedComponentConstructor} from "./utils/guards";
+import {instantiate} from "./utils/instantiate";
+import {isFunctionGetterSafe} from "./utils/is-function-getter-safe";
+import {resolveImportPublicName} from "./utils/resolve-import-public-name";
 
 export function buildSetupMethod(ctor: Constructor & {[VUE_CLASS_COMPONENT_OPTIONS]: any}, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
