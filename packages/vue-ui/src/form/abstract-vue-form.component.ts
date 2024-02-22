@@ -171,7 +171,7 @@ export abstract class BtAbstractVueForm<
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['tabindex', 'disabled', 'busy'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch(['tabindex', 'disabled', 'busy'], {immediate: ImmediateStrategy.BeforeMount})
     protected onControlPropsChange(): void {
         this.v.control.tabIndex = this.tabindex;
         this.v.control.disabled = this.disabled;
@@ -181,7 +181,7 @@ export abstract class BtAbstractVueForm<
     /**
      * Track focus changes to emit the corresponding events.
      */
-    @Watch('v.control.focused', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('v.control.focused', {immediate: ImmediateStrategy.BeforeMount})
     protected onFocusChanged(newValue: boolean): void {
         this.$emit(newValue ? 'focus' : 'blur');
     }
@@ -197,7 +197,7 @@ export abstract class BtAbstractVueForm<
     /**
      * Watch the `v-model` value.
      */
-    @Watch('modelValue', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('modelValue', {immediate: ImmediateStrategy.BeforeMount})
     protected onModelValueChange(newValue: any): void {
         if (newValue !== UndefinedValue) {
             // Calling `getControl` ensures that a control is returned.

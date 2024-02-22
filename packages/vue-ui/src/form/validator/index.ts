@@ -18,6 +18,8 @@ export { default as BtValidatePattern } from './pattern-validator.component.vue'
 export { default as BtValidatePhone } from './phone-validator.component.vue';
 export { default as BtValidateSameAs } from './same-as-validator.component.vue';
 export { default as BtValidateUrl } from './url-validator.component.vue';
+export { default as BtValidateCallback } from './callback-validator.component.vue';
+export { default as BtValidateCallbackBoolean } from './callback-boolean-validator.component.vue';
 
 export * from './validator.component';
 export * from './container-validator.component';

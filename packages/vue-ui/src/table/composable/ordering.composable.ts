@@ -16,7 +16,7 @@ export class OrderingComposable {
      */
     public module!: OrderingModule;
 
-    @Watch(['name', 'direction', 'remote'], {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch(['name', 'direction', 'remote'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncPaginationConfigurationProps(): void {
         this.module.columnName = this.name;
         this.module.direction = this.direction;

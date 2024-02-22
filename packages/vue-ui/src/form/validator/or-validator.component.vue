@@ -1,8 +1,7 @@
 <script lang="ts">
 import { Or, Valid, ValidatorInterface } from "@banquette/validation";
 import { Component, Render } from "@banquette/vue-typescript";
-import { VNodeChild } from "@vue/runtime-core";
-import { renderSlot } from "vue";
+import {renderSlot, VNode} from "vue";
 import { BtContainerValidator } from "./container-validator.component";
 
 @Component('bt-validate-or')
@@ -18,7 +17,7 @@ export default class BtValidateOr extends BtContainerValidator {
         return Valid();
     }
 
-    @Render() public render(context: any): VNodeChild {
+    @Render() public render(context: any): VNode {
         return renderSlot(context.$slots, 'default');
     }
 }

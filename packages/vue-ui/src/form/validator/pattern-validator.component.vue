@@ -12,7 +12,7 @@ export default class BtValidatePattern extends BtValidator {
      * @inheritDoc
      */
     protected buildValidator(): ValidatorInterface {
-        return Pattern(new RegExp(this.pattern, this.flags), {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
+        return Pattern(new RegExp(this.pattern, this.flags!), {message: this.message, type: this.type, tags: this.tags, groups: this.groups});
     }
 }
 </script>

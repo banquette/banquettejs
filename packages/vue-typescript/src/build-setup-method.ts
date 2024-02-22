@@ -1,63 +1,42 @@
-import { UsageException, ExceptionFactory } from "@banquette/exception";
-import { areEqual, noop, proxy, isServer } from "@banquette/utils-misc";
-import { cloneDeepPrimitive, getObjectKeys, getObjectValue } from "@banquette/utils-object";
-import { ensureString, isArray, isFunction, isNullOrUndefined, isString, isUndefined, Constructor, GenericCallback } from "@banquette/utils-type";
-import { ValidatorInterface } from "@banquette/validation";
-import { WritableComputedOptions, WritableComputedRef } from "@vue/reactivity";
-import { WatchOptions as VueWatchOptions } from "@vue/runtime-core";
-import {
-    SetupContext,
-    toRef,
-    Ref,
-    ref,
-    computed,
-    watch,
-    getCurrentInstance,
-    provide,
-    readonly,
-    inject,
-    isRef,
-    watchEffect,
-    onBeforeMount,
-    onMounted,
-    nextTick,
-    onBeforeUnmount,
-    toRaw,
-    ComponentInternalInstance,
-    onServerPrefetch
-} from "vue";
-import { ComponentAwareComposable } from "./component-aware.composable";
-import { HOOKS_MAP, COMPONENT_TS_INSTANCE, ACTIVE_VARIANTS, COMPONENT_VUE_INSTANCE } from "./constants";
-import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
-import { ComputedDecoratorOptions } from "./decorator/computed.decorator";
-import { ImportDecoratorOptions } from "./decorator/import.decorator";
-import { LifecycleHook } from "./decorator/lifecycle.decorator";
-import { ThemeVarDecoratorOptions } from "./decorator/theme-var.decorator";
-import { WatchFunction, ImmediateStrategy, PrivateWatchOptions } from "./decorator/watch.decorator";
-import { ErrorPlaceholderComponent } from "./error-placeholder-component";
-import { getThemesForComponent } from "./theme/utils/get-themes-for-component";
-import { matchVariant } from "./theme/utils/match-variants";
-import { splitVariantString } from "./theme/utils/split-variant-string";
-import { VueThemeVariant } from "./theme/vue-theme-variant";
-import { PrefixOrAlias } from "./type";
-import { ComponentsCount } from "./utils/components-count";
-import { anyToTsInst } from "./utils/converters";
-import { defineGetter } from "./utils/define-getter";
-import { defineRefProxy } from "./utils/define-ref-proxy";
-import { getOrCreateComponentMetadata } from "./utils/get-or-create-component-metadata";
-import { getPropertyDescriptor } from "./utils/get-property-descriptor";
-import { isDecoratedComponentConstructor } from "./utils/guards";
-import { instantiate } from "./utils/instantiate";
-import { isFunctionGetterSafe } from "./utils/is-function-getter-safe";
-import { resolveImportPublicName } from "./utils/resolve-import-public-name";
+import {ExceptionFactory, UsageException} from "@banquette/exception";
+import {areEqual, isServer, noop, proxy} from "@banquette/utils-misc";
+import {cloneDeepPrimitive, getObjectKeys, getObjectValue} from "@banquette/utils-object";
+import {Constructor, ensureString, GenericCallback, isArray, isFunction, isNullOrUndefined, isString, isUndefined} from "@banquette/utils-type";
+import {ValidatorInterface} from "@banquette/validation";
+import {WritableComputedOptions, WritableComputedRef} from "@vue/reactivity";
+import {WatchOptions as VueWatchOptions} from "@vue/runtime-core";
+import {computed, inject, isRef, nextTick, onBeforeMount, onMounted, provide, readonly, Ref, ref, SetupContext, toRaw, toRef, watch, watchEffect} from "vue";
+import {ComponentAwareComposable} from "./component-aware.composable";
+import {ACTIVE_VARIANTS, COMPONENT_TS_INSTANCE, COMPONENT_VUE_INSTANCE, HOOKS_MAP, VUE_CLASS_COMPONENT_OPTIONS} from "./constants";
+import {ComponentMetadataInterface} from "./decorator/component-metadata.interface";
+import {ComputedDecoratorOptions} from "./decorator/computed.decorator";
+import {ImportDecoratorOptions} from "./decorator/import.decorator";
+import {LifecycleHook} from "./decorator/lifecycle.decorator";
+import {ThemeVarDecoratorOptions} from "./decorator/theme-var.decorator";
+import {ImmediateStrategy, PrivateWatchOptions, WatchFunction} from "./decorator/watch.decorator";
+import {ErrorPlaceholderComponent} from "./error-placeholder-component";
+import {getThemesForComponent} from "./theme/utils/get-themes-for-component";
+import {matchVariant} from "./theme/utils/match-variants";
+import {splitVariantString} from "./theme/utils/split-variant-string";
+import {VueThemeVariant} from "./theme/vue-theme-variant";
+import {PrefixOrAlias} from "./type";
+import {anyToTsInst} from "./utils/converters";
+import {defineGetter} from "./utils/define-getter";
+import {defineRefProxy} from "./utils/define-ref-proxy";
+import {getOrCreateComponentMetadata} from "./utils/get-or-create-component-metadata";
+import {getPropertyDescriptor} from "./utils/get-property-descriptor";
+import {isDecoratedComponentConstructor} from "./utils/guards";
+import {instantiate} from "./utils/instantiate";
+import {isFunctionGetterSafe} from "./utils/is-function-getter-safe";
+import {resolveImportPublicName} from "./utils/resolve-import-public-name";
 
-export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
+export function buildSetupMethod(ctor: Constructor & {[VUE_CLASS_COMPONENT_OPTIONS]: any}, data: ComponentMetadataInterface, rootProps: any = null, parentInst: any = null, importName?: string, prefixOrAlias: PrefixOrAlias = null) {
     return (props: any, context: SetupContext): any => {
         let inst = parentInst;
         let unmounted: boolean = false;
         let computedVersion: Ref = ref(1);
         const output: Record<any, any> = {};
-        let vueInst: any = getCurrentInstance() as ComponentInternalInstance & {[COMPONENT_TS_INSTANCE]: any};
+
         if (inst === null) {
             // Trick so Vue doesn't stop and show a warning because there is no render function on the component.
             // noop is assigned because this is not the function that will be used in reality.
@@ -67,7 +46,7 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
             try {
                 inst = new Proxy(instantiate(ctor, data.component), {
                     get(target: any, p: string, receiver: any): any {
-                        if (p[0] === '$' && inst[COMPONENT_VUE_INSTANCE][p]) {
+                        if (p[0] === '$' && COMPONENT_VUE_INSTANCE in inst && inst[COMPONENT_VUE_INSTANCE][p]) {
                             return inst[COMPONENT_VUE_INSTANCE][p];
                         }
                         return Reflect.get(target, p, receiver);
@@ -77,20 +56,11 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                 inst = new ErrorPlaceholderComponent('Failed to instantiate component\'s class. ' + ExceptionFactory.EnsureException(e, '').message);
                 data.renderMethod = 'render';
             }
-            // Set the Vue object we have to ensure an object is always available,
-            // but make it writable, so it can be overridden by the `beforeCreate()` hook.
-            Object.defineProperty(inst, COMPONENT_VUE_INSTANCE, {
-                enumerable: false,
-                configurable: true,
-                writable: true,
-                value: vueInst
-            });
 
-            // Make the Typescript instance available through the Vue instance.
-            Object.defineProperty(vueInst, COMPONENT_TS_INSTANCE, {
+            Object.defineProperty(ctor[VUE_CLASS_COMPONENT_OPTIONS], COMPONENT_TS_INSTANCE, {
                 enumerable: false,
                 configurable: false,
-                writable: false,
+                writable: true,
                 value: inst
             });
 
@@ -388,13 +358,15 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         }
 
         // Decorated hooks
-        for (const hook of getObjectKeys(data.hooks)) {
-            const hookMethod = HOOKS_MAP[hook as LifecycleHook];
-            if (isFunction(hookMethod)) {
-                // @ts-ignore
-                data.hooks[hook].forEach((methodName) => {
-                    hookMethod(proxy(inst[methodName], inst));
-                });
+        if (!isServer()) {
+            for (const hook of getObjectKeys(data.hooks)) {
+                const hookMethod = HOOKS_MAP[hook as LifecycleHook];
+                if (isFunction(hookMethod)) {
+                    // @ts-ignore
+                    data.hooks[hook].forEach((methodName) => {
+                        hookMethod(proxy(inst[methodName], inst));
+                    });
+                }
             }
         }
 
@@ -580,11 +552,9 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
                                     process();
                                 };
                                 initialCallConsumed = false;
-                                if (isServer() && (_watchData.options.immediate & ImmediateStrategy.SsrPrefetch) === ImmediateStrategy.SsrPrefetch) {
-                                    onServerPrefetch(initialProcess);
-                                } else if ((_watchData.options.immediate & ImmediateStrategy.BeforeMount) === ImmediateStrategy.BeforeMount) {
+                                if (!isServer() && (_watchData.options.immediate & ImmediateStrategy.BeforeMount) === ImmediateStrategy.BeforeMount) {
                                     onBeforeMount(initialProcess);
-                                } else if ((_watchData.options.immediate & ImmediateStrategy.Mounted) === ImmediateStrategy.Mounted) {
+                                } else if (!isServer() && (_watchData.options.immediate & ImmediateStrategy.Mounted) === ImmediateStrategy.Mounted) {
                                     onMounted(initialProcess);
                                 } else {
                                     nextTick().then(initialProcess);
@@ -637,12 +607,6 @@ export function buildSetupMethod(ctor: Constructor, data: ComponentMetadataInter
         }
 
         if (props !== null) {
-            onBeforeMount(() => ComponentsCount.count++);
-            onBeforeUnmount(() => {
-                unmounted = true;
-                ComponentsCount.count--;
-            });
-
             if (data.renderMethod !== null) {
                 return proxy(inst[data.renderMethod], inst);
             }

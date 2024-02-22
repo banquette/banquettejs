@@ -3,7 +3,16 @@ import { extend, getObjectKeys } from "@banquette/utils-object";
 import { isArray, isConstructor, isFunction, isNumeric, isObject, isString, isUndefined, Constructor } from "@banquette/utils-type";
 import { Component } from "@vue/runtime-core";
 import { buildSetupMethod } from "./build-setup-method";
-import { DECORATORS_METADATA_CACHE, DECORATORS_METADATA, PRE_CONSTRUCTION_HOOKS, HOOKS_MAP, COMPONENT_CTOR, COMPONENT_TS_INSTANCE, COMPONENT_VUE_INSTANCE } from "./constants";
+import {
+    DECORATORS_METADATA_CACHE,
+    DECORATORS_METADATA,
+    PRE_CONSTRUCTION_HOOKS,
+    HOOKS_MAP,
+    COMPONENT_CTOR,
+    COMPONENT_TS_INSTANCE,
+    COMPONENT_VUE_INSTANCE,
+    VUE_CLASS_COMPONENT_OPTIONS
+} from "./constants";
 import { ComponentMetadataInterface } from "./decorator/component-metadata.interface";
 import { ComponentDecoratorOptions } from "./decorator/component.decorator";
 import { ImportDecoratorOptions } from "./decorator/import.decorator";
@@ -127,7 +136,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     for (const hook of PRE_CONSTRUCTION_HOOKS) {
         if (isFunction(ctor.prototype[hook])) {
             options[hook] = function() {
-                ctor.prototype[hook].apply(this.$[COMPONENT_TS_INSTANCE]);
+                ctor.prototype[hook].apply(this[COMPONENT_TS_INSTANCE]);
             };
         }
     }
@@ -150,7 +159,7 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
     options.emits = data.component.emits;
 
     // Setup
-    options.setup = buildSetupMethod(ctor, data);
+    options.setup = buildSetupMethod(ctor as Constructor & {[VUE_CLASS_COMPONENT_OPTIONS]: any}, data);
 
     // Injections
     const fullOptionsMap = vccOptionsMap.get(ctor);
@@ -177,9 +186,17 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
         value: ctor
     });
 
+    // Object.defineProperty(options, '________________________TEST________________________________', {
+    //     enumerable: false,
+    //     configurable: true,
+    //     writable: false,
+    //     value: true
+    // });
+
     options.beforeCreate = function(this: DecoratedComponentInstance) {
+        // debugger;
         // Retrieve the Typescript instance from the Vue object.
-        const inst = this.$[COMPONENT_TS_INSTANCE];
+        const inst = options[COMPONENT_TS_INSTANCE];
 
         // In the context of `beforeCreate`, "this" is the Vue instance.
         // Keep a reference on it for closures below.
@@ -192,6 +209,14 @@ export function generateVccOpts(ctor: Constructor, data: ComponentMetadataInterf
             configurable: false,
             writable: false,
             value: this
+        });
+
+        // Make the Typescript instance available through the Vue instance.
+        Object.defineProperty(this, COMPONENT_TS_INSTANCE, {
+            enumerable: false,
+            configurable: false,
+            writable: false,
+            value: inst
         });
 
         /**

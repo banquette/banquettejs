@@ -220,7 +220,7 @@ describe('masks', () => {
             ), V.Callback(async (context: ValidationContextInterface) => {
                 await waitForDelay(20);
                 context.result.addViolation('email-callback');
-            }, [ASYNC_TAG])),
+            }, {tags: [ASYNC_TAG]})),
             tags: V.Compose(
                 V.Invalid({type: 'tags-max'}),
                 V.Foreach(

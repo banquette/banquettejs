@@ -279,7 +279,7 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
         }
     }
 
-    @Watch('validationStrategy', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('validationStrategy', {immediate: ImmediateStrategy.BeforeMount})
     private onValidationStrategyChange(newValue: FormValidationStrategy): void {
         switch (newValue) {
             case 'none' : this.vm.form.setValidationStrategy(ValidationStrategy.None); break ;
@@ -290,7 +290,7 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
         }
     }
 
-    @Watch('validationGroup', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('validationGroup', {immediate: ImmediateStrategy.BeforeMount})
     private onValidationGroupChange(newValue: string|string[]|null): void {
         this.vm.form.setValidationGroups(newValue);
     }

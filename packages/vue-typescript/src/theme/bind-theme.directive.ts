@@ -56,6 +56,7 @@ export class BindThemeDirective extends Vue {
      * Vue lifecycle.
      */
     public created(el: Element, bindings: DirectiveBinding) {
+        //debugger;
         this.instance = anyToTsInst(bindings.instance);
         const metadata = anyToComponentMetadata(bindings.instance);
         const configuration = metadata ? metadata.themeable : null;

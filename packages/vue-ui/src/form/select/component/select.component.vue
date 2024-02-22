@@ -336,7 +336,7 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
         this.$emit('change', this.v.control.value);
     }
 
-    @Watch('v.choicesVisible', {immediate: ImmediateStrategy.BeforeMount | ImmediateStrategy.SsrPrefetch})
+    @Watch('v.choicesVisible', {immediate: ImmediateStrategy.BeforeMount})
     private onChoiceVisibilityChange(newValue: boolean): void {
         if (newValue && !this.v.isInputReadonly) {
             this.v.inputValue = this.v.searchBuffer;

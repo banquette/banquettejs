@@ -57,10 +57,8 @@ export type DecoratedComponentConstructor = Constructor & {
  * A Vue component instance decorated with Vue Typescript's metadata.
  */
 export type DecoratedComponentInstance = ComponentPublicInstance & {
-    $: {
-        type: VccOpts
-        [COMPONENT_TS_INSTANCE]: DecoratedComponentInstance
-    },
+    $: {type: VccOpts },
     $resolvedParent: ComponentPublicInstance|null,
-    $plugins: ComponentCustomProperties
+    $plugins: ComponentCustomProperties,
+    [COMPONENT_TS_INSTANCE]: DecoratedComponentInstance
 };
