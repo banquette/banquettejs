@@ -44,7 +44,8 @@ export class ApiRequestBuilder extends AbstractRequestBuilder<ApiRequest> {
             withCredentials: this._withCredentials || false,
             mimeType: this._mimeType,
             tags: this._tags,
-            extras: this._extras
+            extras: this._extras,
+            cacheInMemory: this._cacheInMemory
         });
     }
 
