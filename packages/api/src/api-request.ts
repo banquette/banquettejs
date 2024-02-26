@@ -32,6 +32,9 @@ export class ApiRequest {
      * @param tags              Tags that will be sent with emitted events.
      * @param extras            Any additional data you want to associate with the request.
      *                          This object will not be sent with the request.
+     * @param cacheInMemory     If `true`, and if the request is a GET request, it will only be called once.
+     *                          If a subsequent request is made to the exact same url, the cache version will be used.
+     *                          The response is only stored in memory, no persistence.
      */
     public constructor(public model: ModelExtendedIdentifier|ModelBidirectionalExtendedIdentifier|null,
                        public endpoint: string|null,
@@ -49,7 +52,8 @@ export class ApiRequest {
                        public withCredentials?: boolean,
                        public mimeType?: string|null,
                        public tags?: symbol|symbol[],
-                       public extras?: Record<string, any>) {
+                       public extras?: Record<string, any>,
+                       public cacheInMemory?: boolean) {
     }
 
     /**
@@ -69,7 +73,8 @@ export class ApiRequest {
             this.payloadType,
             this.responseType,
             this.tags,
-            this.extras
+            this.extras,
+            this.cacheInMemory
         );
     }
 

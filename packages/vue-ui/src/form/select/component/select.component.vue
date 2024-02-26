@@ -105,6 +105,7 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
     @Prop({name: 'remoteMethod', type: String, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
     @Prop({name: 'remoteUrlParams', type: Object, default: {}}) public urlParams!: Record<string, Primitive>;
     @Prop({name: 'remoteHeaders', type: Object, default: {}}) public headers!: Record<string, Primitive>;
+    @Prop({name: 'remoteCacheInMemory', type: Boolean, default: false}) public cacheInMemory!: boolean;
 
     /**
      * Search related props.
@@ -362,7 +363,7 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
         this.v.isInputReadonly = this.vm.searchType === SearchType.None && !this.allowCreation;
     }
 
-    @Watch(['model', 'remoteUrl', 'remoteEndpoint', 'remoteMethod', 'remoteUrlParams', 'remoteHeaders'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['model', 'remoteUrl', 'remoteEndpoint', 'remoteMethod', 'remoteUrlParams', 'remoteHeaders', 'cacheInMemory'], {immediate: ImmediateStrategy.BeforeMount})
     private syncRemoteProps(): void {
         this.vm.remote.updateConfiguration({
             url: this.url,
@@ -370,7 +371,8 @@ export default class BtFormSelect extends BtAbstractVueForm<SelectViewDataInterf
             method: this.method,
             urlParams: this.urlParams,
             headers: this.headers,
-            model: this.model
+            model: this.model,
+            cacheInMemory: this.cacheInMemory
         });
     }
 

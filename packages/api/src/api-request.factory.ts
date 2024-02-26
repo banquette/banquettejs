@@ -20,7 +20,8 @@ export interface ApiRequestConfig {
     withCredentials?: boolean;
     mimeType?: string|null;
     tags?: symbol|symbol[];
-    extras?: any
+    extras?: any;
+    cacheInMemory?: boolean;
 }
 
 export class ApiRequestFactory {
@@ -45,7 +46,8 @@ export class ApiRequestFactory {
             config.withCredentials,
             config.mimeType,
             config.tags,
-            config.extras
+            config.extras,
+            config.cacheInMemory
         );
     }
 }
