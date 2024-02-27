@@ -1,23 +1,23 @@
-import { Inject, Module, Injector } from "@banquette/dependency-injection";
+import { Inject, Injector, Module } from "@banquette/dependency-injection";
 import { UnsubscribeFunction } from "@banquette/event";
 import { UsageException } from "@banquette/exception";
 import {
     BeforeValueChangeFormEvent,
-    ErrorsChangedFormEvent,
-    StateChangedFormEvent,
-    ValueChangedFormEvent,
     ComponentNotFoundException,
+    ErrorsChangedFormEvent,
     FormComponentInterface,
     FormControl,
     FormError,
     FormGroupInterface,
     FormViewControlInterface,
-    FormViewModelInterface
+    FormViewModelInterface,
+    StateChangedFormEvent,
+    ValueChangedFormEvent
 } from "@banquette/form";
 import { proxy, WeakObjectRef } from "@banquette/utils-misc";
-import { isFunction, isObject, isString, GenericCallback, VoidCallback } from "@banquette/utils-type";
+import { GenericCallback, isFunction, isObject, isString, VoidCallback } from "@banquette/utils-type";
 import { ValidatorInterface } from "@banquette/validation";
-import { Composable, Computed, Lifecycle, Prop, Watch, ImmediateStrategy } from "@banquette/vue-typescript";
+import { Composable, Computed, ImmediateStrategy, Lifecycle, Prop, Watch } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { FormStorageService } from "./form-storage.service";
 import { ProxifiedCallInterface } from "./proxified-call.interface";
@@ -144,7 +144,7 @@ export class FormControlProxy implements FormViewControlInterface {
     /**
      * Array of methods waiting to be called when the control becomes available.
      */
-    private methodsQueue: ProxifiedCallInterface[] = [];
+    private methodsQueue: ProxifiedCallInterface<any>[] = [];
 
     /**
      * The list of subscribers to call each time a "real" FormControl instance is assigned.
@@ -265,10 +265,17 @@ export class FormControlProxy implements FormViewControlInterface {
     /**
      * @inheritDoc
      */
+    public validate(): boolean|Promise<boolean> {
+        return this.callControlMethodForResult<boolean>('validate', false, false);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public getExtras(): Record<string, any> {
-        const result = this.callControlMethod('getExtra', false);
+        const result = this.callControlMethod<Record<string, any>>('getExtra', false);
         if (result.done) {
-            return result.returnValue;
+            return result.returnValue as Record<string, any>;
         }
         return {};
     }
@@ -284,9 +291,9 @@ export class FormControlProxy implements FormViewControlInterface {
      * @inheritDoc
      */
     public getExtra<T = any>(name: string, defaultValue: any): T {
-        const result = this.callControlMethod('getExtras', false, false, name, defaultValue);
+        const result = this.callControlMethod<T>('getExtras', false, false, name, defaultValue);
         if (result.done) {
-            return result.returnValue;
+            return result.returnValue as T;
         }
         return defaultValue;
     }
@@ -316,7 +323,7 @@ export class FormControlProxy implements FormViewControlInterface {
     }
 
     /**
-     * The a fallback form to use to resolve controls paths if none is defined by the prop.
+     * A fallback form to use to resolve controls paths if none is defined by the prop.
      */
     public setFallbackGetControl(fallback: (path: string) => FormComponentInterface|null): void {
         this.fallbackGetControl = fallback;
@@ -437,11 +444,13 @@ export class FormControlProxy implements FormViewControlInterface {
      * Try to call a method on the control or queue the call if no control is available yet.
      * The queue will automatically be flushed when the control becomes available.
      */
-    private callControlMethod(method: keyof FormViewControlInterface,
-                              replayable: boolean = true,
-                              skippable: boolean = false,
-                              ...args: any[]): ProxifiedCallInterface {
-        const call: ProxifiedCallInterface = {
+    private callControlMethod<R = unknown>(
+        method: keyof FormViewControlInterface,
+        replayable: boolean = true,
+        skippable: boolean = false,
+        ...args: any[]
+    ): ProxifiedCallInterface<R> {
+        const call: ProxifiedCallInterface<R> = {
             method,
             args,
             done: false,
@@ -449,12 +458,32 @@ export class FormControlProxy implements FormViewControlInterface {
             skippable
         };
         if (this.bridge) {
-            call.returnValue = this.bridge[method].apply(this.bridge, args as any);
+            call.returnValue = this.bridge[method].apply(this.bridge, args as any) as R;
             call.done = true;
         } else if (replayable) {
             this.methodsQueue.push(call);
         }
         return call;
+    }
+
+    /**
+     * Just like callControlMethod() but handles the return value of the call.
+     * If the call has been made synchronously, the return value is returned directly.
+     * Otherwise, a promise is returned that will resolve with the return value.
+     */
+    private callControlMethodForResult<R>(
+        method: keyof FormViewControlInterface,
+        replayable: boolean = true,
+        skippable: boolean = false,
+        ...args: any[]
+    ): R|Promise<R> {
+        const call = this.callControlMethod<R>(method, replayable, skippable, ...args);
+        if (call.done) {
+            return call.returnValue as R;
+        }
+        return new Promise<R>((resolve) => {
+            call.callback = resolve;
+        });
     }
 
     /**
