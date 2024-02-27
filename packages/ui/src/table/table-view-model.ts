@@ -130,6 +130,11 @@ export class TableViewModel {
 
     private unsubscribeFunctions: VoidCallback[] = [];
 
+    /**
+     * A unique symbol to tie the listeners to the requests listeners.
+     */
+    private listenersTag: symbol = Symbol('table-request-tag');
+
     public constructor(@Inject(ConfigurationService) private configuration: ConfigurationService,
                        @Inject(EventDispatcherService) private globalDispatcher: EventDispatcherService,
                        @Inject(PaginationModule) pagination: PaginationModule) {
@@ -143,9 +148,9 @@ export class TableViewModel {
         this.unsubscribeFunctions.push(this.ordering.onInvalidate(proxy(this.onOrderingConfigurationChange, this)));
         this.bindApiListeners();
 
-        this.unsubscribeFunctions.push(useBuiltInResponseTransformer());
-        this.unsubscribeFunctions.push(useBuiltInRequestListener());
-        this.unsubscribeFunctions.push(useBuiltInResponseListener());
+        this.unsubscribeFunctions.push(useBuiltInResponseTransformer(this.listenersTag));
+        this.unsubscribeFunctions.push(useBuiltInRequestListener(this.listenersTag));
+        this.unsubscribeFunctions.push(useBuiltInResponseListener(this.listenersTag));
     }
 
     public dispose(): void {
@@ -244,7 +249,7 @@ export class TableViewModel {
         if (!this.remote.isApplicable) {
             return ;
         }
-        const response = this.remote.send(null, {}, {}, [TableTag]);
+        const response = this.remote.send(null, {}, {}, [TableTag, this.listenersTag]);
         this.createServerResult(response);
         response.promise.finally(() => {
             const serverResult = this.getServerResult(response);
@@ -294,7 +299,7 @@ export class TableViewModel {
             if (serverResult === null) {
                 return ;
             }
-            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeRequest, new TableRequestEvent(serverResult, this.createEventState(), event.httpEvent));
+            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeRequest, new TableRequestEvent(serverResult, this.createEventState(), event.httpEvent), false, [this.listenersTag]);
             const promise = result.promise;
             if (promise !== null) {
                 return new Promise<void>((resolve) => {
@@ -304,14 +309,14 @@ export class TableViewModel {
             }
             // Stopping the propagation is cleaner but the Api would have ignored the query anyway as it's a GET request.
             event.stopPropagation();
-        }, config.table.apiEventsPriorities.beforeRequest, [TableTag], [ApiProcessorTag]));
+        }, config.table.apiEventsPriorities.beforeRequest, [TableTag, this.listenersTag], [ApiProcessorTag]));
 
         this.unsubscribeFunctions.push(this.globalDispatcher.subscribe(ApiEvents.BeforeResponse, (event: ApiBeforeResponseEvent) => {
             const serverResult = this.getServerResult(event.httpEvent.request.response);
             if (serverResult === null) {
                 return ;
             }
-            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeResponse, new TableResponseEvent(serverResult, this.createEventState(), event.httpEvent));
+            const result = this.globalDispatcher.dispatch(TableApiEvents.BeforeResponse, new TableResponseEvent(serverResult, this.createEventState(), event.httpEvent), false, [this.listenersTag]);
             const promise = result.promise;
             if (promise !== null) {
                 return new Promise<void>((resolve) => {
@@ -321,11 +326,11 @@ export class TableViewModel {
             }
             // Very important to stop the propagation so the built-in processor from the api package is not executed.
             event.stopPropagation();
-        }, config.table.apiEventsPriorities.beforeResponse, [TableTag], [ApiProcessorTag]));
+        }, config.table.apiEventsPriorities.beforeResponse, [TableTag, this.listenersTag], [ApiProcessorTag]));
 
         this.unsubscribeFunctions.push(this.globalDispatcher.subscribe(ApiEvents.RequestSuccess, (event: ApiBeforeResponseEvent) => {
             event.stopPropagation();
-        }, 1, [TableTag], [ApiProcessorTag]));
+        }, 1, [TableTag, this.listenersTag], [ApiProcessorTag]));
     }
 
     /**

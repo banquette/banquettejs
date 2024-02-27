@@ -2,14 +2,14 @@ import { Injector } from "@banquette/dependency-injection";
 import {EventDispatcherService, UnsubscribeFunction} from "@banquette/event";
 import { ModelMetadataService, TransformService, PojoTransformerSymbol } from "@banquette/model";
 import {isArray} from "@banquette/utils-type";
-import { TableProcessorTag, TableApiEvents } from "../constant";
+import { TableApiEvents, TableProcessorTag } from "../constant";
 import { TableResponseEvent } from "../event/table-response.event";
 
 // The assignation is so the /**!PURE*/ comment is kept when compiling.
 // It's then replace by "/* @__PURE__ */" at the end of the build.
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useBuiltInResponseTransformer = /**!PURE*/ (() => {
-    return (): UnsubscribeFunction => {
+    return (tableInstanceTag: symbol): UnsubscribeFunction => {
         const transformService = /**!PURE*/ Injector.Get(TransformService);
         const modelMetadata = /**!PURE*/ Injector.Get(ModelMetadataService);
 
@@ -37,7 +37,7 @@ export const useBuiltInResponseTransformer = /**!PURE*/ (() => {
             TableApiEvents.BeforeResponse,
             onBeforeResponse,
             0,
-            null,
+            [tableInstanceTag],
             [TableProcessorTag]
         );
     };
