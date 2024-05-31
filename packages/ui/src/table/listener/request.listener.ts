@@ -21,7 +21,7 @@ function getConfig(): TableConfigurationInterface {
 // It's then replace by "/* @__PURE__ */" at the end of the build.
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useBuiltInRequestListener = /**!PURE*/ (() => {
-    return (): UnsubscribeFunction => {
+    return (tableInstanceTag: symbol): UnsubscribeFunction => {
         /**
          * Add configuration parameters (pagination, filtering) to the request.
          */
@@ -49,7 +49,7 @@ export const useBuiltInRequestListener = /**!PURE*/ (() => {
             TableApiEvents.BeforeRequest,
             onBeforeRequest,
             0,
-            null,
+            [tableInstanceTag],
             [TableProcessorTag]
         );
     };

@@ -1,5 +1,5 @@
 import { UnsubscribeFunction } from "@banquette/event";
-import { ValidatorInterface } from "@banquette/validation";
+import { ValidatorInterface} from "@banquette/validation";
 import { BeforeValueChangeFormEvent } from "./event/before-value-change.form-event";
 import { ErrorsChangedFormEvent } from "./event/errors-changed.form-event";
 import { StateChangedFormEvent } from "./event/state-changed.form-event";
@@ -210,6 +210,11 @@ export interface FormViewControlInterface {
      * Resetting the control does not impact the following states: `ContextualizedState.Disabled`, `BasicState.Busy`, `BasicState.Validating`, `BasicState.Concrete`.
      */
     reset(): void;
+
+    /**
+     * Validate the component.
+     */
+    validate(): boolean|Promise<boolean>;
 
     /**
      * Get all extra data.

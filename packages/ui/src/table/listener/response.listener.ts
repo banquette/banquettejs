@@ -10,7 +10,7 @@ import { isPaginatedServerResponseInterface } from "../pagination/utils";
 // It's then replace by "/* @__PURE__ */" at the end of the build.
 // If "/* @__PURE__ */" is set right here, it'll be striped out when building.
 export const useBuiltInResponseListener = /**!PURE*/ (() => {
-    return (): UnsubscribeFunction => {
+    return (tableInstanceTag: symbol): UnsubscribeFunction => {
         function onBeforeResponse(event: TableResponseEvent) {
             const responseBody: any = event.httpEvent.response.response;
             const isPaginatedResponse = event.state.pagination.enabled && isPaginatedServerResponseInterface(responseBody);
@@ -29,7 +29,7 @@ export const useBuiltInResponseListener = /**!PURE*/ (() => {
             TableApiEvents.BeforeResponse,
             onBeforeResponse,
             1,
-            null,
+            [tableInstanceTag],
             [TableProcessorTag]
         );
     };

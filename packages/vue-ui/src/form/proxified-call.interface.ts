@@ -6,7 +6,7 @@ import { FormViewControlInterface } from "@banquette/form";
  * Because the call may not have been made yet, this object holds a reference on it so
  * we can save it and have a way to store the return value.
  */
-export interface ProxifiedCallInterface {
+export interface ProxifiedCallInterface<R = unknown> {
     /**
      * The method to call.
      */
@@ -25,10 +25,15 @@ export interface ProxifiedCallInterface {
     /**
      * The return value of the call.
      */
-    returnValue: any;
+    returnValue: R|undefined;
 
     /**
      * If `true`, only the last call will be performed if present multiple times in the stack.
      */
     skippable: boolean;
+
+    /**
+     * An optional callback to call with the return value when the method has been called.
+     */
+    callback?: ((returnValue: R) => void)|null;
 }

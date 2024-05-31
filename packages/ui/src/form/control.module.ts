@@ -196,6 +196,27 @@ export class ControlModule<ControlValueType = any> implements HeadlessInterface<
     }
 
     /**
+     * Reset the control. It has the following effects:
+     *
+     *   - Set the value to the "default value",
+     *   - Unmark the following states: `BasicState.Changed`, `BasicState.Touched`, `BasicState.Dirty`, `BasicState.Validated`,
+     *   - Blur the control if focused,
+     *   - Clear validation errors.
+     *
+     * Resetting the control does not impact the following states: `ContextualizedState.Disabled`, `BasicState.Busy`, `BasicState.Validating`, `BasicState.Concrete`.
+     */
+    public reset(): void {
+        this.activeControl.reset();
+    }
+
+    /**
+     * Validate the component.
+     */
+    public validate(): boolean|Promise<boolean> {
+        return this.activeControl.validate();
+    }
+
+    /**
      * Allow you to modify protected view data. Use at your own risk.
      */
     public mutateInternalViewData(cb: VoidCallback): void {

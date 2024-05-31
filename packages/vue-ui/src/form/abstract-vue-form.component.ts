@@ -161,6 +161,20 @@ export abstract class BtAbstractVueForm<
     }
 
     /**
+     * Force the validation of the control.
+     */
+    public validate(): boolean|Promise<boolean> {
+        return this.vm.control.validate();
+    }
+
+    /**
+     * Force the reset of the control.
+     */
+    public reset(): void {
+        this.vm.control.reset();
+    }
+
+    /**
      * Setup and assign the view model instance.
      *
      * In here you should compose your view model by instantiating every brick of logic your component needs
