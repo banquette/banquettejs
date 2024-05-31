@@ -24,7 +24,8 @@ import BtPagination from "./pagination/pagination.component.vue";
 
 @Component({
     name: 'bt-table',
-    components: [BtColumn, BtPagination, BtFilter, TeleportDirective, BtForm, IMaterialReport, BtProgressCircular]
+    components: [BtColumn, BtPagination, BtFilter, BtForm, IMaterialReport, BtProgressCircular],
+    directives: [TeleportDirective]
 })
 export default class BtTable extends Vue {
     /**
