@@ -19,6 +19,7 @@ export default class BtRemote extends Vue {
     @Prop({type: String as PropType<HttpMethod>, default: HttpMethod.GET, transform: (value) => ensureInEnum(value, HttpMethod, HttpMethod.GET)}) public method!: HttpMethod;
     @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public urlParams!: Record<string, Primitive>;
     @Prop({type: Object as PropType<Record<string, Primitive>>, default: {}}) public headers!: Record<string, Primitive>;
+    @Prop({type: Boolean as PropType<boolean>, default: false}) public cacheInMemory!: boolean;
 
     @Expose() public response: HttpResponse<any>|null = null;
     @Expose() public bag: any = {};
@@ -44,7 +45,7 @@ export default class BtRemote extends Vue {
         }
     }
 
-    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers'], {immediate: ImmediateStrategy.BeforeMount, deep: true})
+    @Watch(['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'cacheInMemory'], {immediate: ImmediateStrategy.BeforeMount, deep: true})
     private syncConfigurationProps(): void {
         this.remote.updateConfiguration({
             url: this.url,
@@ -52,7 +53,8 @@ export default class BtRemote extends Vue {
             method: this.method,
             urlParams: this.urlParams,
             headers: this.headers,
-            model: this.model
+            model: this.model,
+            cacheInMemory: this.cacheInMemory
         });
         this.update();
     }
