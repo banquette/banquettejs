@@ -11,7 +11,7 @@ import { Injector } from "@banquette/dependency-injection";
 import {EventDispatcherService, UnsubscribeFunction} from "@banquette/event";
 import { HttpMethod } from "@banquette/http";
 import { TransformService } from "@banquette/model";
-import {isObject} from "@banquette/utils-type";
+import { isArray, isObject } from "@banquette/utils-type";
 import { ApiProcessorTag, ApiEvents } from "../constant";
 import { ApiRequestEvent } from "../event/api-request.event";
 import { ApiTransformerSymbol } from "../transformer/api";
@@ -30,7 +30,8 @@ export const useBuiltInRequestModelTransformer = /**!PURE*/ (() => {
          */
         function onBeforeRequest(event: ApiRequestEvent) {
             let payload: any = event.httpEvent.request.payload;
-            if (event.apiRequest.method === HttpMethod.GET || event.apiRequest.model === null || !isObject(payload)) {
+            const modelCtor = event.apiRequest.model !== null ? (isArray(event.apiRequest.model) ? event.apiRequest.model[0] : event.apiRequest.model) : null;
+            if (event.apiRequest.method === HttpMethod.GET || modelCtor === null || !isObject(payload)) {
                 return;
             }
             const transformResult = transformService.transform(payload, ApiTransformerSymbol);

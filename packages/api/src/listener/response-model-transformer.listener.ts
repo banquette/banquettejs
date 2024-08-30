@@ -42,7 +42,10 @@ export const useBuiltInResponseModelTransformer = /**!PURE*/ (() => {
                     event.httpEvent.response.result = transformResult.result;
                 }
             };
-            const ctor = modelMetadata.resolveAlias(isArray(event.apiRequest.model) ? event.apiRequest.model[1] : event.apiRequest.model);
+            let ctor = event.apiRequest.model !== null ? (isArray(event.apiRequest.model) ? event.apiRequest.model[1] : event.apiRequest.model) : null;
+            if (ctor === null) {
+                return;
+            }
             const transformResult = transformService.transformInverse(responseBody, ctor, ApiTransformerSymbol);
             if (transformResult.promise !== null) {
                 return transformResult.promise.then(handleResult);

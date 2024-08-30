@@ -1,6 +1,6 @@
 import { Service } from "@banquette/dependency-injection";
 import { HttpMethod } from "@banquette/http";
-import {isFunction, isNullOrUndefined, isString, isUndefined, Constructor, StringEnum, isObject, isType} from "@banquette/utils-type";
+import { Constructor, isFunction, isNullOrUndefined, isObject, isType, isUndefined, StringEnum } from "@banquette/utils-type";
 import { ApiEndpoint } from "./api-endpoint";
 import { ApiEndpointCollection } from "./api-endpoint-collection";
 import { ApiEndpointOptionsWithIdentifiers, ApiEndpointParameterOptions } from "./api-endpoint.options";
