@@ -72,7 +72,7 @@ export abstract class AbstractRequestBuilder<ResultType> {
      * Add multiple url parameters.
      */
     public params(
-        params: Record<string, Primitive>,
+        params: Record<string, Primitive|Primitive[]>,
         type: UrlParameterType = UrlParameterType.Auto
     ): this {
         for (const name of Object.keys(params)) {
@@ -86,13 +86,20 @@ export abstract class AbstractRequestBuilder<ResultType> {
      */
     public param(
         name: string,
-        value: Primitive,
+        value: Primitive | Primitive[],
         type: UrlParameterType = UrlParameterType.Auto
     ): this {
         if (isUndefined(this._params)) {
             this._params = {};
         }
-        this._params[name] = { type, value: String(value) };
+        if (Array.isArray(value)) {
+            value.forEach((val, index) => {
+                const paramName = `${name}[${index}]`;
+                this._params![paramName] = { type, value: String(val) };
+            });
+        } else {
+            this._params[name] = { type, value: String(value) };
+        }
         return this;
     }
 
