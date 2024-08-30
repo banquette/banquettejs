@@ -262,8 +262,13 @@ export class FormModelBinder {
         }
         if (event.mutation.type === MutationType.Delete) {
             try {
+                this.canMutateForm = true;
                 this.form.get(event.mutation.path).detach();
-            } catch (e) {}
+            } catch (e) {
+                // Ignore
+            } finally {
+                this.canMutateForm = false;
+            }
             return ;
         }
         let contextsDepth = 0;
