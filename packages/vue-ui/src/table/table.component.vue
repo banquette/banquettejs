@@ -132,6 +132,13 @@ export default class BtTable extends Vue {
     }
 
     /**
+     * Refresh the data of the table.
+     */
+    public refresh(): void {
+        this.vm.fetch();
+    }
+
+    /**
      * @inheritDoc
      */
     @Expose() public hasSlot(name: string): boolean {
