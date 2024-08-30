@@ -43,7 +43,7 @@ export enum Type {
 /**
  * Ensure the output type matches the ones given as parameters.
  */
-export function Primitive(transformType: Type = Type.Any, inverseType: Type = Type.Any): TransformerInterface {
+export function Primitive(transformType: Type = Type.Any, inverseType?: Type): TransformerInterface {
     const ensureType = (type: Type, value: any) => {
         if ((type & Type.Null) === Type.Null && value === null) {
             return null;
@@ -78,7 +78,7 @@ export function Primitive(transformType: Type = Type.Any, inverseType: Type = Ty
          * @inheritDoc
          */
         transformInverse(context: TransformContext): TransformResult {
-            context.result.setResult(ensureType(inverseType, context.value));
+            context.result.setResult(ensureType(inverseType ?? transformType, context.value));
             return context.result;
         }
     };
