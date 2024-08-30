@@ -150,8 +150,25 @@ export class ApiService {
         }
         let endpoint: ApiEndpoint|null = null;
         if (request.endpoint !== null) {
-            const modelCtor = request.model !== null ? this.modelMetadata.resolveAlias(isArray(request.model) ? request.model[0] : request.model) : null;
-            endpoint = this.endpointsStorage.getEndpoint(request.endpoint, modelCtor);
+            let modelCtor = request.model !== null ? (isArray(request.model) ? request.model[0] : request.model) : null;
+            if (modelCtor !== null) {
+                modelCtor = this.modelMetadata.resolveAlias(modelCtor);
+            }
+            try {
+                endpoint = this.endpointsStorage.getEndpoint(request.endpoint, modelCtor);
+            } catch (e) {
+                if (modelCtor !== null) {
+                    // If the endpoint is not found in the endpoints specific to the model, try to find it globally.
+                    try {
+                        endpoint = this.endpointsStorage.getEndpoint(request.endpoint, null);
+                    } catch (innerE) {
+                        // If the endpoint is not found globally, throw the original error.
+                        throw e;
+                    }
+                } else {
+                    throw e;
+                }
+            }
         }
         if (endpoint === null) {
             if (isNullOrUndefined(request.url) || !request.url.length) {
