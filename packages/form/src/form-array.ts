@@ -111,6 +111,9 @@ export class FormArray extends AbstractFormGroup<number, any[], FormComponentInt
      */
     public get<T extends FormComponentInterface>(identifier: number|string): T {
         if (!isNumeric(identifier)) {
+            if (!identifier.toString().includes('/')) {
+                throw new UsageException(`Invalid identifier "${identifier}". Must be an integer or a path.`);
+            }
             return this.getByPath(identifier as string);
         }
         identifier = ensureInteger(identifier);
