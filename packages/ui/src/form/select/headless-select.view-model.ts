@@ -92,6 +92,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
     private lastSelectedIdentifier: Primitive|undefined = undefined;
     private noChoiceAvailable: boolean = true;
     private searchBufferSlug: string = '';
+    private runningRequestsCount: number = 0;
 
     public constructor(control: FormViewControlInterface) {
         super(control);
@@ -180,6 +181,7 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
                 }
             }
         }
+        ++this.runningRequestsCount;
         this.viewData.control.busy = true;
         this.viewData.remoteFetchError = null;
         this.viewData.remoteFetchStatus = ChoicesRemoteFetchStatus.Pending;
@@ -196,7 +198,9 @@ export class HeadlessSelectViewModel<ViewDataType extends HeadlessSelectViewData
             this.viewData.remoteFetchError = ExceptionFactory.EnsureException(reason, 'Unknown error.').message;
             this.viewData.remoteFetchStatus = ChoicesRemoteFetchStatus.Failed;
         }).finally(() => {
-            this.viewData.control.busy = false;
+            if (!--this.runningRequestsCount) {
+                this.viewData.control.busy = false;
+            }
         });
     }
 

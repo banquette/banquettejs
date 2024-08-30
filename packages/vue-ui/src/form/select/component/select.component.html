@@ -65,46 +65,48 @@
         render-hidden
         @mousedown.prevent
     >
-        <choice-slot-wrapper position="before">
-            <slot name="choices-before"></slot>
-        </choice-slot-wrapper>
-
-        <template v-for="choices in v.choices">
-            <template v-for="(choices, group) in choices.grouped">
-                <bt-form-select-group :label="group">
-                    <template v-for="choice in choices">
-                        <bt-form-select-choice v-if="!choice.external" :internal-choice="choice">
-                            <slot name="choice" :choice="choice">{{ choice.label }}</slot>
-                        </bt-form-select-choice>
-                    </template>
-                </bt-form-select-group>
-            </template>
-
-            <template v-for="choice in choices.standalone">
-                <bt-form-select-choice v-if="!choice.external" :internal-choice="choice">
-                    <slot name="choice" :choice="choice">{{ choice.label }}</slot>
-                </bt-form-select-choice>
-            </template>
-        </template>
-
-        <choice-slot-wrapper position="after">
-            <slot name="choices"></slot>
-            <slot name="choices-after"></slot>
-        </choice-slot-wrapper>
-
-        <div class="no-results error" v-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'failed'">
-            {{ v.remoteFetchError }}
-        </div>
-        <div class="no-results" v-else-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'waiting-search'">
-            <span v-html="i18n.searchMinLength?.replace('%minLength%', v.searchMinLength)"></span>
-        </div>
-        <div class="no-results loading" v-else-if="!v.visibleChoicesCount && v.control.busy">
+        <div class="no-results loading" v-if="v.control.busy">
             <bt-progress-circular></bt-progress-circular>
         </div>
-        <div class="no-results" v-else-if="!v.visibleChoicesCount">
-            <span v-if="v.searchBuffer.length" v-html="i18n.noResults"></span>
-            <span v-else v-html="i18n.empty"></span>
-        </div>
+        <template v-else>
+            <choice-slot-wrapper position="before">
+                <slot name="choices-before"></slot>
+            </choice-slot-wrapper>
+
+            <template v-for="choices in v.choices">
+                <template v-for="(choices, group) in choices.grouped">
+                    <bt-form-select-group :label="group">
+                        <template v-for="choice in choices">
+                            <bt-form-select-choice v-if="!choice.external" :internal-choice="choice">
+                                <slot name="choice" :choice="choice">{{ choice.label }}</slot>
+                            </bt-form-select-choice>
+                        </template>
+                    </bt-form-select-group>
+                </template>
+
+                <template v-for="choice in choices.standalone">
+                    <bt-form-select-choice v-if="!choice.external" :internal-choice="choice">
+                        <slot name="choice" :choice="choice">{{ choice.label }}</slot>
+                    </bt-form-select-choice>
+                </template>
+            </template>
+
+            <choice-slot-wrapper position="after">
+                <slot name="choices"></slot>
+                <slot name="choices-after"></slot>
+            </choice-slot-wrapper>
+
+            <div class="no-results error" v-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'failed'">
+                {{ v.remoteFetchError }}
+            </div>
+            <div class="no-results" v-else-if="!v.visibleChoicesCount && v.remoteFetchStatus === 'waiting-search'">
+                <span v-html="i18n.searchMinLength?.replace('%minLength%', v.searchMinLength)"></span>
+            </div>
+            <div class="no-results" v-else-if="!v.visibleChoicesCount">
+                <span v-if="v.searchBuffer.length" v-html="i18n.noResults"></span>
+                <span v-else v-html="i18n.empty"></span>
+            </div>
+        </template>
     </bt-dropdown>
     <bt-dropdown v-if="$refs.additionalTagsAggregator" :target="$refs.additionalTagsAggregator.$el" :visible="v.selectedPopoverVisible" class="bt-form-select-additional-tags">
         <bt-tag v-for="choice in v.selectedInPopover" closable @close="deselectChoice(choice)" :key="choice.id">
