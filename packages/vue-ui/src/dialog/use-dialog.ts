@@ -3,18 +3,18 @@ import { DialogService } from "./dialog.service";
 
 export const useDialog = /**!PURE*/ ((_) => {
     return () => {
-        const dialogServie = /**!PURE*/  Injector.Get(_);
+        const dialogService = /**!PURE*/  Injector.Get(_);
         return {
             show: <R = unknown>(id: string, args: Record<string, any> = {}): Promise<R> => {
-                return dialogServie.show(id, args);
+                return dialogService.show(id, args);
             },
 
             hide: (id: string) => {
-                dialogServie.hide(id);
+                dialogService.hide(id);
             },
 
             hideAll: () => {
-                dialogServie.hideAll();
+                dialogService.hideAll();
             }
         };
     };
