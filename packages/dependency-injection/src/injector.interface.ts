@@ -13,7 +13,7 @@ export interface InjectorAdapterInterface<C> {
     /**
      * Gets an element registered in the container.
      */
-    get<T>(identifier: InjectableIdentifier): T;
+    get<T>(identifier: InjectableIdentifier, ...args: any[]): T;
 
     /**
      * Gets any number of elements matching at least on of the tags given as input.

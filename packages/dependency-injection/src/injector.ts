@@ -32,8 +32,8 @@ export class Injector {
     /**
      * Gets an element registered in the container.
      */
-    public static Get<T>(identifier: InjectableIdentifier<T>): T {
-        return Injector.Adapter.get(identifier);
+    public static Get<T>(identifier: InjectableIdentifier<T>, ...args: any[]): T {
+        return Injector.Adapter.get(identifier, ...args);
     }
 
     /**

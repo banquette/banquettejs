@@ -17,8 +17,8 @@ export class BuiltInAdapter
     /**
      * @inheritDoc
      */
-    public get<T>(identifier: InjectableIdentifier): T {
-        return this.getContainer().get<T>(identifier);
+    public get<T>(identifier: InjectableIdentifier, ...args: any[]): T {
+        return this.getContainer().get<T>(identifier, ...args);
     }
 
     /**

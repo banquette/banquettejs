@@ -35,8 +35,8 @@ export class BuiltInContainer {
     /**
      * Gets an element registered in the container.
      */
-    public get<T>(identifier: InjectableIdentifier): T {
-        const instance: any = this.resolveInjectable(identifier);
+    public get<T>(identifier: InjectableIdentifier, ...args: any[]): T {
+        const instance: any = this.resolveInjectable(identifier, ...args);
         this.assignResolutionInstancesPropertyDependencies();
         return instance;
     }
@@ -84,9 +84,9 @@ export class BuiltInContainer {
     }
 
     /**
-     * Get/create the object corresponding to an indentifier.
+     * Get/create the object corresponding to an identifier.
      */
-    private resolveInjectable(identifier: InjectableIdentifier): any {
+    private resolveInjectable(identifier: InjectableIdentifier, ...args: any[]): any {
         const metadata: InjectableMetadataInterface =
             MetadataContainer.GetOrFail(identifier);
         if (metadata.singleton && this.singletons.has(identifier)) {
@@ -99,6 +99,7 @@ export class BuiltInContainer {
             for (const dependency of metadata.constructorDependencies) {
                 constructorArgs.push(this.resolveDependency(dependency));
             }
+            constructorArgs.push(...args);
             instance = new metadata.ctor(...constructorArgs);
             this.resolutionInstances.push(instance);
         } finally {
