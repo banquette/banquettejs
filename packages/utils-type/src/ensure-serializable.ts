@@ -11,6 +11,7 @@ import { getSymbolDescription } from "./utils";
 
 function doEnsureSerializable(input: any,
                               maxDepth: number,
+                              maxNumberOfItems: number,
                               onlyTraversePojo: boolean,
                               depth: number,
                               objectsStack: any[]): any {
@@ -35,14 +36,17 @@ function doEnsureSerializable(input: any,
     if (isArray(input)) {
         const clone: any[] = [];
         if (maxDepth <= 0 || depth < maxDepth) {
-            const maxNumberOfItems = 50;
             let itemIndex = 0;
             for (const item of input) {
-                clone.push(doEnsureSerializable(item, maxDepth, onlyTraversePojo, depth + 1, objectsStack));
+                clone.push(doEnsureSerializable(item, maxDepth, maxNumberOfItems, onlyTraversePojo, depth + 1, objectsStack));
                 ++itemIndex;
                 if (itemIndex >= maxNumberOfItems) {
                     break ;
                 }
+            }
+            if (input.length > maxNumberOfItems) {
+                const delta = input.length - maxNumberOfItems;
+                clone.push('[+ ' + delta + ' element' + (delta > 1 ? 's' : '') + ']');
             }
             return clone;
         }
@@ -67,7 +71,7 @@ function doEnsureSerializable(input: any,
             for (let i = 0; i < keys.length; ++i) {
                 const key = keys[i];
                 if (!isFunction(input[key])) {
-                    clone[key] = doEnsureSerializable(input[key], maxDepth, onlyTraversePojo, depth + 1, objectsStack);
+                    clone[key] = doEnsureSerializable(input[key], maxDepth, maxNumberOfItems, onlyTraversePojo, depth + 1, objectsStack);
                 }
                 if (i >= maxNumberOfKeys) {
                     break ;
@@ -89,6 +93,6 @@ function doEnsureSerializable(input: any,
  *
  * The original object is not affected.
  */
-export function ensureSerializable(input: any, maxDepth: number = 5, onlyTraversePojo: boolean = true): any {
-    return doEnsureSerializable(input, maxDepth, onlyTraversePojo, 0, []);
+export function ensureSerializable(input: any, maxDepth: number = 5, maxNumberOfItems = 50, onlyTraversePojo: boolean = true): any {
+    return doEnsureSerializable(input, maxDepth, maxNumberOfItems, onlyTraversePojo, 0, []);
 }
