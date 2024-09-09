@@ -121,7 +121,7 @@ export default class BtForm<ModelType extends object = any, ViewData extends For
         this.$emit('update:disabled', value);
     }
 
-    @Expose() public v!: ViewData;
+    @Expose() declare public v: ViewData;
 
     /**
      * Holds the logic unrelated to the VueJS implementation.

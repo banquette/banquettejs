@@ -21,7 +21,7 @@ export default class BtFormBaseInput extends Vue {
     /**
      * The generic view data object.
      */
-    @Prop({type: Object, required: true}) public v!: {base: BaseInputViewDataInterface, control: ControlViewDataInterface};
+    @Prop({type: Object, required: true}) declare public v: {base: BaseInputViewDataInterface, control: ControlViewDataInterface};
 
     @Computed() public get hasLabelSlot(): boolean {
         return this.hasNonEmptySlot('label');

@@ -63,7 +63,7 @@ export default class BtTree extends Vue {
      */
     @Prop({type: Number, default: 18}) public indent!: number;
 
-    @Expose() public v!: HeadlessTreeViewDataInterface;
+    @Expose() declare public v: HeadlessTreeViewDataInterface;
 
     /**
      * Holds the logic unrelated to the VueJS implementation.
