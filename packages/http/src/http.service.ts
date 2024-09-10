@@ -321,10 +321,12 @@ export class HttpService {
         queuedRequest.response.result = response.response;
         if (response.status.toString()[0] !== '2') {
             const statusText: string = httpStatusToText(response.status);
-            const error: Exception =
+            const serverError = response.response;
+            const error: Exception = serverError instanceof Exception ? serverError : (
                 response.status === 401 || response.status === 403
                     ? new AuthenticationException(statusText)
-                    : new RequestException(statusText);
+                    : new RequestException(statusText)
+            );
             this.handleRequestFailure(queuedRequest, error);
             return;
         }
