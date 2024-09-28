@@ -21,7 +21,7 @@ const TypesMap: Record<string, Type> = {
 @Component('bt-validate-is-type')
 export default class BtValidateIsType extends BtValidator {
     @Prop({type: [String, Array], required: true, transform: (value: any) => {
-        let output: Type = 0;
+        let output: number = 0;
         for (let type of ensureArray(value)) {
             type = type.toLowerCase();
             if (!isUndefined(TypesMap[type])) {
@@ -31,7 +31,7 @@ export default class BtValidateIsType extends BtValidator {
         if (!output) {
             throw new UsageException(`Invalid type "${ensureString(value)}", should be one of: ${Object.keys(TypesMap).join(',')}.`);
         }
-        return output;
+        return output as Type;
     }}) public allowed!: Type;
 
     /**
