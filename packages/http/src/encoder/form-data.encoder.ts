@@ -44,9 +44,12 @@ export const useFormDataEncoder = /**!PURE*/ (() => {
             if (!isObject(event.request.payload)) {
                 throw new UsageException('An object is expected as input to encode the payload as FormData.');
             }
-            if (payload instanceof HTMLFormElement) {
+            const isHTMLFormElement = typeof HTMLFormElement !== 'undefined' && payload instanceof HTMLFormElement;
+            const isHTMLInputElement = typeof HTMLInputElement !== 'undefined' && payload instanceof HTMLInputElement;
+
+            if (isHTMLFormElement) {
                 formData = new FormData(payload);
-            } else if (payload instanceof HTMLInputElement && payload.type !== 'file') {
+            } else if (isHTMLInputElement && payload.type !== 'file') {
                 const filesArray = payload.files !== null ? Array.from(payload.files) : [];
                 for (const file of filesArray) {
                     formData.append(`file${payload.multiple ? 's[]' : ''}`, file, file.name);
