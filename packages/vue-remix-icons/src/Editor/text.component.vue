@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixText = /* @__PURE__ */ ((_) => {
     return r('text', {
         name: 'i-remix-text',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -12,4 +12,6 @@ export default /* @__PURE__ */ ((_) => {
         }
     });
 })();
+
+export default IRemixText;
 </script>

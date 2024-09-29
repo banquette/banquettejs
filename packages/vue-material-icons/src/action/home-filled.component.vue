@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IMaterialHomeFilled = /* @__PURE__ */ ((_) => {
     return r('home-filled', {
         name: 'i-material-home-filled',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -12,4 +12,6 @@ export default /* @__PURE__ */ ((_) => {
         }
     });
 })();
+
+export default IMaterialHomeFilled;
 </script>

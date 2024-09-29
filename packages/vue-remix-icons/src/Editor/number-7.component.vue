@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixNumber7 = /* @__PURE__ */ ((_) => {
     return r('number-7', {
         name: 'i-remix-number-7',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -12,4 +12,6 @@ export default /* @__PURE__ */ ((_) => {
         }
     });
 })();
+
+export default IRemixNumber7;
 </script>

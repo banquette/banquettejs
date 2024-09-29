@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixDragMove2 = /* @__PURE__ */ ((_) => {
     return r('drag-move-2', {
         name: 'i-remix-drag-move-2',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -14,4 +14,6 @@ return h('svg',{"viewBox":c ? '2 2 20 20' : '0 0 24 24',"width":w,"height":s,"fi
         }
     });
 })();
+
+export default IRemixDragMove2;
 </script>

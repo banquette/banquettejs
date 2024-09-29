@@ -2,16 +2,18 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixEBike2 = /* @__PURE__ */ ((_) => {
     return r('e-bike-2', {
         name: 'i-remix-e-bike-2',
         props: ['width', 'height', 'color', 'crop', 'version'],
         render() {
             let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
             if (v === 'line')
-    return h('svg',{"viewBox":c ? '2 1 21 21' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M16 1a1 1 0 0 1 1 1v1h5v6h-2.019l2.746 7.544a4 4 0 1 1-7.6 2.456h-4.253a4.002 4.002 0 0 1-7.8-.226A2 2 0 0 1 2 17V7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v5a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V3h-3V1h4ZM7 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12-.001a2 2 0 1 0 1.88 1.316l-.016-.044A2 2 0 0 0 19 16ZM17.853 9H17v3a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3H4v3.354A4.002 4.002 0 0 1 10.874 17h4.252a4.002 4.002 0 0 1 4.568-2.94L17.853 9ZM9 8H4v2h5V8Zm11-3h-3v2h3V5Z"},[])]);
-return h('svg',{"viewBox":c ? '2 1 21 21' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M16 1a1 1 0 0 1 1 1v1h5v6h-2.019l2.746 7.545A4 4 0 1 1 15.126 19h-4.252a4.002 4.002 0 0 1-7.8-.226A2 2 0 0 1 2 17V7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v5a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V3h-3V1h4Zm3 15a2 2 0 1 0 1.88 1.316l-.016-.044A2 2 0 0 0 19 16ZM7 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm2-8H4v2h5V8Zm11-3h-3v2h3V5Z"},[])]);
+    return h('svg',{"viewBox":c ? '2 1 21 21' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M16 1a1 1 0 0 1 1 1v1h5v6h-2.019l2.746 7.544a4 4 0 1 1-7.6 2.456h-4.253a4.002 4.002 0 0 1-7.8-.226A2 2 0 0 1 2 17V7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v5a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V3h-3V1zM7 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4m12-.001a2 2 0 1 0 1.88 1.316l-.016-.044A2 2 0 0 0 19 16m-1.147-7H17v3a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3H4v3.354A4.002 4.002 0 0 1 10.874 17h4.252a4 4 0 0 1 4.568-2.94zM9 8H4v2h5zm11-3h-3v2h3z"},[])]);
+return h('svg',{"viewBox":c ? '2 1 21 21' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"M16 1a1 1 0 0 1 1 1v1h5v6h-2.019l2.746 7.545A4 4 0 1 1 15.126 19h-4.252a4.002 4.002 0 0 1-7.8-.226A2 2 0 0 1 2 17V7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v5a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V3h-3V1zm3 15a2 2 0 1 0 1.88 1.316l-.016-.044A2 2 0 0 0 19 16M7 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4m2-8H4v2h5zm11-3h-3v2h3z"},[])]);
         }
     });
 })();
+
+export default IRemixEBike2;
 </script>

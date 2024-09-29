@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixArrowRightS = /* @__PURE__ */ ((_) => {
     return r('arrow-right-s', {
         name: 'i-remix-arrow-right-s',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -14,4 +14,6 @@ return h('svg',{"viewBox":c ? '10 6 6 12' : '0 0 24 24',"width":w,"height":s,"fi
         }
     });
 })();
+
+export default IRemixArrowRightS;
 </script>

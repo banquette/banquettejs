@@ -310,7 +310,7 @@ for (let libIndex = 0; libIndex < configurations.length; ++libIndex) {
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const ${className} = /* @__PURE__ */ ((_) => {
     return r('${componentName}', {
         name: 'i-${configuration.libName}-${componentName}',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -320,6 +320,8 @@ export default /* @__PURE__ */ ((_) => {
         }
     });
 })();
+
+export default ${className};
 </script>`;
         if (src.indexOf('v-else') > -1 && src.indexOf('v-if') < 0) {
             console.log('found');

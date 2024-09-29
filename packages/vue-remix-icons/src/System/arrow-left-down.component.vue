@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixArrowLeftDown = /* @__PURE__ */ ((_) => {
     return r('arrow-left-down', {
         name: 'i-remix-arrow-left-down',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -14,4 +14,6 @@ return h('svg',{"viewBox":c ? '6 5.98 12.02 12.02' : '0 0 24 24',"width":w,"heig
         }
     });
 })();
+
+export default IRemixArrowLeftDown;
 </script>

@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixCss3 = /* @__PURE__ */ ((_) => {
     return r('css3', {
         name: 'i-remix-css3',
         props: ['width', 'height', 'color', 'crop', 'version'],
@@ -14,4 +14,6 @@ return h('svg',{"viewBox":c ? '2.06 3 19.88 18' : '0 0 24 24',"width":w,"height"
         }
     });
 })();
+
+export default IRemixCss3;
 </script>

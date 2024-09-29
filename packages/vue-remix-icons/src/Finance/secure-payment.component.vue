@@ -2,16 +2,18 @@
 import { h } from 'vue';
 import { r } from "../utils.js";
 
-export default /* @__PURE__ */ ((_) => {
+const IRemixSecurePayment = /* @__PURE__ */ ((_) => {
     return r('secure-payment', {
         name: 'i-remix-secure-payment',
         props: ['width', 'height', 'color', 'crop', 'version'],
         render() {
             let w = this.width, s = this.height || (!this.width ? '1em' : null),f=this.color || 'currentColor',v = this.version,c = this.crop !== undefined;
             if (v === 'line')
-    return h('svg',{"viewBox":c ? '3 2 19 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m11 2 7.298 2.28a1 1 0 0 1 .702.955V7h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1l-3.22.001c-.387.51-.857.96-1.4 1.33L11 22l-5.38-3.668A6 6 0 0 1 3 13.374V5.235a1 1 0 0 1 .702-.954L11 2zm0 2.094L5 5.97v7.404a4 4 0 0 0 1.558 3.169l.189.136L11 19.58 14.782 17H10a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h7V5.97l-6-1.876zM11 12v3h9v-3h-9zm0-2h9V9h-9v1z"},[])]);
-return h('svg',{"viewBox":c ? '3 2 19 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m11 2 7.298 2.28a1 1 0 0 1 .702.955V7h2a1 1 0 0 1 1 1v2H9V8a1 1 0 0 1 1-1h7V5.97l-6-1.876L5 5.97v7.404a4 4 0 0 0 1.558 3.169l.189.136L11 19.58 14.782 17H10a1 1 0 0 1-1-1v-4h13v4a1 1 0 0 1-1 1l-3.22.001c-.387.51-.857.96-1.4 1.33L11 22l-5.38-3.668A6 6 0 0 1 3 13.374V5.235a1 1 0 0 1 .702-.954L11 2z"},[])]);
+    return h('svg',{"viewBox":c ? '3 2 19 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m11 2 7.298 2.28a1 1 0 0 1 .702.955V7h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1l-3.22.001c-.387.51-.857.96-1.4 1.33L11 22l-5.38-3.668A6 6 0 0 1 3 13.374V5.235a1 1 0 0 1 .702-.954zm0 2.094L5 5.97v7.404a4 4 0 0 0 1.558 3.169l.189.136L11 19.58 14.782 17H10a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h7V5.97zM11 12v3h9v-3zm0-2h9V9h-9z"},[])]);
+return h('svg',{"viewBox":c ? '3 2 19 20' : '0 0 24 24',"width":w,"height":s,"fill":f},[h('path',{d:"m11 2 7.298 2.28a1 1 0 0 1 .702.955V7h2a1 1 0 0 1 1 1v2H9V8a1 1 0 0 1 1-1h7V5.97l-6-1.876L5 5.97v7.404a4 4 0 0 0 1.558 3.169l.189.136L11 19.58 14.782 17H10a1 1 0 0 1-1-1v-4h13v4a1 1 0 0 1-1 1l-3.22.001c-.387.51-.857.96-1.4 1.33L11 22l-5.38-3.668A6 6 0 0 1 3 13.374V5.235a1 1 0 0 1 .702-.954z"},[])]);
         }
     });
 })();
+
+export default IRemixSecurePayment;
 </script>
