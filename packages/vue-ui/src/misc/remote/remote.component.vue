@@ -10,7 +10,8 @@ import { BtProgressCircular } from "../../progress/progress-circular";
 
 @Component({
     name: 'bt-remote',
-    components: [BtProgressCircular]
+    components: [BtProgressCircular],
+    emits: ['ready', 'error']
 })
 export default class BtRemote extends Vue {
     @Prop({type: String as PropType<string|null>, default: null}) public url!: string|null;
@@ -40,6 +41,11 @@ export default class BtRemote extends Vue {
         } else {
             this.response = this.remote.send();
             this.response.promise.finally(() => {
+                if (this.response?.isSuccess) {
+                    this.$emit('ready', this.response);
+                } else {
+                    this.$emit('error', this.response);
+                }
                 this.$forceUpdateComputed();
             });
         }

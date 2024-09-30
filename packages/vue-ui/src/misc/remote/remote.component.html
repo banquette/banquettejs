@@ -8,7 +8,7 @@
     </slot>
 
     <!-- This slot is shown when the component failed to fetch remote data -->
-    <slot name="error" v-else-if="error" :response="response" :bag="bag">
+    <slot name="error" v-else-if="error" :response="response" :retry="update" :bag="bag">
         {{ response.error.message }}
     </slot>
 
