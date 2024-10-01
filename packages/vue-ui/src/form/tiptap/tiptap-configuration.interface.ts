@@ -1,20 +1,17 @@
 import { Extensions } from "@tiptap/vue-3";
-import { ModuleInterface } from "./modules/module.interface";
+import { ModuleInterface } from "./type";
 
 export interface TiptapConfigurationInterface {
     /**
      * Array of toolbars, each array is separate toolbar.
      * Each toolbar contains an array of modules to use, in order.
      */
-    toolbars?: Array<Array<keyof ModuleInterface>>;
+    toolbars?: ModuleInterface[][];
 
     /**
-     * Define the modules to use and with what configuration.
-     *
-     * If a module is already assigned to a toolbar it is not required to define it here,
-     * except if you need to customize its configuration object.
+     * Array of tiptap modules, that are not part of the toolbar.
      */
-    modules?: Partial<ModuleInterface>;
+    modules?: ModuleInterface[];
 
     /**
      * Raw array of tiptap extensions for which you don't want to create a Vue component.

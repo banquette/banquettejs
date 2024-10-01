@@ -8,7 +8,7 @@ export * from './select';
 export * from './text';
 export * from './tree';
 export * from './validator';
-// export * from './tiptap';
+export * from './tiptap';
 
 export * from './constant';
 export * from './form-control.proxy';

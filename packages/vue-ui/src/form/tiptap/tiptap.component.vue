@@ -3,16 +3,15 @@
 <script lang="ts">
 import { Injector } from "@banquette/dependency-injection";
 import { UsageException } from "@banquette/exception";
-import { kebabCase, trim } from "@banquette/utils-string";
-import { isArray, isNullOrUndefined, isString, isUndefined, AnyObject, GenericCallback } from "@banquette/utils-type";
-import { Component, Expose, Import, Prop, Themeable, Watch, ImmediateStrategy, BindThemeDirective } from "@banquette/vue-typescript";
+import { trim } from "@banquette/utils-string";
+import { GenericCallback, isNullOrUndefined, isString, isUndefined } from "@banquette/utils-type";
+import { BindThemeDirective, Component, Expose, ImmediateStrategy, Import, Prop, Themeable, Watch } from "@banquette/vue-typescript";
 import Document from '@tiptap/extension-document';
 import Paragraph from '@tiptap/extension-paragraph';
 import Text from '@tiptap/extension-text';
 import { Editor, EditorContent, Extensions } from '@tiptap/vue-3'
 import { BtAbstractVueForm } from "../abstract-vue-form.component";
-import { BtFormBaseInput } from "../base-input";
-import { BaseInputComposable } from "../base-input/base-input.composable";
+import { BaseInputComposable, BtFormBaseInput } from "../base-input";
 import { TiptapModuleInterface } from "./modules/tiptap-module.interface";
 import { TiptapConfigurationInterface } from "./tiptap-configuration.interface";
 import { TiptapConfigurationService } from "./tiptap-configuration.service";
@@ -20,23 +19,7 @@ import { TiptapViewDataInterface } from "./tiptap-view-data.interface";
 import { TiptapViewModel } from "./tiptap.view-model";
 import { isTiptapConfiguration } from "./type";
 
-type ModuleInUse = {configuration: AnyObject, inToolbar: boolean};
-interface InnerConfigurationInterface {
-    /**
-     * Array of arrays of components' names.
-     */
-    toolbars: string[][];
-
-    /**
-     * Map containing all modules in use with their configuration.
-     */
-    modules: Record<string, ModuleInUse>;
-
-    /**
-     * Array of extensions that don't depend on the modules.
-     */
-    extensions: Extensions;
-}
+type InnerConfigurationInterface = Required<TiptapConfigurationInterface>;
 
 @Themeable()
 @Component({
@@ -152,10 +135,13 @@ export default class BtFormTiptap extends BtAbstractVueForm<TiptapViewDataInterf
 
     @Watch('conf', {immediate: ImmediateStrategy.BeforeMount, deep: true})
     protected onConfChange(newValue: TiptapConfigurationInterface) {
-        const oldModules = this.innerConfiguration !== null ? Object.keys(this.innerConfiguration.modules) : [];
-        this.innerConfiguration = this.resolveConfiguration(newValue);
-        const newModules = Object.keys(this.innerConfiguration.modules);
-
+        const oldModules = this.innerConfiguration ? this.getUniqueModulesNamesFromConfiguration(this.innerConfiguration) : [];
+        this.innerConfiguration = {
+            toolbars: newValue.toolbars || [],
+            modules: newValue.modules || [],
+            extensions: newValue.extensions || []
+        };
+        const newModules = this.getUniqueModulesNamesFromConfiguration(this.innerConfiguration);
         this.modulesInitializingCount = 0;
         for (const newModule of newModules) {
             if (oldModules.indexOf(newModule) < 0) {
@@ -175,58 +161,6 @@ export default class BtFormTiptap extends BtAbstractVueForm<TiptapViewDataInterf
         if (this.editor && this.editor.getHTML() !== newValue) {
             this.editor.commands.setContent(newValue);
         }
-    }
-
-    /**
-     * Convert a TiptapConfigurationInterface into a InnerConfigurationInterface object.
-     */
-    private resolveConfiguration(conf: TiptapConfigurationInterface): InnerConfigurationInterface {
-        const output: InnerConfigurationInterface = {toolbars: [], modules: {}, extensions: conf.extensions || []};
-        const resolveComponentName = (name: string): string|null => {
-            const normalizedName = kebabCase(name);
-            const namesCandidates = ['bt-form-tiptap-' + normalizedName, normalizedName];
-            return namesCandidates[0];
-            // if (!isUndefined(ModulesToolbarAliases[name])) {
-            //     const alias = ModulesToolbarAliases[name];
-            //     namesCandidates.push.apply(namesCandidates, ['bt-form-tiptap-' + alias, alias]);
-            // }
-            // for (const candidate of namesCandidates) {
-            //     if (Object.keys(this.$.root.appContext.components).indexOf(candidate) > -1) {
-            //         return candidate;
-            //     }
-            // }
-            // console.warn(`Failed to find an existing Vue component for name "${normalizedName}". The following names have been tried: ${namesCandidates.join(', ')}`);
-            // return null;
-        };
-        if (isArray(conf.toolbars)) {
-            for (const toolbar of conf.toolbars) {
-                const resolvedToolbar: string[] = [];
-                for (let item of toolbar) {
-                    let componentName: any = item;
-                    componentName = resolveComponentName(componentName);
-                    if (componentName !== null) {
-                        resolvedToolbar.push(componentName);
-                        output.modules[componentName] = {inToolbar: true, configuration: {}};
-                    }
-                }
-                if (resolvedToolbar.length > 0) {
-                    output.toolbars.push(resolvedToolbar);
-                }
-            }
-        }
-        if (!isUndefined(conf.modules)) {
-            for (const key of Object.keys(conf.modules)) {
-                const componentName = resolveComponentName(key);
-                if (componentName !== null) {
-                    if (isUndefined(output.modules[componentName])) {
-                        output.modules[componentName] = {inToolbar: false, configuration: (conf.modules as any)[key]};
-                    } else {
-                        output.modules[componentName].configuration = (conf.modules as any)[key];
-                    }
-                }
-            }
-        }
-        return output;
     }
 
     /**
@@ -274,11 +208,11 @@ export default class BtFormTiptap extends BtAbstractVueForm<TiptapViewDataInterf
                 });
             }
             for (const module of this.modules) {
-                module.setEditor(this.editor);
+                module.setEditor(this.editor!);
                 module.enable();
             }
             currentExtensions = extensions;
-            editor = this.editor;
+            editor = this.editor!;
         }
     })();
 
@@ -292,6 +226,23 @@ export default class BtFormTiptap extends BtAbstractVueForm<TiptapViewDataInterf
                 callback.apply(this, args);
             }
         };
+    }
+
+    private getUniqueModulesNamesFromConfiguration(configuration: InnerConfigurationInterface): string[] {
+        const modules: string[] = [];
+        for (const module of configuration.toolbars) {
+            for (const item of module) {
+                if (!modules.includes(item.component.name)) {
+                    modules.push(item.component.name);
+                }
+            }
+        }
+        for (const module of configuration.modules) {
+            if (!modules.includes(module.component.name)) {
+                modules.push(module.component.name);
+            }
+        }
+        return modules;
     }
 }
 </script>

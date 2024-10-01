@@ -14,6 +14,7 @@
         "@banquette/http": "workspace:^",
         "@banquette/vue-material-icons": "workspace:^",
         "@banquette/vue-remix-icons": "workspace:^",
+        "@banquette/vue-typescript": "workspace:^",
         "@banquette/vue-ui": "workspace:^",
         "vue": "^3.2.47"
     },

@@ -1,6 +1,6 @@
 import { UsageException } from "@banquette/exception";
 import { Expose, Prop, Vue } from "@banquette/vue-typescript";
-import { Editor, Extensions, EditorEvents } from "@tiptap/vue-3";
+import { Editor, EditorEvents, Extensions } from "@tiptap/vue-3";
 import BtFormTiptap from "../tiptap.component.vue";
 import { TiptapModuleInterface } from "./tiptap-module.interface";
 
@@ -36,7 +36,6 @@ export abstract class AbstractTiptapModule<Conf = any> extends Vue implements Ti
      * Vue lifecycle method.
      */
     public beforeMount(): void {
-        console.log('before mount');
         const $parent = (this.getParent('bt-form-tiptap') as InstanceType<typeof BtFormTiptap>) || null;
         if (!$parent) {
             throw new UsageException('A tiptap module must be child of a `bt-form-tiptap` component.');
@@ -57,6 +56,7 @@ export abstract class AbstractTiptapModule<Conf = any> extends Vue implements Ti
      */
     public setEditor(editor: Editor): void {
         this.editor = editor;
+        this.onReady();
     }
 
     /**
@@ -98,5 +98,9 @@ export abstract class AbstractTiptapModule<Conf = any> extends Vue implements Ti
      */
     protected getDefaultConfiguration(): Partial<Conf> {
         return {};
+    }
+
+    protected onReady(): void {
+        // Override me
     }
 }
