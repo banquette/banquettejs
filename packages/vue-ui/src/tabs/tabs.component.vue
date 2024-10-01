@@ -194,24 +194,34 @@ export default class BtTabs extends Vue {
      */
     private updateFocusIndicator(): void {
         if (!this.indicatorEl || !this.focusedTab || !this.focusedTab.$refs.toggle) {
-            return ;
+            return;
         }
-        const offset = getElementOffset(this.focusedTab.$refs.toggle, false);
+        const rect = this.focusedTab.$refs.toggle.getBoundingClientRect();
+        const parentRect = this.indicatorEl.parentElement!.getBoundingClientRect();
+
+        // Adjust relative to parent container or any ancestor affecting the layout
+        const relativeLeft = rect.left - parentRect.left;
+        const relativeTop = rect.top - parentRect.top;
+
         const style = getComputedStyle(this.focusedTab.$refs.toggle);
 
-        // In case the direction changed.
         if (this.direction === TabsDirection.Top) {
             const paddingLeft = parseFloat(style.paddingLeft);
             const paddingRight = parseFloat(style.paddingRight);
-            this.indicatorEl.style.left = `${Math.round(offset.left + paddingLeft)}px`;
+
+            // Use relativeLeft to adjust for any container offsets
+            this.indicatorEl.style.left = `${Math.round(relativeLeft + paddingLeft)}px`;
             this.indicatorEl.style.width = `${Math.round(this.focusedTab.$refs.toggle.offsetWidth - (paddingLeft + paddingRight))}px`;
         } else if (this.direction === TabsDirection.Left || this.direction === TabsDirection.Right) {
             const paddingTop = parseFloat(style.paddingTop);
             const paddingBottom = parseFloat(style.paddingBottom);
-            this.indicatorEl.style.top = `${Math.round(offset.top + paddingTop)}px`;
+
+            // Use relativeTop to adjust for any container offsets
+            this.indicatorEl.style.top = `${Math.round(relativeTop + paddingTop)}px`;
             this.indicatorEl.style.height = `${Math.round(this.focusedTab.$refs.toggle.offsetHeight - (paddingTop + paddingBottom))}px`;
         }
     }
+
 
     /**
      * Observe changes to the `<bt-tab>` container to maintain the ordering sync.
