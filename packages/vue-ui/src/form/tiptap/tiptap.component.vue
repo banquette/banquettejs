@@ -6,9 +6,6 @@ import { UsageException } from "@banquette/exception";
 import { trim } from "@banquette/utils-string";
 import { GenericCallback, isNullOrUndefined, isString, isUndefined } from "@banquette/utils-type";
 import { BindThemeDirective, Component, Expose, ImmediateStrategy, Import, Prop, Themeable, Watch } from "@banquette/vue-typescript";
-import Document from '@tiptap/extension-document';
-import Paragraph from '@tiptap/extension-paragraph';
-import Text from '@tiptap/extension-text';
 import { Editor, EditorContent, Extensions } from '@tiptap/vue-3'
 import { BtAbstractVueForm } from "../abstract-vue-form.component";
 import { BaseInputComposable, BtFormBaseInput } from "../base-input";
@@ -18,6 +15,10 @@ import { TiptapConfigurationService } from "./tiptap-configuration.service";
 import { TiptapViewDataInterface } from "./tiptap-view-data.interface";
 import { TiptapViewModel } from "./tiptap.view-model";
 import { isTiptapConfiguration } from "./type";
+import Document from '@tiptap/extension-document';
+import Paragraph from '@tiptap/extension-paragraph';
+import Text from '@tiptap/extension-text';
+import Placeholder from "@tiptap/extension-placeholder";
 
 type InnerConfigurationInterface = Required<TiptapConfigurationInterface>;
 
@@ -28,6 +29,9 @@ type InnerConfigurationInterface = Required<TiptapConfigurationInterface>;
     components: [EditorContent, BtFormBaseInput]
 })
 export default class BtFormTiptap extends BtAbstractVueForm<TiptapViewDataInterface, TiptapViewModel> {
+    // To get autocompletion in the view.
+    declare v: TiptapViewDataInterface;
+
     /**
      * Holds the props exposed by the base input.
      */
@@ -153,6 +157,22 @@ export default class BtFormTiptap extends BtAbstractVueForm<TiptapViewDataInterf
         }
     }
 
+    private ignoreNextPlaceHolderUpdate = false;
+    @Watch('placeholder', {immediate: ImmediateStrategy.BeforeMount})
+    protected onPlaceholderChange(newValue: any): void {
+        if (this.ignoreNextPlaceHolderUpdate) {
+            this.ignoreNextPlaceHolderUpdate = false;
+            return ;
+        }
+        if (newValue) {
+            // Hacky way of denying the placeholder to the base input.
+            this.$nextTick(() => {
+                this.ignoreNextPlaceHolderUpdate = true;
+                this.v.base.placeholder = null;
+            });
+        }
+    }
+
     /**
      * @inheritDoc
      */
@@ -168,7 +188,11 @@ export default class BtFormTiptap extends BtAbstractVueForm<TiptapViewDataInterf
      */
     private buildEditor = (() => {
         // Extensions always required, no matter the configuration.
-        const baseExtensions = [Document, Paragraph, Text];
+        const baseExtensions: Extensions = [Document, Paragraph, Text, Placeholder.configure({
+            placeholder: () => {
+                return this.base?.placeholder || '';
+            }
+        })];
         let currentExtensions: Extensions = [];
         let editor!: Editor;
         return (configuration: InnerConfigurationInterface): void => {

@@ -91,4 +91,12 @@
             padding: var(--form-tiptap-padding-x) var(--form-tiptap-padding-y);
         }
     }
+
+    :global(.ProseMirror p[data-placeholder]::before) {
+        color: var(--bt-color-gray-500);
+        content: attr(data-placeholder);
+        position: absolute;
+        left: var(--form-tiptap-padding-x);
+        pointer-events: none;
+    }
 }
