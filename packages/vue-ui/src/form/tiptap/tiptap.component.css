@@ -92,7 +92,7 @@
         }
     }
 
-    :global(.ProseMirror p[data-placeholder]::before) {
+    :global(.ProseMirror p[data-placeholder].is-editor-empty::before) {
         color: var(--bt-color-gray-500);
         content: attr(data-placeholder);
         position: absolute;
