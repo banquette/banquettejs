@@ -80,6 +80,13 @@ export class FormFile {
     public serverResponse?: any;
 
     /**
+     * Check if the mime type of the file corresponds to an image.
+     */
+    public get isImage(): boolean {
+        return this.type !== null && this.type.startsWith('image/');
+    }
+
+    /**
      * Status shorthands.
      */
     public get uploading(): boolean { return this.status === UploadStatus.Uploading }

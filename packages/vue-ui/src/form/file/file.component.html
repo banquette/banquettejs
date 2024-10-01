@@ -22,23 +22,27 @@
         <div class="inner-wrapper">
             <slot name="browse" :browse="browse">
                 <div class="browse" @click="browse()">
-                    <slot name="browse-text"><span v-html="i18n.empty"></span></slot>
+                    <slot name="browse-text" :browse="browse"><span v-html="i18n.empty"></span></slot>
                 </div>
             </slot>
             <div class="files-queue">
                 <div v-for="formFile in v.control.value" class="file-item" :class="{error: formFile.failed}">
                     <div class="file-details">
                         <bt-progress-circular v-if="formFile.uploading"></bt-progress-circular>
-                        <div class="error-icon" v-else-if="formFile.failed"><i-material-error></i-material-error></div>
-                        <i-material-description v-else></i-material-description>
+                        <div class="error-icon" v-else-if="formFile.failed"><i-material-error crop></i-material-error></div>
+                        <slot name="file-preview" :file="formFile" v-else><i-material-description crop></i-material-description></slot>
                         <div class="file-details-inner">
                             <div class="file-name">
-                                {{ formFile.filename }}
+                                <slot name="file-name" :file="formFile">
+                                    {{ formFile.filename }}
+                                </slot>
                             </div>
                             <bt-progress-horizontal :progress="formFile.progress" v-if="formFile.uploading || formFile.paused" :show-progress-text="false"></bt-progress-horizontal>
-                            <div class="file-size" v-if="formFile.file">{{ formFile.uploadedSizeText }} / {{ formFile.totalSizeText }} ({{ formFile.progress }}%)</div>
-                            <div class="file-size" v-else-if="formFile.totalSize">{{ formFile.totalSizeText }}</div>
                             <div class="error-message" v-if="formFile.failed">{{ formFile.error }}</div>
+                            <slot name="file-size" :file="formFile" v-else>
+                                <div class="file-size" v-if="formFile.uploadedSizeText">{{ formFile.uploadedSizeText }} / {{ formFile.totalSizeText }} ({{ formFile.progress }}%)</div>
+                                <div class="file-size" v-else-if="formFile.totalSize">{{ formFile.totalSizeText }}</div>
+                            </slot>
                         </div>
                     </div>
                     <div class="buttons">

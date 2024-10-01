@@ -160,7 +160,7 @@ export class HeadlessFormFileViewModel<ViewDataType extends HeadlessFormFileView
         if (!this.multiple) {
             const missingFiles = [];
             for (const file of this.viewData.control.value) {
-                if (file.file !== null && newFiles.indexOf(file.file) < 0) {
+                if (!file.file || newFiles.indexOf(file.file) < 0) {
                     missingFiles.push(file);
                 }
             }
