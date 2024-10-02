@@ -1,6 +1,6 @@
 {
     "name": "@banquette/utils-date",
-    "version": "0.2.4",
+    "version": "0.3.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/banquette/banquettejs.git",
