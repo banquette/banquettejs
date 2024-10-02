@@ -50,7 +50,7 @@ export const useFormDataEncoder = /**!PURE*/ (() => {
             if (isHTMLFormElement) {
                 formData = new FormData(payload);
             } else if (isHTMLInputElement && payload.type !== 'file') {
-                const filesArray = payload.files !== null ? Array.from(payload.files) : [];
+                const filesArray: File[] = payload.files !== null ? Array.from(payload.files) : [];
                 for (const file of filesArray) {
                     formData.append(`file${payload.multiple ? 's[]' : ''}`, file, file.name);
                 }
