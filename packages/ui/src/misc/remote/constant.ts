@@ -8,7 +8,12 @@ export const RemoteModuleEvents = {
     /**
      * Triggered when the module performs an HTTP request.
      */
-    Request: Symbol('request'),
+    BeforeRequest: Symbol('before-request'),
+
+    /**
+     * Triggered just after an HTTP request is performed, and before the response is received.
+     */
+    BeforeResponse: Symbol('before-request'),
 
     /**
      * Triggered when the HTTP request finishes, with success or not.

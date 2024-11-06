@@ -26,6 +26,7 @@ import { ModuleInterface } from "./module.interface";
 import { OrderingModule } from "./ordering/ordering.module";
 import { PaginationModule } from "./pagination/pagination.module";
 import { ServerResult } from "./server-result";
+import { RemoteModuleResponseEventArg } from "../misc";
 
 @Module()
 export class TableViewModel {
@@ -124,9 +125,9 @@ export class TableViewModel {
     public localDispatcher: EventDispatcher;
 
     /**
-     * A map linking http responses to their result object for the table.
+     * Holds the response id of the last request.
      */
-    private serverResultsMap: Record<number, ServerResult> = {};
+    private lastResponseId: number|null = null;
 
     private unsubscribeFunctions: VoidCallback[] = [];
 
@@ -146,6 +147,8 @@ export class TableViewModel {
         this.unsubscribeFunctions.push(this.filtering.onChange(proxy(this.onModuleConfigurationChange, this)));
         this.unsubscribeFunctions.push(this.ordering.onChange(proxy(this.onOrderingConfigurationChange, this)));
         this.unsubscribeFunctions.push(this.ordering.onInvalidate(proxy(this.onOrderingConfigurationChange, this)));
+        this.unsubscribeFunctions.push(this.remote.onBeforeResponse(proxy(this.onFetchBeforeResponse, this)));
+        this.unsubscribeFunctions.push(this.remote.onResponse(proxy(this.onFetchResponse, this)));
         this.bindApiListeners();
 
         this.unsubscribeFunctions.push(useBuiltInResponseTransformer(this.listenersTag));
@@ -250,23 +253,7 @@ export class TableViewModel {
             return ;
         }
         const response = this.remote.send(null, {}, {}, [TableTag, this.listenersTag]);
-        this.createServerResult(response);
-        response.promise.finally(() => {
-            const serverResult = this.getServerResult(response);
-            if (serverResult === null || !(response.result instanceof ServerResult) || response.result.id !== serverResult.id || response.isCanceled) {
-                return ;
-            }
-            if (!isNullOrUndefined(serverResult.ordering)) {
-                this.ordering.digestServerResponse(serverResult.ordering);
-            }
-            if (!isNullOrUndefined(serverResult.filtering)) {
-                this.filtering.digestServerResponse(serverResult.filtering);
-            }
-            if (!isNullOrUndefined(serverResult.pagination)) {
-                this.pagination.digestServerResponse(serverResult.pagination);
-            }
-            this.items = response.result.items;
-        });
+        this.lastResponseId = response.id;
         this.status = TableStatus.Fetching;
         this.updateView();
     }
@@ -289,6 +276,27 @@ export class TableViewModel {
         };
     })();
 
+    private onFetchBeforeResponse(event: RemoteModuleResponseEventArg): void {
+        this.lastResponseId = event.response.id;
+    }
+
+    private onFetchResponse(event: RemoteModuleResponseEventArg): void {
+        const serverResult = this.getServerResult(event.response);
+        if (serverResult === null || !(event.response.result instanceof ServerResult) || event.response.isCanceled) {
+            return ;
+        }
+        if (!isNullOrUndefined(serverResult.ordering)) {
+            this.ordering.digestServerResponse(serverResult.ordering);
+        }
+        if (!isNullOrUndefined(serverResult.filtering)) {
+            this.filtering.digestServerResponse(serverResult.filtering);
+        }
+        if (!isNullOrUndefined(serverResult.pagination)) {
+            this.pagination.digestServerResponse(serverResult.pagination);
+        }
+        this.items = event.response.result.items;
+    }
+
     /**
      * Listen for api requests to trigger custom processing.
      */
@@ -303,7 +311,7 @@ export class TableViewModel {
             const promise = result.promise;
             if (promise !== null) {
                 return new Promise<void>((resolve) => {
-                    // We just wait to wait for the promise to complete, we don't care if it succeeded or not.
+                    // We just wait for the promise to complete, we don't care if it succeeded or not.
                     promise.finally(resolve);
                 });
             }
@@ -486,16 +494,12 @@ export class TableViewModel {
     }
 
     /**
-     * Create a the ServerResult for an Http response.
-     */
-    private createServerResult(response: HttpResponse<any>): void {
-        this.serverResultsMap[response.id] = new ServerResult();
-    }
-
-    /**
-     * Try to get the ServerResult corresponding to an Http response.
+     * Try to get the ServerResult corresponding to a Http response.
      */
     private getServerResult(response: HttpResponse<any>): ServerResult|null {
-        return this.serverResultsMap[response.id] || null;
+        if (response.id === this.lastResponseId) {
+            return new ServerResult();
+        }
+        return null;
     }
 }

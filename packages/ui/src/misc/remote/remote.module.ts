@@ -13,8 +13,6 @@ import { RemoteModuleRequestEventArg } from "./event/remote-module-request.event
 import { RemoteModuleResponseEventArg } from "./event/remote-module-response.event-arg";
 import { UsageException } from "@banquette/exception";
 
-let maxId: number = 0;
-
 /**
  * Offer an easy way for UI components to make HTTP calls without having to worry about what parameters
  * are defined and what services are involved depending on the configuration.
@@ -23,8 +21,6 @@ let maxId: number = 0;
  * so it can be configured once and then consumed as many times as needed.
  */
 export class RemoteModule {
-    public readonly id: number = ++maxId;
-
     /**
      * A static URL to call.
      */
@@ -117,6 +113,13 @@ export class RemoteModule {
      */
     private pollingTimer: any = null;
 
+    private lastSendParams: {
+        payload?: any,
+        urlParams: Record<string, Primitive>,
+        headers: Record<string, Primitive>,
+        tags: symbol[]
+    }|null = null;
+
     /**
      * Check if the module is usable in the current configuration.
      */
@@ -173,6 +176,7 @@ export class RemoteModule {
         headers: Record<string, Primitive> = {},
         tags: symbol[] = []
     ): HttpResponse<T> {
+        this.lastSendParams = { payload, urlParams, headers, tags };
         if (this.response !== null && this.response.isPending && !this.allowMultiple) {
             this.response.request.cancel();
         }
@@ -189,18 +193,19 @@ export class RemoteModule {
             .cacheInMemory(this.cacheInMemory)
             .tags(tags)
             .getRequest();
-        this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Request, new RemoteModuleRequestEventArg(this.id, request));
+        this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.BeforeRequest, new RemoteModuleRequestEventArg(request));
         this.response = this.api.send(request);
+        this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.BeforeResponse, new RemoteModuleResponseEventArg(this.response));
         this.response.promise.then((response: HttpResponse<any>) => {
             this.eventDispatcher.dispatchWithErrorHandling(
                 RemoteModuleEvents.Response,
-                new RemoteModuleResponseEventArg(this.id, response)
+                new RemoteModuleResponseEventArg(response)
             );
         });
         this.response.promise.catch((response: HttpResponse<any>) => {
             this.eventDispatcher.dispatchWithErrorHandling(
                 RemoteModuleEvents.Response,
-                new RemoteModuleResponseEventArg(this.id, response)
+                new RemoteModuleResponseEventArg(response)
             );
 
             // Check `isError` to skip canceled requests.
@@ -231,7 +236,7 @@ export class RemoteModule {
 
         if (this.realTimeStrategy === RealTimeStrategy.Polling) {
             this.pollingTimer = setInterval(() => {
-                this.send();
+                this.send(this.lastSendParams?.payload, this.lastSendParams?.urlParams, this.lastSendParams?.headers, this.lastSendParams?.tags);
             }, this.pollingInterval);
         } else if (this.realTimeStrategy === RealTimeStrategy.TimestampPolling) {
             if (!this.realTimeEndpoint || !this.subscriptionName) {
@@ -275,7 +280,7 @@ export class RemoteModule {
                 const data = await response.json();
                 if (data.lastUpdate && data.lastUpdate !== this.lastUpdateTimestamp) {
                     this.lastUpdateTimestamp = data.lastUpdate;
-                    this.send();
+                    this.send(this.lastSendParams?.payload, this.lastSendParams?.urlParams, this.lastSendParams?.headers, this.lastSendParams?.tags);
                 }
             } else {
                 console.error('Failed to fetch update timestamp:', response.statusText);
@@ -296,7 +301,14 @@ export class RemoteModule {
      * Be notified when an HTTP request is made.
      */
     public onRequest(cb: (event: RemoteModuleRequestEventArg) => void): UnsubscribeFunction {
-        return this.eventDispatcher.subscribe(RemoteModuleEvents.Request, cb);
+        return this.eventDispatcher.subscribe(RemoteModuleEvents.BeforeRequest, cb);
+    }
+
+    /**
+     * Be notified when an HTTP request has started but not yet responded.
+     */
+    public onBeforeResponse(cb: (event: RemoteModuleResponseEventArg) => void): UnsubscribeFunction {
+        return this.eventDispatcher.subscribe(RemoteModuleEvents.BeforeResponse, cb);
     }
 
     /**

@@ -2,14 +2,7 @@ import { FilteringServerResponseInterface } from "./filtering/filtering-server-r
 import { OrderingServerResponseInterface } from "./ordering/ordering-server-response.interface";
 import { PaginatedServerResponseInterface } from "./pagination/paginated-server-response.interface";
 
-let MaxId: number = 0;
-
 export class ServerResult<T = unknown> {
-    /**
-     * Unique identifier of the result.
-     */
-    public id: number = ++MaxId;
-
     /**
      * Array of items to show.
      */
