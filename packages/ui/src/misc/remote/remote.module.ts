@@ -7,28 +7,33 @@ import { areEqual } from "@banquette/utils-misc";
 import { extend } from "@banquette/utils-object";
 import { isNonEmptyString } from "@banquette/utils-string";
 import { isObject, isUndefined, Primitive, StringEnum } from "@banquette/utils-type";
-import { RemoteModuleEvents } from "./constant";
+import { RemoteModuleEvents, RealTimeStrategy } from "./constant";
 import { RemoteConfigurationInterface } from "./remote-configuration.interface";
-import {RemoteModuleRequestEventArg} from "./event/remote-module-request.event-arg";
-import {RemoteModuleResponseEventArg} from "./event/remote-module-response.event-arg";
+import { RemoteModuleRequestEventArg } from "./event/remote-module-request.event-arg";
+import { RemoteModuleResponseEventArg } from "./event/remote-module-response.event-arg";
+import { UsageException } from "@banquette/exception";
+
+let maxId: number = 0;
 
 /**
- * Offer an easy way for ui components to make http calls without having to worry about what parameters
+ * Offer an easy way for UI components to make HTTP calls without having to worry about what parameters
  * are defined and what services are involved depending on the configuration.
  *
  * Being a module also has the advantage (over a service) to keep the configuration internally
- * so it can be configured once and then consumed as many time as needed.
+ * so it can be configured once and then consumed as many times as needed.
  */
 export class RemoteModule {
+    public readonly id: number = ++maxId;
+
     /**
-     * A static url to call.
+     * A static URL to call.
      */
-    public readonly url: string|null = null;
+    public readonly url: string | null = null;
 
     /**
      * The name of an ApiEndpoint.
      */
-    public readonly endpoint: string|null = null;
+    public readonly endpoint: string | null = null;
 
     /**
      * The HTTP method to use when doing the request.
@@ -42,15 +47,15 @@ export class RemoteModule {
      *   - the collection in which to find the endpoint (if "endpoint" is defined),
      *   - the type of entity the payload/response should be transformed from/into.
      */
-    public readonly model: ModelExtendedIdentifier|null = null;
+    public readonly model: ModelExtendedIdentifier | null = null;
 
     /**
-     * The parameters to replace in the url or add in the query string.
+     * The parameters to replace in the URL or add in the query string.
      */
     public readonly urlParams!: Record<string, Primitive>;
 
     /**
-     * Headers to add the every request done by the module.
+     * Headers to add to every request done by the module.
      */
     public readonly headers!: Record<string, Primitive>;
 
@@ -70,17 +75,47 @@ export class RemoteModule {
     private allowMultiple: boolean = false;
 
     /**
-     * If `true`, and if a GET request, a given url will only be called once, and its response will be stored in memory.
+     * If `true`, and if a GET request, a given URL will only be called once, and its response will be stored in memory.
      */
     private cacheInMemory: boolean = false;
 
     /**
-     * Last response generated from the send().
+     * Response generated from the last call to send().
      */
-    private response: HttpResponse<any>|null = null;
+    private response: HttpResponse<any> | null = null;
 
     private api: ApiService = Injector.Get(ApiService);
     private eventDispatcher: EventDispatcher = new EventDispatcher();
+
+    /**
+     * The strategy to use for real-time updates.
+     */
+    public realTimeStrategy: RealTimeStrategy = RealTimeStrategy.None;
+
+    /**
+     * The endpoint to check for the last update timestamp (used in TimestampPolling strategy).
+     */
+    public realTimeEndpoint: string | null = null;
+
+    /**
+     * The unique name referencing the data endpoint for subscription (used in TimestampPolling strategy).
+     */
+    public subscriptionName: string | null = null;
+
+    /**
+     * Polling interval in milliseconds.
+     */
+    public pollingInterval: number = 5000; // Default to 5 seconds
+
+    /**
+     * Stores the last known update timestamp (used in TimestampPolling strategy).
+     */
+    private lastUpdateTimestamp: string | null = null;
+
+    /**
+     * Timer reference for the polling loop.
+     */
+    private pollingTimer: any = null;
 
     /**
      * Check if the module is usable in the current configuration.
@@ -90,7 +125,7 @@ export class RemoteModule {
     }
 
     /**
-     * Check if request is pending.
+     * Check if a request is pending.
      */
     public get pending(): boolean {
         return this.response !== null && this.response.isPending;
@@ -101,7 +136,22 @@ export class RemoteModule {
      */
     public updateConfiguration(configuration: Partial<RemoteConfigurationInterface>): void {
         let changed = false;
-        for (const prop of ['url', 'endpoint', 'method', 'model', 'urlParams', 'headers', 'payloadType', 'responseType', 'allowMultiple', 'cacheInMemory']) {
+        for (const prop of [
+            'url',
+            'endpoint',
+            'method',
+            'model',
+            'urlParams',
+            'headers',
+            'payloadType',
+            'responseType',
+            'allowMultiple',
+            'cacheInMemory',
+            'realTimeStrategy',
+            'realTimeEndpoint',
+            'subscriptionName',
+            'pollingInterval',
+        ]) {
             const newValue = !isUndefined((configuration as any)[prop]) ? (configuration as any)[prop] : (this as any)[prop];
             if (!changed && !areEqual((this as any)[prop], newValue)) {
                 changed = true;
@@ -110,17 +160,24 @@ export class RemoteModule {
         }
         if (changed) {
             this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.ConfigurationChange);
+            this.restartRealTimeUpdates();
         }
     }
 
     /**
      * Call the server using the current configuration and process the results.
      */
-    public send<T = any>(payload?: any, urlParams: Record<string, Primitive> = {}, headers: Record<string, Primitive> = {}, tags: symbol[] = []): HttpResponse<T> {
+    public send<T = any>(
+        payload?: any,
+        urlParams: Record<string, Primitive> = {},
+        headers: Record<string, Primitive> = {},
+        tags: symbol[] = []
+    ): HttpResponse<T> {
         if (this.response !== null && this.response.isPending && !this.allowMultiple) {
             this.response.request.cancel();
         }
-        const request = this.api.build()
+        const request = this.api
+            .build()
             .url(this.url)
             .endpoint(this.endpoint)
             .model(this.model)
@@ -132,17 +189,27 @@ export class RemoteModule {
             .cacheInMemory(this.cacheInMemory)
             .tags(tags)
             .getRequest();
-        this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Request, new RemoteModuleRequestEventArg(request));
+        this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Request, new RemoteModuleRequestEventArg(this.id, request));
         this.response = this.api.send(request);
         this.response.promise.then((response: HttpResponse<any>) => {
-            this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Response, new RemoteModuleResponseEventArg(response));
+            this.eventDispatcher.dispatchWithErrorHandling(
+                RemoteModuleEvents.Response,
+                new RemoteModuleResponseEventArg(this.id, response)
+            );
         });
         this.response.promise.catch((response: HttpResponse<any>) => {
-            this.eventDispatcher.dispatchWithErrorHandling(RemoteModuleEvents.Response, new RemoteModuleResponseEventArg(response));
+            this.eventDispatcher.dispatchWithErrorHandling(
+                RemoteModuleEvents.Response,
+                new RemoteModuleResponseEventArg(this.id, response)
+            );
 
             // Check `isError` to skip canceled requests.
             if (response.isError && !(response.result instanceof RemoteException)) {
-                if (isObject(response.result) && !isUndefined(response.result.exception) && isNonEmptyString(response.result.exception.message)) {
+                if (
+                    isObject(response.result) &&
+                    !isUndefined(response.result.exception) &&
+                    isNonEmptyString(response.result.exception.message)
+                ) {
                     response.result = new RemoteException(
                         response.result.exception.type || 'remote',
                         response.result.exception.message
@@ -150,28 +217,90 @@ export class RemoteModule {
                 }
             }
             // The catch() DOES NOT guarantee an exception in `result`.
-            // If none of the checks above matched, we simply let the result as is, the caller will have to deal with it.
+            // If none of the checks above matched, we simply let the result as is; the caller will have to deal with it.
             return response;
         });
         return this.response;
     }
 
     /**
-     * By notified when a configuration value changes.
+     * Start real-time updates based on the configured strategy.
+     */
+    public startRealTimeUpdates(): void {
+        this.stopRealTimeUpdates();
+
+        if (this.realTimeStrategy === RealTimeStrategy.Polling) {
+            this.pollingTimer = setInterval(() => {
+                this.send();
+            }, this.pollingInterval);
+        } else if (this.realTimeStrategy === RealTimeStrategy.TimestampPolling) {
+            if (!this.realTimeEndpoint || !this.subscriptionName) {
+                throw new UsageException('Real-time endpoint and subscription name must be configured for TimestampPolling strategy.');
+            }
+            this.pollingTimer = setInterval(() => {
+                this.checkForUpdates();
+            }, this.pollingInterval);
+        }
+    }
+
+    /**
+     * Stop real-time updates.
+     */
+    public stopRealTimeUpdates(): void {
+        if (this.pollingTimer) {
+            clearInterval(this.pollingTimer);
+            this.pollingTimer = null;
+        }
+    }
+
+    /**
+     * Restart real-time updates when configuration changes.
+     */
+    private restartRealTimeUpdates(): void {
+        this.stopRealTimeUpdates();
+        if (this.realTimeStrategy !== RealTimeStrategy.None) {
+            this.startRealTimeUpdates();
+        }
+    }
+
+    /**
+     * Check for updates using timestamp polling.
+     */
+    private async checkForUpdates(): Promise<void> {
+        try {
+            const response = await fetch(
+                `${this.realTimeEndpoint}/${encodeURIComponent(this.subscriptionName!)}`
+            );
+            if (response.ok) {
+                const data = await response.json();
+                if (data.lastUpdate && data.lastUpdate !== this.lastUpdateTimestamp) {
+                    this.lastUpdateTimestamp = data.lastUpdate;
+                    this.send();
+                }
+            } else {
+                console.error('Failed to fetch update timestamp:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching update timestamp:', error);
+        }
+    }
+
+    /**
+     * Be notified when a configuration value changes.
      */
     public onConfigurationChange(cb: (event: EventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(RemoteModuleEvents.ConfigurationChange, cb);
     }
 
     /**
-     * By notified when an HTTP request is made.
+     * Be notified when an HTTP request is made.
      */
     public onRequest(cb: (event: RemoteModuleRequestEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(RemoteModuleEvents.Request, cb);
     }
 
     /**
-     * By notified when an HTTP request has finished, with success or not.
+     * Be notified when an HTTP request has finished, with success or not.
      */
     public onResponse(cb: (event: RemoteModuleResponseEventArg) => void): UnsubscribeFunction {
         return this.eventDispatcher.subscribe(RemoteModuleEvents.Response, cb);

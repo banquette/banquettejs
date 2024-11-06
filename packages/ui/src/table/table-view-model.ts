@@ -367,21 +367,21 @@ export class TableViewModel {
         let items = ([] as ItemInterface[]).concat(this.items);
 
         // Ordering
-        if (this.ordering.isApplicable && !this.isModuleRemoteDependent(this.ordering)) {
+        if (this.ordering.isApplicable && !this.isRemoteModuleDependent(this.ordering)) {
             items = this.ordering.apply(items);
         } else {
             this.ordering.changed = false;
         }
 
         // Filtering
-        if (this.filtering.isApplicable && !this.isModuleRemoteDependent(this.filtering)) {
+        if (this.filtering.isApplicable && !this.isRemoteModuleDependent(this.filtering)) {
             items = this.filtering.apply(items);
         } else {
             this.filtering.changed = false;
         }
 
         // Pagination
-        if (this.pagination.enabled && !this.isModuleRemoteDependent(this.pagination)) {
+        if (this.pagination.enabled && !this.isRemoteModuleDependent(this.pagination)) {
             items = this.pagination.digestFullItemsList(items);
         } else {
             this.pagination.changed = false;
@@ -398,9 +398,9 @@ export class TableViewModel {
             return ;
         }
         if (this.remote.isApplicable && (
-            (this.pagination.changed && this.isModuleRemoteDependent(this.pagination)) ||
-            (this.filtering.changed && this.isModuleRemoteDependent(this.filtering)) ||
-            (this.ordering.changed && this.isModuleRemoteDependent(this.ordering))
+            (this.pagination.changed && this.isRemoteModuleDependent(this.pagination)) ||
+            (this.filtering.changed && this.isRemoteModuleDependent(this.filtering)) ||
+            (this.ordering.changed && this.isRemoteModuleDependent(this.ordering))
         )) {
             this.temperedFetch();
         } else {
@@ -411,7 +411,7 @@ export class TableViewModel {
     /**
      * Test if a module depends on an ajax request to work.
      */
-    private isModuleRemoteDependent(module: ModuleInterface): boolean {
+    private isRemoteModuleDependent(module: ModuleInterface): boolean {
         return module.remote === true || (module.remote === 'auto' && this.remote.isApplicable);
     }
 
