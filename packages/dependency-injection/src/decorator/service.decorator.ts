@@ -1,7 +1,7 @@
 import { ensureArray, Constructor } from '@banquette/utils-type';
 import { InjectableMetadataInterface } from '../injectable-metadata.interface';
 import { Injector } from '../injector';
-import { registerImplicitDependencies } from '../utils';
+import { getFirstConstructorWithArguments, registerImplicitDependencies } from '../utils';
 
 /**
  * Register a service into the container.
@@ -11,8 +11,8 @@ export function Service(
     ctorOverride: Constructor | null = null
 ): Function {
     return (ctor: Constructor) => {
-        const metadata: InjectableMetadataInterface =
-            registerImplicitDependencies(ctorOverride || ctor);
+        const resolvedCtor = ctorOverride || getFirstConstructorWithArguments(ctor);
+        const metadata: InjectableMetadataInterface = registerImplicitDependencies(resolvedCtor);
         metadata.ctor = ctor;
         metadata.singleton = true;
         metadata.tags = ensureArray(tag);
