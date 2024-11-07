@@ -12,7 +12,7 @@ import { RequestTimeoutException } from '../exception/request-timeout.exception'
 import { HttpRequest } from '../http-request';
 import { NetworkWatcherService } from '../network-watcher.service';
 import { AdapterRequest } from './adapter-request';
-import { AdapterResponse } from './adapter-response';
+import { AdapterResponse, AdapterResponseType } from './adapter-response';
 import { AdapterInterface } from './adapter.interface';
 
 @Module()
@@ -24,11 +24,13 @@ export class XhrAdapter implements AdapterInterface {
     private promiseProgress!: (value?: any) => void;
     private requestProgressStatus!: HttpRequestProgressStatus;
     private canceled: boolean = false;
+    private aborted: boolean = false;
 
     public constructor(
         @Inject(NetworkWatcherService)
         private networkWatcher: NetworkWatcherService
-    ) {}
+    ) {
+    }
 
     /**
      * @inheritDoc
@@ -41,7 +43,7 @@ export class XhrAdapter implements AdapterInterface {
                 return void reject(
                     new UsageException(
                         'An XHR object is already defined.' +
-                            'You must create a new instance of the adapter for each request.'
+                        'You must create a new instance of the adapter for each request.'
                     )
                 );
             }
@@ -87,12 +89,12 @@ export class XhrAdapter implements AdapterInterface {
                 this.xhr.setRequestHeader(headerName, headers[headerName]);
             }
 
-            // Send
-            this.xhr.send(request.payload);
-
-            // In case the request has been canceled immediately
+            // Send, if not canceled
             if (this.canceled) {
-                this.cancel();
+                this.xhr.abort();
+                this.onAbort(); // In case the event is not triggered because send() is never called.
+            } else {
+                this.xhr.send(request.payload);
             }
         });
     }
@@ -119,7 +121,7 @@ export class XhrAdapter implements AdapterInterface {
                 this.xhr.status,
                 this.xhr.responseURL,
                 this.xhr.responseText || null,
-                this.xhr.responseType,
+                this.normalizeXhrResponseType(this.xhr.responseType),
                 this.convertHeadersStringToObject(
                     this.xhr.getAllResponseHeaders()
                 )
@@ -162,6 +164,10 @@ export class XhrAdapter implements AdapterInterface {
      * Called when the transaction is aborted.
      */
     private onAbort(): void {
+        if (this.aborted) {
+            return ;
+        }
+        this.aborted = true;
         this.updateProgressStatus(HttpRequestProgressStatus.Closed);
         this.promiseReject(new RequestCanceledException());
     }
@@ -201,6 +207,21 @@ export class XhrAdapter implements AdapterInterface {
         ) {
             this.promiseProgress(new StatusChangeEvent(this.request, status));
             this.requestProgressStatus = status;
+        }
+    }
+
+    private normalizeXhrResponseType(responseType: XMLHttpRequestResponseType): AdapterResponseType {
+        switch (responseType) {
+            case "":
+                return 'text';
+            case "arraybuffer":
+            case "blob":
+            case "document":
+            case "json":
+            case "text":
+                return responseType;
+            default:
+                return 'default';
         }
     }
 }

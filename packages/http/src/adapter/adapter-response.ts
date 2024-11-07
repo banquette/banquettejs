@@ -1,5 +1,7 @@
 import { slugify } from '@banquette/utils-string';
 
+export type AdapterResponseType = 'default' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
+
 /**
  * Holds the response of an adapter.
  *
@@ -11,7 +13,7 @@ export class AdapterResponse {
         public readonly status: number,
         public readonly url: string | null,
         public response: any,
-        public readonly responseType: XMLHttpRequestResponseType | null,
+        public readonly responseType: AdapterResponseType | null,
         public readonly headers: Record<string, string>
     ) {
         (this as any).headers = this.normalizeHeaders(headers);

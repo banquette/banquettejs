@@ -5,6 +5,7 @@ export * from './adapter/adapter-request';
 export * from './adapter/adapter-response';
 export * from './adapter/adapter.interface';
 export * from './adapter/xhr.adapter';
+export * from './adapter/fetch.adapter';
 
 /**
  * Encoding / decoding
