@@ -236,14 +236,18 @@ export class RemoteModule {
 
         if (this.realTimeStrategy === RealTimeStrategy.Polling) {
             this.pollingTimer = setInterval(() => {
-                this.send(this.lastSendParams?.payload, this.lastSendParams?.urlParams, this.lastSendParams?.headers, this.lastSendParams?.tags);
+                if (!this.response?.isPending) {
+                    this.send(this.lastSendParams?.payload, this.lastSendParams?.urlParams, this.lastSendParams?.headers, this.lastSendParams?.tags);
+                }
             }, this.pollingInterval);
         } else if (this.realTimeStrategy === RealTimeStrategy.TimestampPolling) {
             if (!this.realTimeEndpoint || !this.subscriptionName) {
                 throw new UsageException('Real-time endpoint and subscription name must be configured for TimestampPolling strategy.');
             }
             this.pollingTimer = setInterval(() => {
-                this.checkForUpdates();
+                if (!this.response?.isPending) {
+                    this.checkForUpdates();
+                }
             }, this.pollingInterval);
         }
     }
