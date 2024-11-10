@@ -16,6 +16,10 @@ export class FilteringComposable {
      */
     public module!: FilteringModule;
 
+    public dispose(): void {
+        this.module.dispose();
+    }
+
     @Watch(['filters', 'remote'], {immediate: ImmediateStrategy.NextTick})
     protected syncPaginationConfigurationProps(): void {
         this.module.updateFilters(this.filters);

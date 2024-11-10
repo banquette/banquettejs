@@ -30,6 +30,10 @@ export class RemoteComposable {
      */
     public module!: RemoteModule;
 
+    public dispose(): void {
+        this.module.dispose();
+    }
+
     @Watch(
         [
             'url',

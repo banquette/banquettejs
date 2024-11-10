@@ -134,6 +134,10 @@ export class RemoteModule {
         return this.response !== null && this.response.isPending;
     }
 
+    public dispose(): void {
+        this.stopRealTimeUpdates();
+    }
+
     /**
      * Update the configuration and notify of the change.
      */

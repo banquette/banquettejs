@@ -16,6 +16,10 @@ export class OrderingComposable {
      */
     public module!: OrderingModule;
 
+    public dispose(): void {
+        this.module.dispose();
+    }
+
     @Watch(['name', 'direction', 'remote'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncPaginationConfigurationProps(): void {
         this.module.columnName = this.name;
