@@ -57,23 +57,28 @@ export class TableViewModel {
     public get items(): ItemInterface[] {
         return this._items;
     }
-    public set items(items: any[]) {
-        this._items = [];
-        for (const current of items) {
+    public set items(newItems: any[]) {
+        const updatedItems: ItemInterface[] = [];
+
+        for (let i = 0; i < newItems.length; i++) {
+            const current = newItems[i];
+            const detailsVisible = this._items[i]?.detailsVisible ?? false;
+
             // Wrap the push into a closure to keep the index.
             // This allows `toggleDetails` to access the item through to `items` class property,
             // making change tracking easier.
             ((index: number) => {
-                this._items.push({
+                updatedItems.push({
                     item: current,
-                    detailsVisible: false,
+                    detailsVisible,
                     toggleDetails: () => {
-                        this._items[index].detailsVisible = !this._items[index].detailsVisible;
+                        updatedItems[index].detailsVisible = !updatedItems[index].detailsVisible;
                         this.updateView();
                     }
                 });
-            })(this._items.length);
+            })(updatedItems.length);
         }
+        this._items = updatedItems;
         this.status = TableStatus.Ready;
         this.updateVisibleItems();
         this.updateView();
