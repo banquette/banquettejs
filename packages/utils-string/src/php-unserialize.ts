@@ -60,27 +60,35 @@ export const phpUnserialize = (() => {
     }
 
     function readString(expect: string = '"'): string {
-        var len = readLength();
-        let utfLen = 0;
+        const len = readLength(); // Desired byte length
+        let utfLen = 0;           // UTF-8 character length
         let bytes = 0;
         let ch;
         let val;
+
         while (bytes < len) {
-            ch = str.charCodeAt(idx + utfLen++);
+            ch = str.charCodeAt(idx + utfLen);
+
             if (ch <= 0x007f) {
-                bytes++;
-            } else if (ch > 0x07ff) {
-                bytes += 3;
+                bytes += 1; // 1-byte character (ASCII)
+            } else if (ch <= 0x07ff) {
+                bytes += 2; // 2-byte character
+            } else if (ch >= 0xD800 && ch <= 0xDBFF) {
+                // 4-byte surrogate pair (for characters outside BMP, like emojis)
+                bytes += 4;
+                utfLen++; // Extra increment for surrogate pair
             } else {
-                bytes += 2;
+                bytes += 3; // 3-byte character
             }
+            utfLen++;
         }
-        // catch non-compliant utf8 encodings
+        // Catch non-compliant utf8 encodings
         if (str.charAt(idx + utfLen) !== expect) {
-            utfLen += str.indexOf('"', idx + utfLen) - idx - utfLen;
+            utfLen += str.indexOf(expect, idx + utfLen) - idx - utfLen;
         }
-        val = str.substring(idx, idx + utfLen);
-        idx += utfLen + 2;
+
+        val = str.substring(idx, idx + utfLen); // Extract the substring
+        idx += utfLen + 2; // Move index past the extracted string and the surrounding quotes
         return val;
     }
 
