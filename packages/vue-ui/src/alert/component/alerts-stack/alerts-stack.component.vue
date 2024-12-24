@@ -89,15 +89,20 @@ export default class BtAlertsStack extends Vue {
          * Do not do a for loop here, because for each destroy() called here, the `remove()` method is called
          * from the child, which modifies the stack.
          */
+        const positions = getObjectKeys(this.stack);
+
         const hideNext = () => {
-            // const removed = this.stack.pop();
-            // if (!isUndefined(removed)) {
-            //     const target = this.$refs[`a${removed.id}`];
-            //     if (target) {
-            //         target.destroy();
-            //         hideNext();
-            //     }
-            // }
+            for (const position of positions) {
+                const alerts = this.stack[position];
+                if (alerts.length > 0) {
+                    const alert = alerts.pop();
+                    if (alert) {
+                        alert.visible = false;
+                    }
+                    hideNext();
+                    return;
+                }
+            }
         };
         hideNext();
     }
