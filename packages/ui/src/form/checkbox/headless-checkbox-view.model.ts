@@ -65,6 +65,18 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
     public uncheckable: boolean = false;
 
     /**
+     * By default, the checkbox will automatically become "multiple" if there are
+     * multiple checkboxes associated with the same control.
+     *
+     * But in some cases, you may have only one checkbox associated with the control
+     * but still want the value to be considered an array, as other checkboxes may
+     * be added later on dynamically.
+     *
+     * That's when you can set this property to `true`.
+     */
+    public forceMultiple: boolean = false;
+
+    /**
      * If the group is not `null`, the component will behave like a radio button.
      * Only one value can be selected for a given group.
      *
@@ -108,6 +120,9 @@ export class HeadlessCheckboxViewModel<ViewDataType extends HeadlessCheckboxView
      * `true` if the checkbox stores an array of values.
      */
     public get multiple(): boolean {
+        if (this.forceMultiple) {
+            return true;
+        }
         const map = this.getGroupsMap();
         const groups = (Object.getOwnPropertySymbols(map) as Array<string|symbol>).concat(Object.keys(map));
         return groups.length > 1 || (groups.length === 1 && groups[0] === NullGroup && map[groups[0]].length > 1);

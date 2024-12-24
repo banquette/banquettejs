@@ -56,6 +56,11 @@ export default class BtFormCheckbox extends BtAbstractVueForm<CheckboxViewDataIn
     @Prop() public uncheckedValue!: any;
 
     /**
+     * If `true`, force the checkbox to behave as an array of checkboxes, even if no other checkbox are present yet.
+     */
+    @Prop({type: Boolean, default: false}) public multiple!: boolean;
+
+    /**
      * Defines how to resolve the checked value identifier when it's an object.
      * Can be:
      *   - the name of a property in the object.
@@ -164,13 +169,14 @@ export default class BtFormCheckbox extends BtAbstractVueForm<CheckboxViewDataIn
     /**
      * Copy applicable props into the view data.
      */
-    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable', 'valueIdentifier'], {immediate: ImmediateStrategy.BeforeMount})
+    @Watch(['label', 'checkedValue', 'uncheckedValue', 'uncheckable', 'valueIdentifier', 'multiple'], {immediate: ImmediateStrategy.BeforeMount})
     protected syncConfigurationProps(): void {
         this.v.label = this.label;
         this.vm.valueIdentifier = this.valueIdentifier;
         this.vm.checkedValue = this.checkedValue;
         this.vm.uncheckedValue = this.uncheckedValue;
         this.vm.uncheckable = this.uncheckable;
+        this.vm.forceMultiple = this.multiple;
     }
 
     @Watch('checked', {immediate: ImmediateStrategy.BeforeMount})
