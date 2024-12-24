@@ -233,12 +233,13 @@ export default class BtDialog extends Vue {
     /**
      * Open the dialog.
      */
-    @Expose() public open(): void {
+    @Expose() public open(bag?: Record<string, any>): void {
         if (this.isVisible) {
             return ;
         }
         this.isVisible = true;
         this.internalVisible = true;
+        this.slotBag = bag || {};
     }
 
     /**
@@ -248,6 +249,7 @@ export default class BtDialog extends Vue {
         this.isVisible = false;
         this.closeResult = result;
         this.internalVisible = false;
+        this.slotBag = {};
     }
 
     /**
