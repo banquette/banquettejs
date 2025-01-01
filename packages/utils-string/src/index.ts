@@ -30,6 +30,9 @@ export * from './format/number-format';
 export * from './format/replace-string-variables';
 export * from './format/remove-accents';
 export * from './format/slugify';
+export * from './format/truncate-end';
+export * from './format/truncate-middle';
+export * from './format/truncate-start';
 
 /**
  * Url

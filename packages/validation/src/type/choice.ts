@@ -25,7 +25,7 @@ export function Choice(choices: any[], options: ValidatorOptionsInterface|string
                 if (i >= choices.length) {
                     context.result.addViolation(finalOptions.type, finalOptions.message);
                 }
-            } else if (choices.indexOf(context.value) < 0) {
+            } else if (context.value && choices.indexOf(context.value) < 0) {
                 context.result.addViolation(finalOptions.type, finalOptions.message);
             }
             return context.result;

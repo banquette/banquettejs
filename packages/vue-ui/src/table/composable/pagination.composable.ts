@@ -26,6 +26,10 @@ export class PaginationComposable {
      */
     public module!: PaginationModule;
 
+    public dispose(): void {
+        this.module.dispose();
+    }
+
     @Watch([
         'page',
         'pageId',

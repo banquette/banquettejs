@@ -26,6 +26,7 @@ import { ModuleInterface } from "./module.interface";
 import { OrderingModule } from "./ordering/ordering.module";
 import { PaginationModule } from "./pagination/pagination.module";
 import { ServerResult } from "./server-result";
+import { RemoteModuleResponseEventArg } from "../misc";
 
 @Module()
 export class TableViewModel {
@@ -56,23 +57,28 @@ export class TableViewModel {
     public get items(): ItemInterface[] {
         return this._items;
     }
-    public set items(items: any[]) {
-        this._items = [];
-        for (const current of items) {
+    public set items(newItems: any[]) {
+        const updatedItems: ItemInterface[] = [];
+
+        for (let i = 0; i < newItems.length; i++) {
+            const current = newItems[i];
+            const detailsVisible = this._items[i]?.detailsVisible ?? false;
+
             // Wrap the push into a closure to keep the index.
             // This allows `toggleDetails` to access the item through to `items` class property,
             // making change tracking easier.
             ((index: number) => {
-                this._items.push({
+                updatedItems.push({
                     item: current,
-                    detailsVisible: false,
+                    detailsVisible,
                     toggleDetails: () => {
-                        this._items[index].detailsVisible = !this._items[index].detailsVisible;
+                        updatedItems[index].detailsVisible = !updatedItems[index].detailsVisible;
                         this.updateView();
                     }
                 });
-            })(this._items.length);
+            })(updatedItems.length);
         }
+        this._items = updatedItems;
         this.status = TableStatus.Ready;
         this.updateVisibleItems();
         this.updateView();
@@ -124,9 +130,9 @@ export class TableViewModel {
     public localDispatcher: EventDispatcher;
 
     /**
-     * A map linking http responses to their result object for the table.
+     * Holds the response id of the last request.
      */
-    private serverResultsMap: Record<number, ServerResult> = {};
+    private lastResponseId: number|null = null;
 
     private unsubscribeFunctions: VoidCallback[] = [];
 
@@ -146,6 +152,8 @@ export class TableViewModel {
         this.unsubscribeFunctions.push(this.filtering.onChange(proxy(this.onModuleConfigurationChange, this)));
         this.unsubscribeFunctions.push(this.ordering.onChange(proxy(this.onOrderingConfigurationChange, this)));
         this.unsubscribeFunctions.push(this.ordering.onInvalidate(proxy(this.onOrderingConfigurationChange, this)));
+        this.unsubscribeFunctions.push(this.remote.onBeforeResponse(proxy(this.onFetchBeforeResponse, this)));
+        this.unsubscribeFunctions.push(this.remote.onResponse(proxy(this.onFetchResponse, this)));
         this.bindApiListeners();
 
         this.unsubscribeFunctions.push(useBuiltInResponseTransformer(this.listenersTag));
@@ -250,23 +258,7 @@ export class TableViewModel {
             return ;
         }
         const response = this.remote.send(null, {}, {}, [TableTag, this.listenersTag]);
-        this.createServerResult(response);
-        response.promise.finally(() => {
-            const serverResult = this.getServerResult(response);
-            if (serverResult === null || !(response.result instanceof ServerResult) || response.result.id !== serverResult.id || response.isCanceled) {
-                return ;
-            }
-            if (!isNullOrUndefined(serverResult.ordering)) {
-                this.ordering.digestServerResponse(serverResult.ordering);
-            }
-            if (!isNullOrUndefined(serverResult.filtering)) {
-                this.filtering.digestServerResponse(serverResult.filtering);
-            }
-            if (!isNullOrUndefined(serverResult.pagination)) {
-                this.pagination.digestServerResponse(serverResult.pagination);
-            }
-            this.items = response.result.items;
-        });
+        this.lastResponseId = response.id;
         this.status = TableStatus.Fetching;
         this.updateView();
     }
@@ -289,6 +281,27 @@ export class TableViewModel {
         };
     })();
 
+    private onFetchBeforeResponse(event: RemoteModuleResponseEventArg): void {
+        this.lastResponseId = event.response.id;
+    }
+
+    private onFetchResponse(event: RemoteModuleResponseEventArg): void {
+        const serverResult = this.getServerResult(event.response);
+        if (serverResult === null || !(event.response.result instanceof ServerResult) || event.response.isCanceled) {
+            return ;
+        }
+        if (!isNullOrUndefined(serverResult.ordering)) {
+            this.ordering.digestServerResponse(serverResult.ordering);
+        }
+        if (!isNullOrUndefined(serverResult.filtering)) {
+            this.filtering.digestServerResponse(serverResult.filtering);
+        }
+        if (!isNullOrUndefined(serverResult.pagination)) {
+            this.pagination.digestServerResponse(serverResult.pagination);
+        }
+        this.items = event.response.result.items;
+    }
+
     /**
      * Listen for api requests to trigger custom processing.
      */
@@ -303,7 +316,7 @@ export class TableViewModel {
             const promise = result.promise;
             if (promise !== null) {
                 return new Promise<void>((resolve) => {
-                    // We just wait to wait for the promise to complete, we don't care if it succeeded or not.
+                    // We just wait for the promise to complete, we don't care if it succeeded or not.
                     promise.finally(resolve);
                 });
             }
@@ -367,21 +380,21 @@ export class TableViewModel {
         let items = ([] as ItemInterface[]).concat(this.items);
 
         // Ordering
-        if (this.ordering.isApplicable && !this.isModuleRemoteDependent(this.ordering)) {
+        if (this.ordering.isApplicable && !this.isRemoteModuleDependent(this.ordering)) {
             items = this.ordering.apply(items);
         } else {
             this.ordering.changed = false;
         }
 
         // Filtering
-        if (this.filtering.isApplicable && !this.isModuleRemoteDependent(this.filtering)) {
+        if (this.filtering.isApplicable && !this.isRemoteModuleDependent(this.filtering)) {
             items = this.filtering.apply(items);
         } else {
             this.filtering.changed = false;
         }
 
         // Pagination
-        if (this.pagination.enabled && !this.isModuleRemoteDependent(this.pagination)) {
+        if (this.pagination.enabled && !this.isRemoteModuleDependent(this.pagination)) {
             items = this.pagination.digestFullItemsList(items);
         } else {
             this.pagination.changed = false;
@@ -398,9 +411,9 @@ export class TableViewModel {
             return ;
         }
         if (this.remote.isApplicable && (
-            (this.pagination.changed && this.isModuleRemoteDependent(this.pagination)) ||
-            (this.filtering.changed && this.isModuleRemoteDependent(this.filtering)) ||
-            (this.ordering.changed && this.isModuleRemoteDependent(this.ordering))
+            (this.pagination.changed && this.isRemoteModuleDependent(this.pagination)) ||
+            (this.filtering.changed && this.isRemoteModuleDependent(this.filtering)) ||
+            (this.ordering.changed && this.isRemoteModuleDependent(this.ordering))
         )) {
             this.temperedFetch();
         } else {
@@ -411,7 +424,7 @@ export class TableViewModel {
     /**
      * Test if a module depends on an ajax request to work.
      */
-    private isModuleRemoteDependent(module: ModuleInterface): boolean {
+    private isRemoteModuleDependent(module: ModuleInterface): boolean {
         return module.remote === true || (module.remote === 'auto' && this.remote.isApplicable);
     }
 
@@ -486,16 +499,12 @@ export class TableViewModel {
     }
 
     /**
-     * Create a the ServerResult for an Http response.
-     */
-    private createServerResult(response: HttpResponse<any>): void {
-        this.serverResultsMap[response.id] = new ServerResult();
-    }
-
-    /**
-     * Try to get the ServerResult corresponding to an Http response.
+     * Try to get the ServerResult corresponding to a Http response.
      */
     private getServerResult(response: HttpResponse<any>): ServerResult|null {
-        return this.serverResultsMap[response.id] || null;
+        if (response.id === this.lastResponseId) {
+            return new ServerResult();
+        }
+        return null;
     }
 }

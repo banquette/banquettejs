@@ -10,7 +10,7 @@ import { AbstractTiptapModule } from './modules/abstract-tiptap-module';
  */
 export function createToolbarItem<T extends AbstractTiptapModule>(
     component: Constructor<T>,
-    options: T['configuration']
+    options?: T['configuration']
 ) {
     return { component: markRaw(component), options };
 }

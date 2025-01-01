@@ -1,6 +1,7 @@
 import { HttpMethod } from "@banquette/http";
 import { ModelExtendedIdentifier } from "@banquette/model";
 import { Primitive, StringEnum } from "@banquette/utils-type";
+import { RealTimeStrategy } from "./constant";
 
 export interface RemoteConfigurationInterface {
     /**
@@ -56,4 +57,24 @@ export interface RemoteConfigurationInterface {
      * If `true`, a given url will only be called once, and its response will be stored in memory.
      */
     cacheInMemory: boolean;
+
+    /**
+     * The strategy to use for real-time updates.
+     */
+    realTimeStrategy: RealTimeStrategy;
+
+    /**
+     * The endpoint to check for the last update timestamp (used in TimestampPolling strategy).
+     */
+     realTimeEndpoint: string | null;
+
+    /**
+     * The unique name referencing the data endpoint for subscription (used in TimestampPolling strategy).
+     */
+    subscriptionName: string | null;
+
+    /**
+     * Polling interval in milliseconds.
+     */
+    pollingInterval: number;
 }

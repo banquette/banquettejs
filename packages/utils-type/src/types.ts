@@ -9,6 +9,11 @@ export type Constructor<T = unknown> = new (...args: any[]) => T;
 export type AbstractConstructor<T = unknown> = abstract new (...args: any[]) => T;
 
 /**
+ * Accepts both regular and abstract constructors.
+ */
+export type AnyConstructor<T = unknown> = Constructor<T> | AbstractConstructor<T>;
+
+/**
  * A generic function, taking any number of arguments and returning anything or nothing.
  */
 export type GenericCallback<T = any, R = any> = (...args: T[]) => R;

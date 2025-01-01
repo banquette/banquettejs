@@ -121,6 +121,10 @@ export default class BtTable extends Vue {
      */
     public beforeUnmount(): void {
         this.vm.dispose();
+        this.remote.dispose();
+        this.pagination.dispose();
+        this.filtering.dispose();
+        this.order.dispose();
         (this as any).vm = undefined;
     }
 

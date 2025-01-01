@@ -116,3 +116,26 @@ export function getInjectableType(
         tags: isUndefined(lazy) ? (ensureArray(identifier) as symbol[]) : null,
     };
 }
+
+/**
+ * Traverse the prototype chain to find the first constructor with arguments.
+ */
+export function getFirstConstructorWithArguments(ctor: Constructor): Constructor {
+    let currentCtor: Constructor = ctor;
+    do {
+        let metadata: InjectableMetadataInterface | null = MetadataContainer.Get(currentCtor);
+        if (metadata !== null && metadata.constructorDependencies.length > 0) {
+            return currentCtor;
+        }
+        let constructorParameters = getConstructorArgumentsTypes(currentCtor);
+        if (constructorParameters.length > 0) {
+            return currentCtor;
+        }
+        const parentCtor = Reflect.getPrototypeOf(currentCtor);
+        if (!parentCtor || parentCtor === Object) {
+            return ctor;
+        }
+        currentCtor = parentCtor as Constructor;
+    } while (true);
+}
+

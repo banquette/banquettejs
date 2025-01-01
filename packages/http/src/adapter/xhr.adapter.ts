@@ -24,6 +24,7 @@ export class XhrAdapter implements AdapterInterface {
     private promiseProgress!: (value?: any) => void;
     private requestProgressStatus!: HttpRequestProgressStatus;
     private canceled: boolean = false;
+    private aborted: boolean = false;
 
     public constructor(
         @Inject(NetworkWatcherService)
@@ -87,12 +88,12 @@ export class XhrAdapter implements AdapterInterface {
                 this.xhr.setRequestHeader(headerName, headers[headerName]);
             }
 
-            // Send
-            this.xhr.send(request.payload);
-
-            // In case the request has been canceled immediately
+            // Send, if not canceled
             if (this.canceled) {
-                this.cancel();
+                this.xhr.abort();
+                this.onAbort(); // In case the event is not triggered because send() is never called.
+            } else {
+                this.xhr.send(request.payload);
             }
         });
     }
@@ -162,6 +163,10 @@ export class XhrAdapter implements AdapterInterface {
      * Called when the transaction is aborted.
      */
     private onAbort(): void {
+        if (this.aborted) {
+            return ;
+        }
+        this.aborted = true;
         this.updateProgressStatus(HttpRequestProgressStatus.Closed);
         this.promiseReject(new RequestCanceledException());
     }

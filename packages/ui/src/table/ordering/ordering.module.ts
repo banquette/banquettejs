@@ -62,6 +62,10 @@ export class OrderingModule implements ModuleInterface {
      */
     private eventDispatcher = new EventDispatcher();
 
+    public dispose(): void {
+
+    }
+
     /**
      * Order a list of items using the internal configuration.
      */

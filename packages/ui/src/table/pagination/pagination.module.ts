@@ -174,6 +174,10 @@ export class PaginationModule implements ModuleInterface {
      */
     private eventDispatcher = new EventDispatcher();
 
+    public dispose(): void {
+
+    }
+
     /**
      * Go to the previous page.
      */
