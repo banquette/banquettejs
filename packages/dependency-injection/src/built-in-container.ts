@@ -100,7 +100,7 @@ export class BuiltInContainer {
                 constructorArgs.push(this.resolveDependency(dependency));
             }
             constructorArgs.push(...args);
-            instance = new metadata.ctor(...constructorArgs);
+            instance = metadata.factory ? metadata.factory(metadata.ctor, constructorArgs) : new metadata.ctor(...constructorArgs);
             this.resolutionInstances.push(instance);
         } finally {
             this.popFromStack();
