@@ -20,7 +20,7 @@ export function Service(
 ): Function {
     return (ctor: Constructor) => {
         if (isObject(tagOrOptions, true)) {
-            ctorOverride = (tagOrOptions as ServiceDecoratorOptions).ctorOverride;
+            ctorOverride = (tagOrOptions as ServiceDecoratorOptions).ctorOverride || null;
             tagOrOptions = (tagOrOptions as ServiceDecoratorOptions).tag;
             factory = (tagOrOptions as ServiceDecoratorOptions).factory;
         }
