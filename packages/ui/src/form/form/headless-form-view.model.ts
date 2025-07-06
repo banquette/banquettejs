@@ -337,13 +337,13 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
      */
     public async validate(): Promise<boolean> {
         this.updateState(Action.Validate, Status.Working);
+        this.removeError(ErrorType.Validate);
         if (!(await this.form.validate())) {
             this.updateState(Action.Validate, Status.Failure);
             this.setError(ErrorType.Validate, null);
             return false;
         }
         this.updateState(Action.Validate, Status.Success);
-        this.removeError(ErrorType.Validate);
         this.form.clearErrorsDeep();
         return true;
     }
@@ -482,7 +482,6 @@ export class HeadlessFormViewModel<ViewDataType extends HeadlessFormViewDataInte
         if (eventType !== null) {
             this.eventDispatcher.dispatch(eventType, new ActionErrorEventArg(reason));
         }
-        console.error(reason);
     }
 
     /**
