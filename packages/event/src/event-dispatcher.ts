@@ -188,7 +188,11 @@ export class EventDispatcher implements EventDispatcherInterface {
             console.error(`Dispatch failed: ` + getSymbolDescription(type), error);
         };
         if (result.promise) {
-            result.promise.catch(handleError);
+            result.promise.then((result: DispatchResult<T>) => {
+                if (result.error) {
+                    handleError(result.errorDetail);
+                }
+            }).catch(handleError);
         } else if (result.error) {
             handleError(result.errorDetail);
         }
