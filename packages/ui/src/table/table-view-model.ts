@@ -290,14 +290,14 @@ export class TableViewModel {
         if (serverResult === null || !(event.response.result instanceof ServerResult) || event.response.isCanceled) {
             return ;
         }
-        if (!isNullOrUndefined(serverResult.ordering)) {
-            this.ordering.digestServerResponse(serverResult.ordering);
+        if (!isNullOrUndefined(event.response.result.ordering)) {
+            this.ordering.digestServerResponse(event.response.result.ordering);
         }
-        if (!isNullOrUndefined(serverResult.filtering)) {
-            this.filtering.digestServerResponse(serverResult.filtering);
+        if (!isNullOrUndefined(event.response.result.filtering)) {
+            this.filtering.digestServerResponse(event.response.result.filtering);
         }
-        if (!isNullOrUndefined(serverResult.pagination)) {
-            this.pagination.digestServerResponse(serverResult.pagination);
+        if (!isNullOrUndefined(event.response.result.pagination)) {
+            this.pagination.digestServerResponse(event.response.result.pagination);
         }
         this.items = event.response.result.items;
     }

@@ -2,19 +2,24 @@
 <template src="./popover.component.html" ></template>
 <script lang="ts">
 import { isServer } from "@banquette/utils-misc";
-import { isNumeric, Primitive } from "@banquette/utils-type";
+import { isNumeric, Primitive, VoidCallback } from "@banquette/utils-type";
 import { Component, Computed, Expose, Import, Prop, Themeable, Watch, BindThemeDirective, Vue } from "@banquette/vue-typescript";
 import { PropType } from "vue";
 import { StickToDirective, BtClientOnly, BtTeleport } from "../misc";
 import { PopoverComposable } from "./popover.composable";
 import { ThemeConfiguration } from "./theme-configuration";
+import { EventDispatcherService } from "@banquette/event";
+import { Inject, Injector, Module } from "@banquette/dependency-injection";
+import { PopoverEvents } from "./constant";
 
+@Module()
 @Themeable(ThemeConfiguration)
 @Component({
     name: 'bt-popover',
     components: [BtClientOnly, BtTeleport],
     directives: [StickToDirective, BindThemeDirective],
-    inheritAttrs: false
+    inheritAttrs: false,
+    factory: () => Injector.Get(BtPopover),
 })
 export default class BtPopover extends Vue {
     /**
@@ -61,12 +66,22 @@ export default class BtPopover extends Vue {
     @Expose() public shouldRender: boolean = false;
     @Expose() public isVisible: boolean = false;
     private highestZIndex: number|null = null;
+    private unsubscribeFns: VoidCallback[] = [];
+
+    public constructor(@Inject(EventDispatcherService) private eventDispatcher: EventDispatcherService) {
+        super();
+    }
 
     /**
      * Vue lifecycle.
      */
     public beforeMount() {
         this.popoverComposable.config.stickToOptions.enabled = false;
+        this.unsubscribeFns.push(this.eventDispatcher.subscribe(PopoverEvents.HideAll, () => {
+            if (this.popoverComposable.config.visible) {
+                this.popoverComposable.hide();
+            }
+        }));
     }
 
     /**
@@ -74,6 +89,16 @@ export default class BtPopover extends Vue {
      */
     public mounted(): void {
         this.highestZIndex = this.findHighestZIndex();
+    }
+
+    /**
+     * Vue lifecycle.
+     */
+    public beforeUnmount(): void {
+        this.unsubscribeFns.forEach((fn) => fn());
+        this.unsubscribeFns = [];
+        this.popoverComposable.config.stickToOptions.enabled = false;
+        this.popoverComposable.config.stickToOptions.forceUpdate();
     }
 
     /**

@@ -69,6 +69,11 @@ export abstract class Exception implements ExceptionInterface {
     abstract slug: string;
 
     /**
+     * The stack trace at the moment the exception was created.
+     */
+    private readonly _stack: string;
+
+    /**
      * Gets the whole list of available messages by concatenating the current message with
      * the stack of the previous exception (if there is one).
      */
@@ -79,9 +84,19 @@ export abstract class Exception implements ExceptionInterface {
         return [this.message];
     }
 
+    /**
+     * Gets the call stack where the exception was thrown.
+     */
+    public get callStack(): string {
+        return this._stack;
+    }
+
     public constructor(
         public readonly message: string,
         public readonly previous?: Exception | null,
         public readonly extra?: any
-    ) {}
+    ) {
+        const error = new Error();
+        this._stack = error.stack ?? "Stack trace not available";
+    }
 }

@@ -5,12 +5,16 @@
     <bt-dropdown class="bt-popover-confirm-dropdown" :visible="dropdownVisible" v-bind="$attrs">
         <div v-bt-click-outside="cancel" @click.stop>
             <div class="message">
-                <component :is="icon" v-if="icon"></component>
-                {{ message }}
+                <slot name="message" :confirm="confirm" :cancel="cancel">
+                    <component :is="icon" v-if="icon"></component>
+                    {{ message }}
+                </slot>
             </div>
             <div class="actions">
-                <a href="" @click.stop.prevent="cancel()" class="cancel-button">{{ cancelText }}</a>
-                <bt-button @click.stop="confirm()" class="confirm-button">{{ confirmText }}</bt-button>
+                <slot name="actions" :confirm="confirm" :cancel="cancel">
+                    <a href="" @click.stop.prevent="cancel()" class="cancel-button">{{ cancelText }}</a>
+                    <bt-button @click.stop="confirm()" class="confirm-button">{{ confirmText }}</bt-button>
+                </slot>
             </div>
         </div>
     </bt-dropdown>

@@ -1,6 +1,7 @@
 import { Constructor } from '@banquette/utils-type';
 import { InjectableIdentifier } from './type/injectable-identifier.type';
 import { InjectableType } from './type/injectable.type';
+import { InjectableFactoryType } from "./type/injectable-factory.type";
 
 export interface InjectableMetadataInterface {
     /**
@@ -28,6 +29,11 @@ export interface InjectableMetadataInterface {
      * List of dependencies that must be given to the constructor when building the object.
      */
     constructorDependencies: InjectableType[];
+
+    /**
+     * Custom factory to use to create the object.
+     */
+    factory: InjectableFactoryType|null;
 
     /**
      * List of dependencies that must be set to properties of the created object.

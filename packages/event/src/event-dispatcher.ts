@@ -158,7 +158,6 @@ export class EventDispatcher implements EventDispatcherInterface {
                     // dispatch() must never throw, so if an exception is thrown,
                     // we capture it and set the result on error.
                     // The end user can then decide to throw the error stored in "errorDetails" if they want to.
-                    console.error(`Dispatch failed: ` + getSymbolDescription(type), event, e);
                     result.fail(e);
                     return false;
                 }
@@ -186,13 +185,14 @@ export class EventDispatcher implements EventDispatcherInterface {
     ): DispatchResult<T> {
         const result = this.dispatch(type, event, sequential, tags);
         const handleError = (error: any) => {
-            const message = `Dispatch failed for Symbol("${getSymbolDescription(
-                type
-            )}"). Reason: ${ExceptionFactory.EnsureException(error).message}`;
-            console.error(message, error);
+            console.error(`Dispatch failed: ` + getSymbolDescription(type), error);
         };
         if (result.promise) {
-            result.promise.catch(handleError);
+            result.promise.then((result: DispatchResult<T>) => {
+                if (result.error) {
+                    handleError(result.errorDetail);
+                }
+            }).catch(handleError);
         } else if (result.error) {
             handleError(result.errorDetail);
         }

@@ -25,6 +25,7 @@ export function buildInjectableMetadata(
         tags: [],
         constructorDependencies: [],
         propertiesDependencies: {},
+        factory: null
     };
     MetadataContainer.Set(metadata);
     return metadata;
