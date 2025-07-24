@@ -5,7 +5,7 @@
     <bt-dropdown class="bt-popover-confirm-dropdown" :visible="dropdownVisible" v-bind="$attrs">
         <div v-bt-click-outside="cancel" @click.stop>
             <div class="message">
-                <slot name="message">
+                <slot name="message" :confirm="confirm" :cancel="cancel">
                     <component :is="icon" v-if="icon"></component>
                     {{ message }}
                 </slot>
