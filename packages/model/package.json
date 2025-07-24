@@ -1,6 +1,6 @@
 {
     "name": "@banquette/model",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "repository": {
         "type": "git",
         "url": "models://github.com/banquette/banquettejs.git",
