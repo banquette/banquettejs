@@ -146,13 +146,17 @@ export class EventDispatcher implements EventDispatcherInterface {
                         result: subResult,
                         event: e,
                     });
-                    if (sequential && result.localPromise !== null) {
-                        // Don't catch because localPromise is already caught internally
-                        // and we don't want to continue if one of the subscriber fails.
-                        // If the promise rejects, the result will fail and nothing else will happen.
-                        result.localPromise.then(next);
-                        return false;
+                    if (sequential) {
+                        if (result.localPromise !== null) {
+                            // Don't catch because localPromise is already caught internally
+                            // and we don't want to continue if one of the subscriber fails.
+                            // If the promise rejects, the result will fail and nothing else will happen.
+                            result.localPromise.then(next);
+                            return false;
+                        }
+                        return next();
                     }
+                    // Let the outer while drive the execution.
                     return true;
                 } catch (e) {
                     // dispatch() must never throw, so if an exception is thrown,
@@ -196,6 +200,30 @@ export class EventDispatcher implements EventDispatcherInterface {
         } else if (result.error) {
             handleError(result.errorDetail);
         }
+        return result;
+    }
+
+    /**
+     * Same as `dispatch()` but will throw if an error happens in one of the subscribers.
+     */
+    public dispatchStrict<T = any>(
+        type: symbol,
+        event?: EventArg | null,
+        sequential: boolean = false,
+        tags: symbol[] = []
+    ): DispatchResult<T> {
+        const result = this.dispatch<T>(type, event, sequential, tags);
+        const basePromise: Promise<DispatchResult<T>> =
+            result.promise ? result.promise : Promise.resolve(result);
+
+        // Swap the public promise so consumers get the rejecting behavior.
+        (result as any).promise = basePromise.then((r) => {
+            if (r.error) {
+                // Re-throw stored error so `await r.promise` rejects.
+                throw r.errorDetail;
+            }
+            return r;
+        });
         return result;
     }
 

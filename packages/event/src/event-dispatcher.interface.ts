@@ -14,7 +14,8 @@ export interface EventDispatcherInterface {
 
     /**
      * Trigger an event.
-     * The promise will resolve when all subscribers have been executed.
+     * The promise will always resolve, when all subscribers have been executed.
+     * If an error occurs, it is stored in DispatchResult. The promise will never reject.
      */
     dispatch<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean, tags?: symbol[]): DispatchResult<T>;
 
@@ -22,6 +23,11 @@ export interface EventDispatcherInterface {
      * Same as `dispatch()` but with additional error log in case something goes wrong.
      */
     dispatchWithErrorHandling<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean, tags?: symbol[]): DispatchResult<T>;
+
+    /**
+     * Same as `dispatch()` but will throw if an error happens in one of the subscribers.
+     */
+    dispatchStrict<T = any>(type: symbol, event?: EventArg|null, sequential?: boolean, tags?: symbol[]): DispatchResult<T>;
 
     /**
      * Try to trigger and event but keep the call in a queue if no listeners have been registered yet.
