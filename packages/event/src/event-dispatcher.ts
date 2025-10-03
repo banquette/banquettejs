@@ -1,4 +1,3 @@
-import { ExceptionFactory } from '@banquette/exception';
 import { arrayIntersect } from '@banquette/utils-array';
 import { Not } from '@banquette/utils-misc';
 import { getSymbolDescription } from '@banquette/utils-object';
