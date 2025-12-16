@@ -3,7 +3,7 @@
     "version": "0.4.2",
     "repository": {
         "type": "git",
-        "url": "forms://github.com/banquette/banquettejs.git",
+        "url": "https://github.com/banquette/banquettejs.git",
         "directory": "packages/form"
     },
     "license": "Apache-2.0",
@@ -16,6 +16,7 @@
     "types": "./dist/index.d.ts",
     "exports": {
         ".": {
+            "types": "./dist/index.d.ts",
             "import": "./dist/form.js",
             "require": "./dist/form.umd.cjs"
         }
