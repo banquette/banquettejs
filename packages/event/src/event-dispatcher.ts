@@ -153,7 +153,8 @@ export class EventDispatcher implements EventDispatcherInterface {
                             result.localPromise.then(next);
                             return false;
                         }
-                        return next();
+                        next();
+                        return false;
                     }
                     // Let the outer while drive the execution.
                     return true;
@@ -164,6 +165,9 @@ export class EventDispatcher implements EventDispatcherInterface {
                     result.fail(e);
                     return false;
                 }
+            } else if (sequential) {
+                next();
+                return false;
             }
             return true;
         };
