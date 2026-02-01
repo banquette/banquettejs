@@ -26,6 +26,7 @@ export * from './is-scalar';
 export * from './is-pojo';
 export * from './is-primitive';
 export * from './is-promise-like';
+export * from './is-record';
 export * from './is-reg-exp';
 export * from './is-symbol';
 export * from './is-valid-moment-date';
