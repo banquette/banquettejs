@@ -66,6 +66,26 @@ test('Async events (sequential)', async () => {
     await expectFromDispatchAsync(tracker, event1, ['a', 'b', 'c'], true);
 });
 
+test('sequential: async failure sets error and stops later subscribers', async () => {
+    const called: string[] = [];
+    const event1 = Symbol('event1');
+
+    eventDispatcher.subscribe(event1, async () => {
+        called.push('a');
+        throw new Error('boom');
+    });
+
+    eventDispatcher.subscribe(event1, () => {
+        called.push('b'); // must NOT run
+    });
+
+    const result = await eventDispatcher.dispatch(event1, null, true).onReady();
+
+    expect(result.error).toBe(true);
+    expect(String(result.errorDetail?.message ?? '')).toContain('boom');
+    expect(called).toEqual(['a']);
+});
+
 test('propagation tags', async () => {
     let tracker = subscribeAndTrack(event1, {
         encoder1: [0, [], [tag1], true],

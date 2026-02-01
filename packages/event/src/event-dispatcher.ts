@@ -150,7 +150,12 @@ export class EventDispatcher implements EventDispatcherInterface {
                             // Don't catch because localPromise is already caught internally
                             // and we don't want to continue if one of the subscriber fails.
                             // If the promise rejects, the result will fail and nothing else will happen.
-                            result.localPromise.then(next);
+                            result.localPromise.then(() => {
+                                // Stop the sequential pipeline if any previous subscriber failed
+                                if (!result.error) {
+                                    next();
+                                }
+                            });
                             return false;
                         }
                         next();
