@@ -20,9 +20,10 @@ export function Service(
 ): Function {
     return (ctor: Constructor) => {
         if (isObject(tagOrOptions, true)) {
-            ctorOverride = (tagOrOptions as ServiceDecoratorOptions).ctorOverride || null;
-            tagOrOptions = (tagOrOptions as ServiceDecoratorOptions).tag;
-            factory = (tagOrOptions as ServiceDecoratorOptions).factory;
+            const options = tagOrOptions as ServiceDecoratorOptions;
+            ctorOverride = options.ctorOverride || null;
+            tagOrOptions = options.tag;
+            factory = options.factory || null;
         }
         const resolvedCtor = ctorOverride || getFirstConstructorWithArguments(ctor);
         const metadata: InjectableMetadataInterface = registerImplicitDependencies(resolvedCtor);
@@ -33,4 +34,3 @@ export function Service(
         Injector.Register(metadata);
     };
 }
-
